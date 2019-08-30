@@ -14,7 +14,7 @@ properties([
 @Library("Infrastructure") 
 
 
-def product = "EXUI"
+def product = "rpa"
 def component = "MANAGE ORGANISATION"
 
 withNightlyPipeline("java", product, component) {
@@ -26,5 +26,7 @@ withNightlyPipeline("java", product, component) {
     after('performanceTest') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'functional-output/**/*'
     }
+
+
 
 }
