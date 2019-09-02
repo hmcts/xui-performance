@@ -99,15 +99,19 @@ object ManageOrganisation {
   val MOLogin = exec(http("manageorganisation_login")
     .post(IdamUrl + "/login?scope=openid+profile+roles+manage-user+create-user&response_type=code&redirect_uri=" + BaseURL + "%2foauth2%2fcallback&client_id=xuimowebapp")
     .headers(headers_4)
-    .disableFollowRedirect
+    //.disableFollowRedirect
     .formParam("username", "exuigdz2eu@mailinator.com")
     .formParam("password", "Compaq123!")
     .formParam("save", "Sign in")
     .formParam("selfRegistrationEnabled", "false")
     //.formParam("_csrf", "c0a9f3cb-971d-47bc-a5a1-696eae6056ef"))
     .formParam("_csrf", "${csrfToken1}")
-    //.check(headerRegex("Set-Cookie", "__auth__=(.*); Path").saveAs("AuthHeader"))
-    .check(headerRegex("Set-Cookie", "Idam.Session=*AAJTSQACMDEAAlMxAAA.*(.*)").saveAs("AuthHeader"))
+    //.check(headerRegex("Set-Cookie", "__auth__=(.*)").saveAs("AuthHeader"))
+    //.check(headerRegex("Set-Cookie", "__auth__=(.*)").saveAs("authCode"))
+    .check(headerRegex("Set-Cookie", "(?__auth__)(.*)").saveAs("authCode"))
+
+
+    //.check(headerRegex("Set-Cookie", "Idam.Session=*AAJTSQACMDEAAlMxAAA.*(.*)").saveAs("AuthHeader"))
   )
     .pause(2)
 
