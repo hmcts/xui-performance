@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.exui.performance
+package uk.gov.hmcts.reform.exui.performance.simulations
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._

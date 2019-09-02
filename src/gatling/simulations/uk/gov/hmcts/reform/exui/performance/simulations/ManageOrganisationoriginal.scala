@@ -150,5 +150,5 @@ object ManageOrganisationOriginal {
 
 
 
-	setUp(scn.inject(atOnceUsers(1))).protocols(httpProtocol)
+//	setUp(scn.inject(atOnceUsers(1))).protocols(httpProtocol)
 }
