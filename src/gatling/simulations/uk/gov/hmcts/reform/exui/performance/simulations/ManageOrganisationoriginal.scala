@@ -1,13 +1,9 @@
-package uk.gov.hmcts.reform.exui.performance
-
-
-import scala.concurrent.duration._
+package uk.gov.hmcts.reform.exui.performance.simulations
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import io.gatling.jdbc.Predef._
 
-class ManageOrganisationOriginal extends Simulation {
+object ManageOrganisationOriginal {
 
 	val httpProtocol = http
 		.baseUrl("https://xui-mo-webapp-demo.service.core-compute-demo.internal")
