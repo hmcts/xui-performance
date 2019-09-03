@@ -8,6 +8,7 @@ object Environment {
   val idamURL = "https://idam-web-public.demo.platform.hmcts.net"
   val baseURL = "https://xui-mo-webapp-demo.service.core-compute-demo.internal"
 
+
   /*val idamURL = "https://idam-web-public.aat.platform.hmcts.net"
   val ccdEnvurl = "https://ccd-case-management-web-aat.service.core-compute-aat.internal"
   val baseURL = "https://ccd-api-gateway-web-aat.service.core-compute-aat.internal"*/

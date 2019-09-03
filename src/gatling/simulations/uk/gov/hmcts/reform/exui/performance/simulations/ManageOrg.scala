@@ -15,14 +15,15 @@ class ManageOrg extends Simulation {
     .baseUrl(BaseURL)
     .proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
     //.inferHtmlResources(BlackList(""".*\.js""", """.*\.css""", """.*\.gif""", """.*\.jpeg""", """.*\.jpg""", """.*\.ico""", """.*\.woff""", """.*\.woff2""", """.*\.(t|o)tf""", """.*\.png""", """.*detectportal\.firefox\.com.*"""), WhiteList())
-    .userAgentHeader("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36")
+    //.userAgentHeader("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36")
+    .doNotTrackHeader("1")
 
   val ManageOrgScn = scenario("MOS").repeat(1)
   {
     exec(
       ManageOrganisation.MOHome,
       ManageOrganisation.MOLogin,
-      //ManageOrganisation.MOAPI,
+      ManageOrganisation.MOAPI,
       //ManageOrganisation.MOLogout
     )
   }
