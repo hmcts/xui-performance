@@ -6,11 +6,12 @@ import scala.concurrent.duration._
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
+import uk.gov.hmcts.reform.exui.performance.Feeders
 
 class ManageOrganisationOriginal extends Simulation {
 
 	val httpProtocol = http
-		.baseUrl("https://xui-mo-webapp-demo.service.core-compute-demo.internal")
+		//.baseUrl("https://xui-mo-webapp-demo.service.core-compute-demo.internal")
 		.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
 		.inferHtmlResources(BlackList(""".*\.js""", """.*\.css""", """.*\.gif""", """.*\.jpeg""", """.*\.jpg""", """.*\.ico""", """.*\.woff""", """.*\.woff2""", """.*\.(t|o)tf""", """.*\.png""", """.*detectportal\.firefox\.com.*"""), WhiteList())
 		.userAgentHeader("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36")
@@ -68,91 +69,130 @@ class ManageOrganisationOriginal extends Simulation {
 		"Sec-Fetch-User" -> "?1",
 		"Upgrade-Insecure-Requests" -> "1")
 
-    val uri2 = "https://idam-web-public.demo.platform.hmcts.net"
-    val uri3 = "https://www.google-analytics.com/r/collect"
+    val uri22 = "https://idam-web-public.demo.platform.hmcts.net"
+	  val url_mo = "https://xui-mo-webapp-demo.service.core-compute-demo.internal"
+
+			val manageOrgHomePage = group ( "EXUI_MO_Homepage") {
+
+				exec(http("EXUI_MO_005_Homepage")
+					.get(url_mo + "/")
+					.headers(headers_0)
+					.check(status.is(200)))
+
+					.exec(http("EXUI_MO_010_Homepage")
+						.get(url_mo + "/api/user/details")
+						.headers(headers_1)
+						.check(status.is(401)))
+
+					.exec(http("EXUI_MO_015_Homepage")
+						.get(uri22 + "/?response_type=code&client_id=xuimowebapp&redirect_uri=https://xui-mo-webapp-demo.service.core-compute-demo.internal/oauth2/callback&scope=openid%20profile%20roles%20manage-user%20create-user")
+						.headers(headers_2)
+						.check(regex("Sign in"))
+						.check(css("input[name='_csrf']", "value").saveAs("csrfToken1"))
+					)
+			}
+			/*http("request_3")
+.get(uri3 + "?v=1&_v=j79&a=1361156712&t=pageview&_s=1&dl=https%3A%2F%2Fidam-web-public.demo.platform.hmcts.net%2Flogin%3Fscope%3Dopenid%2Bprofile%2Broles%2Bmanage-user%2Bcreate-user%26response_type%3Dcode%26redirect_uri%3Dhttps%253a%252f%252fxui-mo-webapp-demo.service.core-compute-demo.internal%252foauth2%252fcallback%26client_id%3Dxuimowebapp&dr=https%3A%2F%2Fxui-mo-webapp-demo.service.core-compute-demo.internal%2Fhome&ul=en-us&de=UTF-8&dt=Sign%20in%20-%20HMCTS%20Access&sd=24-bit&sr=1280x720&vp=437x610&je=0&_u=IEBAAEAB~&jid=1616258456&gjid=75239786&cid=272823260.1566920599&tid=UA-122164129-2&_gid=1963206053.1566920599&_r=1&z=304471461")
+.headers(headers_3))
+.check(status.is(401)))*/
+			.pause(10)
+
+				val manageOrganisationLogin = group ("EXUI_MO_Login") {
+					exec(http("EXUI_MO_005_Login")
+						.post(uri22 + "/login?scope=openid+profile+roles+manage-user+create-user&response_type=code&redirect_uri=https%3a%2f%2fxui-mo-webapp-demo.service.core-compute-demo.internal%2foauth2%2fcallback&client_id=xuimowebapp")
+						.headers(headers_4)
+						//.disableFollowRedirect
+						.formParam("username", "exuigdz2eu@mailinator.com")
+						.formParam("password", "Compaq123!")
+						.formParam("save", "Sign in")
+						.formParam("selfRegistrationEnabled", "false")
+						//.formParam("_csrf", "c0a9f3cb-971d-47bc-a5a1-696eae6056ef"))
+						.formParam("_csrf", "${csrfToken1}")
+						.check(status.in(200, 302)))
+						//.check(headerRegex("Set-Cookie", ".*(.+?); Path=").saveAs("AuthHeader3")))
+						//.check(headerRegex("Set-Cookie", ".\\*(.*); Path=").saveAs("AuthHeader3")))
+
+
+						/*.exec {
+							session =>
+								println("this is a authentication token....." + session("AuthHeader3").as[String])
+
+								session
+						}*/
+
+
+
+
+
+						.exec(http("EXUI_MO_010_Login")
+							.get(url_mo + "/api/user/details")
+							.headers(headers_5))
+
+						.exec(http("EXUI_MO_015_Login")
+							.get(url_mo + "/api/organisation")
+							.headers(headers_5))
+
+						.exec(http("EXUI_MO_020_Login")
+							.get(url_mo + "/api/organisation/"))
+				}
+			.pause(5)
+
+					val usersPage = group ("EXUI_MO_Userspage") {
+						exec(http("EXUI_MO_005_Userspage")
+							.get(url_mo + "/api/userList")
+							.headers(headers_5)
+							.check(status.is(200)))
+					}
+			.pause(5)
+
+			val inviteUserPage = group ( "EXUI_MO_InviteUserpage") {
+				exec(http("EXUI_MO_005_InviteUserpage")
+					.get(url_mo + "/api/jurisdictions")
+					.headers(headers_5)
+					.check(status.is(200)))
+			}
+			.pause(10)
+
+				val sendInvitation = group ("EXUI_MO_SendInvitation") {
+					feed(Feeders.createDynamicDataFeeder1).exec(http("EXUI_MO_005_SendInvitation")
+						.post(url_mo + "/api/inviteUser")
+						.headers(headers_12)
+						.body(ElFileBody("MO.json")).asJson
+						.check(status.is(200)))
+				}
+
+			.pause(5)
+
+	     val manageOrganisationLogout = group ("EXUI_MO_Logout") {
+				 exec(http("EXUI_MO_005_Logout")
+					 .get(url_mo + "/api/logout")
+					 .headers(headers_14)
+					 .check(status.is(200)))
+
+					 .exec(http("EXUI_MO_010_Logout")
+						 .get(url_mo + "/api/user/details")
+						 .headers(headers_1)
+						 .check(status.is(401)))
+
+					 .exec(http("EXUI_MO_015_Logout")
+						 .get(uri22 + "/?response_type=code&client_id=xuimowebapp&redirect_uri=https://xui-mo-webapp-demo.service.core-compute-demo.internal/oauth2/callback&scope=openid%20profile%20roles%20manage-user%20create-user")
+						 .headers(headers_2))
+			 }
 
 	val scn = scenario("ManageOrganisationOriginal")
-		.exec(http("manageorganisation_homepage")
-			.get("/")
-			.headers(headers_0))
+  		.exec (manageOrgHomePage)
+  		.exec(manageOrganisationLogin)
+  		.exec(usersPage)
+  		.exec(inviteUserPage)
+  		.exec (sendInvitation)
+  		.exec (manageOrganisationLogout)
 
-		.exec(http("request_1")
-			.get("/api/user/details")
-			.headers(headers_1)
-			.check(status.is(401)))
-
-		.exec(http("idam_loginpage")
-			.get(uri2 + "/?response_type=code&client_id=xuimowebapp&redirect_uri=https://xui-mo-webapp-demo.service.core-compute-demo.internal/oauth2/callback&scope=openid%20profile%20roles%20manage-user%20create-user")
-			.headers(headers_2)
-				.check(regex("Sign in"))
-				.check(css("input[name='_csrf']", "value").saveAs("csrfToken1"))
-			)
-
-            /*http("request_3")
-			.get(uri3 + "?v=1&_v=j79&a=1361156712&t=pageview&_s=1&dl=https%3A%2F%2Fidam-web-public.demo.platform.hmcts.net%2Flogin%3Fscope%3Dopenid%2Bprofile%2Broles%2Bmanage-user%2Bcreate-user%26response_type%3Dcode%26redirect_uri%3Dhttps%253a%252f%252fxui-mo-webapp-demo.service.core-compute-demo.internal%252foauth2%252fcallback%26client_id%3Dxuimowebapp&dr=https%3A%2F%2Fxui-mo-webapp-demo.service.core-compute-demo.internal%2Fhome&ul=en-us&de=UTF-8&dt=Sign%20in%20-%20HMCTS%20Access&sd=24-bit&sr=1280x720&vp=437x610&je=0&_u=IEBAAEAB~&jid=1616258456&gjid=75239786&cid=272823260.1566920599&tid=UA-122164129-2&_gid=1963206053.1566920599&_r=1&z=304471461")
-			.headers(headers_3))
-			.check(status.is(401)))*/
-		.pause(28)
-
-		.exec(http("manageorganisation_login")
-			.post(uri2 + "/login?scope=openid+profile+roles+manage-user+create-user&response_type=code&redirect_uri=https%3a%2f%2fxui-mo-webapp-demo.service.core-compute-demo.internal%2foauth2%2fcallback&client_id=xuimowebapp")
-			.headers(headers_4)
-
-			.formParam("username", "exuigdz2eu@mailinator.com")
-			.formParam("password", "Compaq123!")
-			.formParam("save", "Sign in")
-			.formParam("selfRegistrationEnabled", "false")
-			//.formParam("_csrf", "c0a9f3cb-971d-47bc-a5a1-696eae6056ef"))
-			.formParam("_csrf", "${csrfToken1}"))
-		.pause(2)
-
-		.exec(http("request_5")
-			.get("/api/user/details")
-			.headers(headers_5))
-
-			.exec(http("request_6")
-			.get("/api/organisation")
-			.headers(headers_5))
-
-            .exec(http("request_7")
-			.get("/api/organisation/"))
-
-		.pause(5)
-
-			.exec(http("request_9")
-			.get("/api/userList")
-			.headers(headers_5))
-
-		.pause(5)
-
-			.exec(http("request_11")
-			.get("/api/jurisdictions")
-			.headers(headers_5))
-
-		.pause(42)
-
-		.exec(http("request_12")
-			.post("/api/inviteUser")
-			.headers(headers_12)
-			.body(RawFileBody("0012_request.json")))
-
-
-		.pause(8)
-
-		.exec(http("request_14")
-			.get("/api/logout")
-			.headers(headers_14))
-
-			.exec(http("request_15")
-			.get("/api/user/details")
-			.headers(headers_1)
-			.check(status.is(401)))
-
-            .exec(http("request_16")
-			.get(uri2 + "/?response_type=code&client_id=xuimowebapp&redirect_uri=https://xui-mo-webapp-demo.service.core-compute-demo.internal/oauth2/callback&scope=openid%20profile%20roles%20manage-user%20create-user")
-			.headers(headers_2))
-
-
+		.exec {
+			session =>
+				println("this is a email id1 ....." + session("generatedEmail1").as[String])
+				// println("this is a user json ....." + session("addUser").as[String])
+				session
+		}
 
 	setUp(scn.inject(atOnceUsers(1))).protocols(httpProtocol)
 }
