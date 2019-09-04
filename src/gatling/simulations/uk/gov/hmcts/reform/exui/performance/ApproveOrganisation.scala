@@ -1,13 +1,16 @@
 package uk.gov.hmcts.reform.exui.performance
 
 
+import scala.concurrent.duration._
+
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
+import io.gatling.jdbc.Predef._
 
 class ApproveOrganisation extends Simulation {
 
 	val httpProtocol = http.proxy(Proxy("proxyout.reform.hmcts.net", 8080))
-		.baseUrl("https://xui-ao-webapp-demo.service.core-compute-demo.internal")
+//		.baseUrl("https://xui-ao-webapp-demo.service.core-compute-demo.internal")
 		.inferHtmlResources()
 		.userAgentHeader("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36")
 
@@ -150,5 +153,4 @@ class ApproveOrganisation extends Simulation {
 		.body(ElFileBody("0026.json")).asJson)
 
 	setUp(scn.inject(atOnceUsers(1))).protocols(httpProtocol)
-
 }
