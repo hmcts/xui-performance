@@ -59,4 +59,14 @@ object Feeders {
   })));
   /*val createDynamicDataFeeder = Iterator.continually(Map("generatedEmail" -> (generatedEmail), "generatedPassword" -> (generatedPassword), "generateOrganisationName" -> (orgName)));
 */
+
+  val createDynamicDataFeeder1 = Iterator.continually(Map("generatedEmail1" -> ({
+    generateEmailAddress()
+  })));
+
+
+
 }
+
+
+
