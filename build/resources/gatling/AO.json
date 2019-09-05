@@ -1,0 +1,1 @@
+{"organisationIdentifier":"${orgRefCode}","contactInformation":[{"addressLine1":"34","addressLine2":"Philbeach Gardens","townCity":"London","dxAddress":[]}],"superUser":{"userIdentifier":"asa Taylor","firstName":"asa Taylor","lastName":"asa Taylor","email":"${generatedEmail}"},"status":"ACTIVE","name":"${orgName}","paymentAccount":[]}
