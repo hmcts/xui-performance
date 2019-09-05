@@ -1,0 +1,10 @@
+{
+  "simulation": "uk.gov.hmcts.reform.exui.performance.simulations.ExUI",
+  "simulationId": "exui",
+  "start": 1567680355790,
+  "description": "",
+  "scenarios": ["EXUI"],
+  "assertions": [
+
+  ]
+}
