@@ -14,18 +14,32 @@ object Feeders {
 
   var generatedEmail = ""
   var generatedPassword = ""
-
+  var generatedEmailForCase = ""
   var orgName = ""
+  var appReferenceName = ""
 
   def generateEmailAddress() :String = {
-    generatedEmail = ("exui" + randomAlphanumericString(6) + "@mailinator.com")
+    generatedEmail = ("exui" + randomAlphanumericString(6) + "@mailtest.gov.uk")
     //print("generated enail"+generatedEmail)
     generatedEmail
   }
 
+
+
   def generateOrganisationName() :String = {
     orgName = ("orgname-perftest" + randomAlphanumericString(4))
     orgName
+  }
+
+  def generateEmailForCase() :String = {
+    generatedEmailForCase = ("exui_case" + randomAlphanumericString(6) + "@mailtest.gov.uk")
+    //print("generated enail"+generatedEmail)
+    generatedEmailForCase
+  }
+
+  def generateAppReferenceName() :String = {
+    appReferenceName = ("case ref perftest" + randomAlphanumericString(6))
+    appReferenceName
   }
   /*def generatePassword() :String = {
     generatedPassword = randomAlphanumericString(9)
@@ -59,6 +73,12 @@ object Feeders {
   })));
   /*val createDynamicDataFeeder = Iterator.continually(Map("generatedEmail" -> (generatedEmail), "generatedPassword" -> (generatedPassword), "generateOrganisationName" -> (orgName)));
 */
+
+  val createCaseData = Iterator.continually(Map("caseEmail" -> ({
+    generateEmailForCase()
+  }),"appRef" -> ({
+    generateAppReferenceName()
+  })));
 
   val createDynamicDataFeeder1 = Iterator.continually(Map("generatedEmail1" -> ({
     generateEmailAddress()

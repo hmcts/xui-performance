@@ -1,5 +1,5 @@
 plugins {
-    id 'org.owasp.dependencycheck' version '5.1.0'
+    id 'org.owasp.dependencycheck' version '3.3.4'
     id 'scala'
     id 'com.github.lkishalmi.gatling' version '3.0.2'
     id 'java-gradle-plugin'
@@ -10,12 +10,12 @@ plugins {
 
 //apply plugin: 'java'
 apply plugin: 'scala'
-group 'uk.gov.hmcts.exui.perfproject'
+group 'uk.gov.hmcts.reform'
 version = '1.0'
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'exui performance tests',
+        attributes 'Implementation-Title': 'EXUI Performance Tests',
                 'Implementation-Version': version
     }
 }
@@ -35,20 +35,28 @@ repositories {
 dependencies {
     compile 'org.scala-lang:scala-library:2.12.8'
 
-    gatlingCompile 'com.warrenstrange:googleauth:1.1.5'
+    //compile group: 'com.warrenstrange', name: 'googleauth', version: '1.2.0'
     compile group: 'io.gatling', name: 'gatling-app', version: '3.1.1'
+    compile group: 'org.json', name: 'json' , version: '20180813'
 
     compile group: 'io.gatling', name: 'gatling-recorder', version: '3.1.1'
     compile group: 'io.gatling.highcharts', name: 'gatling-charts-highcharts', version: '3.1.1'
 
+    compile group: 'io.rest-assured', name: 'rest-assured', version: '3.3.0'
+    compile group: 'org.springframework', name: 'spring-web', version: '5.1.5.RELEASE'
+    gatlingCompile 'com.warrenstrange:googleauth:1.2.0'
+    gatlingCompile group: 'uk.gov.service.notify', name: 'notifications-java-client', version: '3.14.1-RELEASE'
+
 }
+
+
+
+
 
 gatling {
     toolVersion '3.1.1'
     scalaVersion '2.12.8'
-   simulations = [ 'uk.gov.hmcts.reform.exui.performance.simulations.ExUI'
-   // simulations = [ 'uk.gov.hmcts.reform.exui.performance.ManageOrganisationOriginal'
-   // simulations = [ 'uk.gov.hmcts.reform.exui.performance.ManageOrganisation_original'
+    simulations = [ 'uk.gov.hmcts.reform.exui.performance.simulations.ExUI'
     ]
 }
 

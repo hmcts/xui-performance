@@ -1,0 +1,39 @@
+{
+  "data": {
+    "solsSolicitorFirmName": "testexui performance",
+    "solsSolicitorAddress": {
+      "AddressLine1": "40 Hibernia Gardens",
+      "AddressLine2": "",
+      "AddressLine3": "",
+      "PostTown": "Hounslow",
+      "County": "",
+      "PostCode": "TW3 3SD",
+      "Country": "United Kingdom"
+    },
+    "solsSolicitorAppReference": "perftestasasaassasasasa",
+    "solsSolicitorEmail": "exuiabc123@mailnesia.com",
+    "solsSolicitorPhoneNumber": "07540612049"
+  },
+  "event": {
+    "id": "solicitorCreateApplication",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false,
+  "event_data": {
+    "solsSolicitorFirmName": "testexui performance",
+    "solsSolicitorAddress": {
+      "AddressLine1": "40 Hibernia Gardens",
+      "AddressLine2": "",
+      "AddressLine3": "",
+      "PostTown": "Hounslow",
+      "County": "",
+      "PostCode": "TW3 3SD",
+      "Country": "United Kingdom"
+    },
+    "solsSolicitorAppReference": "perftestasasaassasasasa",
+    "solsSolicitorEmail": "exuiabc123@mailnesia.com",
+    "solsSolicitorPhoneNumber": "07540612049"
+  }
+}
