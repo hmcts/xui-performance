@@ -5,8 +5,8 @@ import io.gatling.http.Predef._
 
 object Environment {
 
-  val idamURL = "https://idam-web-public.demo.platform.hmcts.net"
- // val baseURL = "https://xui-mo-webapp-demo.service.core-compute-demo.internal"
+  val idamURL = "https://idam-web-public.perftest.platform.hmcts.net"
+  val baseURL = "https://xui-webapp-perftest.service.core-compute-perftest.internal"
 
 
   /*val idamURL = "https://idam-web-public.aat.platform.hmcts.net"
