@@ -17,7 +17,7 @@ object EXUIManageCaseCreation {
   //val BaseURL = Environment.baseURL
   val IdamUrl = Environment.idamURL
   val baseURL=Environment.baseURL
-  val loginFeeder = csv("orgId.csv").circular
+  val loginFeeder = csv("OrgId.csv").circular
 
   //headers
 
@@ -130,7 +130,7 @@ object EXUIManageCaseCreation {
         .headers(headers_13)
         .check(regex("Sign in"))
         .check(css("input[name='_csrf']", "value").saveAs("csrfToken")))
-      .pause(10)
+      .pause(20)
 
 
 
@@ -153,7 +153,7 @@ object EXUIManageCaseCreation {
       .formParam("_csrf", "${csrfToken}")
       .headers(headers_59))
   }
-    .pause(20)
+    .pause(40)
 
 
   val manageCase_Logout = group ("TX01_EXUI_ManageCases_Logout") {
@@ -193,12 +193,12 @@ object EXUIManageCaseCreation {
       .get("/data/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases/pagination_metadata?state=SolAppCreated")
       .headers(headers_28)
       .check(status.is(200)))
-      .pause(5)
+      .pause(20)
       .exec(http("EXUI_ManageCases_005_SolAppCreatedPage1")
       .get("/aggregated/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases?view=WORKBASKET&state=SolAppCreated&page=1")
       .headers(headers_28)
       .check(status.is(200)))
-    .pause(20)
+    .pause(40)
   /*  .exec(http("request_75")
       .get("/api/healthCheck?path=/cases/case-filter")
       .headers(headers_5)*/
@@ -206,7 +206,7 @@ object EXUIManageCaseCreation {
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
         .headers(headers_28)
       .check(status.in(200,304)))
-    .pause(10)
+    .pause(40)
     /*.exec(http("request_77")
       .get("/api/healthCheck?path=/cases/case-create/PROBATE/GrantOfRepresentation/solicitorCreateApplication")
       .headers(headers_5))*/
@@ -215,7 +215,7 @@ object EXUIManageCaseCreation {
         .headers(headers_78)
         .check(status.is(200))
         .check(jsonPath("$.event_token").optional.saveAs("event_token")))
-        .pause(20)
+        .pause(40)
 
       /* .exec {
              session =>
@@ -230,7 +230,7 @@ object EXUIManageCaseCreation {
           .get("/data/internal/case-types/GrantOfRepresentation/event-triggers/solicitorCreateApplication?ignore-warning=false")
           .headers(headers_78)
       .check(status.is(200)))
-        .pause(20)
+        .pause(50)
      /* .exec(http("EXUI_ManageCases_009_InternalProfile")
           .get("/data/internal/profile")
           .headers(headers_81)
@@ -239,7 +239,7 @@ object EXUIManageCaseCreation {
     .exec(http("EXUI_ManageCases_09_AddressLookup")
       .get("/api/addresses?postcode=TW33SD")
       .headers(headers_28))
-    .pause(10)
+    .pause(30)
     /*.exec(http("request_83")
       .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorCreateApplicationsolicitorCreateApplicationPage1")
       .headers(headers_83)
@@ -257,7 +257,7 @@ object EXUIManageCaseCreation {
       .body(ElFileBody("RecordedSimulationcasecreate1810_0088_request.json")).asJson
       .check(status.is(200))
       .check(jsonPath("$.id").optional.saveAs("caseId")))
-      .pause(120)
+      .pause(150)
 
       /*.exec {
         session =>
