@@ -288,13 +288,13 @@ object EXUIManageCase {
     exec(http("EXUI_ManageCases_011_Findcase")
       .get("/data/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases/pagination_metadata?case_reference=${caseId}")
       .headers(headers_37)
-      .check(status.is(200)))
+      .check(status.in(200,304)))
       .pause(20)
 
         .exec(http("EXUI_ManageCases_012_Findcase_Page1")
         .get("/aggregated/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases?view=SEARCH&page=1&case_reference=${caseId}")
         .headers(headers_37)
-      .check(status.is(200)))
+          .check(status.in(200,304)))
         .pause(30)
        /* .exec(http("EXUI_ManageCases_014_AccessRead")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
@@ -309,7 +309,7 @@ object EXUIManageCase {
       .exec(http("EXUI_ManageCases_013_CaseDetails")
         .get("/data/internal/cases/${caseId}")
         .headers(headers_500)
-        .check(status.is(200)))
+      .check(status.in(200,304)))
       .pause(100)
   }
 
