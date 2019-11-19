@@ -22,7 +22,8 @@ object ExUI {
 
   //val BaseURL = Environment.baseURL
   val IdamUrl = Environment.idamURL
-  val url="https://xui-mo-webapp-perftest.service.core-compute-perftest.internal"
+  //val url="https://xui-mo-webapp-perftest.service.core-compute-perftest.internal"
+  val url="https://xui-mo-webapp-aat.service.core-compute-aat.internal"
 
   val headers_co1 = Map(
     "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
@@ -67,7 +68,7 @@ object ExUI {
       }
   .exec {
       session =>
-        val fw = new BufferedWriter(new FileWriter("OrgId.csv", true))
+        val fw = new BufferedWriter(new FileWriter("C:\\Users\\vijay\\mojprojects\\ExpertUI\\rpa-exui-performance-tests\\src\\gatling\\resources\\OrgIdAAT.csv", true))
         try {
           fw.write(session("orgRefCode").as[String]  +"," + session("generatedEmail").as[String]+"\r\n")
         }
@@ -132,7 +133,8 @@ object ExUI {
     "Upgrade-Insecure-Requests" -> "1")
 
   //val uri2 = "https://idam-web-public.demo.platform.hmcts.net"
-  val url_approve="https://xui-ao-webapp-perftest.service.core-compute-perftest.internal"
+ // val url_approve="https://xui-ao-webapp-perftest.service.core-compute-perftest.internal"
+   val url_approve="https://xui-ao-webapp-aat.service.core-compute-aat.internal"
   //val uri3 = "https://www.google-analytics.com"
 
   val approveOrgHomePage=	group ("EXUI_AO_Homepage") {
@@ -143,11 +145,10 @@ object ExUI {
       .check(status.is(200)))
 
       .exec(http("EXUI_AO_010_Homepage")
-        .get(IdamUrl + "/login?response_type=code&client_id=xuiaowebapp&redirect_uri=https://xui-ao-webapp-perftest.service.core-compute-perftest.internal/oauth2/callback&scope=openid%20profile%20roles%20manage-user%20create-user")
+        .get(IdamUrl + "/login?response_type=code&client_id=xuiaowebapp&redirect_uri=https://xui-ao-webapp-aat.service.core-compute-aat.internal/oauth2/callback&scope=openid%20profile%20roles%20manage-user%20create-user%20manage-roles")
         .headers(headers_6)
         .check(regex("Sign in"))
         .check(css("input[name='_csrf']", "value").saveAs("csrfToken")))
-
       .exec {
         session =>
           println("this is csrf....." + session("csrfToken").as[String])
@@ -159,9 +160,10 @@ object ExUI {
   val approveOrganisationlogin = group ("EXUI_AO_Login") {
 
     exec(http("EXUI_AO_005_Login")
-      .post(IdamUrl + "/login?response_type=code&client_id=xuiaowebapp&redirect_uri=https://xui-ao-webapp-perftest.service.core-compute-perftest.internal/oauth2/callback&scope=openid%20profile%20roles%20manage-user%20create-user")
+     // .post(IdamUrl + "/login?response_type=code&client_id=xuiaowebapp&redirect_uri=https://xui-ao-webapp-perftest.service.core-compute-perftest.internal/oauth2/callback&scope=openid%20profile%20roles%20manage-user%20create-user")
+      .post(IdamUrl + "/login?response_type=code&client_id=xuiaowebapp&redirect_uri=https://xui-ao-webapp-aat.service.core-compute-aat.internal/oauth2/callback&scope=openid%20profile%20roles%20manage-user%20create-user")
       .headers(headers_20)
-      .formParam("username", "xuiperftestapprover@mailnesia.com")
+      .formParam("username", "vmuniganti@mailnesia.com")
       .formParam("password", "Monday01")
       .formParam("save", "Sign in")
       .formParam("selfRegistrationEnabled", "false")
@@ -189,7 +191,7 @@ object ExUI {
       .exec {
 
         session =>
-          val client = new NotificationClient("sidam_perftest-b7ab8862-25b4-41c9-8311-cb78815f7d2d-ebb113ff-da17-4646-a39e-f93783a993f4")
+          val client = new NotificationClient("sidam_aat-b7ab8862-25b4-41c9-8311-cb78815f7d2d-4ceaf178-56c6-4b78-988b-05e5fee73188")
           val pattern = new Regex("token.+")
           val str = findEmail(client,session("generatedEmail").as[String])
           // val str = findEmail(client,"exuitc4fp2@mailtest.gov.uk")
@@ -197,23 +199,23 @@ object ExUI {
       }
       .pause(60)
       .exec(http("SelfReg01_TX03_Password")
-        .get("https://idam-web-public.perftest.platform.hmcts.net/users/register?&${activationLink}")
+       // .get("https://idam-web-public.perftest.platform.hmcts.net/users/register?&${activationLink}")
+        .get("https://idam-web-public.aat.platform.hmcts.net/users/register?&${activationLink}")
         .check(status.is(200))
 
         .check(css("input[name='token']", "value").saveAs("token"))
         .check(css("input[name='code']", "value").saveAs("code"))
         .check(css("input[name='_csrf']", "value").saveAs("_csrf")))
       .pause(60)
-      .exec(http("SelfReg01_TX04_Activate").post("https://idam-web-public.perftest.platform.hmcts.net/users/activate")
+      .exec(http("SelfReg01_TX04_Activate")
+        //.post("https://idam-web-public.perftest.platform.hmcts.net/users/activate")
+        .post("https://idam-web-public.aat.platform.hmcts.net/users/activate")
         .formParam("_csrf", "${_csrf}")
         .formParam("code", "${code}")
         .formParam("token", "${token}")
         .formParam("password1", "Pass19word")
         .formParam("password2", "Pass19word")
         .check(status.is(200)))
-
-
-
 
   val approveOrganisationLogout = group ("EXUI_AO_Logout") {
     exec(http("EXUI_AO_005_Logout")
