@@ -17,7 +17,7 @@ object EXUIManageCaseCreation {
   //val BaseURL = Environment.baseURL
   val IdamUrl = Environment.idamURL
   val baseURL=Environment.baseURL
-  val loginFeeder = csv("OrgId.csv").circular
+  //val loginFeeder = csv("OrgIdAAT.csv").circular
 
   //headers
 
@@ -82,21 +82,21 @@ object EXUIManageCaseCreation {
   val headers_83 = Map(
     "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
     "Content-Type" -> "application/json",
-    "Origin" -> "https://xui-webapp-perftest.service.core-compute-perftest.internal",
+    "Origin" -> "https://xui-webapp-aat.service.core-compute-aat.internal",
     "Sec-Fetch-Mode" -> "cors",
     "experimental" -> "true")
 
   val headers_84 = Map(
     "Accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-draft-create.v2+json;charset=UTF-8",
     "Content-Type" -> "application/json",
-    "Origin" -> "https://xui-webapp-perftest.service.core-compute-perftest.internal",
+    "Origin" -> "https://xui-webapp-aat.service.core-compute-aat.internal",
     "Sec-Fetch-Mode" -> "cors",
     "experimental" -> "true")
 
   val headers_88 = Map(
     "Accept" -> "application/json",
     "Content-Type" -> "application/json",
-    "Origin" -> "https://xui-webapp-perftest.service.core-compute-perftest.internal",
+    "Origin" -> "https://xui-webapp-aat.service.core-compute-aat.internal",
     "Request-Id" -> "|aPld4.8/RnX",
     "Sec-Fetch-Mode" -> "cors")
 
@@ -111,7 +111,7 @@ object EXUIManageCaseCreation {
     "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
     "Accept-Encoding" -> "gzip, deflate, br",
     "Accept-Language" -> "en-US,en;q=0.9",
-    "Origin" -> "https://idam-web-public.perftest.platform.hmcts.net",
+    "Origin" -> "https://idam-web-public.aat.platform.hmcts.net",
     "Sec-Fetch-Mode" -> "navigate",
     "Sec-Fetch-Site" -> "same-origin",
     "Sec-Fetch-User" -> "?1",
@@ -119,14 +119,15 @@ object EXUIManageCaseCreation {
 
   val manageCasesHomePage=	group ("TX01_EXUI_ManageCases_Homepage") {
 
-    feed(loginFeeder)
-      .exec(http("EXUI_ManageCases_001_Homepage")
+    //feed(loginFeeder)
+      exec(http("EXUI_ManageCases_001_Homepage")
       .get("/")
       .headers(headers_0)
       .check(status.is(200)))
 
       .exec(http("EXUI_ManageCases_002_Landingpage")
-        .get(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=https://xui-webapp-perftest.service.core-compute-perftest.internal/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
+       // .get(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=https://xui-webapp-aat.service.core-compute-aat.internal/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
+        .get(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=https://xui-webapp-aat.service.core-compute-aat.internal/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
         .headers(headers_13)
         .check(regex("Sign in"))
         .check(css("input[name='_csrf']", "value").saveAs("csrfToken")))
@@ -145,8 +146,9 @@ object EXUIManageCaseCreation {
   val manageCaseslogin = group ("TX01_EXUI_ManageCases_Login") {
 
     exec(http("EXUI_ManageCases_003_SubmitLoginpage")
-      .post(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=https://xui-webapp-perftest.service.core-compute-perftest.internal/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
-      .formParam("username", "${emailId}")
+      //.post(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=https://xui-webapp-aat.service.core-compute-aat.internal/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
+      .post(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=https://xui-webapp-aat.service.core-compute-aat.internal/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
+      .formParam("username", "${generatedEmail}")
       .formParam("password", "Pass19word")
       .formParam("save", "Sign in")
       .formParam("selfRegistrationEnabled", "false")
@@ -210,7 +212,7 @@ object EXUIManageCaseCreation {
     /*.exec(http("request_77")
       .get("/api/healthCheck?path=/cases/case-create/PROBATE/GrantOfRepresentation/solicitorCreateApplication")
       .headers(headers_5))*/
-      .exec(http("EXUI_ManageCases_007_Access-Create")
+      .exec(http("EXUI_ManageCases_007_Sol-Create-Application")
         .get("/data/internal/case-types/GrantOfRepresentation/event-triggers/solicitorCreateApplication?ignore-warning=false")
         .headers(headers_78)
         .check(status.is(200))
