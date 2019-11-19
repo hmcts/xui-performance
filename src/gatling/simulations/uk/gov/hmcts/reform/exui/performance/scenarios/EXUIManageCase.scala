@@ -310,7 +310,7 @@ object EXUIManageCase {
         .get("/data/internal/cases/${caseId}")
         .headers(headers_500)
       .check(status.in(200,304)))
-      .pause(100)
+      .pause(30)
   }
 
   // following code is for manage organisation

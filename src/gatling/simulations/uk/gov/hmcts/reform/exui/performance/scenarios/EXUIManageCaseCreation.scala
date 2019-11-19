@@ -259,7 +259,7 @@ object EXUIManageCaseCreation {
       .body(ElFileBody("RecordedSimulationcasecreate1810_0088_request.json")).asJson
       .check(status.in(200,304))
       .check(jsonPath("$.id").optional.saveAs("caseId")))
-      .pause(150)
+      .pause(30)
 
       /*.exec {
         session =>
