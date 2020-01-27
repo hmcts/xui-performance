@@ -285,13 +285,13 @@ object EXUIManageCase {
    /* exec(http("EXUI_ManageCases_11_CaseSearch")
     .get("/api/healthCheck?path=%2Fcases%2Fcase-search")
     .headers(headers_1)*/
-    exec(http("EXUI_ManageCases_011_Findcase")
+    exec(http("XUIMC01_110_Findcase")
       .get("/data/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases/pagination_metadata?case_reference=${caseId}")
       .headers(headers_37)
       .check(status.in(200,304)))
       .pause(20)
 
-        .exec(http("EXUI_ManageCases_012_Findcase_Page1")
+        .exec(http("XUIMC01_120_Findcase_Page1")
         .get("/aggregated/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases?view=SEARCH&page=1&case_reference=${caseId}")
         .headers(headers_37)
           .check(status.in(200,304)))
@@ -306,11 +306,11 @@ object EXUIManageCase {
           .check(status.is(200)))
       .pause(5)*/
 
-      .exec(http("EXUI_ManageCases_013_CaseDetails")
+      .exec(http("XUIMC01_130_CaseDetails")
         .get("/data/internal/cases/${caseId}")
         .headers(headers_500)
       .check(status.in(200,304)))
-      .pause(30)
+      .pause(100)
   }
 
   // following code is for manage organisation

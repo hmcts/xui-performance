@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.exui.performance.simulations
 
 import io.gatling.core.Predef._
-import io.gatling.http.Predef._
 import uk.gov.hmcts.reform.exui.performance.scenarios._
 import uk.gov.hmcts.reform.exui.performance.scenarios.utils._
 
@@ -11,9 +10,8 @@ class ExUI extends Simulation {
 
 
 	val httpProtocol = Environment.HttpProtocol
-		.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
-	//.baseUrl("https://xui-webapp-perftest.service.core-compute-perftest.internal")
-		.baseUrl("https://xui-webapp-aat.service.core-compute-aat.internal")
+	//	.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
+	.baseUrl("https://xui-webapp-perftest.service.core-compute-perftest.internal")
    // .inferHtmlResources()
     .userAgentHeader("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36")
 
@@ -59,31 +57,14 @@ class ExUI extends Simulation {
 				}
           .exec(EXUIManageCaseCreation.manageCase_Logout)
 
+
+
   }
-
-	val EXUIAATScn = scenario("EXUI").repeat(1)
-	{
-		exec(
-			ExUI.createOrg,
-			ExUI.approveOrgHomePage,
-			ExUI.approveOrganisationlogin,
-			ExUI.approveOrganisationApprove,
-			EXUIManageCaseCreation.manageCasesHomePage,
-			EXUIManageCaseCreation.manageCaseslogin,
-			EXUIManageCaseCreation.casecreation,
-			EXUIManageCase.caseFind,
-			EXUIManageCaseCreation.manageCase_Logout
-
-
-
-
-		)
-	}
 
 
 
   setUp(
-		EXUIAATScn.inject(rampUsers(1) during (1 minutes)))
+		EXUIMCaseCreationScn.inject(rampUsers(5) during (1 minutes)))
 		.protocols(httpProtocol)
 
 }
