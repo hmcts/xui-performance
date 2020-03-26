@@ -1,0 +1,41 @@
+{
+  "data": {
+    "checklist": {
+      "checklist1": [
+        "isAdult"
+      ],
+      "checklist2": [
+        "isNotDetained"
+      ],
+      "checklist3": [
+        "isNotFamilyAppeal"
+      ],
+      "checklist5": [
+        "isResidingInUK"
+      ]
+    }
+  },
+  "event": {
+    "id": "startAppeal",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false,
+  "event_data": {
+    "checklist": {
+      "checklist1": [
+        "isAdult"
+      ],
+      "checklist2": [
+        "isNotDetained"
+      ],
+      "checklist3": [
+        "isNotFamilyAppeal"
+      ],
+      "checklist5": [
+        "isResidingInUK"
+      ]
+    }
+  }
+}

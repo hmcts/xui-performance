@@ -19,7 +19,13 @@ object Feeders {
   var appReferenceName = ""
 
   def generateEmailAddress() :String = {
-    generatedEmail = ("exui" + randomAlphanumericString(6) + "@mailtest.gov.uk")
+    generatedEmail = ("exui-org" + randomAlphanumericString(6) + "@mailtest.gov.uk")
+    //print("generated enail"+generatedEmail)
+    generatedEmail
+  }
+
+  def generateUserEmailAddress() :String = {
+    generatedEmail = ("exui-user" + randomAlphanumericString(6) + "@mailtest.gov.uk")
     //print("generated enail"+generatedEmail)
     generatedEmail
   }
@@ -80,8 +86,8 @@ object Feeders {
     generateAppReferenceName()
   })));
 
-  val createDynamicDataFeeder1 = Iterator.continually(Map("generatedEmail1" -> ({
-    generateEmailAddress()
+  val createDynamicUserDataFeeder = Iterator.continually(Map("generatedUserEmail" -> ({
+    generateUserEmailAddress()
   })));
 
 

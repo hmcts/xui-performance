@@ -1,0 +1,96 @@
+{
+  "data": {
+    "applicants": [
+      {
+        "id": "9de5744b-26c2-4653-919d-d9b828fc4c3f",
+        "value": {
+          "party": {
+            "organisationName": "hjhjhhhhhllo",
+            "pbaNumber": "1234567",
+            "clientCode": null,
+            "customerReference": null,
+            "address": {
+              "AddressLine1": "8 Hibernia Gardens",
+              "AddressLine2": "",
+              "AddressLine3": "",
+              "PostTown": "Hounslow",
+              "County": "",
+              "PostCode": "TW3 3SD",
+              "Country": "United Kingdom"
+            },
+            "telephoneNumber": {
+              "telephoneNumber": "07540634567",
+              "contactDirection": "nnnnggg"
+            },
+            "jobTitle": "kkkuuhhh",
+            "mobileNumber": {
+              "telephoneNumber": null
+            },
+            "email": {
+              "email": "dddffff@la.gov.uk"
+            }
+          }
+        }
+      }
+    ],
+    "solicitor": {
+      "name": "nhhffsol",
+      "mobile": "07540687298",
+      "telephone": "05673245678",
+      "email": "joe.bloggs@la.gov.uk",
+      "dx": null,
+      "reference": null
+    }
+  },
+  "event": {
+    "id": "enterApplicant",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false,
+  "event_data": {
+    "applicants": [
+      {
+        "id": "9de5744b-26c2-4653-919d-d9b828fc4c3f",
+        "value": {
+          "party": {
+            "organisationName": "hjhjhhhhhllo",
+            "pbaNumber": "1234567",
+            "clientCode": null,
+            "customerReference": null,
+            "address": {
+              "AddressLine1": "8 Hibernia Gardens",
+              "AddressLine2": "",
+              "AddressLine3": "",
+              "PostTown": "Hounslow",
+              "County": "",
+              "PostCode": "TW3 3SD",
+              "Country": "United Kingdom"
+            },
+            "telephoneNumber": {
+              "telephoneNumber": "07540634567",
+              "contactDirection": "nnnnggg"
+            },
+            "jobTitle": "kkkuuhhh",
+            "mobileNumber": {
+              "telephoneNumber": null
+            },
+            "email": {
+              "email": "dddffff@la.gov.uk"
+            }
+          }
+        }
+      }
+    ],
+    "solicitor": {
+      "name": "nhhffsol",
+      "mobile": "07540687298",
+      "telephone": "05673245678",
+      "email": "joe.bloggs@la.gov.uk",
+      "dx": null,
+      "reference": null
+    }
+  },
+  "case_reference": "${caseId}"
+}

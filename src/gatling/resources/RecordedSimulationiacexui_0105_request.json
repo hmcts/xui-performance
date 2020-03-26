@@ -1,0 +1,43 @@
+{
+  "data": {
+    "orgListOfUsers": {
+      "value": {
+        "code": "26002d02-6496-4639-b432-4985d9c5c52b",
+        "label": "ia.legalrep.a.xui@gmail.com"
+      },
+      "list_items": [
+        {
+          "code": "26002d02-6496-4639-b432-4985d9c5c52b",
+          "label": "ia.legalrep.a.xui@gmail.com"
+        },
+        {
+          "code": "65ada726-e9df-4cae-8969-ed5339ef1862",
+          "label": "ia.legalrep.bbb.xui@protonmail.com"
+        },
+        {
+          "code": "835c71bd-1f73-47c1-a00d-453f954d0d56",
+          "label": "ia.legalrep.orgcreator@gmail.com"
+        },
+        {
+          "code": "cbb37832-1ca8-4bf6-b234-779262359c63",
+          "label": "ia.legalrep.c.xui@gmail.com"
+        },
+        {
+          "code": "e9a1d081-49ba-48a2-bdb2-ea4635edd976",
+          "label": "ia.legalrep.bb.xui@gmail.com"
+        }
+      ]
+    }
+  },
+  "event": {
+    "id": "shareACase",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false,
+  "event_data": {
+    "orgListOfUsers": "26002d02-6496-4639-b432-4985d9c5c52b"
+  },
+  "case_reference": "1580904712599223"
+}

@@ -1,0 +1,15 @@
+{
+  "data": {
+    "submissionConsent": [
+      "agree"
+    ],
+    "submissionConsentLabel": "I, james@swansea.gov.uk (local-authority), believe that the facts stated in this application are true."
+  },
+  "event": {
+    "id": "submitApplication",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false
+}

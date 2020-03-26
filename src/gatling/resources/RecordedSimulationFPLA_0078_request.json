@@ -1,0 +1,26 @@
+{
+  "data": {
+    "orders": {
+      "orderType": [
+        "CARE_ORDER"
+      ],
+      "directions": null
+    }
+  },
+  "event": {
+    "id": "ordersNeeded",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false,
+  "event_data": {
+    "orders": {
+      "orderType": [
+        "CARE_ORDER"
+      ],
+      "directions": null
+    }
+  },
+  "case_reference": "${caseId}"
+}

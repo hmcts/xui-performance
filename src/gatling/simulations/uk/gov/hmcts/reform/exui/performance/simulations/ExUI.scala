@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.exui.performance.simulations
 
 import io.gatling.core.Predef._
-import uk.gov.hmcts.reform.exui.performance.scenarios._
+import io.gatling.http.Predef.Proxy
+import uk.gov.hmcts.reform.exui.performance.scenarios.{ExUI, _}
 import uk.gov.hmcts.reform.exui.performance.scenarios.utils._
 
 import scala.concurrent.duration._
@@ -10,26 +11,32 @@ class ExUI extends Simulation {
 
 
 	val httpProtocol = Environment.HttpProtocol
-	//	.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
-	.baseUrl("https://xui-webapp-perftest.service.core-compute-perftest.internal")
+		.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
+	//.baseUrl("https://xui-webapp-aat.service.core-compute-aat.internal")
+		.baseUrl("https://ccd-case-management-web-perftest.service.core-compute-perftest.internal")
+
    // .inferHtmlResources()
     .userAgentHeader("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36")
 
 	val EXUIScn = scenario("EXUI").repeat(1)
 	 {
-		exec(
+	  	exec(
 			ExUI.createOrg,
 			ExUI.approveOrgHomePage,
 			ExUI.approveOrganisationlogin,
-			ExUI.approveOrganisationApprove
-			//ExUI.approveOrganisationLogout
+			ExUI.approveOrganisationApprove,
+			ExUI.approveOrganisationLogout
 			/*ExUI.manageOrgHomePage,
 			ExUI.manageOrganisationLogin,
 			ExUI.usersPage,
-			ExUI.inviteUserPage,
-			ExUI.sendInvitation,
-			ExUI.manageOrganisationLogout*/
-		)
+			ExUI.inviteUserPage
+				.repeat(1) {
+					exec(ExUI.sendInvitation)
+				},
+				ExUI.manageOrganisationLogout*/
+			)
+
+
 	   }
 
 
@@ -61,10 +68,26 @@ class ExUI extends Simulation {
 
   }
 
+	val EXUIMCaseCreationIACScn = scenario("EXUI Manage Case IAC").repeat(1)
+	{
+		exec(EXUIIACMC.manageCasesHomePage)
+			.exec(EXUIIACMC.manageCaseslogin)
+			.exec(EXUIIACMC.iaccasecreation)
+			.exec(EXUIIACMC.manageCase_Logout)
 
+	}
+
+	val EXUIMCaseCreationFPLAScn = scenario("EXUI Manage Case FPLA").repeat(1)
+	{
+		exec(EXUIFPLAMC.manageCasesHomePage)
+			.exec(EXUIFPLAMC.manageCaseslogin)
+			.exec(EXUIFPLAMC.fplacasecreation)
+			.exec(EXUIFPLAMC.manageCase_Logout)
+
+	}
 
   setUp(
-		EXUIMCaseCreationScn.inject(rampUsers(5) during (1 minutes)))
+		EXUIScn.inject(rampUsers(1) during (1 minutes)))
 		.protocols(httpProtocol)
 
 }
