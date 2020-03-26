@@ -1,0 +1,53 @@
+{
+  "data": {
+    "appellantTitle": "sasasa",
+    "appellantGivenNames": "asasas",
+    "appellantFamilyName": "fgfgfgfg",
+    "appellantDateOfBirth": "1975-08-01",
+    "appellantNationalities": [
+      {
+        "id": null,
+        "value": {
+          "code": "GB"
+        }
+      }
+    ]
+  },
+  "event": {
+    "id": "startAppeal",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false,
+  "event_data": {
+    "checklist": {
+      "checklist1": [
+        "isAdult"
+      ],
+      "checklist2": [
+        "isNotDetained"
+      ],
+      "checklist3": [
+        "isNotFamilyAppeal"
+      ],
+      "checklist5": [
+        "isResidingInUK"
+      ]
+    },
+    "homeOfficeReferenceNumber": "A1289136/008",
+    "homeOfficeDecisionDate": "2020-01-01",
+    "appellantTitle": "sasasa",
+    "appellantGivenNames": "asasas",
+    "appellantFamilyName": "fgfgfgfg",
+    "appellantDateOfBirth": "1975-08-01",
+    "appellantNationalities": [
+      {
+        "id": null,
+        "value": {
+          "code": "GB"
+        }
+      }
+    ]
+  }
+}

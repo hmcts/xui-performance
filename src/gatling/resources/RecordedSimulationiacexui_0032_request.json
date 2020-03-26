@@ -1,0 +1,62 @@
+{
+  "data": {
+    "checklist": {
+      "checklist1": [
+        "isAdult"
+      ],
+      "checklist2": [
+        "isNotDetained"
+      ],
+      "checklist3": [
+        "isNotFamilyAppeal"
+      ],
+      "checklist5": [
+        "isResidingInUK"
+      ]
+    },
+    "homeOfficeReferenceNumber": "A1289136/008",
+    "homeOfficeDecisionDate": "2020-01-01",
+    "appellantTitle": "sasasa",
+    "appellantGivenNames": "asasas",
+    "appellantFamilyName": "fgfgfgfg",
+    "appellantDateOfBirth": "1975-08-01",
+    "appellantNationalities": [
+      {
+        "id": null,
+        "value": {
+          "code": "GB"
+        }
+      }
+    ],
+    "appellantHasFixedAddress": "Yes",
+    "appellantAddress": {
+      "AddressLine1": "22 Hibernia Gardens",
+      "AddressLine2": "",
+      "AddressLine3": "",
+      "PostTown": "Hounslow",
+      "County": "",
+      "PostCode": "TW3 3SD",
+      "Country": "United Kingdom"
+    },
+    "appealType": "revocationOfProtection",
+    "appealGroundsRevocation": {
+      "values": [
+        "revocationHumanitarianProtection"
+      ]
+    },
+    "hasNewMatters": "Yes",
+    "newMatters": "sdsadasasasas",
+    "hasOtherAppeals": "No",
+    "legalRepCompany": "dsdsdsd",
+    "legalRepName": "ghghghgh",
+    "legalRepReferenceNumber": "ddddddref"
+  },
+  "event": {
+    "id": "startAppeal",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false,
+  "draft_id": null
+}
