@@ -1,7 +1,7 @@
 {
   "data": {
-    "homeOfficeReferenceNumber": "A1289136/008",
-    "homeOfficeDecisionDate": "2020-01-01"
+    "homeOfficeReferenceNumber": "A1289136/007",
+    "homeOfficeDecisionDate": "2020-03-20"
   },
   "event": {
     "id": "startAppeal",
@@ -25,7 +25,7 @@
         "isResidingInUK"
       ]
     },
-    "homeOfficeReferenceNumber": "A1289136/008",
-    "homeOfficeDecisionDate": "2020-01-01"
+    "homeOfficeReferenceNumber": "A1289136/007",
+    "homeOfficeDecisionDate": "2020-03-20"
   }
 }
