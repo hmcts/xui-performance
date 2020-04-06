@@ -14,6 +14,10 @@ class ExUI extends Simulation {
 		.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
 	//.baseUrl("https://xui-webapp-aat.service.core-compute-aat.internal")
 		.baseUrl("https://ccd-case-management-web-perftest.service.core-compute-perftest.internal")
+	val IAChttpProtocol = Environment.HttpProtocol
+		.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
+		.baseUrl("https://xui-webapp-perftest.service.core-compute-perftest.internal")
+		//.baseUrl("https://ccd-case-management-web-perftest.service.core-compute-perftest.internal")
 
    // .inferHtmlResources()
     .userAgentHeader("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36")
@@ -25,15 +29,15 @@ class ExUI extends Simulation {
 			ExUI.approveOrgHomePage,
 			ExUI.approveOrganisationlogin,
 			ExUI.approveOrganisationApprove,
-			ExUI.approveOrganisationLogout
-			/*ExUI.manageOrgHomePage,
+			ExUI.approveOrganisationLogout,
+			ExUI.manageOrgHomePage,
 			ExUI.manageOrganisationLogin,
 			ExUI.usersPage,
 			ExUI.inviteUserPage
 				.repeat(1) {
 					exec(ExUI.sendInvitation)
 				},
-				ExUI.manageOrganisationLogout*/
+				ExUI.manageOrganisationLogout
 			)
 
 
@@ -87,7 +91,7 @@ class ExUI extends Simulation {
 	}
 
   setUp(
-		EXUIScn.inject(rampUsers(1) during (1 minutes)))
-		.protocols(httpProtocol)
+		EXUIMCaseCreationIACScn.inject(rampUsers(1) during (1 seconds)))
+		.protocols(IAChttpProtocol)
 
 }

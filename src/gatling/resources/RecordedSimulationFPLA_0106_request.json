@@ -1,74 +1,53 @@
 {
   "data": {
-    "respondents1": [
+    "appellantTitle": "asasasas",
+    "appellantGivenNames": "fgfgfgfgfg",
+    "appellantFamilyName": "hjhjhjhjhj",
+    "appellantDateOfBirth": "1990-08-01",
+    "appellantNationalities": [
       {
-        "id": "9d2ee6e1-f061-425c-b17f-961d8ce8d940",
+        "id": null,
         "value": {
-          "party": {
-            "firstName": "hjhjhhjh",
-            "lastName": "jkjkjkjkjkj",
-            "dateOfBirth": "1980-03-31",
-            "gender": "Male",
-            "placeOfBirth": "ghghghg",
-            "address": {
-              "AddressLine1": "34 Hibernia Gardens",
-              "AddressLine2": "",
-              "AddressLine3": "",
-              "PostTown": "Hounslow",
-              "County": "",
-              "PostCode": "TW3 3SD",
-              "Country": "United Kingdom"
-            },
-            "telephoneNumber": {
-              "telephoneNumber": null,
-              "contactDirection": null
-            },
-            "relationshipToChild": null,
-            "contactDetailsHidden": null,
-            "litigationIssues": null
-          }
+          "code": "ZW"
         }
       }
     ]
   },
   "event": {
-    "id": "enterRespondents",
+    "id": "startAppeal",
     "summary": "",
     "description": ""
   },
   "event_token": "${event_token}",
   "ignore_warning": false,
   "event_data": {
-    "respondents1": [
+    "checklist": {
+      "checklist1": [
+        "isAdult"
+      ],
+      "checklist2": [
+        "isNotDetained"
+      ],
+      "checklist3": [
+        "isNotFamilyAppeal"
+      ],
+      "checklist5": [
+        "isResidingInUK"
+      ]
+    },
+    "homeOfficeReferenceNumber": "A1289136/007",
+    "homeOfficeDecisionDate": "2020-03-20",
+    "appellantTitle": "asasasas",
+    "appellantGivenNames": "fgfgfgfgfg",
+    "appellantFamilyName": "hjhjhjhjhj",
+    "appellantDateOfBirth": "1990-08-01",
+    "appellantNationalities": [
       {
-        "id": "9d2ee6e1-f061-425c-b17f-961d8ce8d940",
+        "id": null,
         "value": {
-          "party": {
-            "firstName": "hjhjhhjh",
-            "lastName": "jkjkjkjkjkj",
-            "dateOfBirth": "1980-03-31",
-            "gender": "Male",
-            "placeOfBirth": "ghghghg",
-            "address": {
-              "AddressLine1": "34 Hibernia Gardens",
-              "AddressLine2": "",
-              "AddressLine3": "",
-              "PostTown": "Hounslow",
-              "County": "",
-              "PostCode": "TW3 3SD",
-              "Country": "United Kingdom"
-            },
-            "telephoneNumber": {
-              "telephoneNumber": null,
-              "contactDirection": null
-            },
-            "relationshipToChild": null,
-            "contactDetailsHidden": null,
-            "litigationIssues": null
-          }
+          "code": "ZW"
         }
       }
     ]
-  },
-  "case_reference": "${caseId}"
+  }
 }

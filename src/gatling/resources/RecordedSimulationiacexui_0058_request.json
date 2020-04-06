@@ -12,7 +12,6 @@
   "event_token": "${event_token}",
   "ignore_warning": false,
   "event_data": {
-    "applicationOutOfTimeExplanation": "dgfgdfdfdfdfdfdcfd",
     "legalRepDeclaration": [
       "hasDeclared"
     ]

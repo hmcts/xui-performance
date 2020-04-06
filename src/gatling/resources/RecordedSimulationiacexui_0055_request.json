@@ -1,6 +1,8 @@
 {
   "data": {
-    "applicationOutOfTimeExplanation": "dgfgdfdfdfdfdfdcfd"
+    "legalRepDeclaration": [
+      "hasDeclared"
+    ]
   },
   "event": {
     "id": "submitAppeal",
@@ -10,7 +12,9 @@
   "event_token": "${event_token}",
   "ignore_warning": false,
   "event_data": {
-    "applicationOutOfTimeExplanation": "dgfgdfdfdfdfdfdcfd"
+    "legalRepDeclaration": [
+      "hasDeclared"
+    ]
   },
   "case_reference": "${caseId}"
 }

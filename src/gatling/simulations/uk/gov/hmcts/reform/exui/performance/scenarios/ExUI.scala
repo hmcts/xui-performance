@@ -23,7 +23,8 @@ object ExUI {
   //val BaseURL = Environment.baseURL
   val IdamUrl = Environment.idamURL
   val url=Environment.manageOrdURL
-
+  val approveUser=Environment.adminUserAO
+  val approveUserPassword=Environment.adminPasswordAO
   val headers_co1 = Map(
     "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
     "Accept-Encoding" -> "gzip, deflate, br",
@@ -157,8 +158,8 @@ object ExUI {
     exec(http("EXUI_AO_005_Login")
       .post(IdamUrl + "/login?response_type=code&client_id=xuiaowebapp&redirect_uri=https://xui-ao-webapp-perftest.service.core-compute-perftest.internal/oauth2/callback&scope=openid%20profile%20roles%20manage-user%20create-user")
       .headers(headers_20)
-      .formParam("username", "vmuniganti@mailnesia.com")
-      .formParam("password", "Monday01")
+      .formParam("username", approveUser)
+      .formParam("password", approveUserPassword)
       .formParam("save", "Sign in")
       .formParam("selfRegistrationEnabled", "false")
       .formParam("_csrf", "${csrfToken}"))
@@ -203,7 +204,7 @@ object ExUI {
           //session.set("activationLink", (pattern findFirstMatchIn str.get).mkString)
           session.set("activationLink", (pattern findFirstMatchIn str.get).mkString.trim.replace(")", ""))
       }
-      .pause(60)
+      .pause(40)
       .exec(http("SelfReg01_TX03_Password")
         .get("https://idam-web-public.perftest.platform.hmcts.net/users/register?&${activationLink}")
           .headers(headers_pwd)
@@ -211,7 +212,7 @@ object ExUI {
         .check(css("input[name='token']", "value").saveAs("token"))
         .check(css("input[name='code']", "value").saveAs("code"))
         .check(css("input[name='_csrf']", "value").saveAs("_csrf")))
-      .pause(60)
+      .pause(40)
       .exec(http("SelfReg01_TX04_Activate").post("https://idam-web-public.perftest.platform.hmcts.net/users/activate")
         .formParam("_csrf", "${_csrf}")
         .formParam("code", "${code}")
@@ -327,6 +328,7 @@ object ExUI {
       .headers(headers_4)
       //.disableFollowRedirect
       .formParam("username", "${generatedEmail}")
+      //.formParam("username","exui-su-01@mailinator.com")
       .formParam("password", "Pass19word")
       .formParam("save", "Sign in")
       .formParam("selfRegistrationEnabled", "false")
@@ -423,7 +425,8 @@ object ExUI {
             session =>
               val fw = new BufferedWriter(new FileWriter("OrgId.csv", true))
               try {
-                fw.write(session("orgRefCode").as[String] + "," + session("generatedEmail").as[String] + "," + session("generatedUserEmail").as[String] + "\r\n")
+                //fw.write(session("orgRefCode").as[String] + "," + session("generatedEmail").as[String] + "," + session("generatedUserEmail").as[String] + "\r\n")
+                fw.write(session("generatedUserEmail").as[String] + "\r\n")
               }
               finally fw.close()
               session
