@@ -1,14 +1,15 @@
 package uk.gov.hmcts.reform.exui.performance.simulations
 
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import io.gatling.core.Predef._
 import io.gatling.http.Predef.Proxy
-import uk.gov.hmcts.reform.exui.performance.scenarios.{ExUI, _}
+import uk.gov.hmcts.reform.exui.performance.scenarios._
 import uk.gov.hmcts.reform.exui.performance.scenarios.utils._
 
 import scala.concurrent.duration._
 
 class ExUI extends Simulation {
-
 
 	val httpProtocol = Environment.HttpProtocol
 		.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
@@ -17,14 +18,13 @@ class ExUI extends Simulation {
 	val IAChttpProtocol = Environment.HttpProtocol
 		.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
 		.baseUrl("https://xui-webapp-perftest.service.core-compute-perftest.internal")
-		//.baseUrl("https://ccd-case-management-web-perftest.service.core-compute-perftest.internal")
 
    // .inferHtmlResources()
     .userAgentHeader("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36")
 
 	val EXUIScn = scenario("EXUI").repeat(1)
 	 {
-	  	exec(
+		exec(
 			ExUI.createOrg,
 			ExUI.approveOrgHomePage,
 			ExUI.approveOrganisationlogin,
@@ -34,16 +34,12 @@ class ExUI extends Simulation {
 			ExUI.manageOrganisationLogin,
 			ExUI.usersPage,
 			ExUI.inviteUserPage
-				.repeat(1) {
-					exec(ExUI.sendInvitation)
+			.repeat(1) {
+				exec(ExUI.sendInvitation)
 				},
-				ExUI.manageOrganisationLogout
+			ExUI.manageOrganisationLogout
 			)
-
-
-	   }
-
-
+	 }
 
 	val EXUIMCaseScn = scenario("EXUI Manage Case").repeat(1)
 	{
@@ -59,35 +55,31 @@ class ExUI extends Simulation {
 
   val EXUIMCaseCreationScn = scenario("EXUI Manage Case").repeat(1)
   {
-      exec(EXUIManageCaseCreation.manageCasesHomePage)
-				.exec(EXUIManageCaseCreation.manageCaseslogin)
-			  	.repeat(1) {
-					//EXUIManageCaseCreation.filtercaselist,
-					exec(EXUIManageCaseCreation.casecreation)
-					  	.exec(EXUIManageCase.caseFind)
-				}
-          .exec(EXUIManageCaseCreation.manageCase_Logout)
-
-
-
+		exec(EXUIManageCaseCreation.manageCasesHomePage)
+		.exec(EXUIManageCaseCreation.manageCaseslogin)
+		.repeat(1) {
+			//EXUIManageCaseCreation.filtercaselist,
+			exec(EXUIManageCaseCreation.casecreation)
+			.exec(EXUIManageCase.caseFind)
+			}
+		.exec(EXUIManageCaseCreation.manageCase_Logout)
   }
 
 	val EXUIMCaseCreationIACScn = scenario("EXUI Manage Case IAC").repeat(1)
 	{
 		exec(EXUIIACMC.manageCasesHomePage)
-			.exec(EXUIIACMC.manageCaseslogin)
-			.exec(EXUIIACMC.iaccasecreation)
-			.exec(EXUIIACMC.manageCase_Logout)
+		.exec(EXUIIACMC.manageCaseslogin)
+		.exec(EXUIIACMC.iaccasecreation)
+		.exec(EXUIIACMC.manageCase_Logout)
 
 	}
 
 	val EXUIMCaseCreationFPLAScn = scenario("EXUI Manage Case FPLA").repeat(1)
 	{
 		exec(EXUIFPLAMC.manageCasesHomePage)
-			.exec(EXUIFPLAMC.manageCaseslogin)
-			.exec(EXUIFPLAMC.fplacasecreation)
-			.exec(EXUIFPLAMC.manageCase_Logout)
-
+		.exec(EXUIFPLAMC.manageCasesLogin)
+		.exec(EXUIFPLAMC.fplacasecreation)
+		.exec(EXUIFPLAMC.manageCasesLogout)
 	}
 
   setUp(
