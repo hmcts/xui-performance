@@ -581,6 +581,7 @@ object EXUIIACMC {
         .get("/data/internal/profile")
         .headers(headers_new3))
 
+      //failing at this step, returning an HTTP 500 error
       .exec(http("request_40")
         .post("/data/cases/${caseId}/events")
         .headers(headers_new7)
