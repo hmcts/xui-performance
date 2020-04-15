@@ -1,9 +1,6 @@
 package uk.gov.hmcts.reform.exui.performance.simulations
 
-import java.text.SimpleDateFormat
-import java.util.Calendar
 import io.gatling.core.Predef._
-import io.gatling.http.Predef.Proxy
 import uk.gov.hmcts.reform.exui.performance.scenarios._
 import uk.gov.hmcts.reform.exui.performance.scenarios.utils._
 
@@ -11,13 +8,15 @@ import scala.concurrent.duration._
 
 class ExUI extends Simulation {
 
+	val BaseURL = Environment.baseURL
+
 	val httpProtocol = Environment.HttpProtocol
-		.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
+		//.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
 	//.baseUrl("https://xui-webapp-aat.service.core-compute-aat.internal")
 		.baseUrl("https://ccd-case-management-web-perftest.service.core-compute-perftest.internal")
 	val IAChttpProtocol = Environment.HttpProtocol
-		.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
-		.baseUrl("https://xui-webapp-perftest.service.core-compute-perftest.internal")
+		//.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
+		.baseUrl(BaseURL)
 
    // .inferHtmlResources()
     .userAgentHeader("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36")
@@ -83,7 +82,7 @@ class ExUI extends Simulation {
 	}
 
   setUp(
-		EXUIMCaseCreationIACScn.inject(rampUsers(1) during (1 seconds)))
+		EXUIMCaseCreationFPLAScn.inject(rampUsers(1) during (1 seconds)))
 		.protocols(IAChttpProtocol)
 
 }

@@ -7,4 +7,3 @@ target/**
 .gradle/
 *.log
 build/**
-
