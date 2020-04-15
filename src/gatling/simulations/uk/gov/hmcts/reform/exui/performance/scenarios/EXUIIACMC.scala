@@ -2,10 +2,11 @@ package uk.gov.hmcts.reform.exui.performance.scenarios
 
 import java.text.SimpleDateFormat
 import java.util.Date
-
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
+import scala.concurrent.duration._
 import uk.gov.hmcts.reform.exui.performance.scenarios.utils.Environment
+import scala.util.Random
 
 object EXUIIACMC {
 
@@ -13,6 +14,9 @@ object EXUIIACMC {
   val IdamUrl = Environment.idamURL
   val baseURL=Environment.baseURL
   val loginFeeder = csv("OrgId.csv").circular
+
+  val MinThinkTime = Environment.minThinkTime
+  val MaxThinkTime = Environment.maxThinkTime
 
   //headers
 
@@ -62,7 +66,7 @@ object EXUIIACMC {
     "accept-language" -> "en-US,en;q=0.9",
     "content-type" -> "application/json",
     "experimental" -> "true",
-    "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+    "origin" -> baseURL,
     "sec-fetch-mode" -> "cors",
     "sec-fetch-site" -> "same-origin")
 
@@ -79,7 +83,7 @@ object EXUIIACMC {
     "accept-language" -> "en-US,en;q=0.9",
     "content-type" -> "application/json",
     "experimental" -> "true",
-    "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+    "origin" -> baseURL,
     "sec-fetch-mode" -> "cors",
     "sec-fetch-site" -> "same-origin")
 
@@ -135,7 +139,7 @@ object EXUIIACMC {
     "accept" -> "*/*",
     "accept-encoding" -> "gzip, deflate, br",
     "accept-language" -> "en-US,en;q=0.9",
-    "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+    "origin" -> baseURL,
     "sec-fetch-mode" -> "cors",
     "sec-fetch-site" -> "same-origin")
 
@@ -145,14 +149,14 @@ object EXUIIACMC {
     "accept-language" -> "en-US,en;q=0.9",
     "content-type" -> "application/json",
     "experimental" -> "true",
-    "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+    "origin" -> baseURL,
     "sec-fetch-mode" -> "cors",
     "sec-fetch-site" -> "same-origin")
 
   val headers_63 = Map(
     "Accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8",
     "Content-Type" -> "application/json",
-    "Origin" -> "https://xui-webapp-perftest.service.core-compute-perftest.internal",
+    "Origin" -> baseURL,
     "Sec-Fetch-Dest" -> "empty",
     "Sec-Fetch-Mode" -> "cors",
     "Sec-Fetch-Site" -> "same-origin",
@@ -217,7 +221,7 @@ object EXUIIACMC {
     "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
     "Accept-Encoding" -> "gzip, deflate, br",
     "Accept-Language" -> "en-US,en;q=0.9",
-    "Origin" -> "https://idam-web-public.perftest.platform.hmcts.net",
+    "Origin" -> IdamUrl,
     "Sec-Fetch-Mode" -> "navigate",
     "Sec-Fetch-Site" -> "same-origin",
     "Sec-Fetch-User" -> "?1",
@@ -247,7 +251,7 @@ object EXUIIACMC {
   val headers_new4 = Map(
     "Accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
     "Content-Type" -> "application/json",
-    "Origin" -> "https://xui-webapp-perftest.service.core-compute-perftest.internal",
+    "Origin" -> baseURL,
     "Sec-Fetch-Dest" -> "empty",
     "Sec-Fetch-Mode" -> "cors",
     "Sec-Fetch-Site" -> "same-origin",
@@ -256,27 +260,16 @@ object EXUIIACMC {
   val headers_new7 = Map(
     "Accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8",
     "Content-Type" -> "application/json",
-    "Origin" -> "https://xui-webapp-perftest.service.core-compute-perftest.internal",
+    "Origin" -> baseURL,
     "Sec-Fetch-Dest" -> "empty",
     "Sec-Fetch-Mode" -> "cors",
     "Sec-Fetch-Site" -> "same-origin",
     "experimental" -> "true")
 
-
-  val headers_tc = Map(
-    "accept" -> "application/json, text/plain, */*",
-    "accept-encoding" -> "gzip, deflate, br",
-    "accept-language" -> "en-US,en;q=0.9",
-    "content-type" -> "application/json",
-    "origin" -> "https://manage-case.perftest.platform.hmcts.net",
-    "sec-fetch-dest" -> "empty",
-    "sec-fetch-mode" -> "cors",
-    "sec-fetch-site" -> "same-origin")
-
-  val manageCasesHomePage=	group ("TX01_EXUI_ManageCases_Homepage") {
+  val manageCasesHomePage =	group ("EXUI_ManageCases_Homepage") {
 
     feed(loginFeeder)
-    .exec(http("XUIMC02_OB010_Homepage")
+    .exec(http("XUIMC_010_Homepage")
       .get("/")
       .headers(headers_0)
       .check(status.is(200)))
@@ -287,39 +280,174 @@ object EXUIIACMC {
       .check(regex("Sign in"))
       .check(css("input[name='_csrf']", "value").saveAs("csrfToken")))
 
-    .pause(10)
+    .pause(MinThinkTime seconds, MaxThinkTime seconds)
   }
+  val feedUserDataIAC = csv("IACUserData.csv").circular
 
-  val manageCaseslogin = group ("TX01_EXUI_ManageCases_Login") {
+  val manageCaseslogin = group ("EXUI_ManageCases_Login") {
 
-    exec(http("XUIMC01_030_Login_SubmitLoginpage")
+    feed(feedUserDataIAC)
+
+    .exec(http("XUIMC_030_Login_SubmitLoginPage")
       .post(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
-      .formParam("username", "exui.userss1@mailinator.com")
-      .formParam("password", "Pass19word")
+      .formParam("username", "${IACUserName}")
+      .formParam("password", "${IACUserPassword}")
       .formParam("save", "Sign in")
       .formParam("selfRegistrationEnabled", "false")
       .formParam("_csrf", "${csrfToken}")
       .headers(headers_login_submit))
   }
-    .pause(10)
+    .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-  val termsnconditions=
-  exec(http("request_tc")
-    .post("/api/userTermsAndConditions")
-    .headers(headers_tc)
-    .body(RawFileBody("RecordedSimulationTC_0031_request.txt"))
-      .check(status.in(200,304,302))
-    )
-
-  val manageCase_Logout = group ("TX01_EXUI_IAC_ManageCases_Logout") {
-    exec(http("XUIMC01_140__Logout")
+  val manageCase_Logout = group ("EXUI_IAC_ManageCases_Logout") {
+    exec(http("XUIMC_140_Logout")
       .get("/api/logout")
       .headers(headers_34)
       //.check(regex("Sign in")))
       .check(status.in(200,304,302)))
   }
 
-  val shareacase= group("EXUI_filter")
+  private val rng: Random = new Random()
+  private def firstName(): String = rng.alphanumeric.take(10).mkString
+  private def lastName(): String = rng.alphanumeric.take(10).mkString
+
+  val sdfDate = new SimpleDateFormat("yyyy-MM-dd")
+  val now = new Date()
+  val timeStamp = sdfDate.format(now)
+
+  val iaccasecreation= group("EXUI_ManageCases_IAC_Create") {
+
+    //set the current date as a usable parameter
+    exec(session => session.set("currentDate", timeStamp))
+    
+    //set the random variables as usable parameters
+    .exec(
+      _.setAll(
+        ("firstName", firstName()),
+        ("lastName", lastName())
+      ))
+
+    .exec(http("XUIMC_040_005_StartAppealCreatedPage1")
+      .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
+      .headers(headers_2)
+      .check(status.in(200, 304)))
+
+    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+
+    .exec(http("XUIMC_040_010_StartAppealCreatedPage2")
+      .get("/data/internal/case-types/Asylum/event-triggers/startAppeal?ignore-warning=false")
+      .headers(headers_4)
+      .check(status.is(200))
+      .check(jsonPath("$.event_token").optional.saveAs("event_token")))
+
+    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+
+    .exec(http("XUIMC_050_StartAppealChecklist")
+      .post("/data/case-types/Asylum/validate?pageId=startAppealchecklist")
+      .headers(headers_9)
+      .body(StringBody("{\n  \"data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    }\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    }\n  }\n}"))
+      .check(status.is(200)))
+
+    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+
+    .exec(http("XUIMC_060_StartAppealHomeOfficeDecision")
+      .post("/data/case-types/Asylum/validate?pageId=startAppealhomeOfficeDecision")
+      .headers(headers_9)
+      .body(StringBody("{\n  \"data\": {\n    \"homeOfficeReferenceNumber\": \"A1289136/007\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\"\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"A1289136/007\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\"\n  }\n}"))
+      .check(status.in(200, 304)))
+
+    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+
+    .exec(http("XUIMC_070_005_StartAppealBasicDetails")
+      .post("/data/case-types/Asylum/validate?pageId=startAppealappellantBasicDetails")
+      .headers(headers_9)
+      .body(StringBody("{\n  \"data\": {\n    \"appellantTitle\": \"sasasa\",\n    \"appellantGivenNames\": \"asasas\",\n    \"appellantFamilyName\": \"fgfgfgfg\",\n    \"appellantDateOfBirth\": \"1975-08-01\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"GB\"\n        }\n      }\n    ]\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"A1289136/008\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"appellantTitle\": \"sasasa\",\n    \"appellantGivenNames\": \"asasas\",\n    \"appellantFamilyName\": \"fgfgfgfg\",\n    \"appellantDateOfBirth\": \"1975-08-01\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"GB\"\n        }\n      }\n    ]\n  }\n}"))
+      .check(status.in(200, 304)))
+
+    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+
+    .exec(http("XUIMC_070_010_StartAppealBasicDetailsAddressSearch")
+      .get("/api/addresses?postcode=TW33SD")
+      .headers(headers_2))
+
+    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+
+    .exec(http("XUIMC_080_StartAppealAppellantAddress")
+      .post("/data/case-types/Asylum/validate?pageId=startAppealappellantAddress")
+      .headers(headers_9)
+      .body(StringBody("{\n  \"data\": {\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"14 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    }\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"A1289136/007\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"appellantTitle\": \"Ms\",\n    \"appellantGivenNames\": \"Tessa\",\n    \"appellantFamilyName\": \"Tickles\",\n    \"appellantDateOfBirth\": \"1990-08-01\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"14 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    }\n  }\n}"))
+      .check(status.in(200, 304)))
+
+    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+
+    .exec(http("XUIMC_090_StartAppealAppealType")
+      .post("/data/case-types/Asylum/validate?pageId=startAppealappealType")
+      .headers(headers_9)
+      .body(StringBody("{\n  \"data\": {\n    \"appealType\": \"revocationOfProtection\"\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"A1289136/007\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"appellantTitle\": \"Ms\",\n    \"appellantGivenNames\": \"Tessa\",\n    \"appellantFamilyName\": \"Tickles\",\n    \"appellantDateOfBirth\": \"1990-08-01\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"14 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    },\n    \"appealType\": \"revocationOfProtection\"\n  }\n}"))
+      .check(status.in(200, 304)))
+
+    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+
+    .exec(http("XUIMC_100_StartAppealGroundsRevocation")
+      .post("/data/case-types/Asylum/validate?pageId=startAppealappealGroundsRevocation")
+      .headers(headers_9)
+      .body(StringBody("{\n  \"data\": {\n    \"appealGroundsRevocation\": {\n      \"values\": [\n        \"revocationHumanitarianProtection\"\n      ]\n    }\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"A1289136/007\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"appellantTitle\": \"Ms\",\n    \"appellantGivenNames\": \"Tessa\",\n    \"appellantFamilyName\": \"Tickles\",\n    \"appellantDateOfBirth\": \"1990-08-01\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"14 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    },\n    \"appealType\": \"revocationOfProtection\",\n    \"appealGroundsRevocation\": {\n      \"values\": [\n        \"revocationHumanitarianProtection\"\n      ]\n    }\n  }\n}"))
+      .check(status.in(200, 304)))
+
+    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+
+    .exec(http("XUIMC_110_StartAppealNewMatters")
+      .post("/data/case-types/Asylum/validate?pageId=startAppealnewMatters")
+      .headers(headers_9)
+      .body(StringBody("{\n  \"data\": {\n    \"hasNewMatters\": \"No\"\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"A1289136/007\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"appellantTitle\": \"Ms\",\n    \"appellantGivenNames\": \"Tessa\",\n    \"appellantFamilyName\": \"Tickles\",\n    \"appellantDateOfBirth\": \"1990-08-01\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"14 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    },\n    \"appealType\": \"revocationOfProtection\",\n    \"appealGroundsRevocation\": {\n      \"values\": [\n        \"revocationHumanitarianProtection\"\n      ]\n    },\n    \"hasNewMatters\": \"No\"\n  }\n}"))
+      .check(status.in(200, 304)))
+
+    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+
+    .exec(http("XUIMC_120_StartAppealHasOtherAppeals")
+      .post("/data/case-types/Asylum/validate?pageId=startAppealhasOtherAppeals")
+      .headers(headers_9)
+      .body(StringBody("{\n  \"data\": {\n    \"hasOtherAppeals\": \"No\"\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"A1289136/007\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"appellantTitle\": \"Ms\",\n    \"appellantGivenNames\": \"Tessa\",\n    \"appellantFamilyName\": \"Tickles\",\n    \"appellantDateOfBirth\": \"1990-08-01\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"14 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    },\n    \"appealType\": \"revocationOfProtection\",\n    \"appealGroundsRevocation\": {\n      \"values\": [\n        \"revocationHumanitarianProtection\"\n      ]\n    },\n    \"hasNewMatters\": \"No\",\n    \"hasOtherAppeals\": \"No\"\n  }\n}"))
+      .check(status.in(200, 304)))
+
+    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+
+    .exec(http("XUIMC_130_StartAppealLegalRepresentative")
+      .post("/data/case-types/Asylum/validate?pageId=startAppeallegalRepresentativeDetails")
+      .headers(headers_9)
+      .body(StringBody("{\n  \"data\": {\n    \"legalRepCompany\": \"${lastName}\",\n    \"legalRepName\": \"${firstName}\",\n    \"legalRepReferenceNumber\": \"ddddddrefa\"\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"A1289136/007\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"appellantTitle\": \"Ms\",\n    \"appellantGivenNames\": \"Tessa\",\n    \"appellantFamilyName\": \"Tickles\",\n    \"appellantDateOfBirth\": \"1990-08-01\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"14 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    },\n    \"appealType\": \"revocationOfProtection\",\n    \"appealGroundsRevocation\": {\n      \"values\": [\n        \"revocationHumanitarianProtection\"\n      ]\n    },\n    \"hasNewMatters\": \"No\",\n    \"hasOtherAppeals\": \"No\",\n    \"legalRepCompany\": \"${lastName}\",\n    \"legalRepName\": \"${firstName}\",\n    \"legalRepReferenceNumber\": \"ddddddrefa\"\n  }\n}"))
+      .check(status.in(200, 304)))
+
+    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+
+    .exec(http("XUIMC_140_StartAppealCaseSave")
+      .post("/data/case-types/Asylum/cases?ignore-warning=false")
+      .headers(headers_32)
+      .body(StringBody("{\n  \"data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"A1289136/007\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"appellantTitle\": \"Ms\",\n    \"appellantGivenNames\": \"Tessa\",\n    \"appellantFamilyName\": \"Tickles\",\n    \"appellantDateOfBirth\": \"1990-08-01\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"14 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    },\n    \"appealType\": \"revocationOfProtection\",\n    \"appealGroundsRevocation\": {\n      \"values\": [\n        \"revocationHumanitarianProtection\"\n      ]\n    },\n    \"hasNewMatters\": \"No\",\n    \"hasOtherAppeals\": \"No\",\n    \"legalRepCompany\": \"${lastName}\",\n    \"legalRepName\": \"${firstName}\",\n    \"legalRepReferenceNumber\": \"ddddddrefa\"\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"draft_id\": null\n}"))
+      .check(status.in(200, 304))
+      .check(jsonPath("$.id").optional.saveAs("caseId")))
+
+    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+
+    .exec(http("XUIMC_150_SubmitAppealPage1")
+      .get("/data/internal/cases/${caseId}/event-triggers/submitAppeal?ignore-warning=false")
+      .headers(headers_new1)
+      .check(jsonPath("$.event_token").optional.saveAs("event_token")))
+
+    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+
+    .exec(http("XUIMC_160_SubmitAppealAppealDeclaration")
+      .post("/data/case-types/Asylum/validate?pageId=submitAppealdeclaration")
+      .headers(headers_new4)
+      .body(StringBody("{\n  \"data\": {\n    \"legalRepDeclaration\": [\n      \"hasDeclared\"\n    ]\n  },\n  \"event\": {\n    \"id\": \"submitAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"legalRepDeclaration\": [\n      \"hasDeclared\"\n    ]\n  },\n  \"case_reference\": \"${caseId}\"\n}")))
+
+    .exec(http("XUIMC_170_SubmitAppealAppealDeclaration")
+      .post("/data/cases/${caseId}/events")
+      .headers(headers_new7)
+      .body(StringBody("{\n  \"data\": {\n    \"legalRepDeclaration\": [\n      \"hasDeclared\"\n    ]\n  },\n  \"event\": {\n    \"id\": \"submitAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false\n}")))
+  }
+
+  val shareacase = group("EXUI_filter")
   {
     exec(http("request_100")
       .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F1580904712599223%2Ftrigger%2FshareACase")
@@ -333,6 +461,8 @@ object EXUIIACMC {
       .post("/data/case-types/Asylum/validate?pageId=shareACaseshareACase")
       .headers(headers_9)
       .body(StringBody("{\n  \"data\": {\n    \"orgListOfUsers\": {\n      \"value\": {\n        \"code\": \"26002d02-6496-4639-b432-4985d9c5c52b\",\n        \"label\": \"ia.legalrep.a.xui@gmail.com\"\n      },\n      \"list_items\": [\n        {\n          \"code\": \"26002d02-6496-4639-b432-4985d9c5c52b\",\n          \"label\": \"ia.legalrep.a.xui@gmail.com\"\n        },\n        {\n          \"code\": \"65ada726-e9df-4cae-8969-ed5339ef1862\",\n          \"label\": \"ia.legalrep.bbb.xui@protonmail.com\"\n        },\n        {\n          \"code\": \"835c71bd-1f73-47c1-a00d-453f954d0d56\",\n          \"label\": \"ia.legalrep.orgcreator@gmail.com\"\n        },\n        {\n          \"code\": \"cbb37832-1ca8-4bf6-b234-779262359c63\",\n          \"label\": \"ia.legalrep.c.xui@gmail.com\"\n        },\n        {\n          \"code\": \"e9a1d081-49ba-48a2-bdb2-ea4635edd976\",\n          \"label\": \"ia.legalrep.bb.xui@gmail.com\"\n        }\n      ]\n    }\n  },\n  \"event\": {\n    \"id\": \"shareACase\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"orgListOfUsers\": \"26002d02-6496-4639-b432-4985d9c5c52b\"\n  },\n  \"case_reference\": \"1580904712599223\"\n}")))
+  
+    .pause(MinThinkTime seconds, MaxThinkTime seconds)
   }
 
   /*val filtercaselist= group("EXUI_filter")
@@ -382,366 +512,4 @@ object EXUIIACMC {
       .headers(headers_0)
   }
 */
-  val sdfDate = new SimpleDateFormat("yyyy-MM-dd")
-  val now = new Date()
-  val timeStamp = sdfDate.format(now)
-
-  val iaccasecreation= group("TX01_EXUI_ManageCases_IAC_Create") {
-    exec(session => session.set("currentDate", timeStamp))
-
-      .exec(http("XUIMC01_070_Access-Create")
-
-      .exec(http("XUI-IAC01_010_SolAppCreatedPage")
-      .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
-      .headers(headers_2)
-        .check(status.in(200,304)))
-    .pause(5)
-
-      .exec(http("XUI-IAC01_020_AccessCreate")
-        .get("/data/internal/case-types/Asylum/event-triggers/startAppeal?ignore-warning=false")
-        .headers(headers_4)
-        .check(status.is(200))
-        .check(jsonPath("$.event_token").optional.saveAs("event_token")))
-
-      .pause(4)
-
-      .exec {
-        session =>
-          println("this is event token ....." + session("event_token").as[String])
-          session
-      }
-
-      .exec(http("request_9")
-        .post("/data/case-types/Asylum/validate?pageId=startAppealchecklist")
-        .headers(headers_9)
-        .body(StringBody("{\n  \"data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    }\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    }\n  }\n}"))
-        .check(status.is(200)))
-
-      .pause(3)
-
-      .exec(http("request_14")
-        .post("/data/case-types/Asylum/validate?pageId=startAppealhomeOfficeDecision")
-        .headers(headers_9)
-        .body(StringBody("{\n  \"data\": {\n    \"homeOfficeReferenceNumber\": \"A1289136/007\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\"\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"A1289136/007\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\"\n  }\n}"))
-        .check(status.in(200, 304)))
-
-      .pause(5)
-
-      .exec(http("request_16")
-        .post("/data/case-types/Asylum/validate?pageId=startAppealappellantBasicDetails")
-        .headers(headers_9)
-        .body(StringBody("{\n  \"data\": {\n    \"appellantTitle\": \"sasasa\",\n    \"appellantGivenNames\": \"asasas\",\n    \"appellantFamilyName\": \"fgfgfgfg\",\n    \"appellantDateOfBirth\": \"1975-08-01\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"GB\"\n        }\n      }\n    ]\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"A1289136/008\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"appellantTitle\": \"sasasa\",\n    \"appellantGivenNames\": \"asasas\",\n    \"appellantFamilyName\": \"fgfgfgfg\",\n    \"appellantDateOfBirth\": \"1975-08-01\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"GB\"\n        }\n      }\n    ]\n  }\n}"))
-        .check(status.in(200, 304)))
-
-      .pause(5)
-
-      .exec(http("request_18")
-        .get("/api/addresses?postcode=TW33SD")
-        .headers(headers_2))
-
-      .pause(5)
-
-      .exec(http("request_19")
-        .post("/data/case-types/Asylum/validate?pageId=startAppealappellantAddress")
-        .headers(headers_9)
-        .body(StringBody("{\n  \"data\": {\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"14 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    }\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"A1289136/007\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"appellantTitle\": \"asasasas\",\n    \"appellantGivenNames\": \"Tessa\",\n    \"appellantFamilyName\": \"Tickles\",\n    \"appellantDateOfBirth\": \"1990-08-01\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"14 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    }\n  }\n}"))
-        .check(status.in(200, 304)))
-
-      .pause(5)
-
-      .exec(http("XUI-IAC01_030_AppealCheckList")
-        .post("/data/case-types/Asylum/validate?pageId=startAppealchecklist")
-        .headers(headers_9)
-          .body(ElFileBody("RecordedSimulationiacexui_0009_request.json")).asJson
-          .check(status.is(200))
-        )
-          .pause(3)
-     .exec(http("XUI-IAC01_040_HomeOfficeDecision")
-       .post("/data/case-types/Asylum/validate?pageId=startAppealhomeOfficeDecision")
-       .headers(headers_9)
-       .body(ElFileBody("RecordedSimulationiacexui_0014_request.json")).asJson
-   .check(status.in(200,304)))
-     .pause(5)
-
-     .exec(http("XUI-IAC01_050_AppealantDetails")
-       .post("/data/case-types/Asylum/validate?pageId=startAppealappellantBasicDetails")
-       .headers(headers_9)
-       .body(ElFileBody("RecordedSimulationiacexui_0016_request.json")).asJson
-       .check(status.in(200,304)))
-     .pause(5)
-
-     .exec(http("XUI-IAC01_060_AppelantPostcode")
-     .get("/api/addresses?postcode=TW33SD")
-     .headers(headers_2))
-     .pause(5)
-     .exec(http("XUI-IAC01_070_AppellantAddress")
-       .post("/data/case-types/Asylum/validate?pageId=startAppealappellantAddress")
-       .headers(headers_9)
-       .body(ElFileBody("RecordedSimulationiacexui_0019_request.json")).asJson
-       .check(status.in(200,304)))
-     .pause(5)
-
-     .exec(http("XUI-IAC01_080_AppellantType")
-       .post("/data/case-types/Asylum/validate?pageId=startAppealappealType")
-       .headers(headers_9)
-       .body(ElFileBody("RecordedSimulationiacexui_0021_request.json")).asJson
-       .check(status.in(200,304)))
-     .pause(5)
-
-
-     .exec(http("XUI-IAC01_090_AppealGroundRevocation")
-       .post("/data/case-types/Asylum/validate?pageId=startAppealappealGroundsRevocation")
-       .headers(headers_9)
-       .body(ElFileBody("RecordedSimulationiacexui_0023_request.json")).asJson
-       .check(status.in(200,304)))
-     .pause(5)
-
-     .exec(http("XUI-IAC01_0100_AppealantNewMatters")
-       .post("/data/case-types/Asylum/validate?pageId=startAppealnewMatters")
-       .headers(headers_9)
-       .body(ElFileBody("RecordedSimulationiacexui_0025_request.json")).asJson
-       .check(status.in(200,304)))
-     .pause(5)
-
-     .exec(http("XUI-IAC01_0110_AppealhasOtherAppeals")
-       .post("/data/case-types/Asylum/validate?pageId=startAppealhasOtherAppeals")
-       .headers(headers_9)
-       .body(ElFileBody("RecordedSimulationiacexui_0027_request.json")).asJson
-       .check(status.in(200,304)))
-     .pause(5)
-
-     .exec(http("XUI-IAC01_0120_AppealLRDetails")
-       .post("/data/case-types/Asylum/validate?pageId=startAppeallegalRepresentativeDetails")
-       .headers(headers_9)
-       .body(ElFileBody("RecordedSimulationiacexui_0029_request.json")).asJson
-       .check(status.in(200,304)))
-     .pause(5)
-
-   .exec(http("XUI-IAC01_0130_ClaimCaseId")
-       .post("/data/case-types/Asylum/cases?ignore-warning=false")
-       .headers(headers_32)
-       .body(ElFileBody("RecordedSimulationiacexui_0032_request.json")).asJson
-       .check(status.in(200,304))
-     .check(jsonPath("$.id").optional.saveAs("caseId"))
-   )
-     .pause(5)
-
-        .exec {
-          session =>
-            println("this is caseId ....." + session("caseId").as[String])
-            session
-        }
-
-        .exec(http("XUI-IAC01_0140_SubmitAppeal")
-        .get("/case/IA/Asylum/${caseId}/trigger/submitAppeal")
-        .check(status.in(200,304)))
-        .pause(5)
-
-        .exec(http("XUI-IAC01_0150_TCEnabled")
-      .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
-          .check(status.in(200,304))
-        )
-          .pause(10)
-
-
-          .exec(http("XUI-IAC01_0160_RetrieveCaseId")
-        .get("/data/internal/cases/${caseId}")
-            .headers(headers_44)
-            .check(status.in(200,304)))
-        .pause(5)
-
-          .exec(http("XUI-IAC01_0170_EventTrigger")
-          .get("/data/internal/cases/${caseId}/event-triggers/submitAppeal?ignore-warning=false")
-          .headers(headers_45)
-        .check(status.in(200,304))
-            .check(jsonPath("$.event_token").optional.saveAs("event_token1"))
-          )
-    .pause(5)
-
-        .exec(http("XUI-IAC01_0180_TCAfterNewEvent")
-          .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
-          .check(status.in(200,304))
-        )
-        .pause(10)
-
-    .exec(http("XUI-IAC01_0190_AppealDeclarationr")
-      .post("/data/case-types/Asylum/validate?pageId=submitAppealdeclaration")
-      .headers(headers_9)
-      .body(ElFileBody("RecordedSimulationiacexui_0058_request.json")).asJson
-      .check(status.in(200,304)))
-    .pause(5)
-
-    .exec(http("XUI-IAC01_0200_InternalProfile")
-  .get("/data/internal/profile")
-  .headers(headers_8)
-.check(status.in(200,304)))
-.pause(5)
-    .exec(http("XUI-IAC01_0210_CaseSubmitted")
-    .post("/data/cases/${caseId}/events")
-    .headers(headers_62)
-      .body(ElFileBody("RecordedSimulationiacexui_0062_request.json"))
-.check(status.in(200,304)))
-.pause(5)
-
-  }
-
-      .exec(http("request_21")
-        .post("/data/case-types/Asylum/validate?pageId=startAppealappealType")
-        .headers(headers_9)
-        .body(StringBody("{\n  \"data\": {\n    \"appealType\": \"revocationOfProtection\"\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"A1289136/007\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"appellantTitle\": \"asasasas\",\n    \"appellantGivenNames\": \"Tessa\",\n    \"appellantFamilyName\": \"Tickles\",\n    \"appellantDateOfBirth\": \"1990-08-01\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"14 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    },\n    \"appealType\": \"revocationOfProtection\"\n  }\n}"))
-        .check(status.in(200, 304)))
-
-      .pause(5)
-
-      .exec(http("request_23")
-        .post("/data/case-types/Asylum/validate?pageId=startAppealappealGroundsRevocation")
-        .headers(headers_9)
-        .body(StringBody("{\n  \"data\": {\n    \"appealGroundsRevocation\": {\n      \"values\": [\n        \"revocationHumanitarianProtection\"\n      ]\n    }\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"A1289136/007\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"appellantTitle\": \"asasasas\",\n    \"appellantGivenNames\": \"Tessa\",\n    \"appellantFamilyName\": \"Tickles\",\n    \"appellantDateOfBirth\": \"1990-08-01\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"14 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    },\n    \"appealType\": \"revocationOfProtection\",\n    \"appealGroundsRevocation\": {\n      \"values\": [\n        \"revocationHumanitarianProtection\"\n      ]\n    }\n  }\n}"))
-        .check(status.in(200, 304)))
-
-      .pause(5)
-
-      .exec(http("request_25")
-        .post("/data/case-types/Asylum/validate?pageId=startAppealnewMatters")
-        .headers(headers_9)
-        .body(StringBody("{\n  \"data\": {\n    \"hasNewMatters\": \"No\"\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"A1289136/007\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"appellantTitle\": \"asasasas\",\n    \"appellantGivenNames\": \"Tessa\",\n    \"appellantFamilyName\": \"Tickles\",\n    \"appellantDateOfBirth\": \"1990-08-01\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"14 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    },\n    \"appealType\": \"revocationOfProtection\",\n    \"appealGroundsRevocation\": {\n      \"values\": [\n        \"revocationHumanitarianProtection\"\n      ]\n    },\n    \"hasNewMatters\": \"No\"\n  }\n}"))
-        .check(status.in(200, 304)))
-
-      .pause(5)
-
-      .exec(http("request_27")
-        .post("/data/case-types/Asylum/validate?pageId=startAppealhasOtherAppeals")
-        .headers(headers_9)
-        .body(StringBody("{\n  \"data\": {\n    \"hasOtherAppeals\": \"No\"\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"A1289136/007\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"appellantTitle\": \"asasasas\",\n    \"appellantGivenNames\": \"Tessa\",\n    \"appellantFamilyName\": \"Tickles\",\n    \"appellantDateOfBirth\": \"1990-08-01\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"14 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    },\n    \"appealType\": \"revocationOfProtection\",\n    \"appealGroundsRevocation\": {\n      \"values\": [\n        \"revocationHumanitarianProtection\"\n      ]\n    },\n    \"hasNewMatters\": \"No\",\n    \"hasOtherAppeals\": \"No\"\n  }\n}"))
-        .check(status.in(200, 304)))
-
-      .pause(5)
-
-      .exec(http("request_29")
-        .post("/data/case-types/Asylum/validate?pageId=startAppeallegalRepresentativeDetails")
-        .headers(headers_9)
-        .body(StringBody("{\n  \"data\": {\n    \"legalRepCompany\": \"ghghghglegala\",\n    \"legalRepName\": \"vbvbvbvbvfnamea\",\n    \"legalRepReferenceNumber\": \"ddddddrefa\"\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"A1289136/007\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"appellantTitle\": \"asasasas\",\n    \"appellantGivenNames\": \"Tessa\",\n    \"appellantFamilyName\": \"Tickles\",\n    \"appellantDateOfBirth\": \"1990-08-01\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"14 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    },\n    \"appealType\": \"revocationOfProtection\",\n    \"appealGroundsRevocation\": {\n      \"values\": [\n        \"revocationHumanitarianProtection\"\n      ]\n    },\n    \"hasNewMatters\": \"No\",\n    \"hasOtherAppeals\": \"No\",\n    \"legalRepCompany\": \"ghghghglegala\",\n    \"legalRepName\": \"vbvbvbvbvfnamea\",\n    \"legalRepReferenceNumber\": \"ddddddrefa\"\n  }\n}"))
-        .check(status.in(200, 304)))
-
-      .pause(5)
-
-      //    .exec(http("request_29")
-      //      .get("/data/internal/profile")
-      //      .check(status.in(200,304)))
-      //
-      //    .pause(5)
-
-      .exec(http("request_32")
-        .post("/data/case-types/Asylum/cases?ignore-warning=false")
-        .headers(headers_32)
-        .body(StringBody("{\n  \"data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"A1289136/007\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"appellantTitle\": \"asasasas\",\n    \"appellantGivenNames\": \"Tessa\",\n    \"appellantFamilyName\": \"Tickles\",\n    \"appellantDateOfBirth\": \"1990-08-01\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"14 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    },\n    \"appealType\": \"revocationOfProtection\",\n    \"appealGroundsRevocation\": {\n      \"values\": [\n        \"revocationHumanitarianProtection\"\n      ]\n    },\n    \"hasNewMatters\": \"No\",\n    \"hasOtherAppeals\": \"No\",\n    \"legalRepCompany\": \"ghghghglegala\",\n    \"legalRepName\": \"vbvbvbvbvfnamea\",\n    \"legalRepReferenceNumber\": \"ddddddrefa\"\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"draft_id\": null\n}"))
-        .check(status.in(200, 304))
-        .check(jsonPath("$.id").optional.saveAs("caseId")))
-
-      .pause(5)
-
-      .exec {
-        session =>
-          println("this is caseId ....." + session("caseId").as[String])
-          session
-      }
-
-    //    .exec(http("request_34")
-    //      .get("/case/IA/Asylum/${caseId}/trigger/submitAppeal")
-    //      .check(status.in(200,304)))
-    //
-    //    .pause(5)
-    //
-    //    .exec(http("request_35")
-    //      .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
-    //      .check(status.in(200,304)))
-    //
-    //    .pause(10)
-    //
-    //    .exec(http("request_44")
-    //      .get("/data/internal/cases/${caseId}")
-    //      .headers(headers_44)
-    //      .check(status.in(200,304)))
-    //
-    //    .pause(5)
-    //
-    //    .exec(http("request_45")
-    //      .get("/data/internal/cases/${caseId}/event-triggers/submitAppeal?ignore-warning=false")
-    //      .headers(headers_45)
-    //      .check(status.in(200,304)))
-    //
-    //    .pause(5)
-    //
-    //    .exec(http("request_58")
-    //      .post("/data/case-types/Asylum/validate?pageId=submitAppealdeclaration")
-    //      .headers(headers_9)
-    //      .body(StringBody("{\n  \"data\": {\n    \"legalRepDeclaration\": [\n      \"hasDeclared\"\n    ]\n  },\n  \"event\": {\n    \"id\": \"submitAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"legalRepDeclaration\": [\n      \"hasDeclared\"\n    ]\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
-    //      .check(status.in(200,304)))
-    //
-    //    .pause(5)
-    //
-    //    .exec(http("request_61")
-    //      .get("/data/internal/profile")
-    //      .headers(headers_8)
-    //      .check(status.in(200,304)))
-    //
-    //    .pause(5)
-    //
-    //    .exec(http("request_62")
-    //      .post("/data/cases/${caseId}/events")
-    //      .headers(headers_63)
-    //      .body(StringBody("{\n  \"data\": {\n    \"legalRepDeclaration\": [\n      \"hasDeclared\"\n    ]\n  },\n  \"event\": {\n    \"id\": \"submitAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false\n}"))
-    //      .check(status.in(200,304)))
-    //
-    //    .pause(5)
-    //
-    //    .exec(http("request_63")
-    //      .get("/api/healthCheck?path=/cases/case-details/${caseId}/trigger/submitAppeal/confirm")
-    //      .headers(headers_0)
-    //      .check(status.in(200,304)))
-    //
-    //    .pause(5)
-
-      .exec(http("request_33")
-        .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAppeal")
-        .headers(headers_new0))
-
-      .exec(http("request_34")
-        .get("/data/internal/cases/${caseId}/event-triggers/submitAppeal?ignore-warning=false")
-        .headers(headers_new1))
-
-      .exec(http("request_35")
-        .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAppeal%2FsubmitAppealdeclaration")
-        .headers(headers_new0))
-
-      .exec(http("request_36")
-        .get("/data/internal/profile")
-        .headers(headers_new3))
-
-      .pause(2)
-
-      .exec(http("request_37")
-        .post("/data/case-types/Asylum/validate?pageId=submitAppealdeclaration")
-        .headers(headers_new4)
-        .body(StringBody("{\n  \"data\": {\n    \"legalRepDeclaration\": [\n      \"hasDeclared\"\n    ]\n  },\n  \"event\": {\n    \"id\": \"submitAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"legalRepDeclaration\": [\n      \"hasDeclared\"\n    ]\n  },\n  \"case_reference\": \"${caseId}\"\n}")))
-
-      .exec(http("request_38")
-        .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAppeal%2Fsubmit")
-        .headers(headers_new0))
-
-      .exec(http("request_39")
-        .get("/data/internal/profile")
-        .headers(headers_new3))
-
-      //failing at this step, returning an HTTP 500 error
-      .exec(http("request_40")
-        .post("/data/cases/${caseId}/events")
-        .headers(headers_new7)
-        .body(StringBody("{\n  \"data\": {\n    \"legalRepDeclaration\": [\n      \"hasDeclared\"\n    ]\n  },\n  \"event\": {\n    \"id\": \"submitAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false\n}")))
-
-      .exec(http("request_41")
-        .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAppeal%2Fconfirm")
-        .headers(headers_new0))
-
-  }
 }
