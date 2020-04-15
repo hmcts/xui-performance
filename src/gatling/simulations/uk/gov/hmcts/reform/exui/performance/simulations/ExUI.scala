@@ -17,6 +17,8 @@ class ExUI extends Simulation {
 	val IAChttpProtocol = Environment.HttpProtocol
 		//.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
 		.baseUrl(BaseURL)
+		//.baseUrl("https://xui-webapp-perftest.service.core-compute-perftest.internal")
+		//.baseUrl("https://ccd-case-management-web-perftest.service.core-compute-perftest.internal")
 
    // .inferHtmlResources()
     .userAgentHeader("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36")

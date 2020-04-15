@@ -9,7 +9,7 @@
     "summary": "",
     "description": ""
   },
-  "event_token": "${event_token}",
+  "event_token": "${event_token1}",
   "ignore_warning": false,
   "event_data": {
     "legalRepDeclaration": [
