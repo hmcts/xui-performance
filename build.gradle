@@ -13,6 +13,10 @@ apply plugin: 'scala'
 group 'uk.gov.hmcts.reform'
 version = '1.0'
 
+tasks.withType(JavaExec) {
+    jvmArgs = ['-Xms512m', '-Xmx1024m', '-XX:+UseConcMarkSweepGC']
+}
+
 jar {
     manifest {
         attributes 'Implementation-Title': 'EXUI Performance Tests',
@@ -31,7 +35,6 @@ repositories {
     jcenter()
 }
 
-
 dependencies {
     compile 'org.scala-lang:scala-library:2.12.8'
 
@@ -48,10 +51,6 @@ dependencies {
     gatlingCompile group: 'uk.gov.service.notify', name: 'notifications-java-client', version: '3.14.1-RELEASE'
 
 }
-
-
-
-
 
 gatling {
     toolVersion '3.1.1'
@@ -73,8 +72,6 @@ pluginBundle {
     vcsUrl = 'https://github.com/lkishalmi/gradle-gatling-plugin'
     description = 'Gatling Simulation Execution'
     tags = ['gatling', 'load test', 'stress test', 'performance test', 'scala']
-
-
 }
 
 ext ['netty.version'] = '4.0.51.Final'
