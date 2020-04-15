@@ -15,8 +15,9 @@ class ExUI extends Simulation {
 	//.baseUrl("https://xui-webapp-aat.service.core-compute-aat.internal")
 		.baseUrl("https://ccd-case-management-web-perftest.service.core-compute-perftest.internal")
 	val IAChttpProtocol = Environment.HttpProtocol
-		.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
-		.baseUrl("https://xui-webapp-perftest.service.core-compute-perftest.internal")
+		//.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
+		//.baseUrl("https://xui-webapp-perftest.service.core-compute-perftest.internal")
+		.baseUrl("https://manage-case.perftest.platform.hmcts.net")
 		//.baseUrl("https://ccd-case-management-web-perftest.service.core-compute-perftest.internal")
 
    // .inferHtmlResources()

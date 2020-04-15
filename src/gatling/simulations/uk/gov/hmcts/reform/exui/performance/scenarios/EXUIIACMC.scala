@@ -68,7 +68,7 @@ object EXUIIACMC {
     "accept-language" -> "en-US,en;q=0.9",
     "content-type" -> "application/json",
     "experimental" -> "true",
-    "origin" -> "https://xui-webapp-perftest.service.core-compute-perftest.internal",
+    "origin" -> "https://manage-case.perftest.platform.hmcts.net",
     "sec-fetch-mode" -> "cors",
     "sec-fetch-site" -> "same-origin")
 
@@ -85,7 +85,7 @@ object EXUIIACMC {
     "accept-language" -> "en-US,en;q=0.9",
     "content-type" -> "application/json",
     "experimental" -> "true",
-    "origin" -> "https://xui-webapp-perftest.service.core-compute-perftest.internal",
+    "origin" -> "https://manage-case.perftest.platform.hmcts.net",
     "sec-fetch-mode" -> "cors",
     "sec-fetch-site" -> "same-origin")
 
@@ -141,7 +141,7 @@ object EXUIIACMC {
     "accept" -> "*/*",
     "accept-encoding" -> "gzip, deflate, br",
     "accept-language" -> "en-US,en;q=0.9",
-    "origin" -> "https://xui-webapp-perftest.service.core-compute-perftest.internal",
+    "origin" -> "https://manage-case.perftest.platform.hmcts.net",
     "sec-fetch-mode" -> "cors",
     "sec-fetch-site" -> "same-origin")
 
@@ -151,7 +151,7 @@ object EXUIIACMC {
     "accept-language" -> "en-US,en;q=0.9",
     "content-type" -> "application/json",
     "experimental" -> "true",
-    "origin" -> "https://xui-webapp-perftest.service.core-compute-perftest.internal",
+    "origin" -> "https://manage-case.perftest.platform.hmcts.net",
     "sec-fetch-mode" -> "cors",
     "sec-fetch-site" -> "same-origin")
 
@@ -220,6 +220,16 @@ object EXUIIACMC {
     "Sec-Fetch-User" -> "?1",
     "Upgrade-Insecure-Requests" -> "1")
 
+  val headers_tc = Map(
+    "accept" -> "application/json, text/plain, */*",
+    "accept-encoding" -> "gzip, deflate, br",
+    "accept-language" -> "en-US,en;q=0.9",
+    "content-type" -> "application/json",
+    "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+    "sec-fetch-dest" -> "empty",
+    "sec-fetch-mode" -> "cors",
+    "sec-fetch-site" -> "same-origin")
+
   val manageCasesHomePage=	group ("TX01_EXUI_ManageCases_Homepage") {
 
     feed(loginFeeder)
@@ -229,7 +239,7 @@ object EXUIIACMC {
       .check(status.is(200)))
 
       .exec(http("XUIMC02_020_Login_LandingPage")
-        .get(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=https://xui-webapp-perftest.service.core-compute-perftest.internal/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
+        .get(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=https://manage-case.perftest.platform.hmcts.net/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
         .headers(headers_login)
         .check(regex("Sign in"))
         .check(css("input[name='_csrf']", "value").saveAs("csrfToken")))
@@ -248,8 +258,8 @@ object EXUIIACMC {
   val manageCaseslogin = group ("TX01_EXUI_ManageCases_Login") {
 
     exec(http("XUIMC01_030_Login_SubmitLoginpage")
-      .post(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=https://xui-webapp-perftest.service.core-compute-perftest.internal/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
-      .formParam("username", "exui.userss1@mailinator.com")
+      .post(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=https://manage-case.perftest.platform.hmcts.net/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
+      .formParam("username", "exui-userdx5dfe@mailtest.gov.uk")
       .formParam("password", "Pass19word")
       .formParam("save", "Sign in")
       .formParam("selfRegistrationEnabled", "false")
@@ -257,6 +267,14 @@ object EXUIIACMC {
       .headers(headers_login_submit))
   }
     .pause(10)
+
+  val termsnconditions=
+  exec(http("request_tc")
+    .post("/api/userTermsAndConditions")
+    .headers(headers_tc)
+    .body(RawFileBody("RecordedSimulationTC_0031_request.txt"))
+      .check(status.in(200,304,302))
+    )
 
 
   val manageCase_Logout = group ("TX01_EXUI_IAC_ManageCases_Logout") {
@@ -329,14 +347,13 @@ object EXUIIACMC {
   val iaccasecreation= group("TX01_EXUI_ManageCases_IAC_Create")
   {
 
-      exec(http("XUIMC01_050_SolAppCreatedPage1")
+      exec(http("XUI-IAC01_010_SolAppCreatedPage")
       .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
       .headers(headers_2)
         .check(status.in(200,304)))
     .pause(5)
 
-
-      .exec(http("XUIMC01_070_Access-Create")
+      .exec(http("XUI-IAC01_020_AccessCreate")
         .get("/data/internal/case-types/Asylum/event-triggers/startAppeal?ignore-warning=false")
         .headers(headers_4)
         .check(status.is(200))
@@ -349,39 +366,39 @@ object EXUIIACMC {
                session
            }
 
-        .exec(http("request_9")
+        .exec(http("XUI-IAC01_030_AppealCheckList")
         .post("/data/case-types/Asylum/validate?pageId=startAppealchecklist")
         .headers(headers_9)
           .body(ElFileBody("RecordedSimulationiacexui_0009_request.json")).asJson
           .check(status.is(200))
         )
           .pause(3)
-     .exec(http("request_14")
+     .exec(http("XUI-IAC01_040_HomeOfficeDecision")
        .post("/data/case-types/Asylum/validate?pageId=startAppealhomeOfficeDecision")
        .headers(headers_9)
        .body(ElFileBody("RecordedSimulationiacexui_0014_request.json")).asJson
    .check(status.in(200,304)))
      .pause(5)
 
-     .exec(http("request_16")
+     .exec(http("XUI-IAC01_050_AppealantDetails")
        .post("/data/case-types/Asylum/validate?pageId=startAppealappellantBasicDetails")
        .headers(headers_9)
        .body(ElFileBody("RecordedSimulationiacexui_0016_request.json")).asJson
        .check(status.in(200,304)))
      .pause(5)
 
-     .exec(http("request_18")
+     .exec(http("XUI-IAC01_060_AppelantPostcode")
      .get("/api/addresses?postcode=TW33SD")
      .headers(headers_2))
      .pause(5)
-     .exec(http("request_19")
+     .exec(http("XUI-IAC01_070_AppellantAddress")
        .post("/data/case-types/Asylum/validate?pageId=startAppealappellantAddress")
        .headers(headers_9)
        .body(ElFileBody("RecordedSimulationiacexui_0019_request.json")).asJson
        .check(status.in(200,304)))
      .pause(5)
 
-     .exec(http("request_21")
+     .exec(http("XUI-IAC01_080_AppellantType")
        .post("/data/case-types/Asylum/validate?pageId=startAppealappealType")
        .headers(headers_9)
        .body(ElFileBody("RecordedSimulationiacexui_0021_request.json")).asJson
@@ -389,39 +406,35 @@ object EXUIIACMC {
      .pause(5)
 
 
-     .exec(http("request_23")
+     .exec(http("XUI-IAC01_090_AppealGroundRevocation")
        .post("/data/case-types/Asylum/validate?pageId=startAppealappealGroundsRevocation")
        .headers(headers_9)
        .body(ElFileBody("RecordedSimulationiacexui_0023_request.json")).asJson
        .check(status.in(200,304)))
      .pause(5)
 
-     .exec(http("request_25")
+     .exec(http("XUI-IAC01_0100_AppealantNewMatters")
        .post("/data/case-types/Asylum/validate?pageId=startAppealnewMatters")
        .headers(headers_9)
        .body(ElFileBody("RecordedSimulationiacexui_0025_request.json")).asJson
        .check(status.in(200,304)))
      .pause(5)
 
-     .exec(http("request_27")
+     .exec(http("XUI-IAC01_0110_AppealhasOtherAppeals")
        .post("/data/case-types/Asylum/validate?pageId=startAppealhasOtherAppeals")
        .headers(headers_9)
        .body(ElFileBody("RecordedSimulationiacexui_0027_request.json")).asJson
        .check(status.in(200,304)))
      .pause(5)
 
-     .exec(http("request_29")
+     .exec(http("XUI-IAC01_0120_AppealLRDetails")
        .post("/data/case-types/Asylum/validate?pageId=startAppeallegalRepresentativeDetails")
        .headers(headers_9)
        .body(ElFileBody("RecordedSimulationiacexui_0029_request.json")).asJson
        .check(status.in(200,304)))
      .pause(5)
-        .exec(http("request_29")
-      .get("/data/internal/profile")
-          .check(status.in(200,304)))
-        .pause(5)
 
-   .exec(http("request_32")
+   .exec(http("XUI-IAC01_0130_ClaimCaseId")
        .post("/data/case-types/Asylum/cases?ignore-warning=false")
        .headers(headers_32)
        .body(ElFileBody("RecordedSimulationiacexui_0032_request.json")).asJson
@@ -436,57 +449,56 @@ object EXUIIACMC {
             session
         }
 
-        .exec(http("request_34")
+        .exec(http("XUI-IAC01_0140_SubmitAppeal")
         .get("/case/IA/Asylum/${caseId}/trigger/submitAppeal")
         .check(status.in(200,304)))
         .pause(5)
 
-        .exec(http("request_34")
+        .exec(http("XUI-IAC01_0150_TCEnabled")
       .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
           .check(status.in(200,304))
         )
           .pause(10)
 
 
-          .exec(http("request_44")
+          .exec(http("XUI-IAC01_0160_RetrieveCaseId")
         .get("/data/internal/cases/${caseId}")
             .headers(headers_44)
             .check(status.in(200,304)))
         .pause(5)
 
-          .exec(http("request_45")
+          .exec(http("XUI-IAC01_0170_EventTrigger")
           .get("/data/internal/cases/${caseId}/event-triggers/submitAppeal?ignore-warning=false")
           .headers(headers_45)
-        .check(status.in(200,304)))
+        .check(status.in(200,304))
+            .check(jsonPath("$.event_token").optional.saveAs("event_token1"))
+          )
     .pause(5)
 
+        .exec(http("XUI-IAC01_0180_TCAfterNewEvent")
+          .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
+          .check(status.in(200,304))
+        )
+        .pause(10)
 
-
-    .exec(http("request_58")
+    .exec(http("XUI-IAC01_0190_AppealDeclarationr")
       .post("/data/case-types/Asylum/validate?pageId=submitAppealdeclaration")
       .headers(headers_9)
       .body(ElFileBody("RecordedSimulationiacexui_0058_request.json")).asJson
       .check(status.in(200,304)))
     .pause(5)
 
-    .exec(http("request_61")
+    .exec(http("XUI-IAC01_0200_InternalProfile")
   .get("/data/internal/profile")
   .headers(headers_8)
 .check(status.in(200,304)))
 .pause(5)
-    .exec(http("request_62")
+    .exec(http("XUI-IAC01_0210_CaseSubmitted")
     .post("/data/cases/${caseId}/events")
     .headers(headers_62)
       .body(ElFileBody("RecordedSimulationiacexui_0062_request.json"))
 .check(status.in(200,304)))
 .pause(5)
-
-      .exec(http("request_63")
-      .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAppeal%2Fconfirm")
-      .headers(headers_0)
-        .check(status.in(200,304)))
-        .pause(5)
-
 
   }
 
