@@ -313,7 +313,7 @@ object EXUIFPLAMC {
 
     feed(feedUserDataFPL)
 
-    .exec(http("XUIMC_030_Login_SubmitLoginpage")
+    .exec(http("XUIMC_030_Login_SubmitLoginPage")
       .post(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri="+baseURL+"/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
       .formParam("username", "${FPLUserName}")
       .formParam("password", "${FPLUserPassword}")
@@ -359,7 +359,7 @@ object EXUIFPLAMC {
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
   }
 
-  val fplacasecreation= group("EXUI_ManageCases_FPLA_Create")
+  val fplacasecreation = group("EXUI_ManageCases_FPLA_Create")
   {
     exec(http("XUIMC_040_005_SolAppCreatedPage1")
       .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
@@ -399,13 +399,6 @@ object EXUIFPLAMC {
       .check(jsonPath("$.id").optional.saveAs("caseId")))
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
-
-    // .exec(http("XUIMC_080_ViewCase")
-    //   .get("/data/internal/cases/${caseId}")
-    //   .headers(headers_74)
-    //   .check(status.in(200,304)))
-
-    // .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
     //Orders Needed
     .exec(http("XUIMC_050_005_OrdersNeededPage1")
