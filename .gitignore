@@ -6,4 +6,4 @@ target/**
 *.project
 .gradle/
 *.log
-build/
+build/**
