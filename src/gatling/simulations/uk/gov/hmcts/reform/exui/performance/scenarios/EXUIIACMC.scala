@@ -2,10 +2,13 @@ package uk.gov.hmcts.reform.exui.performance.scenarios
 
 import java.text.SimpleDateFormat
 import java.util.Date
+
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import scala.concurrent.duration._
 import uk.gov.hmcts.reform.exui.performance.scenarios.utils.Environment
+import uk.gov.service.notify.NotificationClient
+
+import scala.concurrent.duration._
 import scala.util.Random
 
 object EXUIIACMC {
@@ -19,6 +22,21 @@ object EXUIIACMC {
   val MaxThinkTime = Environment.maxThinkTime
 
   //headers
+
+  val headers_tc = Map(
+    "Content-Type" -> "application/json",
+    "Origin" -> "https://manage-case.perftest.platform.hmcts.net",
+    "Sec-Fetch-Dest" -> "empty",
+    "Sec-Fetch-Mode" -> "cors",
+    "Sec-Fetch-Site" -> "same-origin")
+
+  val headers_tc_get = Map(
+    "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+    "Sec-Fetch-Dest" -> "document",
+    "Sec-Fetch-Mode" -> "navigate",
+    "Sec-Fetch-Site" -> "same-origin",
+    "Sec-Fetch-User" -> "?1",
+    "Upgrade-Insecure-Requests" -> "1")
 
   val headers_0 = Map(
     "accept" -> "application/json, text/plain, */*",
@@ -295,9 +313,53 @@ object EXUIIACMC {
       .formParam("save", "Sign in")
       .formParam("selfRegistrationEnabled", "false")
       .formParam("_csrf", "${csrfToken}")
-      .headers(headers_login_submit))
-  }
+      .headers(headers_login_submit)
+     // .check(headerRegex("Set-Cookie", "__userid__=(.*)”).saveAs("userid")))
+    // .check(headerRegex("StoredCookie", "__userid__=(.*)").saveAs("authCookie"))
+          )
+
+   }
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
+    .exec(
+    session =>{
+      session.set("userid",getCookieValue(CookieKey("__userid__").withDomain("manage-case.perftest.platform.hmcts.net")))
+      session
+    }
+  )
+
+
+    .exec {
+      session =>
+        println("this is cookie ....." + session("userid").as[String])
+        //println("claim number ....." + session("claimNumber").as[String])
+        session
+    }
+
+
+
+
+
+
+  val termsandconditions_Get=
+    exec(http("tc_get")
+      .get("/accept-terms-and-conditions")
+      .headers(headers_tc_get)
+      .check(status.in(200, 304)))
+
+  val termsnconditions=
+    exec(http("request_tc")
+      .post("/api/userTermsAndConditions")
+      .headers(headers_tc)
+      //.body(ElFileBody("RecordedSimulationTC_0031_request.json")).asJson
+      .body(StringBody("{\"userId\":\"5cccf39b-4f84-468b-b71d-0c77edda5043\"}"))
+
+      .check(status.in(200,304,302))
+    )
+      .pause(MinThinkTime seconds, MaxThinkTime seconds)
+
+
+
+
 
   val manageCase_Logout = group ("EXUI_IAC_ManageCases_Logout") {
     exec(http("XUIMC_140_Logout")
@@ -331,7 +393,6 @@ object EXUIIACMC {
       .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
       .headers(headers_2)
       .check(status.in(200, 304)))
-
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
     .exec(http("XUIMC_040_010_StartAppealCreatedPage2")
@@ -464,6 +525,8 @@ object EXUIIACMC {
   
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
   }
+
+
 
   /*val filtercaselist= group("EXUI_filter")
   {

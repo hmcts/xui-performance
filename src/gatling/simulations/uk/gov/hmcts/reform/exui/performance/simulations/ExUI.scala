@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.exui.performance.simulations
 
 import io.gatling.core.Predef._
+import io.gatling.http.Predef.Proxy
 import uk.gov.hmcts.reform.exui.performance.scenarios._
 import uk.gov.hmcts.reform.exui.performance.scenarios.utils._
 
@@ -9,9 +10,8 @@ import scala.concurrent.duration._
 class ExUI extends Simulation {
 
 	val BaseURL = Environment.baseURL
-
 	val httpProtocol = Environment.HttpProtocol
-		//.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
+		.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
 	//.baseUrl("https://xui-webapp-aat.service.core-compute-aat.internal")
 		.baseUrl("https://ccd-case-management-web-perftest.service.core-compute-perftest.internal")
 	val IAChttpProtocol = Environment.HttpProtocol
@@ -35,7 +35,7 @@ class ExUI extends Simulation {
 			ExUI.manageOrganisationLogin,
 			ExUI.usersPage,
 			ExUI.inviteUserPage
-			.repeat(1) {
+			.repeat(5) {
 				exec(ExUI.sendInvitation)
 				},
 			ExUI.manageOrganisationLogout
@@ -69,9 +69,11 @@ class ExUI extends Simulation {
 	val EXUIMCaseCreationIACScn = scenario("EXUI Manage Case IAC").repeat(1)
 	{
 		exec(EXUIIACMC.manageCasesHomePage)
-		.exec(EXUIIACMC.manageCaseslogin)
-		.exec(EXUIIACMC.iaccasecreation)
-		.exec(EXUIIACMC.manageCase_Logout)
+			.exec(EXUIIACMC.manageCaseslogin)
+		//	.exec(EXUIIACMC.termsandconditions_Get)
+		/*	.exec(EXUIIACMC.termsnconditions)*/
+		/*.exec(EXUIIACMC.iaccasecreation)
+		.exec(EXUIIACMC.manageCase_Logout)*/
 
 	}
 
@@ -83,7 +85,11 @@ class ExUI extends Simulation {
 		.exec(EXUIFPLAMC.manageCasesLogout)
 	}
 
-  setUp(
+  /*setUp(
+		EXUIMCaseCreationFPLAScn.inject(rampUsers(1) during (1 seconds)))
+		.protocols(IAChttpProtocol)*/
+
+	setUp(
 		EXUIMCaseCreationIACScn.inject(rampUsers(1) during (1 seconds)))
 		.protocols(IAChttpProtocol)
 
