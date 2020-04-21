@@ -71,7 +71,7 @@ class ExUI extends Simulation {
 		exec(EXUIIACMC.manageCasesHomePage)
 			.exec(EXUIIACMC.manageCaseslogin)
 		//	.exec(EXUIIACMC.termsandconditions_Get)
-		/*	.exec(EXUIIACMC.termsnconditions)*/
+			.exec(EXUIIACMC.termsnconditions)
 		/*.exec(EXUIIACMC.iaccasecreation)
 		.exec(EXUIIACMC.manageCase_Logout)*/
 
@@ -90,7 +90,7 @@ class ExUI extends Simulation {
 		.protocols(IAChttpProtocol)*/
 
 	setUp(
-		EXUIMCaseCreationIACScn.inject(rampUsers(1) during (1 seconds)))
+		EXUIMCaseCreationIACScn.inject(rampUsers(1) during (10 seconds)))
 		.protocols(IAChttpProtocol)
 
 }
