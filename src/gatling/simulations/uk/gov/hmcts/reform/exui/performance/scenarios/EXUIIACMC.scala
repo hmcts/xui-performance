@@ -2,10 +2,14 @@ package uk.gov.hmcts.reform.exui.performance.scenarios
 
 import java.text.SimpleDateFormat
 import java.util.Date
+
 import io.gatling.core.Predef._
+import io.gatling.core.structure._
 import io.gatling.http.Predef._
-import scala.concurrent.duration._
 import uk.gov.hmcts.reform.exui.performance.scenarios.utils.Environment
+import uk.gov.service.notify.NotificationClient
+
+import scala.concurrent.duration._
 import scala.util.Random
 
 object EXUIIACMC {
@@ -19,6 +23,21 @@ object EXUIIACMC {
   val MaxThinkTime = Environment.maxThinkTime
 
   //headers
+
+  val headers_tc = Map(
+    "Content-Type" -> "application/json",
+    "Origin" -> "https://manage-case.perftest.platform.hmcts.net",
+    "Sec-Fetch-Dest" -> "empty",
+    "Sec-Fetch-Mode" -> "cors",
+    "Sec-Fetch-Site" -> "same-origin")
+
+  val headers_tc_get = Map(
+    "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+    "Sec-Fetch-Dest" -> "document",
+    "Sec-Fetch-Mode" -> "navigate",
+    "Sec-Fetch-Site" -> "same-origin",
+    "Sec-Fetch-User" -> "?1",
+    "Upgrade-Insecure-Requests" -> "1")
 
   val headers_0 = Map(
     "accept" -> "application/json, text/plain, */*",
@@ -274,7 +293,7 @@ object EXUIIACMC {
       .headers(headers_0)
       .check(status.is(200)))
 
-    .exec(http("XUIMC02_020_Login_LandingPage")
+    .exec(http("XUIMC02_020_LoginLandingPage")
       .get(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
       .headers(headers_login)
       .check(regex("Sign in"))
@@ -282,13 +301,14 @@ object EXUIIACMC {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
   }
+
   val feedUserDataIAC = csv("IACUserData.csv").circular
 
   val manageCaseslogin = group ("EXUI_ManageCases_Login") {
 
     feed(feedUserDataIAC)
 
-    .exec(http("XUIMC_030_Login_SubmitLoginPage")
+    .exec(http("XUIMC_030_005_SubmitLoginPage")
       .post(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
       .formParam("username", "${IACUserName}")
       .formParam("password", "${IACUserPassword}")
@@ -296,8 +316,51 @@ object EXUIIACMC {
       .formParam("selfRegistrationEnabled", "false")
       .formParam("_csrf", "${csrfToken}")
       .headers(headers_login_submit))
-  }
+
+    .exec(getCookieValue(CookieKey("__userid__").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("userId")))
+
+    // .exec {
+    //   session =>
+    //     println("this is the userid cookie: " + session("userId").as[String])
+    //     session
+    // }
+
+    .exec(http("XUIMC_030_006_GetT&CStatus")
+        .get("/api/userTermsAndConditions/${userId}"))
+
+    //if statement here not working, userId seems to be captured every time but journey is still working with/without the t&c working
+    .doIf(_.contains("userId")) {
+        exec(http("XUIMC_030_010_GetTermsAndConditionsStatus")
+          .get("/accept-terms-and-conditions")
+          .headers(headers_tc_get)
+          .check(status.in(200, 304)))
+
+        .exec(http("XUIMC_030_015_AcceptTermsAndConditions")
+          .post("/api/userTermsAndConditions")
+          .headers(headers_tc)
+          .body(StringBody("{\"userId\":\"${userId}\"}"))
+          .check(status.in(200,304,302)))
+      }
+    
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
+  }
+
+  //These steps no longer needed
+  // val termsandconditionsGet=
+  //   exec(http("XUIMC_030_010_GetTermsAndConditionsStatus")
+  //     .get("/accept-terms-and-conditions")
+  //     .headers(headers_tc_get)
+  //     .check(status.in(200, 304)))
+
+  // val termsandconditionsAccept=
+  //   exec(http("XUIMC_030_015_AcceptTermsAndConditions")
+  //     .post("/api/userTermsAndConditions")
+  //     .headers(headers_tc)
+  //     .body(StringBody("{\"userId\":\"${userId}\"}"))
+
+  //     .check(status.in(200,304,302))
+  //   )
+  //     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
   val manageCase_Logout = group ("EXUI_IAC_ManageCases_Logout") {
     exec(http("XUIMC_140_Logout")
@@ -331,7 +394,6 @@ object EXUIIACMC {
       .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
       .headers(headers_2)
       .check(status.in(200, 304)))
-
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
     .exec(http("XUIMC_040_010_StartAppealCreatedPage2")
@@ -423,7 +485,7 @@ object EXUIIACMC {
     .exec(http("XUIMC_140_StartAppealCaseSave")
       .post("/data/case-types/Asylum/cases?ignore-warning=false")
       .headers(headers_32)
-      .body(StringBody("{\n  \"data\": {\n    \"checklist\": {\n      \"checorklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"A1289136/007\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"appellantTitle\": \"Ms\",\n    \"appellantGivenNames\": \"Tessa\",\n    \"appellantFamilyName\": \"Tickles\",\n    \"appellantDateOfBirth\": \"1990-08-01\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"14 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    },\n    \"appealType\": \"revocationOfProtection\",\n    \"appealGroundsRevocation\": {\n      \"values\": [\n        \"revocationHumanitarianProtection\"\n      ]\n    },\n    \"hasNewMatters\": \"No\",\n    \"hasOtherAppeals\": \"No\",\n    \"legalRepCompany\": \"${lastName}\",\n    \"legalRepName\": \"${firstName}\",\n    \"legalRepReferenceNumber\": \"ddddddrefa\"\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"draft_id\": null\n}"))
+      .body(StringBody("{\n  \"data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"A1289136/007\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"appellantTitle\": \"Ms\",\n    \"appellantGivenNames\": \"Tessa\",\n    \"appellantFamilyName\": \"Tickles\",\n    \"appellantDateOfBirth\": \"1990-08-01\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"14 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    },\n    \"appealType\": \"revocationOfProtection\",\n    \"appealGroundsRevocation\": {\n      \"values\": [\n        \"revocationHumanitarianProtection\"\n      ]\n    },\n    \"hasNewMatters\": \"No\",\n    \"hasOtherAppeals\": \"No\",\n    \"legalRepCompany\": \"${lastName}\",\n    \"legalRepName\": \"${firstName}\",\n    \"legalRepReferenceNumber\": \"ddddddrefa\"\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"draft_id\": null\n}"))
       .check(status.in(200, 304))
       .check(jsonPath("$.id").optional.saveAs("caseId")))
 
@@ -465,48 +527,41 @@ object EXUIIACMC {
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
   }
 
+
+
   /*val filtercaselist= group("EXUI_filter")
   {
     /*exec(http("EXUI_AO_005_Caselist")
       .get("/data/caseworkers/:uid/jurisdictions/DIVORCE/case-types/DIVORCE/cases/pagination_metadata?state=AwaitingPayment")
       .headers(headers_0)
       .check(status.is(200)))*/
-
     .exec(http("request_69")
       .get("/data/caseworkers/:uid/jurisdictions/IA/case-types/Asylum/cases/pagination_metadata")
       .headers(headers_28)
       .check(status.is(200)))
-
     .exec(http("request_70")
       .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
       .headers(headers_28)
       .check(status.in(200,304)))
-
     .exec(http("request_72")
       .get("/data/internal/case-types/Asylum/search-inputs")
       .headers(headers_72)
       .check(status.is(200)))
-
     .exec(http("request_70")
       .get("/data/internal/cases/1580904712599223")
       .headers(headers_44))
-
     .exec(http("request_74")
       .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F1580904712599223")
       .headers(headers_0)
-
     .exec(http("request_92")
       .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F1580904712599223%23appeal")
       .headers(headers_0))
-
     .exec(http("request_94")
       .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F1580904712599223%23caseDetails")
       .headers(headers_0))
-
     .exec(http("request_96")
       .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F1580904712599223%23documents")
       .headers(headers_0))
-
     .exec(http("request_98")
       .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F1580904712599223%23directions")
       .headers(headers_0)

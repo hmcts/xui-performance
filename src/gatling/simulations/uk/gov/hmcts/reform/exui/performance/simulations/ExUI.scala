@@ -70,6 +70,8 @@ class ExUI extends Simulation {
 	{
 		exec(EXUIIACMC.manageCasesHomePage)
 		.exec(EXUIIACMC.manageCaseslogin)
+		//.exec(EXUIIACMC.termsandconditionsGet)
+		//.exec(EXUIIACMC.termsandconditionsAccept)
 		.exec(EXUIIACMC.iaccasecreation)
 		.exec(EXUIIACMC.manageCase_Logout)
 
