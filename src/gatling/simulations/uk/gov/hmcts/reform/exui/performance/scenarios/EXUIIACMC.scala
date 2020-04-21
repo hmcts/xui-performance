@@ -285,7 +285,6 @@ object EXUIIACMC {
     "experimental" -> "true")
 
   val manageCasesHomePage =	group ("EXUI_ManageCases_Homepage") {
-
     feed(loginFeeder)
     .exec(http("XUIMC_010_Homepage")
       .get("/")
@@ -314,30 +313,25 @@ object EXUIIACMC {
       .formParam("selfRegistrationEnabled", "false")
       .formParam("_csrf", "${csrfToken}")
       .headers(headers_login_submit)
+      .check(currentLocation.saveAs("currentPage"))
+      .check(regex("Terms and conditions").count.saveAs("contentstatus"))
      // .check(headerRegex("Set-Cookie", "__userid__=(.*)”).saveAs("userid")))
     // .check(headerRegex("StoredCookie", "__userid__=(.*)").saveAs("authCookie"))
           )
 
    }
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
-    .exec(
-    session =>{
-      session.set("userid",getCookieValue(CookieKey("__userid__").withDomain("manage-case.perftest.platform.hmcts.net")))
-      session
-    }
-  )
-
 
     .exec {
-      session =>
-        println("this is cookie ....." + session("userid").as[String])
-        //println("claim number ....." + session("claimNumber").as[String])
-        session
-    }
+       session =>
+         println("current page is ....." + session("currentPage").as[String])
+         println("status ....." + session("contentstatus").as[String])
 
+         session
+     }
 
-
-
+    .exec(getCookieValue(
+      CookieKey("__userid__").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("myUserId")))
 
 
   val termsandconditions_Get=
@@ -347,14 +341,16 @@ object EXUIIACMC {
       .check(status.in(200, 304)))
 
   val termsnconditions=
-    exec(http("request_tc")
-      .post("/api/userTermsAndConditions")
-      .headers(headers_tc)
-      //.body(ElFileBody("RecordedSimulationTC_0031_request.json")).asJson
-      .body(StringBody("{\"userId\":\"5cccf39b-4f84-468b-b71d-0c77edda5043\"}"))
+    //doIf(session => session.contains("accessToken")) {
+      exec(http("request_tc")
+        .post("/api/userTermsAndConditions")
+        .headers(headers_tc)
+        //.body(ElFileBody("RecordedSimulationTC_0031_request.json")).asJson
+        .body(StringBody("{\"userId\":\"${myUserId}\"}"))
 
-      .check(status.in(200,304,302))
-    )
+        .check(status.in(200, 304, 302))
+      )
+   // }
       .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
 
