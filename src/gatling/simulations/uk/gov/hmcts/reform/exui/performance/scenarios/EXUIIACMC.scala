@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 import io.gatling.core.Predef._
+import io.gatling.core.structure._
 import io.gatling.http.Predef._
 import uk.gov.hmcts.reform.exui.performance.scenarios.utils.Environment
 import uk.gov.service.notify.NotificationClient
@@ -291,7 +292,7 @@ object EXUIIACMC {
       .headers(headers_0)
       .check(status.is(200)))
 
-    .exec(http("XUIMC02_020_Login_LandingPage")
+    .exec(http("XUIMC02_020_LoginLandingPage")
       .get(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
       .headers(headers_login)
       .check(regex("Sign in"))
@@ -299,28 +300,66 @@ object EXUIIACMC {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
   }
+
   val feedUserDataIAC = csv("IACUserData.csv").circular
 
   val manageCaseslogin = group ("EXUI_ManageCases_Login") {
 
     feed(feedUserDataIAC)
 
-    .exec(http("XUIMC_030_Login_SubmitLoginPage")
+    .exec(http("XUIMC_030_005_SubmitLoginPage")
       .post(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
       .formParam("username", "${IACUserName}")
       .formParam("password", "${IACUserPassword}")
       .formParam("save", "Sign in")
       .formParam("selfRegistrationEnabled", "false")
       .formParam("_csrf", "${csrfToken}")
-      .headers(headers_login_submit)
-      .check(currentLocation.saveAs("currentPage"))
-      .check(regex("Terms and conditions").count.saveAs("contentstatus"))
-     // .check(headerRegex("Set-Cookie", "__userid__=(.*)”).saveAs("userid")))
-    // .check(headerRegex("StoredCookie", "__userid__=(.*)").saveAs("authCookie"))
-          )
+      .headers(headers_login_submit))
 
-   }
+    .exec(getCookieValue(CookieKey("__userid__").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("userId")))
+
+    // .exec {
+    //   session =>
+    //     println("this is the userid cookie: " + session("userId").as[String])
+    //     session
+    // }
+
+    .exec(http("XUIMC_030_006_GetT&CStatus")
+        .get("/api/userTermsAndConditions/${userId}"))
+
+    //if statement here not working, userId seems to be captured every time but journey is still working with/without the t&c working
+    .doIf(_.contains("userId")) {
+        exec(http("XUIMC_030_010_GetTermsAndConditionsStatus")
+          .get("/accept-terms-and-conditions")
+          .headers(headers_tc_get)
+          .check(status.in(200, 304)))
+
+        .exec(http("XUIMC_030_015_AcceptTermsAndConditions")
+          .post("/api/userTermsAndConditions")
+          .headers(headers_tc)
+          .body(StringBody("{\"userId\":\"${userId}\"}"))
+          .check(status.in(200,304,302)))
+      }
+
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
+  }
+
+  //These steps no longer needed
+  // val termsandconditionsGet=
+  //   exec(http("XUIMC_030_010_GetTermsAndConditionsStatus")
+  //     .get("/accept-terms-and-conditions")
+  //     .headers(headers_tc_get)
+  //     .check(status.in(200, 304)))
+
+  // val termsandconditionsAccept=
+  //   exec(http("XUIMC_030_015_AcceptTermsAndConditions")
+  //     .post("/api/userTermsAndConditions")
+  //     .headers(headers_tc)
+  //     .body(StringBody("{\"userId\":\"${userId}\"}"))
+
+  //     .check(status.in(200,304,302))
+  //   )
+  //     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
     .exec {
        session =>
@@ -530,42 +569,33 @@ object EXUIIACMC {
       .get("/data/caseworkers/:uid/jurisdictions/DIVORCE/case-types/DIVORCE/cases/pagination_metadata?state=AwaitingPayment")
       .headers(headers_0)
       .check(status.is(200)))*/
-
     .exec(http("request_69")
       .get("/data/caseworkers/:uid/jurisdictions/IA/case-types/Asylum/cases/pagination_metadata")
       .headers(headers_28)
       .check(status.is(200)))
-
     .exec(http("request_70")
       .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
       .headers(headers_28)
       .check(status.in(200,304)))
-
     .exec(http("request_72")
       .get("/data/internal/case-types/Asylum/search-inputs")
       .headers(headers_72)
       .check(status.is(200)))
-
     .exec(http("request_70")
       .get("/data/internal/cases/1580904712599223")
       .headers(headers_44))
-
     .exec(http("request_74")
       .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F1580904712599223")
       .headers(headers_0)
-
     .exec(http("request_92")
       .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F1580904712599223%23appeal")
       .headers(headers_0))
-
     .exec(http("request_94")
       .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F1580904712599223%23caseDetails")
       .headers(headers_0))
-
     .exec(http("request_96")
       .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F1580904712599223%23documents")
       .headers(headers_0))
-
     .exec(http("request_98")
       .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F1580904712599223%23directions")
       .headers(headers_0)

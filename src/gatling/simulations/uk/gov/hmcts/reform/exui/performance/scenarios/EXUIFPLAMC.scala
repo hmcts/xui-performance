@@ -286,7 +286,6 @@ object EXUIFPLAMC {
     "Upgrade-Insecure-Requests" -> "1")
 
   private val rng: Random = new Random()
-
   private def firstName(): String = rng.alphanumeric.take(10).mkString
   private def lastName(): String = rng.alphanumeric.take(10).mkString
 
