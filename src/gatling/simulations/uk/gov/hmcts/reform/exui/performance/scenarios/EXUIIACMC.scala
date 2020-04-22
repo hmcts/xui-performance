@@ -286,7 +286,6 @@ object EXUIIACMC {
     "experimental" -> "true")
 
   val manageCasesHomePage =	group ("EXUI_ManageCases_Homepage") {
-
     feed(loginFeeder)
     .exec(http("XUIMC_010_Homepage")
       .get("/")
@@ -341,7 +340,7 @@ object EXUIIACMC {
           .body(StringBody("{\"userId\":\"${userId}\"}"))
           .check(status.in(200,304,302)))
       }
-    
+
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
   }
 
@@ -361,6 +360,41 @@ object EXUIIACMC {
   //     .check(status.in(200,304,302))
   //   )
   //     .pause(MinThinkTime seconds, MaxThinkTime seconds)
+
+    .exec {
+       session =>
+         println("current page is ....." + session("currentPage").as[String])
+         println("status ....." + session("contentstatus").as[String])
+
+         session
+     }
+
+    .exec(getCookieValue(
+      CookieKey("__userid__").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("myUserId")))
+
+
+  val termsandconditions_Get=
+    exec(http("tc_get")
+      .get("/accept-terms-and-conditions")
+      .headers(headers_tc_get)
+      .check(status.in(200, 304)))
+
+  val termsnconditions=
+    //doIf(session => session.contains("accessToken")) {
+      exec(http("request_tc")
+        .post("/api/userTermsAndConditions")
+        .headers(headers_tc)
+        //.body(ElFileBody("RecordedSimulationTC_0031_request.json")).asJson
+        .body(StringBody("{\"userId\":\"${myUserId}\"}"))
+
+        .check(status.in(200, 304, 302))
+      )
+   // }
+      .pause(MinThinkTime seconds, MaxThinkTime seconds)
+
+
+
+
 
   val manageCase_Logout = group ("EXUI_IAC_ManageCases_Logout") {
     exec(http("XUIMC_140_Logout")
