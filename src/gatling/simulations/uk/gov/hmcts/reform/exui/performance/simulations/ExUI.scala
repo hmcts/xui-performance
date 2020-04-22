@@ -69,12 +69,11 @@ class ExUI extends Simulation {
 	val EXUIMCaseCreationIACScn = scenario("EXUI Manage Case IAC").repeat(1)
 	{
 		exec(EXUIIACMC.manageCasesHomePage)
-			.exec(EXUIIACMC.manageCaseslogin)
-		//	.exec(EXUIIACMC.termsandconditions_Get)
-			.exec(EXUIIACMC.termsnconditions)
-		/*.exec(EXUIIACMC.iaccasecreation)
-		.exec(EXUIIACMC.manageCase_Logout)*/
-
+		.exec(EXUIIACMC.manageCaseslogin)
+		//.exec(EXUIIACMC.termsandconditionsGet)
+		//.exec(EXUIIACMC.termsandconditionsAccept)
+		.exec(EXUIIACMC.iaccasecreation)
+		.exec(EXUIIACMC.manageCase_Logout)
 	}
 
 	val EXUIMCaseCreationFPLAScn = scenario("EXUI Manage Case FPLA").repeat(1)
