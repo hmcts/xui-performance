@@ -6,36 +6,61 @@ object Feeders {
 
   val random = new scala.util.Random
 
+  val repeat  = List(1, 2, 3,4,5)
+
+  def sequenceValue() =
+    Stream.continually(repeat.toStream).flatten.take(5).toList
+
   def randomString(alphabet: String)(n: Int): String =
     Stream.continually(random.nextInt(alphabet.size)).map(alphabet).take(n).mkString
 
+
   def randomAlphanumericString(n: Int) =
     randomString("abcdefghijklmnopqrstuvwxyz0123456789")(n)
+
+
 
   var generatedEmail = ""
   var generatedPassword = ""
   var generatedEmailForCase = ""
   var orgName = ""
   var appReferenceName = ""
+  var sequence1=0
+  var seq = 0
+
+  def nextSeq() : Integer = {
+
+    seq = seq + 1
+        seq
+    }
+
+
+
+  /*def nextseq1()=
+    nextSeq()*/
+  def generatenextNumber() :Integer = {
+    sequence1 = (sequenceValue().iterator.next())
+    sequence1
+  }
+
+  def generateOrganisationName() :String = {
+    orgName = ("iacorg-" + randomAlphanumericString(5))
+    orgName
+  }
 
   def generateEmailAddress() :String = {
-    generatedEmail = ("exui-org" + randomAlphanumericString(6) + "@mailtest.gov.uk")
+    generatedEmail = (generateOrganisationName() + "_superuser@mailtest.gov.uk")
     //print("generated enail"+generatedEmail)
     generatedEmail
   }
 
   def generateUserEmailAddress() :String = {
-    generatedEmail = ("exui-user" + randomAlphanumericString(6) + "@mailtest.gov.uk")
+    generatedEmail = (generateOrganisationName() + "_user"+"@mailtest.gov.uk")
     //print("generated enail"+generatedEmail)
     generatedEmail
   }
 
 
-
-  def generateOrganisationName() :String = {
-    orgName = ("orgname-perftest" + randomAlphanumericString(4))
-    orgName
-  }
 
   def generateEmailForCase() :String = {
     generatedEmailForCase = ("exui_case" + randomAlphanumericString(6) + "@mailtest.gov.uk")
@@ -73,10 +98,15 @@ object Feeders {
 
 
   val createDynamicDataFeeder = Iterator.continually(Map("generatedEmail" -> ({
-    generateEmailAddress()
-  }),"orgName" -> ({
-    generateOrganisationName()
-  })));
+    generateOrganisationName()+"_superuser@mailinator.com"
+  }),
+    "orgName" -> ({
+    orgName
+  }),
+    "generatedUserEmail" -> ({
+      "_user"+nextSeq()+"@mailinator.com"
+    })
+  ));
   /*val createDynamicDataFeeder = Iterator.continually(Map("generatedEmail" -> (generatedEmail), "generatedPassword" -> (generatedPassword), "generateOrganisationName" -> (orgName)));
 */
 
@@ -87,8 +117,10 @@ object Feeders {
   })));
 
   val createDynamicUserDataFeeder = Iterator.continually(Map("generatedUserEmail" -> ({
-    generateUserEmailAddress()
+    "_user"+nextSeq()+"@mailinator.com"
   })));
+
+
 
 
 

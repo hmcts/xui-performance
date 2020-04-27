@@ -14,7 +14,15 @@ class ExUI extends Simulation {
 		.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
 	//.baseUrl("https://xui-webapp-aat.service.core-compute-aat.internal")
 		.baseUrl("https://ccd-case-management-web-perftest.service.core-compute-perftest.internal")
-	val IAChttpProtocol = Environment.HttpProtocol
+
+  val XUIHttpProtocol = Environment.HttpProtocol
+    .proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
+    //.baseUrl("https://xui-webapp-aat.service.core-compute-aat.internal")
+    //.baseUrl("https://ccd-case-management-web-perftest.service.core-compute-perftest.internal")
+    .headers(Environment.commonHeader)
+
+
+  val IAChttpProtocol = Environment.HttpProtocol
 		//.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
 		.baseUrl(BaseURL)
 		//.baseUrl("https://xui-webapp-perftest.service.core-compute-perftest.internal")
@@ -72,6 +80,7 @@ class ExUI extends Simulation {
 			.exec(EXUIIACMC.manageCaseslogin)
 		//	.exec(EXUIIACMC.termsandconditions_Get)
 			.exec(EXUIIACMC.termsnconditions)
+      .exec(EXUIIACMC.manageCase_Logout)
 		/*.exec(EXUIIACMC.iaccasecreation)
 		.exec(EXUIIACMC.manageCase_Logout)*/
 
@@ -90,7 +99,11 @@ class ExUI extends Simulation {
 		.protocols(IAChttpProtocol)*/
 
 	setUp(
-		EXUIMCaseCreationIACScn.inject(rampUsers(1) during (10 seconds)))
+		EXUIMCaseCreationIACScn.inject(rampUsers(2) during (10 seconds)))
 		.protocols(IAChttpProtocol)
+
+  /*setUp(
+    EXUIScn.inject(rampUsers(2) during (1 seconds)))
+    .protocols(XUIHttpProtocol)*/
 
 }

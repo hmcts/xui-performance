@@ -24,6 +24,14 @@ object Environment {
  // val maxWaitForNextIteration = 600
   val HttpProtocol = http
 
+ val commonHeader = Map(
+  "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+  "Accept-Encoding" -> "gzip, deflate, br",
+  "Accept-Language" -> "en-US,en;q=0.9",
+  "Sec-Fetch-Mode" -> "navigate",
+  "Sec-Fetch-Site" -> "cross-site",
+  "Upgrade-Insecure-Requests" -> "1")
+
   
 
 }
