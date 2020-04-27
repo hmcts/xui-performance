@@ -308,13 +308,13 @@ object EXUIIACMC {
     .exec(http("XUIMC_030_Login_SubmitLoginPage")
       .post(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
       .formParam("username", "${IACUserName}")
-      .formParam("password", "${IACUserPassword}")
+      .formParam("password", "Pass19word")
       .formParam("save", "Sign in")
       .formParam("selfRegistrationEnabled", "false")
       .formParam("_csrf", "${csrfToken}")
       .headers(headers_login_submit)
-      .check(currentLocation.saveAs("currentPage"))
-      .check(regex("Terms and conditions").count.saveAs("contentstatus"))
+      //.check(currentLocation.saveAs("currentPage"))
+     // .check(regex("Terms and conditions").count.saveAs("contentstatus"))
      // .check(headerRegex("Set-Cookie", "__userid__=(.*)”).saveAs("userid")))
     // .check(headerRegex("StoredCookie", "__userid__=(.*)").saveAs("authCookie"))
           )
@@ -322,14 +322,13 @@ object EXUIIACMC {
    }
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .exec {
+    /*.exec {
        session =>
          println("current page is ....." + session("currentPage").as[String])
          println("status ....." + session("contentstatus").as[String])
 
          session
-     }
-
+     }*/
     .exec(getCookieValue(
       CookieKey("__userid__").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("myUserId")))
 
