@@ -284,28 +284,28 @@ object EXUIIACMC {
     "Sec-Fetch-Site" -> "same-origin",
     "experimental" -> "true")
 
-  val manageCasesHomePage =	group ("EXUI_ManageCases_Homepage") {
+  val manageCasesHomePage =
     feed(loginFeeder)
-    .exec(http("XUIMC_010_Homepage")
+    .exec(http("XUI-IAC01_010_Homepage")
       .get("/")
       .headers(headers_0)
       .check(status.is(200)))
 
-    .exec(http("XUIMC02_020_Login_LandingPage")
+    .exec(http("XUI-IAC01_020_LoginLandingPage")
       .get(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
       .headers(headers_login)
       .check(regex("Sign in"))
       .check(css("input[name='_csrf']", "value").saveAs("csrfToken")))
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
-  }
+
   val feedUserDataIAC = csv("IACUserData.csv").circular
 
-  val manageCaseslogin = group ("EXUI_ManageCases_Login") {
+  val manageCaseslogin =
 
     feed(feedUserDataIAC)
 
-    .exec(http("XUIMC_030_Login_SubmitLoginPage")
+    .exec(http("XUI-IAC01_030_SubmitLoginPage")
       .post(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
       .formParam("username", "${IACUserName}")
       .formParam("password", "Pass19word")
@@ -318,9 +318,7 @@ object EXUIIACMC {
      // .check(headerRegex("Set-Cookie", "__userid__=(.*)”).saveAs("userid")))
     // .check(headerRegex("StoredCookie", "__userid__=(.*)").saveAs("authCookie"))
           )
-
-   }
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+          .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
     /*.exec {
        session =>
@@ -341,7 +339,7 @@ object EXUIIACMC {
 
   val termsnconditions=
     //doIf(session => session.contains("accessToken")) {
-      exec(http("request_tc")
+      exec(http("XUI-IAC01_040_T&C")
         .post("/api/userTermsAndConditions")
         .headers(headers_tc)
         //.body(ElFileBody("RecordedSimulationTC_0031_request.json")).asJson
@@ -356,13 +354,13 @@ object EXUIIACMC {
 
 
 
-  val manageCase_Logout = group ("EXUI_IAC_ManageCases_Logout") {
-    exec(http("XUIMC_140_Logout")
+  val manageCase_Logout =
+    exec(http("XUI-IAC01_050__Logout")
       .get("/api/logout")
       .headers(headers_34)
       //.check(regex("Sign in")))
       .check(status.in(200,304,302)))
-  }
+
 
   private val rng: Random = new Random()
   private def firstName(): String = rng.alphanumeric.take(10).mkString
