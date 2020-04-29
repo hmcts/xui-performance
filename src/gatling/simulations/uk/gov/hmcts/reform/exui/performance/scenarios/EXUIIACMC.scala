@@ -313,6 +313,7 @@ object EXUIIACMC {
       .formParam("selfRegistrationEnabled", "false")
       .formParam("_csrf", "${csrfToken}")
       .headers(headers_login_submit)
+      .check(status.in(200, 304, 302))
       //.check(currentLocation.saveAs("currentPage"))
      // .check(regex("Terms and conditions").count.saveAs("contentstatus"))
      // .check(headerRegex("Set-Cookie", "__userid__=(.*)”).saveAs("userid")))
@@ -320,16 +321,15 @@ object EXUIIACMC {
           )
           .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    /*.exec {
-       session =>
-         println("current page is ....." + session("currentPage").as[String])
-         println("status ....." + session("contentstatus").as[String])
 
-         session
-     }*/
     .exec(getCookieValue(
       CookieKey("__userid__").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("myUserId")))
+  .exec {
+         session =>
+           println("current page is ....." + session("myUserId").as[String])
 
+           session
+       }
 
   val termsandconditions_Get=
     exec(http("tc_get")
