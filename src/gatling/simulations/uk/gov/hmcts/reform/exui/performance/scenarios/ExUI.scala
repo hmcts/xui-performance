@@ -74,7 +74,7 @@ object ExUI {
       .put(url_approve+"/api/organisations/${orgRefCode}")
       .body(ElFileBody("AO.json")).asJson
       .check(status.is(200)))
-      .pause(30)
+      .pause(40)
         .exec {
 
         session =>
@@ -83,14 +83,14 @@ object ExUI {
           val str = findEmail(client,session("generatedEmail").as[String])
            session.set("activationLink", (pattern findFirstMatchIn str.get).mkString.trim.replace(")", ""))
       }
-      .pause(30)
+      .pause(40)
       .exec(http("SelfReg01_TX03_Password")
         .get("https://idam-web-public.perftest.platform.hmcts.net/users/register?&${activationLink}")
         .check(status.is(200))
         .check(css("input[name='token']", "value").saveAs("token"))
         .check(css("input[name='code']", "value").saveAs("code"))
         .check(css("input[name='_csrf']", "value").saveAs("_csrf")))
-      .pause(30)
+      .pause(40)
       .exec(http("SelfReg01_TX04_Activate").post("https://idam-web-public.perftest.platform.hmcts.net/users/activate")
         .formParam("_csrf", "${_csrf}")
         .formParam("code", "${code}")
@@ -98,6 +98,7 @@ object ExUI {
         .formParam("password1", "Pass19word")
         .formParam("password2", "Pass19word")
         .check(status.is(200)))
+      .pause(40)
 
   val approveOrganisationLogout =
     exec(http("EXUI_AO_005_Logout")
@@ -166,29 +167,31 @@ object ExUI {
     .pause(Environment.minThinkTime)
 
   val sendInvitation =
-        feed(feeder).
+        //feed(feeder).
+  feed(Feeders.createDynamicUserDataFeeder).
         exec(http("EXUI_MO_005_SendInvitation")
       .post(url_mo + "/api/inviteUser")
       .body(ElFileBody("MO.json")).asJson
       .check(status.is(200))
       ).exitHereIfFailed
-        .pause(30)
+        .pause(40)
       .exec {
 
         session =>
           val client = new NotificationClient("sidam_perftest-b7ab8862-25b4-41c9-8311-cb78815f7d2d-ebb113ff-da17-4646-a39e-f93783a993f4")
           val pattern = new Regex("token.+")
-          val str = findEmail(client,session("orgName").as[String]+"_user"+session("userid").as[String]+"@mailinator.com")
+         // val str = findEmail(client,session("orgName").as[String]+"_user"+session("userid").as[String]+"@mailinator.com")
+         val str = findEmail(client,session("generatedUserEmail").as[String])
           session.set("activationLink", (pattern findFirstMatchIn str.get).mkString.trim.replace(")", ""))
       }
-      .pause(30)
+      .pause(40)
       .exec(http("InviteUser_TX03_Password")
         .get("https://idam-web-public.perftest.platform.hmcts.net/users/register?&${activationLink}")
         .check(status.is(200))
         .check(css("input[name='token']", "value").saveAs("token"))
         .check(css("input[name='code']", "value").saveAs("code"))
         .check(css("input[name='_csrf']", "value").saveAs("_csrf")))
-      .pause(30)
+      .pause(40)
       .exec(http("SelfReg01_TX04_Activate").post("https://idam-web-public.perftest.platform.hmcts.net/users/activate")
         .formParam("_csrf", "${_csrf}")
         .formParam("code", "${code}")
@@ -200,9 +203,9 @@ object ExUI {
            .doIf(session=>session("statusvalue").as[String].contains("200")) {
             exec {
             session =>
-              val fw = new BufferedWriter(new FileWriter("OrgId1.csv", true))
+              val fw = new BufferedWriter(new FileWriter("OrgId2.csv", true))
               try {
-                fw.write(session("orgName").as[String] + ","+session("orgRefCode").as[String] + "," + session("generatedEmail").as[String] + "," + session("orgName").as[String]+"_user"+session("userid").as[String]+"@mailinator.com" + "\r\n")
+                fw.write(session("orgName").as[String] + ","+session("orgRefCode").as[String] + "," + session("generatedEmail").as[String] +","+ session("generatedUserEmail").as[String] + "\r\n")
               }
               finally fw.close()
               session

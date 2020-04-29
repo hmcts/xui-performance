@@ -26,7 +26,7 @@ object Feeders {
   var orgName = ""
   var appReferenceName = ""
   var sequence1=0
-  var seq = 0
+  var seq = 363
 
   def nextSeq() : Integer = {
 
@@ -44,7 +44,7 @@ object Feeders {
   }
 
   def generateOrganisationName() :String = {
-    orgName = ("iacorg-" + randomAlphanumericString(5))
+    orgName = ("fplorg-" + randomAlphanumericString(5))
     orgName
   }
 
@@ -117,7 +117,7 @@ object Feeders {
   })));
 
   val createDynamicUserDataFeeder = Iterator.continually(Map("generatedUserEmail" -> ({
-    "_user"+nextSeq()+"@mailinator.com"
+    "fpluser"+nextSeq()+"@mailinator.com"
   })));
 
 

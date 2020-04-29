@@ -43,7 +43,7 @@ class ExUI extends Simulation {
 			ExUI.manageOrganisationLogin,
 			ExUI.usersPage,
 			ExUI.inviteUserPage
-			.repeat(5) {
+			.repeat(11) {
 				exec(ExUI.sendInvitation)
 				},
 			ExUI.manageOrganisationLogout
@@ -101,9 +101,8 @@ class ExUI extends Simulation {
 	setUp(
 		EXUIMCaseCreationIACScn.inject(rampUsers(342) during (600 seconds)))
 		.protocols(IAChttpProtocol)
-
   /*setUp(
-    EXUIScn.inject(rampUsers(2) during (1 seconds)))
-    .protocols(XUIHttpProtocol)*/
-
+    EXUIScn.inject(rampUsers(10) during (100 seconds)))
+    .protocols(XUIHttpProtocol)
+*/
 }
