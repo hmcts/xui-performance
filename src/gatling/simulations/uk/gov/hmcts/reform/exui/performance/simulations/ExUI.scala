@@ -98,8 +98,12 @@ class ExUI extends Simulation {
 		EXUIMCaseCreationFPLAScn.inject(rampUsers(1) during (1 seconds)))
 		.protocols(IAChttpProtocol)*/
 
-	setUp(
+	/*setUp(
 		EXUIMCaseCreationIACScn.inject(rampUsers(342) during (600 seconds)))
+		.protocols(IAChttpProtocol)*/
+
+	setUp(
+		EXUIMCaseCreationIACScn.inject(rampUsers(1) during (1 seconds)))
 		.protocols(IAChttpProtocol)
   /*setUp(
     EXUIScn.inject(rampUsers(10) during (100 seconds)))
