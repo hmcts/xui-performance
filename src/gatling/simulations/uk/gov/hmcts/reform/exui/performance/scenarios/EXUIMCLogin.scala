@@ -131,7 +131,7 @@ object EXUIMCLogin {
       .check(regex("Sign in"))
       .check(css("input[name='_csrf']", "value").saveAs("csrfToken"))
       .check(status.is(200)))
-      .pause( seconds, MaxThinkTime )
+      .pause( MinThinkTime, MaxThinkTime )
   }
 
   val manageCaseslogin =group("XUI01_020_SignIn") {
