@@ -157,7 +157,7 @@ object EXUIMCLogin {
            session
        }*/
 
-      .repeat(2,"n") {
+      .repeat(1,"n") {
       exec(http("XUI01_020_010_SignInTCEnabled${n}")
         .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
         .headers(headers_38)
@@ -190,7 +190,7 @@ object EXUIMCLogin {
     .headers(headers_hometc)
       .check(status.in(200,304,302))
       )
-.repeat(4,"count") {
+.repeat(6,"count") {
   exec(http("XUI01_030_015_AcceptT&CAccessJurisdictions${count}")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
       .headers(headers_access_read)
