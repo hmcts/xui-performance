@@ -16,7 +16,7 @@ object EXUIIACMC {
   val IdamUrl = Environment.idamURL
   val baseURL=Environment.baseURL
   //val loginFeeder = csv("OrgId.csv").circular
-  val feedUserDataIAC = csv("IACDataBackground.csv").circular
+//  val feedUserDataIAC = csv("IACDataBackground.csv").circular
 
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
