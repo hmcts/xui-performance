@@ -18,17 +18,17 @@ object ExUI {
   val url=Environment.manageOrdURL
   val approveUser=Environment.adminUserAO
   val approveUserPassword=Environment.adminPasswordAO
-  val url_approve="https://xui-ao-webapp-perftest.service.core-compute-perftest.internal"
-  val url_mo = "https://xui-mo-webapp-perftest.service.core-compute-perftest.internal"
+  val url_approve="https://administer-orgs.perftest.platform.hmcts.net"
+  val url_mo = "https://manage-org.perftest.platform.hmcts.net"
   val feeder = csv("userid-increment.csv").circular
 
   val createOrg=
     exec(http("EXUI_RO_Homepage")
-      .get(url+"/register-org/register")
+      .get("/register-org/register")
       .check(status.is(200)))
       .pause(Environment.minThinkTime,Environment.maxThinkTime)
       .feed(Feeders.createDynamicDataFeeder).exec(http("EXUI_RO_Create")
-      .post(url+"/external/register-org/register")
+      .post("/external/register-org/register")
       .body(ElFileBody("CR.json")).asJson
       .check(status.is(200))
       .check(jsonPath("$.organisationIdentifier").optional.saveAs("orgRefCode")))
@@ -39,7 +39,7 @@ object ExUI {
       .get(url_approve + "/")
       .check(status.is(200)))
       .exec(http("EXUI_AO_010_Homepage")
-        .get(IdamUrl + "/login?response_type=code&client_id=xuiaowebapp&redirect_uri=https://xui-ao-webapp-perftest.service.core-compute-perftest.internal/oauth2/callback&scope=openid%20profile%20roles%20manage-user%20create-user")
+        .get(IdamUrl + "/login?response_type=code&client_id=xuiaowebapp&redirect_uri="+url_approve+"/oauth2/callback&scope=openid%20profile%20roles%20manage-user%20create-user")
         .check(regex("Sign in"))
         .check(css("input[name='_csrf']", "value").saveAs("csrfToken")))
 
@@ -48,7 +48,7 @@ object ExUI {
   val approveOrganisationlogin =
 
     exec(http("EXUI_AO_005_Login")
-      .post(IdamUrl + "/login?response_type=code&client_id=xuiaowebapp&redirect_uri=https://xui-ao-webapp-perftest.service.core-compute-perftest.internal/oauth2/callback&scope=openid%20profile%20roles%20manage-user%20create-user")
+      .post(IdamUrl + "/login?response_type=code&client_id=xuiaowebapp&redirect_uri="+url_approve+"/oauth2/callback&scope=openid%20profile%20roles%20manage-user%20create-user")
       .formParam("username", approveUser)
       .formParam("password", approveUserPassword)
       .formParam("save", "Sign in")
@@ -100,6 +100,16 @@ object ExUI {
         .check(status.is(200)))
       .pause(40)
 
+    .exec {
+    session =>
+      val fw = new BufferedWriter(new FileWriter("OrgDetails.csv", true))
+      try {
+        fw.write(session("orgName").as[String] + ","+session("orgRefCode").as[String] + "," + session("generatedEmail").as[String]  + "\r\n")
+      }
+      finally fw.close()
+      session
+  }
+
   val approveOrganisationLogout =
     exec(http("EXUI_AO_005_Logout")
       .get(url_approve + "/api/logout")
@@ -121,7 +131,7 @@ object ExUI {
         .check(status.is(401)))
 
       .exec(http("EXUI_MO_015_Homepage")
-        .get(IdamUrl + "/?response_type=code&client_id=xuimowebapp&redirect_uri=https://xui-mo-webapp-perftest.service.core-compute-perftest.internal/oauth2/callback&scope=openid%20profile%20roles%20manage-user%20create-user")
+        .get(IdamUrl + "/?response_type=code&client_id=xuimowebapp&redirect_uri="+url_mo+"/oauth2/callback&scope=openid%20profile%20roles%20manage-user%20create-user")
         //.headers(headers_2)
         .check(regex("Sign in"))
         .check(css("input[name='_csrf']", "value").saveAs("csrfToken1"))
@@ -132,7 +142,7 @@ object ExUI {
 
   val manageOrganisationLogin =
     exec(http("EXUI_MO_005_Login")
-      .post(IdamUrl + "/login?scope=openid+profile+roles+manage-user+create-user&response_type=code&redirect_uri=https%3a%2f%2fxui-mo-webapp-perftest.service.core-compute-perftest.internal%2foauth2%2fcallback&client_id=xuimowebapp")
+      .post(IdamUrl + "/login?scope=openid+profile+roles+manage-user+create-user&response_type=code&redirect_uri=https%3a%2f%2fmanage-org.perftest.platform.hmcts.net%2foauth2%2fcallback&client_id=xuimowebapp")
       .formParam("username", "${generatedEmail}")
       .formParam("password", "Pass19word")
       .formParam("save", "Sign in")
@@ -203,7 +213,7 @@ object ExUI {
            .doIf(session=>session("statusvalue").as[String].contains("200")) {
             exec {
             session =>
-              val fw = new BufferedWriter(new FileWriter("OrgId2.csv", true))
+              val fw = new BufferedWriter(new FileWriter("OrgId3.csv", true))
               try {
                 fw.write(session("orgName").as[String] + ","+session("orgRefCode").as[String] + "," + session("generatedEmail").as[String] +","+ session("generatedUserEmail").as[String] + "\r\n")
               }
@@ -224,7 +234,7 @@ object ExUI {
         .check(status.is(401)))
 
       .exec(http("EXUI_MO_015_Logout")
-        .get(IdamUrl + "/?response_type=code&client_id=xuimowebapp&redirect_uri=https://xui-mo-webapp-perftest.service.core-compute-perftest.internal/oauth2/callback&scope=openid%20profile%20roles%20manage-user%20create-user")
+        .get(IdamUrl + "/?response_type=code&client_id=xuimowebapp&redirect_uri=https://manage-org.perftest.platform.hmcts.net/oauth2/callback&scope=openid%20profile%20roles%20manage-user%20create-user")
     )
 
 
@@ -269,8 +279,5 @@ object ExUI {
     }
     None
   }
-
-
-
 
 }

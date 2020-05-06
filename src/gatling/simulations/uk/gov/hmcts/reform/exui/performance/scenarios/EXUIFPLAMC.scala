@@ -2,7 +2,9 @@ package uk.gov.hmcts.reform.exui.performance.scenarios
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
+import uk.gov.hmcts.reform.exui.performance.scenarios.EXUIIACMC.{MaxThinkTime, MinThinkTime}
 import uk.gov.hmcts.reform.exui.performance.scenarios.utils.Environment
+
 import scala.concurrent.duration._
 import scala.util.Random
 
@@ -10,7 +12,7 @@ object EXUIFPLAMC {
 
   val IdamUrl = Environment.idamURL
   val baseURL = Environment.baseURL
-  val loginFeeder = csv("OrgId.csv").circular
+  val loginFeeder = csv("FPLUserData.csv").circular
 
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
@@ -289,15 +291,17 @@ object EXUIFPLAMC {
   private def firstName(): String = rng.alphanumeric.take(10).mkString
   private def lastName(): String = rng.alphanumeric.take(10).mkString
 
-  val feedUserDataFPL = csv("FPLUserData.csv").circular
+  /*val manageCasesHomePage=	group("EXUI_ManageCases_Homepage") {
 
-  val manageCasesHomePage=	group ("EXUI_ManageCases_Homepage") {
-
-    feed(loginFeeder)
-    .exec(http("XUIMC_010_Homepage")
+    exec(http("XUIMC_010_Homepage")
       .get("/")
       .headers(headers_0)
       .check(status.is(200)))
+
+      .exec(http("XUI01_010_010_HomepageTCEnabled")
+        .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
+        .headers(headers_hometc)
+        .check(status.is(200)))
 
     .exec(http("XUIMC_020_LoginLandingPage")
       .get(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri="+baseURL+"/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
@@ -310,18 +314,59 @@ object EXUIFPLAMC {
 
   val manageCasesLogin = group ("EXUI_ManageCases_Login") {
 
-    feed(feedUserDataFPL)
-
-    .exec(http("XUIMC_030_Login_SubmitLoginPage")
+    exec(http("XUIMC_030_Login_SubmitLoginPage")
       .post(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri="+baseURL+"/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
-      .formParam("username", "${FPLUserName}")
-      .formParam("password", "${FPLUserPassword}")
+      .formParam("username", "${user}")
+      .formParam("password", "Pass19word")
       .formParam("save", "Sign in")
       .formParam("selfRegistrationEnabled", "false")
       .formParam("_csrf", "${csrfToken}")
-      .headers(headers_30))
+      .headers(headers_30)
+      .check(status.in(200, 304, 302))
+    )
+      .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .exec(getCookieValue(
+        CookieKey("__userid__").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("myUserIdFPL")))
+      .repeat(2,"n") {
+        exec(http("XUI01_020_010_SignInTCEnabled${n}")
+          .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
+          .headers(headers_38)
+          .check(status.in(200, 304)))
+        /*.get("/api/configuration?configurationKey=termsAndConditionsEnabled")
+          .headers(headers_42)*/
+      }
+      .exec(http("XUI01_020_015_SignInAcceptTCGet")
+        .get("/accept-terms-and-conditions")
+        .headers(headers_tc_get)
+        .check(status.in(200, 304))
+      )
   }
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
+
+  val termsnconditions=group("XUI01_030_AcceptT&C") {
+    //doIf(session => session.contains("accessToken")) {
+    exec(http("XUI01_030_005_AcceptT&C")
+      .post("/api/userTermsAndConditions")
+      .headers(headers_tc)
+      .body(StringBody("{\"userId\":\"${myUserIdFPL}\"}"))
+      .check(status.in(200, 304, 302))
+    )
+      .pause(MinThinkTime seconds, MaxThinkTime seconds)
+
+      .exec(http("XUI01_030_010_AcceptT&CEnabled")
+        .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
+        .headers(headers_hometc)
+        .check(status.in(200,304,302))
+      )
+      .repeat(2,"count") {
+        exec(http("XUI01_030_015_AcceptT&CAccessJurisdictions${count}")
+          .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
+          .headers(headers_access_read)
+          .check(status.in(200,304,302)))
+
+      }
+
+  }
 
   val manageCasesLogout = group ("EXUI_ManageCases_Logout") {
     exec(http("XUIMC_150_Logout")
@@ -329,9 +374,9 @@ object EXUIFPLAMC {
         .headers(headers_14)
       //  .check(regex("Sign in")))
       .check(status.in(200,304)))
-  }
+  }*/
 
-  val shareacase = group("EXUI_Manage_Representative")
+ /* val shareacase = group("EXUI_Manage_Representative")
   {
     exec(http("XUIMC_O10_Homepage")
       .get("/")
@@ -356,24 +401,24 @@ object EXUIFPLAMC {
       .headers(headers_30))
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
-  }
+  }*/
 
-  val fplacasecreation = group("EXUI_ManageCases_FPLA_Create")
+  val fplacasecreation = group("FPLA Case Create")
   {
-    exec(http("XUIMC_040_005_SolAppCreatedPage1")
+    exec(http("XUIFPL_020_005_SolAppCreatedPage1")
       .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
       .headers(headers_16)
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIMC_040_010_SolAppCreatedPage2")
+    .exec(http("XUIFPL_020_010__SolAppCreatedPage2")
       .get("/data/internal/case-types/CARE_SUPERVISION_EPO/event-triggers/openCase?ignore-warning=false")
       .headers(headers_68)
       .check(status.is(200))
       .check(jsonPath("$.event_token").optional.saveAs("event_token")))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
     //set the random variables as usable parameters
     .exec(
@@ -382,47 +427,47 @@ object EXUIFPLAMC {
         ("lastName", lastName())
       ))
 
-    .exec(http("XUIMC_040_015_SolAppCreatedPage3")
+    .exec(http("XUIFPL_020_015_SolAppCreatedPage3")
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=openCase1")
       .headers(headers_71)
       .body(StringBody("{\n  \"data\": {\n    \"caseName\": \"${firstName}\"\n  },\n  \"event\": {\n    \"id\": \"openCase\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"caseName\": \"${firstName}\"\n  }\n}"))
       .check(status.is(200)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIMC_040_020_SolAppSubmittedPage")
+    .exec(http("XUIFPL_020_020_SolAppSubmittedPage")
       .post("/data/case-types/CARE_SUPERVISION_EPO/cases?ignore-warning=false")
       .headers(headers_72)
       .body(StringBody("{\n  \"data\": {\n    \"caseName\": \"${firstName}\"\n  },\n  \"event\": {\n    \"id\": \"openCase\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"draft_id\": null\n}"))
       .check(status.in(200,304))
       .check(jsonPath("$.id").optional.saveAs("caseId")))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
     //Orders Needed
-    .exec(http("XUIMC_050_005_OrdersNeededPage1")
+    .exec(http("XUIFPL_020_025_OrdersNeededPage1")
       .get("/data/internal/cases/${caseId}/event-triggers/ordersNeeded?ignore-warning=false")
       .headers(headers_76)
       .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIMC_050_010_OrdersNeededPage2")
+    .exec(http("XUIFPL_020_030_OrdersNeededPage2")
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=ordersNeeded1")
       .headers(headers_71)
       .body(StringBody("{\n  \"data\": {\n    \"orders\": {\n      \"orderType\": [\n        \"CARE_ORDER\"\n      ],\n      \"directions\": null\n    }\n  },\n  \"event\": {\n    \"id\": \"ordersNeeded\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"orders\": {\n      \"orderType\": [\n        \"CARE_ORDER\"\n      ],\n      \"directions\": null\n    }\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIMC_050_015_OrdersNeededSubmittedPage")
+    .exec(http("XUIFPL_020_035_OrdersNeededSubmittedPage")
       .post("/data/cases/${caseId}/events")
       .headers(headers_81)
       .body(StringBody("{\n  \"data\": {\n    \"orders\": {\n      \"orderType\": [\n        \"CARE_ORDER\"\n      ],\n      \"directions\": null\n    }\n  },\n  \"event\": {\n    \"id\": \"ordersNeeded\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
     // .exec(http("XUIMC_050_ViewCase")
     //   .get("/data/internal/cases/${caseId}")
@@ -432,29 +477,29 @@ object EXUIFPLAMC {
     // .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
     //hearing needed
-    .exec(http("XUIMC_060_005_HearingNeededPage1")
+    .exec(http("XUIFPL_020_040_HearingNeededPage1")
       .get("/data/internal/cases/${caseId}/event-triggers/hearingNeeded?ignore-warning=false")
       .headers(headers_76)
       .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIMC_060_010_HearingNeededPage2")
+    .exec(http("XUIFPL_020_045_HearingNeededPage2")
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=hearingNeeded1")
       .headers(headers_71)
       .body(StringBody("{\n  \"data\": {\n    \"hearing\": {\n      \"timeFrame\": \"Within 18 days\",\n      \"type\": null,\n      \"withoutNotice\": null,\n      \"reducedNotice\": null,\n      \"respondentsAware\": null\n    }\n  },\n  \"event\": {\n    \"id\": \"hearingNeeded\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"hearing\": {\n      \"timeFrame\": \"Within 18 days\",\n      \"type\": null,\n      \"withoutNotice\": null,\n      \"reducedNotice\": null,\n      \"respondentsAware\": null\n    }\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIMC_060_015_HearingNeededSubmittedPage")
+    .exec(http("XUIFPL_020_050_HearingNeededSubmittedPage")
       .post("/data/cases/${caseId}/events")
       .headers(headers_80)
       .body(StringBody("{\n  \"data\": {\n    \"hearing\": {\n      \"timeFrame\": \"Within 18 days\",\n      \"type\": null,\n      \"withoutNotice\": null,\n      \"reducedNotice\": null,\n      \"respondentsAware\": null\n    }\n  },\n  \"event\": {\n    \"id\": \"hearingNeeded\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
     // .exec(http("XUIMC_170_ViewCase")
     //   .get("/data/internal/cases/${caseId}")
@@ -464,29 +509,29 @@ object EXUIFPLAMC {
     // .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
     //enter children
-    .exec(http("XUIMC_070_005_EnterChildrenPage1")
+    .exec(http("XUIFPL_020_055_EnterChildrenPage1")
       .get("/data/internal/cases/${caseId}/event-triggers/enterChildren?ignore-warning=false")
       .headers(headers_76)
       .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIMC_070_010_EnterChildrenPage2")
+    .exec(http("XUIFPL_020_060_EnterChildrenPage2")
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterChildren1")
       .headers(headers_71)
       .body(StringBody("{\n  \"data\": {\n    \"children1\": [\n      {\n        \"id\": \"d01fbe4f-95df-4023-b2cd-0312639a9700\",\n        \"value\": {\n          \"party\": {\n            \"firstName\": \"test\",\n            \"lastName\": \"testing\",\n            \"dateOfBirth\": \"2010-02-01\",\n            \"gender\": \"Boy\",\n            \"livingSituation\": \"Living with respondents\",\n            \"addressChangeDate\": \"2020-03-01\",\n            \"address\": {\n              \"AddressLine1\": \"Flat 14\",\n              \"AddressLine2\": \"Bramber House\",\n              \"AddressLine3\": \"Seven Kings Way\",\n              \"PostTown\": \"Kingston Upon Thames\",\n              \"County\": \"\",\n              \"PostCode\": \"KT2 5BU\",\n              \"Country\": \"United Kingdom\"\n            },\n            \"keyDates\": \"test\",\n            \"careAndContactPlan\": \"test\",\n            \"adoption\": \"No\",\n            \"mothersName\": \"tess\",\n            \"fathersName\": \"dan\",\n            \"fathersResponsibility\": \"Yes\",\n            \"socialWorkerName\": \"test\",\n            \"socialWorkerTelephoneNumber\": {\n              \"telephoneNumber\": \"02088889999\",\n              \"contactDirection\": \"test\"\n            },\n            \"additionalNeeds\": \"No\",\n            \"detailsHidden\": \"No\",\n            \"litigationIssues\": \"NO\"\n          }\n        }\n      }\n    ]\n  },\n  \"event\": {\n    \"id\": \"enterChildren\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"children1\": [\n      {\n        \"id\": \"d01fbe4f-95df-4023-b2cd-0312639a9700\",\n        \"value\": {\n          \"party\": {\n            \"firstName\": \"test\",\n            \"lastName\": \"testing\",\n            \"dateOfBirth\": \"2010-02-01\",\n            \"gender\": \"Boy\",\n            \"livingSituation\": \"Living with respondents\",\n            \"addressChangeDate\": \"2020-03-01\",\n            \"address\": {\n              \"AddressLine1\": \"Flat 14\",\n              \"AddressLine2\": \"Bramber House\",\n              \"AddressLine3\": \"Seven Kings Way\",\n              \"PostTown\": \"Kingston Upon Thames\",\n              \"County\": \"\",\n              \"PostCode\": \"KT2 5BU\",\n              \"Country\": \"United Kingdom\"\n            },\n            \"keyDates\": \"test\",\n            \"careAndContactPlan\": \"test\",\n            \"adoption\": \"No\",\n            \"mothersName\": \"tess\",\n            \"fathersName\": \"dan\",\n            \"fathersResponsibility\": \"Yes\",\n            \"socialWorkerName\": \"test\",\n            \"socialWorkerTelephoneNumber\": {\n              \"telephoneNumber\": \"02088889999\",\n              \"contactDirection\": \"test\"\n            },\n            \"additionalNeeds\": \"No\",\n            \"detailsHidden\": \"No\",\n            \"litigationIssues\": \"NO\"\n          }\n        }\n      }\n    ]\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIMC_070_015_EnterChildrenSubmittedPage")
+    .exec(http("XUIFPL_020_065_EnterChildrenSubmittedPage")
       .post("/data/cases/${caseId}/events")
       .headers(headers_80)
       .body(StringBody("{\n  \"data\": {\n    \"children1\": [\n      {\n        \"id\": \"d01fbe4f-95df-4023-b2cd-0312639a9700\",\n        \"value\": {\n          \"party\": {\n            \"firstName\": \"test\",\n            \"lastName\": \"testing\",\n            \"dateOfBirth\": \"2010-02-01\",\n            \"gender\": \"Boy\",\n            \"livingSituation\": \"Living with respondents\",\n            \"addressChangeDate\": \"2020-03-01\",\n            \"address\": {\n              \"AddressLine1\": \"Flat 14\",\n              \"AddressLine2\": \"Bramber House\",\n              \"AddressLine3\": \"Seven Kings Way\",\n              \"PostTown\": \"Kingston Upon Thames\",\n              \"County\": \"\",\n              \"PostCode\": \"KT2 5BU\",\n              \"Country\": \"United Kingdom\"\n            },\n            \"keyDates\": \"test\",\n            \"careAndContactPlan\": \"test\",\n            \"adoption\": \"No\",\n            \"mothersName\": \"tess\",\n            \"fathersName\": \"dan\",\n            \"fathersResponsibility\": \"Yes\",\n            \"socialWorkerName\": \"test\",\n            \"socialWorkerTelephoneNumber\": {\n              \"telephoneNumber\": \"02088889999\",\n              \"contactDirection\": \"test\"\n            },\n            \"additionalNeeds\": \"No\",\n            \"detailsHidden\": \"No\",\n            \"litigationIssues\": \"NO\"\n          }\n        }\n      }\n    ]\n  },\n  \"event\": {\n    \"id\": \"enterChildren\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
     // .exec(http("request_94")
     //   .get("/data/internal/cases/${caseId}")
@@ -496,37 +541,36 @@ object EXUIFPLAMC {
     // .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
     //enter respondants
-    .exec(http("XUIMC_080_005_EnterRespondentsPage1")
+    .exec(http("XUIFPL_020_070_EnterRespondentsPage1")
       .get("/data/internal/cases/${caseId}/event-triggers/enterRespondents?ignore-warning=false")
       .headers(headers_76)
       .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIMC_080_010_EnterRespondentsGetAddress")
+    .exec(http("XUIFPL_020_075_EnterRespondentsGetAddress")
       .get("/addresses?postcode=TW33SD")
       .headers(headers_16)
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIMC_080_015_EnterRespondentsPage2")
+    .exec(http("XUIFPL_020_080_EnterRespondentsPage2")
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterRespondents1")
       .headers(headers_71)
       .body(StringBody("{\n  \"data\": {\n    \"respondents1\": [\n      {\n        \"id\": \"416c4c9c-fdae-4259-8e32-fc7877dc1abf\",\n        \"value\": {\n          \"party\": {\n            \"firstName\": \"tess\",\n            \"lastName\": \"tickles\",\n            \"dateOfBirth\": \"1980-02-01\",\n            \"gender\": \"Female\",\n            \"placeOfBirth\": \"london\",\n            \"address\": {\n              \"AddressLine1\": \"Flat 12\",\n              \"AddressLine2\": \"Bramber House\",\n              \"AddressLine3\": \"Seven Kings Way\",\n              \"PostTown\": \"Kingston Upon Thames\",\n              \"County\": \"\",\n              \"PostCode\": \"KT2 5BU\",\n              \"Country\": \"United Kingdom\"\n            },\n            \"telephoneNumber\": {\n              \"telephoneNumber\": \"02088889999\",\n              \"contactDirection\": \"tess\"\n            },\n            \"relationshipToChild\": \"test\",\n            \"contactDetailsHidden\": \"No\",\n            \"litigationIssues\": \"NO\"\n          }\n        }\n      }\n    ]\n  },\n  \"event\": {\n    \"id\": \"enterRespondents\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"respondents1\": [\n      {\n        \"id\": \"416c4c9c-fdae-4259-8e32-fc7877dc1abf\",\n        \"value\": {\n          \"party\": {\n            \"firstName\": \"tess\",\n            \"lastName\": \"tickles\",\n            \"dateOfBirth\": \"1980-02-01\",\n            \"gender\": \"Female\",\n            \"placeOfBirth\": \"london\",\n            \"address\": {\n              \"AddressLine1\": \"Flat 12\",\n              \"AddressLine2\": \"Bramber House\",\n              \"AddressLine3\": \"Seven Kings Way\",\n              \"PostTown\": \"Kingston Upon Thames\",\n              \"County\": \"\",\n              \"PostCode\": \"KT2 5BU\",\n              \"Country\": \"United Kingdom\"\n            },\n            \"telephoneNumber\": {\n              \"telephoneNumber\": \"02088889999\",\n              \"contactDirection\": \"tess\"\n            },\n            \"relationshipToChild\": \"test\",\n            \"contactDetailsHidden\": \"No\",\n            \"litigationIssues\": \"NO\"\n          }\n        }\n      }\n    ]\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIMC_080_020_EnterRespondentsSubmittedPage")
+    .exec(http("XUIFPL_020_085_EnterRespondentsSubmittedPage")
       .post("/data/cases/${caseId}/events")
       .headers(headers_80)
       .body(StringBody("{\n  \"data\": {\n    \"respondents1\": [\n      {\n        \"id\": \"416c4c9c-fdae-4259-8e32-fc7877dc1abf\",\n        \"value\": {\n          \"party\": {\n            \"firstName\": \"tess\",\n            \"lastName\": \"tickles\",\n            \"dateOfBirth\": \"1980-02-01\",\n            \"gender\": \"Female\",\n            \"placeOfBirth\": \"london\",\n            \"address\": {\n              \"AddressLine1\": \"Flat 12\",\n              \"AddressLine2\": \"Bramber House\",\n              \"AddressLine3\": \"Seven Kings Way\",\n              \"PostTown\": \"Kingston Upon Thames\",\n              \"County\": \"\",\n              \"PostCode\": \"KT2 5BU\",\n              \"Country\": \"United Kingdom\"\n            },\n            \"telephoneNumber\": {\n              \"telephoneNumber\": \"02088889999\",\n              \"contactDirection\": \"tess\"\n            },\n            \"relationshipToChild\": \"test\",\n            \"contactDetailsHidden\": \"No\",\n            \"litigationIssues\": \"NO\"\n          }\n        }\n      }\n    ]\n  },\n  \"event\": {\n    \"id\": \"enterRespondents\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
-
+      .pause(MinThinkTime , MaxThinkTime )
     // .exec(http("request_110")
     //   .get("/data/internal/cases/${caseId}")
     //   .headers(headers_74)
@@ -535,36 +579,36 @@ object EXUIFPLAMC {
     // .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
     // enter applicant
-    .exec(http("XUIMC_090_005_EnterApplicantPage1")
+    .exec(http("XUIFPL_020_090_EnterApplicantPage1")
       .get("/data/internal/cases/${caseId}/event-triggers/enterApplicant?ignore-warning=false")
       .headers(headers_76)
       .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIMC_090_010_EnterApplicantGetAddress")
+    .exec(http("XUIFPL_020_095_EnterApplicantGetAddress")
       .get("/addresses?postcode=TW33SD")
       .headers(headers_16)
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIMC_090_015_EnterApplicantPage2")
+    .exec(http("XUIFPL_020_100_EnterApplicantPage2")
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterApplicant1")
       .headers(headers_71)
       .body(StringBody("{\n  \"data\": {\n    \"applicants\": [\n      {\n        \"id\": \"9de5744b-26c2-4653-919d-d9b828fc4c3f\",\n        \"value\": {\n          \"party\": {\n            \"organisationName\": \"${firstName}\",\n            \"pbaNumber\": \"1234567\",\n            \"clientCode\": null,\n            \"customerReference\": null,\n            \"address\": {\n              \"AddressLine1\": \"8 Hibernia Gardens\",\n              \"AddressLine2\": \"\",\n              \"AddressLine3\": \"\",\n              \"PostTown\": \"Hounslow\",\n              \"County\": \"\",\n              \"PostCode\": \"TW3 3SD\",\n              \"Country\": \"United Kingdom\"\n            },\n            \"telephoneNumber\": {\n              \"telephoneNumber\": \"07540634567\",\n              \"contactDirection\": \"${firstName}\"\n            },\n            \"jobTitle\": \"kkkuuhhh\",\n            \"mobileNumber\": {\n              \"telephoneNumber\": null\n            },\n            \"email\": {\n              \"email\": \"dddffff@la.gov.uk\"\n            }\n          }\n        }\n      }\n    ],\n    \"solicitor\": {\n      \"name\": \"nhhffsol\",\n      \"mobile\": \"07540687298\",\n      \"telephone\": \"05673245678\",\n      \"email\": \"joe.bloggs@la.gov.uk\",\n      \"dx\": null,\n      \"reference\": null\n    }\n  },\n  \"event\": {\n    \"id\": \"enterApplicant\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"applicants\": [\n      {\n        \"id\": \"9de5744b-26c2-4653-919d-d9b828fc4c3f\",\n        \"value\": {\n          \"party\": {\n            \"organisationName\": \"${firstName}\",\n            \"pbaNumber\": \"1234567\",\n            \"clientCode\": null,\n            \"customerReference\": null,\n            \"address\": {\n              \"AddressLine1\": \"8 Hibernia Gardens\",\n              \"AddressLine2\": \"\",\n              \"AddressLine3\": \"\",\n              \"PostTown\": \"Hounslow\",\n              \"County\": \"\",\n              \"PostCode\": \"TW3 3SD\",\n              \"Country\": \"United Kingdom\"\n            },\n            \"telephoneNumber\": {\n              \"telephoneNumber\": \"07540634567\",\n              \"contactDirection\": \"${firstName}\"\n            },\n            \"jobTitle\": \"kkkuuhhh\",\n            \"mobileNumber\": {\n              \"telephoneNumber\": null\n            },\n            \"email\": {\n              \"email\": \"dddffff@la.gov.uk\"\n            }\n          }\n        }\n      }\n    ],\n    \"solicitor\": {\n      \"name\": \"nhhffsol\",\n      \"mobile\": \"07540687298\",\n      \"telephone\": \"05673245678\",\n      \"email\": \"joe.bloggs@la.gov.uk\",\n      \"dx\": null,\n      \"reference\": null\n    }\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIMC_090_020_EnterApplicantSubmittedPage")
+    .exec(http("XUIFPL_020_105_EnterApplicantSubmittedPage")
       .post("/data/cases/${caseId}/events")
       .headers(headers_80)
       .body(StringBody("{\n  \"data\": {\n    \"applicants\": [\n      {\n        \"id\": \"9de5744b-26c2-4653-919d-d9b828fc4c3f\",\n        \"value\": {\n          \"party\": {\n            \"organisationName\": \"${firstName}\",\n            \"pbaNumber\": \"PBA1234567\",\n            \"clientCode\": null,\n            \"customerReference\": null,\n            \"address\": {\n              \"AddressLine1\": \"8 Hibernia Gardens\",\n              \"AddressLine2\": \"\",\n              \"AddressLine3\": \"\",\n              \"PostTown\": \"Hounslow\",\n              \"County\": \"\",\n              \"PostCode\": \"TW3 3SD\",\n              \"Country\": \"United Kingdom\"\n            },\n            \"telephoneNumber\": {\n              \"telephoneNumber\": \"07540634567\",\n              \"contactDirection\": \"${firstName}\"\n            },\n            \"jobTitle\": \"kkkuuhhh\",\n            \"mobileNumber\": {\n              \"telephoneNumber\": null\n            },\n            \"email\": {\n              \"email\": \"dddffff@la.gov.uk\"\n            }\n          }\n        }\n      }\n    ],\n    \"solicitor\": {\n      \"name\": \"nhhffsol\",\n      \"mobile\": \"07540687298\",\n      \"telephone\": \"05673245678\",\n      \"email\": \"joe.bloggs@la.gov.uk\",\n      \"dx\": null,\n      \"reference\": null\n    }\n  },\n  \"event\": {\n    \"id\": \"enterApplicant\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
     // .exec(http("request_115")
     //   .get("/data/internal/cases/${caseId}")
@@ -574,29 +618,29 @@ object EXUIFPLAMC {
     // .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
     // enter grounds
-    .exec(http("XUIMC_100_005_EnterGroundsPage1")
+    .exec(http("XUIFPL_020_110__EnterGroundsPage1")
       .get("/data/internal/cases/${caseId}/event-triggers/enterGrounds?ignore-warning=false")
       .headers(headers_76)
       .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIMC_100_010_EnterGroundsPage2")
+    .exec(http("XUIFPL_020_115_EnterGroundsPage2")
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterGrounds1")
       .headers(headers_71)
       .body(StringBody("{\n  \"data\": {\n    \"grounds\": {\n      \"thresholdReason\": [\n        \"beyondControl\"\n      ],\n      \"thresholdDetails\": \"sdsdsds\"\n    }\n  },\n  \"event\": {\n    \"id\": \"enterGrounds\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"grounds\": {\n      \"thresholdReason\": [\n        \"beyondControl\"\n      ],\n      \"thresholdDetails\": \"sdsdsds\"\n    }\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIMC_100_015_EnterGroundsSubmittedPage")
+    .exec(http("XUIFPL_020_120_EnterGroundsSubmittedPage")
       .post("/data/cases/${caseId}/events")
       .headers(headers_80)
       .body(StringBody("{\n  \"data\": {\n    \"grounds\": {\n      \"thresholdReason\": [\n        \"beyondControl\"\n      ],\n      \"thresholdDetails\": \"sdsdsds\"\n    }\n  },\n  \"event\": {\n    \"id\": \"enterGrounds\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
     // .exec(http("request_119")
     //   .get("/data/internal/cases/${caseId}")
@@ -606,29 +650,29 @@ object EXUIFPLAMC {
     // .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
     //other proposal
-    .exec(http("XUIMC_110_005_OtherProposalPage1")
+    .exec(http("XUIFPL_020_125_OtherProposalPage1")
       .get("/data/internal/cases/${caseId}/event-triggers/otherProposal?ignore-warning=false")
       .headers(headers_76)
       .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIMC_110_010_OtherProposalPage2")
+    .exec(http("XUIFPL_020_130_OtherProposalPage2")
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=otherProposal1")
       .headers(headers_71)
       .body(StringBody("{\n  \"data\": {\n    \"allocationProposal\": {\n      \"proposal\": \"District judge\",\n      \"proposalReason\": \"xccxcx\"\n    }\n  },\n  \"event\": {\n    \"id\": \"otherProposal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"allocationProposal\": {\n      \"proposal\": \"District judge\",\n      \"proposalReason\": \"xccxcx\"\n    }\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIMC_110_015_OtherProposalSubmittedPage")
+    .exec(http("XUIFPL_020_135_OtherProposalSubmittedPage")
       .post("/data/cases/${caseId}/events")
       .headers(headers_80)
       .body(StringBody("{\n  \"data\": {\n    \"allocationProposal\": {\n      \"proposal\": \"District judge\",\n      \"proposalReason\": \"xccxcx\"\n    }\n  },\n  \"event\": {\n    \"id\": \"otherProposal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
     // .exec(http("request_123")
     //   .get("/data/internal/cases/${caseId}")
@@ -638,15 +682,15 @@ object EXUIFPLAMC {
     // .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
     // upload documents
-    .exec(http("XUIMC_120_005_UploadDocumentsPage1")
+    .exec(http("XUIFPL_020_140UploadDocumentsPage1")
       .get("/data/internal/cases/${caseId}/event-triggers/uploadDocuments?ignore-warning=false")
       .headers(headers_76)
       .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIMC_120_010_UploadDocumentsUploadProcess")
+    .exec(http("XUIFPL_020_145_UploadDocumentsUploadProcess")
       .post("/documents")
       .headers(headers_8)
       .bodyPart(RawFileBodyPart("files", "1MB.pdf")
@@ -658,21 +702,21 @@ object EXUIFPLAMC {
       .check(regex("""http://(.+)/""").saveAs("DMURL"))
       .check(regex("""internal/documents/(.+?)"},"binary""").saveAs("Document_ID")))
 
-    .exec(http("XUIMC_120_015_UploadDocumentsPage2")
+    .exec(http("XUIFPL_020_150_UploadDocumentsPage2")
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=uploadDocuments1")
       .headers(headers_71)
       .body(StringBody("{\n  \"data\": {\n    \"documents_socialWorkChronology_document\": {\n      \"documentStatus\": \"Attached\",\n      \"typeOfDocument\": {\n        \"document_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}\",\n        \"document_binary_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}/binary\",\n        \"document_filename\": \"1MB.pdf\"\n      }\n    },\n    \"documents_socialWorkStatement_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkAssessment_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkCarePlan_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkEvidenceTemplate_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_threshold_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_checklist_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkOther\": []\n  },\n  \"event\": {\n    \"id\": \"uploadDocuments\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"documents_socialWorkChronology_document\": {\n      \"documentStatus\": \"Attached\",\n      \"typeOfDocument\": {\n        \"document_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}\",\n        \"document_binary_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}/binary\",\n        \"document_filename\": \"1MB.pdf\"\n      }\n    },\n    \"documents_socialWorkStatement_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkAssessment_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkCarePlan_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkEvidenceTemplate_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_threshold_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_checklist_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkOther\": []\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIMC_120_020_UploadDocumentsSubmittedPage")
+    .exec(http("XUIFPL_020_155_UploadDocumentsSubmittedPage")
       .post("/data/cases/${caseId}/events")
       .headers(headers_80)
       .body(StringBody("{\n  \"data\": {\n    \"documents_socialWorkChronology_document\": {\n      \"documentStatus\": \"Attached\",\n      \"typeOfDocument\": {\n        \"document_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}\",\n        \"document_binary_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}/binary\",\n        \"document_filename\": \"1MB.pdf\"\n      }\n    },\n    \"documents_socialWorkStatement_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkAssessment_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkCarePlan_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkEvidenceTemplate_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_threshold_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_checklist_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkOther\": []\n  },\n  \"event\": {\n    \"id\": \"uploadDocuments\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
     // .exec(http("request_129")
     //   .get("/data/internal/cases/${caseId}")
@@ -682,35 +726,118 @@ object EXUIFPLAMC {
     // .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
     // submit application
-    .exec(http("XUIMC_130_005_SubmitApplicationPage1")
+    .exec(http("XUIFPL_020_160_SubmitApplicationPage1")
       .get("/data/internal/cases/${caseId}/event-triggers/submitApplication?ignore-warning=false")
       .headers(headers_76)
       .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIMC_130_010_SubmitApplicationPage2")
+    .exec(http("XUIFPL_020_165_SubmitApplicationPage2")
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=submitApplication1")
       .headers(headers_71)
-      .body(StringBody("{\n  \"data\": {\n    \"submissionConsent\": [\n      \"agree\"\n    ],\n    \"submissionConsentLabel\": \"I, ${FPLUserName} (local-authority), believe that the facts stated in this application are true.\"\n  },\n  \"event\": {\n    \"id\": \"submitApplication\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"submissionConsent\": [\n      \"agree\"\n    ],\n    \"submissionConsentLabel\": \"I, ${FPLUserName} (local-authority), believe that the facts stated in this application are true.\"\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
+      .body(StringBody("{\n  \"data\": {\n    \"submissionConsent\": [\n      \"agree\"\n    ],\n    \"submissionConsentLabel\": \"I, ${user} (local-authority), believe that the facts stated in this application are true.\"\n  },\n  \"event\": {\n    \"id\": \"submitApplication\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"submissionConsent\": [\n      \"agree\"\n    ],\n    \"submissionConsentLabel\": \"I, ${user} (local-authority), believe that the facts stated in this application are true.\"\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIMC_130_015_SubmitApplicationSubmittedPage")
+    .exec(http("XUIFPL_020_170_SubmitApplicationSubmittedPage")
       .post("/data/cases/${caseId}/events")
       .headers(headers_80)
-      .body(StringBody("{\n  \"data\": {\n    \"submissionConsent\": [\n      \"agree\"\n    ],\n    \"submissionConsentLabel\": \"I, ${FPLUserName} (local-authority), believe that the facts stated in this application are true.\"\n  },\n  \"event\": {\n    \"id\": \"submitApplication\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
+      .body(StringBody("{\n  \"data\": {\n    \"submissionConsent\": [\n      \"agree\"\n    ],\n    \"submissionConsentLabel\": \"I, ${user} (local-authority), believe that the facts stated in this application are true.\"\n  },\n  \"event\": {\n    \"id\": \"submitApplication\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIMC_140_ViewCase")
+    .exec(http("XUIFPL_020_175_ViewCase")
       .get("/data/internal/cases/${caseId}")
       .headers(headers_74)
       .check(status.in(200,304)))
 
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+      .pause(MinThinkTime , MaxThinkTime )
   }
+
+  val headers_viewtab = Map(
+    "accept" -> "application/json, text/plain, */*",
+    "accept-encoding" -> "gzip, deflate, br",
+    "accept-language" -> "en-US,en;q=0.9",
+    "sec-fetch-dest" -> "empty",
+    "sec-fetch-mode" -> "cors",
+    "sec-fetch-site" -> "same-origin",
+    "x-dtpc" -> "3$430739744_795h37vRRPOHSUEPACJDAFRRDTWMOFWLCMTVMIB-0")
+
+  val headers_searchinputs = Map(
+    "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-search-input-details.v2+json;charset=UTF-8",
+    "accept-encoding" -> "gzip, deflate, br",
+    "accept-language" -> "en-US,en;q=0.9",
+    "content-type" -> "application/json",
+    "experimental" -> "true",
+    "sec-fetch-dest" -> "empty",
+    "sec-fetch-mode" -> "cors",
+    "sec-fetch-site" -> "same-origin",
+    "x-dtpc" -> "3$430739744_795h28vRRPOHSUEPACJDAFRRDTWMOFWLCMTVMIB-0")
+
+  val findandviewcasefpl= group("EXUI FPL View Details")
+  {
+
+    exec(http("XUIFPL_030_005_SearchInput")
+      .get("/data/internal/case-types/CARE_SUPERVISION_EPO/search-inputs")
+      .headers(headers_searchinputs)
+      .check(status.in(200, 304))
+    )
+      .pause(MinThinkTime , MaxThinkTime )
+
+      .exec(http("XUIFPL_030_010_SearchParams")
+        .get("/data/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases/pagination_metadata?state=Submitted")
+        .headers(headers_viewtab)
+        .check(status.is(200)))
+      .pause(MinThinkTime , MaxThinkTime )
+
+      .exec(http("XUIFPL_030_015_SearchResults")
+        .get("/aggregated/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases?view=SEARCH&page=1&state=Submitted")
+        .headers(headers_viewtab)
+        .check(status.is(200))
+        .check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumbersFPL"))
+      )
+      .pause(MinThinkTime , MaxThinkTime )
+      .foreach("${caseNumbersFPL}","caseNumberFPL") {
+  exec(http("XUIFPL_030_020_InternalData")
+    .get("/data/internal/cases/${caseNumberFPL}")
+    .headers(headers_searchinputs)
+    .check(status.is(200)))
+    .pause(MinThinkTime , MaxThinkTime )
+
+    .exec(http("XUIFPL_030_025_HearingTab")
+      .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumberFPL}%23HearingTab")
+      .headers(headers_viewtab)
+      .check(status.in(200, 304))
+    )
+    .pause(MinThinkTime , MaxThinkTime )
+    .exec(http("XUIFPL_030_030_OrdersTab")
+      .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumberFPL}%23OrdersTab")
+      .headers(headers_viewtab)
+      .check(status.in(200, 304))
+    )
+    .pause(MinThinkTime , MaxThinkTime )
+    .exec(http("XUIFPL_030_035_CasePeopleTab")
+      .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumberFPL}%23CasePeopleTab")
+      .headers(headers_viewtab)
+      .check(status.in(200, 304))
+    )
+    .pause(MinThinkTime , MaxThinkTime )
+    .exec(http("XUIFPL_030_040_LegalBasisTab")
+      .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumberFPL}%23LegalBasisTab")
+      .headers(headers_viewtab)
+      .check(status.in(200, 304))
+    )
+    .pause(MinThinkTime , MaxThinkTime )
+    .exec(http("XUIFPL_030_045_DocumentsTab")
+      .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumberFPL}%23DocumentsTab")
+      .headers(headers_viewtab)
+      .check(status.in(200, 304))
+    )
+}
+  }
+
 }
