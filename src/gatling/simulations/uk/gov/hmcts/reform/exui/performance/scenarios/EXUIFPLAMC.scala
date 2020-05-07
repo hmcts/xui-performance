@@ -287,6 +287,19 @@ object EXUIFPLAMC {
     "Sec-Fetch-User" -> "?1",
     "Upgrade-Insecure-Requests" -> "1")
 
+    val headers_search = Map(
+    "Sec-Fetch-Dest" -> "empty",
+		"Sec-Fetch-Mode" -> "cors",
+		"Sec-Fetch-Site" -> "same-origin")
+
+    val headers_documents = Map(
+    "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+    "Accept-Encoding" -> "gzip, deflate, br",
+    "Accept-Language" -> "en-US,en;q=0.9",
+    "Sec-Fetch-Mode" -> "navigate",
+    "Sec-Fetch-Site" -> "none",
+    "Upgrade-Insecure-Requests" -> "1")
+
   private val rng: Random = new Random()
   private def firstName(): String = rng.alphanumeric.take(10).mkString
   private def lastName(): String = rng.alphanumeric.take(10).mkString
@@ -778,66 +791,66 @@ object EXUIFPLAMC {
     "sec-fetch-site" -> "same-origin",
     "x-dtpc" -> "3$430739744_795h28vRRPOHSUEPACJDAFRRDTWMOFWLCMTVMIB-0")
 
-  val findandviewcasefpl= group("EXUI FPL View Details")
-  {
+  val findandviewcasefpl= 
 
-    exec(http("XUIFPL_030_005_SearchInput")
-      .get("/data/internal/case-types/CARE_SUPERVISION_EPO/search-inputs")
-      .headers(headers_searchinputs)
-      .check(status.in(200, 304))
-    )
-      .pause(MinThinkTime , MaxThinkTime )
+    exec(http("XUI01_040_005_SearchPage")
+			.get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
+			.headers(headers_search))
 
-      .exec(http("XUIFPL_030_010_SearchParams")
-        .get("/data/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases/pagination_metadata?state=Submitted")
-        .headers(headers_viewtab)
+    .exec(http("XUI01_040_010_SearchPaginationMetaData")
+			.get("/data/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases/pagination_metadata")
+			.headers(headers_search))
+
+    .exec(http("XUI01_040_015_SearchResults")
+			.get("/aggregated/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases?view=WORKBASKET&page=1")
+			.headers(headers_search)
+      .check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumbersFPL")))
+
+    .exec(http("XUI01_040_020_SearchAccessJurisdictions")
+			.get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
+			.headers(headers_search))
+
+      // .exec(http("XUIFPL_030_010_SearchParams")
+      //   .get("/data/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases/pagination_metadata?state=Submitted")
+      //   .headers(headers_viewtab)
+      //   .check(status.is(200)))
+      // .pause(MinThinkTime , MaxThinkTime )
+
+      // .exec(http("XUIFPL_030_015_SearchResults")
+      //   .get("/aggregated/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases?view=SEARCH&page=1&state=Submitted")
+      //   .headers(headers_viewtab)
+      //   .check(status.is(200))
+      //   .check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumbersFPL"))
+      // )
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    .foreach("${caseNumbersFPL}","caseNumberFPL") {
+      exec(http("XUIFPL_050_ViewCase")
+        .get("/data/internal/cases/${caseNumberFPL}")
+        .headers(headers_searchinputs)
+        .check(regex("""internal/documents/(.+?)","document_filename""").find(0).saveAs("Document_ID"))
         .check(status.is(200)))
-      .pause(MinThinkTime , MaxThinkTime )
 
-      .exec(http("XUIFPL_030_015_SearchResults")
-        .get("/aggregated/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases?view=SEARCH&page=1&state=Submitted")
-        .headers(headers_viewtab)
-        .check(status.is(200))
-        .check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumbersFPL"))
-      )
-      .pause(MinThinkTime , MaxThinkTime )
-      .foreach("${caseNumbersFPL}","caseNumberFPL") {
-  exec(http("XUIFPL_030_020_InternalData")
-    .get("/data/internal/cases/${caseNumberFPL}")
-    .headers(headers_searchinputs)
-    .check(status.is(200)))
     .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIFPL_030_025_HearingTab")
-      .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumberFPL}%23HearingTab")
-      .headers(headers_viewtab)
-      .check(status.in(200, 304))
-    )
-    .pause(MinThinkTime , MaxThinkTime )
-    .exec(http("XUIFPL_030_030_OrdersTab")
-      .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumberFPL}%23OrdersTab")
-      .headers(headers_viewtab)
-      .check(status.in(200, 304))
-    )
-    .pause(MinThinkTime , MaxThinkTime )
-    .exec(http("XUIFPL_030_035_CasePeopleTab")
-      .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumberFPL}%23CasePeopleTab")
-      .headers(headers_viewtab)
-      .check(status.in(200, 304))
-    )
-    .pause(MinThinkTime , MaxThinkTime )
-    .exec(http("XUIFPL_030_040_LegalBasisTab")
-      .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumberFPL}%23LegalBasisTab")
-      .headers(headers_viewtab)
-      .check(status.in(200, 304))
-    )
-    .pause(MinThinkTime , MaxThinkTime )
-    .exec(http("XUIFPL_030_045_DocumentsTab")
-      .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumberFPL}%23DocumentsTab")
-      .headers(headers_viewtab)
-      .check(status.in(200, 304))
-    )
-}
-  }
+    .exec(http("XUIFPL_060_005_ViewCaseDocumentUI")
+      .get("/external/config/ui")
+      .headers(headers_documents))
 
+    .exec(http("XUIFPL_060_010_ViewCaseDocumentT&C")
+      .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
+      .headers(headers_documents))
+
+    .exec(http("XUIFPL_060_015_ViewCaseDocumentAnnotations")
+      .get("/em-anno/annotation-sets/filter?documentId=${Document_ID}")
+      .headers(headers_documents)
+      .check(status.in(200, 404)))
+
+    .exec(http("XUIFPL_060_020_ViewCaseDocumentBinary")
+      .get("/documents/${Document_ID}/binary")
+      .headers(headers_documents))
+
+    .pause(MinThinkTime , MaxThinkTime )
+    }
 }
