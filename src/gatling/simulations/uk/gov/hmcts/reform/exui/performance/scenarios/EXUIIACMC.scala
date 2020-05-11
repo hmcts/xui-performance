@@ -333,6 +333,19 @@ object EXUIIACMC {
     "x-dtpc" -> "3$38734236_77h15vDTRMSASFKPLKDRFKMHCCHMMCARPGMHGD-0",
     "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/accept-terms-and-conditions")
 
+  val headers_search = Map(
+    "Sec-Fetch-Dest" -> "empty",
+		"Sec-Fetch-Mode" -> "cors",
+		"Sec-Fetch-Site" -> "same-origin")
+
+  val headers_documents = Map(
+    "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+    "Accept-Encoding" -> "gzip, deflate, br",
+    "Accept-Language" -> "en-US,en;q=0.9",
+    "Sec-Fetch-Mode" -> "navigate",
+    "Sec-Fetch-Site" -> "none",
+    "Upgrade-Insecure-Requests" -> "1")
+
   /*val manageCasesHomePage =group("XUI01_010_Homepage") {
 
     exec(http("XUI01_010_005_Homepage")
@@ -774,73 +787,51 @@ object EXUIIACMC {
     "sec-fetch-site" -> "same-origin",
     "x-dtpc" -> "3$424950534_38h29vPMBLUVMCRTSPKMRPFVPPBRCOTEDTMABH-0")
 
+  val findandviewcase =
 
-  val findandviewcase= group("EXUI View Details")
-  {
+    exec(http("XUI01_040_005_SearchPage")
+			.get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
+			.headers(headers_search))
 
-      exec(http("XUIIAC_040_005_SearchInputs")
-    .get("/data/internal/case-types/Asylum/search-inputs")
-    .headers(headers_37)
-      .check(status.in(200, 304))
-    )
-        .pause(MinThinkTime, MaxThinkTime)
+    .exec(http("XUI01_040_010_SearchPaginationMetaData")
+			.get("/data/caseworkers/:uid/jurisdictions/IA/case-types/Asylum/cases/pagination_metadata?state=appealSubmitted&case.searchPostcode=TW3%203SD")
+			.headers(headers_search))
 
-      .exec(http("XUIIAC_040_010__Caselist")
-      .get("/data/caseworkers/:uid/jurisdictions/IA/case-types/Asylum/cases/pagination_metadata?case.searchPostcode=TW3%203SD")
-      .headers(headers_viewtabs)
-      .check(status.is(200)))
-        .pause(MinThinkTime, MaxThinkTime)
+    .exec(http("XUI01_040_015_SearchResults")
+			.get("/aggregated/caseworkers/:uid/jurisdictions/IA/case-types/Asylum/cases?view=WORKBASKET&state=appealSubmitted&page=1&case.searchPostcode=TW3%203SD")
+			.headers(headers_search)
+      .check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumbers")))
 
-      .exec(http("XUIIAC_040_015__SearchCriteria")
-      .get("/aggregated/caseworkers/:uid/jurisdictions/IA/case-types/Asylum/cases?view=SEARCH&page=1&case.searchPostcode=TW3%203SD")
-      .headers(headers_viewtabs)
-      .check(status.is(200))
-        .check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumbers"))
-      )
-        /*.exec {
-         session =>
-           println("casenumbers are  ....." + session("caseNumbers").as[String])
+    .exec(http("XUI01_040_020_SearchAccessJurisdictions")
+			.get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
+			.headers(headers_search))
 
-           session
-       }*/
+    .pause(MinThinkTime,MaxThinkTime)
 
-        .pause(MinThinkTime,MaxThinkTime)
+    .foreach("${caseNumbers}","caseNumber") {
+      exec(http("XUIIAC_050_CaseDetails")
+        .get("/data/internal/cases/${caseNumber}")
+        .headers(headers_data_internal_cases)
+        .check(regex("""internal/documents/(.+?)","document_filename""").find(0).saveAs("Document_ID"))
+        .check(status.is(200)))
 
-.foreach("${caseNumbers}","caseNumber") {
-  exec(http("XUIIAC_040_020_CaseDetails")
-    .get("/data/internal/cases/${caseNumber}")
-    .headers(headers_data_internal_cases)
-    .check(status.is(200)))
-    .pause(MinThinkTime, MaxThinkTime)
+    .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUIIAC_040_025_AppealDetails")
-      .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumber}%23appeal")
-      .headers(headers_viewtabs)
-      .check(status.in(200, 304))
-    )
-    .pause(MinThinkTime, MaxThinkTime)
+    .exec(http("XUIIAC_060_005_ViewCaseDocumentUI")
+      .get("/external/config/ui")
+      .headers(headers_documents))
 
-    .exec(http("XUIIAC_040_030_CaseDetails")
-      .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumber}%23caseDetails")
-      .headers(headers_viewtabs)
-      .check(status.in(200, 304))
-    )
-    .pause(MinThinkTime, MaxThinkTime)
+    .exec(http("XUIIAC_060_010_ViewCaseDocumentT&C")
+      .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
+      .headers(headers_documents))
 
-    .exec(http("XUIIAC_040_035_Documents")
-      .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumber}%23documents")
-      .headers(headers_viewtabs)
-      .check(status.in(200, 304))
-    )
-    .pause(MinThinkTime, MaxThinkTime)
+    .exec(http("XUIIAC_060_015_ViewCaseDocumentAnnotations")
+      .get("/em-anno/annotation-sets/filter?documentId=${Document_ID}")
+      .headers(headers_documents)
+      .check(status.in(200, 404)))
 
-    .exec(http("XUIIAC_040_040_Directions")
-      .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumber}%23directions")
-      .headers(headers_viewtabs)
-      .check(status.in(200, 304))
-    )
-    .pause(MinThinkTime, MaxThinkTime)
-}
+    .exec(http("XUIIAC_060_020_ViewCaseDocumentBinary")
+      .get("/documents/${Document_ID}/binary")
+      .headers(headers_documents))
   }
-
 }
