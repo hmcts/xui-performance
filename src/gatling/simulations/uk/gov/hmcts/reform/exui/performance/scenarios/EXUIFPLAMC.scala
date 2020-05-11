@@ -287,12 +287,12 @@ object EXUIFPLAMC {
     "Sec-Fetch-User" -> "?1",
     "Upgrade-Insecure-Requests" -> "1")
 
-    val headers_search = Map(
+  val headers_search = Map(
     "Sec-Fetch-Dest" -> "empty",
 		"Sec-Fetch-Mode" -> "cors",
 		"Sec-Fetch-Site" -> "same-origin")
 
-    val headers_documents = Map(
+  val headers_documents = Map(
     "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
     "Accept-Encoding" -> "gzip, deflate, br",
     "Accept-Language" -> "en-US,en;q=0.9",
