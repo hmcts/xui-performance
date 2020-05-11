@@ -24,8 +24,6 @@ object EXUIManageCaseCreation {
     "Sec-Fetch-User" -> "?1",
     "Upgrade-Insecure-Requests" -> "1")
 
-
-
   val headers_13 = Map(
     "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
     "Accept-Encoding" -> "gzip, deflate, br",
@@ -33,9 +31,6 @@ object EXUIManageCaseCreation {
     "Sec-Fetch-Mode" -> "navigate",
     "Sec-Fetch-Site" -> "cross-site",
     "Upgrade-Insecure-Requests" -> "1")
-
-
-
 
   val headers_0 = Map(
     "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
@@ -45,7 +40,6 @@ object EXUIManageCaseCreation {
     "Sec-Fetch-Site" -> "none",
     "Sec-Fetch-User" -> "?1",
     "Upgrade-Insecure-Requests" -> "1")
-
 
   val headers_28 = Map(
     "Accept" -> "application/json",
@@ -57,7 +51,6 @@ object EXUIManageCaseCreation {
     "Content-Type" -> "application/json",
     "Sec-Fetch-Mode" -> "cors",
     "experimental" -> "true")
-
 
   val headers_78 = Map(
     "Accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8",
@@ -92,8 +85,6 @@ object EXUIManageCaseCreation {
     "Request-Id" -> "|aPld4.8/RnX",
     "Sec-Fetch-Mode" -> "cors")
 
-
-
   val headers_59 = Map(
     "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
     "Accept-Encoding" -> "gzip, deflate, br",
@@ -110,6 +101,21 @@ object EXUIManageCaseCreation {
     "Sec-Fetch-Mode" -> "cors",
     "experimental" -> "true")
 
+  val headers_search = Map(
+		"Content-Type" -> "application/json",
+		"Pragma" -> "no-cache",
+		"Sec-Fetch-Dest" -> "empty",
+		"Sec-Fetch-Mode" -> "cors",
+		"Sec-Fetch-Site" -> "same-origin")
+
+  val headers_viewCase = Map(
+		"Accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json",
+		"Content-Type" -> "application/json",
+		"Pragma" -> "no-cache",
+		"Sec-Fetch-Dest" -> "empty",
+		"Sec-Fetch-Mode" -> "cors",
+		"Sec-Fetch-Site" -> "same-origin",
+		"experimental" -> "true")
 
   /*val manageCasesHomePage=	group ("TX01_EXUI_ManageCases_Homepage") {
 
@@ -158,38 +164,65 @@ object EXUIManageCaseCreation {
       .check(status.in(200,304)))
   }*/
 
-  val casedetails= group("EXUI View Case")
-  {
+  val casedetails = 
 
+    exec(http("XUIPB_020_005_SearchPage")
+			.get("/data/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases/pagination_metadata")
+			.headers(headers_search))
 
-      exec(http("XUIPROB_020_005_Pagination")
-      .get("/data/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases/pagination_metadata")
-      .headers(headers_28)
-        .check(status.is(200)))
-      .exec(http("XUIPROB_020_010_AccessRead")
-      .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
-      .headers(headers_28)
-        .check(status.in(200,304)))
-      .exec(http("XUIPROB_020_015_WorkBasket")
-      .get("/data/internal/case-types/GrantOfRepresentation/work-basket-inputs")
-      .headers(headers_prosearch)
-        .check(status.is(200)))
+    .exec(http("XUIPB_020_010_SearchAccessJurisdictions")
+			.get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
+			.headers(headers_search))
 
-        .exec(http("XUIPROB_020_020_CaseReference1")
-          .get("/data/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases/pagination_metadata?case_reference=${caseId}")
-          .headers(headers_prosearch)
-        .check(status.is(200)))
-        .pause(10)
+    .exec(http("XUIPB_020_015_SearchAccessJurisdictions")
+			.get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
+			.headers(headers_search))
 
-        .exec(http("XUIPROB_020_025_CaseReference1")
-          .get("/data/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases/pagination_metadata?case_reference=${caseId}")
-          .headers(headers_51))
-        .pause(10)
-  }
+    .exec(http("XUIPB_020_020_SearchResults")
+			.get("/aggregated/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases?view=WORKBASKET&page=1")
+			.headers(headers_search)
+      .check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumbers")))
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    .foreach("${caseNumbers}","caseNumber") {
+      exec(http("XUIPB_030_ViewCase")
+        .get("/data/internal/cases/${caseNumber}")
+        .headers(headers_viewCase))
+
+      .pause(MinThinkTime , MaxThinkTime )
+    }
+
+    // exec(http("XUIPROB_020_005_Pagination")
+    //   .get("/data/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases/pagination_metadata")
+    //   .headers(headers_28)
+    //   .check(status.is(200)))
+
+    // .exec(http("XUIPROB_020_010_AccessRead")
+    //   .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
+    //   .headers(headers_28)
+    //   .check(status.in(200,304)))
+
+    // .exec(http("XUIPROB_020_015_WorkBasket")
+    //   .get("/data/internal/case-types/GrantOfRepresentation/work-basket-inputs")
+    //   .headers(headers_prosearch)
+    //   .check(status.is(200)))
+
+    // .exec(http("XUIPROB_020_020_CaseReference1")
+    //   .get("/data/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases/pagination_metadata?case_reference=${caseId}")
+    //   .headers(headers_prosearch)
+    //   .check(status.is(200)))
+      
+    //   .pause(10)
+
+    // .exec(http("XUIPROB_020_025_CaseReference1")
+    //   .get("/data/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases/pagination_metadata?case_reference=${caseId}")
+    //   .headers(headers_51))
+    //   .pause(10)
+
 
   val casecreation= group("Probate Create")
   {
-
 
     exec(http("XUIPROB_010_005_SolAppCreated")
       .get("/data/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases/pagination_metadata?state=SolAppCreated")
