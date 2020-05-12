@@ -121,17 +121,17 @@ object EXUIMCLogin {
 
   val manageCasesHomePage =
 
-    exec(http("XUI01_010_005_Homepage")
+    exec(http("XUI${service}01_010_005_Homepage")
       .get("/")
       .headers(headers_0)
       .check(status.is(200)))
 
-    .exec(http("XUI01_010_010_HomepageTCEnabled")
+    .exec(http("XUI${service}_010_010_HomepageTCEnabled")
       .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
       .headers(headers_hometc)
       .check(status.is(200)))
 
-    .exec(http("XUI01_010_015_HompageLoginPage")
+    .exec(http("XUI${service}_010_015_HompageLoginPage")
       .get(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
       .headers(headers_login)
       .check(regex("Sign in"))
@@ -142,7 +142,7 @@ object EXUIMCLogin {
 
   val manageCaseslogin =
 
-    exec(http("XUI01_020_005_SignIn")
+    exec(http("XUI${service}_020_005_SignIn")
       .post(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
       .formParam("username", "${user}")
       .formParam("password", "Pass19word")
@@ -155,21 +155,21 @@ object EXUIMCLogin {
     .exec(getCookieValue(
       CookieKey("__userid__").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("myUserId")))
 
-    .exec(http("XUI01_020_010_SignInTCEnabled")
+    .exec(http("XUI${service}_020_010_SignInTCEnabled")
       .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
       .headers(headers_38)
       .check(status.in(200, 304)))
 
-    .exec(http("XUI01_020_015_SignInGetUserId")
+    .exec(http("XUI${service}_020_015_SignInGetUserId")
       .get("/api/userTermsAndConditions/${myUserId}")
       .headers(headers_tc))
 
-    .exec(http("XUI01_020_020_SignInAcceptTCGet")
+    .exec(http("XUI${service}_020_020_SignInAcceptTCGet")
       .get("/accept-terms-and-conditions")
       .headers(headers_tc_get)
       .check(status.in(200, 304)))
 
-    .exec(http("XUI01_020_025_SignInTCEnabled")
+    .exec(http("XUI${service}_020_025_SignInTCEnabled")
       .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
       .headers(headers_tc))
 
@@ -177,33 +177,33 @@ object EXUIMCLogin {
 
   val termsnconditions=
 
-    exec(http("XUI01_030_005_ConfirmT&C")
+    exec(http("XUI${service}_030_005_ConfirmT&C")
       .post("/api/userTermsAndConditions")
       .headers(headers_tc)
       .body(StringBody("{\"userId\":\"${myUserId}\"}"))
       .check(status.in(200, 304, 302)))
 
-    .exec(http("XUI01_030_010_AcceptT&CEnabled")
+    .exec(http("XUI${service}_030_010_AcceptT&CEnabled")
       .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
       .headers(headers_hometc)
       .check(status.in(200,304,302)))
 
     .repeat(6,"count") {
-      exec(http("XUI01_030_015_AcceptT&CAccessJurisdictions${count}")
+      exec(http("XUI${service}_030_015_AcceptT&CAccessJurisdictions${count}")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
         .headers(headers_access_read)
         .check(status.in(200,304,302)))
     }
 
-    .exec(http("XUI01_030_020_GetWorkBasketInputs")
+    .exec(http("XUI${service}_030_020_GetWorkBasketInputs")
 			.get("/data/internal/case-types/CARE_SUPERVISION_EPO/work-basket-inputs")
 			.headers(headers_17))
 
-    .exec(http("XUI01_030_025_GetPaginationMetaData")
+    .exec(http("XUI${service}_030_025_GetPaginationMetaData")
 			.get("/data/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases/pagination_metadata?state=Open")
 			.headers(headers_0))
 
-    .exec(http("XUI01_030_030_GetDefaultWorkBasketView")
+    .exec(http("XUI${service}_030_030_GetDefaultWorkBasketView")
 			.get("/aggregated/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases?view=WORKBASKET&state=Open&page=1")
 			.headers(headers_0))
 
@@ -211,7 +211,7 @@ object EXUIMCLogin {
   
   val manageCase_Logout =
   
-    exec(http("XUI01_040_005_SignOut")
+    exec(http("XUI${service}_040_005_SignOut")
       .get("/api/logout")
       .headers(headers_34)
       .check(status.in(200, 304, 302)))

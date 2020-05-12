@@ -4,7 +4,6 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import uk.gov.hmcts.reform.exui.performance.Feeders
 import uk.gov.hmcts.reform.exui.performance.scenarios.EXUIIACMC.{MaxThinkTime, MinThinkTime}
-import uk.gov.hmcts.reform.exui.performance.scenarios.EXUIManageCase.headers_51
 import uk.gov.hmcts.reform.exui.performance.scenarios.utils.Environment
 
 object EXUIManageCaseCreation {
@@ -84,6 +83,7 @@ object EXUIManageCaseCreation {
     "Origin" -> "https://manage-case.perftest.platform.hmcts.net/",
     "Request-Id" -> "|aPld4.8/RnX",
     "Sec-Fetch-Mode" -> "cors")
+
 
   val headers_59 = Map(
     "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
@@ -219,61 +219,147 @@ object EXUIManageCaseCreation {
     //   .get("/data/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases/pagination_metadata?case_reference=${caseId}")
     //   .headers(headers_51))
     //   .pause(10)
+    val headers_casecreate = Map(
+      "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8",
+      "content-type" -> "application/json",
+      "experimental" -> "true",
+      "sec-fetch-dest" -> "empty",
+      "sec-fetch-mode" -> "cors",
+      "sec-fetch-site" -> "same-origin",
+      "x-dtpc" -> "3$484214221_400h45vVNUHLCFUOLBQIRUKGTWUKCORNUWNRADP-0")
 
 
-  val casecreation= group("Probate Create")
-  {
+  val headers_casefilter= Map(
+    "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8",
+    "content-type" -> "application/json",
+    "experimental" -> "true",
+    "sec-fetch-dest" -> "empty",
+    "sec-fetch-mode" -> "cors",
+    "sec-fetch-site" -> "same-origin",
+    "x-dtpc" -> "3$484214221_400h48vVNUHLCFUOLBQIRUKGTWUKCORNUWNRADP-0",
+    "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-filter")
 
-    exec(http("XUIPROB_010_005_SolAppCreated")
-      .get("/data/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases/pagination_metadata?state=SolAppCreated")
-      .headers(headers_28)
-      .check(status.in(200,304)))
-      .pause(MinThinkTime, MaxThinkTime)
-      .exec(http("XUIPROB_010_010SolAppCreatedPage1")
-      .get("/aggregated/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases?view=WORKBASKET&state=SolAppCreated&page=1")
-      .headers(headers_28)
+  val headers_casedata = Map(
+    "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
+    "content-type" -> "application/json",
+    "experimental" -> "true",
+    "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+    "sec-fetch-dest" -> "empty",
+    "sec-fetch-mode" -> "cors",
+    "sec-fetch-site" -> "same-origin",
+    "x-dtpc" -> "3$484214221_400h50vVNUHLCFUOLBQIRUKGTWUKCORNUWNRADP-0")
+
+  val headers_draft = Map(
+    "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-draft-create.v2+json;charset=UTF-8",
+    "content-type" -> "application/json",
+    "experimental" -> "true",
+    "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+    "sec-fetch-dest" -> "empty",
+    "sec-fetch-mode" -> "cors",
+    "sec-fetch-site" -> "same-origin",
+    "x-dtpc" -> "3$484214221_400h51vVNUHLCFUOLBQIRUKGTWUKCORNUWNRADP-0")
+
+
+  val headers_casedataprofile = Map(
+    "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8",
+    "content-type" -> "application/json",
+    "experimental" -> "true",
+    "sec-fetch-dest" -> "empty",
+    "sec-fetch-mode" -> "cors",
+    "sec-fetch-site" -> "same-origin",
+    "x-dtpc" -> "3$484214221_400h52vVNUHLCFUOLBQIRUKGTWUKCORNUWNRADP-0",
+    "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-create/PROBATE/GrantOfRepresentation/solicitorCreateApplication/solicitorCreateApplicationsolicitorCreateApplicationPage1")
+
+  val headers_solappcreated = Map(
+    "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-case.v2+json;charset=UTF-8",
+    "content-type" -> "application/json",
+    "experimental" -> "true",
+    "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+    "request-context" -> "appId=cid-v1:32f2f79b-4f35-43d3-a880-a5a2e9f89979",
+    "request-id" -> "|M5xCL.OuK2x",
+    "sec-fetch-dest" -> "empty",
+    "sec-fetch-mode" -> "cors",
+    "sec-fetch-site" -> "same-origin",
+    "x-dtpc" -> "3$484214221_400h63vVNUHLCFUOLBQIRUKGTWUKCORNUWNRADP-0")
+
+  val headers_saveandviewcase= Map(
+    "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json",
+    "content-type" -> "application/json",
+    "experimental" -> "true",
+    "request-context" -> "appId=cid-v1:32f2f79b-4f35-43d3-a880-a5a2e9f89979",
+    "request-id" -> "|M5xCL.CZEGn",
+    "sec-fetch-dest" -> "empty",
+    "sec-fetch-mode" -> "cors",
+    "sec-fetch-site" -> "same-origin",
+    "x-dtpc" -> "3$484214221_400h65vVNUHLCFUOLBQIRUKGTWUKCORNUWNRADP-0")
+
+
+  val casecreation=
+
+    exec(http("XUIPROB_010_005_CreateCase")
+    .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
+    .headers(headers_28)
+    .check(status.in(200,304)))
+    .pause(MinThinkTime, MaxThinkTime)
+
+      .exec(http("XUIPROB_010_010_StartCreateCase1")
+      .get("/data/internal/case-types/GrantOfRepresentation/event-triggers/solicitorCreateApplication?ignore-warning=false")
+      .headers(headers_casecreate)
+      .check(status.in(200,304))
+      .check(jsonPath("$.event_token").optional.saveAs("event_token_probate")))
+
+      .exec(http("XUIPROB_010_015_StartCreateCase2")
+      .get("/data/internal/case-types/GrantOfRepresentation/event-triggers/solicitorCreateApplication?ignore-warning=false")
+      .headers(headers_casecreate)
         .check(status.in(200,304)))
-      .pause(MinThinkTime, MaxThinkTime)
-  /*  .exec(http("request_75")
-      .get("/api/healthCheck?path=/cases/case-filter")
-      .headers(headers_5)*/
-      .exec(http("XUIPROB_010_015_AccessCreate")
-        .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
-        .headers(headers_28)
-      .check(status.in(200,304)))
-      .pause(MinThinkTime, MaxThinkTime)
-    /*.exec(http("request_77")
-      .get("/api/healthCheck?path=/cases/case-create/PROBATE/GrantOfRepresentation/solicitorCreateApplication")
-      .headers(headers_5))*/
-      .exec(http("XUIPROB_010_020_AccessCreate")
-        .get("/data/internal/case-types/GrantOfRepresentation/event-triggers/solicitorCreateApplication?ignore-warning=false")
-        .headers(headers_78)
-        .check(status.is(200))
-        .check(jsonPath("$.event_token").optional.saveAs("event_token")))
-      .pause(MinThinkTime, MaxThinkTime)
 
-       .exec(http("XUIPROB_010_025_CreateCasePage1")
-          .get("/data/internal/case-types/GrantOfRepresentation/event-triggers/solicitorCreateApplication?ignore-warning=false")
-          .headers(headers_78)
+    .exec(http("XUIPROB_010_020_CreateCaseProfile")
+      .get("/data/internal/profile")
+      .headers(headers_casefilter)
       .check(status.in(200,304)))
       .pause(MinThinkTime, MaxThinkTime)
 
-    .exec(http("XUIPROB_010_030_AddressLookup")
+    .exec(http("XUIPROB_010_025_AddressLookup")
       .get("/api/addresses?postcode=TW33SD")
       .headers(headers_28)
       .check(status.in(200,304)))
       .pause(MinThinkTime, MaxThinkTime)
 
       .feed(Feeders.createCaseData)
-      .exec(http("XUIPROB_010_035_AddressLookupCaseCreateFinal")
-      .post("/data/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases?ignore-warning=false")
-      .headers(headers_88)
+      .exec(http("XUIPROB_010_030_CreateApplication")
+      .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorCreateApplicationsolicitorCreateApplicationPage1")
+      .headers(headers_casedata)
       .body(ElFileBody("RecordedSimulationcasecreate1810_0088_request.json")).asJson
-      .check(status.in(200,304))
-      .check(jsonPath("$.id").optional.saveAs("caseId")))
-      .pause(50)
+      .check(status.in(200,304)))
 
-  }
+      .pause(25)
+
+      .exec(http("XUIPROB_010_035_ApplicationDraft")
+      .post("/data/case-types/GrantOfRepresentation/drafts/")
+      .headers(headers_draft)
+      .body(ElFileBody("RecordedSimulationprobate1205_0018_request.json")).asJson
+      .check(status.is(404)))
+
+      .exec(http("XUIPROB_010_035_DraftProfile")
+        .get("/data/internal/profile")
+        .headers(headers_casedataprofile)
+        .check(status.in(200,304)))
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .exec(http("XUIPROB_010_040_CaseSubmitted")
+        .post("/data/case-types/GrantOfRepresentation/cases?ignore-warning=false")
+        .headers(headers_solappcreated)
+        .body(ElFileBody("RecordedSimulationprobate1205_0025_request.json")).asJson
+        .check(status.in(200,304))
+      .check(jsonPath("$.id").optional.saveAs("caseId")))
+
+      .exec(http("XUIPROB_010_045_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(headers_saveandviewcase)
+        .check(status.in(200,304)))
+      .pause(MinThinkTime, MaxThinkTime)
+
+
 
 
 
