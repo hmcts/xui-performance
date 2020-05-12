@@ -63,7 +63,7 @@ class ExUI extends Simulation {
 			.exec(EXUIMCLogin.manageCasesHomePage)
 			.exec(EXUIMCLogin.manageCaseslogin)
 			.exec(EXUIMCLogin.termsnconditions)
-		.repeat(1) {
+		.repeat(2) {
 			exec(EXUIManageCaseCreation.casecreation)
 			.exec(EXUIManageCaseCreation.casedetails)
 			}
@@ -76,7 +76,7 @@ class ExUI extends Simulation {
 	  	.exec(EXUIMCLogin.manageCasesHomePage)
 			.exec(EXUIMCLogin.manageCaseslogin)
 			.exec(EXUIMCLogin.termsnconditions)
-		  	.repeat(1) {
+		  	.repeat(2) {
 					exec(EXUIIACMC.iaccasecreation)
 						.exec(EXUIIACMC.shareacase)
 				}
@@ -100,7 +100,7 @@ class ExUI extends Simulation {
 	  	.exec(EXUIMCLogin.manageCasesHomePage)
 		.exec(EXUIMCLogin.manageCaseslogin)
 			.exec(EXUIMCLogin.termsnconditions)
-		  	.repeat(1) {
+		  	.repeat(2) {
 					exec(EXUIFPLAMC.fplacasecreation)
 				}
 		.exec(EXUIMCLogin.manageCase_Logout)
@@ -120,9 +120,9 @@ class ExUI extends Simulation {
 		EXUIScn.inject(rampUsers(75) during (1800))
 			.protocols(XUIHttpProtocol)
 	)*/
-	 setUp(
+	 /*setUp(
 		 EXUIMCaseProbateScn.inject(rampUsers(1) during (1)))
-      .protocols(IAChttpProtocol)
+      .protocols(IAChttpProtocol)*/
 
   /*setUp(
 		EXUIMCaseCreationFPLAScn.inject(rampUsers(1) during (3)))
@@ -135,11 +135,11 @@ class ExUI extends Simulation {
 	/*setUp(
 		EXUIMCaseCreationIACScn.inject(rampUsers(1) during (6)))
 		.protocols(IAChttpProtocol)*/
- /* setUp(
+  setUp(
     EXUIScn.inject(nothingFor(5),rampUsers(131) during (3000)),
 		EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(82) during (3000)),
 		EXUIMCaseViewIACScn.inject(nothingFor(25),rampUsers(74) during (3000)),
 		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(38) during (3000)),
 		EXUIMCaseViewFPLAScn.inject(nothingFor(45),rampUsers(19) during (3000))
-	).protocols(IAChttpProtocol)*/
+	).protocols(IAChttpProtocol)
 }

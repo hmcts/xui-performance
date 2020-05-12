@@ -705,12 +705,10 @@ object EXUIIACMC {
 
   val shareacase =
 
-
-    exec(http("XUIIAC_030_005_ShareCaseEventTrigger")
+    exec(http("XUIIAC_030_005_StartShareCaseEvent")
       .get("/data/internal/cases/${caseId}/event-triggers/shareACase?ignore-warning=false")
       .headers(headers_sharecase1)
       .check(status.in(200,304,302))
-      // .check(jsonPath("$..list_items").optional.saveAs("userlist"))
       .check(jsonPath("$..list_items[0].code").optional.saveAs("code1"))
       .check(jsonPath("$..list_items[0].label").optional.saveAs("label1"))
       .check(jsonPath("$..list_items[1].code").optional.saveAs("code2"))
