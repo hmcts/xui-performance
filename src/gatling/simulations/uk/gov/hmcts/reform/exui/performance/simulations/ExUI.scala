@@ -49,7 +49,7 @@ class ExUI extends Simulation {
 			ExUI.manageOrganisationLogin,
 			ExUI.usersPage,
 			ExUI.inviteUserPage
-			.repeat(2) {
+			.repeat(1) {
 				exec(ExUI.sendInvitation)
 				},
 			ExUI.manageOrganisationLogout
@@ -57,26 +57,26 @@ class ExUI extends Simulation {
 	 }
 
 
-  val EXUIMCaseProbateScn = scenario("EXUI Manage Case").repeat(1)
+  val EXUIMCaseProbateScn = scenario("***** Probate Case Journey ******").repeat(1)
   {
 		feed(feedUserDataProbate).feed(Feeders.ProDataFeeder)
 			.exec(EXUIMCLogin.manageCasesHomePage)
 			.exec(EXUIMCLogin.manageCaseslogin)
 			.exec(EXUIMCLogin.termsnconditions)
-		.repeat(2) {
-			exec(EXUIManageCaseCreation.casecreation)
-			.exec(EXUIManageCaseCreation.casedetails)
+		.repeat(1) {
+			exec(EXUIProbateMC.casecreation)
+			.exec(EXUIProbateMC.casedetails)
 			}
 		.exec(EXUIMCLogin.manageCase_Logout)
   }
 
-	val EXUIMCaseCreationIACScn = scenario("IAC Create Case").repeat(1)
+	val EXUIMCaseCreationIACScn = scenario("***** IAC Create Case *****").repeat(1)
 	{
 	  	feed(feedUserDataIACCreate).feed(Feeders.IACCreateDataFeeder)
 	  	.exec(EXUIMCLogin.manageCasesHomePage)
 			.exec(EXUIMCLogin.manageCaseslogin)
 			.exec(EXUIMCLogin.termsnconditions)
-		  	.repeat(2) {
+		  	.repeat(1) {
 					exec(EXUIIACMC.iaccasecreation)
 						.exec(EXUIIACMC.shareacase)
 				}
@@ -84,7 +84,7 @@ class ExUI extends Simulation {
 		.exec(EXUIMCLogin.manageCase_Logout)
 	}
 
-	val EXUIMCaseViewIACScn = scenario("IAC View Case").repeat(1)
+	val EXUIMCaseViewIACScn = scenario("***** IAC View Case *****").repeat(1)
 	{
 		feed(feedUserDataIACView).feed(Feeders.IACViewDataFeeder)
 			.exec(EXUIMCLogin.manageCasesHomePage)
@@ -94,19 +94,19 @@ class ExUI extends Simulation {
 			.exec(EXUIMCLogin.manageCase_Logout)
 	}
 
-	val EXUIMCaseCreationFPLAScn = scenario("FPLA Create Case").repeat(1)
+	val EXUIMCaseCreationFPLAScn = scenario("***** FPLA Create Case ***** ").repeat(1)
 	{
 		feed(feedUserDataFPLCreate).feed(Feeders.FPLCreateDataFeeder)
 	  	.exec(EXUIMCLogin.manageCasesHomePage)
 		.exec(EXUIMCLogin.manageCaseslogin)
 			.exec(EXUIMCLogin.termsnconditions)
-		  	.repeat(2) {
+		  	.repeat(1) {
 					exec(EXUIFPLAMC.fplacasecreation)
 				}
 		.exec(EXUIMCLogin.manageCase_Logout)
 	}
 
-	val EXUIMCaseViewFPLAScn = scenario("FPLA View Case").repeat(1)
+	val EXUIMCaseViewFPLAScn = scenario("***** FPLA View Case ***** ").repeat(1)
 	{
 		feed(feedUserDataFPLView).feed(Feeders.FPLViewDataFeeder)
 			.exec(EXUIMCLogin.manageCasesHomePage)
@@ -135,11 +135,20 @@ class ExUI extends Simulation {
 	/*setUp(
 		EXUIMCaseCreationIACScn.inject(rampUsers(1) during (6)))
 		.protocols(IAChttpProtocol)*/
+
+  /*setUp(
+		EXUIMCaseProbateScn.inject(nothingFor(1),rampUsers(1) during (1)),
+    EXUIMCaseCreationIACScn.inject(nothingFor(5),rampUsers(1) during (1)),
+    EXUIMCaseViewIACScn.inject(nothingFor(10),rampUsers(1) during (1)),
+    EXUIMCaseCreationFPLAScn.inject(nothingFor(15),rampUsers(1) during (1)),
+    EXUIMCaseViewFPLAScn.inject(nothingFor(20),rampUsers(1) during (1))
+  ).protocols(IAChttpProtocol)*/
+
   setUp(
-    EXUIScn.inject(nothingFor(5),rampUsers(131) during (3000)),
+		EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(131) during (3100)),
 		EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(82) during (3000)),
-		EXUIMCaseViewIACScn.inject(nothingFor(25),rampUsers(74) during (3000)),
-		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(38) during (3000)),
-		EXUIMCaseViewFPLAScn.inject(nothingFor(45),rampUsers(19) during (3000))
+		EXUIMCaseViewIACScn.inject(nothingFor(25),rampUsers(74) during (3300)),
+		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(38) during (2600)),
+		EXUIMCaseViewFPLAScn.inject(nothingFor(45),rampUsers(19) during (3300))
 	).protocols(IAChttpProtocol)
 }

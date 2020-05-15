@@ -119,24 +119,45 @@ object Feeders {
 
 
   val IACCreateDataFeeder = Iterator.continually(Map("service" -> ({
-    "IAC"
-  })));
+    "IACC"
+  }),
+    "SignoutNumber" -> ({
+      "260"
+    })
+
+  ));
 
   val FPLCreateDataFeeder = Iterator.continually(Map("service" -> ({
-    "FPL"
-  })));
+    "FPLC"
+  }),
+    "SignoutNumber" -> ({
+      "380"
+    })
+  ));
 
   val IACViewDataFeeder = Iterator.continually(Map("service" -> ({
     "IACV"
-  })));
+  }),
+    "SignoutNumber" -> ({
+      "070"
+    })
+  ));
 
   val FPLViewDataFeeder = Iterator.continually(Map("service" -> ({
     "FPLV"
-  })));
+  }),
+    "SignoutNumber" -> ({
+      "070"
+    })
+  ));
 
   val ProDataFeeder = Iterator.continually(Map("service" -> ({
-    "Probate"
-  })));
+    "PROB"
+  }),
+    "SignoutNumber" -> ({
+      "120"
+    })
+  ));
 
 
 
