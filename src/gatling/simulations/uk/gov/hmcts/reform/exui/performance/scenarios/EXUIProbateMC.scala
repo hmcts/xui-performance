@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.exui.performance.scenarios
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import uk.gov.hmcts.reform.exui.performance.Feeders
-import uk.gov.hmcts.reform.exui.performance.scenarios.EXUIIACMC.{MaxThinkTime, MinThinkTime}
 import uk.gov.hmcts.reform.exui.performance.scenarios.utils.Environment
 import uk.gov.hmcts.reform.exui.performance.scenarios.utils.ProbateHeader
 
@@ -15,7 +14,8 @@ object EXUIProbateMC {
   val baseURL=Environment.baseURL
   //val loginFeeder = csv("OrgId.csv").circular
 
- 
+  val MinThinkTime = Environment.minThinkTimePROB
+  val MaxThinkTime = Environment.maxThinkTimePROB
 
 
 
@@ -23,34 +23,38 @@ object EXUIProbateMC {
 
     exec(http("XUI${service}_100_005_SearchPage")
 			.get("/data/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases/pagination_metadata")
-			.headers(ProbateHeader.headers_search))
+			.headers(ProbateHeader.headers_search)
+      .check(status.in(200,304))
+    )
 
     .exec(http("XUI${service}_100_010_SearchAccessJurisdictions")
 			.get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
-			.headers(ProbateHeader.headers_search))
+			.headers(ProbateHeader.headers_search)
+      .check(status.in(200,304))
+    )
 
     .exec(http("XUI${service}_100_015_SearchAccessJurisdictions")
 			.get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
-			.headers(ProbateHeader.headers_search))
+			.headers(ProbateHeader.headers_search)
+      .check(status.in(200,304))
+    )
 
     .exec(http("XUI${service}_100_020_SearchResults")
 			.get("/aggregated/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases?view=WORKBASKET&page=1")
 			.headers(ProbateHeader.headers_search)
-      .check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumbers")))
-
+      .check(status.in(200,304)))
     .pause(MinThinkTime , MaxThinkTime )
 
-    .foreach("${caseNumbers}","caseNumber") {
-      exec(http("XUI${service}_110_ViewCase")
-        .get("/data/internal/cases/${caseNumber}")
-        .headers(ProbateHeader.headers_viewCase))
+        .exec(http("XUI${service}_110_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(ProbateHeader.headers_viewCase)
+      .check(status.in(200,304)))
 
       .pause(MinThinkTime , MaxThinkTime )
-    }
+
 
   val casecreation=
     tryMax(2) {
-
       exec(http("XUI${service}_040_CreateCase")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
         .headers(ProbateHeader.headers_28)

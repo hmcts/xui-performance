@@ -13,8 +13,10 @@ object EXUIFPLAMC {
   val baseURL = Environment.baseURL
   val loginFeeder = csv("FPLUserData.csv").circular
 
-  val MinThinkTime = Environment.minThinkTime
-  val MaxThinkTime = Environment.maxThinkTime
+  val MinThinkTime = Environment.minThinkTimeFPLC
+  val MaxThinkTime = Environment.maxThinkTimeFPLC
+  val MinThinkTimeFPLV = Environment.minThinkTimeFPLV
+  val MaxThinkTimeFPLV = Environment.maxThinkTimeFPLV
   
   private val rng: Random = new Random()
   private def firstName(): String = rng.alphanumeric.take(10).mkString
@@ -497,7 +499,7 @@ object EXUIFPLAMC {
           .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
           .headers(FPLAHeader.headers_search))
     }
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTimeFPLV , MaxThinkTimeFPLV )
 
     .foreach("${caseNumbersFPL}","caseNumberFPL") {
       exec(http("XUI${service}_050_ViewCase")
@@ -507,7 +509,7 @@ object EXUIFPLAMC {
         .check(status.is(200)))
 
 
-    .pause(MinThinkTime , MaxThinkTime )
+        .pause(MinThinkTimeFPLV , MaxThinkTimeFPLV )
 
     .exec(http("XUI${service}_060_005_ViewCaseDocumentUI")
       .get("/external/config/ui")
@@ -526,6 +528,6 @@ object EXUIFPLAMC {
       .get("/documents/${Document_ID}/binary")
       .headers(FPLAHeader.headers_documents)
         .check(status.in(200, 404,304)))
-    .pause(MinThinkTime , MaxThinkTime )
+        .pause(MinThinkTimeFPLV , MaxThinkTimeFPLV )
     }
 }

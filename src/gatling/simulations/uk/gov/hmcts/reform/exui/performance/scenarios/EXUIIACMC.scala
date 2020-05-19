@@ -19,8 +19,10 @@ object EXUIIACMC {
   //val loginFeeder = csv("OrgId.csv").circular
 //  val feedUserDataIAC = csv("IACDataBackground.csv").circular
 
-  val MinThinkTime = Environment.minThinkTime
-  val MaxThinkTime = Environment.maxThinkTime
+  val MinThinkTime = Environment.minThinkTimeIACC
+  val MaxThinkTime = Environment.maxThinkTimeIACC
+  val MinThinkTimeIACV = Environment.minThinkTimeIACV
+  val MaxThinkTimeIACV = Environment.maxThinkTimeIACV
 
   //headers
 
@@ -321,7 +323,7 @@ object EXUIIACMC {
 			.get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
 			.headers(IACHeader.headers_search))
 
-    .pause(MinThinkTime,MaxThinkTime)
+    .pause(MinThinkTimeIACV,MaxThinkTimeIACV)
 
     .foreach("${caseNumbers}","caseNumber") {
       exec(http("XUI${service}_050_CaseDetails")
@@ -330,7 +332,7 @@ object EXUIIACMC {
         .check(regex("""internal/documents/(.+?)","document_filename""").find(0).saveAs("Document_ID"))
         .check(status.is(200)))
 
-    .pause(MinThinkTime , MaxThinkTime )
+        .pause(MinThinkTimeIACV,MaxThinkTimeIACV)
 
     .exec(http("XUI${service}_060_005_ViewCaseDocumentUI")
       .get("/external/config/ui")
