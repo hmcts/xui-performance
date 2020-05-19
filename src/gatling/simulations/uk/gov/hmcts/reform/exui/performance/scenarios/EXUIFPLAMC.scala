@@ -21,13 +21,17 @@ object EXUIFPLAMC {
   private def lastName(): String = rng.alphanumeric.take(10).mkString
 
   val fplacasecreation =
-    exec(http("XUI${service}_040_CreateCase")
-      .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
-      .headers(FPLAHeader.headers_casecreation)
-      .check(status.in(200,304)))
+    tryMax(2) {
+      exec(http("XUI${service}_040_CreateCase")
+        .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
+        .headers(FPLAHeader.headers_casecreation)
+        .check(status.in(200, 304)))
+    }.exitHereIfFailed
       .pause(MinThinkTime , MaxThinkTime )
 
-      .exec(http("XUI${service}_050_005_StartCreateCase")
+    .tryMax(2) {
+
+    exec(http("XUI${service}_050_005_StartCreateCase")
       .get("/data/internal/case-types/CARE_SUPERVISION_EPO/event-triggers/openCase?ignore-warning=false")
       .headers(FPLAHeader.headers_startcreatecase)
       .check(status.is(200))
@@ -35,7 +39,8 @@ object EXUIFPLAMC {
       .exec(http("XUI${service}_050_010_CreateCaseProfile")
         .get("/data/internal/profile")
         .headers(FPLAHeader.headers_createprofile)
-        .check(status.in(200,304)))
+        .check(status.in(200, 304))).exitHereIfFailed
+  }
       .pause(MinThinkTime , MaxThinkTime )
 
       //set the random variables as usable parameters
@@ -474,23 +479,24 @@ object EXUIFPLAMC {
 
 
   val findandviewcasefpl=
-    exec(http("XUI${service}_040_005_SearchPage")
-			.get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
-			.headers(FPLAHeader.headers_search))
+    tryMax(2) {
+      exec(http("XUI${service}_040_005_SearchPage")
+        .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
+        .headers(FPLAHeader.headers_search))
 
-    .exec(http("XUI${service}_040_010_SearchPaginationMetaData")
-			.get("/data/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases/pagination_metadata?state=Submitted")
-			.headers(FPLAHeader.headers_search))
+        .exec(http("XUI${service}_040_010_SearchPaginationMetaData")
+          .get("/data/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases/pagination_metadata?state=Submitted")
+          .headers(FPLAHeader.headers_search))
 
-    .exec(http("XUI${service}_040_015_SearchResults")
-			.get("/aggregated/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases?view=WORKBASKET&page=1&state=Submitted")
-			.headers(FPLAHeader.headers_search)
-      .check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumbersFPL")))
+        .exec(http("XUI${service}_040_015_SearchResults")
+          .get("/aggregated/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases?view=WORKBASKET&page=1&state=Submitted")
+          .headers(FPLAHeader.headers_search)
+          .check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumbersFPL")))
 
-    .exec(http("XUI${service}_040_020_SearchAccessJurisdictions")
-			.get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
-			.headers(FPLAHeader.headers_search))
-
+        .exec(http("XUI${service}_040_020_SearchAccessJurisdictions")
+          .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
+          .headers(FPLAHeader.headers_search))
+    }
     .pause(MinThinkTime , MaxThinkTime )
 
     .foreach("${caseNumbersFPL}","caseNumberFPL") {

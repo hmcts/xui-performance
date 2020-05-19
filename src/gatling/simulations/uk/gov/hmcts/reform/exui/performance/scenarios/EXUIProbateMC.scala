@@ -49,11 +49,13 @@ object EXUIProbateMC {
     }
 
   val casecreation=
+    tryMax(2) {
 
-    exec(http("XUI${service}_040_CreateCase")
-    .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
-    .headers(ProbateHeader.headers_28)
-    .check(status.in(200,304)))
+      exec(http("XUI${service}_040_CreateCase")
+        .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
+        .headers(ProbateHeader.headers_28)
+        .check(status.in(200, 304))).exitHereIfFailed
+    }
     .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_050_005_StartCreateCase1")
@@ -70,7 +72,7 @@ object EXUIProbateMC {
     .exec(http("XUI${service}_050_015_CreateCaseProfile")
       .get("/data/internal/profile")
       .headers(ProbateHeader.headers_casefilter)
-      .check(status.in(200,304)))
+      .check(status.in(200,304))).exitHereIfFailed
       .pause(MinThinkTime, MaxThinkTime)
 
     .exec(http("XUI${service}_060_AddressLookup")

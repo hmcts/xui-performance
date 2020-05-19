@@ -33,21 +33,23 @@ object EXUIIACMC {
   val timeStamp = sdfDate.format(now)
 
   val iaccasecreation=
+    tryMax(2) {
 
-    //set the current date as a usable parameter
-    exec(session => session.set("currentDate", timeStamp))
+      //set the current date as a usable parameter
+      exec(session => session.set("currentDate", timeStamp))
 
-      //set the random variables as usable parameters
-      .exec(
-      _.setAll(
-        ("firstName", firstName()),
-        ("lastName", lastName())
-      ))
-      //when click on create
-      .exec(http("XUI${service}_040_CreateCase")
-      .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
-      .headers(IACHeader.headers_createcase)
-      .check(status.in(200, 304)))
+        //set the random variables as usable parameters
+        .exec(
+        _.setAll(
+          ("firstName", firstName()),
+          ("lastName", lastName())
+        ))
+        //when click on create
+        .exec(http("XUI${service}_040_CreateCase")
+        .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
+        .headers(IACHeader.headers_createcase)
+        .check(status.in(200, 304))).exitHereIfFailed
+    }
       .pause(MinThinkTime , MaxThinkTime )
 
       .exec(http("XUI${service}_050_005_StartCreateCase1")
@@ -75,7 +77,7 @@ object EXUIIACMC {
         .post("/data/case-types/Asylum/validate?pageId=startAppealchecklist")
         .headers(IACHeader.headers_9)
         .body(StringBody("{\n  \"data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    }\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist1\": [\n        \"isAdult\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist3\": [\n        \"isNotFamilyAppeal\"\n      ],\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ]\n    }\n  }\n}"))
-        .check(status.is(200)))
+        .check(status.is(200))).exitHereIfFailed
 
       .pause(MinThinkTime , MaxThinkTime )
 
@@ -235,32 +237,34 @@ object EXUIIACMC {
 
 
   val shareacase =
+    tryMax(2) {
 
-    exec(http("XUI${service}_230_005_StartShareCaseEvent")
-      .get("/data/internal/cases/${caseId}/event-triggers/shareACase?ignore-warning=false")
-      .headers(IACHeader.headers_sharecase1)
-      .check(status.in(200,304,302))
-      .check(jsonPath("$..list_items[0].code").optional.saveAs("code1"))
-      .check(jsonPath("$..list_items[0].label").optional.saveAs("label1"))
-      .check(jsonPath("$..list_items[1].code").optional.saveAs("code2"))
-      .check(jsonPath("$..list_items[1].label").optional.saveAs("label2"))
-      .check(jsonPath("$..list_items[2].code").optional.saveAs("code3"))
-      .check(jsonPath("$..list_items[2].label").optional.saveAs("label3"))
-      .check(jsonPath("$..list_items[3].code").optional.saveAs("code4"))
-      .check(jsonPath("$..list_items[3].label").optional.saveAs("label4"))
-      .check(jsonPath("$..list_items[4].code").optional.saveAs("code5"))
-      .check(jsonPath("$..list_items[4].label").optional.saveAs("label5"))
-      .check(jsonPath("$..list_items[5].code").optional.saveAs("code6"))
-      .check(jsonPath("$..list_items[5].label").optional.saveAs("label6"))
-      .check(jsonPath("$..code").find(0).optional.saveAs("code"))
-      .check(jsonPath("$..label").find(2).optional.saveAs("label"))
-      .check(jsonPath("$.event_token").optional.saveAs("event_token_sharecase"))
-    )
-      .exec(http("XUI${service}_230_010_ShareACaseProfile")
-        .get("/data/internal/profile")
-        .headers(IACHeader.headers_di_casedetails)
-        .check(status.in(200,304,302))
+      exec(http("XUI${service}_230_005_StartShareCaseEvent")
+        .get("/data/internal/cases/${caseId}/event-triggers/shareACase?ignore-warning=false")
+        .headers(IACHeader.headers_sharecase1)
+        .check(status.in(200, 304, 302))
+        .check(jsonPath("$..list_items[0].code").optional.saveAs("code1"))
+        .check(jsonPath("$..list_items[0].label").optional.saveAs("label1"))
+        .check(jsonPath("$..list_items[1].code").optional.saveAs("code2"))
+        .check(jsonPath("$..list_items[1].label").optional.saveAs("label2"))
+        .check(jsonPath("$..list_items[2].code").optional.saveAs("code3"))
+        .check(jsonPath("$..list_items[2].label").optional.saveAs("label3"))
+        .check(jsonPath("$..list_items[3].code").optional.saveAs("code4"))
+        .check(jsonPath("$..list_items[3].label").optional.saveAs("label4"))
+        .check(jsonPath("$..list_items[4].code").optional.saveAs("code5"))
+        .check(jsonPath("$..list_items[4].label").optional.saveAs("label5"))
+        .check(jsonPath("$..list_items[5].code").optional.saveAs("code6"))
+        .check(jsonPath("$..list_items[5].label").optional.saveAs("label6"))
+        .check(jsonPath("$..code").find(0).optional.saveAs("code"))
+        .check(jsonPath("$..label").find(2).optional.saveAs("label"))
+        .check(jsonPath("$.event_token").optional.saveAs("event_token_sharecase"))
       )
+        .exec(http("XUI${service}_230_010_ShareACaseProfile")
+          .get("/data/internal/profile")
+          .headers(IACHeader.headers_di_casedetails)
+          .check(status.in(200, 304, 302))
+        )
+    }
       .pause(MinThinkTime , MaxThinkTime )
 
       .exec(http("XUI${service}_240_005_ShareACaseValidate")
