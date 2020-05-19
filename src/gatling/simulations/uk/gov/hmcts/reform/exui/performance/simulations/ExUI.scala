@@ -117,8 +117,8 @@ class ExUI extends Simulation {
 	}
 
 	/*setUp(
-		EXUIScn.inject(rampUsers(75) during (1800))
-			.protocols(XUIHttpProtocol)
+		EXUIMCaseProbateScn.inject(rampUsers(131) during (600))
+			.protocols(IAChttpProtocol)
 	)*/
 	 /*setUp(
 		 EXUIMCaseProbateScn.inject(rampUsers(1) during (1)))
@@ -145,10 +145,10 @@ class ExUI extends Simulation {
   ).protocols(IAChttpProtocol)*/
 
   setUp(
-		EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(131) during (3100)),
-		EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(82) during (3000)),
-		EXUIMCaseViewIACScn.inject(nothingFor(25),rampUsers(74) during (3300)),
-		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(38) during (2600)),
-		EXUIMCaseViewFPLAScn.inject(nothingFor(45),rampUsers(19) during (3300))
+		EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(131) during (3200)),
+		EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(82) during (3200)),
+		EXUIMCaseViewIACScn.inject(nothingFor(25),rampUsers(74) during (3400)),
+		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(38) during (2700)),
+		EXUIMCaseViewFPLAScn.inject(nothingFor(45),rampUsers(19) during (3400))
 	).protocols(IAChttpProtocol)
 }

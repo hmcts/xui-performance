@@ -339,10 +339,11 @@ object EXUIIACMC {
     .exec(http("XUI${service}_060_015_ViewCaseDocumentAnnotations")
       .get("/em-anno/annotation-sets/filter?documentId=${Document_ID}")
       .headers(IACHeader.headers_documents)
-      .check(status.in(200, 404)))
+      .check(status.in(200, 404,304)))
 
     .exec(http("XUI${service}_060_020_ViewCaseDocumentBinary")
       .get("/documents/${Document_ID}/binary")
-      .headers(IACHeader.headers_documents))
+      .headers(IACHeader.headers_documents)
+      .check(status.in(200, 404,304)))
   }
 }

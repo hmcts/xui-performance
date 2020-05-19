@@ -473,18 +473,17 @@ object EXUIFPLAMC {
 
 
 
-  val findandviewcasefpl= 
-
+  val findandviewcasefpl=
     exec(http("XUI${service}_040_005_SearchPage")
 			.get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
 			.headers(FPLAHeader.headers_search))
 
     .exec(http("XUI${service}_040_010_SearchPaginationMetaData")
-			.get("/data/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases/pagination_metadata")
+			.get("/data/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases/pagination_metadata?state=Submitted")
 			.headers(FPLAHeader.headers_search))
 
     .exec(http("XUI${service}_040_015_SearchResults")
-			.get("/aggregated/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases?view=WORKBASKET&page=1")
+			.get("/aggregated/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases?view=WORKBASKET&page=1&state=Submitted")
 			.headers(FPLAHeader.headers_search)
       .check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumbersFPL")))
 
@@ -515,12 +514,12 @@ object EXUIFPLAMC {
     .exec(http("XUI${service}_060_015_ViewCaseDocumentAnnotations")
       .get("/em-anno/annotation-sets/filter?documentId=${Document_ID}")
       .headers(FPLAHeader.headers_documents)
-      .check(status.in(200, 404)))
+      .check(status.in(200, 404,304)))
 
     .exec(http("XUI${service}_060_020_ViewCaseDocumentBinary")
       .get("/documents/${Document_ID}/binary")
-      .headers(FPLAHeader.headers_documents))
-
+      .headers(FPLAHeader.headers_documents)
+        .check(status.in(200, 404,304)))
     .pause(MinThinkTime , MaxThinkTime )
     }
 }
