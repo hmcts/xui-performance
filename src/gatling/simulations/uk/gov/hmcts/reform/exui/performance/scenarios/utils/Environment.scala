@@ -23,12 +23,12 @@ object Environment {
   val maxThinkTimeFPLC = 85//30
  val minThinkTimeIACC = 100//10
  val maxThinkTimeIACC = 120
- val minThinkTimeFPLV = 330//10
- val maxThinkTimeFPLV = 340//320
- val minThinkTimeIACV = 510//10
- val maxThinkTimeIACV = 530
- val minThinkTimePROB = 320//10
- val maxThinkTimePROB = 330
+ val minThinkTimeFPLV = 340//10
+ val maxThinkTimeFPLV = 345//320
+ val minThinkTimeIACV = 470//10
+ val maxThinkTimeIACV = 490
+ val minThinkTimePROB = 300//10
+ val maxThinkTimePROB = 310
 
   val constantthinkTime = 5
   //val minWaitForNextIteration = 300
