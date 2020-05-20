@@ -319,37 +319,38 @@ object EXUIIACMC {
 			.headers(IACHeader.headers_search)
       .check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumbers")))
 
-    .exec(http("XUI${service}_040_020_SearchAccessJurisdictions")
-			.get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
-			.headers(IACHeader.headers_search))
-
-    .pause(MinThinkTimeIACV,MaxThinkTimeIACV)
-
-    .foreach("${caseNumbers}","caseNumber") {
-      exec(http("XUI${service}_050_CaseDetails")
-        .get("/data/internal/cases/${caseNumber}")
-        .headers(IACHeader.headers_data_internal_cases)
-        .check(regex("""internal/documents/(.+?)","document_filename""").find(0).saveAs("Document_ID"))
-        .check(status.is(200)))
+        .exec(http("XUI${service}_040_020_SearchAccessJurisdictions")
+          .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
+          .headers(IACHeader.headers_search))
 
         .pause(MinThinkTimeIACV,MaxThinkTimeIACV)
 
-    .exec(http("XUI${service}_060_005_ViewCaseDocumentUI")
-      .get("/external/config/ui")
-      .headers(IACHeader.headers_documents))
+        .foreach("${caseNumbers}","caseNumber") {
+          exec(http("XUI${service}_050_CaseDetails")
+            .get("/data/internal/cases/${caseNumber}")
+            .headers(IACHeader.headers_data_internal_cases)
+            .check(regex("""internal/documents/(.+?)","document_filename""").find(0).saveAs("Document_ID"))
+            .check(status.is(200)))
 
-    .exec(http("XUI${service}_060_010_ViewCaseDocumentT&C")
-      .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
-      .headers(IACHeader.headers_documents))
+            .pause(MinThinkTimeIACV,MaxThinkTimeIACV)
 
-    .exec(http("XUI${service}_060_015_ViewCaseDocumentAnnotations")
-      .get("/em-anno/annotation-sets/filter?documentId=${Document_ID}")
-      .headers(IACHeader.headers_documents)
-      .check(status.in(200, 404,304)))
+        .exec(http("XUI${service}_060_005_ViewCaseDocumentUI")
+          .get("/external/config/ui")
+          .headers(IACHeader.headers_documents))
 
-    .exec(http("XUI${service}_060_020_ViewCaseDocumentBinary")
-      .get("/documents/${Document_ID}/binary")
-      .headers(IACHeader.headers_documents)
-      .check(status.in(200, 404,304)))
-  }
+        .exec(http("XUI${service}_060_010_ViewCaseDocumentT&C")
+          .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
+          .headers(IACHeader.headers_documents))
+
+        .exec(http("XUI${service}_060_015_ViewCaseDocumentAnnotations")
+          .get("/em-anno/annotation-sets/filter?documentId=${Document_ID}")
+          .headers(IACHeader.headers_documents)
+          .check(status.in(200, 404,304)))
+
+        .exec(http("XUI${service}_060_020_ViewCaseDocumentBinary")
+          .get("/documents/${Document_ID}/binary")
+          .headers(IACHeader.headers_documents)
+          .check(status.in(200, 404,304)))
+      }
+      .pause(MinThinkTimeIACV,MaxThinkTimeIACV)
 }
