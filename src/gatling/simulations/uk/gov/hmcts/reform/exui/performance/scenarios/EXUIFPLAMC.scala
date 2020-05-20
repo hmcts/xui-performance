@@ -499,7 +499,7 @@ object EXUIFPLAMC {
           .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
           .headers(FPLAHeader.headers_search))
     }
-    .pause(MinThinkTimeFPLV , MaxThinkTimeFPLV )
+      .pause(MinThinkTimeFPLV , MaxThinkTimeFPLV )
 
     .foreach("${caseNumbersFPL}","caseNumberFPL") {
       exec(http("XUI${service}_050_ViewCase")
@@ -507,7 +507,6 @@ object EXUIFPLAMC {
         .headers(FPLAHeader.headers_searchinputs)
         .check(regex("""internal/documents/(.+?)","document_filename""").find(0).saveAs("Document_ID"))
         .check(status.is(200)))
-
 
         .pause(MinThinkTimeFPLV , MaxThinkTimeFPLV )
 

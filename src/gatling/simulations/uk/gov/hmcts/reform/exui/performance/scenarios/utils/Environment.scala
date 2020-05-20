@@ -17,18 +17,18 @@ object Environment {
   // val baseURL = "https://gateway.ccd.demo.platform.hmcts.net"
   //val idamURL = "https://idam.preprod.ccidam.reform.hmcts.net"
   //val ccdEnvurl = "https://www.ccd.demo.platform.hmcts.net"
-  val minThinkTime = 100//10
- val maxThinkTime = 110//30
+  val minThinkTime =100//10
+ val maxThinkTime =110//30
  val minThinkTimeFPLC = 75//10
   val maxThinkTimeFPLC = 85//30
  val minThinkTimeIACC = 100//10
  val maxThinkTimeIACC = 120
- val minThinkTimeFPLV = 310//10
- val maxThinkTimeFPLV = 320
- val minThinkTimeIACV = 500//10
- val maxThinkTimeIACV = 520
- val minThinkTimePROB = 270//10
- val maxThinkTimePROB = 280
+ val minThinkTimeFPLV = 330//10
+ val maxThinkTimeFPLV = 340//320
+ val minThinkTimeIACV = 510//10
+ val maxThinkTimeIACV = 530
+ val minThinkTimePROB = 320//10
+ val maxThinkTimePROB = 330
 
   val constantthinkTime = 5
   //val minWaitForNextIteration = 300
