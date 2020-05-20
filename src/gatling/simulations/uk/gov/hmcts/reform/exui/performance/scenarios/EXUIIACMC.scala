@@ -351,6 +351,7 @@ object EXUIIACMC {
           .get("/documents/${Document_ID}/binary")
           .headers(IACHeader.headers_documents)
           .check(status.in(200, 404,304)))
+            .pause(MinThinkTimeIACV,MaxThinkTimeIACV)
       }
-      .pause(MinThinkTimeIACV,MaxThinkTimeIACV)
+
 }
