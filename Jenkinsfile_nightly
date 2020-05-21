@@ -14,7 +14,7 @@ properties([
 @Library("Infrastructure") 
 
 
-def product = "rpa"
+def product = "XUI"
 def component = "MANAGE ORGANISATION"
 
 withNightlyPipeline("java", product, component) {
