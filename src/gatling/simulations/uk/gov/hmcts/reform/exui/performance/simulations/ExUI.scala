@@ -40,11 +40,11 @@ class ExUI extends Simulation {
 	val EXUIScn = scenario("EXUI").repeat(1)
 	 {
 		exec(
-			/*ExUI.createOrg,
+			ExUI.createOrg,
 			ExUI.approveOrgHomePage,
 			ExUI.approveOrganisationlogin,
 			ExUI.approveOrganisationApprove,
-			ExUI.approveOrganisationLogout,*/
+			ExUI.approveOrganisationLogout,
 			ExUI.manageOrgHomePage,
 			ExUI.manageOrganisationLogin,
 			ExUI.usersPage,
