@@ -87,14 +87,6 @@ object Feeders {
     generatedPassword
   }
 
-  /*private def addDynamicData(): String = {
-    generateEmailAddress()
-   generatePassword()
-   generateOrganisationName()
-    var body =
-      s"""{"fromValues":{"haveDXNumber":"dontHaveDX","orgName":"${orgName}","createButton":"Continue","officeAddressOne":"34","officeAddressTwo":"Philbeach Gardens","townOrCity":"London","county":null,"postcode":"SW5 9EY","PBAnumber1":null,"PBAnumber2":null,"haveDx":"no","haveSra":"no","firstName":"John","lastName":"Taylor","emailAddress":"${generatedEmail}","jurisdictions":[{"id":"SSCS"},{"id":"Divorce"},{"id":"Probate"},{"id":"Public Law"},{"id":"Bulk Scanning"},{"id":"Immigration & Asylum"},{"id":"Civil Money Claims"},{"id":"Employment"},{"id":"Family public law and adoption"},{"id":"Civil enforcement and possession"}]},"event":"continue"}""".stripMargin
-    return body
-  }*/
 
 
   val createDynamicDataFeeder = Iterator.continually(Map("generatedEmail" -> ({
@@ -114,7 +106,7 @@ object Feeders {
   })));
 
   val createDynamicUserDataFeeder = Iterator.continually(Map("generatedUserEmail" -> ({
-    "probateuser"+nextSeq()+"@mailinator.com"
+    "_aat.user"+nextSeq()+"@mailinator.com"
   })));
 
 

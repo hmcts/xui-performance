@@ -15,12 +15,20 @@ object ExUI {
 
    //val BaseURL = Environment.baseURL
   val IdamUrl = Environment.idamURL
-  val url=Environment.manageOrdURL
   val approveUser=Environment.adminUserAO
   val approveUserPassword=Environment.adminPasswordAO
-  val url_approve="https://administer-orgs.perftest.platform.hmcts.net"
-  val url_mo = "https://manage-org.perftest.platform.hmcts.net"
+  val url_approve=Environment.url_approve
+  val url_mo = Environment.manageOrdURL
+  val notificationClient=Environment.notificationClient
   val feeder = csv("userid-increment.csv").circular
+  val feederuser = csv("OrgDetails.csv").circular
+
+  val headers_tc_aat = Map(
+    "Content-Type" -> "application/json",
+    "Origin" -> "https://manage-case.perftest.platform.hmcts.net",
+    "Sec-Fetch-Dest" -> "empty",
+    "Sec-Fetch-Mode" -> "cors",
+    "Sec-Fetch-Site" -> "same-origin")
 
   val createOrg=
     exec(http("EXUI_RO_Homepage")
@@ -78,20 +86,20 @@ object ExUI {
         .exec {
 
         session =>
-          val client = new NotificationClient("sidam_perftest-b7ab8862-25b4-41c9-8311-cb78815f7d2d-ebb113ff-da17-4646-a39e-f93783a993f4")
+          val client = new NotificationClient(notificationClient)
           val pattern = new Regex("token.+")
           val str = findEmail(client,session("generatedEmail").as[String])
            session.set("activationLink", (pattern findFirstMatchIn str.get).mkString.trim.replace(")", ""))
       }
       .pause(40)
       .exec(http("SelfReg01_TX03_Password")
-        .get("https://idam-web-public.perftest.platform.hmcts.net/users/register?&${activationLink}")
+        .get(IdamUrl+"/users/register?&${activationLink}")
         .check(status.is(200))
         .check(css("input[name='token']", "value").saveAs("token"))
         .check(css("input[name='code']", "value").saveAs("code"))
         .check(css("input[name='_csrf']", "value").saveAs("_csrf")))
       .pause(40)
-      .exec(http("SelfReg01_TX04_Activate").post("https://idam-web-public.perftest.platform.hmcts.net/users/activate")
+      .exec(http("SelfReg01_TX04_Activate").post(IdamUrl+"/users/activate")
         .formParam("_csrf", "${_csrf}")
         .formParam("code", "${code}")
         .formParam("token", "${token}")
@@ -119,7 +127,7 @@ object ExUI {
 
 
   val manageOrgHomePage =
-
+    feed(feederuser).
     exec(http("EXUI_MO_005_Homepage")
       .get(url_mo + "/")
      // .headers(headers_0)
@@ -137,32 +145,67 @@ object ExUI {
         .check(css("input[name='_csrf']", "value").saveAs("csrfToken1"))
       )
 
-
     .pause(Environment.minThinkTime)
 
   val manageOrganisationLogin =
     exec(http("EXUI_MO_005_Login")
-      .post(IdamUrl + "/login?scope=openid+profile+roles+manage-user+create-user&response_type=code&redirect_uri=https%3a%2f%2fmanage-org.perftest.platform.hmcts.net%2foauth2%2fcallback&client_id=xuimowebapp")
-      .formParam("username", "${generatedEmail}")
+      .post(IdamUrl + "/login?scope=openid+profile+roles+manage-user+create-user&response_type=code&redirect_uri=https%3a%2f%2fmanage-org.aat.platform.hmcts.net%2foauth2%2fcallback&client_id=xuimowebapp")
+      .formParam("username", "${generatedEmail1}")
       .formParam("password", "Pass19word")
       .formParam("save", "Sign in")
       .formParam("selfRegistrationEnabled", "false")
       .formParam("_csrf", "${csrfToken1}")
       .check(status.in(200, 302)))
-      .exec(http("EXUI_MO_010_Login")
-        .get(url_mo + "/api/user/details")
-      .check(status.in(200, 302)))
-      .pause(Environment.constantthinkTime)
 
-      .exec(http("EXUI_MO_015_Login")
-        .get(url_mo + "/api/organisation")
-      .check(status.in(200, 302)))
-      .pause(Environment.constantthinkTime)
+
+    .exec(http("EXUI_MO_060_050_Login")
+          .get(url_mo + "/api/user/details")
+          .check(status.in(200, 302,304))
+    .check(jsonPath("$.userId").optional.saveAs("myUserId")))
+
+
+      .exec( session => {
+        println("userId is "+session("myUserId").as[String])
+        session
+      })
+
+      .exec(http("XUI_020_010_SignInTCEnabled")
+            .get(url_mo+"/api/configuration?configurationKey=feature.termsAndConditionsEnabled")
+            .check(status.in(200, 304)))
+
+      .exec(http("XUI_020_010_SignInTCEnabled")
+            .get(url_mo+"/api/userTermsAndConditions/${myUserId}")
+            .check(status.in(200, 304)))
+
 
       .exec(http("EXUI_MO_020_Login")
-        .get(url_mo + "/api/organisation/")
-      .check(status.in(200, 302,304)))
-    .pause(Environment.constantthinkTime)
+            .get(url_mo + "/api/organisation/")
+            .check(status.in(200, 302,304)))
+      .pause(Environment.constantthinkTime)
+
+    .exec(http("XUIASD_035_005_ConfirmT&C")
+       .post(url_mo+"/api/userTermsAndConditions")
+      .headers(headers_tc_aat)
+       .body(StringBody("{\"userId\":\"${myUserId}\"}"))
+       .check(status.in(200, 304, 302)))
+
+
+      .exec(http("XUIASD_035_010_ConfirmT&C")
+            .post(url_mo+"/api/userTermsAndConditions")
+        .headers(headers_tc_aat)
+            .body(StringBody("{\"userId\":\"${myUserId}\"}"))
+            .check(status.in(200, 304, 302)))
+
+
+      .exec(http("EXUI_MO_065_050_Login")
+            .get(url_mo + "/api/user/details")
+            .check(status.in(200, 302,304)))
+      .pause(Environment.constantthinkTime)
+
+      .exec(http("XUI_025_010_SignInTCEnabled")
+            .get(url_mo+"/api/configuration?configurationKey=feature.termsAndConditionsEnabled")
+            .check(status.in(200, 304)))
+
 
   val usersPage =
     exec(http("EXUI_MO_005_Userspage")
@@ -188,21 +231,21 @@ object ExUI {
       .exec {
 
         session =>
-          val client = new NotificationClient("sidam_perftest-b7ab8862-25b4-41c9-8311-cb78815f7d2d-ebb113ff-da17-4646-a39e-f93783a993f4")
+          val client = new NotificationClient(notificationClient)
           val pattern = new Regex("token.+")
          // val str = findEmail(client,session("orgName").as[String]+"_user"+session("userid").as[String]+"@mailinator.com")
-         val str = findEmail(client,session("generatedUserEmail").as[String])
+         val str = findEmail(client,session("orgName").as[String]+session("generatedUserEmail").as[String])
           session.set("activationLink", (pattern findFirstMatchIn str.get).mkString.trim.replace(")", ""))
       }
       .pause(40)
       .exec(http("InviteUser_TX03_Password")
-        .get("https://idam-web-public.perftest.platform.hmcts.net/users/register?&${activationLink}")
+        .get(IdamUrl+"/users/register?&${activationLink}")
         .check(status.is(200))
         .check(css("input[name='token']", "value").saveAs("token"))
         .check(css("input[name='code']", "value").saveAs("code"))
         .check(css("input[name='_csrf']", "value").saveAs("_csrf")))
       .pause(40)
-      .exec(http("SelfReg01_TX04_Activate").post("https://idam-web-public.perftest.platform.hmcts.net/users/activate")
+      .exec(http("SelfReg01_TX04_Activate").post(IdamUrl+"/users/activate")
         .formParam("_csrf", "${_csrf}")
         .formParam("code", "${code}")
         .formParam("token", "${token}")
@@ -215,7 +258,7 @@ object ExUI {
             session =>
               val fw = new BufferedWriter(new FileWriter("OrgId3.csv", true))
               try {
-                fw.write(session("orgName").as[String] + ","+session("orgRefCode").as[String] + "," + session("generatedEmail").as[String] +","+ session("generatedUserEmail").as[String] + "\r\n")
+                fw.write(session("orgName").as[String] + ","+session("orgRefCode").as[String] + "," + session("generatedEmail1").as[String] +","+ session("orgName").as[String]+session("generatedUserEmail").as[String] + "\r\n")
               }
               finally fw.close()
               session
@@ -234,12 +277,8 @@ object ExUI {
         .check(status.is(401)))
 
       .exec(http("EXUI_MO_015_Logout")
-        .get(IdamUrl + "/?response_type=code&client_id=xuimowebapp&redirect_uri=https://manage-org.perftest.platform.hmcts.net/oauth2/callback&scope=openid%20profile%20roles%20manage-user%20create-user")
+        .get(IdamUrl + "/?response_type=code&client_id=xuimowebapp&redirect_uri="+url_mo+"/oauth2/callback&scope=openid%20profile%20roles%20manage-user%20create-user")
     )
-
-
-
-
 
   // email notification related stuff
   def findEmail(client: NotificationClient, emailAddress:String) : Option[String] = {
