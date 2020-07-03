@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.exui.performance.simulations
 
 import io.gatling.core.Predef._
-import io.gatling.http.Predef.Proxy
 import uk.gov.hmcts.reform.exui.performance.Feeders
 import uk.gov.hmcts.reform.exui.performance.scenarios._
 import uk.gov.hmcts.reform.exui.performance.scenarios.utils._
@@ -15,11 +14,12 @@ class ExUI extends Simulation {
 	val feedUserDataIACCreate = csv("IACDataCreate.csv").circular
 	val feedUserDataFPLCreate = csv("FPLDataCreate.csv").circular
 	val feedUserDataProbate = csv("ProbateUserData.csv").circular
+	val feedUserDataFPLCases = csv("FPLCases.csv").circular
 
-	val httpProtocol = Environment.HttpProtocol
+	/*val httpProtocol = Environment.HttpProtocol
 		.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
 	//.baseUrl("https://xui-webapp-aat.service.core-compute-aat.internal")
-		.baseUrl("https://ccd-case-management-web-perftest.service.core-compute-perftest.internal")
+		.baseUrl("https://ccd-case-management-web-perftest.service.core-compute-perftest.internal")*/
 
   val XUIHttpProtocol = Environment.HttpProtocol
    // .proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
@@ -49,7 +49,7 @@ class ExUI extends Simulation {
 			ExUI.manageOrganisationLogin,
 			ExUI.usersPage,
 			ExUI.inviteUserPage
-			.repeat(1) {
+			.repeat(5,"n") {
 				exec(ExUI.sendInvitation)
 				},
 			ExUI.manageOrganisationLogout
@@ -116,14 +116,38 @@ class ExUI extends Simulation {
 			.exec(EXUIMCLogin.manageCase_Logout)
 	}
 
-	/*setUp(
-		EXUIMCaseProbateScn.inject(rampUsers(131) during (600))
-			.protocols(IAChttpProtocol)
-	)*/
-	 /*setUp(
-		 EXUIMCaseProbateScn.inject(rampUsers(1) during (1)))
-      .protocols(IAChttpProtocol)*/
+	// below is for FPLa SDO And CMO
+	val EXUIMCFPLASDOScn = scenario("***** FPLA SDO ***** ").repeat(1)
+	{
+		feed(feedUserDataFPLCases).feed(Feeders.FPLCreateDataFeeder)
+		/*.exec(EXUIMCLogin.manageCasesHomePage)
+    .exec(EXUIMCLogin.manageCaseslogin)
+    .exec(EXUIMCLogin.termsnconditions)
+    .repeat(1) {
+      exec(EXUIFPLAMC.fplacasecreation)
+    }
+    .exec(EXUIMCLogin.manageCase_Logout)*/
+		.exec(EXUIMCLogin.manageCasesHomePage)
+		.exec(EXUIMCLogin.managecasesadminlogin)
+		.exec(EXUIFPLASDO.fplviewcaseforsdoasadmin)
+		.exec(EXUIFPLASDO.fplasdoadminactivities)
+		.exec(EXUIMCLogin.manageCase_Logout)
+		.exec(EXUIMCLogin.manageCasesHomePage)
+		.exec(EXUIMCLogin.managecasesgatekeeperlogin)
+		.exec(EXUIFPLASDO.fplviewcaseforsdoasgatekeeper)
+		.exec(EXUIFPLASDO.fplasdogatekeeperactivities)
+		.exec(EXUIMCLogin.manageCase_Logout)
 
+	}
+
+
+	/*setUp(
+		EXUIScn.inject(rampUsers(10) during (300))
+			.protocols(XUIHttpProtocol)
+	)*/
+	 setUp(
+		 EXUIMCFPLASDOScn.inject(rampUsers(1) during (1)))
+      .protocols(IAChttpProtocol)
   /*setUp(
 		EXUIMCaseCreationFPLAScn.inject(rampUsers(1) during (3)))
 		.protocols(IAChttpProtocol)*/
@@ -152,11 +176,11 @@ class ExUI extends Simulation {
 		EXUIMCaseViewFPLAScn.inject(nothingFor(45),rampUsers(19) during (3400))
 	).protocols(IAChttpProtocol)*/
 
-  setUp(
+ /* setUp(
 		EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(131) during (900)),
 		EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(82) during (900)),
 		EXUIMCaseViewIACScn.inject(nothingFor(25),rampUsers(74) during (900)),
 		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(38) during (600)),
 		EXUIMCaseViewFPLAScn.inject(nothingFor(45),rampUsers(19) during (900))
-	).protocols(IAChttpProtocol)
+	).protocols(IAChttpProtocol)*/
 }
