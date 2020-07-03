@@ -19,6 +19,8 @@ object ExUI {
   val approveUserPassword=Environment.adminPasswordAO
   val url_approve=Environment.url_approve
   val url_mo = Environment.manageOrdURL
+  val baseDomainOrg = Environment.baseDomainOrg
+  val baseDomainManageCase = Environment.baseDomain
   val notificationClient=Environment.notificationClient
   val feeder = csv("userid-increment.csv").circular
   val feederuser = csv("OrgDetails.csv").circular
@@ -149,7 +151,7 @@ object ExUI {
 
   val manageOrganisationLogin =
     exec(http("EXUI_MO_005_Login")
-      .post(IdamUrl + "/login?scope=openid+profile+roles+manage-user+create-user&response_type=code&redirect_uri=https%3a%2f%2fmanage-org.aat.platform.hmcts.net%2foauth2%2fcallback&client_id=xuimowebapp")
+      .post(IdamUrl + "/login?scope=openid+profile+roles+manage-user+create-user&response_type=code&redirect_uri=https%3a%2f%2f"+baseDomainOrg+"%2foauth2%2fcallback&client_id=xuimowebapp")
       .formParam("username", "${generatedEmail1}")
       .formParam("password", "Pass19word")
       .formParam("save", "Sign in")
