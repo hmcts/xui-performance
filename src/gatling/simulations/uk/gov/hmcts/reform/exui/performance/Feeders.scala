@@ -26,7 +26,7 @@ object Feeders {
   var orgName = ""
   var appReferenceName = ""
   var sequence1=0
-  var seq = 1
+  var seq = 50
 
   def nextSeq() : Integer = {
 
@@ -106,7 +106,7 @@ object Feeders {
   })));
 
   val createDynamicUserDataFeeder = Iterator.continually(Map("generatedUserEmail" -> ({
-    "_aat.user"+nextSeq()+"@mailinator.com"
+    "_pt.user"+nextSeq()+"@mailinator.com"
   })));
 
 
