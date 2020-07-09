@@ -120,18 +120,18 @@ class ExUI extends Simulation {
 	val EXUIMCFPLASDOScn = scenario("***** FPLA SDO ***** ").repeat(1)
 	{
 		feed(feedUserDataFPLCases).feed(Feeders.FPLCreateDataFeeder)
-		/*.exec(EXUIMCLogin.manageCasesHomePage)
+	/*	.exec(EXUIMCLogin.manageCasesHomePage)
     .exec(EXUIMCLogin.manageCaseslogin)
     .exec(EXUIMCLogin.termsnconditions)
     .repeat(1) {
       exec(EXUIFPLAMC.fplacasecreation)
     }
     .exec(EXUIMCLogin.manageCase_Logout)*/
-		.exec(EXUIMCLogin.manageCasesHomePage)
+		/*.exec(EXUIMCLogin.manageCasesHomePage)
 		.exec(EXUIMCLogin.managecasesadminlogin)
 		.exec(EXUIFPLASDO.fplviewcaseforsdoasadmin)
 		.exec(EXUIFPLASDO.fplasdoadminactivities)
-		.exec(EXUIMCLogin.manageCase_Logout)
+		.exec(EXUIMCLogin.manageCase_Logout)*/
 		.exec(EXUIMCLogin.manageCasesHomePage)
 		.exec(EXUIMCLogin.managecasesgatekeeperlogin)
 		.exec(EXUIFPLASDO.fplviewcaseforsdoasgatekeeper)
@@ -141,13 +141,13 @@ class ExUI extends Simulation {
 	}
 
 
-	setUp(
+	/*setUp(
 		EXUIScn.inject(rampUsers(1) during (300))
 			.protocols(XUIHttpProtocol)
-	)
-	 /*setUp(
+	)*/
+	 setUp(
 		 EXUIMCFPLASDOScn.inject(rampUsers(1) during (1)))
-      .protocols(IAChttpProtocol)*/
+      .protocols(IAChttpProtocol)
   /*setUp(
 		EXUIMCaseCreationFPLAScn.inject(rampUsers(1) during (3)))
 		.protocols(IAChttpProtocol)*/
