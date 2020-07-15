@@ -47,18 +47,57 @@ object ExUI {
   val approveOrgHomePage=
     exec(http("EXUI_AO_005_Homepage")
       .get(url_approve + "/")
-      .check(status.is(200)))
-      .exec(http("EXUI_AO_010_Homepage")
-        .get(IdamUrl + "/login?response_type=code&client_id=xuiaowebapp&redirect_uri="+url_approve+"/oauth2/callback&scope=openid%20profile%20roles%20manage-user%20create-user")
+      .check(status.is(200))
+    )
+
+  exec(http("request_6")
+  .get("/api/environment/config")
+    .check(status.is(200))
+  )
+
+
+    .exec(http("request_8")
+  .get("/api/user/details")
+  .check(status.is(200))
+    )
+
+    .exec(http("request_12")
+  .get("/auth/isAuthenticated")
+            .check(status.is(200))
+    )
+
+    .exec(http("request_8")
+  .get("/auth/login")
+      .check(status.is(200))
+    )
+
+
+    .exec(http("EXUI_AO_010_Homepage")
+  .get("/auth/login")
+      .check(status.is(200))
+      .check(headerRegex("Location", "(?state=)(.*)").saveAs("state"))
+    )
+
+
+      .exec( session => {
+        println("new location is  "+session("state").as[String])
+        session
+      })
+
+
+
+
+      /*.exec(http("EXUI_AO_015_Homepage")
+        .get(IdamUrl + "/login?client_id=xuiaowebapp&redirect_uri="+url_approve+"/oauth2/callback&state=${state}&response_type=code&scope=profile%20openid%20roles%20manage-user%20create-user&prompt=")
         .check(regex("Sign in"))
-        .check(css("input[name='_csrf']", "value").saveAs("csrfToken")))
+        .check(css("input[name='_csrf']", "value").saveAs("csrfToken")))*/
 
     .pause(Environment.minThinkTime)
 
   val approveOrganisationlogin =
 
     exec(http("EXUI_AO_005_Login")
-      .post(IdamUrl + "/login?response_type=code&client_id=xuiaowebapp&redirect_uri="+url_approve+"/oauth2/callback&scope=openid%20profile%20roles%20manage-user%20create-user")
+      .post(IdamUrl + "/login?client_id=xuiaowebapp&redirect_uri="+url_approve+"https://administer-orgs.perftest.platform.hmcts.net/oauth2/callback&state=${state}&response_type=code&scope=profile%20openid%20roles%20manage-user%20create-user&prompt=")
       .formParam("username", approveUser)
       .formParam("password", approveUserPassword)
       .formParam("save", "Sign in")
@@ -218,11 +257,11 @@ object ExUI {
   val inviteUserPage =
     exec(http("EXUI_MO_005_InviteUserpage")
       .get(url_mo + "/api/jurisdictions")
-      .check(status.is(200)))
+      .check(status.in(200,304)))
     .pause(Environment.minThinkTime)
 
   val sendInvitation =
-        //feed(feeder).
+
   feed(Feeders.createDynamicUserDataFeeder).
         exec(http("EXUI_MO_005_SendInvitation")
       .post(url_mo + "/api/inviteUser")
@@ -260,7 +299,7 @@ object ExUI {
             session =>
               val fw = new BufferedWriter(new FileWriter("OrgId3.csv", true))
               try {
-                fw.write(session("orgName").as[String] + ","+session("orgRefCode").as[String] + "," + session("generatedEmail1").as[String] +","+ session("orgName").as[String]+session("generatedUserEmail").as[String] + "\r\n")
+                fw.write(session("orgName").as[String] + ","+session("orgRefCode").as[String] + "," + session("generatedEmail1").as[String] +","+ session("orgName").as[String]+session("generatedUserEmail").as[String]+ "\r\n")
               }
               finally fw.close()
               session
@@ -272,7 +311,7 @@ object ExUI {
   val manageOrganisationLogout =
     exec(http("EXUI_MO_005_Logout")
       .get(url_mo + "/api/logout")
-      .check(status.is(200)))
+      .check(status.in(200,401)))
 
       .exec(http("EXUI_MO_010_Logout")
         .get(url_mo + "/api/user/details")

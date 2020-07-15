@@ -40,19 +40,19 @@ class ExUI extends Simulation {
 	val EXUIScn = scenario("EXUI").repeat(1)
 	 {
 		exec(
-			ExUI.createOrg,
-			ExUI.approveOrgHomePage,
-			ExUI.approveOrganisationlogin,
-			ExUI.approveOrganisationApprove,
-			ExUI.approveOrganisationLogout,
-			ExUI.manageOrgHomePage,
+			//ExUI.createOrg,
+			ExUI.approveOrgHomePage
+			//ExUI.approveOrganisationlogin
+		//	ExUI.approveOrganisationApprove,
+		//	ExUI.approveOrganisationLogout
+			/*ExUI.manageOrgHomePage,
 			ExUI.manageOrganisationLogin,
 			ExUI.usersPage,
 			ExUI.inviteUserPage
-			.repeat(1,"n") {
+			.repeat(4,"n") {
 				exec(ExUI.sendInvitation)
 				},
-			ExUI.manageOrganisationLogout
+			ExUI.manageOrganisationLogout*/
 			)
 	 }
 
@@ -100,7 +100,7 @@ class ExUI extends Simulation {
 	  	.exec(EXUIMCLogin.manageCasesHomePage)
 		.exec(EXUIMCLogin.manageCaseslogin)
 			.exec(EXUIMCLogin.termsnconditions)
-		  	.repeat(1) {
+		  	.repeat(2) {
 					exec(EXUIFPLAMC.fplacasecreation)
 				}
 		.exec(EXUIMCLogin.manageCase_Logout)
@@ -119,24 +119,24 @@ class ExUI extends Simulation {
 	// below is for FPLa SDO And CMO
 	val EXUIMCFPLASDOScn = scenario("***** FPLA SDO ***** ").repeat(1)
 	{
-		feed(feedUserDataFPLCases).feed(Feeders.FPLCreateDataFeeder)
-	/*	.exec(EXUIMCLogin.manageCasesHomePage)
+		feed(feedUserDataFPLCases).feed(Feeders.FPLSDODataFeeder)
+		/*.exec(EXUIMCLogin.manageCasesHomePage)
     .exec(EXUIMCLogin.manageCaseslogin)
     .exec(EXUIMCLogin.termsnconditions)
     .repeat(1) {
       exec(EXUIFPLAMC.fplacasecreation)
     }
     .exec(EXUIMCLogin.manageCase_Logout)*/
-		/*.exec(EXUIMCLogin.manageCasesHomePage)
-		.exec(EXUIMCLogin.managecasesadminlogin)
-		.exec(EXUIFPLASDO.fplviewcaseforsdoasadmin)
-		.exec(EXUIFPLASDO.fplasdoadminactivities)
-		.exec(EXUIMCLogin.manageCase_Logout)*/
 		.exec(EXUIMCLogin.manageCasesHomePage)
-		.exec(EXUIMCLogin.managecasesgatekeeperlogin)
-		.exec(EXUIFPLASDO.fplviewcaseforsdoasgatekeeper)
-		.exec(EXUIFPLASDO.fplasdogatekeeperactivities)
+		.exec(EXUIMCLogin.managecasesadminlogin)
+		//.exec(EXUIFPLASDO.fplviewcaseforsdoasadmin)
+		.exec(EXUIFPLASDO.fplasdoadminactivities)
 		.exec(EXUIMCLogin.manageCase_Logout)
+		.exec(EXUIMCLogin.manageCasesHomePageGK)
+		.exec(EXUIMCLogin.managecasesgatekeeperlogin)
+	//	.exec(EXUIFPLASDO.fplviewcaseforsdoasgatekeeper)
+		.exec(EXUIFPLASDO.fplasdogatekeeperactivities)
+		.exec(EXUIMCLogin.manageCase_LogoutGK)
 
 	}
 
@@ -148,8 +148,9 @@ class ExUI extends Simulation {
 	 setUp(
 		 EXUIMCFPLASDOScn.inject(rampUsers(1) during (1)))
       .protocols(IAChttpProtocol)
-  /*setUp(
-		EXUIMCaseCreationFPLAScn.inject(rampUsers(1) during (3)))
+
+ /* setUp(
+		EXUIMCaseCreationFPLAScn.inject(rampUsers(55) during (1800)))
 		.protocols(IAChttpProtocol)*/
 	/*setUp(
 		EXUIMCaseViewIACScn.inject(rampUsers(1) during (1)))
