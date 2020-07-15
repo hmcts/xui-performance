@@ -143,6 +143,18 @@ object Feeders {
     })
   ));
 
+  val FPLSDODataFeeder = Iterator.continually(Map("service" -> ({
+    "SDO"
+  }),
+    "SignoutNumberAdmin" -> ({
+      "160"
+    }),
+    "SignoutNumberGK" -> ({
+      "300"
+    })
+
+  ));
+
   val ProDataFeeder = Iterator.continually(Map("service" -> ({
     "PROB"
   }),

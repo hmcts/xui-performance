@@ -75,26 +75,27 @@ object EXUIFPLASDO {
   val fplasdoadminactivities =
 
   //enter familycase number details
-      exec(http("XUI${service}_060_005_FamilyCaseNumberGo")
+      exec(http("XUI${service}_040_005_FamilyCaseNumberGo")
       .get("/data/internal/cases/${caseId}/event-triggers/addFamilyManCaseNumber?ignore-warning=false")
       .headers(FPLAHeader.headers_sdo_casenumbergo)
       .check(jsonPath("$.event_token").saveAs("event_token_sdo_casenumber"))
       .check(status.in(200, 304)))
 
-      .exec(http("XUI${service}_060_010_FamilyCaseNumberGoProfile")
+      .exec(http("XUI${service}_040_010_FamilyCaseNumberGoProfile")
         .get("/data/internal/profile")
         .headers(FPLAHeader.headers_sdo_casenumbergoprofile)
         .check(status.in(200, 304)))
 
       .pause(MinThinkTime, MaxThinkTime)
 
-      .exec(http("XUI${service}_060_005_FamilyCaseNumberContinue")
+      .exec(http("XUI${service}_050_005_FamilyCaseNumberContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=addFamilyManCaseNumber1")
         .headers(FPLAHeader.headers_sdo_casenumbercontinue)
-        .body(StringBody("{\n  \"data\": {\n    \"familyManCaseNumber\": \"samplefamilycasenumber\"\n  },\n  \"event\": {\n    \"id\": \"addFamilyManCaseNumber\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token_sdo_casenumber}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"familyManCaseNumber\": \"samplefamilycasenumber\"\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
-        .check(status.in(200, 304)))
+            // .body(StringBody(""))
+            .body(ElFileBody("SDOFamilyCaseNumberContinue.json")).asJson
+            .check(status.in(200, 304)))
 
-      .exec(http("XUI${service}_060_010_FamilyCaseNumberContinueProfile")
+      .exec(http("XUI${service}_050_010_FamilyCaseNumberContinueProfile")
         .get("/data/internal/profile")
         .headers(FPLAHeader.headers_sdo_casenumbercontinueprofile)
         .check(status.in(200, 304)))
@@ -102,52 +103,109 @@ object EXUIFPLASDO {
 
       .pause(MinThinkTime, MaxThinkTime)
 
-      .exec(http("XUI${service}_070_005_FamilyCaseNumberSaveContinue")
+      .exec(http("XUI${service}_060_005_FamilyCaseNumberSaveContinue")
         .post("/data/cases/${caseId}/events")
         .headers(FPLAHeader.headers_sdo_casenumber_view)
-        .body(StringBody("{\n  \"data\": {\n    \"familyManCaseNumber\": \"samplefamilycasenumber\"\n  },\n  \"event\": {\n    \"id\": \"addFamilyManCaseNumber\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token_sdo_casenumber}\",\n  \"ignore_warning\": false\n}"))
-        .check(status.in(200, 304)))
+            //  .body(StringBody(""))
+            .body(ElFileBody("SDOFamilyCaseNumberSaveContinue.json")).asJson
+            .check(status.in(200, 304)))
 
 
-      .exec(http("XUI${service}_070_010_FamilyCaseNumberSaveViewCase")
+      .exec(http("XUI${service}_060_010_FamilyCaseNumberSaveViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(FPLAHeader.headers_93)
         .check(status.in(200, 304)))
 
-      .exec(http("XUI${service}_70_015_FamilyCaseNumberSaveViewCaseUnDefined")
+      .exec(http("XUI${service}_60_015_FamilyCaseNumberSaveViewCaseUnDefined")
         .get("/undefined/cases/${caseId}")
         .headers(FPLAHeader.headers_94)
         .check(status.in(200, 304)))
 
-      .exec(http("XUI${service}_70_020_FamilyCaseNumberPaymentGroups")
+      .exec(http("XUI${service}_60_020_FamilyCaseNumberPaymentGroups")
         .get("/payments/cases/${caseId}/paymentgroups")
         .headers(FPLAHeader.headers_96)
         .check(status.in(200, 304, 403)))
+      .pause(MinThinkTime, MaxThinkTime)
+
+      //enter allocated judge details
+
+      .exec(http("XUI${service}_070_005_AllocatedJudgeGo")
+            .get("/data/internal/cases/${caseId}/event-triggers/allocatedJudge?ignore-warning=false")
+            .headers(FPLAHeader.headers_121)
+            .check(jsonPath("$.event_token").saveAs("event_token_sdo_allocatedjudge"))
+            .check(status.in(200, 304)))
+
+      .exec(http("XUI${service}_070_010_AllocatedJudgeProfile")
+            .get("/data/internal/profile")
+            .headers(FPLAHeader.headers_124)
+            .check(status.in(200, 304)))
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .exec(http("XUI${service}_080_005_AllocatedJudgeContinue")
+            .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=allocatedJudgeAllocatedJudge")
+            .headers(FPLAHeader.headers_128)
+            // .body(StringBody(""))
+            .body(ElFileBody("SDOAllocatedJudgeContinue.json")).asJson
+            .check(status.in(200, 304)))
+
+      .exec(http("XUI${service}_080_010_AllocatedJudgeContinueProfile")
+            .get("/data/internal/profile")
+            .headers(FPLAHeader.headers_130)
+            .check(status.in(200, 304)))
 
 
       .pause(MinThinkTime, MaxThinkTime)
 
+      .exec(http("XUI${service}_090_005_AllocatedJudgeSaveContinue")
+            .post("/data/cases/${caseId}/events")
+            .headers(FPLAHeader.headers_133)
+            //  .body(StringBody(""))
+            .body(ElFileBody("SDOAllocatedJudgeSaveContinue.json")).asJson
+            .check(status.in(200, 304)))
+
+
+      .exec(http("XUI${service}_090_010_AllocatedJudgeSaveViewCase")
+            .get("/data/internal/cases/${caseId}")
+            .headers(FPLAHeader.headers_135)
+            .check(status.in(200, 304)))
+
+      .exec(http("XUI${service}_090_015_AllocatedJudgeSaveViewCaseUnDefined")
+            .get("/undefined/cases/${caseId}")
+            .headers(FPLAHeader.headers_136)
+            .check(status.in(200, 304)))
+
+      .exec(http("XUI${service}_090_020_AllocatedJudgePaymentGroups")
+            .get("/payments/cases/${caseId}/paymentgroups")
+            .headers(FPLAHeader.headers_137)
+            .check(status.in(200, 304, 403)))
+
+      .pause(MinThinkTime, MaxThinkTime)
+
       //enter hearing booking details
-      .exec(http("XUI${service}_080_005_HearingBookingDetailsGo")
+
+      .exec(http("XUI${service}_100_005_HearingBookingDetailsGo")
       .get("/data/internal/cases/${caseId}/event-triggers/hearingBookingDetails?ignore-warning=false")
       .headers(FPLAHeader.headers_100)
       .check(jsonPath("$.event_token").saveAs("event_token_sdo_hearingbooking"))
+        .check(jsonPath("$..id").find(4).optional.saveAs("hearingDetails"))
       .check(status.in(200, 304)))
 
-      .exec(http("XUI${service}_080_010_HearingBookingDetailsProfile")
+      .exec(http("XUI${service}_100_010_HearingBookingDetailsProfile")
         .get("/data/internal/profile")
         .headers(FPLAHeader.headers_102)
         .check(status.in(200, 304)))
 
       .pause(MinThinkTime, MaxThinkTime)
 
-      .exec(http("XUI${service}_090_005_HearingBookingDetailsContinue")
+      .exec(http("XUI${service}_110_005_HearingBookingDetailsContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=hearingBookingDetails1")
         .headers(FPLAHeader.headers_106)
-        .body(StringBody("{\n  \"data\": {\n    \"hearingDetails\": [\n      {\n        \"id\": \"23fdec4f-7f7f-4d05-bfdd-689e4baec83b\",\n        \"value\": {\n          \"type\": \"CASE_MANAGEMENT\",\n          \"venue\": \"37\",\n          \"startDate\": \"2020-06-05T09:00:00.000\",\n          \"endDate\": \"2020-06-05T013:00:00.000\",\n          \"hearingNeedsBooked\": [\n            \"INTERPRETER\"\n          ],\n          \"hearingNeedsDetails\": \"sdjsjksjdksjdksjdksjdksjdksjdksjd\",\n          \"judgeAndLegalAdvisor\": {\n            \"judgeTitle\": \"HER_HONOUR_JUDGE\",\n            \"judgeLastName\": \"judgelast\",\n            \"legalAdvisorName\": \"gjgjggjgjgjjg\",\n            \"allocatedJudgeLabel\": null\n          }\n        }\n      }\n    ]\n  },\n  \"event\": {\n    \"id\": \"hearingBookingDetails\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token_sdo_hearingbooking}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"hearingDetails\": [\n      {\n        \"id\": \"23fdec4f-7f7f-4d05-bfdd-689e4baec83b\",\n        \"value\": {\n          \"type\": \"CASE_MANAGEMENT\",\n          \"venue\": \"37\",\n          \"startDate\": \"2020-06-05T09:00:00.000\",\n          \"endDate\": \"2020-06-05T013:00:00.000\",\n          \"hearingNeedsBooked\": [\n            \"INTERPRETER\"\n          ],\n          \"hearingNeedsDetails\": \"sdjsjksjdksjdksjdksjdksjdksjdksjd\",\n          \"judgeAndLegalAdvisor\": {\n            \"judgeTitle\": \"HER_HONOUR_JUDGE\",\n            \"judgeLastName\": \"judgelast\",\n            \"legalAdvisorName\": \"gjgjggjgjgjjg\",\n            \"allocatedJudgeLabel\": null\n          }\n        }\n      }\n    ]\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
-        .check(status.in(200, 304)))
+            //.body(StringBody(""))
+            .body(ElFileBody("SDOHearingBookingDetailsContinue.json")).asJson
+            .check(status.in(200, 304)))
 
-      .exec(http("XUI${service}_090_010_HearingBookingDetailsContinueProfile")
+      .exec(http("XUI${service}_110_010_HearingBookingDetailsContinueProfile")
         .get("/data/internal/profile")
         .headers(FPLAHeader.headers_109)
         .check(status.in(200, 304)))
@@ -155,105 +213,54 @@ object EXUIFPLASDO {
 
       .pause(MinThinkTime, MaxThinkTime)
 
-      .exec(http("XUI${service}_100_005_HearingBookingDetailsSaveContinue")
+      .exec(http("XUI${service}_120_005_HearingBookingDetailsSaveContinue")
         .post("/data/cases/${caseId}/events")
         .headers(FPLAHeader.headers_112)
-        .body(StringBody("{\n  \"data\": {\n    \"hearingDetails\": [\n      {\n        \"id\": \"23fdec4f-7f7f-4d05-bfdd-689e4baec83b\",\n        \"value\": {\n          \"type\": \"CASE_MANAGEMENT\",\n          \"venue\": \"37\",\n          \"startDate\": \"2020-06-05T09:00:00.000\",\n          \"endDate\": \"2020-06-05T13:00:00.000\",\n          \"hearingNeedsBooked\": [\n            \"INTERPRETER\"\n          ],\n          \"hearingNeedsDetails\": \"sdjsjksjdksjdksjdksjdksjdksjdksjd\",\n          \"judgeAndLegalAdvisor\": {\n            \"judgeTitle\": \"HER_HONOUR_JUDGE\",\n            \"judgeLastName\": \"judgelast\",\n            \"legalAdvisorName\": \"gjgjggjgjgjjg\",\n            \"allocatedJudgeLabel\": null\n          }\n        }\n      }\n    ]\n  },\n  \"event\": {\n    \"id\": \"hearingBookingDetails\",\n    \"summary\": \"asasasas\",\n    \"description\": \"ghghghghghgh\"\n  },\n  \"event_token\": \"${event_token_sdo_hearingbooking}\",\n  \"ignore_warning\": false\n}"))
-        .check(status.in(200, 304)))
+            // .body(StringBody(""))
+            .body(ElFileBody("SDOHearingBookingDetailsSaveContinue.json")).asJson
+            .check(status.in(200, 304)))
 
 
-      .exec(http("XUI${service}_100_010_HearingBookingDetailsSaveViewCase")
+      .exec(http("XUI${service}_120_010_HearingBookingDetailsSaveViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(FPLAHeader.headers_114)
         .check(status.in(200, 304)))
 
-      .exec(http("XUI${service}_100_015_HearingBookingDetailsSaveViewCaseUnDefined")
+      .exec(http("XUI${service}_120_015_HearingBookingDetailsSaveViewCaseUnDefined")
         .get("/undefined/cases/${caseId}")
         .headers(FPLAHeader.headers_115)
         .check(status.in(200, 304)))
 
-      .exec(http("XUI${service}_100_020_HearingBookingPaymentGroups")
+      .exec(http("XUI${service}_120_020_HearingBookingPaymentGroups")
         .get("/payments/cases/${caseId}/paymentgroups")
         .headers(FPLAHeader.headers_116)
         .check(status.in(200, 304, 403)))
 
       .pause(MinThinkTime, MaxThinkTime)
 
-
-      //enter allocated judge details
-      .exec(http("XUI${service}_110_005_AllocatedJudgeGo")
-      .get("/data/internal/cases/${caseId}/event-triggers/allocatedJudge?ignore-warning=false")
-      .headers(FPLAHeader.headers_121)
-      .check(jsonPath("$.event_token").saveAs("event_token_sdo_allocatedjudge"))
-      .check(status.in(200, 304)))
-
-      .exec(http("XUI${service}_110_010_AllocatedJudgeProfile")
-        .get("/data/internal/profile")
-        .headers(FPLAHeader.headers_124)
-        .check(status.in(200, 304)))
-
-      .pause(MinThinkTime, MaxThinkTime)
-
-      .exec(http("XUI${service}_120_005_AllocatedJudgeContinue")
-        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=allocatedJudgeAllocatedJudge")
-        .headers(FPLAHeader.headers_128)
-        .body(StringBody("{\n  \"data\": {\n    \"allocatedJudge\": {\n      \"judgeTitle\": \"HER_HONOUR_JUDGE\",\n      \"judgeLastName\": \"judgelast\",\n      \"allocatedJudgeLabel\": null,\n      \"legalAdvisorName\": null\n    }\n  },\n  \"event\": {\n    \"id\": \"allocatedJudge\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token_sdo_allocatedjudge}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"allocatedJudge\": {\n      \"judgeTitle\": \"HER_HONOUR_JUDGE\",\n      \"judgeLastName\": \"judgelast\",\n      \"allocatedJudgeLabel\": null,\n      \"legalAdvisorName\": null\n    }\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
-        .check(status.in(200, 304)))
-
-      .exec(http("XUI${service}_120_010_AllocatedJudgeContinueProfile")
-        .get("/data/internal/profile")
-        .headers(FPLAHeader.headers_130)
-        .check(status.in(200, 304)))
-
-
-      .pause(MinThinkTime, MaxThinkTime)
-
-      .exec(http("XUI${service}_130_005_AllocatedJudgeSaveContinue")
-        .post("/data/cases/${caseId}/events")
-        .headers(FPLAHeader.headers_133)
-        .body(StringBody("{\n  \"data\": {\n    \"allocatedJudge\": {\n      \"judgeTitle\": \"HER_HONOUR_JUDGE\",\n      \"judgeLastName\": \"judgelast\",\n      \"allocatedJudgeLabel\": null,\n      \"legalAdvisorName\": null\n    }\n  },\n  \"event\": {\n    \"id\": \"allocatedJudge\",\n    \"summary\": \"asasasasas\",\n    \"description\": \"fgfgfgfgfgfg\"\n  },\n  \"event_token\": \"${event_token_sdo_allocatedjudge}\",\n  \"ignore_warning\": false\n}"))
-        .check(status.in(200, 304)))
-
-
-      .exec(http("XUI${service}_130_010_AllocatedJudgeSaveViewCase")
-        .get("/data/internal/cases/${caseId}")
-        .headers(FPLAHeader.headers_135)
-        .check(status.in(200, 304)))
-
-      .exec(http("XUI${service}_130_015_AllocatedJudgeSaveViewCaseUnDefined")
-        .get("/undefined/cases/${caseId}")
-        .headers(FPLAHeader.headers_136)
-        .check(status.in(200, 304)))
-
-      .exec(http("XUI${service}_130_020_AllocatedJudgePaymentGroups")
-        .get("/payments/cases/${caseId}/paymentgroups")
-        .headers(FPLAHeader.headers_137)
-        .check(status.in(200, 304, 403)))
-
-      .pause(MinThinkTime, MaxThinkTime)
-
   //enter send to gatekeeper details
 
-    .exec(http("XUI${service}_140_005_SendToGateKeeperGo")
+    .exec(http("XUI${service}_130_005_SendToGateKeeperGo")
     .get("/data/internal/cases/${caseId}/event-triggers/sendToGatekeeper?ignore-warning=false")
     .headers(FPLAHeader.headers_142)
     .check(jsonPath("$.event_token").saveAs("event_token_sdo_gk"))
+        .check(jsonPath("$..id").find(6).optional.saveAs("gateKeeperEmail"))
     .check(status.in(200, 304)))
 
-    .exec(http("XUI${service}_140_010_SendToGateKeeperProfile")
+    .exec(http("XUI${service}_130_010_SendToGateKeeperProfile")
       .get("/data/internal/profile")
       .headers(FPLAHeader.headers_145)
       .check(status.in(200, 304)))
 
     .pause(MinThinkTime, MaxThinkTime)
 
-    .exec(http("XUI${service}_150_005_SendToGateKeeperContinue")
-      .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=sendToGatekeeper1")
-      .headers(FPLAHeader.headers_148)
-      .body(StringBody("{\n  \"data\": {\n    \"gatekeeperEmails\": [\n      {\n        \"id\": \"0bcd5698-a22e-46a2-90ba-7d10236ea52c\",\n        \"value\": {\n          \"email\": \"abc@example.com\"\n        }\n      }\n    ]\n  },\n  \"event\": {\n    \"id\": \"sendToGatekeeper\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token_sdo_gk}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"gatekeeperEmails\": [\n      {\n        \"id\": \"0bcd5698-a22e-46a2-90ba-7d10236ea52c\",\n        \"value\": {\n          \"email\": \"abc@example.com\"\n        }\n      }\n    ]\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
-      .check(status.in(200, 304)))
+    .exec(http("XUI${service}_140_005_SendToGateKeeperContinue")
+          .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=sendToGatekeeper1")
+          .headers(FPLAHeader.headers_148)
+          .body(ElFileBody("SDOSendToGateKeeperContinue.json")).asJson
+          .check(status.in(200, 304)))
 
-    .exec(http("XUI${service}_150_010_SendToGateKeeperContinueProfile")
+    .exec(http("XUI${service}_140_010_SendToGateKeeperContinueProfile")
       .get("/data/internal/profile")
       .headers(FPLAHeader.headers_151)
       .check(status.in(200, 304)))
@@ -261,24 +268,23 @@ object EXUIFPLASDO {
 
     .pause(MinThinkTime, MaxThinkTime)
 
-    .exec(http("XUI${service}_160_005_SendToGateKeeperSaveContinue")
-      .post("/data/cases/${caseId}/events")
-      .headers(FPLAHeader.headers_154)
-      .body(StringBody("{\n  \"data\": {\n    \"gatekeeperEmails\": [\n      {\n        \"id\": \"0bcd5698-a22e-46a2-90ba-7d10236ea52c\",\n        \"value\": {\n          \"email\": \"abc@example.com\"\n        }\n      }\n    ]\n  },\n  \"event\": {\n    \"id\": \"sendToGatekeeper\",\n    \"summary\": \"asasasasa\",\n    \"description\": \"asasasasas\"\n  },\n  \"event_token\": \"${event_token_sdo_gk}\",\n  \"ignore_warning\": false\n}"))
-      .check(status.in(200, 304)))
+    .exec(http("XUI${service}_150_005_SendToGateKeeperSaveContinue")
+          .post("/data/cases/${caseId}/events")
+          .headers(FPLAHeader.headers_154)
+          .body(ElFileBody("SDOSendToGateKeeperSaveContinue.json")).asJson
+          .check(status.in(200, 304)))
 
-
-    .exec(http("XUI${service}_160_010_SendToGateKeeperSaveViewCase")
+    .exec(http("XUI${service}_150_010_SendToGateKeeperSaveViewCase")
       .get("/data/internal/cases/${caseId}")
       .headers(FPLAHeader.headers_156)
       .check(status.in(200, 304)))
 
-    .exec(http("XUI${service}_160_015_SendToGateKeeperSaveViewCaseUndefined")
+    .exec(http("XUI${service}_150_015_SendToGateKeeperSaveViewCaseUndefined")
       .get("/undefined/cases/${caseId}")
       .headers(FPLAHeader.headers_157)
       .check(status.in(200, 304)))
 
-    .exec(http("XUI${service}_160_020_SendToGateKeeperPaymentGroups")
+    .exec(http("XUI${service}_150_020_SendToGateKeeperPaymentGroups")
       .get("/payments/cases/${caseId}/paymentgroups")
       .headers(FPLAHeader.headers_158)
       .check(status.in(200, 304, 403)))
@@ -288,7 +294,7 @@ object EXUIFPLASDO {
   val fplviewcaseforsdoasgatekeeper =
     tryMax(2) {
         exec(session => session.set("currentDate", timeStamp))
-        .exec(http("XUI${service}_140_005_SearchPage")
+        .exec(http("XUI${service}_160_005_SearchPage")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
         .headers(FPLAHeader.headers_search)
         .check(status.in(200, 304)))
@@ -331,38 +337,38 @@ object EXUIFPLASDO {
 
   val fplasdogatekeeperactivities =
   //enter draft sdo details
-    exec(http("XUI${service}_160_005_DraftSDOGo")
+    exec(http("XUI${service}_190_005_DraftSDOGo")
       .get("/data/internal/cases/${caseId}/event-triggers/draftSDO?ignore-warning=false")
       .headers(FPLAHeader.headers_248)
       .check(status.in(200, 304))
       .check(jsonPath("$.event_token").saveAs("event_token_sdo_draft"))
-      .check(jsonPath("$..id").find(144).optional.saveAs("code145"))
-      .check(jsonPath("$..id").find(145).optional.saveAs("code146"))
-      .check(jsonPath("$..id").find(146).optional.saveAs("code147"))
-      .check(jsonPath("$..id").find(147).optional.saveAs("code148"))
-      .check(jsonPath("$..id").find(148).optional.saveAs("code149"))
-      .check(jsonPath("$..id").find(149).optional.saveAs("code150"))
-      .check(jsonPath("$..id").find(322).optional.saveAs("code323"))
-      .check(jsonPath("$..id").find(323).optional.saveAs("code324"))
-      .check(jsonPath("$..id").find(324).optional.saveAs("code325"))
-      .check(jsonPath("$..id").find(325).optional.saveAs("code326"))
-      .check(jsonPath("$..id").find(326).optional.saveAs("code327"))
-      .check(jsonPath("$..id").find(327).optional.saveAs("code328"))
-      .check(jsonPath("$..id").find(328).optional.saveAs("code329"))
-      .check(jsonPath("$..id").find(678).optional.saveAs("code679"))
-      .check(jsonPath("$..id").find(504).optional.saveAs("code505"))
-      .check(jsonPath("$..id").find(505).optional.saveAs("code506"))
-      .check(jsonPath("$..id").find(506).optional.saveAs("code507"))
-      .check(jsonPath("$..id").find(848).optional.saveAs("code849"))
-      .check(jsonPath("$..id").find(1018).optional.saveAs("code1019"))
+      .check(jsonPath("$..id").find(148).optional.saveAs("code145"))
+      .check(jsonPath("$..id").find(149).optional.saveAs("code146"))
+      .check(jsonPath("$..id").find(150).optional.saveAs("code147"))
+      .check(jsonPath("$..id").find(151).optional.saveAs("code148"))
+      .check(jsonPath("$..id").find(152).optional.saveAs("code149"))
+     // .check(jsonPath("$..id").find(149).optional.saveAs("code150"))
+      .check(jsonPath("$..id").find(326).optional.saveAs("code323"))
+      .check(jsonPath("$..id").find(327).optional.saveAs("code324"))
+      .check(jsonPath("$..id").find(328).optional.saveAs("code325"))
+      .check(jsonPath("$..id").find(329).optional.saveAs("code326"))
+      .check(jsonPath("$..id").find(330).optional.saveAs("code327"))
+      .check(jsonPath("$..id").find(331).optional.saveAs("code328"))
+      .check(jsonPath("$..id").find(332).optional.saveAs("code329"))
+      .check(jsonPath("$..id").find(682).optional.saveAs("code679"))
+      .check(jsonPath("$..id").find(508).optional.saveAs("code505"))
+      .check(jsonPath("$..id").find(509).optional.saveAs("code506"))
+      .check(jsonPath("$..id").find(510).optional.saveAs("code507"))
+      .check(jsonPath("$..id").find(852).optional.saveAs("code849"))
+      .check(jsonPath("$..id").find(1022).optional.saveAs("code1019"))
 
     )
-     .exec( session => {
+    /* .exec( session => {
               println("the code of id is "+session("code145").as[String])
           session
-        })
+        })*/
 
-      .exec(http("XUI${service}_160_010_DraftSDOGoProfile")
+      .exec(http("XUI${service}_190_010_DraftSDOGoProfile")
         .get("/data/internal/profile")
         .headers(FPLAHeader.headers_251)
         .check(status.in(200, 304)))
@@ -370,91 +376,99 @@ object EXUIFPLASDO {
         .pause(MinThinkTime, MaxThinkTime)
 
       //new request
-      .exec(http("XUI${service}_170_DraftSDODateOfIssue")
+      .exec(http("XUI${service}_200_DraftSDODateOfIssue")
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOSdoDateOfIssue")
       .headers(FPLAHeader.headers_254)
       //.body(StringBody(""))
-            .body(ElFileBody("RecordedSimulationSDO07072020_0005_request.json")).asJson
+            .body(ElFileBody("SDODateOfIssue.json")).asJson
       .check(status.in(200, 304)))
       .pause(MinThinkTime, MaxThinkTime)
 
       //new request
 
-      .exec(http("XUI${service}_180_DraftSDOJudgeAndLegal")
+      .exec(http("XUI${service}_210_DraftSDOJudgeAndLegal")
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOjudgeAndLegalAdvisor")
-      .headers(FPLAHeader.headers_259)
-     // .body(StringBody(""))
-            .body(ElFileBody("RecordedSimulationSDO07072020_0008_request.json")).asJson
-      .check(status.in(200, 304)))
+      .headers(FPLAHeader.headers_254)
+            // .body(StringBody(""))
+            .body(ElFileBody("SDOJudgeAndLegalAdvisor.json")).asJson
+            .check(status.in(200, 304)))
       .pause(MinThinkTime, MaxThinkTime)
 
       //new request
 
-      .exec(http("XUI${service}_190_DraftSDOAllPartiesDirection")
+      .exec(http("XUI${service}_220_DraftSDOAllPartiesDirection")
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOallPartiesDirections")
-      .headers(FPLAHeader.headers_264)
-    //  .body(StringBody(""))
-            .body(ElFileBody("RecordedSimulationSDO07072020_0011_request.json")).asJson
-      .check(status.in(200, 304)))
+      .headers(FPLAHeader.headers_254)
+            //  .body(StringBody(""))
+            .body(ElFileBody("SDOAllPartiesDirection.json")).asJson
+            .check(status.in(200, 304)))
 
       .pause(MinThinkTime, MaxThinkTime)
 
       //new request
 
-      .exec(http("XUI${service}_200_DraftSDOLocalAuthorityDirection")
+      .exec(http("XUI${service}_230_DraftSDOLocalAuthorityDirection")
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOlocalAuthorityDirections")
-      .headers(FPLAHeader.headers_270)
-   //   .body(StringBody(""))
-            .body(ElFileBody("RecordedSimulationSDO07072020_0014_request.json")).asJson
-      .check(status.in(200, 304)))
+      .headers(FPLAHeader.headers_254)
+            //   .body(StringBody(""))
+            .body(ElFileBody("SDOLocalAuthorityDirection.json")).asJson
+            .check(status.in(200, 304)))
     .pause(MinThinkTime, MaxThinkTime)
 
       //new request
-      .exec(http("XUI${service}_210_DraftSDORespondantDirection")
+      .exec(http("XUI${service}_240_DraftSDORespondantDirection")
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOparentsAndRespondentsDirections")
-      .headers(FPLAHeader.headers_274)
-     // .body(StringBody(""))
-            .body(ElFileBody("RecordedSimulationSDO07072020_0017_request.json")).asJson
+      .headers(FPLAHeader.headers_254)
+            // .body(StringBody(""))
+            .body(ElFileBody("SDORespondantDirection.json")).asJson
     )
       .pause(MinThinkTime, MaxThinkTime)
       //new request
-      .exec(http("XUI${service}_220_DraftSDOcafcasDirections")
+      .exec(http("XUI${service}_250_DraftSDOcafcasDirections")
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOcafcassDirections")
-      .headers(FPLAHeader.headers_279)
-    //  .body(StringBody(""))
-            .body(ElFileBody("RecordedSimulationSDO07072020_0020_request.json")).asJson
-      .check(status.in(200, 304)))
+      .headers(FPLAHeader.headers_254)
+            //  .body(StringBody(""))
+            .body(ElFileBody("SDOcafcasDirections.json")).asJson
+            .check(status.in(200, 304)))
       .pause(MinThinkTime, MaxThinkTime)
       //next request
 
-      .exec(http("XUI${service}_230_DraftSDOOtherPartiesDirections")
+      .exec(http("XUI${service}_260_DraftSDOOtherPartiesDirections")
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOotherPartiesDirections")
-      .headers(FPLAHeader.headers_284)
-      //.body(StringBody(""))
-            .body(ElFileBody("RecordedSimulationSDO07072020_0023_request.json")).asJson
-      .check(status.in(200, 304)))
+      .headers(FPLAHeader.headers_254)
+            //.body(StringBody(""))
+            .body(ElFileBody("SDOOtherPartiesDirections.json")).asJson
+            .check(status.in(200, 304)))
       .pause(MinThinkTime, MaxThinkTime)
 
       //next request
-      .exec(http("XUI${service}_240_DraftSDOCourtDirections")
+      .exec(http("XUI${service}_270_DraftSDOCourtDirections")
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOcourtDirections")
-      .headers(FPLAHeader.headers_289)
-     // .body(StringBody(""))
-            .body(ElFileBody("RecordedSimulationSDO07072020_0026_request.json")).asJson
-      .check(status.in(200, 304))
-      .check(regex("""internal/documents/(.+?)","document_filename""").find(2).saveAs("DocumentID")))
+      .headers(FPLAHeader.headers_254)
+            // .body(StringBody(""))
+            .body(ElFileBody("SDOCourtDirections.json")).asJson
+            .check(status.in(200, 304))
+            .check(regex("""internal/documents/(.*?)","document_filename""").find(0).saveAs("DocumentID")))
+
 
       .pause(MinThinkTime, MaxThinkTime)
 
-      //next request
-      .exec(http("XUI${service}_260_005_DraftSDODocumentReview")
-      .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOdocumentReview")
-      .headers(FPLAHeader.headers_295)
-     // .body(StringBody(""))
-            .body(ElFileBody("RecordedSimulationSDO07072020_0029_request.json")).asJson
-      .check(status.in(200, 304)))
+      .exec( session => {
+        println("document value is "+session("DocumentID").as[String])
+        session
+      })
 
-      .exec(http("XUI${service}_260_010_DraftSDODocumentReviewProfile")
+
+
+      //next request
+      .exec(http("XUI${service}_280_005_DraftSDODocumentReview")
+      .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOdocumentReview")
+      .headers(FPLAHeader.headers_254)
+            // .body(StringBody(""))
+            .body(ElFileBody("SDODocumentReview.json")).asJson
+            .check(status.in(200, 304)))
+
+      .exec(http("XUI${service}_280_010_DraftSDODocumentReviewProfile")
         .get("/data/internal/profile")
         .headers(FPLAHeader.headers_298)
       .check(status.in(200, 304)))
@@ -464,25 +478,25 @@ object EXUIFPLASDO {
 
       //next request
 
-      .exec(http("XUI${service}_270_005_DraftSDOFinalView")
+      .exec(http("XUI${service}_290_005_DraftSDOFinalView")
       .post("/data/cases/${caseId}/events")
       .headers(FPLAHeader.headers_301)
-     // .body(StringBody(""))
-            .body(ElFileBody("RecordedSimulationSDO07072020_0033_request.json")).asJson
-      .check(status.in(200, 304)))
+            // .body(StringBody(""))
+            .body(ElFileBody("SDOFinalView.json")).asJson
+            .check(status.in(200, 304)))
 
 
-      .exec(http("XUI${service}_270_005_DraftSDOFinalView1")
+      .exec(http("XUI${service}_290_010_DraftSDOFinalView1")
         .get("/data/internal/cases/${caseId}")
         .headers(FPLAHeader.headers_304)
         .check(status.in(200, 304)))
 
-      .exec(http("XUI${service}_270_010_DraftSDOFinalView1Undefined")
+      .exec(http("XUI${service}_290_015_DraftSDOFinalView1Undefined")
         .get("/undefined/cases/${caseId}")
         .headers(FPLAHeader.headers_305)
       .check(status.in(200, 304)))
 
-      .exec(http("XUI${service}_270_015_DraftSDOPaymentGroups")
+      .exec(http("XUI${service}_290_020_DraftSDOPaymentGroups")
         .get("/payments/cases/${caseId}/paymentgroups")
         .headers(FPLAHeader.headers_306)
         .check(status.is(403)))
@@ -629,7 +643,6 @@ object EXUIFPLASDO {
   //https://manage-case.perftest.platform.hmcts.net/payments/cases/1589913815676227/paymentgroup
   //https://manage-case.perftest.platform.hmcts.net/undefined/cases/1589913815676227
 
-  //orders and click the order file pdf
 
   //step: signout
   //https://manage-case.perftest.platform.hmcts.net/data/internal/cases/1589913815676227

@@ -1,6 +1,6 @@
 {
   "data": {
-    "dateOfIssue": "2020-07-08"
+    "dateOfIssue": "2020-07-15"
   },
   "event": {
     "id": "draftSDO",
@@ -10,7 +10,7 @@
   "event_token": "${event_token_sdo_draft}",
   "ignore_warning": false,
   "event_data": {
-    "dateOfIssue": "2020-07-08"
+    "dateOfIssue": "2020-07-15"
   },
   "case_reference": "${caseId}"
 }

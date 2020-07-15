@@ -5,7 +5,7 @@
         "id": "${code145}",
         "value": {
           "directionNeeded": "Yes",
-          "dateToBeCompletedBy": null,
+          "dateToBeCompletedBy": "2020-07-07T12:00:00",
           "assignee": "ALL_PARTIES",
           "parentsAndRespondentsAssignee": null,
           "otherPartiesAssignee": null,
@@ -28,7 +28,7 @@
         "id": "${code146}",
         "value": {
           "directionNeeded": "Yes",
-          "dateToBeCompletedBy": null,
+          "dateToBeCompletedBy": "2020-07-08T16:00:00",
           "assignee": "ALL_PARTIES",
           "parentsAndRespondentsAssignee": null,
           "otherPartiesAssignee": null,
@@ -51,7 +51,7 @@
         "id": "${code147}",
         "value": {
           "directionNeeded": "Yes",
-          "dateToBeCompletedBy": null,
+          "dateToBeCompletedBy": "2020-07-08T16:00:00",
           "assignee": "ALL_PARTIES",
           "parentsAndRespondentsAssignee": null,
           "otherPartiesAssignee": null,
@@ -75,7 +75,7 @@
         "value": {
           "directionNeeded": "Yes",
           "directionText": "Parties and their legal representatives must attend the pre-hearing and hearing",
-          "dateToBeCompletedBy": "2020-06-05T09:00:00",
+          "dateToBeCompletedBy": "2020-07-10T00:00:00",
           "assignee": "ALL_PARTIES",
           "parentsAndRespondentsAssignee": null,
           "otherPartiesAssignee": null,
@@ -98,7 +98,7 @@
         "id": "${code149}",
         "value": {
           "directionNeeded": "Yes",
-          "dateToBeCompletedBy": null,
+          "dateToBeCompletedBy": "2020-07-08T16:00:00",
           "assignee": "ALL_PARTIES",
           "parentsAndRespondentsAssignee": null,
           "otherPartiesAssignee": null,
@@ -119,7 +119,7 @@
       }
     ],
     "allPartiesCustom": [],
-    "allPartiesHearingDate": "5 June 2020, 9:00am"
+    "allPartiesHearingDate": "17 July 2020, 9:00am"
   },
   "event": {
     "id": "draftSDO",
@@ -129,10 +129,10 @@
   "event_token": "${event_token_sdo_draft}",
   "ignore_warning": false,
   "event_data": {
-    "dateOfIssue": "2020-07-08",
+    "dateOfIssue": "2020-07-09",
     "judgeAndLegalAdvisor": {
       "useAllocatedJudge": "Yes",
-      "legalAdvisorName": "asasaas fggggg",
+      "legalAdvisorName": "laf lal",
       "allocatedJudgeLabel": "Case assigned to: Her Honour Judge judgelast"
     },
     "allParties": [
@@ -140,7 +140,7 @@
         "id": "${code145}",
         "value": {
           "directionNeeded": "Yes",
-          "dateToBeCompletedBy": null,
+          "dateToBeCompletedBy": "2020-07-07T12:00:00",
           "assignee": "ALL_PARTIES",
           "parentsAndRespondentsAssignee": null,
           "otherPartiesAssignee": null,
@@ -163,7 +163,7 @@
         "id": "${code146}",
         "value": {
           "directionNeeded": "Yes",
-          "dateToBeCompletedBy": null,
+          "dateToBeCompletedBy": "2020-07-08T16:00:00",
           "assignee": "ALL_PARTIES",
           "parentsAndRespondentsAssignee": null,
           "otherPartiesAssignee": null,
@@ -186,7 +186,7 @@
         "id": "${code147}",
         "value": {
           "directionNeeded": "Yes",
-          "dateToBeCompletedBy": null,
+          "dateToBeCompletedBy": "2020-07-08T16:00:00",
           "assignee": "ALL_PARTIES",
           "parentsAndRespondentsAssignee": null,
           "otherPartiesAssignee": null,
@@ -210,7 +210,7 @@
         "value": {
           "directionNeeded": "Yes",
           "directionText": "Parties and their legal representatives must attend the pre-hearing and hearing",
-          "dateToBeCompletedBy": "2020-07-10T09:00:00",
+          "dateToBeCompletedBy": "2020-07-10T00:00:00",
           "assignee": "ALL_PARTIES",
           "parentsAndRespondentsAssignee": null,
           "otherPartiesAssignee": null,
@@ -233,7 +233,7 @@
         "id": "${code149}",
         "value": {
           "directionNeeded": "Yes",
-          "dateToBeCompletedBy": null,
+          "dateToBeCompletedBy": "2020-07-08T16:00:00",
           "assignee": "ALL_PARTIES",
           "parentsAndRespondentsAssignee": null,
           "otherPartiesAssignee": null,
@@ -254,7 +254,7 @@
       }
     ],
     "allPartiesCustom": [],
-    "allPartiesHearingDate": "10 July 2020, 9:00am"
+    "allPartiesHearingDate": "17 July 2020, 9:00am"
   },
   "case_reference": "${caseId}"
 }
