@@ -1,5 +1,5 @@
 plugins {
-    id 'org.owasp.dependencycheck' version '3.3.4'
+    id 'org.owasp.dependencycheck' version '5.1.0'
     id 'scala'
     id 'com.github.lkishalmi.gatling' version '3.0.2'
     id 'java-gradle-plugin'
@@ -10,12 +10,16 @@ plugins {
 
 //apply plugin: 'java'
 apply plugin: 'scala'
-group 'uk.gov.hmcts.exui.perfproject'
+group 'uk.gov.hmcts.reform'
 version = '1.0'
+
+tasks.withType(JavaExec) {
+    jvmArgs = ['-Xms512m', '-Xmx1024m', '-XX:+UseConcMarkSweepGC']
+}
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'exui performance tests',
+        attributes 'Implementation-Title': 'EXUI Performance Tests',
                 'Implementation-Version': version
     }
 }
@@ -31,24 +35,21 @@ repositories {
     jcenter()
 }
 
-
 dependencies {
     compile 'org.scala-lang:scala-library:2.12.8'
-
     gatlingCompile 'com.warrenstrange:googleauth:1.1.5'
     compile group: 'io.gatling', name: 'gatling-app', version: '3.1.1'
-
     compile group: 'io.gatling', name: 'gatling-recorder', version: '3.1.1'
     compile group: 'io.gatling.highcharts', name: 'gatling-charts-highcharts', version: '3.1.1'
+    gatlingCompile group: 'uk.gov.service.notify', name: 'notifications-java-client', version: '3.14.1-RELEASE'
+
 
 }
 
 gatling {
     toolVersion '3.1.1'
     scalaVersion '2.12.8'
-   simulations = [ 'uk.gov.hmcts.reform.exui.performance.simulations.ExUI'
-   // simulations = [ 'uk.gov.hmcts.reform.exui.performance.ManageOrganisationOriginal'
-   // simulations = [ 'uk.gov.hmcts.reform.exui.performance.ManageOrganisation_original'
+    simulations = [ 'uk.gov.hmcts.reform.exui.performance.simulations.ExUI'
     ]
 }
 
@@ -65,8 +66,6 @@ pluginBundle {
     vcsUrl = 'https://github.com/lkishalmi/gradle-gatling-plugin'
     description = 'Gatling Simulation Execution'
     tags = ['gatling', 'load test', 'stress test', 'performance test', 'scala']
-
-
 }
 
 ext ['netty.version'] = '4.0.51.Final'
