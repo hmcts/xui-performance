@@ -401,13 +401,8 @@ object EXUIFPLAMC {
       .exec(http("XUI${service}_320_UploadFile")
         .post("/documents")
         .headers(FPLAHeader.headers_uploadfile)
-<<<<<<< HEAD
         .bodyPart(RawFileBodyPart("files", "200MB.mp3")
           .fileName("200MB.mp3")
-=======
-        .bodyPart(RawFileBodyPart("files", "3MB.pdf")
-          .fileName("3MB.pdf")
->>>>>>> origin/master
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")

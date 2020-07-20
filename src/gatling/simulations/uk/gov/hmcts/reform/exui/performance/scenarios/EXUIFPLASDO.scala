@@ -1,12 +1,9 @@
-<<<<<<< HEAD
 // =======================================================================================
 // This is a SDO journey for generate orders after case is Submitted
 // This journey begins once the FPL case is submitted
 // =======================================================================================
 
 
-=======
->>>>>>> origin/master
 package uk.gov.hmcts.reform.exui.performance.scenarios
 
 import java.text.SimpleDateFormat
@@ -28,11 +25,8 @@ object EXUIFPLASDO {
   val MaxThinkTime = Environment.maxThinkTimeFPLC
   val MinThinkTimeFPLV = Environment.minThinkTimeFPLV
   val MaxThinkTimeFPLV = Environment.maxThinkTimeFPLV
-<<<<<<< HEAD
   val MinThinkTimeSDO = Environment.minThinkTimeSDO
   val MaxThinkTimeSDO = Environment.maxThinkTimeSDO
-=======
->>>>>>> origin/master
   private val rng: Random = new Random()
   private def firstName(): String = rng.alphanumeric.take(10).mkString
   private def lastName(): String = rng.alphanumeric.take(10).mkString
@@ -40,13 +34,10 @@ object EXUIFPLASDO {
   val now = new Date()
   val timeStamp = sdfDate.format(now)
 
-<<<<<<< HEAD
   // =======================================================================================
   // Following scenario is business flow for fpl view  when user loggedin as fpla admin after a create a case
     // =======================================================================================
 
-=======
->>>>>>> origin/master
   val fplviewcaseforsdoasadmin =
     tryMax(2) {
 
@@ -93,7 +84,6 @@ object EXUIFPLASDO {
         .check(status.in(200, 304, 403, 404)))
       .pause(MinThinkTimeFPLV, MaxThinkTimeFPLV)
 
-<<<<<<< HEAD
   // =======================================================================================
   // Following scenario is business flow for fpl activities  when user loggedin as fpla admin after a create a case
   // =======================================================================================
@@ -106,27 +96,16 @@ object EXUIFPLASDO {
   // =======================================================================================
 
     exec(http("XUI${service}_030_005_FamilyCaseNumberGo")
-=======
-  val fplasdoadminactivities =
-
-  //enter familycase number details
-      exec(http("XUI${service}_040_005_FamilyCaseNumberGo")
->>>>>>> origin/master
       .get("/data/internal/cases/${caseId}/event-triggers/addFamilyManCaseNumber?ignore-warning=false")
       .headers(FPLAHeader.headers_sdo_casenumbergo)
       .check(jsonPath("$.event_token").saveAs("event_token_sdo_casenumber"))
       .check(status.in(200, 304)))
 
-<<<<<<< HEAD
       .exec(http("XUI${service}_030_010_FamilyCaseNumberGoProfile")
-=======
-      .exec(http("XUI${service}_040_010_FamilyCaseNumberGoProfile")
->>>>>>> origin/master
         .get("/data/internal/profile")
         .headers(FPLAHeader.headers_sdo_casenumbergoprofile)
         .check(status.in(200, 304)))
 
-<<<<<<< HEAD
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
     // =======================================================================================
@@ -134,28 +113,18 @@ object EXUIFPLASDO {
     // ==================================================================================
 
       .exec(http("XUI${service}_040_005_FamilyCaseNumberContinue")
-=======
-      .pause(MinThinkTime, MaxThinkTime)
-
-      .exec(http("XUI${service}_050_005_FamilyCaseNumberContinue")
->>>>>>> origin/master
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=addFamilyManCaseNumber1")
         .headers(FPLAHeader.headers_sdo_casenumbercontinue)
             // .body(StringBody(""))
             .body(ElFileBody("SDOFamilyCaseNumberContinue.json")).asJson
             .check(status.in(200, 304)))
 
-<<<<<<< HEAD
       .exec(http("XUI${service}_040_010_FamilyCaseNumberContinueProfile")
-=======
-      .exec(http("XUI${service}_050_010_FamilyCaseNumberContinueProfile")
->>>>>>> origin/master
         .get("/data/internal/profile")
         .headers(FPLAHeader.headers_sdo_casenumbercontinueprofile)
         .check(status.in(200, 304)))
 
 
-<<<<<<< HEAD
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
     // =======================================================================================
@@ -164,11 +133,6 @@ object EXUIFPLASDO {
 
 
     .exec(http("XUI${service}_050_005_FamilyCaseNumberSaveContinue")
-=======
-      .pause(MinThinkTime, MaxThinkTime)
-
-      .exec(http("XUI${service}_060_005_FamilyCaseNumberSaveContinue")
->>>>>>> origin/master
         .post("/data/cases/${caseId}/events")
         .headers(FPLAHeader.headers_sdo_casenumber_view)
             //  .body(StringBody(""))
@@ -176,25 +140,16 @@ object EXUIFPLASDO {
             .check(status.in(200, 304)))
 
 
-<<<<<<< HEAD
       .exec(http("XUI${service}_050_010_FamilyCaseNumberSaveViewCase")
-=======
-      .exec(http("XUI${service}_060_010_FamilyCaseNumberSaveViewCase")
->>>>>>> origin/master
         .get("/data/internal/cases/${caseId}")
         .headers(FPLAHeader.headers_93)
         .check(status.in(200, 304)))
 
-<<<<<<< HEAD
       .exec(http("XUI${service}_050_015_FamilyCaseNumberSaveViewCaseUnDefined")
-=======
-      .exec(http("XUI${service}_60_015_FamilyCaseNumberSaveViewCaseUnDefined")
->>>>>>> origin/master
         .get("/undefined/cases/${caseId}")
         .headers(FPLAHeader.headers_94)
         .check(status.in(200, 304)))
 
-<<<<<<< HEAD
       .exec(http("XUI${service}_050_020_FamilyCaseNumberPaymentGroups")
         .get("/payments/cases/${caseId}/paymentgroups")
         .headers(FPLAHeader.headers_96)
@@ -205,65 +160,34 @@ object EXUIFPLASDO {
       //enter allocated judge details
 
       .exec(http("XUI${service}_060_005_AllocatedJudgeGo")
-=======
-      .exec(http("XUI${service}_60_020_FamilyCaseNumberPaymentGroups")
-        .get("/payments/cases/${caseId}/paymentgroups")
-        .headers(FPLAHeader.headers_96)
-        .check(status.in(200, 304, 403)))
-      .pause(MinThinkTime, MaxThinkTime)
-
-      //enter allocated judge details
-
-      .exec(http("XUI${service}_070_005_AllocatedJudgeGo")
->>>>>>> origin/master
             .get("/data/internal/cases/${caseId}/event-triggers/allocatedJudge?ignore-warning=false")
             .headers(FPLAHeader.headers_121)
             .check(jsonPath("$.event_token").saveAs("event_token_sdo_allocatedjudge"))
             .check(status.in(200, 304)))
 
-<<<<<<< HEAD
       .exec(http("XUI${service}_060_010_AllocatedJudgeProfile")
-=======
-      .exec(http("XUI${service}_070_010_AllocatedJudgeProfile")
->>>>>>> origin/master
             .get("/data/internal/profile")
             .headers(FPLAHeader.headers_124)
             .check(status.in(200, 304)))
 
-<<<<<<< HEAD
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
       .exec(http("XUI${service}_070_005_AllocatedJudgeContinue")
-=======
-      .pause(MinThinkTime, MaxThinkTime)
-
-      .exec(http("XUI${service}_080_005_AllocatedJudgeContinue")
->>>>>>> origin/master
             .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=allocatedJudgeAllocatedJudge")
             .headers(FPLAHeader.headers_128)
             // .body(StringBody(""))
             .body(ElFileBody("SDOAllocatedJudgeContinue.json")).asJson
             .check(status.in(200, 304)))
 
-<<<<<<< HEAD
       .exec(http("XUI${service}_070_010_AllocatedJudgeContinueProfile")
-=======
-      .exec(http("XUI${service}_080_010_AllocatedJudgeContinueProfile")
->>>>>>> origin/master
             .get("/data/internal/profile")
             .headers(FPLAHeader.headers_130)
             .check(status.in(200, 304)))
 
 
-<<<<<<< HEAD
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
       .exec(http("XUI${service}_080_005_AllocatedJudgeSaveContinue")
-=======
-      .pause(MinThinkTime, MaxThinkTime)
-
-      .exec(http("XUI${service}_090_005_AllocatedJudgeSaveContinue")
->>>>>>> origin/master
             .post("/data/cases/${caseId}/events")
             .headers(FPLAHeader.headers_133)
             //  .body(StringBody(""))
@@ -271,95 +195,55 @@ object EXUIFPLASDO {
             .check(status.in(200, 304)))
 
 
-<<<<<<< HEAD
       .exec(http("XUI${service}_080_010_AllocatedJudgeSaveViewCase")
-=======
-      .exec(http("XUI${service}_090_010_AllocatedJudgeSaveViewCase")
->>>>>>> origin/master
             .get("/data/internal/cases/${caseId}")
             .headers(FPLAHeader.headers_135)
             .check(status.in(200, 304)))
 
-<<<<<<< HEAD
       .exec(http("XUI${service}_080_015_AllocatedJudgeSaveViewCaseUnDefined")
-=======
-      .exec(http("XUI${service}_090_015_AllocatedJudgeSaveViewCaseUnDefined")
->>>>>>> origin/master
             .get("/undefined/cases/${caseId}")
             .headers(FPLAHeader.headers_136)
             .check(status.in(200, 304)))
 
-<<<<<<< HEAD
       .exec(http("XUI${service}_080_020_AllocatedJudgePaymentGroups")
-=======
-      .exec(http("XUI${service}_090_020_AllocatedJudgePaymentGroups")
->>>>>>> origin/master
             .get("/payments/cases/${caseId}/paymentgroups")
             .headers(FPLAHeader.headers_137)
             .check(status.in(200, 304, 403)))
 
-<<<<<<< HEAD
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
       //enter hearing booking details
 
       .exec(http("XUI${service}_090_005_HearingBookingDetailsGo")
-=======
-      .pause(MinThinkTime, MaxThinkTime)
-
-      //enter hearing booking details
-
-      .exec(http("XUI${service}_100_005_HearingBookingDetailsGo")
->>>>>>> origin/master
       .get("/data/internal/cases/${caseId}/event-triggers/hearingBookingDetails?ignore-warning=false")
       .headers(FPLAHeader.headers_100)
       .check(jsonPath("$.event_token").saveAs("event_token_sdo_hearingbooking"))
         .check(jsonPath("$..id").find(4).optional.saveAs("hearingDetails"))
       .check(status.in(200, 304)))
 
-<<<<<<< HEAD
       .exec(http("XUI${service}_090_010_HearingBookingDetailsProfile")
-=======
-      .exec(http("XUI${service}_100_010_HearingBookingDetailsProfile")
->>>>>>> origin/master
         .get("/data/internal/profile")
         .headers(FPLAHeader.headers_102)
         .check(status.in(200, 304)))
 
-<<<<<<< HEAD
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
       .exec(http("XUI${service}_100_005_HearingBookingDetailsContinue")
-=======
-      .pause(MinThinkTime, MaxThinkTime)
-
-      .exec(http("XUI${service}_110_005_HearingBookingDetailsContinue")
->>>>>>> origin/master
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=hearingBookingDetails1")
         .headers(FPLAHeader.headers_106)
             //.body(StringBody(""))
             .body(ElFileBody("SDOHearingBookingDetailsContinue.json")).asJson
             .check(status.in(200, 304)))
 
-<<<<<<< HEAD
       .exec(http("XUI${service}_100_010_HearingBookingDetailsContinueProfile")
-=======
-      .exec(http("XUI${service}_110_010_HearingBookingDetailsContinueProfile")
->>>>>>> origin/master
         .get("/data/internal/profile")
         .headers(FPLAHeader.headers_109)
         .check(status.in(200, 304)))
 
 
-<<<<<<< HEAD
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
       .exec(http("XUI${service}_110_005_HearingBookingDetailsSaveContinue")
-=======
-      .pause(MinThinkTime, MaxThinkTime)
-
-      .exec(http("XUI${service}_120_005_HearingBookingDetailsSaveContinue")
->>>>>>> origin/master
         .post("/data/cases/${caseId}/events")
         .headers(FPLAHeader.headers_112)
             // .body(StringBody(""))
@@ -367,173 +251,99 @@ object EXUIFPLASDO {
             .check(status.in(200, 304)))
 
 
-<<<<<<< HEAD
       .exec(http("XUI${service}_110_010_HearingBookingDetailsSaveViewCase")
-=======
-      .exec(http("XUI${service}_120_010_HearingBookingDetailsSaveViewCase")
->>>>>>> origin/master
         .get("/data/internal/cases/${caseId}")
         .headers(FPLAHeader.headers_114)
         .check(status.in(200, 304)))
 
-<<<<<<< HEAD
       .exec(http("XUI${service}_110_015_HearingBookingDetailsSaveViewCaseUnDefined")
-=======
-      .exec(http("XUI${service}_120_015_HearingBookingDetailsSaveViewCaseUnDefined")
->>>>>>> origin/master
         .get("/undefined/cases/${caseId}")
         .headers(FPLAHeader.headers_115)
         .check(status.in(200, 304)))
 
-<<<<<<< HEAD
       .exec(http("XUI${service}_110_020_HearingBookingPaymentGroups")
-=======
-      .exec(http("XUI${service}_120_020_HearingBookingPaymentGroups")
->>>>>>> origin/master
         .get("/payments/cases/${caseId}/paymentgroups")
         .headers(FPLAHeader.headers_116)
         .check(status.in(200, 304, 403)))
 
-<<<<<<< HEAD
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
   //enter send to gatekeeper details
 
     .exec(http("XUI${service}_120_005_SendToGateKeeperGo")
-=======
-      .pause(MinThinkTime, MaxThinkTime)
-
-  //enter send to gatekeeper details
-
-    .exec(http("XUI${service}_130_005_SendToGateKeeperGo")
->>>>>>> origin/master
     .get("/data/internal/cases/${caseId}/event-triggers/sendToGatekeeper?ignore-warning=false")
     .headers(FPLAHeader.headers_142)
     .check(jsonPath("$.event_token").saveAs("event_token_sdo_gk"))
         .check(jsonPath("$..id").find(6).optional.saveAs("gateKeeperEmail"))
     .check(status.in(200, 304)))
 
-<<<<<<< HEAD
     .exec(http("XUI${service}_120_010_SendToGateKeeperProfile")
-=======
-    .exec(http("XUI${service}_130_010_SendToGateKeeperProfile")
->>>>>>> origin/master
       .get("/data/internal/profile")
       .headers(FPLAHeader.headers_145)
       .check(status.in(200, 304)))
 
-<<<<<<< HEAD
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
     .exec(http("XUI${service}_130_005_SendToGateKeeperContinue")
-=======
-    .pause(MinThinkTime, MaxThinkTime)
-
-    .exec(http("XUI${service}_140_005_SendToGateKeeperContinue")
->>>>>>> origin/master
           .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=sendToGatekeeper1")
           .headers(FPLAHeader.headers_148)
           .body(ElFileBody("SDOSendToGateKeeperContinue.json")).asJson
           .check(status.in(200, 304)))
 
-<<<<<<< HEAD
     .exec(http("XUI${service}_130_010_SendToGateKeeperContinueProfile")
-=======
-    .exec(http("XUI${service}_140_010_SendToGateKeeperContinueProfile")
->>>>>>> origin/master
       .get("/data/internal/profile")
       .headers(FPLAHeader.headers_151)
       .check(status.in(200, 304)))
 
 
-<<<<<<< HEAD
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
     .exec(http("XUI${service}_140_005_SendToGateKeeperSaveContinue")
-=======
-    .pause(MinThinkTime, MaxThinkTime)
-
-    .exec(http("XUI${service}_150_005_SendToGateKeeperSaveContinue")
->>>>>>> origin/master
           .post("/data/cases/${caseId}/events")
           .headers(FPLAHeader.headers_154)
           .body(ElFileBody("SDOSendToGateKeeperSaveContinue.json")).asJson
           .check(status.in(200, 304)))
 
-<<<<<<< HEAD
     .exec(http("XUI${service}_140_010_SendToGateKeeperSaveViewCase")
-=======
-    .exec(http("XUI${service}_150_010_SendToGateKeeperSaveViewCase")
->>>>>>> origin/master
       .get("/data/internal/cases/${caseId}")
       .headers(FPLAHeader.headers_156)
       .check(status.in(200, 304)))
 
-<<<<<<< HEAD
     .exec(http("XUI${service}_140_015_SendToGateKeeperSaveViewCaseUndefined")
-=======
-    .exec(http("XUI${service}_150_015_SendToGateKeeperSaveViewCaseUndefined")
->>>>>>> origin/master
       .get("/undefined/cases/${caseId}")
       .headers(FPLAHeader.headers_157)
       .check(status.in(200, 304)))
 
-<<<<<<< HEAD
     .exec(http("XUI${service}_140_020_SendToGateKeeperPaymentGroups")
-=======
-    .exec(http("XUI${service}_150_020_SendToGateKeeperPaymentGroups")
->>>>>>> origin/master
       .get("/payments/cases/${caseId}/paymentgroups")
       .headers(FPLAHeader.headers_158)
       .check(status.in(200, 304, 403)))
 
-<<<<<<< HEAD
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
-=======
-    .pause(MinThinkTime, MaxThinkTime)
->>>>>>> origin/master
 
   val fplviewcaseforsdoasgatekeeper =
     tryMax(2) {
         exec(session => session.set("currentDate", timeStamp))
-<<<<<<< HEAD
         .exec(http("XUI${service}_150_005_SearchPage")
-=======
-        .exec(http("XUI${service}_160_005_SearchPage")
->>>>>>> origin/master
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
         .headers(FPLAHeader.headers_search)
         .check(status.in(200, 304)))
 
 
-<<<<<<< HEAD
         .exec(http("XUI${service}_150_010_SearchPaginationMetaData")
-=======
-        .exec(http("XUI${service}_140_010_SearchPaginationMetaData")
->>>>>>> origin/master
           .get("/aggregated/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases?view=SEARCH&page=1&state=Gatekeeping&case_reference=${caseId}")
           .headers(FPLAHeader.headers_236)
           .check(status.in(200, 304)))
 
-<<<<<<< HEAD
         .exec(http("XUI${service}_150_015_SearchResults")
-=======
-        .exec(http("XUI${service}_140_015_SearchResults")
->>>>>>> origin/master
           .get("/data/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases/pagination_metadata?state=Gatekeeping&case_reference=${caseId}")
           .headers(FPLAHeader.headers_237)
           .check(status.in(200, 304)))
 
     }
-<<<<<<< HEAD
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
       .exec(http("XUI${service}_160_005_ViewCase")
-=======
-      .pause(MinThinkTimeFPLV, MaxThinkTimeFPLV)
-
-      .exec(http("XUI${service}_150_005_ViewCase")
->>>>>>> origin/master
         .get("/data/internal/cases/${caseId}")
         .headers(FPLAHeader.headers_241)
         .check(status.in(200, 304)))
@@ -543,37 +353,21 @@ object EXUIFPLASDO {
 
 
 
-<<<<<<< HEAD
       .exec(http("XUI${service}_160_010_ViewcaseUndefined")
-=======
-      .exec(http("XUI${service}_150_010_ViewcaseUndefined")
->>>>>>> origin/master
         .get("/undefined/cases/${caseId}")
         .headers(FPLAHeader.headers_242)
         .check(status.in(200, 304)))
 
-<<<<<<< HEAD
       .exec(http("XUI${service}_160_015_PaymentGroups")
-=======
-      .exec(http("XUI${service}_150_015_PaymentGroups")
->>>>>>> origin/master
         .get("/payments/cases/${caseId}/paymentgroups")
         .headers(FPLAHeader.headers_243)
         .check(status.in(200, 304,403)))
 
-<<<<<<< HEAD
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
   val fplasdogatekeeperactivities =
   //enter draft sdo details
     exec(http("XUI${service}_180_005_DraftSDOGo")
-=======
-      .pause(MinThinkTimeFPLV, MaxThinkTimeFPLV)
-
-  val fplasdogatekeeperactivities =
-  //enter draft sdo details
-    exec(http("XUI${service}_190_005_DraftSDOGo")
->>>>>>> origin/master
       .get("/data/internal/cases/${caseId}/event-triggers/draftSDO?ignore-warning=false")
       .headers(FPLAHeader.headers_248)
       .check(status.in(200, 304))
@@ -604,143 +398,81 @@ object EXUIFPLASDO {
           session
         })*/
 
-<<<<<<< HEAD
       .exec(http("XUI${service}_180_010_DraftSDOGoProfile")
-=======
-      .exec(http("XUI${service}_190_010_DraftSDOGoProfile")
->>>>>>> origin/master
         .get("/data/internal/profile")
         .headers(FPLAHeader.headers_251)
         .check(status.in(200, 304)))
 
-<<<<<<< HEAD
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
       //new request
       .exec(http("XUI${service}_190_DraftSDODateOfIssue")
-=======
-        .pause(MinThinkTime, MaxThinkTime)
-
-      //new request
-      .exec(http("XUI${service}_200_DraftSDODateOfIssue")
->>>>>>> origin/master
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOSdoDateOfIssue")
       .headers(FPLAHeader.headers_254)
       //.body(StringBody(""))
             .body(ElFileBody("SDODateOfIssue.json")).asJson
       .check(status.in(200, 304)))
-<<<<<<< HEAD
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
       //new request
 
       .exec(http("XUI${service}_200_DraftSDOJudgeAndLegal")
-=======
-      .pause(MinThinkTime, MaxThinkTime)
-
-      //new request
-
-      .exec(http("XUI${service}_210_DraftSDOJudgeAndLegal")
->>>>>>> origin/master
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOjudgeAndLegalAdvisor")
       .headers(FPLAHeader.headers_254)
             // .body(StringBody(""))
             .body(ElFileBody("SDOJudgeAndLegalAdvisor.json")).asJson
             .check(status.in(200, 304)))
-<<<<<<< HEAD
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
       //new request
 
       .exec(http("XUI${service}_210_DraftSDOAllPartiesDirection")
-=======
-      .pause(MinThinkTime, MaxThinkTime)
-
-      //new request
-
-      .exec(http("XUI${service}_220_DraftSDOAllPartiesDirection")
->>>>>>> origin/master
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOallPartiesDirections")
       .headers(FPLAHeader.headers_254)
             //  .body(StringBody(""))
             .body(ElFileBody("SDOAllPartiesDirection.json")).asJson
             .check(status.in(200, 304)))
 
-<<<<<<< HEAD
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
       //new request
 
       .exec(http("XUI${service}_220_DraftSDOLocalAuthorityDirection")
-=======
-      .pause(MinThinkTime, MaxThinkTime)
-
-      //new request
-
-      .exec(http("XUI${service}_230_DraftSDOLocalAuthorityDirection")
->>>>>>> origin/master
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOlocalAuthorityDirections")
       .headers(FPLAHeader.headers_254)
             //   .body(StringBody(""))
             .body(ElFileBody("SDOLocalAuthorityDirection.json")).asJson
             .check(status.in(200, 304)))
-<<<<<<< HEAD
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
       //new request
       .exec(http("XUI${service}_230_DraftSDORespondantDirection")
-=======
-    .pause(MinThinkTime, MaxThinkTime)
-
-      //new request
-      .exec(http("XUI${service}_240_DraftSDORespondantDirection")
->>>>>>> origin/master
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOparentsAndRespondentsDirections")
       .headers(FPLAHeader.headers_254)
             // .body(StringBody(""))
             .body(ElFileBody("SDORespondantDirection.json")).asJson
     )
-<<<<<<< HEAD
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
       //new request
       .exec(http("XUI${service}_240_DraftSDOcafcasDirections")
-=======
-      .pause(MinThinkTime, MaxThinkTime)
-      //new request
-      .exec(http("XUI${service}_250_DraftSDOcafcasDirections")
->>>>>>> origin/master
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOcafcassDirections")
       .headers(FPLAHeader.headers_254)
             //  .body(StringBody(""))
             .body(ElFileBody("SDOcafcasDirections.json")).asJson
             .check(status.in(200, 304)))
-<<<<<<< HEAD
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
       //next request
 
       .exec(http("XUI${service}_250_DraftSDOOtherPartiesDirections")
-=======
-      .pause(MinThinkTime, MaxThinkTime)
-      //next request
-
-      .exec(http("XUI${service}_260_DraftSDOOtherPartiesDirections")
->>>>>>> origin/master
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOotherPartiesDirections")
       .headers(FPLAHeader.headers_254)
             //.body(StringBody(""))
             .body(ElFileBody("SDOOtherPartiesDirections.json")).asJson
             .check(status.in(200, 304)))
-<<<<<<< HEAD
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
       //next request
       .exec(http("XUI${service}_260_DraftSDOCourtDirections")
-=======
-      .pause(MinThinkTime, MaxThinkTime)
-
-      //next request
-      .exec(http("XUI${service}_270_DraftSDOCourtDirections")
->>>>>>> origin/master
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOcourtDirections")
       .headers(FPLAHeader.headers_254)
             // .body(StringBody(""))
@@ -749,59 +481,34 @@ object EXUIFPLASDO {
             .check(regex("""internal/documents/(.*?)","document_filename""").find(0).saveAs("DocumentID")))
 
 
-<<<<<<< HEAD
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
      /* .exec( session => {
         println("document value is "+session("DocumentID").as[String])
         session
       })*/
-=======
-      .pause(MinThinkTime, MaxThinkTime)
-
-      .exec( session => {
-        println("document value is "+session("DocumentID").as[String])
-        session
-      })
->>>>>>> origin/master
 
 
 
       //next request
-<<<<<<< HEAD
       .exec(http("XUI${service}_270_005_DraftSDODocumentReview")
-=======
-      .exec(http("XUI${service}_280_005_DraftSDODocumentReview")
->>>>>>> origin/master
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOdocumentReview")
       .headers(FPLAHeader.headers_254)
             // .body(StringBody(""))
             .body(ElFileBody("SDODocumentReview.json")).asJson
             .check(status.in(200, 304)))
 
-<<<<<<< HEAD
       .exec(http("XUI${service}_270_010_DraftSDODocumentReviewProfile")
-=======
-      .exec(http("XUI${service}_280_010_DraftSDODocumentReviewProfile")
->>>>>>> origin/master
         .get("/data/internal/profile")
         .headers(FPLAHeader.headers_298)
       .check(status.in(200, 304)))
 
-<<<<<<< HEAD
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
-=======
-      .pause(MinThinkTime, MaxThinkTime)
->>>>>>> origin/master
 
 
       //next request
 
-<<<<<<< HEAD
       .exec(http("XUI${service}_280_005_DraftSDOFinalView")
-=======
-      .exec(http("XUI${service}_290_005_DraftSDOFinalView")
->>>>>>> origin/master
       .post("/data/cases/${caseId}/events")
       .headers(FPLAHeader.headers_301)
             // .body(StringBody(""))
@@ -809,38 +516,22 @@ object EXUIFPLASDO {
             .check(status.in(200, 304)))
 
 
-<<<<<<< HEAD
       .exec(http("XUI${service}_280_010_DraftSDOFinalView1")
-=======
-      .exec(http("XUI${service}_290_010_DraftSDOFinalView1")
->>>>>>> origin/master
         .get("/data/internal/cases/${caseId}")
         .headers(FPLAHeader.headers_304)
         .check(status.in(200, 304)))
 
-<<<<<<< HEAD
       .exec(http("XUI${service}_280_015_DraftSDOFinalView1Undefined")
-=======
-      .exec(http("XUI${service}_290_015_DraftSDOFinalView1Undefined")
->>>>>>> origin/master
         .get("/undefined/cases/${caseId}")
         .headers(FPLAHeader.headers_305)
       .check(status.in(200, 304)))
 
-<<<<<<< HEAD
       .exec(http("XUI${service}_280_020_DraftSDOPaymentGroups")
-=======
-      .exec(http("XUI${service}_290_020_DraftSDOPaymentGroups")
->>>>>>> origin/master
         .get("/payments/cases/${caseId}/paymentgroups")
         .headers(FPLAHeader.headers_306)
         .check(status.is(403)))
 
-<<<<<<< HEAD
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
-=======
-      .pause(MinThinkTime, MaxThinkTime)
->>>>>>> origin/master
 
 
 
