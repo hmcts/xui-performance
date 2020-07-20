@@ -14,8 +14,9 @@ properties([
 @Library("Infrastructure") 
 
 
-def product = "rpa"
+def product = "xui"
 def component = "MANAGE ORGANISATION"
+def channel   = '#xui-pipeline'
 
 withNightlyPipeline("java", product, component) {
     // Add any environment variables for executing your performance tests for example see below
