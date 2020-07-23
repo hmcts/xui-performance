@@ -54,22 +54,22 @@ object EXUIMCLogin {
   val manageCasesHomePageGK =
     tryMax(2) {
 
-      exec(http("XUI${service}_170_005_Homepage")
+      exec(http("XUI${service}_160_005_GKHomepage")
            .get("/")
            .headers(LoginHeader.headers_0)
            .check(status.in(200,304))).exitHereIfFailed
 
-        .exec(http("XUI${service}_170_010_Homepage")
+        .exec(http("XUI${service}_160_010_GKHomepage")
               .get("/external/config/ui")
               .headers(LoginHeader.headers_0)
               .check(status.in(200,304)))
 
-      .exec(http("XUI${service}_170_015_HomepageTCEnabled")
+      .exec(http("XUI${service}_160_015_GKHomepageTCEnabled")
             .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
             .headers(LoginHeader.headers_hometc)
             .check(status.is(200)))
 
-      .exec(http("XUI${service}_170_020_HompageLoginPage")
+      .exec(http("XUI${service}_160_020_GKHompageLoginPage")
             .get(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
             .headers(LoginHeader.headers_login)
             .check(regex("Sign in"))
@@ -247,7 +247,7 @@ object EXUIMCLogin {
   val managecasesgatekeeperlogin =
     tryMax(2) {
 
-      exec(http("XUI${service}_180_005_SignIn")
+      exec(http("XUI${service}_170_005_GKSignIn")
            .post(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
            .formParam("username", "fpla.gatekeeper@mailinator.com")
            .formParam("password", "Pass19word")
@@ -257,32 +257,32 @@ object EXUIMCLogin {
            .headers(LoginHeader.headers_login_submit)
            .check(status.in(200, 304, 302))).exitHereIfFailed
 
-        .exec(http("XUI${service}_180_010_Homepage")
+        .exec(http("XUI${service}_170_010_GKSignIn")
               .get("/external/config/ui")
               .headers(LoginHeader.headers_0)
               .check(status.in(200,304)))
 
-      .exec(http("XUI${service}_180_015_SignInTCEnabled")
+      .exec(http("XUI${service}_170_015_GKSignInTCEnabled")
             .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
             .headers(LoginHeader.headers_38)
             .check(status.in(200, 304)))
 
       .repeat(1, "count") {
-        exec(http("XUI${service}_180_020_AcceptT&CAccessJurisdictions${count}")
+        exec(http("XUI${service}_170_020_GKAcceptT&CAccessJurisdictions${count}")
              .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
              .headers(LoginHeader.headers_access_read)
              .check(status.in(200, 304, 302)))
       }
 
-      .exec(http("XUI${service}_180_025_GetWorkBasketInputs")
+      .exec(http("XUI${service}_170_025_GKGetWorkBasketInputs")
             .get("/data/internal/case-types/CARE_SUPERVISION_EPO/work-basket-inputs")
             .headers(LoginHeader.headers_17))
 
-      .exec(http("XUI${service}_180_030_GetPaginationMetaData")
+      .exec(http("XUI${service}_170_030_GKGetPaginationMetaData")
             .get("/data/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases/pagination_metadata?state=Open")
             .headers(LoginHeader.headers_0))
 
-      .exec(http("XUI${service}_180_035_GetDefaultWorkBasketView")
+      .exec(http("XUI${service}_170_035_GKGetDefaultWorkBasketView")
             .get("/aggregated/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases?view=WORKBASKET&state=Open&page=1")
             .headers(LoginHeader.headers_0))
 
