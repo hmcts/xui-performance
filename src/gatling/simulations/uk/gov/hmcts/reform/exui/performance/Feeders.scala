@@ -147,7 +147,7 @@ object Feeders {
     "SDO"
   }),
     "SignoutNumberAdmin" -> ({
-      "170"
+      "150"
     }),
     "SignoutNumberGK" -> ({
       "290"
