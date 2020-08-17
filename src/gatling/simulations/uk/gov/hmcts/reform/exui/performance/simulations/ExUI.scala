@@ -186,7 +186,7 @@ class ExUI extends Simulation {
 	).protocols(IAChttpProtocol)*/
 
 	setUp(
-		EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(581) during (3200)),
+		EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(581) during (3200)), //581
 		EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(82) during (3200)),
 		EXUIMCaseViewIACScn.inject(nothingFor(25),rampUsers(74) during (3400)),
 		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(38) during (2700)),
