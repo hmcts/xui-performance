@@ -17,6 +17,20 @@ object EXUIMCLogin {
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
 
+  val headers_1 = Map(
+      "Pragma" -> "no-cache",
+      "Sec-Fetch-Dest" -> "empty",
+      "Sec-Fetch-Mode" -> "cors",
+      "Sec-Fetch-Site" -> "same-origin")
+
+  val headers_4 = Map(
+      "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+      "Pragma" -> "no-cache",
+      "Sec-Fetch-Dest" -> "document",
+      "Sec-Fetch-Mode" -> "navigate",
+      "Sec-Fetch-Site" -> "same-origin",
+      "Upgrade-Insecure-Requests" -> "1")
+
   //====================================================================================
   //Business process : Access Home Page by hitting the URL and relavant sub requests
   //below requests are Homepage and relavant sub requests as part of the login submission
@@ -30,22 +44,41 @@ object EXUIMCLogin {
            .headers(LoginHeader.headers_0)
            .check(status.in(200,304))).exitHereIfFailed
 
-        .exec(http("XUI${service}_010_010_Homepage")
-              .get("/external/config/ui")
-          .headers(LoginHeader.headers_0)
-          .check(status.in(200,304)))
+      //   .exec(http("XUI${service}_010_010_Homepage")
+      //         .get("/external/config/ui")
+      //     .headers(LoginHeader.headers_0)
+      //     .check(status.in(200,304)))
+
+      // .exec(http("XUI${service}_010_015_HomepageTCEnabled")
+      //       .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
+      //       .headers(LoginHeader.headers_hometc)
+      //       .check(status.is(200)))
+
+      // .exec(http("XUI${service}_010_020_HompageLoginPage")
+      //       .get(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
+      //       .headers(LoginHeader.headers_login)
+      //       .check(regex("Sign in"))
+      //       .check(css("input[name='_csrf']", "value").saveAs("csrfToken"))
+      //       .check(status.is(200)))
+
+      .exec(http("XUI${service}_010_010_Homepage")
+            .get("/assets/config/config.json")
+            .headers(headers_1))
 
       .exec(http("XUI${service}_010_015_HomepageTCEnabled")
             .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
-            .headers(LoginHeader.headers_hometc)
-            .check(status.is(200)))
+            .headers(headers_1))
 
-      .exec(http("XUI${service}_010_020_HompageLoginPage")
-            .get(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
-            .headers(LoginHeader.headers_login)
-            .check(regex("Sign in"))
+      .exec(http("XUI${service}_010_020_HomepageIsAuthenticated")
+            .get("/auth/isAuthenticated")
+            .headers(headers_1))
+
+      .exec(http("XUI${service}_010_020_Homepage")
+            .get("/auth/login")
+            .headers(headers_4)
             .check(css("input[name='_csrf']", "value").saveAs("csrfToken"))
-            .check(status.is(200)))
+            .check(regex("manage-user%20create-user&state=(.*)&client").saveAs("state"))
+)
     }
 
     .pause( MinThinkTime, MaxThinkTime )
@@ -88,7 +121,8 @@ object EXUIMCLogin {
     tryMax(2) {
 
       exec(http("XUI${service}_020_005_SignIn")
-           .post(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
+           //.post(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
+           .post(IdamUrl + "/login?response_type=code&redirect_uri=" + baseURL + "%2Foauth2%2Fcallback&scope=profile%20openid%20roles%20manage-user%20create-user&state=${state}&client_id=xuiwebapp")
            .formParam("username", "${user}")
            .formParam("password", "Pass19word")
            .formParam("save", "Sign in")
