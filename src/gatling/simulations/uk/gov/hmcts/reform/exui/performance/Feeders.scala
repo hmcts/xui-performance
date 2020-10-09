@@ -164,7 +164,13 @@ object Feeders {
   ));
 
 
-
+  val DivDataFeeder = Iterator.continually(Map("service" -> ({
+    "DIV"
+  }),
+    "SignoutNumber" -> ({
+      "120"
+    })
+  ));
 
 
 }
