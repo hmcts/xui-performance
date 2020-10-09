@@ -124,7 +124,7 @@ object EXUIMCLogin {
            //.post(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
            .post(IdamUrl + "/login?response_type=code&redirect_uri=" + baseURL + "%2Foauth2%2Fcallback&scope=profile%20openid%20roles%20manage-user%20create-user&state=${state}&client_id=xuiwebapp")
            .formParam("username", "${user}")
-           .formParam("password", "Password19")
+           .formParam("password", "Pass19word")
            .formParam("save", "Sign in")
            .formParam("selfRegistrationEnabled", "false")
            .formParam("_csrf", "${csrfToken}")
