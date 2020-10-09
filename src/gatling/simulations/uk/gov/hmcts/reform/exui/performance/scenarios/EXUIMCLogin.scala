@@ -61,7 +61,11 @@ object EXUIMCLogin {
       //       .check(css("input[name='_csrf']", "value").saveAs("csrfToken"))
       //       .check(status.is(200)))
 
-      .exec(http("XUI${service}_010_010_Homepage")
+      .exec(http("XUI${service}_010_010_HomepageConfigUI")
+            .get("/external/configuration-ui")
+            .headers(headers_1))
+
+      .exec(http("XUI${service}_010_010_HomepageConfigJson")
             .get("/assets/config/config.json")
             .headers(headers_1))
 
@@ -169,18 +173,27 @@ object EXUIMCLogin {
       }
 
         .exec(http("XUI${service}_020_025_GetWorkBasketInputs")
-              .get("/data/internal/case-types/CARE_SUPERVISION_EPO/work-basket-inputs")
+              .get("/data/internal/case-types/FinancialRemedyMVP2/work-basket-inputs")
               .headers(LoginHeader.headers_17))
+        .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("XSRFToken")))
+        .exec( session => {
+          println("the xsrf code is "+session("XSRFToken").as[String])
+          session
+        })
 
         .exec(http("XUI${service}_020_030_GetPaginationMetaData")
-              .get("/data/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases/pagination_metadata?state=Open")
+              .get("/data/caseworkers/:uid/jurisdictions/DIVORCE/case-types/FinancialRemedyMVP2/cases/pagination_metadata?state=caseAdded")
               .headers(LoginHeader.headers_0))
 
         .exec(http("XUI${service}_020_035_GetDefaultWorkBasketView")
-              .get("/aggregated/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases?view=WORKBASKET&state=Open&page=1")
+              .get("/aggregated/caseworkers/:uid/jurisdictions/DIVORCE/case-types/FinancialRemedyMVP2/cases?view=WORKBASKET&state=caseAdded&page=1")
               .headers(LoginHeader.headers_0))
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("xsrfToken")))
+        
+      .exec(http("XUI${service}_010_020_HomepageIsAuthenticated")
+              .get("/auth/isAuthenticated")
+              .headers(LoginHeader.headers_0))
 
     }
 

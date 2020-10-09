@@ -25,23 +25,23 @@ val baseDomainOrg="manage-org.perftest.platform.hmcts.net"
   //10
   val maxThinkTimeFPLC = 35//80
 
-  val minThinkTimeSDO = 100
+  val minThinkTimeSDO = 10//100
   //10
-  val maxThinkTimeSDO = 110
+  val maxThinkTimeSDO = 10//110
   //30
-  val minThinkTimeIACC = 100
+  val minThinkTimeIACC = 10//100
   //10
-  val maxThinkTimeIACC = 120
-  val minThinkTimeFPLV = 450
+  val maxThinkTimeIACC = 10//120
+  val minThinkTimeFPLV = 10//450
   //10
-  val maxThinkTimeFPLV = 480
+  val maxThinkTimeFPLV = 10//480
   //320
-  val minThinkTimeIACV = 470
+  val minThinkTimeIACV = 10//470
   //10
   val maxThinkTimeIACV = 5//490
   val minThinkTimePROB = 6//300
   //10
-  val maxThinkTimePROB = 310 //310
+  val maxThinkTimePROB = 10//310
   val constantthinkTime = 5
   val HttpProtocol = http
 // }
