@@ -35,12 +35,12 @@ object EXUICaseWorker {
     feed(caseFeeder)
 
     .exec(http("XUI${service}_030_005_SearchPagination")
-        .get("/data/caseworkers/:uid/jurisdictions/${jurisdiction}/case-types/${jurisdiction}/cases/pagination_metadata")
+        .get("/data/caseworkers/:uid/jurisdictions/${jurisdiction}/case-types/${caseType}/cases/pagination_metadata")
         .headers(CaseworkerHeader.headers_2)
         .header("X-XSRF-TOKEN", "${xsrfToken}"))
 
     .exec(http("XUI${service}_030_010_SearchWorkbasket")
-        .get("/aggregated/caseworkers/:uid/jurisdictions/${jurisdiction}/case-types/${jurisdiction}/cases?view=WORKBASKET&page=1")
+        .get("/aggregated/caseworkers/:uid/jurisdictions/${jurisdiction}/case-types/${caseType}/cases?view=WORKBASKET&page=1")
         .headers(CaseworkerHeader.headers_2)
         .header("X-XSRF-TOKEN", "${xsrfToken}")
         .check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumbers")))
