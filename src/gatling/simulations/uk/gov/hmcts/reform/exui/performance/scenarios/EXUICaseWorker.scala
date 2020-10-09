@@ -8,11 +8,9 @@ import uk.gov.hmcts.reform.exui.performance.scenarios.utils.CaseworkerHeader
 
 object EXUICaseWorker {
 
-
-  //val BaseURL = Environment.baseURL
   val IdamUrl = Environment.idamURL
   val baseURL=Environment.baseURL
-  //val loginFeeder = csv("OrgId.csv").circular
+  val caseFeeder = csv("CaseworkerSearches.csv").random
 
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
@@ -33,13 +31,16 @@ object EXUICaseWorker {
     // .pause(1)
 
     // .
-    exec(http("XUI${service}_030_005_SearchPagination")
-        .get("/data/caseworkers/:uid/jurisdictions/PROBATE/case-types/Caveat/cases/pagination_metadata")
+
+    feed(caseFeeder)
+
+    .exec(http("XUI${service}_030_005_SearchPagination")
+        .get("/data/caseworkers/:uid/jurisdictions/${jurisdiction}/case-types/${jurisdiction}/cases/pagination_metadata")
         .headers(CaseworkerHeader.headers_2)
         .header("X-XSRF-TOKEN", "${xsrfToken}"))
 
     .exec(http("XUI${service}_030_010_SearchWorkbasket")
-        .get("/aggregated/caseworkers/:uid/jurisdictions/PROBATE/case-types/Caveat/cases?view=WORKBASKET&page=1")
+        .get("/aggregated/caseworkers/:uid/jurisdictions/${jurisdiction}/case-types/${jurisdiction}/cases?view=WORKBASKET&page=1")
         .headers(CaseworkerHeader.headers_2)
         .header("X-XSRF-TOKEN", "${xsrfToken}")
         .check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumbers")))
@@ -70,6 +71,8 @@ object EXUICaseWorker {
             .check(status.is(404)))
         
         .pause(MinThinkTime, MaxThinkTime)
+
+        //TO DO - put this in a do-if statement, so only do these steps if document_ID is found
 
         .exec(http("XUI${service}_050_005_ClickDocumentsTab")
             .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumber}%23documentsTab")
