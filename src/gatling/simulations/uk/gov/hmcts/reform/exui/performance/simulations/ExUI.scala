@@ -14,6 +14,7 @@ class ExUI extends Simulation {
 	val feedUserDataIACCreate = csv("IACDataCreate.csv").circular
 	val feedUserDataFPLCreate = csv("FPLDataCreate.csv").circular
 	val feedUserDataProbate = csv("ProbateUserData.csv").circular
+	val feedUserDataCaseworker = csv("Caseworkers.csv").circular
 	val feedUserDataFPLCases = csv("FPLCases.csv").circular
 
 	/*val httpProtocol = Environment.HttpProtocol
@@ -140,6 +141,19 @@ class ExUI extends Simulation {
 
 	}
 
+	val EXUIMCaseCaseworkerScn = scenario("***** Caseworker Journey ******").repeat(1)
+  {
+		feed(feedUserDataCaseworker).feed(Feeders.CwDataFeeder)
+			.exec(EXUIMCLogin.manageCasesHomePage)
+			.exec(EXUIMCLogin.caseworkerLogin)
+		.repeat(1) {
+			exec(EXUICaseWorker.SearchCase)
+			.exec(EXUICaseWorker.ViewCase)
+			}
+		.exec(EXUIMCLogin.manageCase_Logout)
+  }
+
+
 
 	/*setUp(
 		EXUIScn.inject(rampUsers(1) during (300))
@@ -185,11 +199,15 @@ class ExUI extends Simulation {
 		EXUIMCFPLASDOScn.inject(nothingFor(55),rampUsers(30) during (600))
 	).protocols(IAChttpProtocol)*/
 
+	// setUp(
+	// 	EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(581) during (3200)), //581
+	// 	EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(82) during (3200)),
+	// 	EXUIMCaseViewIACScn.inject(nothingFor(25),rampUsers(74) during (3400)),
+	// 	EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(38) during (2700)),
+	// 	EXUIMCaseViewFPLAScn.inject(nothingFor(45),rampUsers(19) during (3400)),
+	// ).protocols(IAChttpProtocol)
+
 	setUp(
-		EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(581) during (3200)), //581
-		EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(82) during (3200)),
-		EXUIMCaseViewIACScn.inject(nothingFor(25),rampUsers(74) during (3400)),
-		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(38) during (2700)),
-		EXUIMCaseViewFPLAScn.inject(nothingFor(45),rampUsers(19) during (3400)),
-	).protocols(IAChttpProtocol)
+		EXUIMCaseCaseworkerScn.inject(rampUsers(1) during 1)
+		).protocols(IAChttpProtocol)
 }
