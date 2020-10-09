@@ -163,6 +163,13 @@ object Feeders {
     })
   ));
 
+  val CwDataFeeder = Iterator.continually(Map("service" -> ({
+    "CW"
+}),
+    "SignoutNumber" -> ({
+      "120"
+    })
+  ));
 
   val DivDataFeeder = Iterator.continually(Map("service" -> ({
     "DIV"
