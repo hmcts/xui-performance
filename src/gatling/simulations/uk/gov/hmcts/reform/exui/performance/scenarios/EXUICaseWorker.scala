@@ -97,5 +97,7 @@ object EXUICaseWorker {
             .check(status.in(200, 404,304)))
 
         .pause(MinThinkTime, MaxThinkTime)
+	    
+	    //Simulate clicking on Case List
     }
 }
