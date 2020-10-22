@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.exui.performance.simulations
 
 import io.gatling.core.Predef._
+import io.gatling.http.Predef._
 import uk.gov.hmcts.reform.exui.performance.Feeders
 import uk.gov.hmcts.reform.exui.performance.scenarios._
 import uk.gov.hmcts.reform.exui.performance.scenarios.utils._
@@ -37,6 +38,12 @@ class ExUI extends Simulation {
 
    // .inferHtmlResources()
     .userAgentHeader("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36")
+
+	val FRhttpProtocol = Environment.HttpProtocol
+		//.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
+		.baseUrl(BaseURL)
+		.inferHtmlResources()
+		.userAgentHeader("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.80 Safari/537.36")
 
 	val EXUIScn = scenario("EXUI").repeat(1)
 	 {
@@ -167,7 +174,32 @@ class ExUI extends Simulation {
 		.exec(EXUIMCLogin.manageCase_Logout)
   }
 
+	val recordedSimulationFRScn = scenario("FR").repeat(1)
+	{
+		exec(EXUI_FR.login)
+		.exec(EXUI_FR.createCase)
+		.exec(EXUI_FR.logout)
+	}
 
+	val recordedSimulationFRRespondentScn = scenario("FR_Respondent").repeat(1)
+	{
+		exec(EXUI_FR_Respondent.login)
+			.exec(EXUI_FR_Respondent.shareCase)
+			.exec(EXUI_FR_Respondent.logout)
+	}
+
+	setUp(
+		//EXUIMCaseCreationDivorceScn.inject(nothingFor(5),rampUsers(1) during (3))
+		//EXUIMCaseCaseworkerScn.inject(rampUsers(1) during 1)
+		//EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(1) during (3))
+		/*EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(1) during (3)),
+		EXUIMCaseViewIACScn.inject(nothingFor(25),rampUsers(1) during (3)),
+		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(1) during (2)),
+		EXUIMCaseViewFPLAScn.inject(nothingFor(45),rampUsers(1) during (3)),*/
+		recordedSimulationFRScn.inject(atOnceUsers(1)).protocols(FRhttpProtocol),
+		recordedSimulationFRRespondentScn.inject(atOnceUsers(1)).protocols(FRhttpProtocol))
+
+}
 
 	/*setUp(
 		EXUIScn.inject(rampUsers(1) during (300))
@@ -222,14 +254,3 @@ class ExUI extends Simulation {
 		EXUIMCaseViewFPLAScn.inject(nothingFor(45),rampUsers(19) during (3400)),
 	).protocols(IAChttpProtocol)*/
 
-	setUp(
-		EXUIMCaseCreationDivorceScn.inject(nothingFor(5),rampUsers(1) during (3))
-    EXUIMCaseCaseworkerScn.inject(rampUsers(1) during 1)
-		//EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(1) during (3))
-		/*EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(1) during (3)),
-		EXUIMCaseViewIACScn.inject(nothingFor(25),rampUsers(1) during (3)),
-		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(1) during (2)),
-		EXUIMCaseViewFPLAScn.inject(nothingFor(45),rampUsers(1) during (3)),*/
-	).protocols(IAChttpProtocol)
-
-}
