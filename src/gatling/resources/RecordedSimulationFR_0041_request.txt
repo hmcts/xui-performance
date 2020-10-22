@@ -1,0 +1,15 @@
+{
+  "data": {
+    "isAdmin": null
+  },
+  "event": {
+    "id": "FR_solicitorCreate",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxbmpuZG45aXM2cDEzdG40a2JqbzUxODl1ZCIsInN1YiI6IjQyYWY1YjI2LTkwMGYtNDBlNS1hODRmLThlMGJhOWIzODRkOSIsImlhdCI6MTYwMzI3MDI4OSwiZXZlbnQtaWQiOiJGUl9zb2xpY2l0b3JDcmVhdGUiLCJjYXNlLXR5cGUtaWQiOiJGaW5hbmNpYWxSZW1lZHlNVlAyIiwianVyaXNkaWN0aW9uLWlkIjoiRElWT1JDRSIsImNhc2UtdmVyc2lvbiI6ImJmMjFhOWU4ZmJjNWEzODQ2ZmIwNWI0ZmEwODU5ZTA5MTdiMjIwMmYifQ.ogjAGHMRQs_Fn1En55dZjq4rd-ZuHAZx_wPAWnG076w",
+  "ignore_warning": false,
+  "event_data": {
+    "isAdmin": null
+  }
+}
