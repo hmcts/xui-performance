@@ -8,13 +8,13 @@
     "summary": "",
     "description": ""
   },
-  "event_token": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxbmpuZG45aXM2cDEzdG40a2JqbzUxODl1ZCIsInN1YiI6IjQyYWY1YjI2LTkwMGYtNDBlNS1hODRmLThlMGJhOWIzODRkOSIsImlhdCI6MTYwMzI3MDI4OSwiZXZlbnQtaWQiOiJGUl9zb2xpY2l0b3JDcmVhdGUiLCJjYXNlLXR5cGUtaWQiOiJGaW5hbmNpYWxSZW1lZHlNVlAyIiwianVyaXNkaWN0aW9uLWlkIjoiRElWT1JDRSIsImNhc2UtdmVyc2lvbiI6ImJmMjFhOWU4ZmJjNWEzODQ2ZmIwNWI0ZmEwODU5ZTA5MTdiMjIwMmYifQ.ogjAGHMRQs_Fn1En55dZjq4rd-ZuHAZx_wPAWnG076w",
+  "event_token": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI3ZnZjNXJnMGtoMm9sNWxzcG9vcm9nZmQyYSIsInN1YiI6IjczNDQ5ZTg3LTg2YmItNGFmNC04ZmQwLTkyM2YxZGUxY2FkMCIsImlhdCI6MTYwMzQ1OTg3MSwiZXZlbnQtaWQiOiJGUl9zb2xpY2l0b3JDcmVhdGUiLCJjYXNlLXR5cGUtaWQiOiJGaW5hbmNpYWxSZW1lZHlDb25zZW50ZWRSZXNwb25kZW50IiwianVyaXNkaWN0aW9uLWlkIjoiRElWT1JDRSIsImNhc2UtdmVyc2lvbiI6ImJmMjFhOWU4ZmJjNWEzODQ2ZmIwNWI0ZmEwODU5ZTA5MTdiMjIwMmYifQ.soVqUxXfhTONXapvIyzs8ubQcQN99685MDB8wvCEH30",
   "ignore_warning": false,
   "event_data": {
     "isAdmin": "No",
-    "solicitorName": "John",
+    "solicitorName": "Joe Bloggs",
     "solicitorFirm": "HMCTS",
-    "solicitorReference": "abc",
+    "solicitorReference": null,
     "solicitorAddress": {
       "AddressLine1": "Ministry Of Justice",
       "AddressLine2": "Seventh Floor 102 Petty France",
@@ -25,17 +25,9 @@
       "Country": "United Kingdom"
     },
     "solicitorPhone": null,
-    "solicitorEmail": "abc@gmail.com",
+    "solicitorEmail": "abc@email.com",
     "solicitorDXnumber": null,
     "solicitorAgreeToReceiveEmails": "No",
-    "ApplicantOrganisationPolicy": {
-      "Organisation": {
-        "OrganisationID": null,
-        "OrganisationName": null
-      },
-      "OrgPolicyCaseAssignedRole": "[APPSOLICITOR]",
-      "OrgPolicyReference": null
-    },
     "divorceCaseNumber": "EZ11D81265",
     "divorceStageReached": "Petition Issued"
   }

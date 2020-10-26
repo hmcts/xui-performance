@@ -179,6 +179,14 @@ object Feeders {
     })
   ));
 
+  val FRDataFeeder = Iterator.continually(Map("service" -> ({
+    "FR"
+  }),
+    "SignoutNumber" -> ({
+      "250"
+    })
+  ));
+
 
 }
 

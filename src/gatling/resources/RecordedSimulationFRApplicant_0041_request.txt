@@ -1,0 +1,10 @@
+------WebKitFormBoundarysWFdOsWptcJsOCpU
+Content-Disposition: form-data; name="files"; filename="dummy.pdf"
+Content-Type: application/pdf
+
+
+------WebKitFormBoundarysWFdOsWptcJsOCpU
+Content-Disposition: form-data; name="classification"
+
+PUBLIC
+------WebKitFormBoundarysWFdOsWptcJsOCpU--
