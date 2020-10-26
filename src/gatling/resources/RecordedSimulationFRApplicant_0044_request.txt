@@ -1,0 +1,76 @@
+{
+  "data": {
+    "consentOrder": {
+      "document_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/7228f9f2-c8c8-48e1-aa34-817e767a5c13",
+      "document_binary_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/7228f9f2-c8c8-48e1-aa34-817e767a5c13/binary",
+      "document_filename": "dummy.pdf"
+    }
+  },
+  "event": {
+    "id": "FR_solicitorCreate",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI3ZnZjNXJnMGtoMm9sNWxzcG9vcm9nZmQyYSIsInN1YiI6IjczNDQ5ZTg3LTg2YmItNGFmNC04ZmQwLTkyM2YxZGUxY2FkMCIsImlhdCI6MTYwMzQ1OTg3MSwiZXZlbnQtaWQiOiJGUl9zb2xpY2l0b3JDcmVhdGUiLCJjYXNlLXR5cGUtaWQiOiJGaW5hbmNpYWxSZW1lZHlDb25zZW50ZWRSZXNwb25kZW50IiwianVyaXNkaWN0aW9uLWlkIjoiRElWT1JDRSIsImNhc2UtdmVyc2lvbiI6ImJmMjFhOWU4ZmJjNWEzODQ2ZmIwNWI0ZmEwODU5ZTA5MTdiMjIwMmYifQ.soVqUxXfhTONXapvIyzs8ubQcQN99685MDB8wvCEH30",
+  "ignore_warning": false,
+  "event_data": {
+    "isAdmin": "No",
+    "solicitorName": "Joe Bloggs",
+    "solicitorFirm": "HMCTS",
+    "solicitorReference": null,
+    "solicitorAddress": {
+      "AddressLine1": "Ministry Of Justice",
+      "AddressLine2": "Seventh Floor 102 Petty France",
+      "AddressLine3": "",
+      "PostTown": "London",
+      "County": "",
+      "PostCode": "SW1H 9AJ",
+      "Country": "United Kingdom"
+    },
+    "solicitorPhone": null,
+    "solicitorEmail": "abc@email.com",
+    "solicitorDXnumber": null,
+    "solicitorAgreeToReceiveEmails": "No",
+    "divorceCaseNumber": "EZ11D81265",
+    "divorceStageReached": "Petition Issued",
+    "applicantFMName": "Joe",
+    "applicantLName": "Baker",
+    "regionList": "southeast",
+    "southEastFRCList": "kent",
+    "kentSurreyCourtList": "FR_kent_surreyList_10",
+    "appRespondentFMName": "Stephen",
+    "appRespondentLName": "Parker",
+    "appRespondentRep": "Yes",
+    "rSolicitorName": "Adam Walker",
+    "rOrgPolicy": {
+      "Organisation": {
+        "OrganisationID": "NAGMS8A",
+        "OrganisationName": "probateorg-7v7n2"
+      },
+      "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
+      "OrgPolicyReference": "Test Resp Sol Ref"
+    },
+    "rSolicitorFirm": "resp sol & co",
+    "rSolicitorReference": null,
+    "rSolicitorAddress": {
+      "AddressLine1": "Ministry Of Justice",
+      "AddressLine2": "Seventh Floor 102 Petty France",
+      "AddressLine3": "",
+      "PostTown": "London",
+      "County": "",
+      "PostCode": "SW1H 9AJ",
+      "Country": "United Kingdom"
+    },
+    "rSolicitorPhone": null,
+    "rSolicitorEmail": null,
+    "rSolicitorDXnumber": null,
+    "natureOfApplication2": [
+      "Lump Sum Order"
+    ],
+    "consentOrder": {
+      "document_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/7228f9f2-c8c8-48e1-aa34-817e767a5c13",
+      "document_binary_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/7228f9f2-c8c8-48e1-aa34-817e767a5c13/binary",
+      "document_filename": "dummy.pdf"
+    }
+  }
+}

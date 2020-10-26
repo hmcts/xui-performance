@@ -1,0 +1,10 @@
+------WebKitFormBoundarynZAT1BNCygsLwdnc
+Content-Disposition: form-data; name="files"; filename="dummy.pdf"
+Content-Type: application/pdf
+
+
+------WebKitFormBoundarynZAT1BNCygsLwdnc
+Content-Disposition: form-data; name="classification"
+
+PUBLIC
+------WebKitFormBoundarynZAT1BNCygsLwdnc--
