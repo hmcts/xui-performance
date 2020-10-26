@@ -65,19 +65,19 @@ object EXUIMCLogin {
             .get("/external/configuration-ui")
             .headers(headers_1))
 
-      .exec(http("XUI${service}_010_010_HomepageConfigJson")
+      .exec(http("XUI${service}_010_015_HomepageConfigJson")
             .get("/assets/config/config.json")
             .headers(headers_1))
 
-      .exec(http("XUI${service}_010_015_HomepageTCEnabled")
+      .exec(http("XUI${service}_010_020_HomepageTCEnabled")
             .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
             .headers(headers_1))
 
-      .exec(http("XUI${service}_010_020_HomepageIsAuthenticated")
+      .exec(http("XUI${service}_010_025_HomepageIsAuthenticated")
             .get("/auth/isAuthenticated")
             .headers(headers_1))
 
-      .exec(http("XUI${service}_010_020_Homepage")
+      .exec(http("XUI${service}_010_030_Homepage")
             .get("/auth/login")
             .headers(headers_4)
             .check(css("input[name='_csrf']", "value").saveAs("csrfToken"))
@@ -175,11 +175,11 @@ object EXUIMCLogin {
         .exec(http("XUI${service}_020_025_GetWorkBasketInputs")
               .get("/data/internal/case-types/FinancialRemedyMVP2/work-basket-inputs")
               .headers(LoginHeader.headers_17))
-        .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("XSRFToken")))
-        .exec( session => {
+       /* .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("XSRFToken")))*/
+       /* .exec( session => {
           println("the xsrf code is "+session("XSRFToken").as[String])
           session
-        })
+        })*/
 
         .exec(http("XUI${service}_020_030_GetPaginationMetaData")
               .get("/data/caseworkers/:uid/jurisdictions/DIVORCE/case-types/FinancialRemedyMVP2/cases/pagination_metadata?state=caseAdded")
@@ -189,11 +189,11 @@ object EXUIMCLogin {
               .get("/aggregated/caseworkers/:uid/jurisdictions/DIVORCE/case-types/FinancialRemedyMVP2/cases?view=WORKBASKET&state=caseAdded&page=1")
               .headers(LoginHeader.headers_0))
 
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("xsrfToken")))
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("XSRFToken")))
         
-      .exec(http("XUI${service}_010_020_HomepageIsAuthenticated")
+     /* .exec(http("XUI${service}_020_040_HomepageIsAuthenticated")
               .get("/auth/isAuthenticated")
-              .headers(LoginHeader.headers_0))
+              .headers(LoginHeader.headers_0))*/
 
     }
 

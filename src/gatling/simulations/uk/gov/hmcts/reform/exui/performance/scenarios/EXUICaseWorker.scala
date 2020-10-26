@@ -2,9 +2,7 @@ package uk.gov.hmcts.reform.exui.performance.scenarios
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import uk.gov.hmcts.reform.exui.performance.Feeders
-import uk.gov.hmcts.reform.exui.performance.scenarios.utils.Environment
-import uk.gov.hmcts.reform.exui.performance.scenarios.utils.CaseworkerHeader
+import uk.gov.hmcts.reform.exui.performance.scenarios.utils.{CaseworkerHeader, Environment}
 
 object EXUICaseWorker {
 
@@ -38,7 +36,6 @@ object EXUICaseWorker {
         .get("/data/caseworkers/:uid/jurisdictions/${jurisdiction}/case-types/${caseType}/cases/pagination_metadata")
         .headers(CaseworkerHeader.headers_2)
         .header("X-XSRF-TOKEN", "${xsrfToken}"))
-
     .exec(http("XUI${service}_030_010_SearchWorkbasket")
         .get("/aggregated/caseworkers/:uid/jurisdictions/${jurisdiction}/case-types/${caseType}/cases?view=WORKBASKET&page=1")
         .headers(CaseworkerHeader.headers_2)
