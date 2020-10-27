@@ -15,6 +15,7 @@ class ExUI extends Simulation {
 	val feedUserDataIACCreate = csv("IACDataCreate.csv").circular
 	val feedUserDataFPLCreate = csv("FPLDataCreate.csv").circular
 	val feedUserDataProbate = csv("ProbateUserData.csv").circular
+	val feedUserDataProbate2 = csv("ProbateUserData2.csv").circular
 	val feedUserDataCaseworker = csv("Caseworkers.csv").circular
 	val feedUserDataFPLCases = csv("FPLCases.csv").circular
 
@@ -174,19 +175,20 @@ class ExUI extends Simulation {
 		.exec(EXUIMCLogin.manageCase_Logout)
   }
 
-	val recordedSimulationFRApplicantScn = scenario("FR_Applicant").repeat(1)
-	{		feed(feedUserDataProbate).feed(Feeders.FRDataFeeder)
+	val recordedSimulationFRScn = scenario("FR").repeat(1)
+	{	 feed(feedUserDataProbate)
+		.feed(Feeders.FRApplicantDataFeeder)
 		.exec(EXUIMCLogin.manageCasesHomePage)
-			.exec(EXUIMCLogin.manageCaseslogin)
+		.exec(EXUIMCLogin.manageCaseslogin)
 		.exec(EXUI_FR_Applicant.createCase)
 		.exec(EXUIMCLogin.manageCase_Logout)
-	}
 
-	val recordedSimulationFRRespondentScn = scenario("FR_Respondent").repeat(1)
-	{
-		exec(EXUI_FR_Respondent.login)
-			.exec(EXUI_FR_Respondent.shareCase)
-			.exec(EXUI_FR_Respondent.logout)
+		.feed(feedUserDataProbate2)
+		.feed(Feeders.FRRespondentDataFeeder)
+		.exec(EXUIMCLogin.manageCasesHomePage)
+		.exec(EXUIMCLogin.manageCaseslogin)
+		.exec(EXUI_FR_Respondent.shareCase)
+		.exec(EXUIMCLogin.manageCase_Logout)
 	}
 
 	setUp(
@@ -197,9 +199,7 @@ class ExUI extends Simulation {
 		EXUIMCaseViewIACScn.inject(nothingFor(25),rampUsers(1) during (3)),
 		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(1) during (2)),
 		EXUIMCaseViewFPLAScn.inject(nothingFor(45),rampUsers(1) during (3)),*/
-		recordedSimulationFRApplicantScn.inject(atOnceUsers(1)).protocols(FRhttpProtocol))
-		//recordedSimulationFRRespondentScn.inject(atOnceUsers(1)).protocols(FRhttpProtocol))
-
+		recordedSimulationFRScn.inject(atOnceUsers(1)).protocols(FRhttpProtocol))
 }
 
 	/*setUp(

@@ -1,1 +1,1 @@
-{"sharedCases":[{"caseId":"1603271365614201","caseTitle":"Smith Vs Jones","caseTypeId":"FinancialRemedyMVP2","pendingShares":[{"email":"sreekanth.demo2@mailinator.com","firstName":"sreekanth","idamId":"c326fe1d-c461-432a-a196-4fa4bca756b2","lastName":"test"}],"pendingUnshares":[]}]}
+{"sharedCases":[{"caseId":"${caseId}","caseTitle":"Baker Vs Parker","caseTypeId":"FinancialRemedyConsentedRespondent","pendingShares":[{"email":"${email}","firstName":"${firstName}","idamId":"${idamId}","lastName":"${lastName}"}],"pendingUnshares":[]}]}
