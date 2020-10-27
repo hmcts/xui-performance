@@ -15,7 +15,7 @@ class ExUI extends Simulation {
 	val feedUserDataFPLCreate = csv("FPLDataCreate.csv").circular
 	val feedUserDataProbate = csv("ProbateUserData.csv").circular
 	val feedUserDataDivorce = csv("DivorceUserData.csv").circular
-	val feedUserDataCaseworker = csv("Caseworkers.csv").circular
+	val feedUserDataCaseworker = csv("Caseworkers.csv").random
 	val feedUserDataFPLCases = csv("FPLCases.csv").circular
 
 	/*val httpProtocol = Environment.HttpProtocol
@@ -182,12 +182,11 @@ class ExUI extends Simulation {
 		.protocols(IAChttpProtocol)*/
 
 	/*setUp(
-		EXUIMCaseProbateScn.inject(rampUsers(1) during (10)))
-		.protocols(IAChttpProtocol)
-*/
+		EXUIMCaseCreationDivorceScn.inject(rampUsers(1) during (10)))
+		.protocols(IAChttpProtocol)*/
 
 	/*setUp(
-		EXUIMCaseViewFPLAScn.inject(rampUsers(19) during (100)))
+		EXUIMCaseCaseworkerScn.inject(rampUsers(1) during (1)))
 		.protocols(IAChttpProtocol)*/
 
   /*setUp(
@@ -212,7 +211,7 @@ class ExUI extends Simulation {
 		EXUIMCaseViewIACScn.inject(nothingFor(25),rampUsers(74) during (900)),
 		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(38) during (600)),
 		EXUIMCaseViewFPLAScn.inject(nothingFor(45),rampUsers(19) during (900)),
-		EXUIMCaseCreationDivorceScn.inject(nothingFor(55),rampUsers(200) during (900))
+		EXUIMCaseCaseworkerScn.inject(nothingFor(55),rampUsers(200) during (900))
 	).protocols(IAChttpProtocol)
 
 

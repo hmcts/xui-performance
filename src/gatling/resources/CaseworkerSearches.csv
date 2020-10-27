@@ -1,5 +1,4 @@
 	jurisdiction,caseType
-PROBATE,GrantOfRepresentation
 PROBATE,Caveat
-DIVORCE,DIVORCE
+PROBATE,GrantOfRepresentation
 DIVORCE,DIVORCE_ExceptionRecord

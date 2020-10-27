@@ -21,7 +21,7 @@ object EXUIProbateMC {
   val casedetails = 
 
     exec(http("XUI${service}_100_005_SearchInputs")
-			.get("data/internal/case-types/Caveat/search-inputs")
+			.get("/data/internal/case-types/Caveat/search-inputs")
 			.headers(ProbateHeader.headers_search)
       .header("X-XSRF-TOKEN", "${XSRFToken}")
       .check(status.in(200,304))
