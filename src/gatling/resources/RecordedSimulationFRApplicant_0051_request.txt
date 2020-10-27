@@ -45,8 +45,8 @@
     "rSolicitorName": "Adam Walker",
     "rOrgPolicy": {
       "Organisation": {
-        "OrganisationID": "NAGMS8A",
-        "OrganisationName": "probateorg-7v7n2"
+        "OrganisationID": "${respondent_orgref}",
+        "OrganisationName": "${respondent_orgname}"
       },
       "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
       "OrgPolicyReference": "Test Resp Sol Ref"
