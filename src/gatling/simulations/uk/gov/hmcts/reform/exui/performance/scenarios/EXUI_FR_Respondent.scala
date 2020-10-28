@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.exui.performance.scenarios
 
-
 import scala.concurrent.duration._
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
@@ -11,7 +10,7 @@ import uk.gov.hmcts.reform.exui.performance.scenarios.utils.FR_Respondent_Header
 object EXUI_FR_Respondent extends Simulation {
 
 	val shareCase = scenario("ShareCase")
-	.exec(http("XUI${service}_030_UnassignedCases1")
+		.exec(http("XUI${service}_030_UnassignedCases1")
 			.post("/api/unassignedCaseTypes")
 			.headers(headers_37)
 		.check(status in (200,304)))
@@ -42,7 +41,22 @@ object EXUI_FR_Respondent extends Simulation {
 		.exec(http("XUI${service}_070_ShareCase3")
 			.post("/api/caseshare/case-assignments")
 			.headers(headers_54)
-			.body(ElFileBody("RecordedSimulationFRRespondent_0054_request.txt"))
+			.body(StringBody("""{
+												 |    "sharedCases":
+												 |    [
+												 |        {"caseId":"${caseId}",
+												 |        "caseTitle":"Baker Vs Parker",
+												 |        "caseTypeId":"FinancialRemedyConsentedRespondent",
+												 |        "pendingShares":
+												 |        [
+												 |            {"email":"${email}",
+												 |            "firstName":"${firstName}",
+												 |            "idamId":"${idamId}",
+												 |            "lastName":"${lastName}"}
+												 |        ],
+												 |        "pendingUnshares":[]}
+												 |    ]
+												 |}""".stripMargin))
 			.check(status in (201,304)))
 		.pause(minThinkTime, maxThinkTime)
 

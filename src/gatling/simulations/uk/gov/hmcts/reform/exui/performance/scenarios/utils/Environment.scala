@@ -10,6 +10,7 @@ object Environment {
   val manageOrdURL = "https://manage-org.perftest.platform.hmcts.net"
   val idamURL = "https://idam-web-public.perftest.platform.hmcts.net"
   val baseURL = "https://manage-case.perftest.platform.hmcts.net"
+  val dmStoreURL = "http://dm-store-perftest.service.core-compute-perftest.internal"
   val ccdEnvurl = "https://ccd-case-management-web-aat.service.core-compute-aat.internal"
   val baseFPLAURL = "https://manage-case.perftest.platform.hmcts.net"
  val baseDomain="manage-case.perftest.platform.hmcts.net"
@@ -44,6 +45,8 @@ val baseDomainOrg="manage-org.perftest.platform.hmcts.net"
   val maxThinkTimePROB = 10//310
   val constantthinkTime = 5
   val HttpProtocol = http
+  val docId1 = "7228f9f2-c8c8-48e1-aa34-817e767a5c13"
+  val docId2 = "050c28e2-8175-4d0a-80cc-36e7193c0192"
 // }
  //else {
  //================================================================================
