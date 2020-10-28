@@ -574,7 +574,7 @@ object EXUIFPLAMC {
                 .body(StringBody("{\n  \"size\": 25\n}"))
           .check(status.in(200,304))
          // .check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumbersFPL")))
-              .check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumberFPL")))
+              .check(jsonPath("$..case_id").find(0).optional.saveAs("caseNumberFPL")))
       .pause(MinThinkTimeFPLV , MaxThinkTimeFPLV )
 
    // .foreach("${caseNumbersFPL}","caseNumberFPL") {
