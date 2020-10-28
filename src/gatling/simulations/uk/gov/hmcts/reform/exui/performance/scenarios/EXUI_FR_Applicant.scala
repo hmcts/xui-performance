@@ -45,20 +45,20 @@ object EXUI_FR_Applicant extends Simulation {
 			.post("/data/case-types/FinancialRemedyConsentedRespondent/validate?pageId=FR_solicitorCreate1")
 			.headers(headers_10)
 			.body(StringBody("""{
-												 |  "data": {
-												 |    "isAdmin": null
-												 |  },
-												 |  "event": {
-												 |    "id": "FR_solicitorCreate",
-												 |    "summary": "",
-												 |    "description": ""
-												 |  },
-												 |  "event_token": "${eventToken}",
-												 |  "ignore_warning": false,
-												 |  "event_data": {
-												 |    "isAdmin": null
-												 |  }
-												 |}""".stripMargin))
+					 |  "data": {
+					 |    "isAdmin": null
+					 |  },
+					 |  "event": {
+					 |    "id": "FR_solicitorCreate",
+					 |    "summary": "",
+					 |    "description": ""
+					 |  },
+					 |  "event_token": "${eventToken}",
+					 |  "ignore_warning": false,
+					 |  "event_data": {
+					 |    "isAdmin": null
+					 |  }
+					 |}""".stripMargin))
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
@@ -72,51 +72,51 @@ object EXUI_FR_Applicant extends Simulation {
 			.post("/data/case-types/FinancialRemedyConsentedRespondent/validate?pageId=FR_solicitorCreate2")
 			.headers(headers_18)
 			.body(StringBody("""{
-												 |  "data": {
-												 |    "solicitorName": "Joe Bloggs",
-												 |    "solicitorFirm": "HMCTS",
-												 |    "solicitorReference": null,
-												 |    "solicitorAddress": {
-												 |      "AddressLine1": "Ministry Of Justice",
-												 |      "AddressLine2": "Seventh Floor 102 Petty France",
-												 |      "AddressLine3": "",
-												 |      "PostTown": "London",
-												 |      "County": "",
-												 |      "PostCode": "SW1H 9AJ",
-												 |      "Country": "United Kingdom"
-												 |    },
-												 |    "solicitorPhone": null,
-												 |    "solicitorEmail": "abc@email.com",
-												 |    "solicitorDXnumber": null,
-												 |    "solicitorAgreeToReceiveEmails": "No"
-												 |  },
-												 |  "event": {
-												 |    "id": "FR_solicitorCreate",
-												 |    "summary": "",
-												 |    "description": ""
-												 |  },
-												 |  "event_token": "${eventToken}",
-												 |  "ignore_warning": false,
-												 |  "event_data": {
-												 |    "isAdmin": "No",
-												 |    "solicitorName": "Joe Bloggs",
-												 |    "solicitorFirm": "HMCTS",
-												 |    "solicitorReference": null,
-												 |    "solicitorAddress": {
-												 |      "AddressLine1": "Ministry Of Justice",
-												 |      "AddressLine2": "Seventh Floor 102 Petty France",
-												 |      "AddressLine3": "",
-												 |      "PostTown": "London",
-												 |      "County": "",
-												 |      "PostCode": "SW1H 9AJ",
-												 |      "Country": "United Kingdom"
-												 |    },
-												 |    "solicitorPhone": null,
-												 |    "solicitorEmail": "abc@email.com",
-												 |    "solicitorDXnumber": null,
-												 |    "solicitorAgreeToReceiveEmails": "No"
-												 |  }
-												 |}""".stripMargin))
+					 |  "data": {
+					 |    "solicitorName": "Joe Bloggs",
+					 |    "solicitorFirm": "HMCTS",
+					 |    "solicitorReference": null,
+					 |    "solicitorAddress": {
+					 |      "AddressLine1": "Ministry Of Justice",
+					 |      "AddressLine2": "Seventh Floor 102 Petty France",
+					 |      "AddressLine3": "",
+					 |      "PostTown": "London",
+					 |      "County": "",
+					 |      "PostCode": "SW1H 9AJ",
+					 |      "Country": "United Kingdom"
+					 |    },
+					 |    "solicitorPhone": null,
+					 |    "solicitorEmail": "abc@email.com",
+					 |    "solicitorDXnumber": null,
+					 |    "solicitorAgreeToReceiveEmails": "No"
+					 |  },
+					 |  "event": {
+					 |    "id": "FR_solicitorCreate",
+					 |    "summary": "",
+					 |    "description": ""
+					 |  },
+					 |  "event_token": "${eventToken}",
+					 |  "ignore_warning": false,
+					 |  "event_data": {
+					 |    "isAdmin": "No",
+					 |    "solicitorName": "Joe Bloggs",
+					 |    "solicitorFirm": "HMCTS",
+					 |    "solicitorReference": null,
+					 |    "solicitorAddress": {
+					 |      "AddressLine1": "Ministry Of Justice",
+					 |      "AddressLine2": "Seventh Floor 102 Petty France",
+					 |      "AddressLine3": "",
+					 |      "PostTown": "London",
+					 |      "County": "",
+					 |      "PostCode": "SW1H 9AJ",
+					 |      "Country": "United Kingdom"
+					 |    },
+					 |    "solicitorPhone": null,
+					 |    "solicitorEmail": "abc@email.com",
+					 |    "solicitorDXnumber": null,
+					 |    "solicitorAgreeToReceiveEmails": "No"
+					 |  }
+					 |}""".stripMargin))
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
@@ -124,39 +124,39 @@ object EXUI_FR_Applicant extends Simulation {
 			.post("/data/case-types/FinancialRemedyConsentedRespondent/validate?pageId=FR_solicitorCreate3")
 			.headers(headers_22)
 			.body(StringBody("""{
-												 |  "data": {
-												 |    "divorceCaseNumber": "EZ11D81265",
-												 |    "divorceStageReached": "Petition Issued"
-												 |  },
-												 |  "event": {
-												 |    "id": "FR_solicitorCreate",
-												 |    "summary": "",
-												 |    "description": ""
-												 |  },
-												 |  "event_token": "${eventToken}",
-												 |  "ignore_warning": false,
-												 |  "event_data": {
-												 |    "isAdmin": "No",
-												 |    "solicitorName": "Joe Bloggs",
-												 |    "solicitorFirm": "HMCTS",
-												 |    "solicitorReference": null,
-												 |    "solicitorAddress": {
-												 |      "AddressLine1": "Ministry Of Justice",
-												 |      "AddressLine2": "Seventh Floor 102 Petty France",
-												 |      "AddressLine3": "",
-												 |      "PostTown": "London",
-												 |      "County": "",
-												 |      "PostCode": "SW1H 9AJ",
-												 |      "Country": "United Kingdom"
-												 |    },
-												 |    "solicitorPhone": null,
-												 |    "solicitorEmail": "abc@email.com",
-												 |    "solicitorDXnumber": null,
-												 |    "solicitorAgreeToReceiveEmails": "No",
-												 |    "divorceCaseNumber": "EZ11D81265",
-												 |    "divorceStageReached": "Petition Issued"
-												 |  }
-												 |}""".stripMargin))
+					 |  "data": {
+					 |    "divorceCaseNumber": "EZ11D81265",
+					 |    "divorceStageReached": "Petition Issued"
+					 |  },
+					 |  "event": {
+					 |    "id": "FR_solicitorCreate",
+					 |    "summary": "",
+					 |    "description": ""
+					 |  },
+					 |  "event_token": "${eventToken}",
+					 |  "ignore_warning": false,
+					 |  "event_data": {
+					 |    "isAdmin": "No",
+					 |    "solicitorName": "Joe Bloggs",
+					 |    "solicitorFirm": "HMCTS",
+					 |    "solicitorReference": null,
+					 |    "solicitorAddress": {
+					 |      "AddressLine1": "Ministry Of Justice",
+					 |      "AddressLine2": "Seventh Floor 102 Petty France",
+					 |      "AddressLine3": "",
+					 |      "PostTown": "London",
+					 |      "County": "",
+					 |      "PostCode": "SW1H 9AJ",
+					 |      "Country": "United Kingdom"
+					 |    },
+					 |    "solicitorPhone": null,
+					 |    "solicitorEmail": "abc@email.com",
+					 |    "solicitorDXnumber": null,
+					 |    "solicitorAgreeToReceiveEmails": "No",
+					 |    "divorceCaseNumber": "EZ11D81265",
+					 |    "divorceStageReached": "Petition Issued"
+					 |  }
+					 |}""".stripMargin))
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
@@ -164,47 +164,47 @@ object EXUI_FR_Applicant extends Simulation {
 			.post("/data/case-types/FinancialRemedyConsentedRespondent/validate?pageId=FR_solicitorCreate4")
 			.headers(headers_26)
 			.body(StringBody("""{
-												 |  "data": {
-												 |    "applicantFMName": "Joe",
-												 |    "applicantLName": "Baker",
-												 |    "regionList": "southeast",
-												 |    "southEastFRCList": "kent",
-												 |    "kentSurreyCourtList": "FR_kent_surreyList_10"
-												 |  },
-												 |  "event": {
-												 |    "id": "FR_solicitorCreate",
-												 |    "summary": "",
-												 |    "description": ""
-												 |  },
-												 |  "event_token": "${eventToken}",
-												 |  "ignore_warning": false,
-												 |  "event_data": {
-												 |    "isAdmin": "No",
-												 |    "solicitorName": "Joe Bloggs",
-												 |    "solicitorFirm": "HMCTS",
-												 |    "solicitorReference": null,
-												 |    "solicitorAddress": {
-												 |      "AddressLine1": "Ministry Of Justice",
-												 |      "AddressLine2": "Seventh Floor 102 Petty France",
-												 |      "AddressLine3": "",
-												 |      "PostTown": "London",
-												 |      "County": "",
-												 |      "PostCode": "SW1H 9AJ",
-												 |      "Country": "United Kingdom"
-												 |    },
-												 |    "solicitorPhone": null,
-												 |    "solicitorEmail": "abc@email.com",
-												 |    "solicitorDXnumber": null,
-												 |    "solicitorAgreeToReceiveEmails": "No",
-												 |    "divorceCaseNumber": "EZ11D81265",
-												 |    "divorceStageReached": "Petition Issued",
-												 |    "applicantFMName": "Joe",
-												 |    "applicantLName": "Baker",
-												 |    "regionList": "southeast",
-												 |    "southEastFRCList": "kent",
-												 |    "kentSurreyCourtList": "FR_kent_surreyList_10"
-												 |  }
-												 |}""".stripMargin))
+					 |  "data": {
+					 |    "applicantFMName": "Joe",
+					 |    "applicantLName": "Baker",
+					 |    "regionList": "southeast",
+					 |    "southEastFRCList": "kent",
+					 |    "kentSurreyCourtList": "FR_kent_surreyList_10"
+					 |  },
+					 |  "event": {
+					 |    "id": "FR_solicitorCreate",
+					 |    "summary": "",
+					 |    "description": ""
+					 |  },
+					 |  "event_token": "${eventToken}",
+					 |  "ignore_warning": false,
+					 |  "event_data": {
+					 |    "isAdmin": "No",
+					 |    "solicitorName": "Joe Bloggs",
+					 |    "solicitorFirm": "HMCTS",
+					 |    "solicitorReference": null,
+					 |    "solicitorAddress": {
+					 |      "AddressLine1": "Ministry Of Justice",
+					 |      "AddressLine2": "Seventh Floor 102 Petty France",
+					 |      "AddressLine3": "",
+					 |      "PostTown": "London",
+					 |      "County": "",
+					 |      "PostCode": "SW1H 9AJ",
+					 |      "Country": "United Kingdom"
+					 |    },
+					 |    "solicitorPhone": null,
+					 |    "solicitorEmail": "abc@email.com",
+					 |    "solicitorDXnumber": null,
+					 |    "solicitorAgreeToReceiveEmails": "No",
+					 |    "divorceCaseNumber": "EZ11D81265",
+					 |    "divorceStageReached": "Petition Issued",
+					 |    "applicantFMName": "Joe",
+					 |    "applicantLName": "Baker",
+					 |    "regionList": "southeast",
+					 |    "southEastFRCList": "kent",
+					 |    "kentSurreyCourtList": "FR_kent_surreyList_10"
+					 |  }
+					 |}""".stripMargin))
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
@@ -224,94 +224,94 @@ object EXUI_FR_Applicant extends Simulation {
 			.post("/data/case-types/FinancialRemedyConsentedRespondent/validate?pageId=FR_solicitorCreate5")
 			.headers(headers_34)
 			.body(StringBody("""{
-												 |  "data": {
-												 |    "appRespondentFMName": "Stephen",
-												 |    "appRespondentLName": "Parker",
-												 |    "appRespondentRep": "Yes",
-												 |    "rSolicitorName": "Adam Walker",
-												 |    "rOrgPolicy": {
-												 |      "Organisation": {
-												 |        "OrganisationID": "${respondent_orgref}",
-												 |        "OrganisationName": "${respondent_orgname}"
-												 |      },
-												 |      "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
-												 |      "OrgPolicyReference": "Test Resp Sol Ref"
-												 |    },
-												 |    "rSolicitorFirm": "resp sol & co",
-												 |    "rSolicitorReference": null,
-												 |    "rSolicitorAddress": {
-												 |      "AddressLine1": "Ministry Of Justice",
-												 |      "AddressLine2": "Seventh Floor 102 Petty France",
-												 |      "AddressLine3": "",
-												 |      "PostTown": "London",
-												 |      "County": "",
-												 |      "PostCode": "SW1H 9AJ",
-												 |      "Country": "United Kingdom"
-												 |    },
-												 |    "rSolicitorPhone": null,
-												 |    "rSolicitorEmail": null,
-												 |    "rSolicitorDXnumber": null
-												 |  },
-												 |  "event": {
-												 |    "id": "FR_solicitorCreate",
-												 |    "summary": "",
-												 |    "description": ""
-												 |  },
-												 |  "event_token": "${eventToken}",
-												 |  "ignore_warning": false,
-												 |  "event_data": {
-												 |    "isAdmin": "No",
-												 |    "solicitorName": "Joe Bloggs",
-												 |    "solicitorFirm": "HMCTS",
-												 |    "solicitorReference": null,
-												 |    "solicitorAddress": {
-												 |      "AddressLine1": "Ministry Of Justice",
-												 |      "AddressLine2": "Seventh Floor 102 Petty France",
-												 |      "AddressLine3": "",
-												 |      "PostTown": "London",
-												 |      "County": "",
-												 |      "PostCode": "SW1H 9AJ",
-												 |      "Country": "United Kingdom"
-												 |    },
-												 |    "solicitorPhone": null,
-												 |    "solicitorEmail": "abc@email.com",
-												 |    "solicitorDXnumber": null,
-												 |    "solicitorAgreeToReceiveEmails": "No",
-												 |    "divorceCaseNumber": "EZ11D81265",
-												 |    "divorceStageReached": "Petition Issued",
-												 |    "applicantFMName": "Joe",
-												 |    "applicantLName": "Baker",
-												 |    "regionList": "southeast",
-												 |    "southEastFRCList": "kent",
-												 |    "kentSurreyCourtList": "FR_kent_surreyList_10",
-												 |    "appRespondentFMName": "Stephen",
-												 |    "appRespondentLName": "Parker",
-												 |    "appRespondentRep": "Yes",
-												 |    "rSolicitorName": "Adam Walker",
-												 |    "rOrgPolicy": {
-												 |      "Organisation": {
-												 |        "OrganisationID": "${respondent_orgref}",
-												 |        "OrganisationName": "${respondent_orgname}"
-												 |      },
-												 |      "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
-												 |      "OrgPolicyReference": "Test Resp Sol Ref"
-												 |    },
-												 |    "rSolicitorFirm": "resp sol & co",
-												 |    "rSolicitorReference": null,
-												 |    "rSolicitorAddress": {
-												 |      "AddressLine1": "Ministry Of Justice",
-												 |      "AddressLine2": "Seventh Floor 102 Petty France",
-												 |      "AddressLine3": "",
-												 |      "PostTown": "London",
-												 |      "County": "",
-												 |      "PostCode": "SW1H 9AJ",
-												 |      "Country": "United Kingdom"
-												 |    },
-												 |    "rSolicitorPhone": null,
-												 |    "rSolicitorEmail": null,
-												 |    "rSolicitorDXnumber": null
-												 |  }
-												 |}""".stripMargin))
+					 |  "data": {
+					 |    "appRespondentFMName": "Stephen",
+					 |    "appRespondentLName": "Parker",
+					 |    "appRespondentRep": "Yes",
+					 |    "rSolicitorName": "Adam Walker",
+					 |    "rOrgPolicy": {
+					 |      "Organisation": {
+					 |        "OrganisationID": "${respondent_orgref}",
+					 |        "OrganisationName": "${respondent_orgname}"
+					 |      },
+					 |      "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
+					 |      "OrgPolicyReference": "Test Resp Sol Ref"
+					 |    },
+					 |    "rSolicitorFirm": "resp sol & co",
+					 |    "rSolicitorReference": null,
+					 |    "rSolicitorAddress": {
+					 |      "AddressLine1": "Ministry Of Justice",
+					 |      "AddressLine2": "Seventh Floor 102 Petty France",
+					 |      "AddressLine3": "",
+					 |      "PostTown": "London",
+					 |      "County": "",
+					 |      "PostCode": "SW1H 9AJ",
+					 |      "Country": "United Kingdom"
+					 |    },
+					 |    "rSolicitorPhone": null,
+					 |    "rSolicitorEmail": null,
+					 |    "rSolicitorDXnumber": null
+					 |  },
+					 |  "event": {
+					 |    "id": "FR_solicitorCreate",
+					 |    "summary": "",
+					 |    "description": ""
+					 |  },
+					 |  "event_token": "${eventToken}",
+					 |  "ignore_warning": false,
+					 |  "event_data": {
+					 |    "isAdmin": "No",
+					 |    "solicitorName": "Joe Bloggs",
+					 |    "solicitorFirm": "HMCTS",
+					 |    "solicitorReference": null,
+					 |    "solicitorAddress": {
+					 |      "AddressLine1": "Ministry Of Justice",
+					 |      "AddressLine2": "Seventh Floor 102 Petty France",
+					 |      "AddressLine3": "",
+					 |      "PostTown": "London",
+					 |      "County": "",
+					 |      "PostCode": "SW1H 9AJ",
+					 |      "Country": "United Kingdom"
+					 |    },
+					 |    "solicitorPhone": null,
+					 |    "solicitorEmail": "abc@email.com",
+					 |    "solicitorDXnumber": null,
+					 |    "solicitorAgreeToReceiveEmails": "No",
+					 |    "divorceCaseNumber": "EZ11D81265",
+					 |    "divorceStageReached": "Petition Issued",
+					 |    "applicantFMName": "Joe",
+					 |    "applicantLName": "Baker",
+					 |    "regionList": "southeast",
+					 |    "southEastFRCList": "kent",
+					 |    "kentSurreyCourtList": "FR_kent_surreyList_10",
+					 |    "appRespondentFMName": "Stephen",
+					 |    "appRespondentLName": "Parker",
+					 |    "appRespondentRep": "Yes",
+					 |    "rSolicitorName": "Adam Walker",
+					 |    "rOrgPolicy": {
+					 |      "Organisation": {
+					 |        "OrganisationID": "${respondent_orgref}",
+					 |        "OrganisationName": "${respondent_orgname}"
+					 |      },
+					 |      "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
+					 |      "OrgPolicyReference": "Test Resp Sol Ref"
+					 |    },
+					 |    "rSolicitorFirm": "resp sol & co",
+					 |    "rSolicitorReference": null,
+					 |    "rSolicitorAddress": {
+					 |      "AddressLine1": "Ministry Of Justice",
+					 |      "AddressLine2": "Seventh Floor 102 Petty France",
+					 |      "AddressLine3": "",
+					 |      "PostTown": "London",
+					 |      "County": "",
+					 |      "PostCode": "SW1H 9AJ",
+					 |      "Country": "United Kingdom"
+					 |    },
+					 |    "rSolicitorPhone": null,
+					 |    "rSolicitorEmail": null,
+					 |    "rSolicitorDXnumber": null
+					 |  }
+					 |}""".stripMargin))
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
@@ -319,74 +319,74 @@ object EXUI_FR_Applicant extends Simulation {
 			.post("/data/case-types/FinancialRemedyConsentedRespondent/validate?pageId=FR_solicitorCreate6")
 			.headers(headers_37)
 			.body(StringBody("""{
-												 |  "data": {
-												 |    "natureOfApplication2": [
-												 |      "Lump Sum Order"
-												 |    ]
-												 |  },
-												 |  "event": {
-												 |    "id": "FR_solicitorCreate",
-												 |    "summary": "",
-												 |    "description": ""
-												 |  },
-												 |  "event_token": "${eventToken}",
-												 |  "ignore_warning": false,
-												 |  "event_data": {
-												 |    "isAdmin": "No",
-												 |    "solicitorName": "Joe Bloggs",
-												 |    "solicitorFirm": "HMCTS",
-												 |    "solicitorReference": null,
-												 |    "solicitorAddress": {
-												 |      "AddressLine1": "Ministry Of Justice",
-												 |      "AddressLine2": "Seventh Floor 102 Petty France",
-												 |      "AddressLine3": "",
-												 |      "PostTown": "London",
-												 |      "County": "",
-												 |      "PostCode": "SW1H 9AJ",
-												 |      "Country": "United Kingdom"
-												 |    },
-												 |    "solicitorPhone": null,
-												 |    "solicitorEmail": "abc@email.com",
-												 |    "solicitorDXnumber": null,
-												 |    "solicitorAgreeToReceiveEmails": "No",
-												 |    "divorceCaseNumber": "EZ11D81265",
-												 |    "divorceStageReached": "Petition Issued",
-												 |    "applicantFMName": "Joe",
-												 |    "applicantLName": "Baker",
-												 |    "regionList": "southeast",
-												 |    "southEastFRCList": "kent",
-												 |    "kentSurreyCourtList": "FR_kent_surreyList_10",
-												 |    "appRespondentFMName": "Stephen",
-												 |    "appRespondentLName": "Parker",
-												 |    "appRespondentRep": "Yes",
-												 |    "rSolicitorName": "Adam Walker",
-												 |    "rOrgPolicy": {
-												 |      "Organisation": {
-												 |        "OrganisationID": "${respondent_orgref}",
-												 |        "OrganisationName": "${respondent_orgname}"
-												 |      },
-												 |      "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
-												 |      "OrgPolicyReference": "Test Resp Sol Ref"
-												 |    },
-												 |    "rSolicitorFirm": "resp sol & co",
-												 |    "rSolicitorReference": null,
-												 |    "rSolicitorAddress": {
-												 |      "AddressLine1": "Ministry Of Justice",
-												 |      "AddressLine2": "Seventh Floor 102 Petty France",
-												 |      "AddressLine3": "",
-												 |      "PostTown": "London",
-												 |      "County": "",
-												 |      "PostCode": "SW1H 9AJ",
-												 |      "Country": "United Kingdom"
-												 |    },
-												 |    "rSolicitorPhone": null,
-												 |    "rSolicitorEmail": null,
-												 |    "rSolicitorDXnumber": null,
-												 |    "natureOfApplication2": [
-												 |      "Lump Sum Order"
-												 |    ]
-												 |  }
-												 |}""".stripMargin))
+					 |  "data": {
+					 |    "natureOfApplication2": [
+					 |      "Lump Sum Order"
+					 |    ]
+					 |  },
+					 |  "event": {
+					 |    "id": "FR_solicitorCreate",
+					 |    "summary": "",
+					 |    "description": ""
+					 |  },
+					 |  "event_token": "${eventToken}",
+					 |  "ignore_warning": false,
+					 |  "event_data": {
+					 |    "isAdmin": "No",
+					 |    "solicitorName": "Joe Bloggs",
+					 |    "solicitorFirm": "HMCTS",
+					 |    "solicitorReference": null,
+					 |    "solicitorAddress": {
+					 |      "AddressLine1": "Ministry Of Justice",
+					 |      "AddressLine2": "Seventh Floor 102 Petty France",
+					 |      "AddressLine3": "",
+					 |      "PostTown": "London",
+					 |      "County": "",
+					 |      "PostCode": "SW1H 9AJ",
+					 |      "Country": "United Kingdom"
+					 |    },
+					 |    "solicitorPhone": null,
+					 |    "solicitorEmail": "abc@email.com",
+					 |    "solicitorDXnumber": null,
+					 |    "solicitorAgreeToReceiveEmails": "No",
+					 |    "divorceCaseNumber": "EZ11D81265",
+					 |    "divorceStageReached": "Petition Issued",
+					 |    "applicantFMName": "Joe",
+					 |    "applicantLName": "Baker",
+					 |    "regionList": "southeast",
+					 |    "southEastFRCList": "kent",
+					 |    "kentSurreyCourtList": "FR_kent_surreyList_10",
+					 |    "appRespondentFMName": "Stephen",
+					 |    "appRespondentLName": "Parker",
+					 |    "appRespondentRep": "Yes",
+					 |    "rSolicitorName": "Adam Walker",
+					 |    "rOrgPolicy": {
+					 |      "Organisation": {
+					 |        "OrganisationID": "${respondent_orgref}",
+					 |        "OrganisationName": "${respondent_orgname}"
+					 |      },
+					 |      "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
+					 |      "OrgPolicyReference": "Test Resp Sol Ref"
+					 |    },
+					 |    "rSolicitorFirm": "resp sol & co",
+					 |    "rSolicitorReference": null,
+					 |    "rSolicitorAddress": {
+					 |      "AddressLine1": "Ministry Of Justice",
+					 |      "AddressLine2": "Seventh Floor 102 Petty France",
+					 |      "AddressLine3": "",
+					 |      "PostTown": "London",
+					 |      "County": "",
+					 |      "PostCode": "SW1H 9AJ",
+					 |      "Country": "United Kingdom"
+					 |    },
+					 |    "rSolicitorPhone": null,
+					 |    "rSolicitorEmail": null,
+					 |    "rSolicitorDXnumber": null,
+					 |    "natureOfApplication2": [
+					 |      "Lump Sum Order"
+					 |    ]
+					 |  }
+					 |}""".stripMargin))
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
@@ -401,81 +401,81 @@ object EXUI_FR_Applicant extends Simulation {
 			.post("/data/case-types/FinancialRemedyConsentedRespondent/validate?pageId=FR_solicitorCreate8")
 			.headers(headers_44)
 			.body(StringBody("""{
-												 |  "data": {
-												 |    "consentOrder": {
-												 |      "document_url": "${dmStoreURL}/documents/${docId1}",
-												 |      "document_binary_url": "${dmStoreURL}/documents/${docId1}/binary",
-												 |      "document_filename": "dummy.pdf"
-												 |    }
-												 |  },
-												 |  "event": {
-												 |    "id": "FR_solicitorCreate",
-												 |    "summary": "",
-												 |    "description": ""
-												 |  },
-												 |  "event_token": "${eventToken}",
-												 |  "ignore_warning": false,
-												 |  "event_data": {
-												 |    "isAdmin": "No",
-												 |    "solicitorName": "Joe Bloggs",
-												 |    "solicitorFirm": "HMCTS",
-												 |    "solicitorReference": null,
-												 |    "solicitorAddress": {
-												 |      "AddressLine1": "Ministry Of Justice",
-												 |      "AddressLine2": "Seventh Floor 102 Petty France",
-												 |      "AddressLine3": "",
-												 |      "PostTown": "London",
-												 |      "County": "",
-												 |      "PostCode": "SW1H 9AJ",
-												 |      "Country": "United Kingdom"
-												 |    },
-												 |    "solicitorPhone": null,
-												 |    "solicitorEmail": "abc@email.com",
-												 |    "solicitorDXnumber": null,
-												 |    "solicitorAgreeToReceiveEmails": "No",
-												 |    "divorceCaseNumber": "EZ11D81265",
-												 |    "divorceStageReached": "Petition Issued",
-												 |    "applicantFMName": "Joe",
-												 |    "applicantLName": "Baker",
-												 |    "regionList": "southeast",
-												 |    "southEastFRCList": "kent",
-												 |    "kentSurreyCourtList": "FR_kent_surreyList_10",
-												 |    "appRespondentFMName": "Stephen",
-												 |    "appRespondentLName": "Parker",
-												 |    "appRespondentRep": "Yes",
-												 |    "rSolicitorName": "Adam Walker",
-												 |    "rOrgPolicy": {
-												 |      "Organisation": {
-												 |        "OrganisationID": "${respondent_orgref}",
-												 |        "OrganisationName": "${respondent_orgname}"
-												 |      },
-												 |      "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
-												 |      "OrgPolicyReference": "Test Resp Sol Ref"
-												 |    },
-												 |    "rSolicitorFirm": "resp sol & co",
-												 |    "rSolicitorReference": null,
-												 |    "rSolicitorAddress": {
-												 |      "AddressLine1": "Ministry Of Justice",
-												 |      "AddressLine2": "Seventh Floor 102 Petty France",
-												 |      "AddressLine3": "",
-												 |      "PostTown": "London",
-												 |      "County": "",
-												 |      "PostCode": "SW1H 9AJ",
-												 |      "Country": "United Kingdom"
-												 |    },
-												 |    "rSolicitorPhone": null,
-												 |    "rSolicitorEmail": null,
-												 |    "rSolicitorDXnumber": null,
-												 |    "natureOfApplication2": [
-												 |      "Lump Sum Order"
-												 |    ],
-												 |    "consentOrder": {
-												 |      "document_url": "${dmStoreURL}/documents/${docId1}",
-												 |      "document_binary_url": "${dmStoreURL}/documents/${docId1}/binary",
-												 |      "document_filename": "dummy.pdf"
-												 |    }
-												 |  }
-												 |}""".stripMargin))
+					 |  "data": {
+					 |    "consentOrder": {
+					 |      "document_url": "${dmStoreURL}/documents/${docId1}",
+					 |      "document_binary_url": "${dmStoreURL}/documents/${docId1}/binary",
+					 |      "document_filename": "dummy.pdf"
+					 |    }
+					 |  },
+					 |  "event": {
+					 |    "id": "FR_solicitorCreate",
+					 |    "summary": "",
+					 |    "description": ""
+					 |  },
+					 |  "event_token": "${eventToken}",
+					 |  "ignore_warning": false,
+					 |  "event_data": {
+					 |    "isAdmin": "No",
+					 |    "solicitorName": "Joe Bloggs",
+					 |    "solicitorFirm": "HMCTS",
+					 |    "solicitorReference": null,
+					 |    "solicitorAddress": {
+					 |      "AddressLine1": "Ministry Of Justice",
+					 |      "AddressLine2": "Seventh Floor 102 Petty France",
+					 |      "AddressLine3": "",
+					 |      "PostTown": "London",
+					 |      "County": "",
+					 |      "PostCode": "SW1H 9AJ",
+					 |      "Country": "United Kingdom"
+					 |    },
+					 |    "solicitorPhone": null,
+					 |    "solicitorEmail": "abc@email.com",
+					 |    "solicitorDXnumber": null,
+					 |    "solicitorAgreeToReceiveEmails": "No",
+					 |    "divorceCaseNumber": "EZ11D81265",
+					 |    "divorceStageReached": "Petition Issued",
+					 |    "applicantFMName": "Joe",
+					 |    "applicantLName": "Baker",
+					 |    "regionList": "southeast",
+					 |    "southEastFRCList": "kent",
+					 |    "kentSurreyCourtList": "FR_kent_surreyList_10",
+					 |    "appRespondentFMName": "Stephen",
+					 |    "appRespondentLName": "Parker",
+					 |    "appRespondentRep": "Yes",
+					 |    "rSolicitorName": "Adam Walker",
+					 |    "rOrgPolicy": {
+					 |      "Organisation": {
+					 |        "OrganisationID": "${respondent_orgref}",
+					 |        "OrganisationName": "${respondent_orgname}"
+					 |      },
+					 |      "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
+					 |      "OrgPolicyReference": "Test Resp Sol Ref"
+					 |    },
+					 |    "rSolicitorFirm": "resp sol & co",
+					 |    "rSolicitorReference": null,
+					 |    "rSolicitorAddress": {
+					 |      "AddressLine1": "Ministry Of Justice",
+					 |      "AddressLine2": "Seventh Floor 102 Petty France",
+					 |      "AddressLine3": "",
+					 |      "PostTown": "London",
+					 |      "County": "",
+					 |      "PostCode": "SW1H 9AJ",
+					 |      "Country": "United Kingdom"
+					 |    },
+					 |    "rSolicitorPhone": null,
+					 |    "rSolicitorEmail": null,
+					 |    "rSolicitorDXnumber": null,
+					 |    "natureOfApplication2": [
+					 |      "Lump Sum Order"
+					 |    ],
+					 |    "consentOrder": {
+					 |      "document_url": "${dmStoreURL}/documents/${docId1}",
+					 |      "document_binary_url": "${dmStoreURL}/documents/${docId1}/binary",
+					 |      "document_filename": "dummy.pdf"
+					 |    }
+					 |  }
+					 |}""".stripMargin))
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
@@ -490,88 +490,88 @@ object EXUI_FR_Applicant extends Simulation {
 			.post("/data/case-types/FinancialRemedyConsentedRespondent/validate?pageId=FR_solicitorCreate9")
 			.headers(headers_51)
 			.body(StringBody("""{
-												 |  "data": {
-												 |    "d81Question": "Yes",
-												 |    "d81Joint": {
-												 |      "document_url": "${dmStoreURL}/documents/${docId2}",
-												 |      "document_binary_url": "${dmStoreURL}/documents/${docId2}/binary",
-												 |      "document_filename": "dummy.pdf"
-												 |    }
-												 |  },
-												 |  "event": {
-												 |    "id": "FR_solicitorCreate",
-												 |    "summary": "",
-												 |    "description": ""
-												 |  },
-												 |  "event_token": "${eventToken}",
-												 |  "ignore_warning": false,
-												 |  "event_data": {
-												 |    "isAdmin": "No",
-												 |    "solicitorName": "Joe Bloggs",
-												 |    "solicitorFirm": "HMCTS",
-												 |    "solicitorReference": null,
-												 |    "solicitorAddress": {
-												 |      "AddressLine1": "Ministry Of Justice",
-												 |      "AddressLine2": "Seventh Floor 102 Petty France",
-												 |      "AddressLine3": "",
-												 |      "PostTown": "London",
-												 |      "County": "",
-												 |      "PostCode": "SW1H 9AJ",
-												 |      "Country": "United Kingdom"
-												 |    },
-												 |    "solicitorPhone": null,
-												 |    "solicitorEmail": "abc@email.com",
-												 |    "solicitorDXnumber": null,
-												 |    "solicitorAgreeToReceiveEmails": "No",
-												 |    "divorceCaseNumber": "EZ11D81265",
-												 |    "divorceStageReached": "Petition Issued",
-												 |    "applicantFMName": "Joe",
-												 |    "applicantLName": "Baker",
-												 |    "regionList": "southeast",
-												 |    "southEastFRCList": "kent",
-												 |    "kentSurreyCourtList": "FR_kent_surreyList_10",
-												 |    "appRespondentFMName": "Stephen",
-												 |    "appRespondentLName": "Parker",
-												 |    "appRespondentRep": "Yes",
-												 |    "rSolicitorName": "Adam Walker",
-												 |    "rOrgPolicy": {
-												 |      "Organisation": {
-												 |        "OrganisationID": "${respondent_orgref}",
-												 |        "OrganisationName": "${respondent_orgname}"
-												 |      },
-												 |      "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
-												 |      "OrgPolicyReference": "Test Resp Sol Ref"
-												 |    },
-												 |    "rSolicitorFirm": "resp sol & co",
-												 |    "rSolicitorReference": null,
-												 |    "rSolicitorAddress": {
-												 |      "AddressLine1": "Ministry Of Justice",
-												 |      "AddressLine2": "Seventh Floor 102 Petty France",
-												 |      "AddressLine3": "",
-												 |      "PostTown": "London",
-												 |      "County": "",
-												 |      "PostCode": "SW1H 9AJ",
-												 |      "Country": "United Kingdom"
-												 |    },
-												 |    "rSolicitorPhone": null,
-												 |    "rSolicitorEmail": null,
-												 |    "rSolicitorDXnumber": null,
-												 |    "natureOfApplication2": [
-												 |      "Lump Sum Order"
-												 |    ],
-												 |    "consentOrder": {
-												 |      "document_url": "${dmStoreURL}/documents/${docId1}",
-												 |      "document_binary_url": "${dmStoreURL}/documents/${docId1}/binary",
-												 |      "document_filename": "dummy.pdf"
-												 |    },
-												 |    "d81Question": "Yes",
-												 |    "d81Joint": {
-												 |      "document_url": "${dmStoreURL}/documents/${docId2}",
-												 |      "document_binary_url": "${dmStoreURL}/documents/${docId2}/binary",
-												 |      "document_filename": "dummy.pdf"
-												 |    }
-												 |  }
-												 |}""".stripMargin))
+					 |  "data": {
+					 |    "d81Question": "Yes",
+					 |    "d81Joint": {
+					 |      "document_url": "${dmStoreURL}/documents/${docId2}",
+					 |      "document_binary_url": "${dmStoreURL}/documents/${docId2}/binary",
+					 |      "document_filename": "dummy.pdf"
+					 |    }
+					 |  },
+					 |  "event": {
+					 |    "id": "FR_solicitorCreate",
+					 |    "summary": "",
+					 |    "description": ""
+					 |  },
+					 |  "event_token": "${eventToken}",
+					 |  "ignore_warning": false,
+					 |  "event_data": {
+					 |    "isAdmin": "No",
+					 |    "solicitorName": "Joe Bloggs",
+					 |    "solicitorFirm": "HMCTS",
+					 |    "solicitorReference": null,
+					 |    "solicitorAddress": {
+					 |      "AddressLine1": "Ministry Of Justice",
+					 |      "AddressLine2": "Seventh Floor 102 Petty France",
+					 |      "AddressLine3": "",
+					 |      "PostTown": "London",
+					 |      "County": "",
+					 |      "PostCode": "SW1H 9AJ",
+					 |      "Country": "United Kingdom"
+					 |    },
+					 |    "solicitorPhone": null,
+					 |    "solicitorEmail": "abc@email.com",
+					 |    "solicitorDXnumber": null,
+					 |    "solicitorAgreeToReceiveEmails": "No",
+					 |    "divorceCaseNumber": "EZ11D81265",
+					 |    "divorceStageReached": "Petition Issued",
+					 |    "applicantFMName": "Joe",
+					 |    "applicantLName": "Baker",
+					 |    "regionList": "southeast",
+					 |    "southEastFRCList": "kent",
+					 |    "kentSurreyCourtList": "FR_kent_surreyList_10",
+					 |    "appRespondentFMName": "Stephen",
+					 |    "appRespondentLName": "Parker",
+					 |    "appRespondentRep": "Yes",
+					 |    "rSolicitorName": "Adam Walker",
+					 |    "rOrgPolicy": {
+					 |      "Organisation": {
+					 |        "OrganisationID": "${respondent_orgref}",
+					 |        "OrganisationName": "${respondent_orgname}"
+					 |      },
+					 |      "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
+					 |      "OrgPolicyReference": "Test Resp Sol Ref"
+					 |    },
+					 |    "rSolicitorFirm": "resp sol & co",
+					 |    "rSolicitorReference": null,
+					 |    "rSolicitorAddress": {
+					 |      "AddressLine1": "Ministry Of Justice",
+					 |      "AddressLine2": "Seventh Floor 102 Petty France",
+					 |      "AddressLine3": "",
+					 |      "PostTown": "London",
+					 |      "County": "",
+					 |      "PostCode": "SW1H 9AJ",
+					 |      "Country": "United Kingdom"
+					 |    },
+					 |    "rSolicitorPhone": null,
+					 |    "rSolicitorEmail": null,
+					 |    "rSolicitorDXnumber": null,
+					 |    "natureOfApplication2": [
+					 |      "Lump Sum Order"
+					 |    ],
+					 |    "consentOrder": {
+					 |      "document_url": "${dmStoreURL}/documents/${docId1}",
+					 |      "document_binary_url": "${dmStoreURL}/documents/${docId1}/binary",
+					 |      "document_filename": "dummy.pdf"
+					 |    },
+					 |    "d81Question": "Yes",
+					 |    "d81Joint": {
+					 |      "document_url": "${dmStoreURL}/documents/${docId2}",
+					 |      "document_binary_url": "${dmStoreURL}/documents/${docId2}/binary",
+					 |      "document_filename": "dummy.pdf"
+					 |    }
+					 |  }
+					 |}""".stripMargin))
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
@@ -579,84 +579,84 @@ object EXUI_FR_Applicant extends Simulation {
 			.post("/data/case-types/FinancialRemedyConsentedRespondent/validate?pageId=FR_solicitorCreate11")
 			.headers(headers_55)
 			.body(StringBody("""{
-												 |  "data": {
-												 |    "otherCollection": []
-												 |  },
-												 |  "event": {
-												 |    "id": "FR_solicitorCreate",
-												 |    "summary": "",
-												 |    "description": ""
-												 |  },
-												 |  "event_token": "${eventToken}",
-												 |  "ignore_warning": false,
-												 |  "event_data": {
-												 |    "isAdmin": "No",
-												 |    "solicitorName": "Joe Bloggs",
-												 |    "solicitorFirm": "HMCTS",
-												 |    "solicitorReference": null,
-												 |    "solicitorAddress": {
-												 |      "AddressLine1": "Ministry Of Justice",
-												 |      "AddressLine2": "Seventh Floor 102 Petty France",
-												 |      "AddressLine3": "",
-												 |      "PostTown": "London",
-												 |      "County": "",
-												 |      "PostCode": "SW1H 9AJ",
-												 |      "Country": "United Kingdom"
-												 |    },
-												 |    "solicitorPhone": null,
-												 |    "solicitorEmail": "abc@email.com",
-												 |    "solicitorDXnumber": null,
-												 |    "solicitorAgreeToReceiveEmails": "No",
-												 |    "divorceCaseNumber": "EZ11D81265",
-												 |    "divorceStageReached": "Petition Issued",
-												 |    "applicantFMName": "Joe",
-												 |    "applicantLName": "Baker",
-												 |    "regionList": "southeast",
-												 |    "southEastFRCList": "kent",
-												 |    "kentSurreyCourtList": "FR_kent_surreyList_10",
-												 |    "appRespondentFMName": "Stephen",
-												 |    "appRespondentLName": "Parker",
-												 |    "appRespondentRep": "Yes",
-												 |    "rSolicitorName": "Adam Walker",
-												 |    "rOrgPolicy": {
-												 |      "Organisation": {
-												 |        "OrganisationID": "${respondent_orgref}",
-												 |        "OrganisationName": "${respondent_orgname}"
-												 |      },
-												 |      "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
-												 |      "OrgPolicyReference": "Test Resp Sol Ref"
-												 |    },
-												 |    "rSolicitorFirm": "resp sol & co",
-												 |    "rSolicitorReference": null,
-												 |    "rSolicitorAddress": {
-												 |      "AddressLine1": "Ministry Of Justice",
-												 |      "AddressLine2": "Seventh Floor 102 Petty France",
-												 |      "AddressLine3": "",
-												 |      "PostTown": "London",
-												 |      "County": "",
-												 |      "PostCode": "SW1H 9AJ",
-												 |      "Country": "United Kingdom"
-												 |    },
-												 |    "rSolicitorPhone": null,
-												 |    "rSolicitorEmail": null,
-												 |    "rSolicitorDXnumber": null,
-												 |    "natureOfApplication2": [
-												 |      "Lump Sum Order"
-												 |    ],
-												 |    "consentOrder": {
-												 |      "document_url": "${dmStoreURL}/documents/${docId1}",
-												 |      "document_binary_url": "${dmStoreURL}/documents/${docId1}/binary",
-												 |      "document_filename": "dummy.pdf"
-												 |    },
-												 |    "d81Question": "Yes",
-												 |    "d81Joint": {
-												 |      "document_url": "${dmStoreURL}/documents/${docId2}",
-												 |      "document_binary_url": "${dmStoreURL}/documents/${docId2}/binary",
-												 |      "document_filename": "dummy.pdf"
-												 |    },
-												 |    "otherCollection": []
-												 |  }
-												 |}""".stripMargin))
+					 |  "data": {
+					 |    "otherCollection": []
+					 |  },
+					 |  "event": {
+					 |    "id": "FR_solicitorCreate",
+					 |    "summary": "",
+					 |    "description": ""
+					 |  },
+					 |  "event_token": "${eventToken}",
+					 |  "ignore_warning": false,
+					 |  "event_data": {
+					 |    "isAdmin": "No",
+					 |    "solicitorName": "Joe Bloggs",
+					 |    "solicitorFirm": "HMCTS",
+					 |    "solicitorReference": null,
+					 |    "solicitorAddress": {
+					 |      "AddressLine1": "Ministry Of Justice",
+					 |      "AddressLine2": "Seventh Floor 102 Petty France",
+					 |      "AddressLine3": "",
+					 |      "PostTown": "London",
+					 |      "County": "",
+					 |      "PostCode": "SW1H 9AJ",
+					 |      "Country": "United Kingdom"
+					 |    },
+					 |    "solicitorPhone": null,
+					 |    "solicitorEmail": "abc@email.com",
+					 |    "solicitorDXnumber": null,
+					 |    "solicitorAgreeToReceiveEmails": "No",
+					 |    "divorceCaseNumber": "EZ11D81265",
+					 |    "divorceStageReached": "Petition Issued",
+					 |    "applicantFMName": "Joe",
+					 |    "applicantLName": "Baker",
+					 |    "regionList": "southeast",
+					 |    "southEastFRCList": "kent",
+					 |    "kentSurreyCourtList": "FR_kent_surreyList_10",
+					 |    "appRespondentFMName": "Stephen",
+					 |    "appRespondentLName": "Parker",
+					 |    "appRespondentRep": "Yes",
+					 |    "rSolicitorName": "Adam Walker",
+					 |    "rOrgPolicy": {
+					 |      "Organisation": {
+					 |        "OrganisationID": "${respondent_orgref}",
+					 |        "OrganisationName": "${respondent_orgname}"
+					 |      },
+					 |      "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
+					 |      "OrgPolicyReference": "Test Resp Sol Ref"
+					 |    },
+					 |    "rSolicitorFirm": "resp sol & co",
+					 |    "rSolicitorReference": null,
+					 |    "rSolicitorAddress": {
+					 |      "AddressLine1": "Ministry Of Justice",
+					 |      "AddressLine2": "Seventh Floor 102 Petty France",
+					 |      "AddressLine3": "",
+					 |      "PostTown": "London",
+					 |      "County": "",
+					 |      "PostCode": "SW1H 9AJ",
+					 |      "Country": "United Kingdom"
+					 |    },
+					 |    "rSolicitorPhone": null,
+					 |    "rSolicitorEmail": null,
+					 |    "rSolicitorDXnumber": null,
+					 |    "natureOfApplication2": [
+					 |      "Lump Sum Order"
+					 |    ],
+					 |    "consentOrder": {
+					 |      "document_url": "${dmStoreURL}/documents/${docId1}",
+					 |      "document_binary_url": "${dmStoreURL}/documents/${docId1}/binary",
+					 |      "document_filename": "dummy.pdf"
+					 |    },
+					 |    "d81Question": "Yes",
+					 |    "d81Joint": {
+					 |      "document_url": "${dmStoreURL}/documents/${docId2}",
+					 |      "document_binary_url": "${dmStoreURL}/documents/${docId2}/binary",
+					 |      "document_filename": "dummy.pdf"
+					 |    },
+					 |    "otherCollection": []
+					 |  }
+					 |}""".stripMargin))
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
@@ -664,82 +664,82 @@ object EXUI_FR_Applicant extends Simulation {
 			.post("/data/case-types/FinancialRemedyConsentedRespondent/validate?pageId=FR_solicitorCreate12")
 			.headers(headers_59)
 			.body(StringBody("""{
-												 |  "data": {},
-												 |  "event": {
-												 |    "id": "FR_solicitorCreate",
-												 |    "summary": "",
-												 |    "description": ""
-												 |  },
-												 |  "event_token": "${eventToken}",
-												 |  "ignore_warning": false,
-												 |  "event_data": {
-												 |    "isAdmin": "No",
-												 |    "solicitorName": "Joe Bloggs",
-												 |    "solicitorFirm": "HMCTS",
-												 |    "solicitorReference": null,
-												 |    "solicitorAddress": {
-												 |      "AddressLine1": "Ministry Of Justice",
-												 |      "AddressLine2": "Seventh Floor 102 Petty France",
-												 |      "AddressLine3": "",
-												 |      "PostTown": "London",
-												 |      "County": "",
-												 |      "PostCode": "SW1H 9AJ",
-												 |      "Country": "United Kingdom"
-												 |    },
-												 |    "solicitorPhone": null,
-												 |    "solicitorEmail": "abc@email.com",
-												 |    "solicitorDXnumber": null,
-												 |    "solicitorAgreeToReceiveEmails": "No",
-												 |    "divorceCaseNumber": "EZ11D81265",
-												 |    "divorceStageReached": "Petition Issued",
-												 |    "applicantFMName": "Joe",
-												 |    "applicantLName": "Baker",
-												 |    "regionList": "southeast",
-												 |    "southEastFRCList": "kent",
-												 |    "kentSurreyCourtList": "FR_kent_surreyList_10",
-												 |    "appRespondentFMName": "Stephen",
-												 |    "appRespondentLName": "Parker",
-												 |    "appRespondentRep": "Yes",
-												 |    "rSolicitorName": "Adam Walker",
-												 |    "rOrgPolicy": {
-												 |      "Organisation": {
-												 |        "OrganisationID": "${respondent_orgref}",
-												 |        "OrganisationName": "${respondent_orgname}"
-												 |      },
-												 |      "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
-												 |      "OrgPolicyReference": "Test Resp Sol Ref"
-												 |    },
-												 |    "rSolicitorFirm": "resp sol & co",
-												 |    "rSolicitorReference": null,
-												 |    "rSolicitorAddress": {
-												 |      "AddressLine1": "Ministry Of Justice",
-												 |      "AddressLine2": "Seventh Floor 102 Petty France",
-												 |      "AddressLine3": "",
-												 |      "PostTown": "London",
-												 |      "County": "",
-												 |      "PostCode": "SW1H 9AJ",
-												 |      "Country": "United Kingdom"
-												 |    },
-												 |    "rSolicitorPhone": null,
-												 |    "rSolicitorEmail": null,
-												 |    "rSolicitorDXnumber": null,
-												 |    "natureOfApplication2": [
-												 |      "Lump Sum Order"
-												 |    ],
-												 |    "consentOrder": {
-												 |      "document_url": "${dmStoreURL}/documents/${docId1}",
-												 |      "document_binary_url": "${dmStoreURL}/documents/${docId1}/binary",
-												 |      "document_filename": "dummy.pdf"
-												 |    },
-												 |    "d81Question": "Yes",
-												 |    "d81Joint": {
-												 |      "document_url": "${dmStoreURL}/documents/${docId2}",
-												 |      "document_binary_url": "${dmStoreURL}/documents/${docId2}/binary",
-												 |      "document_filename": "dummy.pdf"
-												 |    },
-												 |    "otherCollection": []
-												 |  }
-												 |}""".stripMargin))
+					 |  "data": {},
+					 |  "event": {
+					 |    "id": "FR_solicitorCreate",
+					 |    "summary": "",
+					 |    "description": ""
+					 |  },
+					 |  "event_token": "${eventToken}",
+					 |  "ignore_warning": false,
+					 |  "event_data": {
+					 |    "isAdmin": "No",
+					 |    "solicitorName": "Joe Bloggs",
+					 |    "solicitorFirm": "HMCTS",
+					 |    "solicitorReference": null,
+					 |    "solicitorAddress": {
+					 |      "AddressLine1": "Ministry Of Justice",
+					 |      "AddressLine2": "Seventh Floor 102 Petty France",
+					 |      "AddressLine3": "",
+					 |      "PostTown": "London",
+					 |      "County": "",
+					 |      "PostCode": "SW1H 9AJ",
+					 |      "Country": "United Kingdom"
+					 |    },
+					 |    "solicitorPhone": null,
+					 |    "solicitorEmail": "abc@email.com",
+					 |    "solicitorDXnumber": null,
+					 |    "solicitorAgreeToReceiveEmails": "No",
+					 |    "divorceCaseNumber": "EZ11D81265",
+					 |    "divorceStageReached": "Petition Issued",
+					 |    "applicantFMName": "Joe",
+					 |    "applicantLName": "Baker",
+					 |    "regionList": "southeast",
+					 |    "southEastFRCList": "kent",
+					 |    "kentSurreyCourtList": "FR_kent_surreyList_10",
+					 |    "appRespondentFMName": "Stephen",
+					 |    "appRespondentLName": "Parker",
+					 |    "appRespondentRep": "Yes",
+					 |    "rSolicitorName": "Adam Walker",
+					 |    "rOrgPolicy": {
+					 |      "Organisation": {
+					 |        "OrganisationID": "${respondent_orgref}",
+					 |        "OrganisationName": "${respondent_orgname}"
+					 |      },
+					 |      "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
+					 |      "OrgPolicyReference": "Test Resp Sol Ref"
+					 |    },
+					 |    "rSolicitorFirm": "resp sol & co",
+					 |    "rSolicitorReference": null,
+					 |    "rSolicitorAddress": {
+					 |      "AddressLine1": "Ministry Of Justice",
+					 |      "AddressLine2": "Seventh Floor 102 Petty France",
+					 |      "AddressLine3": "",
+					 |      "PostTown": "London",
+					 |      "County": "",
+					 |      "PostCode": "SW1H 9AJ",
+					 |      "Country": "United Kingdom"
+					 |    },
+					 |    "rSolicitorPhone": null,
+					 |    "rSolicitorEmail": null,
+					 |    "rSolicitorDXnumber": null,
+					 |    "natureOfApplication2": [
+					 |      "Lump Sum Order"
+					 |    ],
+					 |    "consentOrder": {
+					 |      "document_url": "${dmStoreURL}/documents/${docId1}",
+					 |      "document_binary_url": "${dmStoreURL}/documents/${docId1}/binary",
+					 |      "document_filename": "dummy.pdf"
+					 |    },
+					 |    "d81Question": "Yes",
+					 |    "d81Joint": {
+					 |      "document_url": "${dmStoreURL}/documents/${docId2}",
+					 |      "document_binary_url": "${dmStoreURL}/documents/${docId2}/binary",
+					 |      "document_filename": "dummy.pdf"
+					 |    },
+					 |    "otherCollection": []
+					 |  }
+					 |}""".stripMargin))
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
@@ -753,111 +753,111 @@ object EXUI_FR_Applicant extends Simulation {
 			.post("/data/case-types/FinancialRemedyConsentedRespondent/cases?ignore-warning=false")
 			.headers(headers_64)
 			.body(StringBody("""{
-												 |  "data": {
-												 |    "isAdmin": "No",
-												 |    "applicantRepresented": null,
-												 |    "applicantPhone": null,
-												 |    "applicantEmail": null,
-												 |    "solicitorName": "Joe Bloggs",
-												 |    "solicitorFirm": "HMCTS",
-												 |    "solicitorReference": null,
-												 |    "solicitorAddress": {
-												 |      "AddressLine1": "Ministry Of Justice",
-												 |      "AddressLine2": "Seventh Floor 102 Petty France",
-												 |      "AddressLine3": "",
-												 |      "PostTown": "London",
-												 |      "County": "",
-												 |      "PostCode": "SW1H 9AJ",
-												 |      "Country": "United Kingdom"
-												 |    },
-												 |    "solicitorPhone": null,
-												 |    "solicitorEmail": "abc@email.com",
-												 |    "solicitorDXnumber": null,
-												 |    "solicitorAgreeToReceiveEmails": "No",
-												 |    "divorceCaseNumber": "EZ11D81265",
-												 |    "divorceStageReached": "Petition Issued",
-												 |    "divorceDecreeNisiDate": null,
-												 |    "divorceDecreeAbsoluteDate": null,
-												 |    "applicantFMName": "Joe",
-												 |    "applicantLName": "Baker",
-												 |    "regionList": "southeast",
-												 |    "midlandsFRCList": null,
-												 |    "londonFRCList": null,
-												 |    "northWestFRCList": null,
-												 |    "northEastFRCList": null,
-												 |    "southEastFRCList": "kent",
-												 |    "southWestFRCList": null,
-												 |    "walesFRCList": null,
-												 |    "nottinghamCourtList": null,
-												 |    "birminghamCourtList": null,
-												 |    "londonCourtList": null,
-												 |    "liverpoolCourtList": null,
-												 |    "manchesterCourtList": null,
-												 |    "otherNWCourtList": null,
-												 |    "clevelandCourtList": null,
-												 |    "nwyorkshireCourtList": null,
-												 |    "humberCourtList": null,
-												 |    "kentSurreyCourtList": "FR_kent_surreyList_10",
-												 |    "otherSECourtList": null,
-												 |    "otherSWCourtList": null,
-												 |    "newportCourtList": null,
-												 |    "swanseaCourtList": null,
-												 |    "welshOtherCourtList": null,
-												 |    "appRespondentFMName": "Stephen",
-												 |    "appRespondentLName": "Parker",
-												 |    "appRespondentRep": "Yes",
-												 |    "rSolicitorName": "Adam Walker",
-												 |    "rOrgPolicy": {
-												 |      "Organisation": {
-												 |        "OrganisationID": "${respondent_orgref}",
-												 |        "OrganisationName": "${respondent_orgname}"
-												 |      },
-												 |      "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
-												 |      "OrgPolicyReference": "Test Resp Sol Ref"
-												 |    },
-												 |    "rSolicitorFirm": "resp sol & co",
-												 |    "rSolicitorReference": null,
-												 |    "rSolicitorAddress": {
-												 |      "AddressLine1": "Ministry Of Justice",
-												 |      "AddressLine2": "Seventh Floor 102 Petty France",
-												 |      "AddressLine3": "",
-												 |      "PostTown": "London",
-												 |      "County": "",
-												 |      "PostCode": "SW1H 9AJ",
-												 |      "Country": "United Kingdom"
-												 |    },
-												 |    "rSolicitorPhone": null,
-												 |    "rSolicitorEmail": null,
-												 |    "rSolicitorDXnumber": null,
-												 |    "respondentPhone": null,
-												 |    "respondentEmail": null,
-												 |    "natureOfApplication2": [
-												 |      "Lump Sum Order"
-												 |    ],
-												 |    "natureOfApplication3a": null,
-												 |    "natureOfApplication3b": null,
-												 |    "consentOrder": {
-												 |      "document_url": "${dmStoreURL}/documents/${docId1}",
-												 |      "document_binary_url": "${dmStoreURL}/documents/${docId1}/binary",
-												 |      "document_filename": "dummy.pdf"
-												 |    },
-												 |    "d81Question": "Yes",
-												 |    "d81Joint": {
-												 |      "document_url": "${dmStoreURL}/documents/${docId2}",
-												 |      "document_binary_url": "${dmStoreURL}/documents/${docId2}/binary",
-												 |      "document_filename": "dummy.pdf"
-												 |    },
-												 |    "otherCollection": []
-												 |  },
-												 |  "event": {
-												 |    "id": "FR_solicitorCreate",
-												 |    "summary": "",
-												 |    "description": ""
-												 |  },
-												 |  "event_token": "${eventToken}",
-												 |  "ignore_warning": false,
-												 |  "draft_id": null
-												 |}""".stripMargin))
+					 |  "data": {
+					 |    "isAdmin": "No",
+					 |    "applicantRepresented": null,
+					 |    "applicantPhone": null,
+					 |    "applicantEmail": null,
+					 |    "solicitorName": "Joe Bloggs",
+					 |    "solicitorFirm": "HMCTS",
+					 |    "solicitorReference": null,
+					 |    "solicitorAddress": {
+					 |      "AddressLine1": "Ministry Of Justice",
+					 |      "AddressLine2": "Seventh Floor 102 Petty France",
+					 |      "AddressLine3": "",
+					 |      "PostTown": "London",
+					 |      "County": "",
+					 |      "PostCode": "SW1H 9AJ",
+					 |      "Country": "United Kingdom"
+					 |    },
+					 |    "solicitorPhone": null,
+					 |    "solicitorEmail": "abc@email.com",
+					 |    "solicitorDXnumber": null,
+					 |    "solicitorAgreeToReceiveEmails": "No",
+					 |    "divorceCaseNumber": "EZ11D81265",
+					 |    "divorceStageReached": "Petition Issued",
+					 |    "divorceDecreeNisiDate": null,
+					 |    "divorceDecreeAbsoluteDate": null,
+					 |    "applicantFMName": "Joe",
+					 |    "applicantLName": "Baker",
+					 |    "regionList": "southeast",
+					 |    "midlandsFRCList": null,
+					 |    "londonFRCList": null,
+					 |    "northWestFRCList": null,
+					 |    "northEastFRCList": null,
+					 |    "southEastFRCList": "kent",
+					 |    "southWestFRCList": null,
+					 |    "walesFRCList": null,
+					 |    "nottinghamCourtList": null,
+					 |    "birminghamCourtList": null,
+					 |    "londonCourtList": null,
+					 |    "liverpoolCourtList": null,
+					 |    "manchesterCourtList": null,
+					 |    "otherNWCourtList": null,
+					 |    "clevelandCourtList": null,
+					 |    "nwyorkshireCourtList": null,
+					 |    "humberCourtList": null,
+					 |    "kentSurreyCourtList": "FR_kent_surreyList_10",
+					 |    "otherSECourtList": null,
+					 |    "otherSWCourtList": null,
+					 |    "newportCourtList": null,
+					 |    "swanseaCourtList": null,
+					 |    "welshOtherCourtList": null,
+					 |    "appRespondentFMName": "Stephen",
+					 |    "appRespondentLName": "Parker",
+					 |    "appRespondentRep": "Yes",
+					 |    "rSolicitorName": "Adam Walker",
+					 |    "rOrgPolicy": {
+					 |      "Organisation": {
+					 |        "OrganisationID": "${respondent_orgref}",
+					 |        "OrganisationName": "${respondent_orgname}"
+					 |      },
+					 |      "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
+					 |      "OrgPolicyReference": "Test Resp Sol Ref"
+					 |    },
+					 |    "rSolicitorFirm": "resp sol & co",
+					 |    "rSolicitorReference": null,
+					 |    "rSolicitorAddress": {
+					 |      "AddressLine1": "Ministry Of Justice",
+					 |      "AddressLine2": "Seventh Floor 102 Petty France",
+					 |      "AddressLine3": "",
+					 |      "PostTown": "London",
+					 |      "County": "",
+					 |      "PostCode": "SW1H 9AJ",
+					 |      "Country": "United Kingdom"
+					 |    },
+					 |    "rSolicitorPhone": null,
+					 |    "rSolicitorEmail": null,
+					 |    "rSolicitorDXnumber": null,
+					 |    "respondentPhone": null,
+					 |    "respondentEmail": null,
+					 |    "natureOfApplication2": [
+					 |      "Lump Sum Order"
+					 |    ],
+					 |    "natureOfApplication3a": null,
+					 |    "natureOfApplication3b": null,
+					 |    "consentOrder": {
+					 |      "document_url": "${dmStoreURL}/documents/${docId1}",
+					 |      "document_binary_url": "${dmStoreURL}/documents/${docId1}/binary",
+					 |      "document_filename": "dummy.pdf"
+					 |    },
+					 |    "d81Question": "Yes",
+					 |    "d81Joint": {
+					 |      "document_url": "${dmStoreURL}/documents/${docId2}",
+					 |      "document_binary_url": "${dmStoreURL}/documents/${docId2}/binary",
+					 |      "document_filename": "dummy.pdf"
+					 |    },
+					 |    "otherCollection": []
+					 |  },
+					 |  "event": {
+					 |    "id": "FR_solicitorCreate",
+					 |    "summary": "",
+					 |    "description": ""
+					 |  },
+					 |  "event_token": "${eventToken}",
+					 |  "ignore_warning": false,
+					 |  "draft_id": null
+					 |}""".stripMargin))
 			.check(jsonPath("$..id").saveAs("caseId"))
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
