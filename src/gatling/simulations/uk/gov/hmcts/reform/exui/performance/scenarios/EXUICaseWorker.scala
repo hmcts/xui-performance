@@ -48,8 +48,6 @@ object EXUICaseWorker {
   val ViewCase =
 
     foreach("${caseNumbers}", "caseNumber") {
-
-
       exec(http("XUI${service}_040_010_ViewCase")
         .get("/data/internal/cases/${caseNumber}")
         .headers(CaseworkerHeader.headers_5)
