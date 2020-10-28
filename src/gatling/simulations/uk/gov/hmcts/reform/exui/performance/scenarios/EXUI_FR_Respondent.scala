@@ -42,21 +42,21 @@ object EXUI_FR_Respondent extends Simulation {
 			.post("/api/caseshare/case-assignments")
 			.headers(headers_54)
 			.body(StringBody("""{
-												 |    "sharedCases":
-												 |    [
-												 |        {"caseId":"${caseId}",
-												 |        "caseTitle":"Baker Vs Parker",
-												 |        "caseTypeId":"FinancialRemedyConsentedRespondent",
-												 |        "pendingShares":
-												 |        [
-												 |            {"email":"${email}",
-												 |            "firstName":"${firstName}",
-												 |            "idamId":"${idamId}",
-												 |            "lastName":"${lastName}"}
-												 |        ],
-												 |        "pendingUnshares":[]}
-												 |    ]
-												 |}""".stripMargin))
+					 |    "sharedCases":
+					 |    [
+					 |        {"caseId":"${caseId}",
+					 |        "caseTitle":"Baker Vs Parker",
+					 |        "caseTypeId":"FinancialRemedyConsentedRespondent",
+					 |        "pendingShares":
+					 |        [
+					 |            {"email":"${email}",
+					 |            "firstName":"${firstName}",
+					 |            "idamId":"${idamId}",
+					 |            "lastName":"${lastName}"}
+					 |        ],
+					 |        "pendingUnshares":[]}
+					 |    ]
+					 |}""".stripMargin))
 			.check(status in (201,304)))
 		.pause(minThinkTime, maxThinkTime)
 
