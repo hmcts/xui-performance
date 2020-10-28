@@ -94,7 +94,7 @@ class ExUI extends Simulation {
 		//	.exec(EXUIMCLogin.termsnconditions)
 		.repeat(1) {
       exec(EXUIDivorceMC.casecreation)
-      	//.exec(EXUIIACMC.shareacase)
+      	.exec(EXUIDivorceMC.shareacase)
     }
 		.exec(EXUIMCLogin.manageCase_Logout)
 	}
@@ -183,8 +183,8 @@ class ExUI extends Simulation {
 
 	/*setUp(
 		EXUIMCaseCreationDivorceScn.inject(rampUsers(1) during (10)))
-		.protocols(IAChttpProtocol)*/
-
+		.protocols(IAChttpProtocol)
+*/
 	/*setUp(
 		EXUIMCaseCaseworkerScn.inject(rampUsers(1) during (1)))
 		.protocols(IAChttpProtocol)*/
@@ -211,7 +211,8 @@ class ExUI extends Simulation {
 		EXUIMCaseViewIACScn.inject(nothingFor(25),rampUsers(74) during (900)),
 		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(38) during (600)),
 		EXUIMCaseViewFPLAScn.inject(nothingFor(45),rampUsers(19) during (900)),
-		EXUIMCaseCaseworkerScn.inject(nothingFor(55),rampUsers(200) during (900))
+		EXUIMCaseCaseworkerScn.inject(nothingFor(55),rampUsers(200) during (900)),
+		EXUIMCaseCreationDivorceScn.inject(nothingFor(65),rampUsers(200) during (900))
 	).protocols(IAChttpProtocol)
 
 
@@ -227,11 +228,11 @@ class ExUI extends Simulation {
     //EXUIMCaseCreationDivorceScn.inject(nothingFor(5),rampUsers(1) during (3))
 		//EXUIMCaseCaseworkerScn.inject(nothingFor(5),rampUsers(1) during (3))
 		//	EXUIMCaseCaseworkerScn.inject(rampUsers(1) during 1)
-		//EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(1) during (3))
+		EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(1) during (3))
 		//EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(1) during (3)),
-		EXUIMCaseViewIACScn.inject(nothingFor(25),rampUsers(1) during (3)),
+		//EXUIMCaseViewIACScn.inject(nothingFor(25),rampUsers(1) during (3)),
 		//EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(1) during (2)),
-		EXUIMCaseViewFPLAScn.inject(nothingFor(15),rampUsers(1) during (3)),
+//		EXUIMCaseViewFPLAScn.inject(nothingFor(15),rampUsers(1) during (3)),
 	).protocols(IAChttpProtocol)*/
 
 }

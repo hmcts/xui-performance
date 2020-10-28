@@ -319,7 +319,7 @@ object ExUI {
       .check(status.is(200))
       ).exitHereIfFailed
         .pause(40)
-      .exec {
+      exec {
 
         session =>
           val client = new NotificationClient(notificationClient)

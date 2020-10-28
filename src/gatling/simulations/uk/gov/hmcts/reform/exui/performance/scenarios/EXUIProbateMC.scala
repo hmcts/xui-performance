@@ -3,8 +3,7 @@ package uk.gov.hmcts.reform.exui.performance.scenarios
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import uk.gov.hmcts.reform.exui.performance.Feeders
-import uk.gov.hmcts.reform.exui.performance.scenarios.utils.Environment
-import uk.gov.hmcts.reform.exui.performance.scenarios.utils.ProbateHeader
+import uk.gov.hmcts.reform.exui.performance.scenarios.utils.{Environment, ProbateHeader}
 
 object EXUIProbateMC {
 
@@ -21,24 +20,23 @@ object EXUIProbateMC {
   val casedetails = 
 
     exec(http("XUI${service}_100_005_SearchInputs")
-			.get("/data/internal/case-types/Caveat/search-inputs")
+			.get("/data/internal/case-types/GrantOfRepresentation/work-basket-inputs")
 			.headers(ProbateHeader.headers_search)
       .header("X-XSRF-TOKEN", "${XSRFToken}")
       .check(status.in(200,304))
     )
 
+      .exec(http("XUI${service}_100_010_SearchAccessJurisdictions")
+            .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
+            .headers(ProbateHeader.headers_search)
+            .header("X-XSRF-TOKEN", "${XSRFToken}")
+            .check(status.in(200,304))
+      )
 
-    .exec(http("XUI${service}_100_015_SearchAccessJurisdictions")
-			.get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
-			.headers(ProbateHeader.headers_search)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(status.in(200,304))
-    )
 
-    .exec(http("XUI${service}_100_020_SearchResults")
-			.post("/data/internal/searchCases?ctid=GrantOfRepresentation&use_case=SEARCH&view=SEARCH&page=1")
-
-			.headers(ProbateHeader.headers_search)
+    .exec(http("XUI${service}_100_015_SearchResults")
+			.post("/data/internal/searchCases?ctid=GrantOfRepresentation&use_case=WORKBASKET&view=WORKBASKET&state=SolAppCreated&page=1")
+			.headers(ProbateHeader.headers_searchresults)
       .header("X-XSRF-TOKEN", "${XSRFToken}")
       .body(StringBody("{\n  \"size\": 25\n}"))
       .check(status.in(200,304)))

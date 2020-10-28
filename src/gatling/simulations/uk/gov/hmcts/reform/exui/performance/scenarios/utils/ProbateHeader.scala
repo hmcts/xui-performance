@@ -18,11 +18,22 @@ object ProbateHeader {
   "Sec-Fetch-Mode" -> "cors")
 
  val headers_search = Map(
-  "Content-Type" -> "application/json",
-  "Pragma" -> "no-cache",
-  "Sec-Fetch-Dest" -> "empty",
-  "Sec-Fetch-Mode" -> "cors",
-  "Sec-Fetch-Site" -> "same-origin")
+  "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-workbasket-input-details.v2+json;charset=UTF-8",
+  "content-type" -> "application/json",
+  "experimental" -> "true",
+  "sec-fetch-dest" -> "empty",
+  "sec-fetch-mode" -> "cors",
+  "sec-fetch-site" -> "same-origin",
+  "x-dtpc" -> "1$86844263_624h36vNAFRAOHQBJVKKJVSHALFIWUOILIHQKQW-0e62")
+
+ val headers_searchresults = Map(
+  "accept" -> "application/json",
+  "content-type" -> "application/json",
+  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "sec-fetch-dest" -> "empty",
+  "sec-fetch-mode" -> "cors",
+  "sec-fetch-site" -> "same-origin",
+  "x-dtpc" -> "1$86844263_624h37vNAFRAOHQBJVKKJVSHALFIWUOILIHQKQW-0e62")
 
  val headers_viewCase = Map(
   "Accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json",

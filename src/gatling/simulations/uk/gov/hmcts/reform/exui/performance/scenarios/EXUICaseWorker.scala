@@ -48,9 +48,7 @@ object EXUICaseWorker {
   val ViewCase =
 
     foreach("${caseNumbers}", "caseNumber") {
-      /*exec(http("XUI${service}_040_005_ViewCaseDetails")
-            .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumber}")
-            .headers(CaseworkerHeader.headers_4))*/
+
 
       exec(http("XUI${service}_040_010_ViewCase")
         .get("/data/internal/cases/${caseNumber}")
@@ -60,12 +58,11 @@ object EXUICaseWorker {
         .exec(http("XUI${service}_040_015_ViewUndefined")
           .get("/undefined/cases/${caseNumber}")
           .headers(CaseworkerHeader.headers_undefined)
-          .header("X-XSRF-TOKEN", "${xsrfToken}"))
+          )
 
         .exec(http("XUI${service}_040_020_GetPaymentGroups")
           .get("/payments/cases/${caseNumber}/paymentgroups")
           .headers(CaseworkerHeader.headers_search)
-          .header("X-XSRF-TOKEN", "${xsrfToken}")
           .check(status.is(404)))
         .pause(MinThinkTime, MaxThinkTime)
 

@@ -573,11 +573,12 @@ object EXUIFPLAMC {
           .header("X-XSRF-TOKEN", "${XSRFToken}")
                 .body(StringBody("{\n  \"size\": 25\n}"))
           .check(status.in(200,304))
-          .check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumbersFPL")))
+         // .check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumbersFPL")))
+              .check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumberFPL")))
       .pause(MinThinkTimeFPLV , MaxThinkTimeFPLV )
 
-    .foreach("${caseNumbersFPL}","caseNumberFPL") {
-      exec(http("XUI${service}_050_ViewCase")
+   // .foreach("${caseNumbersFPL}","caseNumberFPL") {
+        .exec(http("XUI${service}_050_ViewCase")
         .get("/data/internal/cases/${caseNumberFPL}")
         .headers(FPLAHeader.headers_searchinputs)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
@@ -615,7 +616,7 @@ object EXUIFPLAMC {
       .check(status.in(200,304))
         .check(status.in(200, 404,304)))
         .pause(MinThinkTimeFPLV , MaxThinkTimeFPLV )
-    }
+  //  }
 
 
 
