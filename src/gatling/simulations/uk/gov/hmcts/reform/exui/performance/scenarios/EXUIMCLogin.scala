@@ -175,6 +175,7 @@ object EXUIMCLogin {
         .exec(http("XUI${service}_020_025_GetWorkBasketInputs")
               .get("/data/internal/case-types/FinancialRemedyMVP2/work-basket-inputs")
               .headers(LoginHeader.headers_17))
+        .exec(getCookieValue(CookieKey("__auth__").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("authToken")))
         .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("XSRFToken")))
         .exec( session => {
           println("the xsrf code is "+session("XSRFToken").as[String])

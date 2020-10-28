@@ -1,1 +1,0 @@
-{"sharedCases":[{"caseId":"${caseId}","caseTitle":"Baker Vs Parker","caseTypeId":"FinancialRemedyConsentedRespondent","pendingShares":[{"email":"${email}","firstName":"${firstName}","idamId":"${idamId}","lastName":"${lastName}"}],"pendingUnshares":[]}]}
