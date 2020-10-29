@@ -77,7 +77,7 @@ object EXUIMCLogin {
             .get("/auth/isAuthenticated")
             .headers(headers_1))
 
-      .exec(http("XUI${service}_010_030_Homepage")
+      .exec(http("XUI${service}_010_030_AuthLogin")
             .get("/auth/login")
             .headers(headers_4)
             .check(css("input[name='_csrf']", "value").saveAs("csrfToken"))

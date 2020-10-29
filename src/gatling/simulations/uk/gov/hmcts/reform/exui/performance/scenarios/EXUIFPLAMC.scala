@@ -609,7 +609,7 @@ object EXUIFPLAMC {
       .check(status.in(200,304))
       .check(status.in(200, 404,304)))*/
 
-    .exec(http("XUI${service}_060_020_ViewCaseDocumentBinary")
+    .exec(http("XUI${service}_060_015_ViewCaseDocumentBinary")
       .get("/documents/${Document_ID}/binary")
       .headers(FPLAHeader.headers_documents)
       .header("X-XSRF-TOKEN", "${XSRFToken}")

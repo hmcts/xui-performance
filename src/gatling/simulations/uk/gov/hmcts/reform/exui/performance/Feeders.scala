@@ -167,7 +167,7 @@ object Feeders {
     "CW"
 }),
     "SignoutNumber" -> ({
-      "120"
+      "60"
     })
   ));
 

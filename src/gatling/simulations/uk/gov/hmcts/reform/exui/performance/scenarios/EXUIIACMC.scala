@@ -255,7 +255,7 @@ object EXUIIACMC {
         .check(status.in(200, 304))
       )
 
-    .exec(http("XUI${service}_240_110_SubmitAppealProfile")
+    .exec(http("XUI${service}_240_010_SubmitAppealProfile")
   .get("/data/internal/profile")
   .headers(IACHeader.headers_internaldeclaration)
       .check(status.in(200, 304))
@@ -371,7 +371,7 @@ object EXUIIACMC {
      // .check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumbers")))
           .check(jsonPath("$..case_id").find(0).optional.saveAs("caseNumber")))
 
-      .exec(http("XUI${service}_040_035_SearchPage")
+      .exec(http("XUI${service}_040_025_SearchPage")
             .get("/data/internal/case-types/Asylum/search-inputs")
             .headers(IACHeader.headers_searchinputs)
             .header("X-XSRF-TOKEN", "${XSRFToken}")
