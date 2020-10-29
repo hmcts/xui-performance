@@ -17,36 +17,36 @@ val baseDomainOrg="manage-org.perftest.platform.hmcts.net"
   val adminUserAO = "vmuniganti@mailnesia.com"
   val adminPasswordAO = "Monday01"
   val notificationClient="sidam_perftest-b7ab8862-25b4-41c9-8311-cb78815f7d2d-ebb113ff-da17-4646-a39e-f93783a993f4"
-  val minThinkTime = 100
+  val minThinkTime =10// 100
   //10
-  val maxThinkTime = 110
+  val maxThinkTime = 10// 110
   //30
-  val minThinkTimeFPLC = 75
+  val minThinkTimeFPLC =10//  75
   //10
-  val maxThinkTimeFPLC = 80
+  val maxThinkTimeFPLC = 10// 80
 
-  val minThinkTimeSDO = 100
+  val minThinkTimeSDO =10//  100
   //10
-  val maxThinkTimeSDO = 110
+  val maxThinkTimeSDO = 10// 110
   //30
-  val minThinkTimeIACC = 100
+  val minThinkTimeIACC =10//  100
   //10
-  val maxThinkTimeIACC = 120
-  val minThinkTimeFPLV = 450
+  val maxThinkTimeIACC =10//  120
+  val minThinkTimeFPLV =10//  450
   //10
-  val maxThinkTimeFPLV = 480
+  val maxThinkTimeFPLV = 10// 480
   //320
-  val minThinkTimeIACV = 470
+  val minThinkTimeIACV =10//  470
   //10
-  val maxThinkTimeIACV = 490
-  val minThinkTimePROB = 300
-  val maxThinkTimePROB = 310
+  val maxThinkTimeIACV =10//  490
+  val minThinkTimePROB =10//  300
+  val maxThinkTimePROB =10//  310
 
-  val minThinkTimeDIV = 140
-  val maxThinkTimeDIV = 160
+  val minThinkTimeDIV =10//  140
+  val maxThinkTimeDIV =10//  160
 
-  val minThinkTimeCW = 50
-  val maxThinkTimeCW = 50
+  val minThinkTimeCW =10//  50
+  val maxThinkTimeCW =10//  50
 
   val constantthinkTime = 5
   val HttpProtocol = http
