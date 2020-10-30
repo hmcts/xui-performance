@@ -150,7 +150,7 @@ object ExUI {
     .check(status.in(200,304)))
       .pause(10)
 
-    .exec(http("request_3")
+    .exec(http("request_4")
           .get("/auth/isAuthenticated")
       .check(status.in(200,304)))
           .pause(10)
@@ -161,22 +161,16 @@ object ExUI {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
       .body(ElFileBody("AO.json")).asJson
       .check(status.is(200)))
-      .pause(40)
-        .exec {
+    .pause(40)
+    .exec {
 
-        session =>
-          val client = new NotificationClient(notificationClient)
-          val pattern = new Regex("token.+")
-          val str = findEmail(client,session("generatedEmail").as[String])
-           session.set("activationLink", (pattern findFirstMatchIn str.get).mkString.trim.replace(")", ""))
-         // session.set("activationLink",str)
-        }
-
-    .exec( session => {
-      println("new email link  is   "+session("activationLink").as[String])
-      session
-    })
-      .pause(40)
+      session =>
+        val client = new NotificationClient(notificationClient)
+        val pattern = new Regex("token.+")
+        val str = findEmail(client,session("generatedEmail").as[String])
+        session.set("activationLink", (pattern findFirstMatchIn str.get).mkString.trim.replace(")", ""))
+    }
+    .pause(40)
       .exec(http("SelfReg01_TX03_Password")
         .get(IdamUrl+"/users/register?&${activationLink}")
         .check(status.is(200))
@@ -190,18 +184,18 @@ object ExUI {
         .formParam("token", "${token}")
         .formParam("password1", "Pass19word")
         .formParam("password2", "Pass19word")
-        .check(status.is(200)))
-      .pause(40)
-
-    .exec {
-    session =>
-      val fw = new BufferedWriter(new FileWriter("OrgDetails.csv", true))
-      try {
-        fw.write(session("orgName").as[String] + ","+session("orgRefCode").as[String] + "," + session("generatedEmail").as[String]  + "\r\n")
+        .check(status.is(200))
+    .check(status.saveAs("aostatusvalue")))
+      .pause(20)
+    .doIf(session=>session("aostatusvalue").as[String].contains("200")) {
+      exec { session =>
+        val fw = new BufferedWriter(new FileWriter("OrgDetails.csv", true))
+        try {
+          fw.write(session("orgName").as[String] + "," + session("orgRefCode").as[String] + "," + session("generatedEmail").as[String] + "\r\n")
+        } finally fw.close()
+        session
       }
-      finally fw.close()
-      session
-  }
+    }
 
   val approveOrganisationLogout =
     exec(http("EXUI_AO_005_Logout")
@@ -344,6 +338,7 @@ object ExUI {
         .formParam("password2", "Pass19word")
         .check(status.in(200,201))
         .check(status.saveAs("statusvalue")))
+          .pause(20)
            .doIf(session=>session("statusvalue").as[String].contains("200")) {
             exec {
             session =>
