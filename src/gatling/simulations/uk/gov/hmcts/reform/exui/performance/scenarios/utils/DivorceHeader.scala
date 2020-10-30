@@ -57,8 +57,8 @@ object DivorceHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "2$587801235_171h12vAMKUMUBHAHCQKSABKWFBHHGLAHGGCPVR-0e9",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-filter")
-
+  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-filter",
+ "x-xsrf-token" -> "${XSRFToken}")
  val headers_soldata = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
   "accept-encoding" -> "gzip, deflate, br",
