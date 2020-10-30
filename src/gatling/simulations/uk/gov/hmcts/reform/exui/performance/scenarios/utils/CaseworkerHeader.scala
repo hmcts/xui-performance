@@ -17,7 +17,7 @@ val headers_0 = Map(
 val headers_2 = Map(
     "accept" -> "application/json",
     "content-type" -> "application/json",
-    "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+    "origin" -> baseURL,
     "sec-fetch-dest" -> "empty",
     "sec-fetch-mode" -> "cors",
     "sec-fetch-site" -> "same-origin",
@@ -36,7 +36,7 @@ val headers_4 = Map(
         "sec-fetch-mode" -> "cors",
         "sec-fetch-site" -> "same-origin",
         "x-dtpc" -> "2$595308963_803h13vGPUVHCQAOWPMASHWHNFGLKUMKEKFNFBO-0e7",
-        "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-search")
+        "x-dtreferer" -> ({baseURL+"/cases/case-search"}))
 
     val headers_undefined = Map(
         "accept" -> "application/json, text/plain, */*",
@@ -44,7 +44,7 @@ val headers_4 = Map(
         "sec-fetch-mode" -> "cors",
         "sec-fetch-site" -> "same-origin",
         "x-dtpc" -> "2$595308963_803h14vGPUVHCQAOWPMASHWHNFGLKUMKEKFNFBO-0e7",
-        "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-search")
+        "x-dtreferer" -> ({baseURL+"/cases/case-search"}))
 
 val headers_5 = Map(
     "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json",

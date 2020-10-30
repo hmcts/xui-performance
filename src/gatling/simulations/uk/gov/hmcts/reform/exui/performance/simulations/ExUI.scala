@@ -42,19 +42,19 @@ class ExUI extends Simulation {
 	val EXUIScn = scenario("EXUI").repeat(1)
 	 {
 		exec(
-			/*ExUI.createOrg,
+			ExUI.createOrg,
 			ExUI.approveOrgHomePage,
 			ExUI.approveOrganisationlogin,
 			ExUI.approveOrganisationApprove,
-			ExUI.approveOrganisationLogout*/
-			ExUI.manageOrgHomePage,
+			ExUI.approveOrganisationLogout
+			/*ExUI.manageOrgHomePage,
 			ExUI.manageOrganisationLogin,
 			ExUI.usersPage,
 			ExUI.inviteUserPage
 			.repeat(5,"n") {
 				exec(ExUI.sendInvitation)
 				},
-			ExUI.manageOrganisationLogout
+			ExUI.manageOrganisationLogout*/
 			)
 	 }
 
@@ -167,10 +167,10 @@ class ExUI extends Simulation {
 		.exec(EXUIMCLogin.manageCase_Logout)
   }
 
-	/*setUp(
-		EXUIScn.inject(rampUsers(395) during (2700))
+	setUp(
+		EXUIScn.inject(rampUsers(1) during (1))
 			.protocols(XUIHttpProtocol)
-	)*/
+	)
 	/* setUp(
 		 EXUIMCaseCreationDivorceScn.inject(rampUsers(395) during (600)))
       .protocols(IAChttpProtocol)*/
@@ -224,7 +224,7 @@ class ExUI extends Simulation {
 		EXUIMCaseViewFPLAScn.inject(nothingFor(45),rampUsers(19) during (3400)),
 	).protocols(IAChttpProtocol)*/
 
-	setUp(
+	/*setUp(
     //EXUIMCaseCreationDivorceScn.inject(nothingFor(5),rampUsers(1) during (3))
 		//EXUIMCaseCaseworkerScn.inject(nothingFor(5),rampUsers(1) during (3))
 		//	EXUIMCaseCaseworkerScn.inject(rampUsers(1) during 1)
@@ -234,5 +234,5 @@ class ExUI extends Simulation {
 		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(1) during (2))
 		//EXUIMCaseViewFPLAScn.inject(nothingFor(15),rampUsers(1) during (3))
 	).protocols(IAChttpProtocol)
-
+*/
 }
