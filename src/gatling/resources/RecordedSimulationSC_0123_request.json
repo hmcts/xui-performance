@@ -2,8 +2,8 @@
   "data": {
     "OrganisationPolicyField": {
       "Organisation": {
-        "OrganisationID": "2SM1XDU",
-        "OrganisationName": "iacorg-lgjyx"
+        "OrganisationID": "${orgref}",
+        "OrganisationName": "${orgname}"
       },
       "OrgPolicyCaseAssignedRole": "[PETSOLICITOR]",
       "OrgPolicyReference": null
@@ -19,8 +19,8 @@
   "event_data": {
     "OrganisationPolicyField": {
       "Organisation": {
-        "OrganisationID": "2SM1XDU",
-        "OrganisationName": "iacorg-lgjyx"
+        "OrganisationID": "${orgref}",
+        "OrganisationName": "${orgname}"
       },
       "OrgPolicyCaseAssignedRole": "[PETSOLICITOR]",
       "OrgPolicyReference": null
