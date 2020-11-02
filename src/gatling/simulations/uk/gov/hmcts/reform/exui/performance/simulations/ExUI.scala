@@ -175,7 +175,7 @@ class ExUI extends Simulation {
 		.exec(EXUIMCLogin.manageCase_Logout)
   }
 
-	val recordedSimulationFRScn = scenario("FR").repeat(1)
+	val EXUIFinancialRemedyScn = scenario("FR").repeat(1)
 	{	 feed(feedUserDataProbate)
 		.feed(Feeders.FRApplicantDataFeeder)
 		.exec(EXUIMCLogin.manageCasesHomePage)
@@ -199,7 +199,7 @@ class ExUI extends Simulation {
 		EXUIMCaseViewIACScn.inject(nothingFor(25),rampUsers(1) during (3)),
 		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(1) during (2)),
 		EXUIMCaseViewFPLAScn.inject(nothingFor(45),rampUsers(1) during (3)),*/
-		recordedSimulationFRScn.inject(atOnceUsers(1)).protocols(FRhttpProtocol))
+		EXUIFinancialRemedyScn.inject(atOnceUsers(1)).protocols(FRhttpProtocol))
 }
 
 	/*setUp(
@@ -270,4 +270,4 @@ class ExUI extends Simulation {
 		//EXUIMCaseViewFPLAScn.inject(nothingFor(15),rampUsers(1) during (3))
 	).protocols(IAChttpProtocol)
 */
-}
+}*/

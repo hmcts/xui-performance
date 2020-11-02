@@ -10,12 +10,6 @@ import uk.gov.hmcts.reform.exui.performance.scenarios.utils.Environment._
 object EXUI_FR_Applicant extends Simulation {
 
 	val createCase = scenario("CreateCase")
-		.exec(_.setAll(
-			("dmStoreURL", dmStoreURL),
-			("docId1", docId1),
-			("docId2", docId2)
-		))
-
 		.exec(http("XUI${service}_030_CreateCase1")
 			.get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
 			.headers(headers_2)
@@ -394,6 +388,7 @@ object EXUI_FR_Applicant extends Simulation {
 			.post("/documents")
 			.headers(headers_41)
 			.body(ElFileBody("RecordedSimulationFRApplicant_0041_request.txt"))
+			.check(jsonPath("$..href").saveAs("href1"))
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
@@ -403,8 +398,8 @@ object EXUI_FR_Applicant extends Simulation {
 			.body(StringBody("""{
 					 |  "data": {
 					 |    "consentOrder": {
-					 |      "document_url": "${dmStoreURL}/documents/${docId1}",
-					 |      "document_binary_url": "${dmStoreURL}/documents/${docId1}/binary",
+					 |      "document_url": "${href1}",
+					 |      "document_binary_url": "${href1}/binary",
 					 |      "document_filename": "dummy.pdf"
 					 |    }
 					 |  },
@@ -470,8 +465,8 @@ object EXUI_FR_Applicant extends Simulation {
 					 |      "Lump Sum Order"
 					 |    ],
 					 |    "consentOrder": {
-					 |      "document_url": "${dmStoreURL}/documents/${docId1}",
-					 |      "document_binary_url": "${dmStoreURL}/documents/${docId1}/binary",
+					 |      "document_url": "${href1}",
+					 |      "document_binary_url": "${href1}/binary",
 					 |      "document_filename": "dummy.pdf"
 					 |    }
 					 |  }
@@ -483,6 +478,7 @@ object EXUI_FR_Applicant extends Simulation {
 			.post("/documents")
 			.headers(headers_48)
 			.body(ElFileBody("RecordedSimulationFRApplicant_0048_request.txt"))
+			.check(jsonPath("$..href").saveAs("href2"))
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
@@ -493,8 +489,8 @@ object EXUI_FR_Applicant extends Simulation {
 					 |  "data": {
 					 |    "d81Question": "Yes",
 					 |    "d81Joint": {
-					 |      "document_url": "${dmStoreURL}/documents/${docId2}",
-					 |      "document_binary_url": "${dmStoreURL}/documents/${docId2}/binary",
+					 |      "document_url": "${href2}",
+					 |      "document_binary_url": "${href2}/binary",
 					 |      "document_filename": "dummy.pdf"
 					 |    }
 					 |  },
@@ -560,14 +556,14 @@ object EXUI_FR_Applicant extends Simulation {
 					 |      "Lump Sum Order"
 					 |    ],
 					 |    "consentOrder": {
-					 |      "document_url": "${dmStoreURL}/documents/${docId1}",
-					 |      "document_binary_url": "${dmStoreURL}/documents/${docId1}/binary",
+					 |      "document_url": "${href1}",
+					 |      "document_binary_url": "${href1}/binary",
 					 |      "document_filename": "dummy.pdf"
 					 |    },
 					 |    "d81Question": "Yes",
 					 |    "d81Joint": {
-					 |      "document_url": "${dmStoreURL}/documents/${docId2}",
-					 |      "document_binary_url": "${dmStoreURL}/documents/${docId2}/binary",
+					 |      "document_url": "${href2}",
+					 |      "document_binary_url": "${href2}/binary",
 					 |      "document_filename": "dummy.pdf"
 					 |    }
 					 |  }
@@ -644,14 +640,14 @@ object EXUI_FR_Applicant extends Simulation {
 					 |      "Lump Sum Order"
 					 |    ],
 					 |    "consentOrder": {
-					 |      "document_url": "${dmStoreURL}/documents/${docId1}",
-					 |      "document_binary_url": "${dmStoreURL}/documents/${docId1}/binary",
+					 |      "document_url": "${href1}",
+					 |      "document_binary_url": "${href1}/binary",
 					 |      "document_filename": "dummy.pdf"
 					 |    },
 					 |    "d81Question": "Yes",
 					 |    "d81Joint": {
-					 |      "document_url": "${dmStoreURL}/documents/${docId2}",
-					 |      "document_binary_url": "${dmStoreURL}/documents/${docId2}/binary",
+					 |      "document_url": "${href2}",
+					 |      "document_binary_url": "${href2}/binary",
 					 |      "document_filename": "dummy.pdf"
 					 |    },
 					 |    "otherCollection": []
@@ -727,14 +723,14 @@ object EXUI_FR_Applicant extends Simulation {
 					 |      "Lump Sum Order"
 					 |    ],
 					 |    "consentOrder": {
-					 |      "document_url": "${dmStoreURL}/documents/${docId1}",
-					 |      "document_binary_url": "${dmStoreURL}/documents/${docId1}/binary",
+					 |      "document_url": "${href1}",
+					 |      "document_binary_url": "${href1}/binary",
 					 |      "document_filename": "dummy.pdf"
 					 |    },
 					 |    "d81Question": "Yes",
 					 |    "d81Joint": {
-					 |      "document_url": "${dmStoreURL}/documents/${docId2}",
-					 |      "document_binary_url": "${dmStoreURL}/documents/${docId2}/binary",
+					 |      "document_url": "${href2}",
+					 |      "document_binary_url": "${href2}/binary",
 					 |      "document_filename": "dummy.pdf"
 					 |    },
 					 |    "otherCollection": []
@@ -837,14 +833,14 @@ object EXUI_FR_Applicant extends Simulation {
 					 |    "natureOfApplication3a": null,
 					 |    "natureOfApplication3b": null,
 					 |    "consentOrder": {
-					 |      "document_url": "${dmStoreURL}/documents/${docId1}",
-					 |      "document_binary_url": "${dmStoreURL}/documents/${docId1}/binary",
+					 |      "document_url": "${href1}",
+					 |      "document_binary_url": "${href1}/binary",
 					 |      "document_filename": "dummy.pdf"
 					 |    },
 					 |    "d81Question": "Yes",
 					 |    "d81Joint": {
-					 |      "document_url": "${dmStoreURL}/documents/${docId2}",
-					 |      "document_binary_url": "${dmStoreURL}/documents/${docId2}/binary",
+					 |      "document_url": "${href2}",
+					 |      "document_binary_url": "${href2}/binary",
 					 |      "document_filename": "dummy.pdf"
 					 |    },
 					 |    "otherCollection": []

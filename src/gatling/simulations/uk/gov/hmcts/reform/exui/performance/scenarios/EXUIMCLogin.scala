@@ -180,7 +180,7 @@ object EXUIMCLogin {
         .exec( session => {
           println("the xsrf code is "+session("XSRFToken").as[String])
           session
-        })*/
+        })
 
         .exec(http("XUI${service}_020_030_GetPaginationMetaData")
               .get("/data/caseworkers/:uid/jurisdictions/DIVORCE/case-types/FinancialRemedyMVP2/cases/pagination_metadata?state=caseAdded")
