@@ -177,10 +177,10 @@ object EXUIMCLogin {
               .headers(LoginHeader.headers_17))
         .exec(getCookieValue(CookieKey("__auth__").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("authToken")))
         .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("XSRFToken")))
-        .exec( session => {
+        /*.exec( session => {
           println("the xsrf code is "+session("XSRFToken").as[String])
           session
-        })
+        })*/
 
         .exec(http("XUI${service}_020_030_GetPaginationMetaData")
               .get("/data/caseworkers/:uid/jurisdictions/DIVORCE/case-types/FinancialRemedyMVP2/cases/pagination_metadata?state=caseAdded")
