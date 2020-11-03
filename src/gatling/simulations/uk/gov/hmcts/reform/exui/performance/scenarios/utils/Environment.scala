@@ -10,7 +10,7 @@ object Environment {
   val manageOrdURL = "https://manage-org.perftest.platform.hmcts.net"
   val idamURL = "https://idam-web-public.perftest.platform.hmcts.net"
   val baseURL = "https://manage-case.perftest.platform.hmcts.net"
-  val ccdEnvurl = "https://ccd-case-management-web-aat.service.core-compute-aat.internal"
+  val ccdEnvurl = "https://ccd-case-management-web-perftest.service.core-compute-perftest.internal"
   val baseFPLAURL = "https://manage-case.perftest.platform.hmcts.net"
  val baseDomain="manage-case.perftest.platform.hmcts.net"
 val baseDomainOrg="manage-org.perftest.platform.hmcts.net"
