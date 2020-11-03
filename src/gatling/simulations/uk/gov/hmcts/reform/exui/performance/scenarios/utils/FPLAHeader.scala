@@ -88,15 +88,18 @@ object FPLAHeader {
   "experimental" -> "true")
 
  val headers_80 = Map(
-  "Accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8",
-  "Accept-Encoding" -> "gzip, deflate, br",
-  "Accept-Language" -> "en-US,en;q=0.9",
-  "Content-Type" -> "application/json",
-  "Origin" -> baseURL,
-  "Sec-Fetch-Mode" -> "cors",
-  "Sec-Fetch-Dest" -> "empty",
-  "Sec-Fetch-Site" -> "same-origin",
-  "experimental" -> "true")
+  "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8",
+  "accept-encoding" -> "gzip, deflate, br",
+  "accept-language" -> "en-US,en;q=0.9",
+  "content-type" -> "application/json",
+  "experimental" -> "true",
+  "origin" -> baseURL,
+  "request-context" -> "appId=cid-v1:7922b140-fa5f-482d-89b4-e66e9e6d675a",
+  "request-id" -> "|nMQoY.0IOZ+",
+  "sec-fetch-dest" -> "empty",
+  "sec-fetch-mode" -> "cors",
+  "sec-fetch-site" -> "same-origin",
+  "x-dtpc" -> "1$101466490_0h45vJCFUPSDSUVDHGRGENWIRBFQHRCWFPFSS-0e52")
 
  val headers_81 = Map(
   "Accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8",
@@ -126,9 +129,37 @@ object FPLAHeader {
   "Sec-Fetch-Site" -> "cross-site")
 
  val headers_search = Map(
-  "Sec-Fetch-Dest" -> "empty",
-  "Sec-Fetch-Mode" -> "cors",
-  "Sec-Fetch-Site" -> "same-origin")
+  "accept" -> "application/json",
+  "content-type" -> "application/json",
+  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "sec-fetch-dest" -> "empty",
+  "sec-fetch-mode" -> "cors",
+  "sec-fetch-site" -> "same-origin",
+  "x-dtpc" -> "1$514772036_188h36vUMEMPMRJCAHVTFMREDAAAJFACRUNIRCA-0e15",
+  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases",
+  "x-xsrf-token" -> "V67Cl4Bt-_Q-U-MUHK3EP2fLJE21zTWWRQkI")
+
+ val headers_searchpaginationmetadata = Map(
+  "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-search-input-details.v2+json;charset=UTF-8",
+  "content-type" -> "application/json",
+  "experimental" -> "true",
+  "sec-fetch-dest" -> "empty",
+  "sec-fetch-mode" -> "cors",
+  "sec-fetch-site" -> "same-origin",
+  "x-dtpc" -> "1$514772036_188h38vUMEMPMRJCAHVTFMREDAAAJFACRUNIRCA-0e15",
+  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases",
+  "x-xsrf-token" -> "V67Cl4Bt-_Q-U-MUHK3EP2fLJE21zTWWRQkI")
+
+ val headers_results = Map(
+  "accept" -> "application/json",
+  "content-type" -> "application/json",
+  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "sec-fetch-dest" -> "empty",
+  "sec-fetch-mode" -> "cors",
+  "sec-fetch-site" -> "same-origin",
+  "x-dtpc" -> "1$514772036_188h36vUMEMPMRJCAHVTFMREDAAAJFACRUNIRCA-0e15",
+  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases")
+
 
  val headers_documents = Map(
   "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
@@ -166,6 +197,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$407919787_877h43vPKUSVOSAPKKCNGHKEFHLNFMFNJDCKBGI-0")
+
 
  val headers_orddersprofile = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8",
