@@ -447,9 +447,7 @@ object EXUIFPLAMC {
         .headers(FPLAHeader.headers_ordersneed1profile)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
-
       .pause(MinThinkTime , MaxThinkTime )
-
       .exec(http("XUI${service}_320_UploadFile")
         .post("/documents")
         .headers(FPLAHeader.headers_uploadfile)

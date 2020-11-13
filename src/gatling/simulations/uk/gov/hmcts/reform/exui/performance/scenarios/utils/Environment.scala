@@ -6,6 +6,9 @@ object Environment {
 
  val environment: String = System.getProperty("env")
  //if (environment == "perftest") {
+ val S2S_ServiceName = "rd_professional_api"
+  val S2SUrl = "http://rpe-service-auth-provider-perftest.service.core-compute-perftest.internal/testing-support"
+  val PRDUrl = "http://rd-professional-api-perftest.service.core-compute-perftest.internal"
   val url_approve = "https://administer-orgs.perftest.platform.hmcts.net"
   val manageOrdURL = "https://manage-org.perftest.platform.hmcts.net"
   val idamURL = "https://idam-web-public.perftest.platform.hmcts.net"
@@ -17,9 +20,9 @@ val baseDomainOrg="manage-org.perftest.platform.hmcts.net"
   val adminUserAO = "vmuniganti@mailnesia.com"
   val adminPasswordAO = "Monday01"
   val notificationClient="sidam_perftest-b7ab8862-25b4-41c9-8311-cb78815f7d2d-ebb113ff-da17-4646-a39e-f93783a993f4"
-  val minThinkTime =10// 100
+  val minThinkTime =5// 100
   //10
-  val maxThinkTime = 10// 110
+  val maxThinkTime = 5// 110
   //30
   val minThinkTimeFPLC =10//  75
   //10
@@ -47,6 +50,9 @@ val baseDomainOrg="manage-org.perftest.platform.hmcts.net"
 
   val minThinkTimeCW =10//  50
   val maxThinkTimeCW =10//  50
+
+  val minThinkTimeFR =100//  50
+  val maxThinkTimeFR =100//  50
 
   val constantthinkTime = 5
   val HttpProtocol = http
