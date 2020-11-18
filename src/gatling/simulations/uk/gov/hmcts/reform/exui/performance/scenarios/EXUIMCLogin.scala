@@ -231,24 +231,24 @@ object EXUIMCLogin {
 
       //      .exec(getCookieValue(CookieKey("__userid__").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("myUserId")))
 
-      .exec(http("XUI${service}_020_010_Homepage")
+      .exec(http("XUI${service}_020_010_configUI")
             .get("/external/config/ui")
             .headers(LoginHeader.headers_0)
             .check(status.in(200,304)))
 
-      /*.exec(http("XUI${service}_020_010_Homepage")
-            .get("/external/config/ui")
+      .exec(http("XUI${service}_020_015_Config")
+            .get("/assets/config/config.json")
             .headers(LoginHeader.headers_0)
-            .check(status.in(200,304)))*/
+            .check(status.in(200,304)))
 
-      .exec(http("XUI${service}_020_015_SignInTCEnabled")
+      .exec(http("XUI${service}_020_020_SignInTCEnabled")
             .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
             .headers(LoginHeader.headers_38)
             .check(status.in(200, 304)))
 
-      /* .exec(http("XUI${service}_020_020_SignInGetUserId")
-             .get("/api/userTermsAndConditions/${myUserId}")
-             .headers(LoginHeader.headers_tc))*/
+        .exec(http("XUI${service}_020_025_SignInGetUserId")
+              .get("/api/user/details")
+              .headers(LoginHeader.headers_0))
 
       /* .exec(http("XUI${service}_020_025_SignInAcceptTCGet")
              .get("/accept-terms-and-conditions")
@@ -260,13 +260,13 @@ object EXUIMCLogin {
              .headers(LoginHeader.headers_tc))*/
 
       .repeat(1, "count") {
-        exec(http("XUI${service}_020_020_AcceptT&CAccessJurisdictions${count}")
+        exec(http("XUI${service}_020_030_AcceptT&CAccessJurisdictions${count}")
              .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
              .headers(LoginHeader.headers_access_read)
              .check(status.in(200, 304, 302)))
       }
 
-      .exec(http("XUI${service}_020_025_GetWorkBasketInputs")
+      .exec(http("XUI${service}_020_035_GetWorkBasketInputs")
             .get("/data/internal/case-types/FinancialRemedyMVP2/work-basket-inputs")
             .headers(LoginHeader.headers_17))
       .exec(getCookieValue(CookieKey("__auth__").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("authToken")))
@@ -276,14 +276,13 @@ object EXUIMCLogin {
         session
       })*/
 
-      .exec(http("XUI${service}_020_030_GetPaginationMetaData")
+      .exec(http("XUI${service}_020_040_GetPaginationMetaData")
             .get("/data/caseworkers/:uid/jurisdictions/DIVORCE/case-types/FinancialRemedyMVP2/cases/pagination_metadata?state=caseAdded")
             .headers(LoginHeader.headers_0))
 
-      .exec(http("XUI${service}_020_035_GetDefaultWorkBasketView")
+      .exec(http("XUI${service}_020_045_GetDefaultWorkBasketView")
             .get("/aggregated/caseworkers/:uid/jurisdictions/DIVORCE/case-types/FinancialRemedyMVP2/cases?view=WORKBASKET&state=caseAdded&page=1")
             .headers(LoginHeader.headers_0))
-
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("XSRFToken")))
 
       /* .exec(http("XUI${service}_020_040_HomepageIsAuthenticated")
@@ -296,7 +295,6 @@ object EXUIMCLogin {
 
     val caseworkerLogin =
     tryMax(2) {
-
       exec(http("XUI${service}_020_005_SignIn")
            //.post(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
            .post(IdamUrl + "/login?response_type=code&redirect_uri=" + baseURL + "%2Foauth2%2Fcallback&scope=profile%20openid%20roles%20manage-user%20create-user&state=${state}&client_id=xuiwebapp")
