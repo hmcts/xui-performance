@@ -13,7 +13,7 @@ object EXUICaseWorker {
   val MinThinkTime = Environment.minThinkTimeCW
   val MaxThinkTime = Environment.maxThinkTimeCW
 
-  val SearchCase =
+  val ApplyFilters =
     feed(caseFeeder)
       .exec(http("XUI${service}_030_SearchPagination")
         .post("/data/internal/searchCases?ctid=${caseType}&use_case=SEARCH&view=SEARCH&page=1").headers(CaseworkerHeader.headers_2)
@@ -56,7 +56,7 @@ object EXUICaseWorker {
             .get("/em-anno/annotation-sets/filter?documentId=${Document_ID}")
             .headers(CaseworkerHeader.headers_documents)
             .header("X-XSRF-TOKEN", "${xsrfToken}")
-            .check(status.in(200, 404, 304)))
+            .check(status.in(200, 404, 304,502)))
 
           .exec(http("XUI${service}_050_020_ViewCaseDocumentBinary")
             .get("/documents/${Document_ID}/binary")

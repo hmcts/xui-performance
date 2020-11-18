@@ -50,7 +50,7 @@ class ExUI extends Simulation {
       ExUI.approveOrgHomePage,
 		ExUI.approveOrganisationlogin,
 			ExUI.approveOrganisationApprove,
-			ExUI.approveOrganisationLogout,*/
+			ExUI.approveOrganisationLogout*/
 			ExUI.manageOrgHomePage,
 			ExUI.manageOrganisationLogin,
 			ExUI.usersPage,
@@ -71,7 +71,7 @@ class ExUI extends Simulation {
 		//	.exec(EXUIMCLogin.termsnconditions)
 		.repeat(1) {
 			exec(EXUIProbateMC.casecreation)
-			.exec(EXUIProbateMC.casedetails)
+			//.exec(EXUIProbateMC.casedetails)
 			}
 		.exec(EXUIMCLogin.manageCase_Logout)
   }
@@ -84,7 +84,7 @@ class ExUI extends Simulation {
 		//	.exec(EXUIMCLogin.termsnconditions)
 		  	.repeat(1) {
 					exec(EXUIIACMC.iaccasecreation)
-					//	.exec(EXUIIACMC.shareacase)
+						.exec(EXUIIACMC.shareacase)
 				}
 
 		.exec(EXUIMCLogin.manageCase_Logout)
@@ -165,13 +165,13 @@ class ExUI extends Simulation {
 			.exec(EXUIMCLogin.manageCasesHomePage)
 			.exec(EXUIMCLogin.caseworkerLogin)
 		.repeat(1) {
-			exec(EXUICaseWorker.SearchCase)
+			exec(EXUICaseWorker.ApplyFilters)
 			.exec(EXUICaseWorker.ViewCase)
 			}
 		.exec(EXUIMCLogin.manageCase_Logout)
   }
 
-	val EXUIFinancialRemedyScn = scenario("FR").repeat(1)
+	val EXUIFinancialRemedyScn = scenario("Scenario FR").repeat(1)
 	{	 feed(feedUserDataRJ)
 		.feed(Feeders.FRApplicantDataFeeder)
 		.exec(EXUIMCLogin.manageCasesHomePage)
@@ -197,16 +197,23 @@ class ExUI extends Simulation {
 		EXUIFinancialRemedyScn.inject(atOnceUsers(1)).protocols(IAChttpProtocol))
 }
 */
-	setUp(
-		EXUIScn.inject(rampUsers(250) during (3600))
+	/*setUp(
+		EXUIScn.inject(rampUsers(209) during (3600))
 			.protocols(XUIHttpProtocol)
-	)
+	)*/
 	/* setUp(
 		 EXUIMCaseCreationDivorceScn.inject(rampUsers(395) during (600)))
       .protocols(IAChttpProtocol)*/
   /*setUp(
-		EXUIMCaseCreationFPLAScn.inject(rampUsers(1) during (1)))
-		.protocols(IAChttpProtocol)*/
+		//EXUIMCaseCreationFPLAScn.inject(rampUsers(1) during (1))
+    //EXUIMCaseCreationDivorceScn.inject(rampUsers(1) during (1))
+    //EXUIMCaseProbateScn.inject(nothingFor(15),rampUsers(1) during (1)),
+    //EXUIMCaseCreationIACScn.inject(nothingFor(20),rampUsers(1) during (1)),
+    //EXUIFinancialRemedyScn.inject(nothingFor(25),rampUsers(1) during (1)),
+    EXUIMCaseCaseworkerScn.inject(nothingFor(35),rampUsers(1) during (1))
+		//EXUIMCaseViewIACScn.inject(nothingFor(25),rampUsers(1) during (3)),
+		//EXUIMCaseViewFPLAScn.inject(nothingFor(15),rampUsers(1) during (3))
+  ).protocols(IAChttpProtocol)*/
 	/*setUp(
 		EXUIMCaseViewIACScn.inject(rampUsers(74) during (600)))
 		.protocols(IAChttpProtocol)*/
@@ -215,6 +222,21 @@ class ExUI extends Simulation {
 		EXUIMCaseCreationDivorceScn.inject(rampUsers(1) during (10)))
 		.protocols(IAChttpProtocol)
 */
+
+	 setUp(
+                EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(230) during (900)),
+                EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(22) during (900)),
+                EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(22) during (600)),
+                EXUIMCaseCaseworkerScn.inject(nothingFor(55),rampUsers(1197) during (900)),
+                EXUIMCaseCreationDivorceScn.inject(nothingFor(65),rampUsers(106) during (900)),
+                EXUIFinancialRemedyScn.inject(nothingFor(75),rampUsers(88) during (900))
+        ).protocols(IAChttpProtocol)
+
+
+
+ /* setUp(
+    EXUIMCaseCreationIACScn.inject(rampUsers(1) during (10)))
+		.protocols(IAChttpProtocol)*/
 	/*setUp(
 		EXUIFinancialRemedyScn.inject(rampUsers(1) during (1)))
 		.protocols(IAChttpProtocol)*/
