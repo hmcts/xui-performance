@@ -17,6 +17,7 @@ object Environment {
   val baseFPLAURL = "https://manage-case.perftest.platform.hmcts.net"
  val baseDomain="manage-case.perftest.platform.hmcts.net"
 val baseDomainOrg="manage-org.perftest.platform.hmcts.net"
+  val idamAPI="https://idam-api.perftest.platform.hmcts.net"
   val adminUserAO = "vmuniganti@mailnesia.com"
   val adminPasswordAO = "Monday01"
   val notificationClient="sidam_perftest-b7ab8862-25b4-41c9-8311-cb78815f7d2d-ebb113ff-da17-4646-a39e-f93783a993f4"
@@ -51,8 +52,8 @@ val baseDomainOrg="manage-org.perftest.platform.hmcts.net"
   val minThinkTimeCW = 50
   val maxThinkTimeCW = 50
 
-  val minThinkTimeFR =  100
-  val maxThinkTimeFR =100
+  val minThinkTimeFR =10//  100
+  val maxThinkTimeFR =10//100
 
   val constantthinkTime = 5
   val HttpProtocol = http

@@ -12,6 +12,8 @@ object EXUIMCLogin {
   val IdamUrl = Environment.idamURL
   val baseURL=Environment.baseURL
   val manageOrgURL=Environment.manageOrdURL
+  val orgDomain=Environment.baseDomainOrg
+  val baseDomain=Environment.baseDomain
   //val loginFeeder = csv("OrgId.csv").circular
 
 
@@ -149,7 +151,7 @@ object EXUIMCLogin {
     tryMax(2) {
 
       exec(http("XUI${service}_020_005_SignIn")
-           .post(IdamUrl + "/login?response_type=code&redirect_uri=https%3A%2F%2Fmanage-org.perftest.platform.hmcts.net%2Foauth2%2Fcallback&scope=profile%20openid%20roles%20manage-user%20create-user%20manage-roles&state=${state}&client_id=xuimowebapp")
+           .post(IdamUrl + "/login?response_type=code&redirect_uri=https%3A%2F%2F"+orgDomain+"%2Foauth2%2Fcallback&scope=profile%20openid%20roles%20manage-user%20create-user%20manage-roles&state=${state}&client_id=xuimowebapp")
            .formParam("username", "${respuser}")
            .formParam("password", "Pass19word")
            .formParam("save", "Sign in")
@@ -198,8 +200,8 @@ object EXUIMCLogin {
       .exec(http("XUI${service}_020_025_GetWorkBasketInputs")
             .get(manageOrgURL + "/data/internal/case-types/FinancialRemedyMVP2/work-basket-inputs")
             .headers(LoginHeader.headers_17))
-      .exec(getCookieValue(CookieKey("__auth__").withDomain("manage-org.perftest.platform.hmcts.net").saveAs("authToken")))
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain("manage-org.perftest.platform.hmcts.net").saveAs("XSRFToken")))
+      .exec(getCookieValue(CookieKey("__auth__").withDomain(orgDomain).saveAs("authToken")))
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(orgDomain).saveAs("XSRFToken")))
 
       .exec(http("XUI${service}_020_030_GetPaginationMetaData")
             .get(manageOrgURL + "/data/caseworkers/:uid/jurisdictions/DIVORCE/case-types/FinancialRemedyMVP2/cases/pagination_metadata?state=caseAdded")
@@ -269,7 +271,7 @@ object EXUIMCLogin {
       .exec(http("XUI${service}_020_035_GetWorkBasketInputs")
             .get("/data/internal/case-types/FinancialRemedyMVP2/work-basket-inputs")
             .headers(LoginHeader.headers_17))
-      .exec(getCookieValue(CookieKey("__auth__").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("authToken")))
+      .exec(getCookieValue(CookieKey("__auth__").withDomain(baseDomain).saveAs("authToken")))
       /*.exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("XSRFToken")))*/
       /*.exec( session => {
         println("the xsrf code is "+session("XSRFToken").as[String])
@@ -283,7 +285,7 @@ object EXUIMCLogin {
       .exec(http("XUI${service}_020_045_GetDefaultWorkBasketView")
             .get("/aggregated/caseworkers/:uid/jurisdictions/DIVORCE/case-types/FinancialRemedyMVP2/cases?view=WORKBASKET&state=caseAdded&page=1")
             .headers(LoginHeader.headers_0))
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("XSRFToken")))
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(baseDomain).saveAs("XSRFToken")))
 
       /* .exec(http("XUI${service}_020_040_HomepageIsAuthenticated")
                .get("/auth/isAuthenticated")
@@ -337,7 +339,7 @@ object EXUIMCLogin {
               .get("/aggregated/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases?view=WORKBASKET&state=Open&page=1")
               .headers(LoginHeader.headers_0))
 
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("xsrfToken")))
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(baseURL).saveAs("xsrfToken")))
 
     }
 
