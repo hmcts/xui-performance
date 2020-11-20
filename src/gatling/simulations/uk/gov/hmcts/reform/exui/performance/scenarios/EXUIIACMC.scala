@@ -281,7 +281,7 @@ object EXUIIACMC {
   val shareacase =
     tryMax(2) {
 
-      exec(http("XUI${service}_230_005_StartShareCaseEvent")
+      exec(http("XUI${service}_260_005_StartShareCaseEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/shareACase?ignore-warning=false")
         .headers(IACHeader.headers_sharecase1)
         .check(status.in(200, 304, 302))
@@ -301,7 +301,7 @@ object EXUIIACMC {
         .check(jsonPath("$..label").find(2).optional.saveAs("label"))
         .check(jsonPath("$.event_token").optional.saveAs("event_token_sharecase"))
       )
-        .exec(http("XUI${service}_230_010_ShareACaseProfile")
+        .exec(http("XUI${service}_260_010_ShareACaseProfile")
           .get("/data/internal/profile")
           .headers(IACHeader.headers_di_casedetails)
           .header("X-XSRF-TOKEN", "${XSRFToken}")
@@ -310,7 +310,7 @@ object EXUIIACMC {
     }
       .pause(MinThinkTime , MaxThinkTime )
 
-      .exec(http("XUI${service}_240_005_ShareACaseValidate")
+      .exec(http("XUI${service}_270_005_ShareACaseValidate")
         .post("/data/case-types/Asylum/validate?pageId=shareACaseshareACase")
         .headers(IACHeader.headers_shareacasesubmit)
         // .body(RawFileBody("RecordedSimulationshareacaseiac_0006_request.txt"))
@@ -319,21 +319,21 @@ object EXUIIACMC {
         //.body(StringBody("{\n  \"data\": {\n    \"orgListOfUsers\": {\n      \"value\": {\n   \"code\":,\n  \"event\": {\n    \"id\": \"submitAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"legalRepDeclaration\": [\n      \"hasDeclared\"\n    ]\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
         .check(status.in(200,304,302)))
 
-      .exec(http("XUI${service}_240_010_ShareaCaseValidateProfile")
+      .exec(http("XUI${service}_270_010_ShareaCaseValidateProfile")
         .get("/data/internal/profile")
         .headers(IACHeader.headers_di_shareacase)
         .check(status.in(200,304,302)))
       .pause(MinThinkTime , MaxThinkTime)
 
 
-    .exec(http("XUI${service}_250_005_ShareACaseEvents")
+    .exec(http("XUI${service}_280_005_ShareACaseEvents")
       .post("/data/cases/${caseId}/events")
       .headers(IACHeader.headers_shareacase12)
       .body(StringBody(StringBodyVJSubmit))
       //.body(ElFileBody("RecordedSimulationshareacaseiac_0012_request.json")).asJson
       .check(status.in(200,304,302)))
 
-    .exec(http("XUI${service}_250_010_ShareACaseViewData")
+    .exec(http("XUI${service}_280_010_ShareACaseViewData")
       .get("/data/internal/cases/${caseId}")
       .headers(IACHeader.headers_shareacase14)
       .check(status.in(200,304,302)))

@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.exui.performance.scenarios
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import uk.gov.hmcts.reform.exui.performance.scenarios.utils.Environment
-import uk.gov.hmcts.reform.exui.performance.scenarios.utils.Environment._
 import uk.gov.hmcts.reform.exui.performance.scenarios.utils.FR_Applicant_Header._
 
 object EXUI_FR_Applicant  {
@@ -18,26 +17,26 @@ object EXUI_FR_Applicant  {
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
-		.exec(http("XUI${service}_040_005_CreateCase2")
+		.exec(http("XUI${service}_040_005_CreateCaseEvent")
 			.get("/data/internal/case-types/FinancialRemedyConsentedRespondent/event-triggers/FR_solicitorCreate?ignore-warning=false")
 			.headers(headers_6)
 			.check(status in (200,304)))
 
 
-		.exec(http("XUI${service}_040_010_CreateCase3")
+		.exec(http("XUI${service}_040_010_CreateCaseEvent2")
 			.get("/data/internal/case-types/FinancialRemedyConsentedRespondent/event-triggers/FR_solicitorCreate?ignore-warning=false")
 			.headers(headers_8)
 			.check(jsonPath("$..event_token").saveAs("eventToken"))
 			.check(status in (200,304)))
 
 
-		.exec(http("XUI${service}_040_015_CreateCase4")
+		.exec(http("XUI${service}_040_015_CreateCaseProfile")
 			.get("/data/internal/profile")
 			.headers(headers_9)
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
-		.exec(http("XUI${service}_050_CreateSolicitor1")
+		.exec(http("XUI${service}_050_CreateSolicitor")
 			.post("/data/case-types/FinancialRemedyConsentedRespondent/validate?pageId=FR_solicitorCreate1")
 			.headers(headers_10)
 			.body(StringBody("""{
@@ -58,7 +57,7 @@ object EXUI_FR_Applicant  {
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
-		.exec(http("XUI${service}_060_GetAddress1")
+		.exec(http("XUI${service}_060_GetAddress")
 			.get("/api/addresses?postcode=SW1H9AJ")
 			.headers(headers_15)
 			.check(status in (200,304)))

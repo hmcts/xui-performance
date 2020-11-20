@@ -21,7 +21,7 @@ object IACHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "2$587801235_171h5vAMKUMUBHAHCQKSABKWFBHHGLAHGGCPVR-0e8",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases",
+  "x-dtreferer" -> ({baseURL+"/cases"}),
   "x-xsrf-token" -> "${XSRFToken}")
 
  val headers_startcreatecase = Map(
@@ -44,7 +44,7 @@ object IACHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -57,7 +57,7 @@ object IACHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -70,7 +70,7 @@ object IACHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -83,7 +83,7 @@ object IACHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -97,7 +97,7 @@ object IACHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -121,7 +121,7 @@ object IACHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -134,7 +134,7 @@ object IACHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -147,7 +147,7 @@ object IACHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -160,7 +160,7 @@ object IACHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -173,7 +173,7 @@ object IACHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -186,7 +186,7 @@ object IACHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -199,7 +199,7 @@ object IACHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -212,7 +212,7 @@ object IACHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -229,7 +229,7 @@ object IACHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "1$579436139_19h40vMEARIAIGLUFFNPCKRPQRQVUGOPAKMIJN-0e24",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-create/IA/Asylum/startAppeal/startAppeallegalRepresentativeDetails",
+  "x-dtreferer" ->  ({baseURL+"/cases/case-create/IA/Asylum/startAppeal/startAppeallegalRepresentativeDetails"}),
   "x-xsrf-token" -> "${XSRFToken}")
 
  val headers_casesave = Map(
@@ -238,7 +238,7 @@ object IACHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -306,7 +306,7 @@ object IACHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -323,7 +323,7 @@ object IACHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "1$581183307_826h6vMEARIAIGLUFFNPCKRPQRQVUGOPAKMIJN-0e27",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/1602581169802120/trigger/submitAppeal/submitAppealdeclaration",
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/submitAppeal/submitAppealdeclaration"}),
   "x-xsrf-token" -> "${XSRFToken}")
 
  val headers_declarationsubmitted = Map(
@@ -332,7 +332,7 @@ object IACHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -373,7 +373,9 @@ object IACHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$38734236_77h15vDTRMSASFKPLKDRFKMHCCHMMCARPGMHGD-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/accept-terms-and-conditions")
+  "x-dtreferer" -> ({baseURL+"/accept-terms-and-conditions"}))
+
+
 
  val headers_search = Map(
   "accept" -> "application/json",
@@ -382,7 +384,9 @@ object IACHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "1$78439528_577h30vMLHQLCSRKNFMUHDPORRGHTRKDKTJURRW-0e38",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/1589966112386213#documents")
+  "x-dtreferer" -> "({baseURL+\"/cases/case-details/${caseId}#documents\"}))
+
+
 
  val headers_searchinputs = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-search-input-details.v2+json;charset=UTF-8",
@@ -396,7 +400,7 @@ object IACHeader {
  val headers_searchresults = Map(
   "accept" -> "application/json",
   "content-type" -> "application/json",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -422,7 +426,7 @@ object IACHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "1$579436139_19h11vMEARIAIGLUFFNPCKRPQRQVUGOPAKMIJN-0e10",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-filter",
+  "x-dtreferer" -> ({baseURL+"/cases/case-filter"}),
   "x-xsrf-token" -> "9PNYZHJX-zWgns_wpICH3RZeczMbC9f8m6w0")
 
  val headers_isauthenticatedsubmit = Map(
@@ -493,7 +497,7 @@ object IACHeader {
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -504,7 +508,7 @@ object IACHeader {
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -528,7 +532,7 @@ object IACHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$54833124_131h34vATDARLUPBSPUDUSAPAWSHOBJTNRRCQHS-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}"}))
 
  val headers_di_shareacase = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8",
@@ -538,7 +542,9 @@ object IACHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$54833124_131h37vATDARLUPBSPUDUSAPAWSHOBJTNRRCQHS-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/shareACase/shareACaseshareACase")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/shareACase/shareACaseshareACase"}))
+
+
 
 
 

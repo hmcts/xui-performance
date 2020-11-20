@@ -1,8 +1,8 @@
 package uk.gov.hmcts.reform.exui.performance.scenarios.utils
 
-import uk.gov.hmcts.reform.exui.performance.scenarios.utils.Environment._
-
 object FR_Applicant_Header {
+
+  val baseURL = Environment.baseURL
 
   val headers_2 = Map(
     "Accept" -> "application/json",
@@ -51,12 +51,12 @@ object FR_Applicant_Header {
     "sec-ch-ua" -> """Chromium";v="86", "\"Not\\A;Brand";v="99", "Google Chrome";v="86""",
     "sec-ch-ua-mobile" -> "?0",
     "x-dtpc" -> "3$259808026_422h11vQEGKFHUHMIDPKBQASVVNRMPKURVRUITM-0e17",
-    "x-dtreferer" -> s"${baseURL}/cases/case-filter")
+    "x-dtreferer" -> "${baseURL}/cases/case-filter")
 
   val headers_10 = Map(
     "Accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
     "Content-Type" -> "application/json",
-    "Origin" -> s"${baseURL}",
+    "Origin" -> baseURL,
     "Sec-Fetch-Dest" -> "empty",
     "Sec-Fetch-Mode" -> "cors",
     "Sec-Fetch-Site" -> "same-origin",
@@ -80,7 +80,7 @@ object FR_Applicant_Header {
   val headers_18 = Map(
     "Accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
     "Content-Type" -> "application/json",
-    "Origin" -> s"${baseURL}",
+    "Origin" -> baseURL,
     "Sec-Fetch-Dest" -> "empty",
     "Sec-Fetch-Mode" -> "cors",
     "Sec-Fetch-Site" -> "same-origin",
@@ -93,7 +93,7 @@ object FR_Applicant_Header {
   val headers_22 = Map(
     "Accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
     "Content-Type" -> "application/json",
-    "Origin" -> s"${baseURL}",
+    "Origin" -> baseURL,
     "Sec-Fetch-Dest" -> "empty",
     "Sec-Fetch-Mode" -> "cors",
     "Sec-Fetch-Site" -> "same-origin",
@@ -106,7 +106,7 @@ object FR_Applicant_Header {
   val headers_26 = Map(
     "Accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
     "Content-Type" -> "application/json",
-    "Origin" -> s"${baseURL}",
+    "Origin" -> baseURL,
     "Sec-Fetch-Dest" -> "empty",
     "Sec-Fetch-Mode" -> "cors",
     "Sec-Fetch-Site" -> "same-origin",
@@ -138,7 +138,7 @@ object FR_Applicant_Header {
   val headers_34 = Map(
     "Accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
     "Content-Type" -> "application/json",
-    "Origin" -> s"${baseURL}",
+    "Origin" -> baseURL,
     "Sec-Fetch-Dest" -> "empty",
     "Sec-Fetch-Mode" -> "cors",
     "Sec-Fetch-Site" -> "same-origin",
@@ -151,7 +151,7 @@ object FR_Applicant_Header {
   val headers_37 = Map(
     "Accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
     "Content-Type" -> "application/json",
-    "Origin" -> s"${baseURL}",
+    "Origin" ->baseURL,
     "Sec-Fetch-Dest" -> "empty",
     "Sec-Fetch-Mode" -> "cors",
     "Sec-Fetch-Site" -> "same-origin",
@@ -164,7 +164,7 @@ object FR_Applicant_Header {
   val headers_41 = Map(
     "Accept" -> "",
     "Content-Type" -> "multipart/form-data; boundary=----WebKitFormBoundarysWFdOsWptcJsOCpU",
-    "Origin" -> s"${baseURL}",
+    "Origin" -> baseURL,
     "Sec-Fetch-Dest" -> "empty",
     "Sec-Fetch-Mode" -> "cors",
     "Sec-Fetch-Site" -> "same-origin",
@@ -176,7 +176,7 @@ object FR_Applicant_Header {
   val headers_44 = Map(
     "Accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
     "Content-Type" -> "application/json",
-    "Origin" -> s"${baseURL}",
+    "Origin" -> baseURL,
     "Sec-Fetch-Dest" -> "empty",
     "Sec-Fetch-Mode" -> "cors",
     "Sec-Fetch-Site" -> "same-origin",
@@ -189,7 +189,7 @@ object FR_Applicant_Header {
   val headers_48 = Map(
     "Accept" -> "",
     "Content-Type" -> "multipart/form-data; boundary=----WebKitFormBoundarynZAT1BNCygsLwdnc",
-    "Origin" -> s"${baseURL}",
+    "Origin" -> baseURL,
     "Sec-Fetch-Dest" -> "empty",
     "Sec-Fetch-Mode" -> "cors",
     "Sec-Fetch-Site" -> "same-origin",
@@ -201,7 +201,7 @@ object FR_Applicant_Header {
   val headers_51 = Map(
     "Accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
     "Content-Type" -> "application/json",
-    "Origin" -> s"${baseURL}",
+    "Origin" -> baseURL,
     "Sec-Fetch-Dest" -> "empty",
     "Sec-Fetch-Mode" -> "cors",
     "Sec-Fetch-Site" -> "same-origin",
@@ -214,7 +214,7 @@ object FR_Applicant_Header {
   val headers_55 = Map(
     "Accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
     "Content-Type" -> "application/json",
-    "Origin" -> s"${baseURL}",
+    "Origin" -> baseURL,
     "Sec-Fetch-Dest" -> "empty",
     "Sec-Fetch-Mode" -> "cors",
     "Sec-Fetch-Site" -> "same-origin",
@@ -227,7 +227,7 @@ object FR_Applicant_Header {
   val headers_59 = Map(
     "Accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
     "Content-Type" -> "application/json",
-    "Origin" -> s"${baseURL}",
+    "Origin" -> baseURL,
     "Sec-Fetch-Dest" -> "empty",
     "Sec-Fetch-Mode" -> "cors",
     "Sec-Fetch-Site" -> "same-origin",
@@ -248,7 +248,9 @@ object FR_Applicant_Header {
     "sec-ch-ua" -> """Chromium";v="86", "\"Not\\A;Brand";v="99", "Google Chrome";v="86""",
     "sec-ch-ua-mobile" -> "?0",
     "x-dtpc" -> "3$259808026_422h41vQEGKFHUHMIDPKBQASVVNRMPKURVRUITM-0e31",
-    "x-dtreferer" -> s"${baseURL}/cases/case-create/DIVORCE/FinancialRemedyConsentedRespondent/FR_solicitorCreate/FR_solicitorCreate12")
+    "x-dtreferer" -> ({baseURL+"/cases/case-create/DIVORCE/FinancialRemedyConsentedRespondent/FR_solicitorCreate/FR_solicitorCreate12"}))
+
+
 
   val headers_64 = Map(
     "Accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-case.v2+json;charset=UTF-8",
@@ -283,6 +285,8 @@ object FR_Applicant_Header {
     "sec-ch-ua" -> """Chromium";v="86", "\"Not\\A;Brand";v="99", "Google Chrome";v="86""",
     "sec-ch-ua-mobile" -> "?0",
     "x-dtpc" -> "3$259808026_422h46vQEGKFHUHMIDPKBQASVVNRMPKURVRUITM-0e32",
-    "x-dtreferer" -> s"${baseURL}/cases/case-create/DIVORCE/FinancialRemedyConsentedRespondent/FR_solicitorCreate/submit")
+    "x-dtreferer" -> ({baseURL+"/cases/case-create/DIVORCE/FinancialRemedyConsentedRespondent/FR_solicitorCreate/submit"}))
+
+
 
 }

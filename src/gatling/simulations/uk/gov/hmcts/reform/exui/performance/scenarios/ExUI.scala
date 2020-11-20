@@ -22,6 +22,7 @@ object ExUI {
   val url_mo = Environment.manageOrdURL
   val baseDomainOrg = Environment.baseDomainOrg
   val baseDomainManageCase = Environment.baseDomain
+  val idamAPI=Environment.idamAPI
   val notificationClient=Environment.notificationClient
   val feeder = csv("userid-increment.csv").circular
   val feederuser = csv("OrgDetails.csv").circular
@@ -39,7 +40,7 @@ object ExUI {
 
   val headers_tc_aat = Map(
     "Content-Type" -> "application/json",
-    "Origin" -> "https://manage-case.perftest.platform.hmcts.net",
+    "Origin" -> url_approve,
     "Sec-Fetch-Dest" -> "empty",
     "Sec-Fetch-Mode" -> "cors",
     "Sec-Fetch-Site" -> "same-origin")
@@ -47,7 +48,7 @@ object ExUI {
   val headers_approve = Map(
     "accept" -> "application/json, text/plain, */*",
     "content-type" -> "application/json",
-    "origin" -> "https://administer-orgs.perftest.platform.hmcts.net",
+    "origin" -> url_approve,
     "sec-fetch-dest" -> "empty",
     "sec-fetch-mode" -> "cors",
     "sec-fetch-site" -> "same-origin",
@@ -75,7 +76,7 @@ object ExUI {
 
   val createSuperUser=
   feed(Feeders.createDynamicDataFeeder).exec(http("XUI_CreateSuperUser")
-       .post("https://idam-api.perftest.platform.hmcts.net/testing-support/accounts")
+       .post(idamAPI+"/testing-support/accounts")
                         // .header("Authorization", "Bearer ${accessToken}")
                         // .header("ServiceAuthorization", "Bearer ${s2sToken}")
                         .header("Content-Type", "application/json")
@@ -355,7 +356,7 @@ val createOrg=
   val sendInvitation =
 
   feed(Feeders.createDynamicUserDataFeeder).
-    exec(http("XUI_CreateSuperUser").post("https://idam-api.perftest.platform.hmcts.net/testing-support/accounts").header("Content-Type", "application/json").body(StringBody("{\"email\": \"${orgName}${generatedUserEmail}${n}@mailinator.com\", \"forename\": \"VUser\", \"password\": \"Pass19word\", \"surname\": \"VykUser\"}"))
+    exec(http("XUI_CreateSuperUser").post(idamAPI+"/testing-support/accounts").header("Content-Type", "application/json").body(StringBody("{\"email\": \"${orgName}${generatedUserEmail}${n}@mailinator.com\", \"forename\": \"VUser\", \"password\": \"Pass19word\", \"surname\": \"VykUser\"}"))
       .check(status is 201))
     .pause(20)
           .exec(http("EXUI_MO_005_SendInvitation")
