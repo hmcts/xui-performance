@@ -11,7 +11,7 @@ object EXUI_FR_Applicant  {
 	val maxThinkTime = Environment.maxThinkTimeFR
 
 	val createCase = scenario("CreateCase")
-		.exec(http("XUI${service}_030_CreateCase1")
+	  	.exec(http("XUI${service}_030_CreateCase1")
 			.get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
 			.headers(headers_2)
 			.check(status in (200,304)))

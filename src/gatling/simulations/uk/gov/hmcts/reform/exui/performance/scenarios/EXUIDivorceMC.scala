@@ -24,12 +24,12 @@ object EXUIDivorceMC {
 */
 
   val casecreation=
-    tryMax(2) {
+
       exec(http("XUI${service}_040_CreateCase")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
         .headers(DivorceHeader.headers_accessCreate)
         .check(status.in(200, 304)))
-    }
+
     .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_050_005_StartCreateCase1")
@@ -263,7 +263,7 @@ object EXUIDivorceMC {
     .check(jsonPath("$..userIdentifier").find(3).optional.saveAs("userIdentifier4"))
     .check(jsonPath("$..userIdentifier").find(4).optional.saveAs("userIdentifier5"))
   )
-    .pause(10)
+    .pause(MinThinkTime , MaxThinkTime )
 
 
   val shareacase =

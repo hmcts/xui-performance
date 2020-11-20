@@ -23,18 +23,17 @@ object EXUIFPLAMC {
   private def lastName(): String = rng.alphanumeric.take(10).mkString
 
   val fplacasecreation =
-    tryMax(2) {
+
       exec(http("XUI${service}_040_CreateCase")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
         .headers(FPLAHeader.headers_casecreation)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(status.in(200, 304)))
-    }.exitHereIfFailed
+        .check(status.in(200, 304))).exitHereIfFailed
       .pause(MinThinkTime , MaxThinkTime )
 
-    .tryMax(2) {
 
-    exec(http("XUI${service}_050_005_StartCreateCase")
+
+      .exec(http("XUI${service}_050_005_StartCreateCase")
       .get("/data/internal/case-types/CARE_SUPERVISION_EPO/event-triggers/openCase?ignore-warning=false")
       .headers(FPLAHeader.headers_startcreatecase)
       .check(status.is(200))
@@ -44,7 +43,7 @@ object EXUIFPLAMC {
         .headers(FPLAHeader.headers_createprofile)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200, 304))).exitHereIfFailed
-  }
+
       .pause(MinThinkTime , MaxThinkTime )
 
       //set the random variables as usable parameters
@@ -542,7 +541,7 @@ object EXUIFPLAMC {
 
 
   val findandviewcasefpl=
-    tryMax(2) {
+
       exec(http("XUI${service}_040_005_SearchPage")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
         .headers(FPLAHeader.headers_search)
@@ -556,7 +555,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-    }
+
 
     .exec(http("XUI${service}_040_015_SearchPaginationMetaData")
   .get("/data/internal/case-types/CARE_SUPERVISION_EPO/search-inputs")
@@ -564,7 +563,6 @@ object EXUIFPLAMC {
     .header("X-XSRF-TOKEN", "${XSRFToken}")
       .check(status.in(200,304))
     )
-
         .exec(http("XUI${service}_040_020_SearchResults")
           .post("/data/internal/searchCases?ctid=CARE_SUPERVISION_EPO&use_case=SEARCH&view=SEARCH&page=1&state=Submitted")
           .headers(FPLAHeader.headers_results)

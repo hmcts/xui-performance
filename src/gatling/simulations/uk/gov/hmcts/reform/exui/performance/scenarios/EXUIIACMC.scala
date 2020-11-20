@@ -34,7 +34,7 @@ object EXUIIACMC {
   val timeStamp = sdfDate.format(now)
 
   val iaccasecreation=
-    tryMax(2) {
+
 
       //set the current date as a usable parameter
       exec(session => session.set("currentDate", timeStamp))
@@ -50,7 +50,7 @@ object EXUIIACMC {
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
         .headers(IACHeader.headers_createcase)
         .check(status.in(200, 304))).exitHereIfFailed
-    }
+
       .pause(MinThinkTime , MaxThinkTime )
 
       .exec(http("XUI${service}_050_005_StartCreateCase1")
@@ -279,7 +279,6 @@ object EXUIIACMC {
 
 
   val shareacase =
-    tryMax(2) {
 
       exec(http("XUI${service}_260_005_StartShareCaseEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/shareACase?ignore-warning=false")
@@ -307,8 +306,7 @@ object EXUIIACMC {
           .header("X-XSRF-TOKEN", "${XSRFToken}")
           .check(status.in(200, 304, 302))
         )
-    }
-      .pause(MinThinkTime , MaxThinkTime )
+          .pause(MinThinkTime , MaxThinkTime )
 
       .exec(http("XUI${service}_270_005_ShareACaseValidate")
         .post("/data/case-types/Asylum/validate?pageId=shareACaseshareACase")
