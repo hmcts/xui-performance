@@ -21,6 +21,7 @@ val baseDomainOrg="manage-org.perftest.platform.hmcts.net"
   val adminUserAO = "vmuniganti@mailnesia.com"
   val adminPasswordAO = "Monday01"
   val notificationClient="sidam_perftest-b7ab8862-25b4-41c9-8311-cb78815f7d2d-ebb113ff-da17-4646-a39e-f93783a993f4"
+
   val minThinkTime = 30//100
   //10
   val maxThinkTime = 30//110

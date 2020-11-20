@@ -69,10 +69,10 @@ class ExUI extends Simulation {
 			.exec(EXUIMCLogin.manageCasesHomePage)
 			.exec(EXUIMCLogin.manageCaseslogin)
 		//	.exec(EXUIMCLogin.termsnconditions)
-		/*.repeat(1) {
+		.repeat(1) {
 			exec(EXUIProbateMC.casecreation)
 			//.exec(EXUIProbateMC.casedetails)
-			}*/
+			}
 		.exec(EXUIMCLogin.manageCase_Logout)
   }
 
@@ -233,27 +233,13 @@ class ExUI extends Simulation {
         ).protocols(IAChttpProtocol)
 
 
-
- /* setUp(
-    EXUIMCaseCreationIACScn.inject(rampUsers(1) during (10)))
-		.protocols(IAChttpProtocol)*/
 	/*setUp(
-		EXUIFinancialRemedyScn.inject(rampUsers(1) during (1)))
-		.protocols(IAChttpProtocol)*/
-  /*setUp(
-		EXUIMCaseProbateScn.inject(nothingFor(1),rampUsers(1) during (1)),
-    EXUIMCaseCreationIACScn.inject(nothingFor(5),rampUsers(1) during (1)),
-    EXUIMCaseViewIACScn.inject(nothingFor(10),rampUsers(1) during (1)),
-    EXUIMCaseCreationFPLAScn.inject(nothingFor(15),rampUsers(1) during (1)),
-    EXUIMCaseViewFPLAScn.inject(nothingFor(20),rampUsers(1) during (1))
-  ).protocols(IAChttpProtocol)*/
-
-  /*setUp(
-		EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(131) during (3200)),
-		EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(82) during (3200)),
-		EXUIMCaseViewIACScn.inject(nothingFor(25),rampUsers(74) during (3400)),
-		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(38) during (2700)),
-		EXUIMCaseViewFPLAScn.inject(nothingFor(45),rampUsers(19) during (3400)),
+		EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(1) during (24)),
+		EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(1) during (24)),
+		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(1) during (24)),
+		EXUIMCaseCaseworkerScn.inject(nothingFor(55),rampUsers(1) during (24)),
+		EXUIMCaseCreationDivorceScn.inject(nothingFor(65),rampUsers(1) during (24)),
+		EXUIFinancialRemedyScn.inject(nothingFor(75),rampUsers(1) during (24))
 	).protocols(IAChttpProtocol)*/
 
  /* setUp(
@@ -268,23 +254,5 @@ class ExUI extends Simulation {
 	).protocols(IAChttpProtocol)*/
 
 
-	/*setUp(
-		EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(581) during (3200)), //581
-		EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(82) during (3200)),
-		EXUIMCaseViewIACScn.inject(nothingFor(25),rampUsers(74) during (3400)),
-		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(38) during (2700)),
-		EXUIMCaseViewFPLAScn.inject(nothingFor(45),rampUsers(19) during (3400)),
-	).protocols(IAChttpProtocol)*/
 
-	/*setUp(
-    //EXUIMCaseCreationDivorceScn.inject(nothingFor(5),rampUsers(1) during (3))
-		//EXUIMCaseCaseworkerScn.inject(nothingFor(5),rampUsers(1) during (3))
-		//	EXUIMCaseCaseworkerScn.inject(rampUsers(1) during 1)
-		//EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(1) during (3))
-		//EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(1) during (3)),
-		//EXUIMCaseViewIACScn.inject(nothingFor(25),rampUsers(1) during (3)),
-		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(1) during (2))
-		//EXUIMCaseViewFPLAScn.inject(nothingFor(15),rampUsers(1) during (3))
-	).protocols(IAChttpProtocol)
-*/
 }

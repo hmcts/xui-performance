@@ -336,7 +336,7 @@ object EXUIMCLogin {
               .get("/aggregated/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases?view=WORKBASKET&state=Open&page=1")
               .headers(LoginHeader.headers_0))
 
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(baseURL).saveAs("xsrfToken")))
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(baseDomain).saveAs("xsrfToken")))
 
 
 
