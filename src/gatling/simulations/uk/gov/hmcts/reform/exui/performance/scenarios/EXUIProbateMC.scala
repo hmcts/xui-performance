@@ -52,13 +52,13 @@ object EXUIProbateMC {
 
 
   val casecreation=
-    tryMax(2) {
+
       exec(http("XUI${service}_040_CreateCase")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
         .headers(ProbateHeader.headers_28)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200, 304))).exitHereIfFailed
-    }
+
     .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_050_005_StartCreateCase1")

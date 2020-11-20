@@ -40,9 +40,7 @@ object EXUIMCLogin {
   //=====================================================================================
 
   val manageCasesHomePage =
-    tryMax(2) {
-
-      exec(http("XUI${service}_010_005_Homepage")
+          exec(http("XUI${service}_010_005_Homepage")
            .get("/")
            .headers(LoginHeader.headers_0)
            .check(status.in(200,304))).exitHereIfFailed
@@ -69,7 +67,7 @@ object EXUIMCLogin {
             .check(css("input[name='_csrf']", "value").saveAs("csrfToken"))
             .check(regex("manage-user%20create-user&state=(.*)&client").saveAs("state"))
 )
-    }
+
 
     .pause( MinThinkTime, MaxThinkTime )
 
@@ -80,7 +78,7 @@ object EXUIMCLogin {
   //=====================================================================================
 
   val manageOrgHomePage =
-    tryMax(2) {
+
 
       exec(http("XUI${service}_010_005_Homepage")
            .get(manageOrgURL + "/")
@@ -109,13 +107,13 @@ object EXUIMCLogin {
             .check(css("input[name='_csrf']", "value").saveAs("csrfToken"))
             .check(regex("manage-user%20create-user%20manage-roles&state=(.*)&client").saveAs("state"))
       )
-    }
+
 
     .pause( MinThinkTime, MaxThinkTime )
 
 
   val manageCasesHomePageGK =
-    tryMax(2) {
+
 
       exec(http("XUI${service}_160_005_GKHomepage")
            .get("/")
@@ -138,7 +136,7 @@ object EXUIMCLogin {
             .check(regex("Sign in"))
             .check(css("input[name='_csrf']", "value").saveAs("csrfToken"))
             .check(status.is(200)))
-    }
+
 
     .pause( MinThinkTime, MaxThinkTime )
 
@@ -148,7 +146,7 @@ object EXUIMCLogin {
   //==================================================================================
 
   val manageOrglogin =
-    tryMax(2) {
+
 
       exec(http("XUI${service}_020_005_SignIn")
            .post(IdamUrl + "/login?response_type=code&redirect_uri=https%3A%2F%2F"+orgDomain+"%2Foauth2%2Fcallback&scope=profile%20openid%20roles%20manage-user%20create-user%20manage-roles&state=${state}&client_id=xuimowebapp")
@@ -212,13 +210,13 @@ object EXUIMCLogin {
             .headers(LoginHeader.headers_0))
 
 
-    }
+
 
     .pause(MinThinkTime , MaxThinkTime)
 
 
   val manageCaseslogin =
-    tryMax(2) {
+
 
       exec(http("XUI${service}_020_005_SignIn")
            //.post(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
@@ -291,12 +289,11 @@ object EXUIMCLogin {
                .get("/auth/isAuthenticated")
                .headers(LoginHeader.headers_0))*/
 
-    }
 
     .pause(MinThinkTime , MaxThinkTime)
 
     val caseworkerLogin =
-    tryMax(2) {
+
       exec(http("XUI${service}_020_005_SignIn")
            //.post(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
            .post(IdamUrl + "/login?response_type=code&redirect_uri=" + baseURL + "%2Foauth2%2Fcallback&scope=profile%20openid%20roles%20manage-user%20create-user&state=${state}&client_id=xuiwebapp")
@@ -341,7 +338,7 @@ object EXUIMCLogin {
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(baseURL).saveAs("xsrfToken")))
 
-    }
+
 
   //======================================================================================
   //Business process : Click on Terms and Conditions
@@ -349,7 +346,7 @@ object EXUIMCLogin {
   // ======================================================================================
 
   val termsnconditions=
-    tryMax(2) {
+
       exec(http("XUI${service}_030_005_ConfirmT&C")
            .post("/api/userTermsAndConditions")
            .headers(LoginHeader.headers_tc)
@@ -379,13 +376,13 @@ object EXUIMCLogin {
       .exec(http("XUI${service}_030_030_GetDefaultWorkBasketView")
             .get("/aggregated/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases?view=WORKBASKET&state=Open&page=1")
             .headers(LoginHeader.headers_0))
-    }
+
 
     .pause(MinThinkTime , MaxThinkTime )
 
 
   val managecasesadminlogin =
-    tryMax(2) {
+
 
       exec(http("XUI${service}_020_005_SignIn")
            .post(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
@@ -426,12 +423,12 @@ object EXUIMCLogin {
             .get("/aggregated/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases?view=WORKBASKET&state=Open&page=1")
             .headers(LoginHeader.headers_0))
 
-    }
+
 
     .pause(MinThinkTime , MaxThinkTime)
 
   val managecasesgatekeeperlogin =
-    tryMax(2) {
+
 
       exec(http("XUI${service}_170_005_GKSignIn")
            .post(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
@@ -472,7 +469,7 @@ object EXUIMCLogin {
             .get("/aggregated/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases?view=WORKBASKET&state=Open&page=1")
             .headers(LoginHeader.headers_0))
 
-    }
+
 
     .pause(MinThinkTime , MaxThinkTime)
 
@@ -482,36 +479,36 @@ object EXUIMCLogin {
   // ======================================================================================
 
   val manageCase_Logout =
-    tryMax(2) {
+
       exec(http("XUI${service}_${SignoutNumber}_SignOut")
            .get("/api/logout")
            .headers(LoginHeader.headers_signout)
            .check(status.in(200, 304, 302)))
-    }
+
 
   val manageOrg_Logout =
-    tryMax(2) {
+
       exec(http("XUI${service}_${SignoutNumber}_SignOut")
            .get(manageOrgURL + "/api/logout")
            .headers(LoginHeader.headers_signout)
            .check(status.in(200, 304, 302)))
-    }
+
 
   val manageCase_LogoutAdmin =
-    tryMax(2) {
+
       exec(http("XUI${service}_${SignoutNumberAdmin}_SignOut")
            .get("/api/logout")
            .headers(LoginHeader.headers_signout)
            .check(status.in(200, 304, 302)))
-    }
+
   pause(105)//to be removed
 
   val manageCase_LogoutGK =
-    tryMax(2) {
+
       exec(http("XUI${service}_${SignoutNumberGK}_SignOut")
            .get("/api/logout")
            .headers(LoginHeader.headers_signout)
            .check(status.in(200, 304, 302)))
-    }
+    
   pause(5)//to be removed
 }

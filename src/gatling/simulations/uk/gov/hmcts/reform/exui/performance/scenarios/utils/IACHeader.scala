@@ -384,8 +384,7 @@ object IACHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "1$78439528_577h30vMLHQLCSRKNFMUHDPORRGHTRKDKTJURRW-0e38",
-  "x-dtreferer" -> "({baseURL+\"/cases/case-details/${caseId}#documents\"}))
-
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}#documents"}))
 
 
  val headers_searchinputs = Map(
