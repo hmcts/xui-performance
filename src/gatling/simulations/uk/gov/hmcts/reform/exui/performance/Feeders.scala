@@ -44,12 +44,12 @@ object Feeders {
   }
 
   def generateOrganisationName() :String = {
-    orgName = ("rjorg-" + randomAlphanumericString(5))
+    orgName = ("pforgdiv-" + randomAlphanumericString(5))
     orgName
   }
 
   def generateEmailAddress() :String = {
-    generatedEmail = (generateOrganisationName() + "_superuser@mailtest.gov.uk")
+    generatedEmail = (generateOrganisationName() + "_superuser@mailinator.com")
     //print("generated enail"+generatedEmail)
     generatedEmail
   }
@@ -90,7 +90,7 @@ object Feeders {
 
 
   val createDynamicDataFeeder = Iterator.continually(Map("generatedEmail" -> ({
-    generateOrganisationName()+"-superuser@mailinator.com"
+    generateOrganisationName()+"-su@mailtest.gov.uk"
   }),
     "orgName" -> ({
     orgName
@@ -114,7 +114,7 @@ object Feeders {
     "IACC"
   }),
     "SignoutNumber" -> ({
-      "260"
+      "290"
     })
 
   ));
@@ -183,7 +183,7 @@ object Feeders {
     "FR_Applicant"
   }),
     "SignoutNumber" -> ({
-      "250"
+      "230"
     })
   ));
 

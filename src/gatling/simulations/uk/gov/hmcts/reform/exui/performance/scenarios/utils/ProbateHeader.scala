@@ -29,7 +29,7 @@ object ProbateHeader {
  val headers_searchresults = Map(
   "accept" -> "application/json",
   "content-type" -> "application/json",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -62,13 +62,14 @@ object ProbateHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$484214221_400h48vVNUHLCFUOLBQIRUKGTWUKCORNUWNRADP-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-filter")
+  "x-dtreferer" -> ({baseURL+"/cases/case-filter"}))
+
 
  val headers_casedata = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -78,7 +79,7 @@ object ProbateHeader {
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-draft-create.v2+json;charset=UTF-8",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -93,13 +94,13 @@ object ProbateHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$484214221_400h52vVNUHLCFUOLBQIRUKGTWUKCORNUWNRADP-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-create/PROBATE/GrantOfRepresentation/solicitorCreateApplication/solicitorCreateApplicationsolicitorCreateApplicationPage1")
+  "x-dtreferer" -> ({baseURL+"/cases/case-create/PROBATE/GrantOfRepresentation/solicitorCreateApplication/solicitorCreateApplicationsolicitorCreateApplicationPage1"}))
 
  val headers_solappcreated = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-case.v2+json;charset=UTF-8",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "request-context" -> "appId=cid-v1:32f2f79b-4f35-43d3-a880-a5a2e9f89979",
   "request-id" -> "|M5xCL.OuK2x",
   "sec-fetch-dest" -> "empty",

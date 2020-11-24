@@ -1,41 +1,42 @@
 package uk.gov.hmcts.reform.exui.performance.scenarios
 
-import scala.concurrent.duration._
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import io.gatling.jdbc.Predef._
+import uk.gov.hmcts.reform.exui.performance.scenarios.utils.Environment
 import uk.gov.hmcts.reform.exui.performance.scenarios.utils.FR_Applicant_Header._
-import uk.gov.hmcts.reform.exui.performance.scenarios.utils.Environment._
 
-object EXUI_FR_Applicant extends Simulation {
+object EXUI_FR_Applicant  {
+
+	val minThinkTime = Environment.minThinkTimeFR
+	val maxThinkTime = Environment.maxThinkTimeFR
 
 	val createCase = scenario("CreateCase")
-		.exec(http("XUI${service}_030_CreateCase1")
+	  	.exec(http("XUI${service}_030_CreateCase1")
 			.get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
 			.headers(headers_2)
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
-		.exec(http("XUI${service}_040_CreateCase2")
+		.exec(http("XUI${service}_040_005_CreateCaseEvent")
 			.get("/data/internal/case-types/FinancialRemedyConsentedRespondent/event-triggers/FR_solicitorCreate?ignore-warning=false")
 			.headers(headers_6)
 			.check(status in (200,304)))
-		.pause(minThinkTime, maxThinkTime)
 
-		.exec(http("XUI${service}_050_CreateCase3")
+
+		.exec(http("XUI${service}_040_010_CreateCaseEvent2")
 			.get("/data/internal/case-types/FinancialRemedyConsentedRespondent/event-triggers/FR_solicitorCreate?ignore-warning=false")
 			.headers(headers_8)
 			.check(jsonPath("$..event_token").saveAs("eventToken"))
 			.check(status in (200,304)))
-		.pause(minThinkTime, maxThinkTime)
 
-		.exec(http("XUI${service}_060_CreateCase4")
+
+		.exec(http("XUI${service}_040_015_CreateCaseProfile")
 			.get("/data/internal/profile")
 			.headers(headers_9)
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
-		.exec(http("XUI${service}_070_CreateSolicitor1")
+		.exec(http("XUI${service}_050_CreateSolicitor")
 			.post("/data/case-types/FinancialRemedyConsentedRespondent/validate?pageId=FR_solicitorCreate1")
 			.headers(headers_10)
 			.body(StringBody("""{
@@ -56,13 +57,13 @@ object EXUI_FR_Applicant extends Simulation {
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
-		.exec(http("XUI${service}_080_GetAddress1")
+		.exec(http("XUI${service}_060_GetAddress")
 			.get("/api/addresses?postcode=SW1H9AJ")
 			.headers(headers_15)
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
-		.exec(http("XUI${service}_090_CreateSolicitor2")
+		.exec(http("XUI${service}_070_CreateSolicitor2")
 			.post("/data/case-types/FinancialRemedyConsentedRespondent/validate?pageId=FR_solicitorCreate2")
 			.headers(headers_18)
 			.body(StringBody("""{
@@ -114,7 +115,7 @@ object EXUI_FR_Applicant extends Simulation {
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
-		.exec(http("XUI${service}_100_CreateSolicitor3")
+		.exec(http("XUI${service}_080_CreateSolicitor3")
 			.post("/data/case-types/FinancialRemedyConsentedRespondent/validate?pageId=FR_solicitorCreate3")
 			.headers(headers_22)
 			.body(StringBody("""{
@@ -154,7 +155,7 @@ object EXUI_FR_Applicant extends Simulation {
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
-		.exec(http("XUI${service}_110_CreateSolicitor4")
+		.exec(http("XUI${service}_090_CreateSolicitor4")
 			.post("/data/case-types/FinancialRemedyConsentedRespondent/validate?pageId=FR_solicitorCreate4")
 			.headers(headers_26)
 			.body(StringBody("""{
@@ -202,19 +203,19 @@ object EXUI_FR_Applicant extends Simulation {
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
-		.exec(http("XUI${service}_120_GetOrganisations")
+		.exec(http("XUI${service}_100_GetShareCaseOrgs")
 			.get("/api/caseshare/orgs")
 			.headers(headers_27)
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
-		.exec(http("XUI${service}_130_GetAddress2")
+		.exec(http("XUI${service}_110_GetAddress2")
 			.get("/api/addresses?postcode=SW1H9AJ")
 			.headers(headers_31)
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
-		.exec(http("XUI${service}_140_CreateSolicitor5")
+		.exec(http("XUI${service}_120_CreateSolicitor5")
 			.post("/data/case-types/FinancialRemedyConsentedRespondent/validate?pageId=FR_solicitorCreate5")
 			.headers(headers_34)
 			.body(StringBody("""{
@@ -309,7 +310,7 @@ object EXUI_FR_Applicant extends Simulation {
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
-		.exec(http("XUI${service}_150_CreateSolicitor6")
+		.exec(http("XUI${service}_130_CreateSolicitor6")
 			.post("/data/case-types/FinancialRemedyConsentedRespondent/validate?pageId=FR_solicitorCreate6")
 			.headers(headers_37)
 			.body(StringBody("""{
@@ -384,7 +385,7 @@ object EXUI_FR_Applicant extends Simulation {
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
-		.exec(http("XUI${service}_160_GetDocuments1")
+		.exec(http("XUI${service}_140_GetDocuments1")
 			.post("/documents")
 			.headers(headers_41)
 			.bodyPart(RawFileBodyPart("files", "dummy.pdf")
@@ -396,7 +397,7 @@ object EXUI_FR_Applicant extends Simulation {
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
-		.exec(http("XUI${service}_170_CreateSolicitor8")
+		.exec(http("XUI${service}_150_CreateSolicitor8")
 			.post("/data/case-types/FinancialRemedyConsentedRespondent/validate?pageId=FR_solicitorCreate8")
 			.headers(headers_44)
 			.body(StringBody("""{
@@ -478,7 +479,7 @@ object EXUI_FR_Applicant extends Simulation {
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
-		.exec(http("XUI${service}_180_GetDocuments2")
+		.exec(http("XUI${service}_160_GetDocuments2")
 			.post("/documents")
 			.headers(headers_48)
 			.bodyPart(RawFileBodyPart("files", "dummy.pdf")
@@ -490,7 +491,7 @@ object EXUI_FR_Applicant extends Simulation {
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
-		.exec(http("XUI${service}_190_CreateSolicitor9")
+		.exec(http("XUI${service}_170_CreateSolicitor9")
 			.post("/data/case-types/FinancialRemedyConsentedRespondent/validate?pageId=FR_solicitorCreate9")
 			.headers(headers_51)
 			.body(StringBody("""{
@@ -579,7 +580,7 @@ object EXUI_FR_Applicant extends Simulation {
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
-		.exec(http("XUI${service}_200_CreateSolicitor11")
+		.exec(http("XUI${service}_180_CreateSolicitor11")
 			.post("/data/case-types/FinancialRemedyConsentedRespondent/validate?pageId=FR_solicitorCreate11")
 			.headers(headers_55)
 			.body(StringBody("""{
@@ -664,7 +665,7 @@ object EXUI_FR_Applicant extends Simulation {
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
-		.exec(http("XUI${service}_210_CreateSolicitor12")
+		.exec(http("XUI${service}_190_CreateSolicitor12")
 			.post("/data/case-types/FinancialRemedyConsentedRespondent/validate?pageId=FR_solicitorCreate12")
 			.headers(headers_59)
 			.body(StringBody("""{
@@ -747,13 +748,13 @@ object EXUI_FR_Applicant extends Simulation {
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
-		.exec(http("XUI${service}_220_CreateCase5")
+		.exec(http("XUI${service}_200_CreateCase5")
 			.get("/data/internal/profile")
 			.headers(headers_61)
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
-		.exec(http("XUI${service}_230_CreateCase6")
+		.exec(http("XUI${service}_210_CreateCase6")
 			.post("/data/case-types/FinancialRemedyConsentedRespondent/cases?ignore-warning=false")
 			.headers(headers_64)
 			.body(StringBody("""{
@@ -866,7 +867,7 @@ object EXUI_FR_Applicant extends Simulation {
 			.check(status in (200,304)))
 		.pause(minThinkTime, maxThinkTime)
 
-		.exec(http("XUI${service}_240_GetCase")
+		.exec(http("XUI${service}_220_GetCase")
 			.get("/data/internal/cases/${caseId}")
 			.headers(headers_66)
 			.check(status in (200,304)))
