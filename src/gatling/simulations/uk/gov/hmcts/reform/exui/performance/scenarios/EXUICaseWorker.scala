@@ -13,7 +13,7 @@ object EXUICaseWorker {
   val MinThinkTime = Environment.minThinkTimeCW
   val MaxThinkTime = Environment.maxThinkTimeCW
 
-  val SearchCase =
+  val ApplyFilters =
     feed(caseFeeder)
       .exec(http("XUI${service}_030_SearchPagination")
         .post("/data/internal/searchCases?ctid=${caseType}&use_case=SEARCH&view=SEARCH&page=1")
@@ -45,6 +45,7 @@ object EXUICaseWorker {
         .check(status.in(200,404)))
 
       .pause(MinThinkTime, MaxThinkTime)
+
 
       //Only do these steps if document_ID is found
       .doIf(session => session.contains("Document_ID")) {

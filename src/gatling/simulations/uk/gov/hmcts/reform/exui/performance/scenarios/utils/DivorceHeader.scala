@@ -21,7 +21,7 @@ object DivorceHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "2$587801235_171h5vAMKUMUBHAHCQKSABKWFBHHGLAHGGCPVR-0e8",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases",
+  "x-dtreferer" -> ({baseURL+"/cases"}),
   "x-xsrf-token" -> "${XSRFToken}")
 
  val headers_27 = Map(
@@ -46,7 +46,7 @@ object DivorceHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "2$587801235_171h11vAMKUMUBHAHCQKSABKWFBHHGLAHGGCPVR-0e9",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-filter",
+  "x-dtreferer" -> ({baseURL+"/cases/case-filter"}),
   "x-xsrf-token" -> "${XSRFToken}")
 
  val headers_shareorgs = Map(
@@ -57,7 +57,7 @@ object DivorceHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "2$587801235_171h12vAMKUMUBHAHCQKSABKWFBHHGLAHGGCPVR-0e9",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-filter",
+  "x-dtreferer" -> ({baseURL+"/cases/case-filter"}),
  "x-xsrf-token" -> "${XSRFToken}")
  val headers_soldata = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
@@ -65,7 +65,7 @@ object DivorceHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -78,7 +78,7 @@ object DivorceHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -91,7 +91,7 @@ object DivorceHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -104,7 +104,7 @@ object DivorceHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -117,7 +117,7 @@ object DivorceHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -130,7 +130,7 @@ object DivorceHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -143,7 +143,7 @@ object DivorceHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -156,7 +156,7 @@ object DivorceHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -169,7 +169,7 @@ object DivorceHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -182,7 +182,7 @@ object DivorceHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -195,7 +195,7 @@ object DivorceHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -208,7 +208,7 @@ object DivorceHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -221,7 +221,7 @@ object DivorceHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -238,7 +238,7 @@ object DivorceHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "2$587801235_171h39vAMKUMUBHAHCQKSABKWFBHHGLAHGGCPVR-0e22",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-create/DIVORCE/DIVORCE_XUI/solicitorCreate/solicitorCreatelangPref",
+  "x-dtreferer" -> ({baseURL+"/cases/case-create/DIVORCE/DIVORCE_XUI/solicitorCreate/solicitorCreatelangPref"}),
   "x-xsrf-token" -> "${XSRFToken}")
 
  val headers_ignorewarning = Map(
@@ -247,7 +247,7 @@ object DivorceHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -285,7 +285,7 @@ object DivorceHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "2$587801235_171h55vAMKUMUBHAHCQKSABKWFBHHGLAHGGCPVR-0e27",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases")
+  "x-dtreferer" -> ({baseURL+"/cases"}))
 
  val headers_shareacasesuserslist = Map(
   "accept" -> "application/json, text/plain, */*",
@@ -297,7 +297,7 @@ object DivorceHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "2$587801235_171h56vAMKUMUBHAHCQKSABKWFBHHGLAHGGCPVR-0e27",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases")
+  "x-dtreferer" -> ({baseURL+"/cases"}))
 
  val headers_shareacaseconfirm = Map(
   "accept" -> "application/json, text/plain, */*",
@@ -311,7 +311,7 @@ object DivorceHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "2$587801235_171h61vAMKUMUBHAHCQKSABKWFBHHGLAHGGCPVR-0e29",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-share-confirm",
+  "x-dtreferer" ->   ({baseURL+"/cases/case-share-confirm"}),
   "x-xsrf-token" -> "${XSRFToken}")
 
 

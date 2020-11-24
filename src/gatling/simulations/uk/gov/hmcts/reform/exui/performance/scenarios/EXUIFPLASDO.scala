@@ -39,7 +39,7 @@ object EXUIFPLASDO {
     // =======================================================================================
 
   val fplviewcaseforsdoasadmin =
-    tryMax(2) {
+
 
       exec(http("XUI${service}_040_005_SearchPage")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
@@ -65,7 +65,7 @@ object EXUIFPLASDO {
           .get("/data/internal/case-types/CARE_SUPERVISION_EPO/search-inputs")
           .headers(FPLAHeader.headers_68)
         )
-    }
+
       .pause(MinThinkTimeFPLV, MaxThinkTimeFPLV)
 
 
@@ -322,7 +322,7 @@ object EXUIFPLASDO {
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
   val fplviewcaseforsdoasgatekeeper =
-    tryMax(2) {
+
         exec(session => session.set("currentDate", timeStamp))
         .exec(http("XUI${service}_150_005_SearchPage")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
@@ -340,7 +340,7 @@ object EXUIFPLASDO {
           .headers(FPLAHeader.headers_237)
           .check(status.in(200, 304)))
 
-    }
+
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
       .exec(http("XUI${service}_160_005_ViewCase")

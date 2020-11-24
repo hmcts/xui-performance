@@ -136,7 +136,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "1$514772036_188h36vUMEMPMRJCAHVTFMREDAAAJFACRUNIRCA-0e15",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases",
+  "x-dtreferer" -> ({baseURL+"/cases"}),
   "x-xsrf-token" -> "V67Cl4Bt-_Q-U-MUHK3EP2fLJE21zTWWRQkI")
 
  val headers_searchpaginationmetadata = Map(
@@ -147,7 +147,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "1$514772036_188h38vUMEMPMRJCAHVTFMREDAAAJFACRUNIRCA-0e15",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases",
+  "x-dtreferer" -> ({baseURL+"/cases"}),
   "x-xsrf-token" -> "V67Cl4Bt-_Q-U-MUHK3EP2fLJE21zTWWRQkI")
 
  val headers_results = Map(
@@ -158,8 +158,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "1$514772036_188h36vUMEMPMRJCAHVTFMREDAAAJFACRUNIRCA-0e15",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases")
-
+  "x-dtreferer" -> ({baseURL+"/cases"}))
 
  val headers_documents = Map(
   "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
@@ -177,7 +176,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$407919787_877h38vPKUSVOSAPKKCNGHKEFHLNFMFNJDCKBGI-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-filter")
+  "x-dtreferer" -> ({baseURL+"/cases/case-filter"}))
 
  val headers_opencaseprofile = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8",
@@ -187,7 +186,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$407919787_877h40vPKUSVOSAPKKCNGHKEFHLNFMFNJDCKBGI-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-create/PUBLICLAW/CARE_SUPERVISION_EPO/openCase/openCase1")
+  "x-dtreferer" ->  ({baseURL+"/cases/case-create/PUBLICLAW/CARE_SUPERVISION_EPO/openCase/openCase1"}))
 
  val headers_casesprofile = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json",
@@ -209,7 +208,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$407919787_877h48vPKUSVOSAPKKCNGHKEFHLNFMFNJDCKBGI-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}"}))
 
  val headers_ordersneed1profile= Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8",
@@ -221,7 +220,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$407919787_877h51vPKUSVOSAPKKCNGHKEFHLNFMFNJDCKBGI-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/ordersNeeded/ordersNeeded1")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/ordersNeeded/ordersNeeded1"}))
 
  val headers_hearingneededprofile = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8",
@@ -233,7 +232,8 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$407919787_877h61vPKUSVOSAPKKCNGHKEFHLNFMFNJDCKBGI-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/hearingNeeded/hearingNeeded1")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/ordersNeeded/ordersNeeded1"}))
+
  val headers_childrenprofile = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8",
   "content-type" -> "application/json",
@@ -244,7 +244,10 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$407919787_877h72vPKUSVOSAPKKCNGHKEFHLNFMFNJDCKBGI-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/enterChildren/enterChildren1")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/enterChildren/enterChildren1"}))
+
+
+
  val headers_respondantprofile = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8",
   "content-type" -> "application/json",
@@ -255,7 +258,9 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$407919787_877h83vPKUSVOSAPKKCNGHKEFHLNFMFNJDCKBGI-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/enterRespondents/enterRespondents1")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/enterRespondents/enterRespondents1"}))
+
+
 
  val headers_applicantprofile = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8",
@@ -267,7 +272,8 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$407919787_877h101vPKUSVOSAPKKCNGHKEFHLNFMFNJDCKBGI-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/enterApplicant/enterApplicant1")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/enterApplicant/enterApplicant1"}))
+
 
  val headers_groundsprofile = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8",
@@ -279,7 +285,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$407919787_877h111vPKUSVOSAPKKCNGHKEFHLNFMFNJDCKBGI-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/enterGrounds/enterGrounds1")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/enterGrounds/enterGrounds1"}))
 
  val headers_otherprofile = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8",
@@ -291,7 +297,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$407919787_877h121vPKUSVOSAPKKCNGHKEFHLNFMFNJDCKBGI-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/otherProposal/otherProposal1")
+  "x-dtreferer" ->  ({baseURL+"/cases/case-details/${caseId}/trigger/otherProposal/otherProposal1"}))
 
  val headers_uploaddocprofile = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8",
@@ -303,7 +309,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$407919787_877h132vPKUSVOSAPKKCNGHKEFHLNFMFNJDCKBGI-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/uploadDocuments/uploadDocuments1")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/uploadDocuments/uploadDocuments1"}))
 
  val headers_submitprofile = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8",
@@ -315,7 +321,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$407919787_877h171vNMOKVINRMMCFSCDPWHJRAGBTITOCLLHM-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/submitApplication/submitApplication1")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/submitApplication/submitApplication1"}))
 
  val headers_viewtab = Map(
   "accept" -> "application/json, text/plain, */*",
@@ -351,9 +357,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$142779249_815h20vUWPCCHAJMMTKNRNUMIFPABHONGSJAHPC-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases")
-
-
+  "x-dtreferer" -> ({baseURL+"/cases"}))
 
  val headers_67 = Map(
   "accept" -> "application/json",
@@ -364,7 +368,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$142779249_815h22vUWPCCHAJMMTKNRNUMIFPABHONGSJAHPC-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases")
+  "x-dtreferer" -> ({baseURL+"/cases"}))
 
  val headers_68 = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-search-input-details.v2+json;charset=UTF-8",
@@ -376,7 +380,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$142779249_815h23vUWPCCHAJMMTKNRNUMIFPABHONGSJAHPC-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases")
+  "x-dtreferer" -> ({baseURL+"/cases"}))
 
  val headers_69 = Map(
   "accept" -> "*/*",
@@ -387,7 +391,7 @@ object FPLAHeader {
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases")
+  "x-dtreferer" -> ({baseURL+"/cases"}))
 
  val headers_871 = Map(
   "accept" -> "application/json, text/plain, */*",
@@ -417,7 +421,8 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$142779249_815h27vUWPCCHAJMMTKNRNUMIFPABHONGSJAHPC-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-search")
+  "x-dtreferer" ->  ({baseURL+"/cases/case-search"}))
+
 
  val headers_adminsearchview = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json",
@@ -438,7 +443,8 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$142779249_815h26vUWPCCHAJMMTKNRNUMIFPABHONGSJAHPC-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-search")
+  "x-dtreferer" -> ({baseURL+"/cases/case-search"}))
+
 
  val headers_876 = Map(
   "accept" -> "*/*",
@@ -449,7 +455,7 @@ object FPLAHeader {
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-search")
+  "x-dtreferer" -> ({baseURL+"/cases/case-search"}))
 
  val headers_78 = Map(
   "accept" -> "application/json, text/plain, */*",
@@ -483,7 +489,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$142779249_815h43vUWPCCHAJMMTKNRNUMIFPABHONGSJAHPC-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}"}))
 
  val headers_83 = Map(
   "accept" -> "*/*",
@@ -494,7 +500,7 @@ object FPLAHeader {
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}"}))
 
  val headers_sdo_casenumbercontinue = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
@@ -519,7 +525,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$142779249_815h46vUWPCCHAJMMTKNRNUMIFPABHONGSJAHPC-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/addFamilyManCaseNumber/addFamilyManCaseNumber1")
+  "x-dtreferer" ->  ({baseURL+"/cases/case-details/${caseId}/trigger/addFamilyManCaseNumber/addFamilyManCaseNumber1"}))
 
  val headers_89 = Map(
   "accept" -> "*/*",
@@ -530,7 +536,7 @@ object FPLAHeader {
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/addFamilyManCaseNumber/addFamilyManCaseNumber1")
+  "x-dtreferer" ->  ({baseURL+"/cases/case-details/${caseId}/trigger/addFamilyManCaseNumber/addFamilyManCaseNumber1"}))
 
  val headers_sdo_casenumber_view = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8",
@@ -538,7 +544,7 @@ object FPLAHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -572,7 +578,8 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$142779249_815h51vUWPCCHAJMMTKNRNUMIFPABHONGSJAHPC-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/addFamilyManCaseNumber/submit")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/addFamilyManCaseNumber/submit"}))
+
 
  val headers_96 = Map(
   "accept" -> "application/json, text/plain, */*",
@@ -582,7 +589,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$142779249_815h50vUWPCCHAJMMTKNRNUMIFPABHONGSJAHPC-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/addFamilyManCaseNumber/submit")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/addFamilyManCaseNumber/submit"}))
 
  val headers_97 = Map(
   "accept" -> "*/*",
@@ -593,7 +600,7 @@ object FPLAHeader {
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/addFamilyManCaseNumber/submit")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/addFamilyManCaseNumber/submit"}))
 
  val headers_99 = Map(
   "accept" -> "application/json, text/plain, */*",
@@ -634,7 +641,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$142779249_815h68vUWPCCHAJMMTKNRNUMIFPABHONGSJAHPC-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}"}))
 
  val headers_106 = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
@@ -642,7 +649,7 @@ object FPLAHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -667,7 +674,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$142779249_815h71vUWPCCHAJMMTKNRNUMIFPABHONGSJAHPC-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/hearingBookingDetails/hearingBookingDetails1")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/hearingBookingDetails/hearingBookingDetails1"}))
 
  val headers_110 = Map(
   "accept" -> "*/*",
@@ -678,7 +685,8 @@ object FPLAHeader {
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/hearingBookingDetails/hearingBookingDetails1")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/hearingBookingDetails/hearingBookingDetails1"}))
+
 
  val headers_112 = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8",
@@ -686,7 +694,7 @@ object FPLAHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -720,7 +728,8 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$142779249_815h76vUWPCCHAJMMTKNRNUMIFPABHONGSJAHPC-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/hearingBookingDetails/submit")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/hearingBookingDetails/submit"}))
+
 
  val headers_116 = Map(
   "accept" -> "application/json, text/plain, */*",
@@ -730,14 +739,14 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$142779249_815h75vUWPCCHAJMMTKNRNUMIFPABHONGSJAHPC-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/hearingBookingDetails/submit")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/hearingBookingDetails/submit"}))
 
  val headers_117 = Map(
   "accept" -> "*/*",
   "accept-encoding" -> "gzip, deflate, br",
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "text/plain;charset=UTF-8",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -782,7 +791,8 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$142779249_815h93vUWPCCHAJMMTKNRNUMIFPABHONGSJAHPC-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/cases/case-details/${caseId}"}))
+
 
  val headers_127 = Map(
   "accept" -> "application/json, text/plain, */*",
@@ -815,7 +825,9 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$142779249_815h96vUWPCCHAJMMTKNRNUMIFPABHONGSJAHPC-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/allocatedJudge/allocatedJudgeAllocatedJudge")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/allocatedJudge/allocatedJudgeAllocatedJudge"}))
+
+
 
  val headers_131 = Map(
   "accept" -> "*/*",
@@ -826,7 +838,9 @@ object FPLAHeader {
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/allocatedJudge/allocatedJudgeAllocatedJudge")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/allocatedJudge/allocatedJudgeAllocatedJudge"}))
+
+
 
  val headers_133 = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8",
@@ -834,7 +848,7 @@ object FPLAHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -868,7 +882,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$142779249_815h101vUWPCCHAJMMTKNRNUMIFPABHONGSJAHPC-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/allocatedJudge/submit")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/allocatedJudge/submit"}))
 
  val headers_137 = Map(
   "accept" -> "application/json, text/plain, */*",
@@ -878,18 +892,18 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$142779249_815h100vUWPCCHAJMMTKNRNUMIFPABHONGSJAHPC-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/allocatedJudge/submit")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/allocatedJudge/submit"}))
 
  val headers_138 = Map(
   "accept" -> "*/*",
   "accept-encoding" -> "gzip, deflate, br",
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "text/plain;charset=UTF-8",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/allocatedJudge/submit")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/allocatedJudge/submit"}))
 
  val headers_141 = Map(
   "accept" -> "application/json, text/plain, */*",
@@ -930,7 +944,8 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$142779249_815h118vAHRFSBEAGTDRREKAQMHFKDWAKLKJUEMH-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}")
+  "x-dtreferer" ->  ({baseURL+"/cases/case-details/${caseId}"}))
+
 
  val headers_148 = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
@@ -938,7 +953,7 @@ object FPLAHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -963,18 +978,19 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$142779249_815h121vLUKIPDRTGHKMLPHEPIVUENOBLKPRFDMA-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/sendToGatekeeper/sendToGatekeeper1")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/sendToGatekeeper/sendToGatekeeper1"}))
 
  val headers_152 = Map(
   "accept" -> "*/*",
   "accept-encoding" -> "gzip, deflate, br",
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "text/plain;charset=UTF-8",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/sendToGatekeeper/sendToGatekeeper1")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/sendToGatekeeper/sendToGatekeeper1"}))
+
 
  val headers_154 = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8",
@@ -982,7 +998,7 @@ object FPLAHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -1016,7 +1032,8 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$142779249_815h126vLUKIPDRTGHKMLPHEPIVUENOBLKPRFDMA-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/sendToGatekeeper/submit")
+  "x-dtreferer" ->  ({baseURL+"/cases/case-details/${caseId}/trigger/sendToGatekeeper/submit"}))
+
 
  val headers_158 = Map(
   "accept" -> "application/json, text/plain, */*",
@@ -1026,7 +1043,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$142779249_815h125vLUKIPDRTGHKMLPHEPIVUENOBLKPRFDMA-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/sendToGatekeeper/submit")
+  "x-dtreferer" ->  ({baseURL+"/cases/case-details/${caseId}/trigger/sendToGatekeeper/submit"}))
 
  val headers_159 = Map(
   "accept" -> "*/*",
@@ -1037,7 +1054,7 @@ object FPLAHeader {
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/sendToGatekeeper/submit")
+  "x-dtreferer" ->  ({baseURL+"/cases/case-details/${caseId}/trigger/sendToGatekeeper/submit"}))
 
  val headers_162 = Map(
   "accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -1130,7 +1147,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$150478102_170h8vLUKIPDRTGHKMLPHEPIVUENOBLKPRFDMA-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/")
+  "x-dtreferer" -> baseURL)
 
  val headers_211 = Map(
   "accept" -> "application/json",
@@ -1141,7 +1158,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$150478102_170h9vLUKIPDRTGHKMLPHEPIVUENOBLKPRFDMA-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/")
+  "x-dtreferer" -> baseURL)
 
  val headers_212 = Map(
   "accept" -> "application/json",
@@ -1152,7 +1169,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$150478102_170h10vLUKIPDRTGHKMLPHEPIVUENOBLKPRFDMA-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/")
+  "x-dtreferer" -> baseURL)
 
  val headers_213 = Map(
   "accept" -> "application/json",
@@ -1163,7 +1180,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$150478102_170h11vLUKIPDRTGHKMLPHEPIVUENOBLKPRFDMA-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/")
+  "x-dtreferer" -> baseURL)
 
  val headers_215 = Map(
   "accept" -> "application/json",
@@ -1174,7 +1191,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$150478102_170h13vLUKIPDRTGHKMLPHEPIVUENOBLKPRFDMA-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/")
+  "x-dtreferer" -> baseURL)
 
  val headers_217 = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-workbasket-input-details.v2+json;charset=UTF-8",
@@ -1186,7 +1203,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$150478102_170h12vLUKIPDRTGHKMLPHEPIVUENOBLKPRFDMA-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/")
+  "x-dtreferer" -> baseURL)
 
  val headers_218 = Map(
   "accept" -> "application/json",
@@ -1197,7 +1214,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$150478102_170h15vLUKIPDRTGHKMLPHEPIVUENOBLKPRFDMA-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/")
+  "x-dtreferer" -> baseURL)
 
  val headers_219 = Map(
   "accept" -> "application/json",
@@ -1208,7 +1225,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$150478102_170h17vLUKIPDRTGHKMLPHEPIVUENOBLKPRFDMA-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/")
+  "x-dtreferer" -> baseURL)
 
  val headers_220 = Map(
   "accept" -> "application/json",
@@ -1219,7 +1236,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$150478102_170h16vLUKIPDRTGHKMLPHEPIVUENOBLKPRFDMA-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/")
+  "x-dtreferer" -> baseURL)
 
  val headers_223 = Map(
   "accept" -> "application/json, text/plain, */*",
@@ -1239,7 +1256,9 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$150478102_170h19vLUKIPDRTGHKMLPHEPIVUENOBLKPRFDMA-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases")
+  "x-dtreferer" ->  ({baseURL+"/cases"}))
+
+
 
  val headers_226 = Map(
   "accept" -> "application/json",
@@ -1250,7 +1269,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$150478102_170h20vLUKIPDRTGHKMLPHEPIVUENOBLKPRFDMA-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases")
+  "x-dtreferer" ->  ({baseURL+"/cases"}))
 
  val headers_227 = Map(
   "accept" -> "application/json",
@@ -1261,7 +1280,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$150478102_170h21vLUKIPDRTGHKMLPHEPIVUENOBLKPRFDMA-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases")
+  "x-dtreferer" ->  ({baseURL+"/cases"}))
 
  val headers_228 = Map(
   "accept" -> "application/json",
@@ -1272,7 +1291,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$150478102_170h22vLUKIPDRTGHKMLPHEPIVUENOBLKPRFDMA-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases")
+  "x-dtreferer" ->  ({baseURL+"/cases"}))
 
  val headers_229 = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-search-input-details.v2+json;charset=UTF-8",
@@ -1284,7 +1303,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$150478102_170h23vLUKIPDRTGHKMLPHEPIVUENOBLKPRFDMA-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases")
+  "x-dtreferer" ->  ({baseURL+"/cases"}))
 
  val headers_232 = Map(
   "accept" -> "application/json",
@@ -1354,7 +1373,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$150478102_170h31vLUKIPDRTGHKMLPHEPIVUENOBLKPRFDMA-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-search")
+  "x-dtreferer" ->  ({baseURL+"/cases/case-search"}))
 
  val headers_243 = Map(
   "accept" -> "application/json, text/plain, */*",
@@ -1364,7 +1383,7 @@ object FPLAHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$150478102_170h30vLUKIPDRTGHKMLPHEPIVUENOBLKPRFDMA-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-search")
+  "x-dtreferer" -> ({baseURL+"/cases/case-search"}))
 
  val headers_247 = Map(
   "accept" -> "application/json, text/plain, */*",
@@ -1411,7 +1430,7 @@ object FPLAHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin")
@@ -1430,11 +1449,11 @@ object FPLAHeader {
   "accept-encoding" -> "gzip, deflate, br",
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "text/plain;charset=UTF-8",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/draftSDO/draftSDOSdoDateOfIssue")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/draftSDO/draftSDOSdoDateOfIssue"}))
 
  val headers_259 = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
@@ -1442,7 +1461,7 @@ object FPLAHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -1466,7 +1485,8 @@ object FPLAHeader {
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/draftSDO/draftSDOjudgeAndLegalAdvisor")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/draftSDO/draftSDOjudgeAndLegalAdvisor"}))
+
 
  val headers_264 = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
@@ -1474,7 +1494,7 @@ object FPLAHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -1494,11 +1514,13 @@ object FPLAHeader {
   "accept-encoding" -> "gzip, deflate, br",
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "text/plain;charset=UTF-8",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/draftSDO/draftSDOallPartiesDirections")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/draftSDO/draftSDOallPartiesDirections"}))
+
+
 
  val headers_269 = Map(
   "accept" -> "application/json, text/plain, */*",
@@ -1515,7 +1537,7 @@ object FPLAHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -1526,11 +1548,12 @@ object FPLAHeader {
   "accept-encoding" -> "gzip, deflate, br",
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "text/plain;charset=UTF-8",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/draftSDO/draftSDOlocalAuthorityDirections")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/draftSDO/draftSDOlocalAuthorityDirections"}))
+
 
  val headers_274 = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
@@ -1538,7 +1561,7 @@ object FPLAHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -1562,7 +1585,9 @@ object FPLAHeader {
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/draftSDO/draftSDOparentsAndRespondentsDirections")
+  "x-dtreferer" ->  ({baseURL+"/cases/case-details/${caseId}/trigger/draftSDO/draftSDOparentsAndRespondentsDirections"}))
+
+
 
  val headers_279 = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
@@ -1570,7 +1595,7 @@ object FPLAHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -1590,11 +1615,12 @@ object FPLAHeader {
   "accept-encoding" -> "gzip, deflate, br",
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "text/plain;charset=UTF-8",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/draftSDO/draftSDOcafcassDirections")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/draftSDO/draftSDOcafcassDirections"}))
+
 
  val headers_284 = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
@@ -1602,7 +1628,7 @@ object FPLAHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -1622,11 +1648,12 @@ object FPLAHeader {
   "accept-encoding" -> "gzip, deflate, br",
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "text/plain;charset=UTF-8",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/draftSDO/draftSDOotherPartiesDirections")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/draftSDO/draftSDOotherPartiesDirections"}))
+
 
  val headers_289 = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
@@ -1634,7 +1661,7 @@ object FPLAHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -1654,11 +1681,13 @@ object FPLAHeader {
   "accept-encoding" -> "gzip, deflate, br",
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "text/plain;charset=UTF-8",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/draftSDO/draftSDOcourtDirections")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/draftSDO/draftSDOcourtDirections"}))
+
+
 
  val headers_295 = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
@@ -1666,7 +1695,7 @@ object FPLAHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
@@ -1696,11 +1725,12 @@ object FPLAHeader {
   "accept-encoding" -> "gzip, deflate, br",
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "text/plain;charset=UTF-8",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/draftSDO/draftSDOdocumentReview")
+  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/draftSDO/draftSDOdocumentReview"}))
+
 
  val headers_301 = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8",
@@ -1708,7 +1738,7 @@ object FPLAHeader {
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "application/json",
   "experimental" -> "true",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin")
@@ -1753,11 +1783,11 @@ object FPLAHeader {
   "accept-encoding" -> "gzip, deflate, br",
   "accept-language" -> "en-US,en;q=0.9",
   "content-type" -> "text/plain;charset=UTF-8",
-  "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+  "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/draftSDO/submit")
+  "x-dtreferer" ->  ({baseURL+"/cases/case-details/${caseId}/trigger/draftSDO/submit"}))
 
  val headers_310 = Map(
   "accept" -> "application/json, text/plain, */*",

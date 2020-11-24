@@ -9,11 +9,12 @@ import uk.gov.hmcts.reform.exui.performance.scenarios.utils.Environment
 import uk.gov.service.notify.{NotificationClient, NotificationList}
 
 import scala.collection.JavaConverters.iterableAsScalaIterableConverter
-import scala.util.matching.Regex
+import scala.util.Random
 
 object ExUI {
 
    //val BaseURL = Environment.baseURL
+  val prdUrl=Environment.PRDUrl
   val IdamUrl = Environment.idamURL
   val approveUser=Environment.adminUserAO
   val approveUserPassword=Environment.adminPasswordAO
@@ -21,13 +22,25 @@ object ExUI {
   val url_mo = Environment.manageOrdURL
   val baseDomainOrg = Environment.baseDomainOrg
   val baseDomainManageCase = Environment.baseDomain
+  val idamAPI=Environment.idamAPI
   val notificationClient=Environment.notificationClient
   val feeder = csv("userid-increment.csv").circular
   val feederuser = csv("OrgDetails.csv").circular
 
+  /*
+  //floowing variable s are for create org
+   */
+
+  private val rng: Random = new Random()
+  private def sRAId(): String = rng.alphanumeric.take(15).mkString
+  private def companyNumber(): String = rng.alphanumeric.take(8).mkString
+  private def companyURL(): String = rng.alphanumeric.take(15).mkString
+  private def paymentAccount1(): String = rng.alphanumeric.take(7).mkString
+  private def paymentAccount2(): String = rng.alphanumeric.take(7).mkString
+
   val headers_tc_aat = Map(
     "Content-Type" -> "application/json",
-    "Origin" -> "https://manage-case.perftest.platform.hmcts.net",
+    "Origin" -> url_approve,
     "Sec-Fetch-Dest" -> "empty",
     "Sec-Fetch-Mode" -> "cors",
     "Sec-Fetch-Site" -> "same-origin")
@@ -35,7 +48,7 @@ object ExUI {
   val headers_approve = Map(
     "accept" -> "application/json, text/plain, */*",
     "content-type" -> "application/json",
-    "origin" -> "https://administer-orgs.perftest.platform.hmcts.net",
+    "origin" -> url_approve,
     "sec-fetch-dest" -> "empty",
     "sec-fetch-mode" -> "cors",
     "sec-fetch-site" -> "same-origin",
@@ -61,13 +74,49 @@ object ExUI {
     "sec-fetch-user" -> "?1",
     "upgrade-insecure-requests" -> "1")
 
-  val createOrg=
+  val createSuperUser=
+  feed(Feeders.createDynamicDataFeeder).exec(http("XUI_CreateSuperUser")
+       .post(idamAPI+"/testing-support/accounts")
+                        // .header("Authorization", "Bearer ${accessToken}")
+                        // .header("ServiceAuthorization", "Bearer ${s2sToken}")
+                        .header("Content-Type", "application/json")
+                        .body(StringBody("{\"email\": \"${generatedEmail}\", \"forename\": \"Vijay\", \"password\": \"Pass19word\", \"surname\": \"Vykuntam\"}"))
+                        .check(status is 201))
+                   .pause(20)
+val createOrg=
+  exec(_.setAll(
+    ("SRAId", sRAId()),
+    ("CompanyNumber", companyNumber()),
+    ("CompanyURL", companyURL()),
+    ("PaymentAccount1",paymentAccount1()),
+    ("PaymentAccount2",paymentAccount2()),
+  ))
+      .exec(http("RD15_External_CreateOrganization")
+          .post(prdUrl+"/refdata/external/v1/organisations")
+          .header("ServiceAuthorization", "Bearer ${s2sToken}")
+          .body(StringBody("{\n   \"name\": \"${orgName}\",\n   \"sraId\": \"TRA${SRAId}\",\n   \"sraRegulated\": true,\n   \"companyNumber\": \"${CompanyNumber}\",\n" +
+            "\"companyUrl\": \"www.tr${CompanyURL}.com\",\n   \"superUser\": {\n       \"firstName\": \"Vijay\",\n       \"lastName\": \"Vykuntam\",\n" +
+            "\"email\": \"${generatedEmail}\"\n,\n        \"jurisdictions\": [\n    {\n      \"id\": \"DIVORCE\"\n    },\n    {\n      \"id\": \"SSCS\"\n    },\n    {\n      \"id\": \"PROBATE\"\n    },\n    {\n      \"id\": \"PUBLICLAW\"\n    },\n    {\n      \"id\": \"BULK SCANNING\"\n    },\n    {\n      \"id\": \"IA\"\n    },\n    {\n      \"id\": \"CMC\"\n    },\n    {\n      \"id\": \"EMPLOYMENT\"\n    },\n    {\n      \"id\": \"Family public law and adoption\"\n    },\n    {\n      \"id\": \"Civil enforcement and possession\"\n    }\n  ]   },\n   \"paymentAccount\": [\n\n          \"PBA${PaymentAccount1}\",\"PBA${PaymentAccount2}\"\n\n   ],\n" +
+            "\"contactInformation\": [\n       {\n           \"addressLine1\": \"4\",\n           \"addressLine2\": \"Hibernia Gardens\",\n           \"addressLine3\": \"Maharaj road\",\n" +
+            "\"townCity\": \"Hounslow\",\n           \"county\": \"middlesex\",\n           \"country\": \"UK\",\n           \"postCode\": \"TW3 3SD\",\n           \"dxAddress\": [\n" +
+            "{\n                   \"dxNumber\": \"DX 1121111990\",\n                   \"dxExchange\": \"112111192099908492\"\n               }\n           ]\n       }\n   ]\n}"))
+          .header("Content-Type", "application/json")
+          .check(jsonPath("$.organisationIdentifier").saveAs("orgRefCode"))
+          .check(status in (200,201)))
+    .pause(15)
+
+
+
+ /* val createOrg1=
     exec(http("EXUI_RO_Homepage")
          .get("/register-org/register")
          .check(status.is(200)))
     .pause(Environment.minThinkTime,Environment.maxThinkTime)
-    .feed(Feeders.createDynamicDataFeeder).exec(http("EXUI_RO_Create").post("/external/register-org/register").body(ElFileBody("CR.json")).asJson.check(status.is(200)).check(jsonPath("$.organisationIdentifier").optional.saveAs("orgRefCode")))
-    .pause(10)
+    .feed(Feeders.createDynamicDataFeeder).exec(http("EXUI_RO_Create")
+      .post("/external/register-org/register")
+      .body(ElFileBody("CR.json")).asJson
+      .check(status.is(200)).check(jsonPath("$.organisationIdentifier").optional.saveAs("orgRefCode")))
+    .pause(10)*/
 
   val approveOrgHomePage=
     exec(http("EXUI_AO_005_Homepage")
@@ -160,10 +209,10 @@ object ExUI {
           .headers(headers_approve)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
       .body(ElFileBody("AO.json")).asJson
-      .check(status.is(200)))
-    .pause(40)
-    .exec {
-
+      .check(status.is(200))
+    .check(status.saveAs("aostatusvalue")))
+    .pause(10)
+       /* .exec {
       session =>
         val client = new NotificationClient(notificationClient)
         val pattern = new Regex("token.+")
@@ -186,7 +235,7 @@ object ExUI {
         .formParam("password2", "Pass19word")
         .check(status.is(200))
     .check(status.saveAs("aostatusvalue")))
-      .pause(20)
+      .pause(20)*/
     .doIf(session=>session("aostatusvalue").as[String].contains("200")) {
       exec { session =>
         val fw = new BufferedWriter(new FileWriter("OrgDetails.csv", true))
@@ -307,13 +356,17 @@ object ExUI {
   val sendInvitation =
 
   feed(Feeders.createDynamicUserDataFeeder).
-        exec(http("EXUI_MO_005_SendInvitation")
+    exec(http("XUI_CreateSuperUser").post(idamAPI+"/testing-support/accounts").header("Content-Type", "application/json").body(StringBody("{\"email\": \"${orgName}${generatedUserEmail}${n}@mailinator.com\", \"forename\": \"VUser\", \"password\": \"Pass19word\", \"surname\": \"VykUser\"}"))
+      .check(status is 201))
+    .pause(20)
+          .exec(http("EXUI_MO_005_SendInvitation")
       .post(url_mo + "/api/inviteUser")
       .body(ElFileBody("MO.json")).asJson
       .check(status.is(200))
+          .check(status.saveAs("userstatusvalue"))
       ).exitHereIfFailed
-        .pause(40)
-      exec {
+        .pause(20)
+      /*exec {
 
         session =>
           val client = new NotificationClient(notificationClient)
@@ -338,8 +391,8 @@ object ExUI {
         .formParam("password2", "Pass19word")
         .check(status.in(200,201))
         .check(status.saveAs("statusvalue")))
-          .pause(20)
-           .doIf(session=>session("statusvalue").as[String].contains("200")) {
+          .pause(20)*/
+           .doIf(session=>session("userstatusvalue").as[String].contains("200")) {
             exec {
             session =>
               val fw = new BufferedWriter(new FileWriter("OrgId3.csv", true))

@@ -2,7 +2,7 @@ package uk.gov.hmcts.reform.exui.performance.scenarios
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import uk.gov.hmcts.reform.exui.performance.scenarios.utils.{DivorceHeader, Environment, ProbateHeader}
+import uk.gov.hmcts.reform.exui.performance.scenarios.utils.{DivorceHeader, Environment}
 
 object EXUIDivorceMC {
 
@@ -17,47 +17,19 @@ object EXUIDivorceMC {
 
 
 
-  val casedetails = 
+  /*val casedetails =
 
-    exec(http("XUI${service}_40_005_SearchPage")
-			.get("/data/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases/pagination_metadata")
-			.headers(ProbateHeader.headers_search)
-      .check(status.in(200,304))
-    )
-
-    .exec(http("XUI${service}_40_010_SearchAccessJurisdictions")
-			.get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
-			.headers(ProbateHeader.headers_search)
-      .check(status.in(200,304))
-    )
-
-    .exec(http("XUI${service}_40_015_SearchAccessJurisdictions")
-			.get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
-			.headers(ProbateHeader.headers_search)
-      .check(status.in(200,304))
-    )
-
-    .exec(http("XUI${service}_40_020_SearchResults")
-			.get("/aggregated/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases?view=WORKBASKET&page=1")
-			.headers(ProbateHeader.headers_search)
-      .check(status.in(200,304)))
-    .pause(MinThinkTime , MaxThinkTime )
-
-        .exec(http("XUI${service}_50_ViewCase")
-        .get("/data/internal/cases/${caseId}")
-        .headers(ProbateHeader.headers_viewCase)
-      .check(status.in(200,304)))
 
       .pause(MinThinkTime , MaxThinkTime )
-
+*/
 
   val casecreation=
-    tryMax(2) {
+
       exec(http("XUI${service}_040_CreateCase")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
         .headers(DivorceHeader.headers_accessCreate)
         .check(status.in(200, 304)))
-    }
+
     .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_050_005_StartCreateCase1")
@@ -291,7 +263,7 @@ object EXUIDivorceMC {
     .check(jsonPath("$..userIdentifier").find(3).optional.saveAs("userIdentifier4"))
     .check(jsonPath("$..userIdentifier").find(4).optional.saveAs("userIdentifier5"))
   )
-    .pause(10)
+    .pause(MinThinkTime , MaxThinkTime )
 
 
   val shareacase =
