@@ -4,16 +4,6 @@ object CaseworkerHeader {
 
 val baseURL = Environment.baseURL
 
-val headers_0 = Map(
-    "Accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-workbasket-input-details.v2+json;charset=UTF-8",
-    "Content-Type" -> "application/json",
-    "Pragma" -> "no-cache",
-    "Sec-Fetch-Dest" -> "empty",
-    "Sec-Fetch-Mode" -> "cors",
-    "Sec-Fetch-Site" -> "same-origin",
-    "X-XSRF-TOKEN" -> "${XSRFToken}",
-    "experimental" -> "true")
-
 val headers_2 = Map(
     "accept" -> "application/json",
     "content-type" -> "application/json",
