@@ -24,7 +24,9 @@ object EXUICaseWorker {
         
       .pause(MinThinkTime, MaxThinkTime)
 
-  val ViewCase = doIf(session => session.contains("caseNumbers")) {
+  val ViewCase = 
+  //Loop through each of the found cases and view
+  doIf(session => session.contains("caseNumbers")) {
     foreach("${caseNumbers}", "caseNumber") {
       exec(http("XUI${service}_040_005_ViewCase")
         .get("/data/internal/cases/${caseNumber}")
@@ -39,11 +41,12 @@ object EXUICaseWorker {
 
       .exec(http("XUI${service}_040_015_GetPaymentGroups")
         .get("/payments/cases/${caseNumber}/paymentgroups")
-        .headers(CaseworkerHeader.headers_search).check(status.in(200,404)))
+        .headers(CaseworkerHeader.headers_search)
+        .check(status.in(200,404)))
 
       .pause(MinThinkTime, MaxThinkTime)
 
-      //TO DO - put this in a do-if statement, so only do these steps if document_ID is found
+      //Only do these steps if document_ID is found
       .doIf(session => session.contains("Document_ID")) {
         exec(http("XUI${service}_050_005_ViewCaseDocumentUI")
           .get("/external/config/ui")
