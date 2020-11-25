@@ -324,21 +324,24 @@ object EXUIMCLogin {
              .check(status.in(200, 304, 302)))
       }
 
-        .exec(http("XUI${service}_020_025_GetWorkBasketInputs")
-              .get("/data/internal/case-types/GrantOfRepresentation/work-basket-inputs")
-              .headers(LoginHeader.headers_17))
+      .exec(http("XUI${service}_020_025_GetWorkBasketInputs")
+            .get("/data/internal/case-types/GrantOfRepresentation/work-basket-inputs")
+            .headers(LoginHeader.headers_17))
 
-        .exec(http("XUI${service}_020_030_GetPaginationMetaData")
-              .get("/data/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases/pagination_metadata?state=Open")
-              .headers(LoginHeader.headers_0))
+      .exec(http("XUI${service}_020_030_GetPaginationMetaData")
+            .get("/data/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases/pagination_metadata?state=Open")
+            .headers(LoginHeader.headers_0))
 
-        .exec(http("XUI${service}_020_035_GetDefaultWorkBasketView")
-              .get("/aggregated/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases?view=WORKBASKET&state=Open&page=1")
-              .headers(LoginHeader.headers_0))
+      .exec(http("XUI${service}_020_035_GetDefaultWorkBasketView")
+            .get("/aggregated/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases?view=WORKBASKET&state=Open&page=1")
+            .headers(LoginHeader.headers_0))
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(baseDomain).saveAs("xsrfToken")))
 
 
+      .pause(MinThinkTime , MaxThinkTime)
+      
+    }
 
   //======================================================================================
   //Business process : Click on Terms and Conditions
