@@ -157,7 +157,7 @@ object EXUIDivorceMC {
             .post("/data/case-types/DIVORCE_XUI/cases?ignore-warning=false")
             .headers(DivorceHeader.headers_ignorewarning)
             .body(ElFileBody("RecordedSimulationSC_0186_request.json")).asJson
-            .check(status.is(200))
+            .check(status.in(200,201))
       .check(jsonPath("$.id").optional.saveAs("caseId")))
     /*.exec( session => {
              println("the case Id is  "+session("caseId").as[String])

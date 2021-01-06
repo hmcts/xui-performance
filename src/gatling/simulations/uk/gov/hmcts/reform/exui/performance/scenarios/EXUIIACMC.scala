@@ -50,7 +50,6 @@ object EXUIIACMC {
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
         .headers(IACHeader.headers_createcase)
         .check(status.in(200, 304))).exitHereIfFailed
-
       .pause(MinThinkTime , MaxThinkTime )
 
       .exec(http("XUI${service}_050_005_StartCreateCase1")
@@ -70,7 +69,6 @@ object EXUIIACMC {
         .get("/data/internal/profile")
         .headers(IACHeader.headers_data_internal)
         .check(status.in(200,304,302)))
-
       .pause(MinThinkTime , MaxThinkTime)
 
 
@@ -193,7 +191,7 @@ object EXUIIACMC {
         .post("/data/case-types/Asylum/cases?ignore-warning=false")
         .headers(IACHeader.headers_casesave)
         .body(StringBody("{\n  \"data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist1\": [],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ],\n      \"checklist3\": [],\n      \"checklist4\": [],\n      \"checklist6\": []\n    },\n    \"homeOfficeReferenceNumber\": \"123456782\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"uploadTheNoticeOfDecisionExplanation\": null,\n    \"appellantTitle\": \"Mr\",\n    \"appellantGivenNames\": \"appealFname\",\n    \"appellantFamilyName\": \"appealLname\",\n    \"appellantDateOfBirth\": \"1995-08-01\",\n    \"appellantStateless\": \"hasNationality\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"10 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    },\n    \"contactPreference\": \"wantsEmail\",\n    \"email\": \"iacpost@mailinator.com\",\n    \"mobileNumber\": null,\n    \"appealType\": \"refusalOfHumanRights\",\n    \"appealGroundsHumanRightsRefusal\": {\n      \"values\": [\n        \"protectionHumanRights\"\n      ]\n    },\n    \"deportationOrderOptions\": \"No\",\n    \"hasNewMatters\": \"No\",\n    \"newMatters\": null,\n    \"hasOtherAppeals\": \"No\",\n    \"legalRepCompany\": \"legalrepC\",\n    \"legalRepName\": \"legalrepN\",\n    \"legalRepReferenceNumber\": \"myref\",\n    \"isFeePaymentEnabled\": null\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"draft_id\": null\n}"))
-        .check(status.in(200, 304))
+        .check(status.in(200, 304,201))
         .check(jsonPath("$.id").optional.saveAs("caseId")))
       .pause(MinThinkTime , MaxThinkTime )
 
@@ -267,7 +265,7 @@ object EXUIIACMC {
         .post("/data/cases/${caseId}/events")
         .headers(IACHeader.headers_declarationsubmitted)
         .body(StringBody("{\n  \"data\": {\n    \"legalRepDeclaration\": [\n      \"hasDeclared\"\n    ]\n  },\n  \"event\": {\n    \"id\": \"submitAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token_submit}\",\n  \"ignore_warning\": false\n}"))
-        .check(status.in(200, 304))
+        .check(status.in(200, 304,201))
       )
       .pause(MinThinkTime , MaxThinkTime )
 
@@ -329,12 +327,12 @@ object EXUIIACMC {
       .headers(IACHeader.headers_shareacase12)
       .body(StringBody(StringBodyVJSubmit))
       //.body(ElFileBody("RecordedSimulationshareacaseiac_0012_request.json")).asJson
-      .check(status.in(200,304,302)))
+      .check(status.in(200,304,302,201)))
 
     .exec(http("XUI${service}_280_010_ShareACaseViewData")
       .get("/data/internal/cases/${caseId}")
       .headers(IACHeader.headers_shareacase14)
-      .check(status.in(200,304,302)))
+      .check(status.in(200,304,302,201)))
     .pause(MinThinkTime , MaxThinkTime )
 
 

@@ -21,7 +21,7 @@ object IACHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "2$587801235_171h5vAMKUMUBHAHCQKSABKWFBHHGLAHGGCPVR-0e8",
-  "x-dtreferer" -> ({baseURL+"/cases"}),
+  "x-dtreferer" -> ({baseURL+"/cases/case-create/IA/Asylum/startAppeal/startAppealhomeOfficeDecision"}),
   "x-xsrf-token" -> "${XSRFToken}")
 
  val headers_startcreatecase = Map(
