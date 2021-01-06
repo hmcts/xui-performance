@@ -81,50 +81,78 @@ object EXUIProbateMC {
       .check(status.in(200,304))).exitHereIfFailed
       .pause(MinThinkTime, MaxThinkTime)
 
-    .exec(http("XUI${service}_060_AddressLookup")
-      .get("/api/addresses?postcode=TW33SD")
-      .headers(ProbateHeader.headers_28)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(status.in(200,304)))
-      .pause(MinThinkTime, MaxThinkTime)
 
       .feed(Feeders.createCaseData)
-      .exec(http("XUI${service}_070_CreateApplication")
+      .exec(http("XUI${service}_060_CreateApplication")
       .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorCreateApplicationsolicitorCreateApplicationPage1")
       .headers(ProbateHeader.headers_casedata)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("RecordedSimulationcasecreate1810_0088_request.json")).asJson
+      .body(ElFileBody("RecordedSimulationPro1612_0048_request.json")).asJson
       .check(status.in(200,304)))
 
       .pause(MinThinkTime, MaxThinkTime)
 
-      .exec(http("XUI${service}_080_005_ApplicationDraft")
-      .post("/data/case-types/GrantOfRepresentation/drafts/")
+      .exec(http("XUI${service}_070_005_ApplicationDraft")
+      .post("/data/internal/case-types/GrantOfRepresentation/drafts/")
       .headers(ProbateHeader.headers_draft)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("RecordedSimulationprobate1205_0018_request.json")).asJson
-      .check(status.is(404)))
+      .body(ElFileBody("RecordedSimulationPro1612_0054_request.json")).asJson
+      .check(status.in(200,404,201))
+        .check(jsonPath("$.id").optional.saveAs("draftId")))
 
-      .exec(http("XUI${service}_080_010_DraftProfile")
+      .exec(http("XUI${service}_070_010_DraftProfile")
         .get("/data/internal/profile")
         .headers(ProbateHeader.headers_casedataprofile)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
       .pause(MinThinkTime, MaxThinkTime)
 
-      .exec(http("XUI${service}_090_005_CaseSubmitted")
+        .exec(http("XUI${service}_080_AddressLookup")
+              .get("/api/addresses?postcode=TW33SD")
+              .headers(ProbateHeader.headers_28)
+              .header("X-XSRF-TOKEN", "${XSRFToken}")
+              .check(status.in(200,304)))
+        .pause(MinThinkTime, MaxThinkTime)
+
+//new request
+      .exec(http("XUI${service}_090_005_CreateApplication2")
+            .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorCreateApplicationsolicitorCreateApplicationPage2")
+            .headers(ProbateHeader.headers_casedata)
+            .header("X-XSRF-TOKEN", "${XSRFToken}")
+            .body(ElFileBody("RecordedSimulationPro1612_0126_request.json")).asJson
+            .check(status.in(200,304)))
+
+        .exec(http("XUI${service}_090_010_DraftProfile")
+              .get("/data/internal/profile")
+              .headers(ProbateHeader.headers_casedataprofile)
+              .header("X-XSRF-TOKEN", "${XSRFToken}")
+              .check(status.in(200,304)))
+        .pause(MinThinkTime, MaxThinkTime)
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+  /*http("request_129")
+  .put("/data/internal/case-types/GrantOfRepresentation/drafts/137705")
+  .headers(headers_129)
+  .body(RawFileBody("RecordedSimulationPro1612_0129_request.txt"))
+  .check(status.is(400)),*/
+
+      .exec(http("XUI${service}_100_005_CaseSubmitted")
         .post("/data/case-types/GrantOfRepresentation/cases?ignore-warning=false")
         .headers(ProbateHeader.headers_solappcreated)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(ElFileBody("RecordedSimulationprobate1205_0025_request.json")).asJson
-        .check(status.in(200,304))
+        .body(ElFileBody("RecordedSimulationPro1612_0144_request.json")).asJson
+        .check(status.in(200,304,201))
       .check(jsonPath("$.id").optional.saveAs("caseId")))
 
-      .exec(http("XUI${service}_090_010_ViewCase")
+      .exec(http("XUI${service}_100_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(ProbateHeader.headers_saveandviewcase)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(status.in(200,304)))
+        .check(status.in(200,304))
+        .check(regex("Add solicitor details"))
+      )
+
       .pause(MinThinkTime, MaxThinkTime)
 
 
