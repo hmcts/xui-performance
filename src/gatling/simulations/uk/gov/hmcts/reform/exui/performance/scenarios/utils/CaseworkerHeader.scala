@@ -4,7 +4,18 @@ object CaseworkerHeader {
 
 val baseURL = Environment.baseURL
 
-val headers_2 = Map(
+
+    val headers_sort = Map(
+        "accept" -> "application/json",
+        "content-type" -> "application/json",
+        "origin" -> baseURL,
+        "sec-fetch-dest" -> "empty",
+        "sec-fetch-mode" -> "cors",
+        "sec-fetch-site" -> "same-origin",
+        "x-dtpc" -> "3$272180847_348h35vGVSERPHCKQWMJCRPGLHSAKFQMPLCLPHL-0e30")
+
+
+    val headers_2 = Map(
     "accept" -> "application/json",
     "content-type" -> "application/json",
     "origin" -> baseURL,
