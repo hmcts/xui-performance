@@ -52,7 +52,8 @@ object EXUIProbateMC {
 
 
   val casecreation=group("XUI${service}_040_CreateCase") {
-    exec(http("XUI${service}_040_CreateCase").get("/aggregated/caseworkers/:uid/jurisdictions?access=create").headers(ProbateHeader.headers_28).header("X-XSRF-TOKEN", "${XSRFToken}").check(status.in(200, 304))).exitHereIfFailed.pause(MinThinkTime, MaxThinkTime)
+    exec(http("XUI${service}_040_CreateCase").get("/aggregated/caseworkers/:uid/jurisdictions?access=create").headers(ProbateHeader.headers_28).header("X-XSRF-TOKEN", "${XSRFToken}").check(status.in(200, 304))).exitHereIfFailed
+      .pause(MinThinkTime, MaxThinkTime)
   }
       .group("XUI${service}_050_StartCreateCase1") {
         exec(http("XUI${service}_050_005_StartCreateCase1")
@@ -70,12 +71,14 @@ object EXUIProbateMC {
             .header("X-XSRF-TOKEN", "${XSRFToken}")
             .headers(ProbateHeader.headers_casefilter)
             .check(status.in(200, 304)))
-          .exitHereIfFailed.pause(MinThinkTime, MaxThinkTime)
+          .exitHereIfFailed
+          .pause(MinThinkTime, MaxThinkTime)
       }
 
       .feed(Feeders.createCaseData)
       .group("XUI${service}_060_CreateApplication") {
-        exec(http("XUI${service}_060_CreateApplication").post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorCreateApplicationsolicitorCreateApplicationPage1").headers(ProbateHeader.headers_casedata).header("X-XSRF-TOKEN", "${XSRFToken}").body(ElFileBody("RecordedSimulationPro1612_0048_request.json")).asJson.check(status.in(200, 304))).pause(MinThinkTime, MaxThinkTime)
+        exec(http("XUI${service}_060_CreateApplication").post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorCreateApplicationsolicitorCreateApplicationPage1").headers(ProbateHeader.headers_casedata).header("X-XSRF-TOKEN", "${XSRFToken}").body(ElFileBody("RecordedSimulationPro1612_0048_request.json")).asJson.check(status.in(200, 304)))
+          .pause(MinThinkTime, MaxThinkTime)
       }
 .group("XUI${service}_070_ApplicationDraft") {
   exec(http("XUI${service}_070_005_ApplicationDraft")

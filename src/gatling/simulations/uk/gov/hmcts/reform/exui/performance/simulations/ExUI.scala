@@ -203,7 +203,7 @@ class ExUI extends Simulation {
 			.protocols(XUIHttpProtocol)
 	)*/
 	 setUp(
-		 EXUIMCaseProbateScn.inject(rampUsers(1) during (1)),
+		 EXUIMCaseProbateScn.inject(rampUsers(230) during (1200)),
 	  // EXUIMCaseCaseworkerScn.inject(nothingFor(20),rampUsers(1) during (1))
 	 )
       .protocols(IAChttpProtocol)
