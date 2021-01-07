@@ -39,7 +39,27 @@ object EXUIMCLogin {
   //=====================================================================================
 
   val manageCasesHomePage =group("XUI${service}_010_Homepage") {
-    exec(http("XUI${service}_010_005_Homepage").get("/").headers(LoginHeader.headers_0).check(status.in(200, 304))).exitHereIfFailed.exec(http("XUI${service}_010_010_HomepageConfigUI").get("/external/configuration-ui").headers(headers_1)).exec(http("XUI${service}_010_015_HomepageConfigJson").get("/assets/config/config.json").headers(headers_1)).exec(http("XUI${service}_010_020_HomepageTCEnabled").get("/api/configuration?configurationKey=termsAndConditionsEnabled").headers(headers_1)).exec(http("XUI${service}_010_025_HomepageIsAuthenticated").get("/auth/isAuthenticated").headers(headers_1)).exec(http("XUI${service}_010_030_AuthLogin").get("/auth/login").headers(headers_4).check(css("input[name='_csrf']", "value").saveAs("csrfToken")).check(regex("manage-user%20create-user&state=(.*)&client").saveAs("state"))).pause(MinThinkTime, MaxThinkTime)
+    exec(http("XUI${service}_010_005_Homepage")
+      .get("/")
+      .headers(LoginHeader.headers_0)
+      .check(status.in(200, 304))).exitHereIfFailed
+      .exec(http("XUI${service}_010_010_HomepageConfigUI")
+        .get("/external/configuration-ui")
+        .headers(headers_1))
+      .exec(http("XUI${service}_010_015_HomepageConfigJson")
+        .get("/assets/config/config.json")
+        .headers(headers_1))
+      .exec(http("XUI${service}_010_020_HomepageTCEnabled")
+        .get("/api/configuration?configurationKey=termsAndConditionsEnabled").headers(headers_1))
+      .exec(http("XUI${service}_010_025_HomepageIsAuthenticated")
+        .get("/auth/isAuthenticated")
+        .headers(headers_1))
+      .exec(http("XUI${service}_010_030_AuthLogin")
+        .get("/auth/login")
+        .headers(headers_4)
+        .check(css("input[name='_csrf']", "value").saveAs("csrfToken"))
+        .check(regex("manage-user%20create-user&state=(.*)&client").saveAs("state")))
+      .pause(MinThinkTime, MaxThinkTime)
   }
 
 
@@ -224,7 +244,14 @@ object EXUIMCLogin {
         .get("/data/caseworkers/:uid/jurisdictions/DIVORCE/case-types/FinancialRemedyMVP2/cases/pagination_metadata?state=caseAdded")
         .headers(LoginHeader.headers_0))*/
 
-      .exec(http("XUI${service}_020_040_HomepageIsAuthenticated").get("/auth/isAuthenticated").headers(LoginHeader.headers_0)).exec(http("XUI${service}_020_045_GetDefaultWorkBasketView").get("/aggregated/caseworkers/:uid/jurisdictions/DIVORCE/case-types/FinancialRemedyMVP2/cases?view=WORKBASKET&state=caseAdded&page=1").headers(LoginHeader.headers_0)).exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(baseDomain).saveAs("XSRFToken"))).pause(MinThinkTime, MaxThinkTime)
+      .exec(http("XUI${service}_020_040_HomepageIsAuthenticated")
+        .get("/auth/isAuthenticated")
+        .headers(LoginHeader.headers_0))
+        .exec(http("XUI${service}_020_045_GetDefaultWorkBasketView")
+          .get("/aggregated/caseworkers/:uid/jurisdictions/DIVORCE/case-types/FinancialRemedyMVP2/cases?view=WORKBASKET&state=caseAdded&page=1")
+          .headers(LoginHeader.headers_0))
+        .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(baseDomain).saveAs("XSRFToken")))
+        .pause(MinThinkTime, MaxThinkTime)
     }
 
     val caseworkerLogin =
