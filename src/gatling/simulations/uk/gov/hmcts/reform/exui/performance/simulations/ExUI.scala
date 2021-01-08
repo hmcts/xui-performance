@@ -34,7 +34,7 @@ class ExUI extends Simulation {
 
   val IAChttpProtocol = Environment.HttpProtocol
 		//.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
-		.baseUrl(BaseURL).inferHtmlResources().silentResources
+		.baseUrl(BaseURL).inferHtmlResources()//.silentResources
 		//.baseUrl("https://xui-webapp-perftest.service.core-compute-perftest.internal")
 		//.baseUrl("https://ccd-case-management-web-perftest.service.core-compute-perftest.internal")
 
@@ -203,7 +203,7 @@ class ExUI extends Simulation {
 			.protocols(XUIHttpProtocol)
 	)*/
 	 setUp(
-		 EXUIMCaseProbateScn.inject(rampUsers(230) during (1200)),
+		 EXUIMCaseProbateScn.inject(rampUsers(1) during (1)),
 	  // EXUIMCaseCaseworkerScn.inject(nothingFor(20),rampUsers(1) during (1))
 	 )
       .protocols(IAChttpProtocol)

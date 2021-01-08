@@ -20,9 +20,9 @@ val baseDomainOrg="manage-org.perftest.platform.hmcts.net"
   val idamAPI="https://idam-api.perftest.platform.hmcts.net"
   val notificationClient="sidam_perftest-b7ab8862-25b4-41c9-8311-cb78815f7d2d-ebb113ff-da17-4646-a39e-f93783a993f4"
 
- val minThinkTime = 100
+ val minThinkTime = 10//100
   //10
-  val maxThinkTime = 110
+  val maxThinkTime = 10//110
   //30
   val minThinkTimeFPLC = 10//60//75
   //10
@@ -42,8 +42,8 @@ val baseDomainOrg="manage-org.perftest.platform.hmcts.net"
   val minThinkTimeIACV = 10//470
   //10
   val maxThinkTimeIACV = 10//490
-  val minThinkTimePROB = 340//300
-  val maxThinkTimePROB = 360//310
+  val minThinkTimePROB = 10//340//300
+  val maxThinkTimePROB = 10//360//310
 
   val minThinkTimeDIV = 10//100//140
   val maxThinkTimeDIV = 10//110//160
