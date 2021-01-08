@@ -119,5 +119,18 @@ object ProbateHeader {
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$484214221_400h65vVNUHLCFUOLBQIRUKGTWUKCORNUWNRADP-0")
 
+ val headers_drfts = Map(
+  "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-draft-update.v2+json;charset=UTF-8",
+  "content-type" -> "application/json",
+  "experimental" -> "true",
+  "origin" -> baseURL,
+  "sec-ch-ua" -> """Google Chrome";v="87", " Not;A Brand";v="99", "Chromium";v="87""",
+  "sec-ch-ua-mobile" -> "?0",
+  "sec-fetch-dest" -> "empty",
+  "sec-fetch-mode" -> "cors",
+  "sec-fetch-site" -> "same-origin",
+  "x-dtpc" -> "3$306835609_341h50vSMDUDAKNCMTAATPLSUJUKNUHICORKWHS-0e15")
+
+
 
 }

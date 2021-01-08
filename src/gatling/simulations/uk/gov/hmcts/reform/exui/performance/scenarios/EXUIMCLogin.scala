@@ -59,8 +59,8 @@ object EXUIMCLogin {
         .headers(headers_4)
         .check(css("input[name='_csrf']", "value").saveAs("csrfToken"))
         .check(regex("manage-user%20create-user&state=(.*)&client").saveAs("state")))
-      .pause(MinThinkTime, MaxThinkTime)
-  }
+
+  } .pause(MinThinkTime, MaxThinkTime)
 
 
   //====================================================================================
@@ -251,8 +251,9 @@ object EXUIMCLogin {
           .get("/aggregated/caseworkers/:uid/jurisdictions/DIVORCE/case-types/FinancialRemedyMVP2/cases?view=WORKBASKET&state=caseAdded&page=1")
           .headers(LoginHeader.headers_0))
         .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(baseDomain).saveAs("XSRFToken")))
-        .pause(MinThinkTime, MaxThinkTime)
+
     }
+      .pause(MinThinkTime, MaxThinkTime)
 
     val caseworkerLogin =
 
@@ -444,13 +445,12 @@ object EXUIMCLogin {
   //below requests are Terms and Conditions page and relavant sub requests
   // ======================================================================================
 
-  val manageCase_Logout =
-
-      exec(http("XUI${service}_${SignoutNumber}_SignOut")
-           .get("/api/logout")
-           .headers(LoginHeader.headers_signout)
-           .check(status.in(200, 304, 302)))
-
+  val manageCase_Logout =group("XUI${service}_${SignoutNumber}_SignOut") {
+    exec(http("XUI${service}_${SignoutNumber}_SignOut")
+      .get("/api/logout")
+      .headers(LoginHeader.headers_signout)
+      .check(status.in(200, 304, 302)))
+  }
 
   val manageOrg_Logout =
 
