@@ -164,11 +164,11 @@ class ExUI extends Simulation {
 		feed(feedUserDataCaseworker).feed(Feeders.CwDataFeeder)
 			.exec(EXUIMCLogin.manageCasesHomePage)
 			.exec(EXUIMCLogin.caseworkerLogin)
-		/*.repeat(1) {
+		.repeat(1) {
 			exec(EXUICaseWorker.ApplyFilters)
 		  	.exec(EXUICaseWorker.ApplySort)
 			.exec(EXUICaseWorker.ViewCase)
-			}*/
+			}
 		.exec(EXUIMCLogin.manageCase_Logout)
   }
 
