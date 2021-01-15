@@ -164,11 +164,11 @@ class ExUI extends Simulation {
 		feed(feedUserDataCaseworker).feed(Feeders.CwDataFeeder)
 			.exec(EXUIMCLogin.manageCasesHomePage)
 			.exec(EXUIMCLogin.caseworkerLogin)
-		.repeat(1) {
+		/*.repeat(1) {
 			exec(EXUICaseWorker.ApplyFilters)
 		  	.exec(EXUICaseWorker.ApplySort)
 			.exec(EXUICaseWorker.ViewCase)
-			}
+			}*/
 		.exec(EXUIMCLogin.manageCase_Logout)
   }
 
@@ -203,7 +203,7 @@ class ExUI extends Simulation {
 			.protocols(XUIHttpProtocol)
 	)*/
 	 setUp(
-		 EXUIMCaseProbateScn.inject(rampUsers(1) during (1)),
+		 EXUIMCaseCaseworkerScn.inject(rampUsers(1) during (1)),
 	  // EXUIMCaseCaseworkerScn.inject(nothingFor(20),rampUsers(1) during (1))
 	 )
       .protocols(IAChttpProtocol)
