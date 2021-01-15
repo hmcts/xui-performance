@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.exui.performance.scenarios
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import uk.gov.hmcts.reform.exui.performance.scenarios.utils.{Environment, LoginHeader}
-import uk.gov.service.notify.NotificationClient
 
 object EXUIMCLogin {
 
@@ -256,52 +255,63 @@ object EXUIMCLogin {
       .pause(MinThinkTime, MaxThinkTime)
 
     val caseworkerLogin =
+      group("XUI${service}_020_SignIn") {
+        exec(http("XUI${service}_020_005_SignIn")
+          //.post(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
+          .post(IdamUrl + "/login?response_type=code&redirect_uri=" + baseURL + "%2Foauth2%2Fcallback&scope=profile%20openid%20roles%20manage-user%20create-user&state=${state}&client_id=xuiwebapp")
+          .formParam("username", "${user}")
+          .formParam("password", "Password12")
+          .formParam("save", "Sign in")
+          .formParam("selfRegistrationEnabled", "false")
+          .formParam("_csrf", "${csrfToken}")
+          .headers(LoginHeader.headers_login_submit)
+          .check(status.in(200, 304, 302))
+          .check(regex("Manage Cases"))).exitHereIfFailed
 
-      exec(http("XUI${service}_020_005_SignIn")
-           //.post(IdamUrl + "/login?response_type=code&client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&scope=profile%20openid%20roles%20manage-user%20create-user")
-           .post(IdamUrl + "/login?response_type=code&redirect_uri=" + baseURL + "%2Foauth2%2Fcallback&scope=profile%20openid%20roles%20manage-user%20create-user&state=${state}&client_id=xuiwebapp")
-           .formParam("username", "${user}")
-           .formParam("password", "Password12")
-           .formParam("save", "Sign in")
-           .formParam("selfRegistrationEnabled", "false")
-           .formParam("_csrf", "${csrfToken}")
-           .headers(LoginHeader.headers_login_submit)
-           .check(status.in(200, 304, 302))
-        .check(regex("Manage Cases"))).exitHereIfFailed
 
-//      .exec(getCookieValue(CookieKey("__userid__").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("myUserId")))
+          /*
+          .post(uri6 + "/login?response_type=code&redirect_uri=https%3A%2F%2Fmanage-case.perftest.platform.hmcts.net%2Foauth2%2Fcallback&scope=profile%20openid%20roles%20manage-user%20create-user&state=OtP7jGEFezvzFa9vUChxL3BhfYrlF4MTaNJ7csGhnWM&client_id=xuiwebapp")
+			.headers(headers_4)
+			.formParam("username", "ccdloadtest2@gmail.com")
+			.formParam("password", "Password12")
+			.formParam("save", "Sign in")
+			.formParam("selfRegistrationEnabled", "false")
+			.formParam("_csrf", "ddc2c3a6-6061-4ef1-905f-9dbedee1a810"),
+           */
 
-      .exec(http("XUI${service}_020_010_Homepage")
-            .get("/external/config/ui")
-            .headers(LoginHeader.headers_0)
-            .check(status.in(200,304)))
+          //      .exec(getCookieValue(CookieKey("__userid__").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("myUserId")))
 
-      .exec(http("XUI${service}_020_015_SignInTCEnabled")
+          .exec(http("XUI${service}_020_010_Homepage")
+          .get("/external/config/ui")
+          .headers(LoginHeader.headers_0)
+          .check(status.in(200, 304)))
+
+          .exec(http("XUI${service}_020_015_SignInTCEnabled")
             .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
             .headers(LoginHeader.headers_38)
             .check(status.in(200, 304)))
 
-      .repeat(1, "count") {
-        exec(http("XUI${service}_020_020_AcceptT&CAccessJurisdictions${count}")
-             .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
-             .headers(LoginHeader.headers_access_read)
-             .check(status.in(200, 304, 302)))
-      }
+          .repeat(1, "count") {
+            exec(http("XUI${service}_020_020_AcceptT&CAccessJurisdictions${count}")
+              .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
+              .headers(LoginHeader.headers_access_read)
+              .check(status.in(200, 304, 302)))
+          }
 
-      .exec(http("XUI${service}_020_025_GetWorkBasketInputs")
+          .exec(http("XUI${service}_020_025_GetWorkBasketInputs")
             .get("/data/internal/case-types/GrantOfRepresentation/work-basket-inputs")
             .headers(LoginHeader.headers_17))
 
-     /* .exec(http("XUI${service}_020_030_GetPaginationMetaData")
+          /* .exec(http("XUI${service}_020_030_GetPaginationMetaData")
             .get("/data/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases/pagination_metadata?state=Open")
             .headers(LoginHeader.headers_0))*/
 
-      .exec(http("XUI${service}_020_035_GetDefaultWorkBasketView")
-            .get("/aggregated/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases?view=WORKBASKET&state=Open&page=1")
-            .headers(LoginHeader.headers_0))
+          .exec(http("XUI${service}_020_035_GetDefaultWorkBasketView")
+          .get("/aggregated/caseworkers/:uid/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases?view=WORKBASKET&state=Open&page=1")
+          .headers(LoginHeader.headers_0))
 
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(baseDomain).saveAs("xsrfToken")))
-
+          .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(baseDomain).saveAs("xsrfToken")))
+      }
 
       .pause(MinThinkTime , MaxThinkTime)
       
