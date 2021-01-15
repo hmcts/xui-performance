@@ -85,14 +85,14 @@ object EXUIProbateMC {
 
       .feed(Feeders.createCaseData)
       .group("XUI${service}_060_CreateApplication") {
-        exec(http("XUI${service}_060_005CreateApplication")
+        exec(http("XUI${service}_060_005_CreateApplication")
           .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorCreateApplicationsolicitorCreateApplicationPage1")
           .headers(ProbateHeader.headers_casedata)
           .header("X-XSRF-TOKEN", "${XSRFToken}")
           .body(ElFileBody("RecordedSimulationPro1612_0048_request.json")).asJson
           .check(status.in(200, 304)))
 
-    .exec(http("XUI${service}_060_010_ApplicationDraft")
+    .exec(http("XUI${service}_060_010_CreateApplication")
     .post("/data/internal/case-types/GrantOfRepresentation/drafts/")
     .headers(ProbateHeader.headers_draft)
     .header("X-XSRF-TOKEN", "${XSRFToken}")
@@ -149,7 +149,8 @@ object EXUIProbateMC {
         .headers(ProbateHeader.headers_saveandviewcase)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200, 304))
-        .check(regex("Add solicitor details")))
+        //.check(regex("Add solicitor details"))
+    )
   }
     .pause(MinThinkTime, MaxThinkTime)
 
