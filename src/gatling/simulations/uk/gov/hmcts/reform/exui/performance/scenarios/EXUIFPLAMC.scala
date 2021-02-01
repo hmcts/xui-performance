@@ -23,7 +23,7 @@ object EXUIFPLAMC {
   private def lastName(): String = rng.alphanumeric.take(10).mkString
 
   val fplacasecreation =
-  group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+  group("XUI${service}_040_CreateCase") {
     exec(http("XUI${service}_040_CreateCase")
       .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
       .headers(FPLAHeader.headers_casecreation)
@@ -32,7 +32,7 @@ object EXUIFPLAMC {
   }
       .pause(MinThinkTime , MaxThinkTime )
 
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_050_StartCreateCase") {
       exec(http("XUI${service}_050_005_StartCreateCase")
         .get("/data/internal/case-types/CARE_SUPERVISION_EPO/event-triggers/openCase?ignore-warning=false")
         .headers(FPLAHeader.headers_startcreatecase)
@@ -52,7 +52,7 @@ object EXUIFPLAMC {
         ("firstName", firstName()),
         ("lastName", lastName())
       ))
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_060_CaseNameContinue") {
       exec(http("XUI${service}_060_005_CaseNameContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=openCase1")
         .headers(FPLAHeader.headers_71)
@@ -68,7 +68,7 @@ object EXUIFPLAMC {
           .check(status.in(200, 304, 201)))
     }
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_070_CaseNameSaveContinue") {
       exec(http("XUI${service}_070_005_CaseNameSaveContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/cases?ignore-warning=false")
         .headers(FPLAHeader.headers_72)
@@ -87,7 +87,7 @@ object EXUIFPLAMC {
       .pause(MinThinkTime , MaxThinkTime )
 
       //Orders Needed
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_080_OrdersDirectionNeededGo") {
     exec(http("XUI${service}_080_005_OrdersDirectionNeededGo")
       .get("/data/internal/cases/${caseId}/event-triggers/ordersNeeded?ignore-warning=false")
       .headers(FPLAHeader.headers_76)
@@ -102,7 +102,7 @@ object EXUIFPLAMC {
         .check(status.in(200, 304, 201)))
   }
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_090_OrdersDirectionNeededContinue") {
       exec(http("XUI${service}_090_005_OrdersDirectionNeededContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=ordersNeeded1")
         .headers(FPLAHeader.headers_71)
@@ -117,7 +117,7 @@ object EXUIFPLAMC {
           .check(status.in(200, 304, 201)))
     }
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_100_OrdersDirectionNeededSaveContinue") {
       exec(http("XUI${service}_100_005_OrdersDirectionNeededSaveContinue")
         .post("/data/cases/${caseId}/events")
         .headers(FPLAHeader.headers_81)
@@ -134,7 +134,7 @@ object EXUIFPLAMC {
       .pause(MinThinkTime , MaxThinkTime )
 
       //hearing needed
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_110_HearingNeededGo") {
     exec(http("XUI${service}_110_005_HearingNeededGo")
       .get("/data/internal/cases/${caseId}/event-triggers/hearingNeeded?ignore-warning=false")
       .headers(FPLAHeader.headers_76)
@@ -149,7 +149,7 @@ object EXUIFPLAMC {
         .check(status.in(200, 304, 201)))
   }
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_120_HearingNeededContinue") {
       exec(http("XUI${service}_120_005_HearingNeededContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=hearingNeeded1")
         .headers(FPLAHeader.headers_71)
@@ -164,7 +164,7 @@ object EXUIFPLAMC {
           .check(status.in(200, 304, 201)))
     }
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_130_HearingNeededSaveContinue") {
       exec(http("XUI${service}_130_005_HearingNeededSaveContinue")
         .post("/data/cases/${caseId}/events")
         .headers(FPLAHeader.headers_80)
@@ -182,7 +182,7 @@ object EXUIFPLAMC {
       .pause(MinThinkTime , MaxThinkTime )
 
       //enter children
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_140_ChildrenGo") {
     exec(http("XUI${service}_140_005_ChildrenGo")
       .get("/data/internal/cases/${caseId}/event-triggers/enterChildren?ignore-warning=false")
       .headers(FPLAHeader.headers_76)
@@ -197,7 +197,7 @@ object EXUIFPLAMC {
         .check(status.in(200, 304, 201)))
   }
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_150_ChildrenContinue") {
       exec(http("XUI${service}_150_005_ChildrenContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterChildren1")
         .headers(FPLAHeader.headers_71)
@@ -213,7 +213,7 @@ object EXUIFPLAMC {
     }
 
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_160_ChildrenSaveContinue") {
       exec(http("XUI${service}_160_005_ChildrenSaveContinue")
         .post("/data/cases/${caseId}/events")
         .headers(FPLAHeader.headers_80)
@@ -231,7 +231,7 @@ object EXUIFPLAMC {
       .pause(MinThinkTime , MaxThinkTime )
 
       //enter respondants
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_170_RespondentsGo") {
     exec(http("XUI${service}_170_005_RespondentsGo")
       .get("/data/internal/cases/${caseId}/event-triggers/enterRespondents?ignore-warning=false")
       .headers(FPLAHeader.headers_76)
@@ -246,7 +246,7 @@ object EXUIFPLAMC {
         .check(status.in(200, 304, 201)))
   }
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_180_RespondentsGetAddress") {
       exec(http("XUI${service}_180_005_RespondentsGetAddress")
         .get("/addresses?postcode=TW33SD")
         .headers(FPLAHeader.headers_16)
@@ -254,7 +254,7 @@ object EXUIFPLAMC {
         .check(status.in(200, 304, 201)))
     }
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_190_RespondentsContinue") {
       exec(http("XUI${service}_190_005_RespondentsContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterRespondents1")
         .headers(FPLAHeader.headers_71)
@@ -269,7 +269,7 @@ object EXUIFPLAMC {
           .check(status.in(200, 304, 201)))
     }
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_200_RespondentsSaveContinue") {
       exec(http("XUI${service}_200_005_RespondentsSaveContinue")
         .post("/data/cases/${caseId}/events")
         .headers(FPLAHeader.headers_80)
@@ -287,7 +287,7 @@ object EXUIFPLAMC {
       .pause(MinThinkTime , MaxThinkTime )
 
       // enter applicant
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_210_ApplicantGo") {
     exec(http("XUI${service}_210_005_ApplicantGo")
       .get("/data/internal/cases/${caseId}/event-triggers/enterApplicant?ignore-warning=false")
       .headers(FPLAHeader.headers_76)
@@ -303,7 +303,7 @@ object EXUIFPLAMC {
 
   }
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_220_ApplicantGetAddress") {
       exec(http("XUI${service}_220_ApplicantGetAddress")
         .get("/addresses?postcode=TW33SD")
         .headers(FPLAHeader.headers_16)
@@ -311,7 +311,7 @@ object EXUIFPLAMC {
         .check(status.in(200, 304, 201)))
     }
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_230_ApplicantContinue") {
       exec(http("XUI${service}_230_005_ApplicantContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterApplicant1")
         .headers(FPLAHeader.headers_71)
@@ -327,14 +327,13 @@ object EXUIFPLAMC {
     }
 
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_240_ApplicantSaveContinue") {
       exec(http("XUI${service}_240_005_ApplicantSaveContinue")
         .post("/data/cases/${caseId}/events")
         .headers(FPLAHeader.headers_80)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .body(StringBody("{\n  \"data\": {\n    \"applicants\": [\n      {\n        \"id\": \"9de5744b-26c2-4653-919d-d9b828fc4c3f\",\n        \"value\": {\n          \"party\": {\n            \"organisationName\": \"${firstName}\",\n            \"pbaNumber\": \"PBA1234567\",\n            \"clientCode\": null,\n            \"customerReference\": null,\n            \"address\": {\n              \"AddressLine1\": \"8 Hibernia Gardens\",\n              \"AddressLine2\": \"\",\n              \"AddressLine3\": \"\",\n              \"PostTown\": \"Hounslow\",\n              \"County\": \"\",\n              \"PostCode\": \"TW3 3SD\",\n              \"Country\": \"United Kingdom\"\n            },\n            \"telephoneNumber\": {\n              \"telephoneNumber\": \"07540634567\",\n              \"contactDirection\": \"${firstName}\"\n            },\n            \"jobTitle\": \"kkkuuhhh\",\n            \"mobileNumber\": {\n              \"telephoneNumber\": null\n            },\n            \"email\": {\n              \"email\": \"dddffff@la.gov.uk\"\n            }\n          }\n        }\n      }\n    ],\n    \"solicitor\": {\n      \"name\": \"nhhffsol\",\n      \"mobile\": \"07540687298\",\n      \"telephone\": \"05673245678\",\n      \"email\": \"joe.bloggs@la.gov.uk\",\n      \"dx\": null,\n      \"reference\": null\n    }\n  },\n  \"event\": {\n    \"id\": \"enterApplicant\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
         .check(status.in(200, 304, 201)))
-
 
         .exec(http("XUI${service}_240_010_ApplicantSaveViewCase")
           .get("/data/internal/cases/${caseId}")
@@ -345,7 +344,7 @@ object EXUIFPLAMC {
       .pause(MinThinkTime , MaxThinkTime )
 
       // enter grounds
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_250_GroundApplicationGo") {
     exec(http("XUI${service}_250_005_GroundApplicationGo")
       .get("/data/internal/cases/${caseId}/event-triggers/enterGrounds?ignore-warning=false")
       .headers(FPLAHeader.headers_76)
@@ -360,7 +359,7 @@ object EXUIFPLAMC {
         .check(status.in(200, 304, 201)))
   }
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_260_GroundApplicationContinue") {
       exec(http("XUI${service}_260_005_GroundApplicationContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterGrounds1")
         .headers(FPLAHeader.headers_71)
@@ -375,7 +374,7 @@ object EXUIFPLAMC {
           .check(status.in(200, 304, 201)))
     }
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_270_GroundApplicationSaveContinue") {
       exec(http("XUI${service}_270_005_GroundApplicationSaveContinue")
         .post("/data/cases/${caseId}/events")
         .headers(FPLAHeader.headers_80)
@@ -391,7 +390,7 @@ object EXUIFPLAMC {
           .check(status.in(200, 304, 201)))
     }
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_280_AllocationProposalGo") {
       //other proposal
       exec(http("XUI${service}_280_005_AllocationProposalGo")
         .get("/data/internal/cases/${caseId}/event-triggers/otherProposal?ignore-warning=false")
@@ -407,7 +406,7 @@ object EXUIFPLAMC {
           .check(status.in(200, 304, 201)))
     }
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_290_AllocationProposalContinue") {
       exec(http("XUI${service}_290_005_AllocationProposalContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=otherProposal1")
         .headers(FPLAHeader.headers_71)
@@ -422,7 +421,7 @@ object EXUIFPLAMC {
           .check(status.in(200, 304, 201)))
     }
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_300_AllocationProposalSaveContinue") {
       exec(http("XUI${service}_300_005_AllocationProposalSaveContinue")
         .post("/data/cases/${caseId}/events")
         .headers(FPLAHeader.headers_80)
@@ -440,7 +439,7 @@ object EXUIFPLAMC {
       .pause(MinThinkTime , MaxThinkTime )
 
       // upload documents
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_310_DocumentsGo") {
     exec(http("XUI${service}_310_005_DocumentsGo")
       .get("/data/internal/cases/${caseId}/event-triggers/uploadDocuments?ignore-warning=false")
       .headers(FPLAHeader.headers_76)
@@ -455,7 +454,7 @@ object EXUIFPLAMC {
         .check(status.in(200, 304, 201)))
   }
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_320_UploadFile") {
       exec(http("XUI${service}_320_UploadFile")
         .post("/documents")
         .headers(FPLAHeader.headers_uploadfile)
@@ -470,7 +469,7 @@ object EXUIFPLAMC {
         .check(regex("""internal/documents/(.+?)/binary""").saveAs("Document_ID")))
     }
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_330_DocumentsContinue") {
       exec(http("XUI${service}_330_005_DocumentsContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=uploadDocuments1")
         .headers(FPLAHeader.headers_71)
@@ -485,7 +484,7 @@ object EXUIFPLAMC {
           .check(status.in(200, 304, 201)))
     }
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_340_DocumentsSaveContinue") {
       exec(http("XUI${service}_340_005_DocumentsSaveContinue")
         .post("/data/cases/${caseId}/events")
         .headers(FPLAHeader.headers_80)
@@ -503,7 +502,7 @@ object EXUIFPLAMC {
       .pause(MinThinkTime , MaxThinkTime )
 
       // submit application
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_350_SubmitApplicationGo") {
     exec(http("XUI${service}_350_005_SubmitApplicationGo")
       .get("/data/internal/cases/${caseId}/event-triggers/submitApplication?ignore-warning=false")
       .headers(FPLAHeader.headers_76)
@@ -518,7 +517,7 @@ object EXUIFPLAMC {
         .check(status.in(200, 304, 201)))
   }
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_360_SubmitApplicationContinue") {
       exec(http("XUI${service}_360_005_SubmitApplicationContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=submitApplication1")
         .headers(FPLAHeader.headers_71)
@@ -533,7 +532,7 @@ object EXUIFPLAMC {
           .check(status.in(200, 304, 201)))
     }
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_370_ApplicationSubmitted") {
       exec(http("XUI${service}_370_005_ApplicationSubmitted")
         .post("/data/cases/${caseId}/events")
         .headers(FPLAHeader.headers_80)

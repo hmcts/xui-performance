@@ -148,22 +148,39 @@ object EXUIMCLogin {
            .headers(LoginHeader.headers_login_submit)
            .check(status.in(200, 304, 302))).exitHereIfFailed
 
-      //      .exec(getCookieValue(CookieKey("__userid__").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("myUserId")))
+           .exec(getCookieValue(CookieKey("__auth__").withDomain(orgDomain).saveAs("authToken")))
 
       .exec(http("XUI${service}_020_010_Homepage")
             .get(manageOrgURL + "/external/config/ui")
             .headers(LoginHeader.headers_0)
             .check(status.in(200,304)))
 
-      /*.exec(http("XUI${service}_020_010_Homepage")
-            .get("/external/config/ui")
-            .headers(LoginHeader.headers_0)
-            .check(status.in(200,304)))*/
+
 
       .exec(http("XUI${service}_020_015_SignInTCEnabled")
             .get(manageOrgURL + "/api/configuration?configurationKey=termsAndConditionsEnabled")
-            .headers(LoginHeader.headers_38)
+            .headers(LoginHeader.headers_manageorglogin)
             .check(status.in(200, 304)))
+
+  /*http("XUI${service}_020_020_SignInTCEnabled")
+    .get("/auth/isAuthenticated")
+    .headers(LoginHeader.headers_manageorglogin)
+
+  http("request_29")
+    .get("/api/user/details")
+    .headers(LoginHeader.headers_manageorglogin)
+
+  http("request_35")
+    .get("/api/user/details")
+    .headers(LoginHeader.headers_manageorglogin)
+
+  http("request_43")
+    .get("/auth/isAuthenticated")
+    .headers(LoginHeader.headers_manageorglogin)
+
+  http("request_51")
+    .get("/api/organisation")
+    .headers(LoginHeader.headers_manageorglogin)*/
 
       /* .exec(http("XUI${service}_020_020_SignInGetUserId")
              .get("/api/userTermsAndConditions/${myUserId}")
@@ -219,9 +236,25 @@ object EXUIMCLogin {
         .check(regex("Manage Cases"))).exitHereIfFailed
 
 
+//following is the other way of getting cookies
+        // .check(headerRegex("Set-Cookie","__auth-token=(.*)").saveAs("authToken"))
 
       //      .exec(getCookieValue(CookieKey("__userid__").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("myUserId")))
-      .exec(http("XUI${service}_020_010_configUI").get("/external/config/ui").headers(LoginHeader.headers_0).check(status.in(200, 304))).exec(http("XUI${service}_020_015_Config").get("/assets/config/config.json").headers(LoginHeader.headers_0).check(status.in(200, 304))).exec(http("XUI${service}_020_020_SignInTCEnabled").get("/api/configuration?configurationKey=termsAndConditionsEnabled").headers(LoginHeader.headers_38).check(status.in(200, 304))).exec(http("XUI${service}_020_025_SignInGetUserId").get("/api/user/details").headers(LoginHeader.headers_0).check(status.in(200, 304)))
+      .exec(http("XUI${service}_020_010_configUI")
+        .get("/external/config/ui")
+        .headers(LoginHeader.headers_0)
+        .check(status.in(200, 304)))
+        .exec(http("XUI${service}_020_015_Config")
+          .get("/assets/config/config.json")
+          .headers(LoginHeader.headers_0)
+          .check(status.in(200, 304)))
+        .exec(http("XUI${service}_020_020_SignInTCEnabled")
+          .get("/api/configuration?configurationKey=termsAndConditionsEnabled").headers(LoginHeader.headers_38)
+          .check(status.in(200, 304)))
+        .exec(http("XUI${service}_020_025_SignInGetUserId")
+          .get("/api/user/details")
+          .headers(LoginHeader.headers_0)
+          .check(status.in(200, 304)))
 
       /* .exec(http("XUI${service}_020_025_SignInAcceptTCGet")
              .get("/accept-terms-and-conditions")
@@ -232,8 +265,14 @@ object EXUIMCLogin {
              .headers(LoginHeader.headers_tc))*/
 
       .repeat(1, "count") {
-        exec(http("XUI${service}_020_030_AcceptT&CAccessJurisdictions${count}").get("/aggregated/caseworkers/:uid/jurisdictions?access=read").headers(LoginHeader.headers_access_read).check(status.in(200, 304, 302)))
-      }.exec(http("XUI${service}_020_035_GetWorkBasketInputs").get("/data/internal/case-types/FinancialRemedyMVP2/work-basket-inputs").headers(LoginHeader.headers_17).check(status.in(200, 304, 302))) /* .exec(getCookieValue(CookieKey("__auth__").withDomain(baseDomain).saveAs("authToken")))*/
+        exec(http("XUI${service}_020_030_AcceptT&CAccessJurisdictions${count}")
+          .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
+          .headers(LoginHeader.headers_access_read)
+          .check(status.in(200, 304, 302)))
+      }
+        .exec(http("XUI${service}_020_035_GetWorkBasketInputs")
+          .get("/data/internal/case-types/FinancialRemedyMVP2/work-basket-inputs").headers(LoginHeader.headers_17)
+          .check(status.in(200, 304, 302))) /* .exec(getCookieValue(CookieKey("__auth__").withDomain(baseDomain).saveAs("authToken")))*/
       /*.exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain("manage-case.perftest.platform.hmcts.net").saveAs("XSRFToken")))*/
       /*.exec( session => {
         println("the xsrf code is "+session("XSRFToken").as[String])
