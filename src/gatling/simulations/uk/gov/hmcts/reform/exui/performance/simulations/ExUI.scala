@@ -179,11 +179,11 @@ class ExUI extends Simulation {
 		.exec(EXUIMCLogin.manageCaseslogin)
 		.exec(EXUI_FR_Applicant.createCase)
 		.exec(EXUIMCLogin.manageCase_Logout)
-		/*.feed(Feeders.FRRespondentDataFeeder)
+		.feed(Feeders.FRRespondentDataFeeder)
 		.exec(EXUIMCLogin.manageOrgHomePage)
 		.exec(EXUIMCLogin.manageOrglogin)
 		.exec(EXUI_FR_Respondent.shareCase)
-		.exec(EXUIMCLogin.manageOrg_Logout)*/
+		.exec(EXUIMCLogin.manageOrg_Logout)
 	}
 
 	/*setUp(
