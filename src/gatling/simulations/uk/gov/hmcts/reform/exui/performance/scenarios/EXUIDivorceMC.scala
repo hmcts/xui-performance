@@ -24,14 +24,14 @@ object EXUIDivorceMC {
 */
 
   val casecreation=
-  group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+  group("XUI${service}_040_CreateCase") {
     exec(http("XUI${service}_040_CreateCase")
       .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
       .headers(DivorceHeader.headers_accessCreate)
       .check(status.in(200, 304)))
   }
     .pause(MinThinkTime, MaxThinkTime)
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_050_StartCreateCase1") {
       exec(http("XUI${service}_050_005_StartCreateCase1")
         .get("/data/internal/case-types/DIVORCE_XUI/event-triggers/solicitorCreate?ignore-warning=false")
         .headers(DivorceHeader.headers_27)
@@ -55,7 +55,7 @@ object EXUIDivorceMC {
     }
       .pause(MinThinkTime, MaxThinkTime)
 
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_060_CreateApplication") {
       exec(http("XUI${service}_060_CreateApplication")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreatesolicitorCreate")
         .headers(DivorceHeader.headers_soldata)
@@ -63,7 +63,7 @@ object EXUIDivorceMC {
         .check(status.in(200, 304)))
     }
       .pause(MinThinkTime, MaxThinkTime)
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_070_SolicitorDetails") {
       exec(http("XUI${service}_070_SolicitorDetails")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolAboutTheSolicitor")
         .headers(DivorceHeader.headers_aboutsol)
@@ -71,7 +71,7 @@ object EXUIDivorceMC {
         .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_080_PetitionerDetails") {
       exec(http("XUI${service}_080_PetitionerDetails")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolAboutThePetitioner")
         .headers(DivorceHeader.headers_aboutpetitioner)
@@ -79,7 +79,7 @@ object EXUIDivorceMC {
         .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_090_RespondantDetails") {
       exec(http("XUI${service}_090_RespondantDetails")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolAboutTheRespondent")
         .headers(DivorceHeader.headers_headerRespondant)
@@ -87,7 +87,7 @@ object EXUIDivorceMC {
         .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_100_MarriageCertificate") {
       exec(http("XUI${service}_100_MarriageCertificate")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolMarriageCertificate")
         .headers(DivorceHeader.headers_marriagecertificate)
@@ -95,7 +95,7 @@ object EXUIDivorceMC {
         .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_110_SolJurisdiction") {
       exec(http("XUI${service}_110_SolJurisdiction")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolJurisdiction")
         .headers(DivorceHeader.headers_createjurisdiction)
@@ -103,7 +103,7 @@ object EXUIDivorceMC {
         .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_120_ReasonForDivorce") {
       exec(http("XUI${service}_120_ReasonForDivorce")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolReasonForDivorce")
         .headers(DivorceHeader.headers_reasonfordiv)
@@ -111,7 +111,7 @@ object EXUIDivorceMC {
         .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_130_Behaviour") {
       exec(http("XUI${service}_130_Behaviour")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolSOCBehaviour1")
         .headers(DivorceHeader.headers_behaviour)
@@ -119,7 +119,7 @@ object EXUIDivorceMC {
         .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_140_ExistingCourtCases") {
       exec(http("XUI${service}_140_ExistingCourtCases")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolExistingCourtCases")
         .headers(DivorceHeader.headers_courtcases)
@@ -127,7 +127,7 @@ object EXUIDivorceMC {
         .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_150_DivideProperty") {
       exec(http("XUI${service}_150_DivideProperty")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolDividingMoneyAndProperty")
         .headers(DivorceHeader.headers_devideprops)
@@ -135,7 +135,7 @@ object EXUIDivorceMC {
         .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_160_ClaimCosts") {
       exec(http("XUI${service}_160_ClaimCosts")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolApplyToClaimCosts")
         .headers(DivorceHeader.headers_claimcosts)
@@ -143,7 +143,7 @@ object EXUIDivorceMC {
         .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_170_UploadDocs") {
       exec(http("XUI${service}_170_UploadDocs")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolUploadDocs")
         .headers(DivorceHeader.headers_upload)
@@ -151,7 +151,7 @@ object EXUIDivorceMC {
         .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_180_CreateLangPref") {
       exec(http("XUI${service}_180_005_CreateLangPref")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreatelangPref")
         .headers(DivorceHeader.headers_langpref)
@@ -164,7 +164,7 @@ object EXUIDivorceMC {
           .check(status.in(200, 304)))
     }
       .pause(MinThinkTime, MaxThinkTime)
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
+    .group("XUI${service}_190_ApplicationDraftfinal") {
       exec(http("XUI${service}_190_005_ApplicationDraftfinal")
         .post("/data/case-types/DIVORCE_XUI/cases?ignore-warning=false")
         .headers(DivorceHeader.headers_ignorewarning)
@@ -280,33 +280,36 @@ object EXUIDivorceMC {
 
 
   val shareacase =
-      exec(http("XUI${service}_200_005_ShareACase")
-    .get("/api/caseshare/cases?case_ids=${caseId}")
-   .headers(DivorceHeader.headers_shareacasebyid)
-    .check(status.in(200,304))
-        .check(jsonPath("$..email").find(0).optional.saveAs("user0"))
-        .check(jsonPath("$..firstName").find(0).optional.saveAs("firstName"))
-        .check(jsonPath("$..lastName").find(0).optional.saveAs("lastName"))
-        .check(jsonPath("$..idamId").find(0).optional.saveAs("idamId"))
+  group("XUI${service}_200_ShareACase") {
+    exec(http("XUI${service}_200_005_ShareACase")
+      .get("/api/caseshare/cases?case_ids=${caseId}")
+      .headers(DivorceHeader.headers_shareacasebyid)
+      .check(status.in(200, 304))
+      .check(jsonPath("$..email").find(0).optional.saveAs("user0"))
+      .check(jsonPath("$..firstName").find(0).optional.saveAs("firstName"))
+      .check(jsonPath("$..lastName").find(0).optional.saveAs("lastName"))
+      .check(jsonPath("$..idamId").find(0).optional.saveAs("idamId"))
 
-      )
-
-    .exec(http("XUI${service}_200_010_ShareACaseUsers")
-  .get("/api/caseshare/users")
-  .headers(DivorceHeader.headers_shareacasesuserslist)
-      .check(status.in(200,304))
-      .check(jsonPath("$..email").find(0).optional.saveAs("user1"))
-      .check(jsonPath("$..firstName").find(0).optional.saveAs("firstName1"))
-      .check(jsonPath("$..lastName").find(0).optional.saveAs("lastName1"))
-      .check(jsonPath("$..idamId").find(0).optional.saveAs("idamId1"))
     )
-        .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUI${service}_210_ShareACaseAssignments")
-  .post("/api/caseshare/case-assignments")
- .headers(DivorceHeader.headers_shareacaseconfirm)
-      .body(ElFileBody("RecordedSimulationSC_0229_request.json")).asJson
-      .check(status.in(200,201)))
+      .exec(http("XUI${service}_200_010_ShareACaseUsers")
+        .get("/api/caseshare/users")
+        .headers(DivorceHeader.headers_shareacasesuserslist)
+        .check(status.in(200, 304))
+        .check(jsonPath("$..email").find(0).optional.saveAs("user1"))
+        .check(jsonPath("$..firstName").find(0).optional.saveAs("firstName1"))
+        .check(jsonPath("$..lastName").find(0).optional.saveAs("lastName1"))
+        .check(jsonPath("$..idamId").find(0).optional.saveAs("idamId1"))
+      )
+  }
+        .pause(MinThinkTime , MaxThinkTime )
+    .group("XUI${service}_210_ShareACaseAssignments") {
+      exec(http("XUI${service}_210_ShareACaseAssignments")
+        .post("/api/caseshare/case-assignments")
+        .headers(DivorceHeader.headers_shareacaseconfirm)
+        .body(ElFileBody("RecordedSimulationSC_0229_request.json")).asJson
+        .check(status.in(200, 201)))
+    }
         .pause(MinThinkTime , MaxThinkTime )
 
 

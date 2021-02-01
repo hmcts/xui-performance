@@ -34,7 +34,7 @@ class ExUI extends Simulation {
 
   val IAChttpProtocol = Environment.HttpProtocol
 		//.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
-		.baseUrl(BaseURL).inferHtmlResources()//.silentResources
+		.baseUrl(BaseURL).inferHtmlResources().silentResources
 		//.baseUrl("https://xui-webapp-perftest.service.core-compute-perftest.internal")
 		//.baseUrl("https://ccd-case-management-web-perftest.service.core-compute-perftest.internal")
 
@@ -179,22 +179,19 @@ class ExUI extends Simulation {
 		.exec(EXUIMCLogin.manageCaseslogin)
 		.exec(EXUI_FR_Applicant.createCase)
 		.exec(EXUIMCLogin.manageCase_Logout)
-		//.feed(feedUserDataProbate2)
-		.feed(Feeders.FRRespondentDataFeeder)
+		/*.feed(Feeders.FRRespondentDataFeeder)
 		.exec(EXUIMCLogin.manageOrgHomePage)
 		.exec(EXUIMCLogin.manageOrglogin)
 		.exec(EXUI_FR_Respondent.shareCase)
-		.exec(EXUIMCLogin.manageOrg_Logout)
+		.exec(EXUIMCLogin.manageOrg_Logout)*/
 	}
 
 	/*setUp(
-		//EXUIMCaseCreationDivorceScn.inject(nothingFor(5),rampUsers(1) during (3))
-		//EXUIMCaseCaseworkerScn.inject(rampUsers(1) during 1)
-		//EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(1) during (3))
-		/*EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(1) during (3)),
-		EXUIMCaseViewIACScn.inject(nothingFor(25),rampUsers(1) during (3)),
+		EXUIMCaseCreationDivorceScn.inject(nothingFor(5),rampUsers(1) during (3)),
+		EXUIMCaseCaseworkerScn.inject(rampUsers(1) during 1),
+		EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(1) during (3)),
+		EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(1) during (3)),
 		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(1) during (2)),
-		EXUIMCaseViewFPLAScn.inject(nothingFor(45),rampUsers(1) during (3)),*/
 		EXUIFinancialRemedyScn.inject(atOnceUsers(1)).protocols(IAChttpProtocol))
 }
 */
@@ -203,20 +200,19 @@ class ExUI extends Simulation {
 			.protocols(XUIHttpProtocol)
 	)*/
 	 setUp(
-		 EXUIMCaseCaseworkerScn.inject(rampUsers(1) during (1)),
+		 EXUIMCaseCreationFPLAScn.inject(rampUsers(1) during (1)),
 	  // EXUIMCaseCaseworkerScn.inject(nothingFor(20),rampUsers(1) during (1))
 	 )
       .protocols(IAChttpProtocol)
-  /*setUp(
-		//EXUIMCaseCreationFPLAScn.inject(rampUsers(1) during (1))
-    //EXUIMCaseCreationDivorceScn.inject(rampUsers(1) during (1))
-    EXUIMCaseProbateScn.inject(nothingFor(15),rampUsers(230) during (1200)),
-    //EXUIMCaseCreationIACScn.inject(nothingFor(20),rampUsers(1) during (1)),
-    //EXUIFinancialRemedyScn.inject(nothingFor(25),rampUsers(1) during (1)),
-    //EXUIMCaseCaseworkerScn.inject(nothingFor(35),rampUsers(1) during (1))
-		//EXUIMCaseViewIACScn.inject(nothingFor(25),rampUsers(1) during (3)),
-		//EXUIMCaseViewFPLAScn.inject(nothingFor(15),rampUsers(1) during (3))
+ /* setUp(
+		EXUIMCaseCreationFPLAScn.inject(rampUsers(1) during (1)),
+    EXUIMCaseCreationDivorceScn.inject(rampUsers(1) during (1)),
+    EXUIMCaseProbateScn.inject(nothingFor(15),rampUsers(1) during (1)),
+    EXUIMCaseCreationIACScn.inject(nothingFor(20),rampUsers(1) during (1)),
+    EXUIFinancialRemedyScn.inject(nothingFor(25),rampUsers(1) during (1)),
+    EXUIMCaseCaseworkerScn.inject(nothingFor(35),rampUsers(1) during (1))
   ).protocols(IAChttpProtocol)*/
+
 	/*setUp(
 		EXUIMCaseViewIACScn.inject(rampUsers(74) during (600)))
 		.protocols(IAChttpProtocol)*/
