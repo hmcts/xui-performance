@@ -1834,4 +1834,19 @@ object FPLAHeader {
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$151995464_260h2vLUKIPDRTGHKMLPHEPIVUENOBLKPRFDMA-0")
 
+ val headers_uploadanddocuments = Map(
+  "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
+  "accept-encoding" -> "gzip, deflate, br",
+  "accept-language" -> "en-US,en;q=0.9",
+  "content-type" -> "application/json",
+  "experimental" -> "true",
+  "origin" -> baseURL,
+  "sec-ch-ua" -> """Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99""",
+  "sec-ch-ua-mobile" -> "?0",
+  "sec-fetch-dest" -> "empty",
+  "sec-fetch-mode" -> "cors",
+  "sec-fetch-site" -> "same-origin",
+  "x-dtpc" -> "2$341019216_588h28vALCVAMCNECRCQJMCWFRHNORFPDERHKHQ-0e23")
+
+
 }

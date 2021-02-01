@@ -218,9 +218,7 @@ object EXUIMCLogin {
 
 
 
-
     .pause(MinThinkTime , MaxThinkTime)
-
 
   val manageCaseslogin =
     group("XUI${service}_020_005_SignIn") {
@@ -285,6 +283,7 @@ object EXUIMCLogin {
       .exec(http("XUI${service}_020_040_HomepageIsAuthenticated")
         .get("/auth/isAuthenticated")
         .headers(LoginHeader.headers_0))
+
         .exec(http("XUI${service}_020_045_GetDefaultWorkBasketView")
           .get("/aggregated/caseworkers/:uid/jurisdictions/DIVORCE/case-types/FinancialRemedyMVP2/cases?view=WORKBASKET&state=caseAdded&page=1")
           .headers(LoginHeader.headers_0))
