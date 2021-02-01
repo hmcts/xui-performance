@@ -199,19 +199,19 @@ class ExUI extends Simulation {
 		EXUIScn.inject(rampUsers(209) during (3600))
 			.protocols(XUIHttpProtocol)
 	)*/
-	 setUp(
+	/* setUp(
 		 EXUIMCaseCreationFPLAScn.inject(rampUsers(1) during (1)),
 	  // EXUIMCaseCaseworkerScn.inject(nothingFor(20),rampUsers(1) during (1))
 	 )
-      .protocols(IAChttpProtocol)
- /* setUp(
-		EXUIMCaseCreationFPLAScn.inject(rampUsers(1) during (1)),
-    EXUIMCaseCreationDivorceScn.inject(rampUsers(1) during (1)),
-    EXUIMCaseProbateScn.inject(nothingFor(15),rampUsers(1) during (1)),
-    EXUIMCaseCreationIACScn.inject(nothingFor(20),rampUsers(1) during (1)),
-    EXUIFinancialRemedyScn.inject(nothingFor(25),rampUsers(1) during (1)),
-    EXUIMCaseCaseworkerScn.inject(nothingFor(35),rampUsers(1) during (1))
-  ).protocols(IAChttpProtocol)*/
+      .protocols(IAChttpProtocol)*/
+  setUp(
+		EXUIMCaseCreationFPLAScn.inject(rampUsers(20) during (900)),
+    EXUIMCaseCreationDivorceScn.inject(rampUsers(100) during (900)),
+    EXUIMCaseProbateScn.inject(nothingFor(15),rampUsers(100) during (900)),
+    EXUIMCaseCreationIACScn.inject(nothingFor(20),rampUsers(50) during (1)),
+    EXUIFinancialRemedyScn.inject(nothingFor(25),rampUsers(100) during (900)),
+    EXUIMCaseCaseworkerScn.inject(nothingFor(35),rampUsers(100) during (900))
+  ).protocols(IAChttpProtocol)
 
 	/*setUp(
 		EXUIMCaseViewIACScn.inject(rampUsers(74) during (600)))

@@ -440,20 +440,55 @@ object EXUIFPLAMC {
 
       // upload documents
     .group("XUI${service}_310_DocumentsGo") {
-    exec(http("XUI${service}_310_005_DocumentsGo")
+    exec(http("XUI${service}_310_DocumentsGo")
+      .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/${caseId}/trigger/uploadDocuments")
+      .headers(FPLAHeader.commonHeader)
+      .check(status.in(200, 304, 201)))
+  }
+    .pause(MinThinkTime , MaxThinkTime )
+
+.group("XUI${service}_320_DocumentsUploadPage"){
+  exec(http("XUI${service}_320_005_DocumentsUploadPage")
+    .get("/external/configuration-ui/")
+    .headers(FPLAHeader.headers_323)
+    .check(status.in(200, 304, 201)))
+
+    .exec(http("XUI${service}_320_010_DocumentsUploadPage")
+    .get("/assets/config/config.json")
+    .headers(FPLAHeader.commonHeader)
+      .check(status.in(200, 304, 201)))
+
+      .exec(http("XUI${service}_320_015_DocumentsUploadPage")
+      .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
+      .headers(FPLAHeader.commonHeader)
+        .check(status.in(200, 304, 201)))
+
+      .exec(http("XUI${service}_320_020_DocumentsUploadPage")
+      .get("/auth/isAuthenticated")
+      .headers(FPLAHeader.commonHeader)
+        .check(status.in(200, 304, 201)))
+
+      .exec(http("XUI${service}_320_025_DocumentsUploadPage")
+      .get("/api/user/details")
+      .headers(FPLAHeader.commonHeader)
+        .check(status.in(200, 304, 201)))
+
+      .exec(http("XUI${service}_320_030_DocumentsUploadPageXUI${service}_320_010_DocumentsUploadPage")
       .get("/data/internal/cases/${caseId}/event-triggers/uploadDocuments?ignore-warning=false")
       .headers(FPLAHeader.headers_76)
       .header("X-XSRF-TOKEN", "${XSRFToken}")
       .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
       .check(status.in(200, 304, 201)))
+  //below request eliminated in the new upload code
 
-      .exec(http("XUI${service}_310_010_DocumentsGoProfile")
+      .exec(http("XUI${service}_310_035_DocumentsGoProfile")
         .get("/data/internal/profile")
         .headers(FPLAHeader.headers_ordersneed1profile)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200, 304, 201)))
   }
       .pause(MinThinkTime , MaxThinkTime )
+
     .group("XUI${service}_320_UploadFile") {
       exec(http("XUI${service}_320_UploadFile")
         .post("/documents")
@@ -469,12 +504,15 @@ object EXUIFPLAMC {
         .check(regex("""internal/documents/(.+?)/binary""").saveAs("Document_ID")))
     }
       .pause(MinThinkTime , MaxThinkTime )
+
+    //below request updated
+
     .group("XUI${service}_330_DocumentsContinue") {
       exec(http("XUI${service}_330_005_DocumentsContinue")
-        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=uploadDocuments1")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=uploadDocumentsaddApplicationDocuments")
         .headers(FPLAHeader.headers_71)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(StringBody("{\n  \"data\": {\n    \"documents_socialWorkChronology_document\": {\n      \"documentStatus\": \"Attached\",\n      \"typeOfDocument\": {\n        \"document_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}\",\n        \"document_binary_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}/binary\",\n        \"document_filename\": \"3MB.pdf\"\n      }\n    },\n    \"documents_socialWorkStatement_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkAssessment_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkCarePlan_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkEvidenceTemplate_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_threshold_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_checklist_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkOther\": []\n  },\n  \"event\": {\n    \"id\": \"uploadDocuments\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"documents_socialWorkChronology_document\": {\n      \"documentStatus\": \"Attached\",\n      \"typeOfDocument\": {\n        \"document_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}\",\n        \"document_binary_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}/binary\",\n        \"document_filename\": \"3MB.pdf\"\n      }\n    },\n    \"documents_socialWorkStatement_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkAssessment_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkCarePlan_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkEvidenceTemplate_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_threshold_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_checklist_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkOther\": []\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
+        .body(StringBody("{\n  \"data\": {\n    \"applicationDocuments\": [\n      {\n        \"value\": {\n          \"documentType\": \"CARE_PLAN\",\n          \"includedInSWET\": null,\n          \"document\": {\n            \"document_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}\",\n            \"document_binary_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}/binary\",\n            \"document_filename\": \"3MB.pdf\"\n          },\n          \"uploadedBy\": null\n        },\n        \"id\": null\n      }\n    ],\n    \"applicationDocumentsToFollowReason\": \"This is perftest reason\"\n  },\n  \"event\": {\n    \"id\": \"uploadDocuments\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_data\": {\n    \"applicationDocuments\": [\n      {\n        \"value\": {\n          \"documentType\": \"CARE_PLAN\",\n          \"includedInSWET\": null,\n          \"document\": {\n            \"document_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}\",\n            \"document_binary_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}/binary\",\n            \"document_filename\": \"200MB.mp3\"\n          },\n          \"uploadedBy\": null\n        },\n        \"id\": null\n      }\n    ],\n    \"applicationDocumentsToFollowReason\": \"This is perftest reason\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"case_reference\": \"${caseId}\"\n}"))
         .check(status.in(200, 304, 201)))
 
         .exec(http("XUI${service}_330_010_DocumentsContinueProfile")
@@ -489,7 +527,7 @@ object EXUIFPLAMC {
         .post("/data/cases/${caseId}/events")
         .headers(FPLAHeader.headers_80)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(StringBody("{\n  \"data\": {\n    \"documents_socialWorkChronology_document\": {\n      \"documentStatus\": \"Attached\",\n      \"typeOfDocument\": {\n        \"document_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}\",\n        \"document_binary_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}/binary\",\n        \"document_filename\": \"3MB.pdf\"\n      }\n    },\n    \"documents_socialWorkStatement_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkAssessment_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkCarePlan_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkEvidenceTemplate_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_threshold_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_checklist_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkOther\": []\n  },\n  \"event\": {\n    \"id\": \"uploadDocuments\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
+        .body(StringBody("{\n  \"data\": {\n    \"applicationDocuments\": [\n      {\n        \"value\": {\n          \"documentType\": \"CARE_PLAN\",\n          \"includedInSWET\": null,\n          \"document\": {\n            \"document_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}\",\n            \"document_binary_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}/binary\",\n            \"document_filename\": \"200MB.mp3\"\n          },\n          \"uploadedBy\": null\n        },\n        \"id\": null\n      }\n    ],\n    \"applicationDocumentsToFollowReason\": \"This is Performance Test\"\n  },\n  \"event\": {\n    \"id\": \"uploadDocuments\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
         .check(status.in(200, 304, 201)))
 
 
