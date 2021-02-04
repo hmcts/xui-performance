@@ -28,10 +28,7 @@ object ExUI {
   val feederuser = csv("OrgDetails.csv").circular
   val adminFeeder = csv("AdminLogin.csv").circular
 
-  /*
-  //floowing variable s are for create org
-   */
-
+  
   private val rng: Random = new Random()
   private def sRAId(): String = rng.alphanumeric.take(15).mkString
   private def companyNumber(): String = rng.alphanumeric.take(8).mkString
@@ -74,16 +71,27 @@ object ExUI {
     "sec-fetch-site" -> "same-site",
     "sec-fetch-user" -> "?1",
     "upgrade-insecure-requests" -> "1")
+  
+  /*======================================================================================
+*Business process : Below scrit  is to create Org, Approve Org and manage Org like invote users
+======================================================================================*/
+  
+  /*======================================================================================
+*Business process : Below method is to create user with empty roles and bu using this user organisation will be created in subsequent requents
+======================================================================================*/
 
   val createSuperUser=
   feed(Feeders.createDynamicDataFeeder).exec(http("XUI_CreateSuperUser")
-       .post(idamAPI+"/testing-support/accounts")
-                        // .header("Authorization", "Bearer ${accessToken}")
-                        // .header("ServiceAuthorization", "Bearer ${s2sToken}")
-                        .header("Content-Type", "application/json")
-                        .body(StringBody("{\"email\": \"${generatedEmail}\", \"forename\": \"Vijay\", \"password\": \"Pass19word\", \"surname\": \"Vykuntam\"}"))
-                        .check(status is 201))
-                   .pause(20)
+          .post(idamAPI+"/testing-support/accounts")
+          .header("Content-Type", "application/json")
+          .body(StringBody("{\"email\": \"${generatedEmail}\", \"forename\": \"Vijay\", \"password\": \"Pass19word\", \"surname\": \"Vykuntam\"}"))
+          .check(status is 201))
+          .pause(20)
+  
+  /*======================================================================================
+*Business process : Below method is to create Organisation with the user created from above request
+======================================================================================*/
+
 val createOrg=
   exec(_.setAll(
     ("SRAId", sRAId()),
@@ -105,20 +113,10 @@ val createOrg=
           .check(jsonPath("$.organisationIdentifier").saveAs("orgRefCode"))
           .check(status in (200,201)))
     .pause(15)
-
-
-
- /* val createOrg1=
-    exec(http("EXUI_RO_Homepage")
-         .get("/register-org/register")
-         .check(status.is(200)))
-    .pause(Environment.minThinkTime,Environment.maxThinkTime)
-    .feed(Feeders.createDynamicDataFeeder).exec(http("EXUI_RO_Create")
-      .post("/external/register-org/register")
-      .body(ElFileBody("CR.json")).asJson
-      .check(status.is(200)).check(jsonPath("$.organisationIdentifier").optional.saveAs("orgRefCode")))
-    .pause(10)*/
-
+  
+  /*======================================================================================
+  *Business process : Below method is to create approve the organisation Home page
+  ======================================================================================*/
   val approveOrgHomePage=
     exec(http("EXUI_AO_005_Homepage")
          .get(url_approve + "/")
@@ -144,6 +142,10 @@ val createOrg=
     )
 
     .pause(Environment.minThinkTime)
+  
+  /*======================================================================================
+  *Business process : Below method is for approve organisation login requests
+  ======================================================================================*/
 
   val approveOrganisationlogin =
 
@@ -191,10 +193,13 @@ val createOrg=
     )
 
     .pause(30)
-
-
-
-
+  
+  
+  
+  /*======================================================================================
+    *Business process : Below method is to create approve the organisation approave
+    * This will approve the organisation created which means we can login to manage org to invite users
+    ======================================================================================*/
   val approveOrganisationApprove =
 
   exec(http("request_3")
@@ -215,30 +220,7 @@ val createOrg=
       .check(status.is(200))
     .check(status.saveAs("aostatusvalue")))
     .pause(10)
-       /* .exec {
-      session =>
-        val client = new NotificationClient(notificationClient)
-        val pattern = new Regex("token.+")
-        val str = findEmail(client,session("generatedEmail").as[String])
-        session.set("activationLink", (pattern findFirstMatchIn str.get).mkString.trim.replace(")", ""))
-    }
-    .pause(40)
-      .exec(http("SelfReg01_TX03_Password")
-        .get(IdamUrl+"/users/register?&${activationLink}")
-        .check(status.is(200))
-        .check(css("input[name='token']", "value").saveAs("token"))
-        .check(css("input[name='code']", "value").saveAs("code"))
-        .check(css("input[name='_csrf']", "value").saveAs("_csrf")))
-      .pause(40)
-      .exec(http("SelfReg01_TX04_Activate").post(IdamUrl+"/users/activate")
-        .formParam("_csrf", "${_csrf}")
-        .formParam("code", "${code}")
-        .formParam("token", "${token}")
-        .formParam("password1", "Pass19word")
-        .formParam("password2", "Pass19word")
-        .check(status.is(200))
-    .check(status.saveAs("aostatusvalue")))
-      .pause(20)*/
+    
     .doIf(session=>session("aostatusvalue").as[String].contains("200")) {
       exec { session =>
         val fw = new BufferedWriter(new FileWriter("OrgDetails.csv", true))
@@ -248,40 +230,41 @@ val createOrg=
         session
       }
     }
-
+  /*======================================================================================
+      *Business process : Below method is to create approve the organisation approave
+      * This will approve the organisation logout
+      ======================================================================================*/
   val approveOrganisationLogout =
     exec(http("EXUI_AO_005_Logout")
       .get(url_approve + "/api/logout")
       .check(status.is(200)))
-
-  // following code is for manage organisation
-
+  
+  
+  /*======================================================================================
+        *Business process : Below method is to create manage organisation
+        * below request is for manage organisation home page
+        ======================================================================================*/
 
   val manageOrgHomePage =
     feed(feederuser).
     exec(http("EXUI_MO_005_Homepage")
       .get(url_mo + "/")
-     // .headers(headers_0)
       .check(status.is(200)))
-
-     /* .exec(http("EXUI_MO_010_Homepage")
-        .get(url_mo + "/api/user/details")
-       // .headers(headers_1)
-        .check(status.is(200))
-        .check(regex("oauth2/callback&state=(.*)&nonce").saveAs("state"))
-        .check(css("input[name='_csrf']", "value").saveAs("csrfToken"))
-      )*/
-
-    .exec(http("request_14")
+      
+    .exec(http("EXUI_MO_010_Homepage")
   .get("/auth/login")
       .check(status.is(200))
-     // .check(headerRegex("Location", "(?state=)(.*)").saveAs("state"))
       .check(regex("&state=(.*)&client_id").saveAs("state"))
       .check(css("input[name='_csrf']", "value").saveAs("csrfToken"))
     )
 
 
     .pause(Environment.minThinkTime)
+  
+  /*======================================================================================
+        *Business process : Below method is to create manage organisation
+        * below request is for manage organisation login page
+        ======================================================================================*/
 
   val manageOrganisationLogin =
     exec(http("EXUI_MO_005_Login")
@@ -294,44 +277,12 @@ val createOrg=
       .formParam("_csrf", "${csrfToken}")
       .check(status.in(200, 302)))
 
-
-    /*.exec(http("EXUI_MO_060_050_Login")
-          .get(url_mo + "/api/user/details")
-          .check(status.in(200, 302,304))
-    .check(jsonPath("$.userId").optional.saveAs("myUserId")))
-
-
-      .exec( session => {
-        println("userId is "+session("myUserId").as[String])
-        session
-      })
-
-      .exec(http("XUI_020_010_SignInTCEnabled")
-            .get(url_mo+"/api/configuration?configurationKey=feature.termsAndConditionsEnabled")
-            .check(status.in(200, 304)))
-
-      .exec(http("XUI_020_010_SignInTCEnabled")
-            .get(url_mo+"/api/userTermsAndConditions/${myUserId}")
-            .check(status.in(200, 304)))*/
-
+      
 
       .exec(http("EXUI_MO_020_Login")
             .get(url_mo + "/api/organisation/")
             .check(status.in(200, 302,304)))
       .pause(Environment.constantthinkTime)
-
-    /*.exec(http("XUIASD_035_005_ConfirmT&C")
-       .post(url_mo+"/api/userTermsAndConditions")
-      .headers(headers_tc_aat)
-       .body(StringBody("{\"userId\":\"${myUserId}\"}"))
-       .check(status.in(200, 304, 302)))*/
-
-
-     /* .exec(http("XUIASD_035_010_ConfirmT&C")
-            .post(url_mo+"/api/userTermsAndConditions")
-        .headers(headers_tc_aat)
-            .body(StringBody("{\"userId\":\"${myUserId}\"}"))
-            .check(status.in(200, 304, 302)))*/
 
 
       .exec(http("EXUI_MO_065_050_Login")
@@ -339,9 +290,7 @@ val createOrg=
             .check(status.in(200, 302,304)))
       .pause(Environment.constantthinkTime)
 
-      /*.exec(http("XUI_025_010_SignInTCEnabled")
-            .get(url_mo+"/api/configuration?configurationKey=feature.termsAndConditionsEnabled")
-            .check(status.in(200, 304)))*/
+     
 
 
   val usersPage =
@@ -349,12 +298,22 @@ val createOrg=
       .get(url_mo + "/api/userList")
       .check(status.is(200)))
     .pause(Environment.constantthinkTime)
+  
+  /*======================================================================================
+        *Business process : Below method is to invite users
+        * below request is for manage organisation click on invite user page in
+        ======================================================================================*/
 
   val inviteUserPage =
     exec(http("EXUI_MO_005_InviteUserpage")
       .get(url_mo + "/api/jurisdictions")
       .check(status.in(200,304)))
     .pause(Environment.minThinkTime)
+  
+  /*======================================================================================
+        *Business process : Below method is to send invitations
+        * below request is for manage organisation home page
+        ======================================================================================*/
 
   val sendInvitation =
 
@@ -369,6 +328,12 @@ val createOrg=
           .check(status.saveAs("userstatusvalue"))
       ).exitHereIfFailed
         .pause(20)
+
+  /*======================================================================================
+      *Below commented code is to use it for email notification for the user
+      * This code may be useful in future and hence not deleted even if this code is commented
+      ======================================================================================*/
+    
       /*exec {
 
         session =>
@@ -408,6 +373,10 @@ val createOrg=
         }
 
       .pause(Environment.constantthinkTime)
+  
+  /*======================================================================================
+        *Business process : Below method is to manage organisations Logout
+        ======================================================================================*/
 
   val manageOrganisationLogout =
     exec(http("EXUI_MO_005_Logout")

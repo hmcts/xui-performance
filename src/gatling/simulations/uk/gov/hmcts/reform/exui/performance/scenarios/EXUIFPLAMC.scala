@@ -21,7 +21,11 @@ object EXUIFPLAMC {
   private val rng: Random = new Random()
   private def firstName(): String = rng.alphanumeric.take(10).mkString
   private def lastName(): String = rng.alphanumeric.take(10).mkString
-
+  
+  /*======================================================================================
+    *Business process : Click On Create Case for FPL
+    * Below group contains all the requests related to Create Case
+    ======================================================================================*/
   val fplacasecreation =
   group("XUI${service}_040_CreateCase") {
     exec(http("XUI${service}_040_CreateCase")
@@ -31,7 +35,11 @@ object EXUIFPLAMC {
       .check(status.in(200, 304))).exitHereIfFailed
   }
       .pause(MinThinkTime , MaxThinkTime )
-
+    
+  /*======================================================================================
+      *Business process : Select Jurisdiction as Family Law and Casetype as CARE_SUPERVISION_EPO
+      * Below group contains all the requests related to Start the Create Case
+    ======================================================================================*/
     .group("XUI${service}_050_StartCreateCase") {
       exec(http("XUI${service}_050_005_StartCreateCase")
         .get("/data/internal/case-types/CARE_SUPERVISION_EPO/event-triggers/openCase?ignore-warning=false")
@@ -52,6 +60,12 @@ object EXUIFPLAMC {
         ("firstName", firstName()),
         ("lastName", lastName())
       ))
+
+  /*======================================================================================
+    *Business process : As part of the FPL Case Creation there are different steps
+    * Below group contains all the requests related to CaseName details
+  ======================================================================================*/
+    
     .group("XUI${service}_060_CaseNameContinue") {
       exec(http("XUI${service}_060_005_CaseNameContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=openCase1")
@@ -68,6 +82,12 @@ object EXUIFPLAMC {
           .check(status.in(200, 304, 201)))
     }
       .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+  *Business process : As part of the FPL Case Creation there are different steps
+  * Below group contains all the requests related to CaseName Continue after enter the casename details
+======================================================================================*/
+    
     .group("XUI${service}_070_CaseNameSaveContinue") {
       exec(http("XUI${service}_070_005_CaseNameSaveContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/cases?ignore-warning=false")
@@ -87,6 +107,11 @@ object EXUIFPLAMC {
       .pause(MinThinkTime , MaxThinkTime )
 
       //Orders Needed
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to Order Direction  after enter the case Order  details
+======================================================================================*/
+    
     .group("XUI${service}_080_OrdersDirectionNeededGo") {
     exec(http("XUI${service}_080_005_OrdersDirectionNeededGo")
       .get("/data/internal/cases/${caseId}/event-triggers/ordersNeeded?ignore-warning=false")
@@ -102,6 +127,11 @@ object EXUIFPLAMC {
         .check(status.in(200, 304, 201)))
   }
       .pause(MinThinkTime , MaxThinkTime )
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to Order Direction Continue after enter the case Order  details
+======================================================================================*/
+    
     .group("XUI${service}_090_OrdersDirectionNeededContinue") {
       exec(http("XUI${service}_090_005_OrdersDirectionNeededContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=ordersNeeded1")
@@ -117,6 +147,12 @@ object EXUIFPLAMC {
           .check(status.in(200, 304, 201)))
     }
       .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to Order Direction Save  after enter the case Order  details
+======================================================================================*/
+    
     .group("XUI${service}_100_OrdersDirectionNeededSaveContinue") {
       exec(http("XUI${service}_100_005_OrdersDirectionNeededSaveContinue")
         .post("/data/cases/${caseId}/events")
@@ -133,7 +169,11 @@ object EXUIFPLAMC {
     }
       .pause(MinThinkTime , MaxThinkTime )
 
-      //hearing needed
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to Hearing Needed data to be entered
+======================================================================================*/
+    
     .group("XUI${service}_110_HearingNeededGo") {
     exec(http("XUI${service}_110_005_HearingNeededGo")
       .get("/data/internal/cases/${caseId}/event-triggers/hearingNeeded?ignore-warning=false")
@@ -149,6 +189,12 @@ object EXUIFPLAMC {
         .check(status.in(200, 304, 201)))
   }
       .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to Hearing Needed Continue to be entered
+======================================================================================*/
+    
     .group("XUI${service}_120_HearingNeededContinue") {
       exec(http("XUI${service}_120_005_HearingNeededContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=hearingNeeded1")
@@ -164,6 +210,12 @@ object EXUIFPLAMC {
           .check(status.in(200, 304, 201)))
     }
       .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to Hearing Needed Save Continue to be entered
+======================================================================================*/
+    
     .group("XUI${service}_130_HearingNeededSaveContinue") {
       exec(http("XUI${service}_130_005_HearingNeededSaveContinue")
         .post("/data/cases/${caseId}/events")
@@ -181,7 +233,10 @@ object EXUIFPLAMC {
     }
       .pause(MinThinkTime , MaxThinkTime )
 
-      //enter children
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to Children Details to Go
+======================================================================================*/
     .group("XUI${service}_140_ChildrenGo") {
     exec(http("XUI${service}_140_005_ChildrenGo")
       .get("/data/internal/cases/${caseId}/event-triggers/enterChildren?ignore-warning=false")
@@ -197,6 +252,10 @@ object EXUIFPLAMC {
         .check(status.in(200, 304, 201)))
   }
       .pause(MinThinkTime , MaxThinkTime )
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to Children Continue to Go
+======================================================================================*/
     .group("XUI${service}_150_ChildrenContinue") {
       exec(http("XUI${service}_150_005_ChildrenContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterChildren1")
@@ -213,6 +272,12 @@ object EXUIFPLAMC {
     }
 
       .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to Children Save Continue to Go
+======================================================================================*/
+    
     .group("XUI${service}_160_ChildrenSaveContinue") {
       exec(http("XUI${service}_160_005_ChildrenSaveContinue")
         .post("/data/cases/${caseId}/events")
@@ -230,7 +295,11 @@ object EXUIFPLAMC {
     }
       .pause(MinThinkTime , MaxThinkTime )
 
-      //enter respondants
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to Respondent Details to Go
+======================================================================================*/
+    
     .group("XUI${service}_170_RespondentsGo") {
     exec(http("XUI${service}_170_005_RespondentsGo")
       .get("/data/internal/cases/${caseId}/event-triggers/enterRespondents?ignore-warning=false")
@@ -246,6 +315,12 @@ object EXUIFPLAMC {
         .check(status.in(200, 304, 201)))
   }
       .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to Respondent Address
+======================================================================================*/
+    
     .group("XUI${service}_180_RespondentsGetAddress") {
       exec(http("XUI${service}_180_005_RespondentsGetAddress")
         .get("/addresses?postcode=TW33SD")
@@ -269,6 +344,11 @@ object EXUIFPLAMC {
           .check(status.in(200, 304, 201)))
     }
       .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to Respondent Details Ssave
+======================================================================================*/
     .group("XUI${service}_200_RespondentsSaveContinue") {
       exec(http("XUI${service}_200_005_RespondentsSaveContinue")
         .post("/data/cases/${caseId}/events")
@@ -286,7 +366,10 @@ object EXUIFPLAMC {
     }
       .pause(MinThinkTime , MaxThinkTime )
 
-      // enter applicant
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to enter applicant  Details Save
+======================================================================================*/
     .group("XUI${service}_210_ApplicantGo") {
     exec(http("XUI${service}_210_005_ApplicantGo")
       .get("/data/internal/cases/${caseId}/event-triggers/enterApplicant?ignore-warning=false")
@@ -303,6 +386,12 @@ object EXUIFPLAMC {
 
   }
       .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to enter applicant get address  Details Save
+======================================================================================*/
+    
     .group("XUI${service}_220_ApplicantGetAddress") {
       exec(http("XUI${service}_220_ApplicantGetAddress")
         .get("/addresses?postcode=TW33SD")
@@ -311,6 +400,12 @@ object EXUIFPLAMC {
         .check(status.in(200, 304, 201)))
     }
       .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to enter applicant  Details Save
+======================================================================================*/
+    
     .group("XUI${service}_230_ApplicantContinue") {
       exec(http("XUI${service}_230_005_ApplicantContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterApplicant1")
@@ -327,6 +422,12 @@ object EXUIFPLAMC {
     }
 
       .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to enter applicant  Details Save
+======================================================================================*/
+    
     .group("XUI${service}_240_ApplicantSaveContinue") {
       exec(http("XUI${service}_240_005_ApplicantSaveContinue")
         .post("/data/cases/${caseId}/events")
@@ -343,7 +444,11 @@ object EXUIFPLAMC {
     }
       .pause(MinThinkTime , MaxThinkTime )
 
-      // enter grounds
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to enter Ground details Go
+======================================================================================*/
+    
     .group("XUI${service}_250_GroundApplicationGo") {
     exec(http("XUI${service}_250_005_GroundApplicationGo")
       .get("/data/internal/cases/${caseId}/event-triggers/enterGrounds?ignore-warning=false")
@@ -359,6 +464,11 @@ object EXUIFPLAMC {
         .check(status.in(200, 304, 201)))
   }
       .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to enter applicant  Details Continue
+======================================================================================*/
     .group("XUI${service}_260_GroundApplicationContinue") {
       exec(http("XUI${service}_260_005_GroundApplicationContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterGrounds1")
@@ -374,6 +484,11 @@ object EXUIFPLAMC {
           .check(status.in(200, 304, 201)))
     }
       .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to enter applicant  Details Save
+======================================================================================*/
     .group("XUI${service}_270_GroundApplicationSaveContinue") {
       exec(http("XUI${service}_270_005_GroundApplicationSaveContinue")
         .post("/data/cases/${caseId}/events")
@@ -390,6 +505,12 @@ object EXUIFPLAMC {
           .check(status.in(200, 304, 201)))
     }
       .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to enter Allocation proposal Go
+======================================================================================*/
+    
     .group("XUI${service}_280_AllocationProposalGo") {
       //other proposal
       exec(http("XUI${service}_280_005_AllocationProposalGo")
@@ -406,6 +527,12 @@ object EXUIFPLAMC {
           .check(status.in(200, 304, 201)))
     }
       .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to enter Allocation proposal Continue
+======================================================================================*/
+    
     .group("XUI${service}_290_AllocationProposalContinue") {
       exec(http("XUI${service}_290_005_AllocationProposalContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=otherProposal1")
@@ -421,6 +548,12 @@ object EXUIFPLAMC {
           .check(status.in(200, 304, 201)))
     }
       .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to enter Allocation proposal Save Continue
+======================================================================================*/
+    
     .group("XUI${service}_300_AllocationProposalSaveContinue") {
       exec(http("XUI${service}_300_005_AllocationProposalSaveContinue")
         .post("/data/cases/${caseId}/events")
@@ -438,7 +571,10 @@ object EXUIFPLAMC {
     }
       .pause(MinThinkTime , MaxThinkTime )
 
-      // upload documents
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to Upload Documents page
+======================================================================================*/
     .group("XUI${service}_310_DocumentsGo") {
     exec(http("XUI${service}_310_DocumentsGo")
       .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/${caseId}/trigger/uploadDocuments")
@@ -446,7 +582,10 @@ object EXUIFPLAMC {
       .check(status.in(200, 304, 201)))
   }
     .pause(MinThinkTime , MaxThinkTime )
-
+  /*======================================================================================
+  *Business process : As part of the FPL Case Creation there are different steps
+  * Below group contains all the requests related to Upload Documents page
+  ======================================================================================*/
 .group("XUI${service}_320_DocumentsUploadPage"){
   exec(http("XUI${service}_320_005_DocumentsUploadPage")
     .get("/external/configuration-ui/")
@@ -479,9 +618,9 @@ object EXUIFPLAMC {
       .header("X-XSRF-TOKEN", "${XSRFToken}")
       .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
       .check(status.in(200, 304, 201)))
-  //below request eliminated in the new upload code
+  
 
-      .exec(http("XUI${service}_310_035_DocumentsGoProfile")
+      .exec(http("XUI${service}_320_035_DocumentsGoProfile")
         .get("/data/internal/profile")
         .headers(FPLAHeader.headers_ordersneed1profile)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
@@ -489,8 +628,13 @@ object EXUIFPLAMC {
   }
       .pause(MinThinkTime , MaxThinkTime )
 
-    .group("XUI${service}_320_UploadFile") {
-      exec(http("XUI${service}_320_UploadFile")
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to Upload Documents files
+======================================================================================*/
+
+    .group("XUI${service}_330_UploadFile") {
+      exec(http("XUI${service}_330_UploadFile")
         .post("/documents")
         .headers(FPLAHeader.headers_uploadfile)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
@@ -505,25 +649,34 @@ object EXUIFPLAMC {
     }
       .pause(MinThinkTime , MaxThinkTime )
 
-    //below request updated
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to Upload Documents upload Continue
+======================================================================================*/
 
-    .group("XUI${service}_330_DocumentsContinue") {
-      exec(http("XUI${service}_330_005_DocumentsContinue")
+    .group("XUI${service}_340_DocumentsContinue") {
+      exec(http("XUI${service}_340_005_DocumentsContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=uploadDocumentsaddApplicationDocuments")
         .headers(FPLAHeader.headers_71)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .body(StringBody("{\n  \"data\": {\n    \"applicationDocuments\": [\n      {\n        \"value\": {\n          \"documentType\": \"CARE_PLAN\",\n          \"includedInSWET\": null,\n          \"document\": {\n            \"document_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}\",\n            \"document_binary_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}/binary\",\n            \"document_filename\": \"3MB.pdf\"\n          },\n          \"uploadedBy\": null\n        },\n        \"id\": null\n      }\n    ],\n    \"applicationDocumentsToFollowReason\": \"This is perftest reason\"\n  },\n  \"event\": {\n    \"id\": \"uploadDocuments\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_data\": {\n    \"applicationDocuments\": [\n      {\n        \"value\": {\n          \"documentType\": \"CARE_PLAN\",\n          \"includedInSWET\": null,\n          \"document\": {\n            \"document_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}\",\n            \"document_binary_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}/binary\",\n            \"document_filename\": \"200MB.mp3\"\n          },\n          \"uploadedBy\": null\n        },\n        \"id\": null\n      }\n    ],\n    \"applicationDocumentsToFollowReason\": \"This is perftest reason\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"case_reference\": \"${caseId}\"\n}"))
         .check(status.in(200, 304, 201)))
 
-        .exec(http("XUI${service}_330_010_DocumentsContinueProfile")
+        .exec(http("XUI${service}_340_010_DocumentsContinueProfile")
           .get("/data/internal/profile")
           .headers(FPLAHeader.headers_uploaddocprofile)
           .header("X-XSRF-TOKEN", "${XSRFToken}")
           .check(status.in(200, 304, 201)))
     }
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_340_DocumentsSaveContinue") {
-      exec(http("XUI${service}_340_005_DocumentsSaveContinue")
+
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to Upload Documents upload save Continue
+======================================================================================*/
+    
+    .group("XUI${service}_350_DocumentsSaveContinue") {
+      exec(http("XUI${service}_350_005_DocumentsSaveContinue")
         .post("/data/cases/${caseId}/events")
         .headers(FPLAHeader.headers_80)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
@@ -531,7 +684,7 @@ object EXUIFPLAMC {
         .check(status.in(200, 304, 201)))
 
 
-        .exec(http("XUI${service}_340_010_DocumentsSaveViewCase")
+        .exec(http("XUI${service}_350_010_DocumentsSaveViewCase")
           .get("/data/internal/cases/${caseId}")
           .headers(FPLAHeader.headers_casesprofile)
           .header("X-XSRF-TOKEN", "${XSRFToken}")
@@ -539,39 +692,55 @@ object EXUIFPLAMC {
     }
       .pause(MinThinkTime , MaxThinkTime )
 
-      // submit application
-    .group("XUI${service}_350_SubmitApplicationGo") {
-    exec(http("XUI${service}_350_005_SubmitApplicationGo")
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to Submit Application Go
+======================================================================================*/
+    
+    .group("XUI${service}_360_SubmitApplicationGo") {
+    exec(http("XUI${service}_360_005_SubmitApplicationGo")
       .get("/data/internal/cases/${caseId}/event-triggers/submitApplication?ignore-warning=false")
       .headers(FPLAHeader.headers_76)
       .header("X-XSRF-TOKEN", "${XSRFToken}")
       .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
       .check(status.in(200, 304, 201)))
 
-      .exec(http("XUI${service}_350_010_SubmitApplicationGoProfile")
+      .exec(http("XUI${service}_360_010_SubmitApplicationGoProfile")
         .get("/data/internal/profile")
         .headers(FPLAHeader.headers_ordersneed1profile)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200, 304, 201)))
   }
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_360_SubmitApplicationContinue") {
-      exec(http("XUI${service}_360_005_SubmitApplicationContinue")
+
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to Submit Application
+======================================================================================*/
+    
+    .group("XUI${service}_370_SubmitApplicationContinue") {
+      exec(http("XUI${service}_370_005_SubmitApplicationContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=submitApplication1")
         .headers(FPLAHeader.headers_71)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .body(StringBody("{\n  \"data\": {\n    \"submissionConsent\": [\n      \"agree\"\n    ],\n    \"submissionConsentLabel\": \"I, ${user} (local-authority), believe that the facts stated in this application are true.\"\n  },\n  \"event\": {\n    \"id\": \"submitApplication\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"submissionConsent\": [\n      \"agree\"\n    ],\n    \"submissionConsentLabel\": \"I, ${user} (local-authority), believe that the facts stated in this application are true.\"\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
         .check(status.in(200, 304, 201)))
 
-        .exec(http("XUI${service}_360_010_SubmitApplicationContinueProfile")
+        .exec(http("XUI${service}_370_010_SubmitApplicationContinueProfile")
           .get("/data/internal/profile")
           .headers(FPLAHeader.headers_submitprofile)
           .header("X-XSRF-TOKEN", "${XSRFToken}")
           .check(status.in(200, 304, 201)))
     }
       .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_370_ApplicationSubmitted") {
-      exec(http("XUI${service}_370_005_ApplicationSubmitted")
+
+  /*======================================================================================
+*Business process : As part of the FPL Case Creation there are different steps
+* Below group contains all the requests related to Application Submitted
+======================================================================================*/
+    
+    .group("XUI${service}_380_ApplicationSubmitted") {
+      exec(http("XUI${service}_380_005_ApplicationSubmitted")
         .post("/data/cases/${caseId}/events")
         .headers(FPLAHeader.headers_80)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
@@ -579,7 +748,7 @@ object EXUIFPLAMC {
         .check(status.in(200, 304, 201)))
 
 
-        .exec(http("XUI${service}_370_010_ApplicationSubmittedViewCase")
+        .exec(http("XUI${service}_380_010_ApplicationSubmittedViewCase")
           .get("/data/internal/cases/${caseId}")
           .headers(FPLAHeader.headers_casesprofile)
           .header("X-XSRF-TOKEN", "${XSRFToken}")
@@ -589,79 +758,7 @@ object EXUIFPLAMC {
 
 
 
-  val findandviewcasefpl=
-
-      exec(http("XUI${service}_040_005_SearchPage")
-        .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
-        .headers(FPLAHeader.headers_search)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(status.in(200,304,201))
-      )
-
-        .exec(http("XUI${service}_040_010_SearchPaginationMetaData")
-          .get("/aggregated/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases?view=SEARCH&page=1&state=Submitted")
-          .headers(FPLAHeader.headers_search)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(status.in(200,304,201)))
-
-
-
-    .exec(http("XUI${service}_040_015_SearchPaginationMetaData")
-  .get("/data/internal/case-types/CARE_SUPERVISION_EPO/search-inputs")
-    .headers(FPLAHeader.headers_searchpaginationmetadata)
-    .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(status.in(200,304,201))
-    )
-        .exec(http("XUI${service}_040_020_SearchResults")
-          .post("/data/internal/searchCases?ctid=CARE_SUPERVISION_EPO&use_case=SEARCH&view=SEARCH&page=1&state=Submitted")
-          .headers(FPLAHeader.headers_results)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-                .body(StringBody("{\n  \"size\": 25\n}"))
-          .check(status.in(200,304,201))
-         // .check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumbersFPL")))
-              .check(jsonPath("$..case_id").find(0).optional.saveAs("caseNumberFPL")))
-      .pause(MinThinkTimeFPLV , MaxThinkTimeFPLV )
-
-   // .foreach("${caseNumbersFPL}","caseNumberFPL") {
-        .exec(http("XUI${service}_050_ViewCase")
-        .get("/data/internal/cases/${caseNumberFPL}")
-        .headers(FPLAHeader.headers_searchinputs)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(status.in(200,304,201))
-        .check(regex("""internal/documents/(.+?)","document_filename""").find(0).saveAs("Document_ID"))
-        .check(status.is(200)))
-
-        .pause(MinThinkTimeFPLV , MaxThinkTimeFPLV )
-
-    .exec(http("XUI${service}_060_005_ViewCaseDocumentUI")
-      .get("/external/config/ui")
-      .headers(FPLAHeader.headers_documents)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(status.in(200,304,201))
-        .check(status.in(200,304,201)))
-
-    .exec(http("XUI${service}_060_010_ViewCaseDocumentT&C")
-      .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
-      .headers(FPLAHeader.headers_documents)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(status.in(200,304,201))
-        .check(status.in(200,304,201)))
-
-   /* .exec(http("XUI${service}_060_015_ViewCaseDocumentAnnotations")
-      .get("/em-anno/annotation-sets/filter?documentId=${Document_ID}")
-      .headers(FPLAHeader.headers_documents)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(status.in(200,304,201))
-      .check(status.in(200, 404,304)))*/
-
-    .exec(http("XUI${service}_060_015_ViewCaseDocumentBinary")
-      .get("/documents/${Document_ID}/binary")
-      .headers(FPLAHeader.headers_documents)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(status.in(200,304,201))
-        .check(status.in(200, 404,304)))
-        .pause(MinThinkTimeFPLV , MaxThinkTimeFPLV )
-  //  }
+  
 
 
 

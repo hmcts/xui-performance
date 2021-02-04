@@ -12,7 +12,11 @@ object EXUI_FR_Respondent {
 	val maxThinkTime = Environment.maxThinkTimeFR
 
 	val manageOrgURL=manageOrdURL
-
+	
+	/*======================================================================================
+*Business process : As part of the create FR respondent application share a case
+* Below group contains all the share the unassigned case
+======================================================================================*/
 	val shareCase = scenario("ShareCase")
 		.group("XUI${service}_030_UnassignedCases") {
 			exec(http("XUI${service}_030_UnassignedCases")
@@ -21,13 +25,24 @@ object EXUI_FR_Respondent {
 				.check(status in(200, 304)))
 		}
 		.pause(minThinkTime, maxThinkTime)
+	
+/*======================================================================================
+*Business process : As part of the create FR respondent application share a case
+* Below group contains all the share the unassigned case -FR Consented
+======================================================================================*/
+		
 		.group("XUI${service}_040_FRConsented") {
 			exec(http("XUI${service}_040_FRConsented")
 				.post(manageOrgURL + "/api/unassignedcases?caseTypeId=FinancialRemedyConsentedRespondent")
 				.headers(headers_38)
 				.check(status in(200, 304)))
 		}
-		.pause(minThinkTime, maxThinkTime)
+		.pause(minThinkTime, maxThinkTime)/*======================================================================================
+*Business process : As part of the create FR Respondent application share a case
+* Below group contains all the share the unassigned case by caseId
+======================================================================================*/
+		
+		
 		.group("XUI${service}_050_ShareCaseByCaseId") {
 			exec(http("XUI${service}_050_ShareCaseByCaseId")
 				.get(manageOrgURL + "/api/caseshare/cases?case_ids=${caseId}")
@@ -35,6 +50,11 @@ object EXUI_FR_Respondent {
 				.check(status in(200, 304)))
 		}
 		.pause(minThinkTime, maxThinkTime)
+	
+/*======================================================================================
+*Business process : As part of the create FR Respondent application share a case
+* Below group contains all the share the unassigned case- share case users
+======================================================================================*/
 		.group("XUI${service}_060_ShareCaseUsers") {
 			exec(http("XUI${service}_060_ShareCaseUsers")
 				.get(manageOrgURL + "/api/caseshare/users")
@@ -46,6 +66,12 @@ object EXUI_FR_Respondent {
 				.check(status in(200, 304)))
 		}
 		.pause(minThinkTime, maxThinkTime)
+	
+/*======================================================================================
+*Business process : As part of the create FR Respondent application share a case
+* Below group contains all the share the unassigned case-final assignment of share a case
+======================================================================================*/
+		
 		.group("XUI${service}_070_ShareCaseAssignments") {
 			exec(http("XUI${service}_070_ShareCaseAssignments")
 				.post(manageOrgURL + "/api/caseshare/case-assignments")

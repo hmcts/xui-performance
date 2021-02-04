@@ -12,6 +12,11 @@ object EXUICaseWorker {
 
   val MinThinkTime = Environment.minThinkTimeCW
   val MaxThinkTime = Environment.maxThinkTimeCW
+  
+  /*======================================================================================
+*Business process : As part of the login as case worker and retrieve complete case details
+* Below group contains all the requests related to enter details and filter case
+======================================================================================*/
 
   val ApplyFilters =
     feed(caseFeeder)
@@ -24,9 +29,14 @@ object EXUICaseWorker {
           .check(status.is(200))
         )
       }
-        //.check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumbers")))
+      
         
       .pause(MinThinkTime, MaxThinkTime)
+  
+  /*======================================================================================
+*Business process : As part of the login as case worker and retrieve complete case details
+* Below group contains all the requests related to sort the case details
+======================================================================================*/
 
   val ApplySort=
   group("XUI${service}_040_ApplySortCaseRef") {
@@ -39,7 +49,11 @@ object EXUICaseWorker {
       .check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumbers")))
   }
     .pause(10)
-
+  
+  /*======================================================================================
+*Business process : As part of the login as case worker and retrieve complete case details
+* Below group contains all the requests related to view case details
+======================================================================================*/
 
   val ViewCase = 
   //Loop through each of the found cases and view
@@ -61,7 +75,10 @@ object EXUICaseWorker {
         }
           .pause(MinThinkTime, MaxThinkTime)
 
-        //following is view tabs
+        /*======================================================================================
+*Business process : As part of the login as case worker and retrieve complete case details
+* Below group contains all the requests related to click case tabs
+======================================================================================*/
           .group("XUI${service}_060_DetailsTabAppeal") {
           exec(http("XUI${service}_060_DetailsTabAppeal")
             .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumber}%23applicantTab")
@@ -76,7 +93,9 @@ object EXUICaseWorker {
               .check(status.in(200, 404)))
           }
           .pause(MinThinkTime, MaxThinkTime)
-        //Only do these steps if document_ID is found
+        /*======================================================================================
+*Business process :below steps are executed if document id is found
+======================================================================================*/
         .doIf(session => session.contains("Document_ID")) {
           group("XUI${service}_080_ViewCaseDocumentUI") {
             exec(http("XUI${service}_080_005_ViewCaseDocumentUI")
