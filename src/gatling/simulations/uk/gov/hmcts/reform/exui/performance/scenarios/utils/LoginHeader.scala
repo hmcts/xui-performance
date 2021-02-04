@@ -3,7 +3,23 @@ package uk.gov.hmcts.reform.exui.performance.scenarios.utils
 object LoginHeader {
  val baseURL = Environment.baseURL
  val IdamUrl = Environment.idamURL
-
+ 
+ 
+ val headers_1 = Map(
+  "Pragma" -> "no-cache",
+  "Sec-Fetch-Dest" -> "empty",
+  "Sec-Fetch-Mode" -> "cors",
+  "Sec-Fetch-Site" -> "same-origin")
+ 
+ val headers_4 = Map(
+  "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+  "Pragma" -> "no-cache",
+  "Sec-Fetch-Dest" -> "document",
+  "Sec-Fetch-Mode" -> "navigate",
+  "Sec-Fetch-Site" -> "same-origin",
+  "Upgrade-Insecure-Requests" -> "1")
+ 
+ 
  val commonHeader = Map(
   "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
   "Accept-Encoding" -> "gzip, deflate, br",
@@ -29,11 +45,15 @@ object LoginHeader {
   "Upgrade-Insecure-Requests" -> "1")
 
  val headers_0 = Map(
-  "accept" -> "application/json, text/plain, */*",
+  "accept" -> "*/*",
   "accept-encoding" -> "gzip, deflate, br",
   "accept-language" -> "en-US,en;q=0.9",
+  "sec-ch-ua" -> """Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99""",
+  "sec-ch-ua-mobile" -> "?0",
+  "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
-  "sec-fetch-site" -> "same-origin")
+  "sec-fetch-site" -> "same-origin",
+  "x-dtpc" -> "1$109055595_179h4vTROQRMFKUAHKCJEJRKDSUTFMCSWGAVJR-0e3")
 
 
  val headers_signout = Map(
@@ -107,11 +127,13 @@ object LoginHeader {
   "accept" -> "application/json, text/plain, */*",
   "accept-encoding" -> "gzip, deflate, br",
   "accept-language" -> "en-US,en;q=0.9",
-  "authorization" -> "${authToken}",
+  "authorization" -> "${authTokenResp}",
   "sec-ch-ua" -> """Google Chrome";v="87", " Not;A Brand";v="99", "Chromium";v="87""",
   "sec-ch-ua-mobile" -> "?0",
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin")
+ 
+ 
 
 }

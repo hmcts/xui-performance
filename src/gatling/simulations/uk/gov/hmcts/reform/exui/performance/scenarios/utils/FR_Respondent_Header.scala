@@ -11,7 +11,7 @@ object FR_Respondent_Header {
     "Sec-Fetch-Dest" -> "empty",
     "Sec-Fetch-Mode" -> "cors",
     "Sec-Fetch-Site" -> "same-origin",
-    "authorization" -> "${authToken}",
+    "authorization" -> "${authTokenResp}",
     "sec-ch-ua" -> """Chromium";v="86", "\"Not\\A;Brand";v="99", "Google Chrome";v="86""",
     "sec-ch-ua-mobile" -> "?0")
 
@@ -24,7 +24,7 @@ object FR_Respondent_Header {
     "Sec-Fetch-Mode" -> "cors",
     "Sec-Fetch-Site" -> "same-origin",
     "X-XSRF-TOKEN" -> "${XSRFToken}",
-    "authorization" -> "${authToken}",
+    "authorization" -> "${authTokenResp}",
     "sec-ch-ua" -> """Chromium";v="86", "\"Not\\A;Brand";v="99", "Google Chrome";v="86""",
     "sec-ch-ua-mobile" -> "?0")
 
@@ -37,7 +37,7 @@ object FR_Respondent_Header {
     "Sec-Fetch-Mode" -> "cors",
     "Sec-Fetch-Site" -> "same-origin",
     "X-XSRF-TOKEN" -> "${XSRFToken}",
-    "authorization" -> "${authToken}",
+    "authorization" -> "${authTokenResp}",
     "sec-ch-ua" -> """Chromium";v="86", "\"Not\\A;Brand";v="99", "Google Chrome";v="86""",
     "sec-ch-ua-mobile" -> "?0")
 
@@ -51,7 +51,7 @@ object FR_Respondent_Header {
     "Sec-Fetch-Mode" -> "cors",
     "Sec-Fetch-Site" -> "same-origin",
     "X-XSRF-TOKEN" -> "${XSRFToken}",
-    "authorization" -> "${authToken}",
+    "authorization" -> "${authTokenResp}",
     "sec-ch-ua" -> """Chromium";v="86", "\"Not\\A;Brand";v="99", "Google Chrome";v="86""",
     "sec-ch-ua-mobile" -> "?0")
 

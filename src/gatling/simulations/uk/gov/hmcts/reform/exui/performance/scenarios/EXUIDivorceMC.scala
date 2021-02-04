@@ -14,14 +14,11 @@ object EXUIDivorceMC {
 
   val MinThinkTime = Environment.minThinkTimeDIV
   val MaxThinkTime = Environment.maxThinkTimeDIV
-
-
-
-  /*val casedetails =
-
-
-      .pause(MinThinkTime , MaxThinkTime )
-*/
+  
+  /*======================================================================================
+*Business process : As part of the Divorce Case Creation there are different steps
+* Below group contains all the requests related to Click On case Create
+======================================================================================*/
 
   val casecreation=
   group("XUI${service}_040_CreateCase") {
@@ -55,6 +52,11 @@ object EXUIDivorceMC {
     }
       .pause(MinThinkTime, MaxThinkTime)
 
+  /*======================================================================================
+*Business process : As part of the Divorce Case Creation there are different steps
+* Below group contains all the requests related to Start Application
+======================================================================================*/
+
     .group("XUI${service}_060_CreateApplication") {
       exec(http("XUI${service}_060_CreateApplication")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreatesolicitorCreate")
@@ -63,6 +65,12 @@ object EXUIDivorceMC {
         .check(status.in(200, 304)))
     }
       .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+*Business process : As part of the Divorce Case Creation there are different steps
+* Below group contains all the requests related to Enter Solicitor Details
+======================================================================================*/
+    
     .group("XUI${service}_070_SolicitorDetails") {
       exec(http("XUI${service}_070_SolicitorDetails")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolAboutTheSolicitor")
@@ -71,6 +79,12 @@ object EXUIDivorceMC {
         .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+*Business process : As part of the Divorce Case Creation there are different steps
+* Below group contains all the requests related to Enter Solicitor Details
+======================================================================================*/
+    
     .group("XUI${service}_080_PetitionerDetails") {
       exec(http("XUI${service}_080_PetitionerDetails")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolAboutThePetitioner")
@@ -79,6 +93,11 @@ object EXUIDivorceMC {
         .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+*Business process : As part of the Divorce Case Creation there are different steps
+* Below group contains all the requests related to Enter Respondent Details
+======================================================================================*/
     .group("XUI${service}_090_RespondantDetails") {
       exec(http("XUI${service}_090_RespondantDetails")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolAboutTheRespondent")
@@ -87,6 +106,10 @@ object EXUIDivorceMC {
         .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
+  /*======================================================================================
+*Business process : As part of the Divorce Case Creation there are different steps
+* Below group contains all the requests related to enter Marriage Certificate details
+======================================================================================*/
     .group("XUI${service}_100_MarriageCertificate") {
       exec(http("XUI${service}_100_MarriageCertificate")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolMarriageCertificate")
@@ -95,6 +118,10 @@ object EXUIDivorceMC {
         .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
+  /*======================================================================================
+*Business process : As part of the Divorce Case Creation there are different steps
+* Below group contains all the requests related to enter Solicitor jurisdiction
+======================================================================================*/
     .group("XUI${service}_110_SolJurisdiction") {
       exec(http("XUI${service}_110_SolJurisdiction")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolJurisdiction")
@@ -103,6 +130,11 @@ object EXUIDivorceMC {
         .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
+  /*======================================================================================
+*Business process : As part of the Divorce Case Creation there are different steps
+* Below group contains all the requests related to enter Reason For Divorce details
+======================================================================================*/
+    
     .group("XUI${service}_120_ReasonForDivorce") {
       exec(http("XUI${service}_120_ReasonForDivorce")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolReasonForDivorce")
@@ -111,6 +143,10 @@ object EXUIDivorceMC {
         .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
+  /*======================================================================================
+*Business process : As part of the Divorce Case Creation there are different steps
+* Below group contains all the requests related to enter behavioural details
+======================================================================================*/
     .group("XUI${service}_130_Behaviour") {
       exec(http("XUI${service}_130_Behaviour")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolSOCBehaviour1")
@@ -119,6 +155,10 @@ object EXUIDivorceMC {
         .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
+  /*======================================================================================
+*Business process : As part of the Divorce Case Creation there are different steps
+* Below group contains all the requests related to enter existing court case details
+======================================================================================*/
     .group("XUI${service}_140_ExistingCourtCases") {
       exec(http("XUI${service}_140_ExistingCourtCases")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolExistingCourtCases")
@@ -127,6 +167,11 @@ object EXUIDivorceMC {
         .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
+  /*======================================================================================
+*Business process : As part of the Divorce Case Creation there are different steps
+* Below group contains all the requests related to enter property division details
+======================================================================================*/
+    
     .group("XUI${service}_150_DivideProperty") {
       exec(http("XUI${service}_150_DivideProperty")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolDividingMoneyAndProperty")
@@ -135,6 +180,11 @@ object EXUIDivorceMC {
         .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+*Business process : As part of the Divorce Case Creation there are different steps
+* Below group contains all the requests related to enter claim costs
+======================================================================================*/
     .group("XUI${service}_160_ClaimCosts") {
       exec(http("XUI${service}_160_ClaimCosts")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolApplyToClaimCosts")
@@ -143,6 +193,11 @@ object EXUIDivorceMC {
         .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+*Business process : As part of the Divorce Case Creation there are different steps
+* Below group contains all the requests related to upload docs
+======================================================================================*/
     .group("XUI${service}_170_UploadDocs") {
       exec(http("XUI${service}_170_UploadDocs")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolUploadDocs")
@@ -151,6 +206,10 @@ object EXUIDivorceMC {
         .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
+  /*======================================================================================
+*Business process : As part of the Divorce Case Creation there are different steps
+* Below group contains all the requests related to enter language preference
+======================================================================================*/
     .group("XUI${service}_180_CreateLangPref") {
       exec(http("XUI${service}_180_005_CreateLangPref")
         .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreatelangPref")
@@ -164,6 +223,11 @@ object EXUIDivorceMC {
           .check(status.in(200, 304)))
     }
       .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+*Business process : As part of the Divorce Case Creation there are different steps
+* Below group contains all the requests related to enter aplication draft final
+======================================================================================*/
     .group("XUI${service}_190_ApplicationDraftfinal") {
       exec(http("XUI${service}_190_005_ApplicationDraftfinal")
         .post("/data/case-types/DIVORCE_XUI/cases?ignore-warning=false")
@@ -184,86 +248,7 @@ object EXUIDivorceMC {
       .pause(MinThinkTime, MaxThinkTime)
 
 
-    /*.exec(http("request_59")
-  .get("/api/monitoring-tools")
-  .headers(DivorceHeader.headers_2)
-      .check(status.is(200)))
-      .pause(MinThinkTime, MaxThinkTime)
-
-
-      .exec(http("XUI${service}_080_005_ApplicationDraft")
-            .get("/data/internal/cases/1600677150585534/event-triggers/solicitorStatementOfTruthPaySubmit?ignore-warning=false")
-            .headers(DivorceHeader.headers_65)
-            .check(status.is(200))
-      .check(jsonPath("$.event_token").optional.saveAs("event_token_submit")))
-
-      .exec(http("XUI${service}_080_005_ApplicationDraft")
-            .get("/data/internal/profile")
-            .headers(DivorceHeader.headers_67)
-            .check(status.is(200)))
-      .pause(MinThinkTime, MaxThinkTime)
-
-      .exec(http("request_69")
-            .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorStatementOfTruthPaySubmitSolStatementOfTruth")
-            .headers(DivorceHeader.headers_69)
-            .body(RawFileBody("RecordedSimulationDiv_0069_request.json"))
-        .check(status.is(200)))
-      .pause(MinThinkTime, MaxThinkTime)
-
-      .exec(http("request_73")
-            .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorStatementOfTruthPaySubmitSolPayment")
-            .headers(DivorceHeader.headers_73)
-            .body(RawFileBody("RecordedSimulationDiv_0073_request.json"))
-        .check(status.is(200)))
-      .pause(MinThinkTime, MaxThinkTime)
-
-      .exec(http("request_75")
-            .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorStatementOfTruthPaySubmitSolPaymentSummary")
-            .headers(DivorceHeader.headers_75)
-            .body(RawFileBody("RecordedSimulationDiv_0075_request.json"))
-        .check(status.is(200)))
-      .pause(MinThinkTime, MaxThinkTime)
-
-      .exec(http("request_78")
-            .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorStatementOfTruthPaySubmitSolSummary")
-            .headers(DivorceHeader.headers_78)
-            .body(RawFileBody("RecordedSimulationDiv_0078_request.json"))
-        .check(status.is(200)))
-      .exec(http("XUI${service}_080_005_ApplicationDraft")
-            .get("/data/internal/profile")
-            .headers(DivorceHeader.headers_82)
-            .check(status.is(200)))
-      .pause(MinThinkTime, MaxThinkTime)
-
-      .exec(http("request_83")
-            .post("/data/cases/1600677150585534/events")
-            .headers(DivorceHeader.headers_83)
-            .body(RawFileBody("RecordedSimulationDiv_0083_request.json"))
-            .check(status.is(200)))
-      .exec(http("XUI${service}_080_005_85")
-            .get("/data/internal/cases/1600677150585534")
-            .headers(DivorceHeader.headers_85)
-            .check(status.is(200)))
-      .pause(MinThinkTime, MaxThinkTime)
-
-
-
-
-
-      .exec(http("XUI${service}_090_005_CaseSubmitted")
-        .post("/data/case-types/GrantOfRepresentation/cases?ignore-warning=false")
-        .headers(ProbateHeader.headers_solappcreated)
-        .body(ElFileBody("RecordedSimulationprobate1205_0025_request.json")).asJson
-        .check(status.in(200,304))
-      .check(jsonPath("$.id").optional.saveAs("caseId")))
-
-      .exec(http("XUI${service}_090_010_ViewCase")
-        .get("/data/internal/cases/${caseId}")
-        .headers(ProbateHeader.headers_saveandviewcase)
-        .check(status.in(200,304)))
-      .pause(MinThinkTime, MaxThinkTime)*/
-
-
+   
   val GETUsersByOrganisation = exec(http("GetUsersByOrg").get("http://rd-professional-api-perftest.service.core-compute-perftest.internal/refdata/internal/v1/organisations/${orgref}/users?returnRoles=false").header("ServiceAuthorization", "${s2sToken}").header("Authorization", " Bearer ${accessToken}").header("Content-Type", "application/json").check(status is 200)
     .check(jsonPath("$..email").find(0).optional.saveAs("user1"))
     .check(jsonPath("$..email").find(1).optional.saveAs("user2"))
