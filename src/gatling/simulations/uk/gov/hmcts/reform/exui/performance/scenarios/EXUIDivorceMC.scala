@@ -28,6 +28,7 @@ object EXUIDivorceMC {
       .check(status.in(200, 304)))
   }
     .pause(MinThinkTime, MaxThinkTime)
+    
     .group("XUI${service}_050_StartCreateCase1") {
       exec(http("XUI${service}_050_005_StartCreateCase1")
         .get("/data/internal/case-types/DIVORCE_XUI/event-triggers/solicitorCreate?ignore-warning=false")
@@ -59,10 +60,10 @@ object EXUIDivorceMC {
 
     .group("XUI${service}_060_CreateApplication") {
       exec(http("XUI${service}_060_CreateApplication")
-        .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreatesolicitorCreate")
-        .headers(DivorceHeader.headers_soldata)
-        .body(ElFileBody("RecordedSimulationSC_0123_request.json")).asJson
-        .check(status.in(200, 304)))
+           .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreatesolicitorCreate")
+           .headers(DivorceHeader.headers_soldata)
+           .body(ElFileBody("DivCreateApplication.json")).asJson
+           .check(status.in(200, 304)))
     }
       .pause(MinThinkTime, MaxThinkTime)
 
@@ -73,10 +74,10 @@ object EXUIDivorceMC {
     
     .group("XUI${service}_070_SolicitorDetails") {
       exec(http("XUI${service}_070_SolicitorDetails")
-        .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolAboutTheSolicitor")
-        .headers(DivorceHeader.headers_aboutsol)
-        .body(ElFileBody("RecordedSimulationSC_0127_request.json")).asJson
-        .check(status.is(200)))
+           .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolAboutTheSolicitor")
+           .headers(DivorceHeader.headers_aboutsol)
+           .body(ElFileBody("DivSolDetails.json")).asJson
+           .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
 
@@ -87,10 +88,10 @@ object EXUIDivorceMC {
     
     .group("XUI${service}_080_PetitionerDetails") {
       exec(http("XUI${service}_080_PetitionerDetails")
-        .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolAboutThePetitioner")
-        .headers(DivorceHeader.headers_aboutpetitioner)
-        .body(ElFileBody("RecordedSimulationSC_0132_request.json")).asJson
-        .check(status.is(200)))
+           .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolAboutThePetitioner")
+           .headers(DivorceHeader.headers_aboutpetitioner)
+           .body(ElFileBody("DivPetitionDetails.json")).asJson
+           .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
 
@@ -100,10 +101,10 @@ object EXUIDivorceMC {
 ======================================================================================*/
     .group("XUI${service}_090_RespondantDetails") {
       exec(http("XUI${service}_090_RespondantDetails")
-        .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolAboutTheRespondent")
-        .headers(DivorceHeader.headers_headerRespondant)
-        .body(ElFileBody("RecordedSimulationSC_0136_request.json")).asJson
-        .check(status.is(200)))
+           .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolAboutTheRespondent")
+           .headers(DivorceHeader.headers_headerRespondant)
+           .body(ElFileBody("DivRespondentDetails.json")).asJson
+           .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
   /*======================================================================================
@@ -112,10 +113,10 @@ object EXUIDivorceMC {
 ======================================================================================*/
     .group("XUI${service}_100_MarriageCertificate") {
       exec(http("XUI${service}_100_MarriageCertificate")
-        .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolMarriageCertificate")
-        .headers(DivorceHeader.headers_marriagecertificate)
-        .body(ElFileBody("RecordedSimulationSC_0141_request.json")).asJson
-        .check(status.is(200)))
+           .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolMarriageCertificate")
+           .headers(DivorceHeader.headers_marriagecertificate)
+           .body(ElFileBody("DivMarriageCertificate.json")).asJson
+           .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
   /*======================================================================================
@@ -124,10 +125,10 @@ object EXUIDivorceMC {
 ======================================================================================*/
     .group("XUI${service}_110_SolJurisdiction") {
       exec(http("XUI${service}_110_SolJurisdiction")
-        .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolJurisdiction")
-        .headers(DivorceHeader.headers_createjurisdiction)
-        .body(ElFileBody("RecordedSimulationSC_0145_request.json")).asJson
-        .check(status.is(200)))
+           .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolJurisdiction")
+           .headers(DivorceHeader.headers_createjurisdiction)
+           .body(ElFileBody("DivSolJurisdiction.json")).asJson
+           .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
   /*======================================================================================
@@ -137,10 +138,10 @@ object EXUIDivorceMC {
     
     .group("XUI${service}_120_ReasonForDivorce") {
       exec(http("XUI${service}_120_ReasonForDivorce")
-        .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolReasonForDivorce")
-        .headers(DivorceHeader.headers_reasonfordiv)
-        .body(ElFileBody("RecordedSimulationSC_0150_request.json")).asJson
-        .check(status.is(200)))
+           .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolReasonForDivorce")
+           .headers(DivorceHeader.headers_reasonfordiv)
+           .body(ElFileBody("DivReasonForDivorce.json")).asJson
+           .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
   /*======================================================================================
@@ -149,10 +150,10 @@ object EXUIDivorceMC {
 ======================================================================================*/
     .group("XUI${service}_130_Behaviour") {
       exec(http("XUI${service}_130_Behaviour")
-        .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolSOCBehaviour1")
-        .headers(DivorceHeader.headers_behaviour)
-        .body(ElFileBody("RecordedSimulationSC_0155_request.json")).asJson
-        .check(status.is(200)))
+           .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolSOCBehaviour1")
+           .headers(DivorceHeader.headers_behaviour)
+           .body(ElFileBody("DivBehaviour.json")).asJson
+           .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
   /*======================================================================================
@@ -161,10 +162,10 @@ object EXUIDivorceMC {
 ======================================================================================*/
     .group("XUI${service}_140_ExistingCourtCases") {
       exec(http("XUI${service}_140_ExistingCourtCases")
-        .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolExistingCourtCases")
-        .headers(DivorceHeader.headers_courtcases)
-        .body(ElFileBody("RecordedSimulationSC_0160_request.json")).asJson
-        .check(status.is(200)))
+           .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolExistingCourtCases")
+           .headers(DivorceHeader.headers_courtcases)
+           .body(ElFileBody("DivExistingCourtCases.json")).asJson
+           .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
   /*======================================================================================
@@ -174,10 +175,10 @@ object EXUIDivorceMC {
     
     .group("XUI${service}_150_DivideProperty") {
       exec(http("XUI${service}_150_DivideProperty")
-        .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolDividingMoneyAndProperty")
-        .headers(DivorceHeader.headers_devideprops)
-        .body(ElFileBody("RecordedSimulationSC_0165_request.json")).asJson
-        .check(status.is(200)))
+           .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolDividingMoneyAndProperty")
+           .headers(DivorceHeader.headers_devideprops)
+           .body(ElFileBody("DivDivideProperty.json")).asJson
+           .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
 
@@ -187,10 +188,10 @@ object EXUIDivorceMC {
 ======================================================================================*/
     .group("XUI${service}_160_ClaimCosts") {
       exec(http("XUI${service}_160_ClaimCosts")
-        .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolApplyToClaimCosts")
-        .headers(DivorceHeader.headers_claimcosts)
-        .body(ElFileBody("RecordedSimulationSC_0170_request.json")).asJson
-        .check(status.is(200)))
+           .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolApplyToClaimCosts")
+           .headers(DivorceHeader.headers_claimcosts)
+           .body(ElFileBody("DivClaimCosts.json")).asJson
+           .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
 
@@ -200,10 +201,10 @@ object EXUIDivorceMC {
 ======================================================================================*/
     .group("XUI${service}_170_UploadDocs") {
       exec(http("XUI${service}_170_UploadDocs")
-        .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolUploadDocs")
-        .headers(DivorceHeader.headers_upload)
-        .body(ElFileBody("RecordedSimulationSC_0175_request.json")).asJson
-        .check(status.is(200)))
+           .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreateSolUploadDocs")
+           .headers(DivorceHeader.headers_upload)
+           .body(ElFileBody("DivUploadDocs.json")).asJson
+           .check(status.is(200)))
     }
       .pause(MinThinkTime, MaxThinkTime)
   /*======================================================================================
@@ -212,10 +213,10 @@ object EXUIDivorceMC {
 ======================================================================================*/
     .group("XUI${service}_180_CreateLangPref") {
       exec(http("XUI${service}_180_005_CreateLangPref")
-        .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreatelangPref")
-        .headers(DivorceHeader.headers_langpref)
-        .body(ElFileBody("RecordedSimulationSC_0180_request.json")).asJson
-        .check(status.is(200)))
+           .post("/data/case-types/DIVORCE_XUI/validate?pageId=solicitorCreatelangPref")
+           .headers(DivorceHeader.headers_langpref)
+           .body(ElFileBody("DivCreateLangPref.json")).asJson
+           .check(status.is(200)))
 
         .exec(http("XUI${service}_180_010_LangPrefProfile")
           .get("/data/internal/profile")
@@ -230,11 +231,11 @@ object EXUIDivorceMC {
 ======================================================================================*/
     .group("XUI${service}_190_ApplicationDraftfinal") {
       exec(http("XUI${service}_190_005_ApplicationDraftfinal")
-        .post("/data/case-types/DIVORCE_XUI/cases?ignore-warning=false")
-        .headers(DivorceHeader.headers_ignorewarning)
-        .body(ElFileBody("RecordedSimulationSC_0186_request.json")).asJson
-        .check(status.in(200, 201))
-        .check(jsonPath("$.id").optional.saveAs("caseId")))
+           .post("/data/case-types/DIVORCE_XUI/cases?ignore-warning=false")
+           .headers(DivorceHeader.headers_ignorewarning)
+           .body(ElFileBody("DivApplicationDraftFinal.json")).asJson
+           .check(status.in(200, 201))
+           .check(jsonPath("$.id").optional.saveAs("caseId")))
         /*.exec( session => {
              println("the case Id is  "+session("caseId").as[String])
              session
@@ -290,10 +291,10 @@ object EXUIDivorceMC {
         .pause(MinThinkTime , MaxThinkTime )
     .group("XUI${service}_210_ShareACaseAssignments") {
       exec(http("XUI${service}_210_ShareACaseAssignments")
-        .post("/api/caseshare/case-assignments")
-        .headers(DivorceHeader.headers_shareacaseconfirm)
-        .body(ElFileBody("RecordedSimulationSC_0229_request.json")).asJson
-        .check(status.in(200, 201)))
+           .post("/api/caseshare/case-assignments")
+           .headers(DivorceHeader.headers_shareacaseconfirm)
+           .body(ElFileBody("DivShareACase.json")).asJson
+           .check(status.in(200, 201)))
     }
         .pause(MinThinkTime , MaxThinkTime )
 

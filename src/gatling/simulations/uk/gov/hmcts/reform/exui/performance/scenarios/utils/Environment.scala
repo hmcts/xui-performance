@@ -21,21 +21,21 @@ val baseDomainOrg="manage-org.perftest.platform.hmcts.net"
   val idamAPI="https://idam-api.perftest.platform.hmcts.net"
   val notificationClient="sidam_perftest-b7ab8862-25b4-41c9-8311-cb78815f7d2d-ebb113ff-da17-4646-a39e-f93783a993f4"
 
- val minThinkTime = 10//100
+ val minThinkTime = 10//50
   //10
-  val maxThinkTime = 10//110
+  val maxThinkTime = 10//55
   //30
-  val minThinkTimeFPLC = 75
+  val minThinkTimeFPLC = 30
   //10
-  val maxThinkTimeFPLC = 80
+  val maxThinkTimeFPLC = 35
 
   val minThinkTimeSDO = 100
   //10
   val maxThinkTimeSDO = 110
   //30
-  val minThinkTimeIACC = 10//100
+  val minThinkTimeIACC = 45
   //10
-  val maxThinkTimeIACC = 10//120
+  val maxThinkTimeIACC = 50
   val minThinkTimeFPLV = 450
   //10
   val maxThinkTimeFPLV = 480
@@ -43,17 +43,17 @@ val baseDomainOrg="manage-org.perftest.platform.hmcts.net"
   val minThinkTimeIACV = 470
   //10
   val maxThinkTimeIACV = 490
-  val minThinkTimePROB = 300
-  val maxThinkTimePROB = 310
+  val minThinkTimePROB = 170
+  val maxThinkTimePROB = 180
 
-  val minThinkTimeDIV = 140
-  val maxThinkTimeDIV = 160
+  val minThinkTimeDIV = 55
+  val maxThinkTimeDIV = 60
 
-  val minThinkTimeCW = 50
-  val maxThinkTimeCW = 50
+  val minThinkTimeCW = 10//200
+  val maxThinkTimeCW = 10//210
 
-  val minThinkTimeFR = 10//100
-  val maxThinkTimeFR =10//100
+  val minThinkTimeFR = 50
+  val maxThinkTimeFR =50
 
   val constantthinkTime = 5
   val HttpProtocol = http
