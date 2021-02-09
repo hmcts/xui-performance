@@ -41,7 +41,8 @@ object EXUIMCLogin {
         .get("/auth/login")
         .headers(LoginHeader.headers_4)
         .check(css("input[name='_csrf']", "value").saveAs("csrfToken"))
-        .check(regex("manage-user%20create-user&state=(.*)&client").saveAs("state")))
+        //.check(regex("manage-user%20create-user&state=(.*)&client").saveAs("state")))
+            .check(regex("/oauth2/callback&amp;state=(.*)&amp;nonce=").saveAs("state")))
 
   } .pause(MinThinkTime, MaxThinkTime)
 

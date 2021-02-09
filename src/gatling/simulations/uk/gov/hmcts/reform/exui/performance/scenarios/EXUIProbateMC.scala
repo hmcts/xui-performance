@@ -67,19 +67,19 @@ object EXUIProbateMC {
      ======================================================================================*/      .feed(Feeders.createCaseData)
       .group("XUI${service}_060_CreateApplication") {
         exec(http("XUI${service}_060_005_CreateApplication")
-          .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorCreateApplicationsolicitorCreateApplicationPage1")
-          .headers(ProbateHeader.headers_casedata)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .body(ElFileBody("RecordedSimulationPro1612_0048_request.json")).asJson
-          .check(status.in(200, 304)))
+             .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorCreateApplicationsolicitorCreateApplicationPage1")
+             .headers(ProbateHeader.headers_casedata)
+             .header("X-XSRF-TOKEN", "${XSRFToken}")
+             .body(ElFileBody("ProbateCreateApplication.json")).asJson
+             .check(status.in(200, 304)))
 
     .exec(http("XUI${service}_060_010_CreateApplication")
-    .post("/data/internal/case-types/GrantOfRepresentation/drafts/")
-    .headers(ProbateHeader.headers_draft)
-    .header("X-XSRF-TOKEN", "${XSRFToken}")
-    .body(ElFileBody("RecordedSimulationPro1612_0054_request.json")).asJson
-    .check(status.in(200, 404, 201))
-    .check(jsonPath("$.id").optional.saveAs("draftId")))
+          .post("/data/internal/case-types/GrantOfRepresentation/drafts/")
+          .headers(ProbateHeader.headers_draft)
+          .header("X-XSRF-TOKEN", "${XSRFToken}")
+          .body(ElFileBody("ProbateCreateApplicationDraft.json")).asJson
+          .check(status.in(200, 404, 201))
+          .check(jsonPath("$.id").optional.saveAs("draftId")))
 
 }
 .pause(MinThinkTime, MaxThinkTime)
@@ -87,8 +87,7 @@ object EXUIProbateMC {
  /*======================================================================================
 *Business process : Following business process is for Probate Case Creation
 * Below group contains all the requests are address look up for applicant
-  ======================================================================================*/
-                   .group("XUI${service}_070_AddressLookup") {
+  ======================================================================================*/ .group("XUI${service}_070_AddressLookup") {
   exec(http("XUI${service}_070_AddressLookup")
     .get("/api/addresses?postcode=TW33SD")
     .headers(ProbateHeader.headers_28)
@@ -105,18 +104,18 @@ object EXUIProbateMC {
 .group("XUI${service}_080_CreateApplication2")
   {
     exec(http("XUI${service}_080_005_CreateApplication2")
-      .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorCreateApplicationsolicitorCreateApplicationPage2")
-      .headers(ProbateHeader.headers_casedata)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("RecordedSimulationPro1612_0126_request.json")).asJson
-      .check(status.in(200, 304)))
+         .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorCreateApplicationsolicitorCreateApplicationPage2")
+         .headers(ProbateHeader.headers_casedata)
+         .header("X-XSRF-TOKEN", "${XSRFToken}")
+         .body(ElFileBody("ProbateCreateApplication2.json")).asJson
+         .check(status.in(200, 304)))
 
     .exec(http("XUI${service}_080_010_Draft")
-  .put("/data/internal/case-types/GrantOfRepresentation/drafts/${draftId}")
-  .headers(ProbateHeader.headers_drfts)
-  .header("X-XSRF-TOKEN", "${XSRFToken}")
-  .body(ElFileBody("RecordedSimulationProbatecreate_0142_request.json")).asJson
-  .check(status.in(400,200,201)))
+          .put("/data/internal/case-types/GrantOfRepresentation/drafts/${draftId}")
+          .headers(ProbateHeader.headers_drfts)
+          .header("X-XSRF-TOKEN", "${XSRFToken}")
+          .body(ElFileBody("ProbateApplication2Draft.json")).asJson
+          .check(status.in(400,200,201)))
 
     .exec(http("XUI${service}_080_015_DraftProfile")
       .get("/data/internal/profile")
@@ -133,12 +132,12 @@ object EXUIProbateMC {
 
   .group("XUI${service}_090_CaseSubmitted") {
     exec(http("XUI${service}_090_005_CaseSubmitted")
-      .post("/data/case-types/GrantOfRepresentation/cases?ignore-warning=false")
-      .headers(ProbateHeader.headers_solappcreated)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("RecordedSimulationPro1612_0144_request.json")).asJson
-      .check(status.in(200, 304, 201))
-      .check(jsonPath("$.id").optional.saveAs("caseId")))
+         .post("/data/case-types/GrantOfRepresentation/cases?ignore-warning=false")
+         .headers(ProbateHeader.headers_solappcreated)
+         .header("X-XSRF-TOKEN", "${XSRFToken}")
+         .body(ElFileBody("ProbateCaseSubmitted.json")).asJson
+         .check(status.in(200, 304, 201))
+         .check(jsonPath("$.id").optional.saveAs("caseId")))
 
     /*======================================================================================
 *Business process : Following business process is for Probate Case Creation
