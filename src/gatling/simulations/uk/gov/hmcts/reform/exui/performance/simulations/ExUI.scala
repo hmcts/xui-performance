@@ -140,17 +140,10 @@ class ExUI extends Simulation {
 
 	val EXUIMCaseCaseworkerScn = scenario("***** Caseworker Journey ******").repeat(1)
   {
-		feed(feedUserDataCaseworker).feed(Feeders.CwDataFeeder)
+	  feed(feedUserDataCaseworker).feed(Feeders.CwDataFeeder)
 			.exec(EXUIMCLogin.manageCasesHomePage)
 			.exec(EXUIMCLogin.caseworkerLogin)
 		.repeat(4) {
-				randomSwitch(
-					3d -> exec(feed(caseFeederIAC)),//iac
-					39d -> exec(feed(caseFeederProbate)),//probate
-					39d -> exec(feed(caseFeederDivorce)),//divorce
-					1d -> exec(feed(caseFeederFPL)),//fpl
-					18d -> exec(feed(caseFeederFR))//FR
-				)
 			exec(EXUICaseWorker.ApplyFilters)
 		  	.exec(EXUICaseWorker.ApplySort)
 				.exec(EXUICaseWorker.ClickFindCase)
@@ -163,12 +156,14 @@ class ExUI extends Simulation {
 	* below scenario is for Financial Remedy Business Process related scenario
 	 ==================================================================================================*/
 
-	val EXUIFinancialRemedyScn = scenario("Scenario FR").repeat(2)
+	val EXUIFinancialRemedyScn = scenario("Scenario FR").repeat(1)
 	{	 feed(feedUserDataFR)
 		.feed(Feeders.FRApplicantDataFeeder)
 		.exec(EXUIMCLogin.manageCasesHomePage)
 		.exec(EXUIMCLogin.manageCaseslogin)
-		.exec(EXUI_FR_Applicant.createCase)
+	  	.repeat(2) {
+			  exec(EXUI_FR_Applicant.createCase)
+		  }
 		.exec(EXUIMCLogin.manageCase_Logout)
 	  	/*.pause(20)
 		.feed(Feeders.FRRespondentDataFeeder)
@@ -185,15 +180,17 @@ class ExUI extends Simulation {
 	* Below setup is to do the smoke test to make sure all the scripts are working for one user
 	 ==================================================================================================*/
 
-	/*setUp(
-		EXUIMCaseCreationDivorceScn.inject(nothingFor(5),rampUsers(1) during (3)),
-		EXUIMCaseCaseworkerScn.inject(rampUsers(1) during 1),
-		EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(1) during (3)),
-		EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(1) during (3)),
-		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(1) during (2)),
-		EXUIFinancialRemedyScn.inject(atOnceUsers(1)).protocols(MChttpProtocol))
-}
-*/
+	setUp(
+		EXUIMCaseCreationDivorceScn.inject(nothingFor(5),rampUsers(10) during (100)),
+		EXUIMCaseCaseworkerScn.inject(rampUsers(10) during 100),
+		EXUIMCaseProbateScn.inject(nothingFor(25),rampUsers(10) during (100)),
+		//EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(1) during (3)),
+		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(10) during (100)),
+		//EXUIFinancialRemedyScn.inject(rampUsers(1) during (2))
+	)
+			.protocols(MChttpProtocol)
+	
+
 	
 	
 	/*===============================================================================================
@@ -208,11 +205,11 @@ class ExUI extends Simulation {
 	/*===============================================================================================
 	* Below setup  is to do the smoke test to make sure one particular scenario  is working as part of sanity test
 	 ==================================================================================================*/
-	 setUp(
+	/* setUp(
 		 EXUIMCaseCaseworkerScn.inject(rampUsers(1) during (3)),
 	  // EXUIMCaseCaseworkerScn.inject(nothingFor(20),rampUsers(1) during (1))
 	 )
-      .protocols(MChttpProtocol)
+      .protocols(MChttpProtocol)*/
 	
 	
 	/*===============================================================================================

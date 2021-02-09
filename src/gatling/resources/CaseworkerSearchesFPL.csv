@@ -1,6 +1,2 @@
 jurisdiction,caseType,sortName,type,viewTab1,view2Tab2,viewTab3,viewTab4,viewTab5
-PROBATE,GrantOfRepresentation,Number,[CASE_REFERENCE],SOT,Copies,Applicant%2520details,Deceased,Applicant%2520details
-IA,Asylum,appealReferenceNumber,Text,Appeal,Appellant,Documents,Directions,Applications
 PUBLICLAW,CARE_SUPERVISION_EPO,caseName,Text,Hearings,Orders,History,Documents,Legal%2520basis
-DIVORCE,DIVORCE_XUI,Number,[CASE_REFERENCE],Marriage%2520Certificate,Documents,Outcome%2520of%2520Decree%2520Nisi,Organisation%2520Policy,AOS
-DIVORCE,FinancialRemedyConsentedRespondent,Number,[CASE_REFERENCE],Case%2520Documents,Divorce,Applicant,History,Judge
