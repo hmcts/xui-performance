@@ -42,7 +42,8 @@ object EXUIMCLogin {
         .headers(LoginHeader.headers_4)
         .check(css("input[name='_csrf']", "value").saveAs("csrfToken"))
         //.check(regex("manage-user%20create-user&state=(.*)&client").saveAs("state")))
-            .check(regex("/oauth2/callback&amp;state=(.*)&amp;nonce=").saveAs("state")))
+            .check(regex("/oauth2/callback&amp;state=(.*)&amp;nonce=").saveAs("state"))
+            .check(regex("&nonce=(.*)&response_type").saveAs("nonce")))
 
   } .pause(MinThinkTime, MaxThinkTime)
 
@@ -81,6 +82,7 @@ object EXUIMCLogin {
             .headers(LoginHeader.headers_4)
             .check(css("input[name='_csrf']", "value").saveAs("csrfToken"))
             .check(regex("manage-user%20create-user%20manage-roles&state=(.*)&client").saveAs("state"))
+            .check(regex("&nonce=(.*)&response_type").saveAs("nonce"))
       )
 
 
@@ -142,10 +144,14 @@ object EXUIMCLogin {
   * service related journeys like divorce,fpla,iac,probate etc...
   =====================================================================================*/
 
+    //The below request may need amending depending on the authentication type set by XUI team
+    //The top row is for OAUTH2 and the bottom row is for OPIDC
+
   val manageCaseslogin =
     group("XUI${service}_020_005_SignIn") {
       exec(flushHttpCache).exec(http("XUI${service}_020_005_SignIn")
-        .post(IdamUrl + "/login?response_type=code&redirect_uri=" + baseURL + "%2Foauth2%2Fcallback&scope=profile%20openid%20roles%20manage-user%20create-user&state=${state}&client_id=xuiwebapp")
+        // .post(IdamUrl + "/login?response_type=code&redirect_uri=" + baseURL + "%2Foauth2%2Fcallback&scope=profile%20openid%20roles%20manage-user%20create-user&state=${state}&client_id=xuiwebapp")
+        .post(IdamUrl + "/login?client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&state=${state}&nonce=${nonce}&response_type=code&scope=profile%20openid%20roles%20manage-user%20create-user&prompt=")
         .formParam("username", "${user}")
         .formParam("password", "Pass19word")
         .formParam("save", "Sign in")
@@ -206,10 +212,14 @@ object EXUIMCLogin {
   * sub requests ,following is for performing the search the case, find the case case details
   =====================================================================================*/
 
+    //The below request may need amending depending on the authentication type set by XUI team
+    //The top row is for OAUTH2 and the bottom row is for OPIDC
+
     val caseworkerLogin =
       group("XUI${service}_020_SignIn") {
         exec(http("XUI${service}_020_005_SignIn")
-          .post(IdamUrl + "/login?response_type=code&redirect_uri=" + baseURL + "%2Foauth2%2Fcallback&scope=profile%20openid%20roles%20manage-user%20create-user&state=${state}&client_id=xuiwebapp")
+//          .post(IdamUrl + "/login?response_type=code&redirect_uri=" + baseURL + "%2Foauth2%2Fcallback&scope=profile%20openid%20roles%20manage-user%20create-user&state=${state}&client_id=xuiwebapp")
+          .post(IdamUrl + "/login?client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&state=${state}&nonce=${nonce}&response_type=code&scope=profile%20openid%20roles%20manage-user%20create-user&prompt=")
           .formParam("username", "${user}")
           .formParam("password", "Password12")
           .formParam("save", "Sign in")
