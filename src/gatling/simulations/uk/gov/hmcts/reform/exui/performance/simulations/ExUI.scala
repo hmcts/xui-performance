@@ -180,7 +180,7 @@ class ExUI extends Simulation {
 	* Below setup is to do the smoke test to make sure all the scripts are working for one user
 	 ==================================================================================================*/
 
-	setUp(
+	/*setUp(
 		EXUIMCaseCreationDivorceScn.inject(nothingFor(5),rampUsers(10) during (100)),
 		EXUIMCaseCaseworkerScn.inject(rampUsers(10) during 100),
 		EXUIMCaseProbateScn.inject(nothingFor(25),rampUsers(10) during (100)),
@@ -188,7 +188,7 @@ class ExUI extends Simulation {
 		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(10) during (100)),
 		//EXUIFinancialRemedyScn.inject(rampUsers(1) during (2))
 	)
-			.protocols(MChttpProtocol)
+			.protocols(MChttpProtocol)*/
 	
 
 	
@@ -205,8 +205,8 @@ class ExUI extends Simulation {
 	/*===============================================================================================
 	* Below setup  is to do the smoke test to make sure one particular scenario  is working as part of sanity test
 	 ==================================================================================================*/
-	/* setUp(
-		 EXUIMCaseCaseworkerScn.inject(rampUsers(1) during (3)),
+	 /*setUp(
+		 EXUIMCaseCreationIACScn.inject(rampUsers(1) during (3)),
 	  // EXUIMCaseCaseworkerScn.inject(nothingFor(20),rampUsers(1) during (1))
 	 )
       .protocols(MChttpProtocol)*/
@@ -216,14 +216,14 @@ class ExUI extends Simulation {
   * Below setup  is for actual test to be run on VM and for reporting, below numbers needs changing as per the agreed load model  nd also need adjust the think times accordingly
    ==================================================================================================*/
 	
-	/* setUp(
+	 setUp(
 		 EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(238) during (1200)),
 		 EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(20) during (1200)),
 		 EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(7) during (1200)),
 		 EXUIMCaseCaseworkerScn.inject(nothingFor(55),rampUsers(900) during (1200)),
 		 EXUIMCaseCreationDivorceScn.inject(nothingFor(65),rampUsers(238) during (1200)),
-		 EXUIFinancialRemedyScn.inject(nothingFor(75),rampUsers(98) during (1200))
-        ).protocols(MChttpProtocol)*/
+		 //EXUIFinancialRemedyScn.inject(nothingFor(75),rampUsers(98) during (1200))
+        ).protocols(MChttpProtocol)
 
 
 	

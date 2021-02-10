@@ -320,74 +320,42 @@ object EXUIIACMC {
               .body(StringBody("{\n  \"data\": {\n    \"legalRepDeclaration\": [\n      \"hasDeclared\"\n    ]\n  },\n  \"event\": {\n    \"id\": \"submitAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token_submit}\",\n  \"ignore_warning\": false\n}")).check(status.in(200, 304, 201)))
           }
           .pause(MinThinkTime, MaxThinkTime)
-  //below is payload for share a case body
-        val StringBodyVJ = "{\n  \"data\": {\n    \"orgListOfUsers\": {\n      \"value\": {\n        \"code\": \"${code1}\",\n        \"label\": \"${label1}\"\n      },\n      \"list_items\": [\n        {\n          \"code\": \"${code1}\",\n          \"label\": \"${label1}\"\n        },\n        {\n          \"code\": \"${code2}\",\n          \"label\": \"${label2}\"\n        },\n        {\n          \"code\": \"${code3}\",\n          \"label\": \"${label3}\"\n        },\n        {\n          \"code\": \"${code4}\",\n          \"label\": \"${label4}\"\n        },\n        {\n          \"code\": \"${code5}\",\n          \"label\": \"${label5}\"\n        },\n        {\n          \"code\": \"${code6}\",\n          \"label\": \"${label6}\"\n        }\n      ]\n    }\n  },\n  \"event\": {\n    \"id\": \"shareACase\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token_sharecase}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"orgListOfUsers\": \"${code1}\"\n  },\n  \"case_reference\": \"${caseId}\"\n}"
-
-        val StringBodyVJSubmit = "{\n  \"data\": {\n    \"orgListOfUsers\": {\n      \"value\": {\n        \"code\": \"${code}\",\n        \"label\": \"${label}\"\n      },\n      \"list_items\": [\n        {\"code\":\"${code1}\",\"label\":\"${label1}\"},\n        {\"code\":\"${code2}\",\"label\":\"${label2}\"},\n        {\"code\":\"${code3}\",\"label\":\"${label3}\"},\n        {\"code\":\"${code4}\",\"label\":\"${label4}\"},\n        {\"code\":\"${code5}\",\"label\":\"${label5}\"},\n        {\"code\":\"${code6}\",\"label\":\"${label6}\"}\n      ]\n    }\n  },\n  \"event\": {\n    \"id\": \"shareACase\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token_sharecase}\",\n  \"ignore_warning\": false\n}"
   
-  /*======================================================================================
-*Business process : Following business process is for IAC  Case share event
-* Below group contains all the requests are for start  submit appeal declaration submitted
-======================================================================================*/
-
-        val shareacase = group("XUI${service}_260_StartShareCaseEvent") {
-          exec(http("XUI${service}_260_005_StartShareCaseEvent")
-            .get("/data/internal/cases/${caseId}/event-triggers/shareACase?ignore-warning=false")
-            .headers(IACHeader.headers_sharecase1)
-            .check(status.in(200, 304, 302))
-            .check(jsonPath("$..list_items[0].code").optional.saveAs("code1"))
-            .check(jsonPath("$..list_items[0].label").optional.saveAs("label1"))
-            .check(jsonPath("$..list_items[1].code").optional.saveAs("code2"))
-            .check(jsonPath("$..list_items[1].label").optional.saveAs("label2"))
-            .check(jsonPath("$..list_items[2].code").optional.saveAs("code3"))
-            .check(jsonPath("$..list_items[2].label").optional.saveAs("label3"))
-            .check(jsonPath("$..list_items[3].code").optional.saveAs("code4"))
-            .check(jsonPath("$..list_items[3].label").optional.saveAs("label4"))
-            .check(jsonPath("$..list_items[4].code").optional.saveAs("code5"))
-            .check(jsonPath("$..list_items[4].label").optional.saveAs("label5"))
-            .check(jsonPath("$..list_items[5].code").optional.saveAs("code6"))
-            .check(jsonPath("$..list_items[5].label").optional.saveAs("label6"))
-            .check(jsonPath("$..code").find(0).optional.saveAs("code"))
-            .check(jsonPath("$..label").find(2).optional.saveAs("label"))
-            .check(jsonPath("$.event_token").optional.saveAs("event_token_sharecase")))
-            
-            .exec(http("XUI${service}_260_010_ShareACaseProfile")
-              .get("/data/internal/profile")
-              .headers(IACHeader.headers_di_casedetails)
-              .header("X-XSRF-TOKEN", "${XSRFToken}")
-              .check(status.in(200, 304, 302)))
-        }
-          .pause(MinThinkTime, MaxThinkTime)
-
-                         /*======================================================================================
-               *Business process : Following business process is for IAC  Case sharing
-               * Below group contains all the requests are for start  share a case validate
-               ======================================================================================*/
-          .group("XUI${service}_270_ShareACaseValidate") {
-            exec(http("XUI${service}_270_005_ShareACaseValidate")
-                   .post("/data/case-types/Asylum/validate?pageId=shareACaseshareACase")
-                   .headers(IACHeader.headers_shareacasesubmit)
-              .body(StringBody(StringBodyVJ))
-              .check(status.in(200, 304, 302)))
-              
-              .exec(http("XUI${service}_270_010_ShareaCaseValidateProfile")
-                .get("/data/internal/profile")
-                .headers(IACHeader.headers_di_shareacase)
-                .check(status.in(200, 304, 302)))
-          }
-          .pause(MinThinkTime, MaxThinkTime)
-
-                         /*======================================================================================
-               *Business process : Following business process is for IAC  Case sharing
-               * Below group contains all the requests are for start  share case events
-               ======================================================================================*/
-          .group("XUI${service}_280_ShareACaseEvents") {
-            exec(http("XUI${service}_280_005_ShareACaseEvents").post("/data/cases/${caseId}/events").headers(IACHeader.headers_shareacase12).body(StringBody(StringBodyVJSubmit))
-              .check(status.in(200, 304, 302, 201)))
-              .exec(http("XUI${service}_280_010_ShareACaseViewData")
-                .get("/data/internal/cases/${caseId}")
-                .headers(IACHeader.headers_shareacase14)
-                .check(status.in(200, 304, 302, 201)))
-          }
-          .pause(MinThinkTime, MaxThinkTime)
+  
+  /*====================================================================================
+  * IAC share a case
+   ======================================================================================*/
+  val shareacase =
+    group("XUI${service}_260_ShareACase") {
+      exec(http("XUI${service}_260_005_ShareACase")
+           .get("/api/caseshare/cases?case_ids=${caseId}")
+           .headers(IACHeader.headers_scase1)
+           .check(status.in(200, 304))
+           .check(jsonPath("$..email").find(0).optional.saveAs("user0"))
+           .check(jsonPath("$..firstName").find(0).optional.saveAs("firstName"))
+           .check(jsonPath("$..lastName").find(0).optional.saveAs("lastName"))
+           .check(jsonPath("$..idamId").find(0).optional.saveAs("idamId"))
+    
+      )
+    
+      .exec(http("XUI${service}_260_010_ShareACaseUsers")
+            .get("/api/caseshare/users")
+            .headers(IACHeader.headers_scase1)
+            .check(status.in(200, 304))
+            .check(jsonPath("$..email").find(0).optional.saveAs("user1"))
+            .check(jsonPath("$..firstName").find(0).optional.saveAs("firstName1"))
+            .check(jsonPath("$..lastName").find(0).optional.saveAs("lastName1"))
+            .check(jsonPath("$..idamId").find(0).optional.saveAs("idamId1"))
+      )
+    }
+    .pause(MinThinkTime , MaxThinkTime )
+    .group("XUI${service}_270_ShareACaseConfirm") {
+      exec(http("XUI${service}_270_ShareACaseAssignments")
+           .post("/api/caseshare/case-assignments")
+           .headers(IACHeader.headers_userassignment)
+           .body(ElFileBody("IACShareACase.json")).asJson
+           .check(status.in(200, 201)))
+    }
+    .pause(MinThinkTime , MaxThinkTime )
+  
       }

@@ -68,6 +68,7 @@ exec(http("XUI${service}_050_005_${jurisdiction}_FindCase")
   .header("X-XSRF-TOKEN", "${xsrfToken}")
   .check(status.in(200,404,304))
 )
+  .pause(MinThinkTime, MaxThinkTime)
 
 //submit find a case
 
@@ -78,13 +79,14 @@ exec(http("XUI${service}_050_005_${jurisdiction}_FindCase")
   .body(StringBody("{\n  \"size\": 25\n}"))
   .check(jsonPath("$..case_id").find(0).optional.saveAs("caseNumber"))
   .check(status.in(200,404,304)))
-.pause(10)
+  
+  .pause(MinThinkTime, MaxThinkTime)
 
 val ViewCase =
 //Loop through each of the found cases and view
 doIf(session => session.contains("caseNumbers")) {
 foreach("${caseNumbers}", "caseNumber", "counter") {
-doIf(session => session("counter").as[Int].<=(5)) {
+doIf(session => session("counter").as[Int].<=(1)) {
 group("XUI${service}_070_${jurisdiction}_ViewCase") {
   exec(http("XUI${service}_070_005_ViewCase")
     .get("/data/internal/cases/${caseNumber}")
