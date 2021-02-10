@@ -111,10 +111,10 @@ class ExUI extends Simulation {
 		.exec(EXUIMCLogin.manageCasesHomePage)
 		.exec(EXUIMCLogin.manageCaseslogin)
 		//	.exec(EXUIMCLogin.termsnconditions)
-		/*.repeat(2) {
+		.repeat(2) {
       exec(EXUIDivorceMC.casecreation)
       	.exec(EXUIDivorceMC.shareacase)
-    }*/
+    }
 		.exec(EXUIMCLogin.manageCase_Logout)
 	}
 	
@@ -143,7 +143,7 @@ class ExUI extends Simulation {
 	  feed(feedUserDataCaseworker).feed(Feeders.CwDataFeeder)
 			.exec(EXUIMCLogin.manageCasesHomePage)
 			.exec(EXUIMCLogin.caseworkerLogin)
-		.repeat(1) {
+		.repeat(4) {
 			exec(EXUICaseWorker.ApplyFilters)
 		  	.exec(EXUICaseWorker.ApplySort)
 				.exec(EXUICaseWorker.ClickFindCase)
