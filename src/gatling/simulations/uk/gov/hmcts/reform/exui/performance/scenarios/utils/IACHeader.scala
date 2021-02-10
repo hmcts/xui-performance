@@ -542,6 +542,25 @@ object IACHeader {
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$54833124_131h37vATDARLUPBSPUDUSAPAWSHOBJTNRRCQHS-0",
   "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/shareACase/shareACaseshareACase"}))
+ 
+ val headers_scase1 = Map(
+  "accept" -> "application/json, text/plain, */*",
+  "sec-ch-ua" -> """Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99""",
+  "sec-ch-ua-mobile" -> "?0",
+  "sec-fetch-dest" -> "empty",
+  "sec-fetch-mode" -> "cors",
+  "sec-fetch-site" -> "same-origin")
+ 
+ val headers_userassignment = Map(
+  "accept" -> "application/json, text/plain, */*",
+  "content-type" -> "application/json",
+  "origin" -> baseURL,
+  "sec-ch-ua" -> """Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99""",
+  "sec-ch-ua-mobile" -> "?0",
+  "sec-fetch-dest" -> "empty",
+  "sec-fetch-mode" -> "cors",
+  "sec-fetch-site" -> "same-origin",
+  "x-xsrf-token" -> "${XSRFToken}")
 
 
 
