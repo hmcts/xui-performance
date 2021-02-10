@@ -111,4 +111,45 @@ val headers_documents = Map(
     "Sec-Fetch-Mode" -> "navigate",
     "Sec-Fetch-Site" -> "none",
     "Upgrade-Insecure-Requests" -> "1")
+    
+    val headers_casefilter = Map(
+        "accept" -> "application/json",
+        "content-type" -> "application/json",
+        "request-context" -> "appId=cid-v1:7922b140-fa5f-482d-89b4-e66e9e6d675a",
+        "request-id" -> "|DRE94.u2MRC",
+        "sec-ch-ua" -> """Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99""",
+        "sec-ch-ua-mobile" -> "?0",
+        "sec-fetch-dest" -> "empty",
+        "sec-fetch-mode" -> "cors",
+        "sec-fetch-site" -> "same-origin",
+        "x-dtpc" -> "2$180916590_215h35vAOAGFJRTHKFFVMNWPNBHMFNNBVVDIHCR-0e18",
+        "x-dtreferer" -> ({baseURL+"/cases/case-filter"}))
+  
+  val headers_findcasesearchinput = Map(
+    "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-search-input-details.v2+json;charset=UTF-8",
+    "content-type" -> "application/json",
+    "experimental" -> "true",
+    "sec-ch-ua" -> """Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99""",
+    "sec-ch-ua-mobile" -> "?0",
+    "sec-fetch-dest" -> "empty",
+    "sec-fetch-mode" -> "cors",
+    "sec-fetch-site" -> "same-origin",
+    "x-dtpc" -> "2$183650634_3h30vHMCICRWCCDFPSCDVCEDPVBSORMWHETFJ-0e11")
+    
+    val workbasketinputs = Map(
+        "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-workbasket-input-details.v2+json;charset=UTF-8",
+        "accept-encoding" -> "gzip, deflate, br",
+        "accept-language" -> "en-US,en;q=0.9",
+        "content-type" -> "application/json",
+        "experimental" -> "true",
+        "sec-ch-ua" -> """Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99""",
+        "sec-ch-ua-mobile" -> "?0",
+        "sec-fetch-dest" -> "empty",
+        "sec-fetch-mode" -> "cors",
+        "sec-fetch-site" -> "same-origin",
+        "x-dtpc" -> "2$189241803_435h22vAEPDEMESKBUFPHVNEGQNAOECJDCUFPOR-0e21")
+       
+   
+    
+       
 }
