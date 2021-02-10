@@ -111,10 +111,10 @@ class ExUI extends Simulation {
 		.exec(EXUIMCLogin.manageCasesHomePage)
 		.exec(EXUIMCLogin.manageCaseslogin)
 		//	.exec(EXUIMCLogin.termsnconditions)
-		.repeat(2) {
+		/*.repeat(2) {
       exec(EXUIDivorceMC.casecreation)
       	.exec(EXUIDivorceMC.shareacase)
-    }
+    }*/
 		.exec(EXUIMCLogin.manageCase_Logout)
 	}
 	
@@ -143,7 +143,7 @@ class ExUI extends Simulation {
 	  feed(feedUserDataCaseworker).feed(Feeders.CwDataFeeder)
 			.exec(EXUIMCLogin.manageCasesHomePage)
 			.exec(EXUIMCLogin.caseworkerLogin)
-		.repeat(4) {
+		.repeat(1) {
 			exec(EXUICaseWorker.ApplyFilters)
 		  	.exec(EXUICaseWorker.ApplySort)
 				.exec(EXUICaseWorker.ClickFindCase)
@@ -206,7 +206,7 @@ class ExUI extends Simulation {
 	* Below setup  is to do the smoke test to make sure one particular scenario  is working as part of sanity test
 	 ==================================================================================================*/
 	 /*setUp(
-		 EXUIMCaseCreationIACScn.inject(rampUsers(1) during (3)),
+		 EXUIMCaseCreationDivorceScn.inject(rampUsers(238) during (600)),
 	  // EXUIMCaseCaseworkerScn.inject(nothingFor(20),rampUsers(1) during (1))
 	 )
       .protocols(MChttpProtocol)*/
