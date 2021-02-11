@@ -108,7 +108,7 @@ group("XUI${service}_080_ViewCase") {
     .header("X-XSRF-TOKEN", "${xsrfToken}")
     .check(regex("""internal/documents/(.+?)","document_filename""").find(0).optional.saveAs("Document_ID")))
     
-    .exec(http("XUI${service}_080_010_ViewUndefined")
+    /*.exec(http("XUI${service}_080_010_ViewUndefined")
       .get("/undefined/cases/${caseNumber}")
       .headers(CaseworkerHeader.headers_undefined)
     .check(status.in(200,304,404)))
@@ -116,7 +116,7 @@ group("XUI${service}_080_ViewCase") {
     .exec(http("XUI${service}_080_015_GetPaymentGroups")
     .get("/payments/cases/${caseNumber}/paymentgroups")
     .headers(CaseworkerHeader.headers_search)
-    .check(status.in(200,304,404)))
+    .check(status.in(200,304,404)))*/
 }
   .pause(MinThinkTime, MaxThinkTime)
 
