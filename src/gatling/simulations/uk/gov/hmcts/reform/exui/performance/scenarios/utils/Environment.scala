@@ -25,9 +25,9 @@ val baseDomainOrg="manage-org.perftest.platform.hmcts.net"
   //10
   val maxThinkTime = 35
   //30
-  val minThinkTimeFPLC = 35
+  val minThinkTimeFPLC = 32
   //10
-  val maxThinkTimeFPLC = 38
+  val maxThinkTimeFPLC = 36
 
   val minThinkTimeSDO = 10//100
   //10
