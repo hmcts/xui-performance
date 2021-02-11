@@ -51,8 +51,8 @@ val baseDomainOrg="manage-org.perftest.platform.hmcts.net"
   val minThinkTimeCW = 40
   val maxThinkTimeCW = 40
 
-  val minThinkTimeFR = 50
-  val maxThinkTimeFR =50
+  val minThinkTimeFR = 55
+  val maxThinkTimeFR =55
 
   val constantthinkTime = 5
   val HttpProtocol = http
