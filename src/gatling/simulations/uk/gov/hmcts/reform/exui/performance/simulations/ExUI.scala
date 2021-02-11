@@ -205,12 +205,12 @@ class ExUI extends Simulation {
 	/*===============================================================================================
 	* Below setup  is to do the smoke test to make sure one particular scenario  is working as part of sanity test
 	 ==================================================================================================*/
-	 /*setUp(
-		 EXUIMCaseCreationDivorceScn.inject(rampUsers(238) during (600)),
+	/* setUp(
+     EXUIMCaseCreationDivorceScn.inject(rampUsers(238) during (1800)),
 	  // EXUIMCaseCaseworkerScn.inject(nothingFor(20),rampUsers(1) during (1))
 	 )
-      .protocols(MChttpProtocol)*/
-	
+      .protocols(MChttpProtocol)
+	*/
 	
 	/*===============================================================================================
   * Below setup  is for actual test to be run on VM and for reporting, below numbers needs changing as per the agreed load model  nd also need adjust the think times accordingly
@@ -222,7 +222,7 @@ class ExUI extends Simulation {
 		 EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(7) during (1200)),
 		 EXUIMCaseCaseworkerScn.inject(nothingFor(55),rampUsers(900) during (1200)),
 		 EXUIMCaseCreationDivorceScn.inject(nothingFor(65),rampUsers(238) during (1200)),
-		 //EXUIFinancialRemedyScn.inject(nothingFor(75),rampUsers(98) during (1200))
+		 EXUIFinancialRemedyScn.inject(nothingFor(75),rampUsers(98) during (1200))
         ).protocols(MChttpProtocol)
 
 
