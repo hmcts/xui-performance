@@ -20,14 +20,14 @@ val MaxThinkTime = Environment.maxThinkTimeCW
 
 val ApplyFilters =
 feed(caseFeeder)
-.group("XUI${service}_030_${jurisdiction}_SearchPagination") {
-  exec(http("XUI${service}_030_005_${jurisdiction}_AccessRead")
+.group("XUI${service}_030_ApplyFilter") {
+  exec(http("XUI${service}_030_005_AccessRead")
     .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
     .headers(CaseworkerHeader.headers_casefilter)
     .header("X-XSRF-TOKEN", "${xsrfToken}")
     .check(status.in(200, 304)))
   
-    .exec(http("XUI${service}_030_010_${jurisdiction}_BasketInputs")
+    .exec(http("XUI${service}_030_010_BasketInputs")
       .get("/data/internal/case-types/${caseType}/work-basket-inputs")
       .headers(CaseworkerHeader.workbasketinputs)
       .header("X-XSRF-TOKEN", "${xsrfToken}")
@@ -35,7 +35,7 @@ feed(caseFeeder)
 }
     .pause(MinThinkTime, MaxThinkTime)
     
-.exec(http("XUI${service}_040_ApplyFilter")
+.exec(http("XUI${service}_040_SubmitApplyFilter")
   .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&page=1")
   .headers(CaseworkerHeader.headers_2)
   .header("X-XSRF-TOKEN", "${xsrfToken}")
@@ -52,7 +52,7 @@ feed(caseFeeder)
 ======================================================================================*/
 
 val ApplySort=
-group("XUI${service}_050_${jurisdiction}_ApplySortCaseRef") {
+group("XUI${service}_050_SortCases") {
 exec(http("XUI${service}_050_ApplySortCaseRef")
 .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&page=1")
 .headers(CaseworkerHeader.headers_sort)
@@ -69,14 +69,14 @@ exec(http("XUI${service}_050_ApplySortCaseRef")
 ======================================================================================*/
 
 val ClickFindCase=
-  group("XUI${service}_060_${jurisdiction}_ClickFindCase") {
-    exec(http("XUI${service}_060_005_${jurisdiction}_FindCase")
+  group("XUI${service}_060_ClickFindCase") {
+    exec(http("XUI${service}_060_005_FindCase")
       .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
       .headers(CaseworkerHeader.headers_read)
       .header("X-XSRF-TOKEN", "${xsrfToken}")
       .check(status.in(200, 304)))
       
-      .exec(http("XUI${service}_060_010_${jurisdiction}_FindCaseSearch")
+      .exec(http("XUI${service}_060_010_FindCaseSearch")
         .get("/data/internal/case-types/${caseType}/search-inputs")
         .headers(CaseworkerHeader.headers_findcasesearchinput)
         .header("X-XSRF-TOKEN", "${xsrfToken}")
@@ -86,7 +86,7 @@ val ClickFindCase=
 
 //submit find a case
 
-.exec(http("XUI${service}_070_${jurisdiction}_FindSearchResults")
+.exec(http("XUI${service}_070_FindSearchResults")
   .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&page=1")
   .headers(CaseworkerHeader.headers_results)
   .header("X-XSRF-TOKEN", "${xsrfToken}")
@@ -101,7 +101,7 @@ val ViewCase =
 doIf(session => session.contains("caseNumbers")) {
 foreach("${caseNumbers}", "caseNumber", "counter") {
 doIf(session => session("counter").as[Int].<=(1)) {
-group("XUI${service}_080_${jurisdiction}_ViewCase") {
+group("XUI${service}_080_ViewCase") {
   exec(http("XUI${service}_080_005_ViewCase")
     .get("/data/internal/cases/${caseNumber}")
     .headers(CaseworkerHeader.headers_5)
@@ -126,13 +126,13 @@ group("XUI${service}_080_${jurisdiction}_ViewCase") {
 ======================================================================================*/
   
     
-      .exec(http("XUI${service}_090_${jurisdiction}_ViewTab_${viewTab1}")
+      .exec(http("XUI${service}_090_ViewTab_${viewTab1}")
       .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumber}%23${viewTab1}")
       .headers(CaseworkerHeader.headers_4)
       .check(status.in(200,304)))
       .pause(MinThinkTime, MaxThinkTime)
       
-      .exec(http("XUI${service}_100_${jurisdiction}_ViewTab_${viewTab2}")
+      .exec(http("XUI${service}_100_ViewTab_${viewTab2}")
         .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumber}%23${viewTab2}")
         .headers(CaseworkerHeader.headers_4)
         .check(status.in(200,304)))
@@ -144,24 +144,24 @@ group("XUI${service}_080_${jurisdiction}_ViewCase") {
 *Business process :below steps are executed if document id is found
 ======================================================================================*/
 .doIf(session => session.contains("Document_ID")) {
-  group("XUI${service}_110_${jurisdiction}_ViewCaseDocumentUI") {
+  group("XUI${service}_110_ViewCaseDocumentUI") {
     exec(http("XUI${service}_110_005_ViewCaseDocumentUI")
       .get("/external/config/ui")
       .headers(CaseworkerHeader.headers_documents)
       .header("X-XSRF-TOKEN", "${xsrfToken}"))
       
-      .exec(http("XUI${service}_110_010_${jurisdiction}_ViewCaseDocumentT&C")
+      .exec(http("XUI${service}_110_010_ViewCaseDocumentT&C")
         .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
         .headers(CaseworkerHeader.headers_documents)
         .header("X-XSRF-TOKEN", "${xsrfToken}")
       .check(status.in(200,304)))
-      .exec(http("XUI${service}_110_015_${jurisdiction}_ViewCaseDocumentAnnotations")
+      .exec(http("XUI${service}_110_015_ViewCaseDocumentAnnotations")
         .get("/em-anno/annotation-sets/filter?documentId=${Document_ID}")
         .headers(CaseworkerHeader.headers_documents)
         .header("X-XSRF-TOKEN", "${xsrfToken}")
         .check(status.in(200,304,404)))
       
-      .exec(http("XUI${service}_110_020_${jurisdiction}_ViewCaseDocumentBinary")
+      .exec(http("XUI${service}_110_020_ViewCaseDocumentBinary")
         .get("/documents/${Document_ID}/binary")
         .headers(CaseworkerHeader.headers_documents)
         .header("X-XSRF-TOKEN", "${xsrfToken}")
@@ -172,23 +172,23 @@ group("XUI${service}_080_${jurisdiction}_ViewCase") {
   .pause(MinThinkTime, MaxThinkTime)
 
 //Simulate clicking on Case List
-    .group("XUI${service}_120_${jurisdiction}_CaseListViewHealthcheck") {
+    .group("XUI${service}_120_CaseListViewHealthcheck") {
     exec(http("XUI${service}_120_005_CaseListViewHealthcheck")
       .get("/api/healthCheck?path=%2Fcases"
       ).headers(CaseworkerHeader.headers_6)
       .header("X-XSRF-TOKEN", "${xsrfToken}"))
       
-      .exec(http("XUI${service}_120_010_${jurisdiction}_CaseListViewGetJurisdictions")
+      .exec(http("XUI${service}_120_010_CaseListViewGetJurisdictions")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
         .headers(CaseworkerHeader.headers_7)
         .header("X-XSRF-TOKEN", "${xsrfToken}"))
       
-      .exec(http("XUI${service}_120_015_${jurisdiction}_CaseListViewWorkBasketInputs")
+      .exec(http("XUI${service}_120_015_CaseListViewWorkBasketInputs")
         .get("/data/internal/case-types/${caseType}/work-basket-inputs")
         .headers(CaseworkerHeader.headers_8)
         .header("X-XSRF-TOKEN", "${xsrfToken}"))
       
-      .exec(http("XUI${service}_120_020_${jurisdiction}_CaseListView")
+      .exec(http("XUI${service}_120_020_CaseListView")
         .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&state=1_OPEN&page=1")
         .headers(CaseworkerHeader.headers_9)
         .header("X-XSRF-TOKEN", "${xsrfToken}")
