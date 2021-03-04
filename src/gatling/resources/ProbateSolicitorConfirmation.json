@@ -1,0 +1,20 @@
+{
+  "data": {},
+  "event": {
+    "id": "solicitorReviewAndConfirm",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "solsLegalStatementDocument": {
+      "document_url": "${documentURL}",
+      "document_binary_url": "${documentURL}/binary",
+      "document_filename": "legalStatementProbate.pdf"
+    },
+    "solsSOTNeedToUpdate": "No",
+    "solsIHT400Date": "2020-12-01"
+  },
+  "event_token": "${event_token_probate}",
+  "ignore_warning": false,
+  "case_reference": "${caseId}"
+}
