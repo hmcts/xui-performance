@@ -131,6 +131,14 @@ object ProbateHeader {
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$306835609_341h50vSMDUDAKNCMTAATPLSUJUKNUHICORKWHS-0e15")
 
-
+ val probate_commonHeader = Map(
+  "accept-encoding" -> "gzip, deflate, br",
+  "accept-language" -> "en-GB,en;q=0.9",
+  "content-type" -> "application/json",
+  "experimental" -> "true",
+  "sec-fetch-dest" -> "empty",
+  "sec-fetch-mode" -> "cors",
+  "sec-fetch-site" -> "same-origin",
+  "user-agent" -> "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36")
 
 }

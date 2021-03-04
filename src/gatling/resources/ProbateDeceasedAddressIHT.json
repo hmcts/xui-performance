@@ -1,0 +1,48 @@
+{
+  "data": {
+    "applicationGrounds": "Probate perf test application",
+    "deceasedDomicileInEngWales": "Yes",
+    "deceasedAddress": {
+      "AddressLine1": "18 Hibernia Gardens",
+      "AddressLine2": "",
+      "AddressLine3": "",
+      "PostTown": "Hounslow",
+      "County": "",
+      "PostCode": "TW3 3SD",
+      "Country": "United Kingdom"
+    },
+    "deceasedAnyOtherNames": "No",
+    "ihtFormId": "IHT400421",
+    "ihtGrossValue": "800000",
+    "ihtNetValue": "800000"
+  },
+  "event": {
+    "id": "solicitorUpdateApplication",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "deceasedForenames": "Perf",
+    "deceasedSurname": "Test",
+    "deceasedDateOfDeath": "2020-02-28",
+    "deceasedDateOfBirth": "1930-03-16",
+    "applicationGrounds": "Probate perf test application",
+    "deceasedDomicileInEngWales": "Yes",
+    "deceasedAddress": {
+      "AddressLine1": "18 Hibernia Gardens",
+      "AddressLine2": "",
+      "AddressLine3": "",
+      "PostTown": "Hounslow",
+      "County": "",
+      "PostCode": "TW3 3SD",
+      "Country": "United Kingdom"
+    },
+    "deceasedAnyOtherNames": "No",
+    "ihtFormId": "IHT400421",
+    "ihtGrossValue": "800000",
+    "ihtNetValue": "800000"
+  },
+  "event_token": "${event_token_probate}",
+  "ignore_warning": false,
+  "case_reference": "${caseId}"
+}

@@ -28,7 +28,7 @@ class ExUI extends Simulation {
 
 	// below Http Protocol is for the scenario - manage org
   val XUIHttpProtocol = Environment.HttpProtocol
-    .proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
+    //.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
     .baseUrl(orgurl)
     .headers(Environment.commonHeader)
 
@@ -217,12 +217,13 @@ class ExUI extends Simulation {
    ==================================================================================================*/
 	
 	 setUp(
-		 EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(238) during (1200)),
-		 EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(20) during (1200)),
-		 EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(7) during (1200)),
-		 EXUIMCaseCaseworkerScn.inject(nothingFor(55),rampUsers(900) during (1200)),
-		 EXUIMCaseCreationDivorceScn.inject(nothingFor(65),rampUsers(238) during (1200)),
-		 EXUIFinancialRemedyScn.inject(nothingFor(75),rampUsers(98) during (1200))
+		 EXUIMCaseProbateScn.inject(atOnceUsers(1))
+		 //EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(238) during (1200)),
+		 //EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(20) during (1200)),
+		 //EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(7) during (1200)),
+		 //EXUIMCaseCaseworkerScn.inject(nothingFor(55),rampUsers(900) during (1200)),
+		 //EXUIMCaseCreationDivorceScn.inject(nothingFor(65),rampUsers(238) during (1200)),
+		 //EXUIFinancialRemedyScn.inject(nothingFor(75),rampUsers(98) during (1200))
         ).protocols(MChttpProtocol)
 
 
