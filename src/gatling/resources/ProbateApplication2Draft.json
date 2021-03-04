@@ -1,7 +1,9 @@
 {
   "data": {
+    "solsStartPage": null,
     "solsSolicitorFirmName": "solfirmperftest",
     "solsSolicitorIsExec": "Yes",
+    "solicitorMainApplicantInfo": null,
     "solsSOTForenames": "solvf",
     "solsSOTSurname": "solvl",
     "solsSolicitorIsMainApplicant": "Yes",

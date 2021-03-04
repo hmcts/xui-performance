@@ -1,5 +1,7 @@
 {
-  "data": {},
+  "data": {
+    "solsStartPage": null
+  },
   "event": {
     "id": "solicitorCreateApplication",
     "summary": "",

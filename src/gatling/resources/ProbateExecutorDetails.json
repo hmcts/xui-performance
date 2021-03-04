@@ -1,0 +1,60 @@
+{
+  "data": {
+    "otherExecutorExists": "Yes",
+    "solsAdditionalExecutorList": [
+      {
+        "value": {
+          "additionalExecForenames": "Exec",
+          "additionalExecLastname": "One",
+          "additionalExecNameOnWill": "No",
+          "additionalApplying": "Yes",
+          "additionalExecAddress": {
+            "AddressLine1": "2 Hibernia Gardens",
+            "AddressLine2": "",
+            "AddressLine3": "",
+            "PostTown": "Hounslow",
+            "County": "",
+            "PostCode": "TW3 3SD",
+            "Country": "United Kingdom"
+          }
+        },
+        "id": null
+      }
+    ]
+  },
+  "event": {
+    "id": "solicitorUpdateProbate",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "solicitorIsMainApplicant": "Yes",
+    "willAccessOriginal": "Yes",
+    "willHasCodicils": "Yes",
+    "willNumberOfCodicils": "1",
+    "otherExecutorExists": "Yes",
+    "solsAdditionalExecutorList": [
+      {
+        "value": {
+          "additionalExecForenames": "Exec",
+          "additionalExecLastname": "One",
+          "additionalExecNameOnWill": "No",
+          "additionalApplying": "Yes",
+          "additionalExecAddress": {
+            "AddressLine1": "2 Hibernia Gardens",
+            "AddressLine2": "",
+            "AddressLine3": "",
+            "PostTown": "Hounslow",
+            "County": "",
+            "PostCode": "TW3 3SD",
+            "Country": "United Kingdom"
+          }
+        },
+        "id": null
+      }
+    ]
+  },
+  "event_token": "${event_token_probate}",
+  "ignore_warning": false,
+  "case_reference": "${caseId}"
+}

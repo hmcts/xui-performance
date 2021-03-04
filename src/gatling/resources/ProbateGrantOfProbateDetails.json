@@ -1,0 +1,22 @@
+{
+  "data": {
+    "solicitorIsMainApplicant": "Yes",
+    "willAccessOriginal": "Yes",
+    "willHasCodicils": "Yes",
+    "willNumberOfCodicils": "1"
+  },
+  "event": {
+    "id": "solicitorUpdateProbate",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "solicitorIsMainApplicant": "Yes",
+    "willAccessOriginal": "Yes",
+    "willHasCodicils": "Yes",
+    "willNumberOfCodicils": 1
+  },
+  "event_token": "${event_token_probate}",
+  "ignore_warning": false,
+  "case_reference": "${caseId}"
+}

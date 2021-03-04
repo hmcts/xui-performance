@@ -159,7 +159,7 @@ object EXUIMCLogin {
                                 .formParam("_csrf", "${csrfToken}")
                                 .headers(LoginHeader.headers_login_submit)
                                 .check(status.in(200, 304, 302))
-                                .check(regex("Manage Cases"))).exitHereIfFailed
+                                .check(regex("Manage cases"))).exitHereIfFailed
       
       //following is the other way of getting cookies
       // .check(headerRegex("Set-Cookie","__auth-token=(.*)").saveAs("authToken"))

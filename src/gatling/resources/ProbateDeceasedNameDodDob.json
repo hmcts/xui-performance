@@ -1,0 +1,22 @@
+{
+  "data": {
+    "deceasedForenames": "Perf",
+    "deceasedSurname": "Test",
+    "deceasedDateOfDeath": "2020-02-28",
+    "deceasedDateOfBirth": "1930-03-16"
+  },
+  "event": {
+    "id": "solicitorUpdateApplication",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "deceasedForenames": "Perf",
+    "deceasedSurname": "Test",
+    "deceasedDateOfDeath": "2020-02-28",
+    "deceasedDateOfBirth": "1930-03-16"
+  },
+  "event_token": "${event_token_probate}",
+  "ignore_warning": false,
+  "case_reference": "${caseId}"
+}
