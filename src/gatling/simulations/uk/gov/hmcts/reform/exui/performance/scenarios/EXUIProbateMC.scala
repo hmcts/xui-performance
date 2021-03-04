@@ -398,4 +398,161 @@ object EXUIProbateMC {
 
   .pause(MinThinkTime, MaxThinkTime)
 
+  /*======================================================================================
+  * Create Complete Application Event
+  ======================================================================================*/
+
+  .group("XUI${service}_210_CompleteAppliction") {
+    exec(http("XUI${service}_210_010_CompleteApplication")
+      .get("/data/internal/cases/${caseId}/event-triggers/solicitorReviewAndConfirm?ignore-warning=false")
+      .headers(ProbateHeader.probate_commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+      .header("X-XSRF-TOKEN", "${XSRFToken}")
+      .check(jsonPath("$.case_fields[?(@.id=='solsLegalStatementDocument')].value.document_url").saveAs("documentURL"))
+      .check(jsonPath("$.id").is("solicitorReviewAndConfirm")))
+
+    .exec(http("XUI${service}_210_020_Profile")
+      .get("/data/internal/profile")
+      .headers(ProbateHeader.probate_commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8")
+      .header("X-XSRF-TOKEN", "${XSRFToken}")
+      .check(jsonPath("$.user.idam.id")))
+  }
+
+  .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+  * Submit Grant of Probate Details
+  ======================================================================================*/
+
+  .group("XUI${service}_220_SubmitLegalStatement") {
+    exec(http("XUI${service}_220_010_SubmitLegalStatement")
+      .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorReviewAndConfirmsolicitorReviewLegalStatementPage1")
+      .headers(ProbateHeader.probate_commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+      .header("X-XSRF-TOKEN", "${XSRFToken}")
+      .body(ElFileBody("ProbateLegalStatement.json")).asJson
+      .check(substring("solsLegalStatementDocument")))
+  }
+
+  .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+  * Submit IHT Submission Date
+  ======================================================================================*/
+
+  .group("XUI${service}_230_SubmitIHTSubmissionDate") {
+    exec(http("XUI${service}_230_010_SubmitIHTSubmissionDate")
+      .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorReviewAndConfirmsolicitorReviewLegalStatementPage2")
+      .headers(ProbateHeader.probate_commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+      .header("X-XSRF-TOKEN", "${XSRFToken}")
+      .body(ElFileBody("ProbateIHTSubmissionDate.json")).asJson
+      .check(jsonPath("$.data.state").is("SolAppUpdated")))
+  }
+
+  .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+  * Submit Solicitor Confirmation
+  ======================================================================================*/
+
+  .group("XUI${service}_240_SubmitSolicitorConfirmation") {
+    exec(http("XUI${service}_240_010_SubmitSolicitorConfirmation")
+      .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorReviewAndConfirmsolicitorReviewLegalStatementPage3")
+      .headers(ProbateHeader.probate_commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+      .header("X-XSRF-TOKEN", "${XSRFToken}")
+      .body(ElFileBody("ProbateSolicitorConfirmation.json")).asJson
+      .check(substring("""{"data":{}""")))
+  }
+
+  .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+  * Submit Solicitor Details
+  ======================================================================================*/
+
+  .group("XUI${service}_250_SubmitSolicitorDetails") {
+    exec(http("XUI${service}_250_010_SubmitSolicitorDetails")
+      .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorReviewAndConfirmsolicitorConfirmPage1")
+      .headers(ProbateHeader.probate_commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+      .header("X-XSRF-TOKEN", "${XSRFToken}")
+      .body(ElFileBody("ProbateSolicitorDetails.json")).asJson
+      .check(substring("solsSOTJobTitle")))
+  }
+
+  .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+  * Submit Extra Copies
+  ======================================================================================*/
+
+  .group("XUI${service}_260_SubmitExtraCopies") {
+    exec(http("XUI${service}_260_010_SubmitExtraCopies")
+      .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorReviewAndConfirmsolicitorConfirmPage2")
+      .headers(ProbateHeader.probate_commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+      .header("X-XSRF-TOKEN", "${XSRFToken}")
+      .body(ElFileBody("ProbateExtraCopies.json")).asJson
+      .check(substring("extraCopiesOfGrant")))
+  }
+
+  .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+  * Submit Payment Method
+  ======================================================================================*/
+
+  .group("XUI${service}_270_SubmitPaymentMethod") {
+    exec(http("XUI${service}_270_010_SubmitPaymentMethod")
+      .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorReviewAndConfirmsolicitorConfirmPage3")
+      .headers(ProbateHeader.probate_commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+      .header("X-XSRF-TOKEN", "${XSRFToken}")
+      .body(ElFileBody("ProbatePaymentMethod.json")).asJson
+      .check(substring("solsPaymentMethods")))
+
+    .exec(http("XUI${service}_270_020_Profile")
+      .get("/data/internal/profile")
+      .headers(ProbateHeader.probate_commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8")
+      .header("X-XSRF-TOKEN", "${XSRFToken}")
+      .check(jsonPath("$.user.idam.id")))
+  }
+
+  .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+  * Submit Application
+  ======================================================================================*/
+
+  .group("XUI${service}_280_SubmitApplication") {
+    exec(http("XUI${service}_280_010_SubmitApplication")
+      .post("/data/cases/${caseId}/events")
+      .headers(ProbateHeader.probate_commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+      .header("X-XSRF-TOKEN", "${XSRFToken}")
+      .body(ElFileBody("ProbateSubmitApplication.json")).asJson
+      .check(jsonPath("$.state").is("CaseCreated")))
+  }
+
+  .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+  * Return to Case
+  ======================================================================================*/
+
+  .group("XUI${service}_290_ViewCase") {
+    exec(http("XUI${service}_290_010_ViewCase")
+      .get("/data/internal/cases/${caseId}")
+      .headers(ProbateHeader.probate_commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
+      .header("X-XSRF-TOKEN", "${XSRFToken}")
+      .check(jsonPath("$.state.id").is("CaseCreated")))
+  }
+
+  .pause(MinThinkTime, MaxThinkTime)
+
 }
