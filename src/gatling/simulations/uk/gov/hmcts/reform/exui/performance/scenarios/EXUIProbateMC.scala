@@ -5,96 +5,104 @@ import io.gatling.http.Predef._
 import uk.gov.hmcts.reform.exui.performance.Feeders
 import uk.gov.hmcts.reform.exui.performance.scenarios.utils.{Environment, ProbateHeader}
 
+/*======================================================================================
+* Create a new Probate application as a professional user (e.g. solicitor)
+======================================================================================*/
+
 object EXUIProbateMC {
-
-
-  //val BaseURL = Environment.baseURL
-  val IdamUrl = Environment.idamURL
-  val baseURL=Environment.baseURL
 
   val MinThinkTime = Environment.minThinkTimePROB
   val MaxThinkTime = Environment.maxThinkTimePROB
 
+  val casecreation =
 
-/*======================================================================================
-*Business process : Following business process is for Probate Case Creation
-======================================================================================*/
-
-/*======================================================================================
-*Business process : Following business process is for Probate Case Creation
-* Below group contains all the requests are when click on create case on MC
-======================================================================================*/
-
-
-  val casecreation=group("XUI${service}_040_CreateCase") {
-    exec(http("XUI${service}_040_CreateCase")
-      .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
-      .headers(ProbateHeader.headers_28)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(status.in(200, 304))).exitHereIfFailed
-  }.pause(MinThinkTime, MaxThinkTime)
-  
-  /*======================================================================================
-  *Business process : Following business process is for Probate Case Creation
-  * Below group contains all the requests are when satrt create case for probate by selecting jurisdiction as probate and case type as GrantOfRepresentation
+    /*======================================================================================
+    * Click the Create Case link
     ======================================================================================*/
-      .group("XUI${service}_050_StartCreateCase1") {
-        exec(http("XUI${service}_050_005_StartCreateCase1")
-          .get("/data/internal/case-types/GrantOfRepresentation/event-triggers/solicitorCreateApplication?ignore-warning=false")
-          .headers(ProbateHeader.headers_casecreate)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .check(status.in(200, 304))
-          .check(jsonPath("$.event_token").optional.saveAs("event_token_probate")))
 
-          .exec(http("XUI${service}_050_010_StartCreateCase2")
-            .get("/data/internal/case-types/GrantOfRepresentation/event-triggers/solicitorCreateApplication?ignore-warning=false")
-            .headers(ProbateHeader.headers_casecreate)
-            .header("X-XSRF-TOKEN", "${XSRFToken}")
-            .check(status.in(200, 304)))
+    group("XUI${service}_040_CreateCase") {
+      exec(http("XUI${service}_040_CreateCase")
+        .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
+        .headers(ProbateHeader.probate_commonHeader)
+        .header("accept", "application/json")
+        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .check(substring("PROBATE"))
+        .check(status.in(200, 304)))
+      .exitHereIfFailed
+    }
 
-          .exec(http("XUI${service}_050_015_CreateCaseProfile")
-            .get("/data/internal/profile")
-            .header("X-XSRF-TOKEN", "${XSRFToken}")
-            .headers(ProbateHeader.headers_casefilter)
-            .check(status.in(200, 304)))
-          .exitHereIfFailed
-      }
-      .pause(MinThinkTime, MaxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
+  
+    /*======================================================================================
+    * Jurisdiction = Manage Probate Applications; Case Type = Grant Of Representation; Event = Apply For Probate
+    ======================================================================================*/
 
- /*======================================================================================
-   *Business process : Following business process is for Probate Case Creation
-   * Below group contains all the requests are when create application
-     ======================================================================================*/      .feed(Feeders.createCaseData)
+    .group("XUI${service}_050_SelectCaseType") {
+      exec(http("XUI${service}_050_005_StartApplication1")
+        .get("/data/internal/case-types/GrantOfRepresentation/event-triggers/solicitorCreateApplication?ignore-warning=false")
+        .headers(ProbateHeader.probate_commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
+        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .check(jsonPath("$.id").is("solicitorCreateApplication")))
+
+      .exec(http("XUI${service}_050_010_StartApplication2")
+        .get("/data/internal/case-types/GrantOfRepresentation/event-triggers/solicitorCreateApplication?ignore-warning=false")
+        .headers(ProbateHeader.probate_commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
+        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .check(jsonPath("$.id").is("solicitorCreateApplication"))
+        .check(jsonPath("$.event_token").saveAs("event_token_probate")))
+
+      .exec(http("XUI${service}_050_015_Profile")
+        .get("/data/internal/profile")
+        .headers(ProbateHeader.probate_commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8")
+        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .check(jsonPath("$.user.idam.id")))
+      .exitHereIfFailed
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Save & Continue
+    ======================================================================================*/
+    .feed(Feeders.createCaseData)
       .group("XUI${service}_060_CreateApplication") {
         exec(http("XUI${service}_060_005_CreateApplication")
-             .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorCreateApplicationsolicitorCreateApplicationPage1")
-             .headers(ProbateHeader.headers_casedata)
-             .header("X-XSRF-TOKEN", "${XSRFToken}")
-             .body(ElFileBody("ProbateCreateApplication.json")).asJson
-             .check(status.in(200, 304)))
-
-    .exec(http("XUI${service}_060_010_CreateApplication")
-          .post("/data/internal/case-types/GrantOfRepresentation/drafts/")
-          .headers(ProbateHeader.headers_draft)
+          .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorCreateApplicationsolicitorCreateApplicationPage1")
+          .headers(ProbateHeader.probate_commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
           .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .body(ElFileBody("ProbateCreateApplicationDraft.json")).asJson
+          .body(ElFileBody("bodies/probate/ProbateCreateApplication.json")).asJson
+          .check(substring("""{"data":{}""")))
+
+        .exec(http("XUI${service}_060_010_CreateApplicationDraft")
+          .post("/data/internal/case-types/GrantOfRepresentation/drafts/")
+          .headers(ProbateHeader.probate_commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-draft-create.v2+json;charset=UTF-8")
+          .header("X-XSRF-TOKEN", "${XSRFToken}")
+          .body(ElFileBody("bodies/probate/ProbateCreateApplicationDraft.json")).asJson
           .check(status.in(200, 404, 201))
           .check(jsonPath("$.id").optional.saveAs("draftId")))
-
-}
-.pause(MinThinkTime, MaxThinkTime)
-
- /*======================================================================================
-*Business process : Following business process is for Probate Case Creation
-* Below group contains all the requests are address look up for applicant
-  ======================================================================================*/ .group("XUI${service}_070_AddressLookup") {
-  exec(http("XUI${service}_070_AddressLookup")
-    .get("/api/addresses?postcode=TW33SD")
-    .headers(ProbateHeader.headers_28)
-    .header("X-XSRF-TOKEN", "${XSRFToken}")
-    .check(status.in(200, 304)))
       }
-      .pause(MinThinkTime, MaxThinkTime)
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Below group contains all the requests are address look up for applicant
+    ======================================================================================*/
+
+    .group("XUI${service}_070_AddressLookup") {
+      exec(http("XUI${service}_070_AddressLookup")
+        .get("/api/addresses?postcode=TW33SD")
+        .headers(ProbateHeader.probate_commonHeader)
+        .header("accept", "application/json")
+        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .check(jsonPath("$.totalresults").ofType[Int].gt(0)))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
 
 
 /*======================================================================================
@@ -107,14 +115,14 @@ object EXUIProbateMC {
          .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorCreateApplicationsolicitorCreateApplicationPage2")
          .headers(ProbateHeader.headers_casedata)
          .header("X-XSRF-TOKEN", "${XSRFToken}")
-         .body(ElFileBody("ProbateCreateApplication2.json")).asJson
+         .body(ElFileBody("bodies/probate/ProbateCreateApplication2.json")).asJson
          .check(status.in(200, 304)))
 
     .exec(http("XUI${service}_080_010_Draft")
           .put("/data/internal/case-types/GrantOfRepresentation/drafts/${draftId}")
           .headers(ProbateHeader.headers_drfts)
           .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .body(ElFileBody("ProbateApplication2Draft.json")).asJson
+          .body(ElFileBody("bodies/probate/ProbateApplication2Draft.json")).asJson
           .check(status.in(400,200,201)))
 
     .exec(http("XUI${service}_080_015_DraftProfile")
@@ -135,7 +143,7 @@ object EXUIProbateMC {
          .post("/data/case-types/GrantOfRepresentation/cases?ignore-warning=false")
          .headers(ProbateHeader.headers_solappcreated)
          .header("X-XSRF-TOKEN", "${XSRFToken}")
-         .body(ElFileBody("ProbateCaseSubmitted.json")).asJson
+         .body(ElFileBody("bodies/probate/ProbateCaseSubmitted.json")).asJson
          .check(status.in(200, 304, 201))
          .check(jsonPath("$.id").optional.saveAs("caseId")))
 
@@ -186,7 +194,7 @@ object EXUIProbateMC {
       .headers(ProbateHeader.probate_commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("ProbateDeceasedDodDob.json")).asJson
+      .body(ElFileBody("bodies/probate/ProbateDeceasedNameDodDob.json")).asJson
       .check(substring("deceasedDateOfDeath")))
   }
 
@@ -216,7 +224,7 @@ object EXUIProbateMC {
       .headers(ProbateHeader.probate_commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("ProbateDeceasedAddressIHT.json")).asJson
+      .body(ElFileBody("bodies/probate/ProbateDeceasedAddressIHT.json")).asJson
       .check(substring("deceasedAddress")))
   }
 
@@ -232,7 +240,7 @@ object EXUIProbateMC {
         .headers(ProbateHeader.probate_commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(ElFileBody("ProbateTypeOfApplication.json")).asJson
+        .body(ElFileBody("bodies/probate/ProbateTypeOfApplication.json")).asJson
         .check(substring("solsWillType")))
     }
 
@@ -248,7 +256,7 @@ object EXUIProbateMC {
       .headers(ProbateHeader.probate_commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("ProbateEnglandOrWales.json")).asJson
+      .body(ElFileBody("bodies/probate/ProbateEnglandOrWales.json")).asJson
       .check(substring("appointExec")))
 
     .exec(http("XUI${service}_140_020_Profile")
@@ -271,7 +279,7 @@ object EXUIProbateMC {
       .headers(ProbateHeader.probate_commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("ProbateConfirmDeceasedDetails.json")).asJson
+      .body(ElFileBody("bodies/probate/ProbateConfirmDeceasedDetails.json")).asJson
       .check(jsonPath("$.state").is("SolProbateCreated")))
 
     .exec(http("XUI${service}_150_020_ViewCase")
@@ -316,7 +324,7 @@ object EXUIProbateMC {
       .headers(ProbateHeader.probate_commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("ProbateGrantOfProbateDetails.json")).asJson
+      .body(ElFileBody("bodies/probate/ProbateGrantOfProbateDetails.json")).asJson
       .check(substring("solicitorIsMainApplicant")))
   }
 
@@ -346,7 +354,7 @@ object EXUIProbateMC {
       .headers(ProbateHeader.probate_commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("ProbateExecutorDetails.json")).asJson
+      .body(ElFileBody("bodies/probate/ProbateExecutorDetails.json")).asJson
       .check(substring("additionalApplying")))
   }
 
@@ -362,7 +370,7 @@ object EXUIProbateMC {
       .headers(ProbateHeader.probate_commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("ProbateExtraInfo.json")).asJson
+      .body(ElFileBody("bodies/probate/ProbateExtraInfo.json")).asJson
       .check(substring("solsAdditionalInfo")))
 
     .exec(http("XUI${service}_190_020_Profile")
@@ -385,7 +393,7 @@ object EXUIProbateMC {
       .headers(ProbateHeader.probate_commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("ProbateConfirmGrantOfProbateDetails.json")).asJson
+      .body(ElFileBody("bodies/probate/ProbateConfirmGrantOfProbateDetails.json")).asJson
       .check(jsonPath("$.state").is("SolAppUpdated")))
 
     .exec(http("XUI${service}_200_020_ViewCase")
@@ -431,7 +439,7 @@ object EXUIProbateMC {
       .headers(ProbateHeader.probate_commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("ProbateLegalStatement.json")).asJson
+      .body(ElFileBody("bodies/probate/ProbateLegalStatement.json")).asJson
       .check(substring("solsLegalStatementDocument")))
   }
 
@@ -447,7 +455,7 @@ object EXUIProbateMC {
       .headers(ProbateHeader.probate_commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("ProbateIHTSubmissionDate.json")).asJson
+      .body(ElFileBody("bodies/probate/ProbateIHTSubmissionDate.json")).asJson
       .check(jsonPath("$.data.state").is("SolAppUpdated")))
   }
 
@@ -463,7 +471,7 @@ object EXUIProbateMC {
       .headers(ProbateHeader.probate_commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("ProbateSolicitorConfirmation.json")).asJson
+      .body(ElFileBody("bodies/probate/ProbateSolicitorConfirmation.json")).asJson
       .check(substring("""{"data":{}""")))
   }
 
@@ -479,7 +487,7 @@ object EXUIProbateMC {
       .headers(ProbateHeader.probate_commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("ProbateSolicitorDetails.json")).asJson
+      .body(ElFileBody("bodies/probate/ProbateSolicitorDetails.json")).asJson
       .check(substring("solsSOTJobTitle")))
   }
 
@@ -495,7 +503,7 @@ object EXUIProbateMC {
       .headers(ProbateHeader.probate_commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("ProbateExtraCopies.json")).asJson
+      .body(ElFileBody("bodies/probate/ProbateExtraCopies.json")).asJson
       .check(substring("extraCopiesOfGrant")))
   }
 
@@ -511,7 +519,7 @@ object EXUIProbateMC {
       .headers(ProbateHeader.probate_commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("ProbatePaymentMethod.json")).asJson
+      .body(ElFileBody("bodies/probate/ProbatePaymentMethod.json")).asJson
       .check(substring("solsPaymentMethods")))
 
     .exec(http("XUI${service}_270_020_Profile")
@@ -534,7 +542,7 @@ object EXUIProbateMC {
       .headers(ProbateHeader.probate_commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("ProbateSubmitApplication.json")).asJson
+      .body(ElFileBody("bodies/probate/ProbateSubmitApplication.json")).asJson
       .check(jsonPath("$.state").is("CaseCreated")))
   }
 

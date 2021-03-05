@@ -15,7 +15,7 @@
       "Country": "United Kingdom"
     },
     "solsSolicitorAppReference": "${appRef}",
-"solsSolicitorEmail": "${caseEmail}",
+    "solsSolicitorEmail": "${caseEmail}",
     "solsSolicitorPhoneNumber": "07975747275"
   },
   "event": {
