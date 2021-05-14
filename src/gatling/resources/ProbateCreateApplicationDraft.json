@@ -1,10 +1,1 @@
-{
-  "data": {},
-  "event": {
-    "id": "solicitorCreateApplication",
-    "summary": "",
-    "description": ""
-  },
-  "event_token": "${event_token_probate}",
-  "ignore_warning": false
-}
+{"data":{"solsStartPage":null},"event":{"id":"solicitorCreateApplication","summary":"","description":""},"event_token":"${event_token_probate}","ignore_warning":false}

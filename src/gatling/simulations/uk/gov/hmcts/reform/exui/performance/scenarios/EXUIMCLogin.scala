@@ -23,27 +23,33 @@ object EXUIMCLogin {
   
   val manageCasesHomePage =group("XUI${service}_010_Homepage") {
     exec(http("XUI${service}_010_005_Homepage")
-         .get("/")
-         .headers(LoginHeader.headers_0)
-         .check(status.in(200, 304))).exitHereIfFailed
+      .get("/")
+      .headers(LoginHeader.headers_0)
+      .check(status.in(200, 304))).exitHereIfFailed
+
     .exec(http("XUI${service}_010_010_HomepageConfigUI")
-          .get("/external/configuration-ui")
-          .headers(LoginHeader.headers_1))
+      .get("/external/configuration-ui")
+      .headers(LoginHeader.headers_1))
+
     .exec(http("XUI${service}_010_015_HomepageConfigJson")
-          .get("/assets/config/config.json")
-          .headers(LoginHeader.headers_1))
+      .get("/assets/config/config.json")
+      .headers(LoginHeader.headers_1))
+
     .exec(http("XUI${service}_010_020_HomepageTCEnabled")
-          .get("/api/configuration?configurationKey=termsAndConditionsEnabled").headers(LoginHeader.headers_1))
+      .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
+      .headers(LoginHeader.headers_1))
+
     .exec(http("XUI${service}_010_025_HomepageIsAuthenticated")
-          .get("/auth/isAuthenticated")
-          .headers(LoginHeader.headers_1))
+      .get("/auth/isAuthenticated")
+      .headers(LoginHeader.headers_1))
+
     .exec(http("XUI${service}_010_030_AuthLogin")
-          .get("/auth/login")
-          .headers(LoginHeader.headers_4)
-          .check(css("input[name='_csrf']", "value").saveAs("csrfToken"))
-          //.check(regex("manage-user%20create-user&state=(.*)&client").saveAs("state")))
-          .check(regex("/oauth2/callback&amp;state=(.*)&amp;nonce=").saveAs("state"))
-          .check(regex("&nonce=(.*)&response_type").saveAs("nonce")))
+      .get("/auth/login")
+      .headers(LoginHeader.headers_4)
+      .check(css("input[name='_csrf']", "value").saveAs("csrfToken"))
+      //.check(regex("manage-user%20create-user&state=(.*)&client").saveAs("state")))
+      .check(regex("/oauth2/callback&amp;state=(.*)&amp;nonce=").saveAs("state"))
+      .check(regex("&nonce=(.*)&response_type").saveAs("nonce")))
     
   } .pause(MinThinkTime, MaxThinkTime)
   
@@ -54,7 +60,6 @@ object EXUIMCLogin {
   =====================================================================================*/
   
   val manageOrgHomePage =
-    
     
     exec(http("XUI${service}_010_005_Homepage")
          .get(manageOrgURL + "/")
@@ -98,14 +103,14 @@ object EXUIMCLogin {
     
     group("XUI${service}_020_SignIn") {
       exec(flushHttpCache).exec(http("XUI${service}_020_005_SignIn")
-                                .post(IdamUrl + "/login?response_type=code&redirect_uri=https%3A%2F%2F" + orgDomain + "%2Foauth2%2Fcallback&scope=profile%20openid%20roles%20manage-user%20create-user%20manage-roles&state=${state}&client_id=xuimowebapp")
-                                .formParam("username", "${respuser}")
-                                .formParam("password", "Pass19word")
-                                .formParam("save", "Sign in")
-                                .formParam("selfRegistrationEnabled", "false")
-                                .formParam("_csrf", "${csrfToken}")
-                                .headers(LoginHeader.headers_login_submit)
-                                .check(status.in(200, 304, 302))).exitHereIfFailed
+            .post(IdamUrl + "/login?response_type=code&redirect_uri=https%3A%2F%2F" + orgDomain + "%2Foauth2%2Fcallback&scope=profile%20openid%20roles%20manage-user%20create-user%20manage-roles&state=${state}&client_id=xuimowebapp")
+            .formParam("username", "${respuser}")
+            .formParam("password", "Pass19word")
+            .formParam("save", "Sign in")
+            .formParam("selfRegistrationEnabled", "false")
+            .formParam("_csrf", "${csrfToken}")
+            .headers(LoginHeader.headers_login_submit)
+            .check(status.in(200, 304, 302))).exitHereIfFailed
       
       .exec(getCookieValue(CookieKey("__auth__").withDomain(orgDomain).saveAs("authTokenResp")))
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(orgDomain).saveAs("XSRFToken")))
@@ -149,17 +154,19 @@ object EXUIMCLogin {
   
   val manageCaseslogin =
     group("XUI${service}_020_005_SignIn") {
-      exec(flushHttpCache).exec(http("XUI${service}_020_005_SignIn")
-                                // .post(IdamUrl + "/login?response_type=code&redirect_uri=" + baseURL + "%2Foauth2%2Fcallback&scope=profile%20openid%20roles%20manage-user%20create-user&state=${state}&client_id=xuiwebapp")
-                                .post(IdamUrl + "/login?client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&state=${state}&nonce=${nonce}&response_type=code&scope=profile%20openid%20roles%20manage-user%20create-user&prompt=")
-                                .formParam("username", "${user}")
-                                .formParam("password", "Pass19word")
-                                .formParam("save", "Sign in")
-                                .formParam("selfRegistrationEnabled", "false")
-                                .formParam("_csrf", "${csrfToken}")
-                                .headers(LoginHeader.headers_login_submit)
-                                .check(status.in(200, 304, 302))
-                                .check(regex("Manage Cases"))).exitHereIfFailed
+      // exec(flushHttpCache)
+      exec(http("XUI${service}_020_005_SignIn")
+            //.post(IdamUrl + "/login?response_type=code&redirect_uri=" + baseURL + "%2Foauth2%2Fcallback&scope=profile%20openid%20roles%20manage-user%20create-user&state=${state}&client_id=xuiwebapp")
+            .post(IdamUrl + "/login?client_id=xuiwebapp&redirect_uri=" + baseURL + "/oauth2/callback&state=${state}&nonce=${nonce}&response_type=code&scope=profile%20openid%20roles%20manage-user%20create-user&prompt=")
+            .formParam("username", "${user}")
+            .formParam("password", "Pass19word")
+            .formParam("save", "Sign in")
+            .formParam("selfRegistrationEnabled", "false")
+            .formParam("_csrf", "${csrfToken}")
+            .headers(LoginHeader.headers_login_submit)
+            .check(status.in(200, 304, 302)))
+            // .check(regex("Manage Cases")))
+            .exitHereIfFailed
       
       //following is the other way of getting cookies
       // .check(headerRegex("Set-Cookie","__auth-token=(.*)").saveAs("authToken"))
@@ -226,8 +233,9 @@ object EXUIMCLogin {
            .formParam("selfRegistrationEnabled", "false")
            .formParam("_csrf", "${csrfToken}")
            .headers(LoginHeader.headers_login_submit)
-           .check(status.in(200, 304, 302))
-           .check(regex("Manage Cases"))).exitHereIfFailed
+           .check(status.in(200, 304, 302)))
+      //      .check(regex("Manage Cases")))
+           .exitHereIfFailed
       
       .exec(http("XUI${service}_020_010_Homepage")
             .get("/external/config/ui")
