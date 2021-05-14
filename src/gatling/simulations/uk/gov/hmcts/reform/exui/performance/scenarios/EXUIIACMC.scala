@@ -87,7 +87,10 @@ object EXUIIACMC {
 ======================================================================================*/
 
       .group("XUI${service}_060_StartAppealChecklist") {
-        exec(http("XUI${service}_060_StartAppealChecklist").post("/data/case-types/Asylum/validate?pageId=startAppealchecklist").headers(IACHeader.headers_9).body(StringBody("{\n  \"data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ]\n    }\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ]\n    }\n  }\n}")).check(status.is(200))).exitHereIfFailed
+        exec(http("XUI${service}_060_StartAppealChecklist")
+        .post("/data/case-types/Asylum/validate?pageId=startAppealchecklist")
+        .headers(IACHeader.headers_9)
+        .body(StringBody("{\n  \"data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ]\n    }\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ]\n    }\n  }\n}")).check(status.is(200))).exitHereIfFailed
       }
       .pause(MinThinkTime, MaxThinkTime)
 
@@ -96,7 +99,8 @@ object EXUIIACMC {
 * Below group contains all the requests are for appeal home office decision
 ======================================================================================*/
       .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
-        exec(http("XUI${service}_070_StartAppealHomeOfficeDecision").post("/data/case-types/Asylum/validate?pageId=startAppealhomeOfficeDecision")
+        exec(http("XUI${service}_070_StartAppealHomeOfficeDecision")
+        .post("/data/case-types/Asylum/validate?pageId=startAppealhomeOfficeDecision")
           .headers(IACHeader.headers_homeofficedecision)
           .body(StringBody("{\n  \"data\": {\n    \"homeOfficeReferenceNumber\": \"12345678\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\"\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"123456783\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\"\n  }\n}")).check(status.in(200, 304)))
       }
@@ -108,7 +112,10 @@ object EXUIIACMC {
 * Below group contains all the requests are for upload notification Decision
 ======================================================================================*/
       .group("XUI${service}_080_StartUpoadNoticeDecision") {
-      exec(http("XUI${service}_080_StartUpoadNoticeDecision").post("/data/case-types/Asylum/validate?pageId=startAppealuploadTheNoticeOfDecision").headers(IACHeader.headers_uploadnotice).body(StringBody("{\n  \"data\": {\n    \"uploadTheNoticeOfDecisionExplanation\": null\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"123456783\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"uploadTheNoticeOfDecisionExplanation\": null\n  }\n}")).check(status.in(200, 304)))
+      exec(http("XUI${service}_080_StartUpoadNoticeDecision")
+      .post("/data/case-types/Asylum/validate?pageId=startAppealuploadTheNoticeOfDecision")
+      .headers(IACHeader.headers_uploadnotice)
+      .body(StringBody("{\n  \"data\": {\n    \"uploadTheNoticeOfDecisionExplanation\": null\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"123456783\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"uploadTheNoticeOfDecisionExplanation\": null\n  }\n}")).check(status.in(200, 304)))
     }
 
       .pause(MinThinkTime, MaxThinkTime)
@@ -133,13 +140,17 @@ object EXUIIACMC {
 * Below group contains all the requests are for Appealant nationality
 ======================================================================================*/
       .group("XUI${service}_100_StartAppealantNationality") {
-      exec(http("XUI${service}_100_StartAppealantNationality").post("/data/case-types/Asylum/validate?pageId=startAppealappellantNationalities").headers(IACHeader.headers_nationality).body(StringBody("{\n  \"data\": {\n    \"appellantStateless\": \"hasNationality\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ]\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"123456783\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"uploadTheNoticeOfDecisionExplanation\": null,\n    \"appellantTitle\": \"Mr\",\n    \"appellantGivenNames\": \"appealFname\",\n    \"appellantFamilyName\": \"appealLname\",\n    \"appellantDateOfBirth\": \"1995-08-01\",\n    \"appellantStateless\": \"hasNationality\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ]\n  }\n}")).check(status.in(200, 304)))
+      exec(http("XUI${service}_100_StartAppealantNationality")
+      .post("/data/case-types/Asylum/validate?pageId=startAppealappellantNationalities")
+      .headers(IACHeader.headers_nationality)
+      .body(StringBody("{\n  \"data\": {\n    \"appellantStateless\": \"hasNationality\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ]\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"123456783\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"uploadTheNoticeOfDecisionExplanation\": null,\n    \"appellantTitle\": \"Mr\",\n    \"appellantGivenNames\": \"appealFname\",\n    \"appellantFamilyName\": \"appealLname\",\n    \"appellantDateOfBirth\": \"1995-08-01\",\n    \"appellantStateless\": \"hasNationality\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ]\n  }\n}")).check(status.in(200, 304)))
     }
       .pause(MinThinkTime, MaxThinkTime)
     /*======================================================================================
     *Business process : Following business process is for IAC  Case Creation
     * Below group contains all the requests are for Appealant address search
     ======================================================================================*/
+    
       .group("XUI${service}_110_StartAppealDetailsAddressSearch") {
         exec(http("XUI${service}_110_StartAppealDetailsAddressSearch")
           .get("/api/addresses?postcode=TW33SD")
@@ -281,18 +292,21 @@ object EXUIIACMC {
               .headers(IACHeader.headers_newsubmitappeal)
               .check(status.in(200, 304))
               .check(jsonPath("$.event_token").optional.saveAs("event_token_submit")))
-              .exec(http("XUI${service}_230_010_IsAuthenticated")
-                .get("/auth/isAuthenticated")
-                .headers(IACHeader.headers_isauthenticatedsubmit)
-                .check(status.in(200, 304, 302)))
-              .exec(http("XUI${service}_230_015_UserDetails")
-                .get("/api/user/details")
-                .headers(IACHeader.headers_isauthenticatedsubmit)
-                .check(status.in(200, 304, 302)))
-              .exec(http("XUI${service}_230_020_DataInternalProfile")
-                .get("/data/internal/profile")
-                .headers(IACHeader.headers_internalprofiledatasubmit)
-                .check(status.in(200, 304, 302)))
+            
+          .exec(http("XUI${service}_230_010_IsAuthenticated")
+            .get("/auth/isAuthenticated")
+            .headers(IACHeader.headers_isauthenticatedsubmit)
+            .check(status.in(200, 304, 302)))
+
+          .exec(http("XUI${service}_230_015_UserDetails")
+            .get("/api/user/details")
+            .headers(IACHeader.headers_isauthenticatedsubmit)
+            .check(status.in(200, 304, 302)))
+            
+          .exec(http("XUI${service}_230_020_DataInternalProfile")
+            .get("/data/internal/profile")
+            .headers(IACHeader.headers_internalprofiledatasubmit)
+            .check(status.in(200, 304, 302)))
           }
           .pause(MinThinkTime, MaxThinkTime)
 
@@ -301,10 +315,14 @@ object EXUIIACMC {
 * Below group contains all the requests are for start  submit appeal declaration
 ======================================================================================*/
           .group("XUI${service}_240_SubmitAppealDeclaration") {
-            exec(http("XUI${service}_240_05_SubmitAppealDeclaration").post("/data/case-types/Asylum/validate?pageId=submitAppealdeclaration").headers(IACHeader.headers_submitdeclaration).body(StringBody("{\n  \"data\": {\n    \"legalRepDeclaration\": [\n      \"hasDeclared\"\n    ]\n  },\n  \"event\": {\n    \"id\": \"submitAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token_submit}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"legalRepDeclaration\": [\n      \"hasDeclared\"\n    ]\n  },\n  \"case_reference\": \"${caseId}\"\n}")).check(status.in(200, 304)))
-              .exec(http("XUI${service}_240_010_SubmitAppealProfile")
-                .get("/data/internal/profile")
-                .headers(IACHeader.headers_internaldeclaration)
+            exec(http("XUI${service}_240_05_SubmitAppealDeclaration").post("/data/case-types/Asylum/validate?pageId=submitAppealdeclaration")
+            .headers(IACHeader.headers_submitdeclaration)
+            .body(StringBody("{\n  \"data\": {\n    \"legalRepDeclaration\": [\n      \"hasDeclared\"\n    ]\n  },\n  \"event\": {\n    \"id\": \"submitAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token_submit}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"legalRepDeclaration\": [\n      \"hasDeclared\"\n    ]\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
+            .check(status.in(200, 304)))
+            
+            .exec(http("XUI${service}_240_010_SubmitAppealProfile")
+              .get("/data/internal/profile")
+              .headers(IACHeader.headers_internaldeclaration)
               .check(status.in(200, 304)))
           }
           .pause(MinThinkTime, MaxThinkTime)
@@ -317,7 +335,8 @@ object EXUIIACMC {
             exec(http("XUI${service}_250_AppealDeclarationSubmitted")
               .post("/data/cases/${caseId}/events")
               .headers(IACHeader.headers_declarationsubmitted)
-              .body(StringBody("{\n  \"data\": {\n    \"legalRepDeclaration\": [\n      \"hasDeclared\"\n    ]\n  },\n  \"event\": {\n    \"id\": \"submitAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token_submit}\",\n  \"ignore_warning\": false\n}")).check(status.in(200, 304, 201)))
+              .body(StringBody("{\n  \"data\": {\n    \"legalRepDeclaration\": [\n      \"hasDeclared\"\n    ]\n  },\n  \"event\": {\n    \"id\": \"submitAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token_submit}\",\n  \"ignore_warning\": false\n}"))
+              .check(status.in(200, 304, 201)))
           }
           .pause(MinThinkTime, MaxThinkTime)
   
