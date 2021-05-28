@@ -104,13 +104,12 @@ object EXUIProbateMC {
 
     .pause(MinThinkTime, MaxThinkTime)
 
-
 /*======================================================================================
 *Business process : Following business process is for Probate Case Creation
 * Below group contains all the requests are address look up for applicant
 ======================================================================================*/
-.group("XUI${service}_080_CreateApplication2")
-  {
+
+  .group("XUI${service}_080_CreateApplication2") {
     exec(http("XUI${service}_080_005_CreateApplication2")
          .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorCreateApplicationsolicitorCreateApplicationPage2")
          .headers(ProbateHeader.headers_casedata)
@@ -130,8 +129,8 @@ object EXUIProbateMC {
       .headers(ProbateHeader.headers_casedataprofile)
       .header("X-XSRF-TOKEN", "${XSRFToken}")
       .check(status.in(200, 304)))
-
-  }.pause(MinThinkTime, MaxThinkTime)
+  }
+  .pause(MinThinkTime, MaxThinkTime)
 
 /*======================================================================================
 *Business process : Following business process is for Probate Case Creation
@@ -160,7 +159,8 @@ object EXUIProbateMC {
         //.check(regex("Add solicitor details"))
     )
   }
-    .pause(MinThinkTime, MaxThinkTime)
+    
+  .pause(MinThinkTime, MaxThinkTime)
 
   /*======================================================================================
   * Create Deceased Details Event
