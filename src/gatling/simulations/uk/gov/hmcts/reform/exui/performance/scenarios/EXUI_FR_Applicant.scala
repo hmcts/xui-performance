@@ -55,7 +55,7 @@ object EXUI_FR_Applicant  {
 ======================================================================================*/
 
 
-                   .group("XUI${service}_050_CreateSolicitor") {
+        .group("XUI${service}_050_CreateSolicitor") {
       exec(http("XUI${service}_050_CreateSolicitor")
         .post("/data/case-types/FinancialRemedyConsentedRespondent/validate?pageId=FR_solicitorCreate1")
         .headers(headers_10)

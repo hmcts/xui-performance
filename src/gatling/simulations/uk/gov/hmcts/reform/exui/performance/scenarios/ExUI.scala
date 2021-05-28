@@ -318,10 +318,15 @@ val createOrg=
   val sendInvitation =
 
   feed(Feeders.createDynamicUserDataFeeder).
-    exec(http("XUI_CreateSuperUser").post(idamAPI+"/testing-support/accounts").header("Content-Type", "application/json").body(StringBody("{\"email\": \"${orgName}${generatedUserEmail}${n}@mailinator.com\", \"forename\": \"VUser\", \"password\": \"Pass19word\", \"surname\": \"VykUser\"}"))
+    exec(http("XUI_CreateSuperUser")
+    .post(idamAPI+"/testing-support/accounts")
+    .header("Content-Type", "application/json")
+    .body(StringBody("{\"email\": \"${orgName}${generatedUserEmail}${n}@mailinator.com\", \"forename\": \"VUser\", \"password\": \"Pass19word\", \"surname\": \"VykUser\"}"))
       .check(status is 201))
+
     .pause(20)
-          .exec(http("EXUI_MO_005_SendInvitation")
+
+    .exec(http("EXUI_MO_005_SendInvitation")
       .post(url_mo + "/api/inviteUser")
       .body(ElFileBody("MO.json")).asJson
       .check(status.is(200))
