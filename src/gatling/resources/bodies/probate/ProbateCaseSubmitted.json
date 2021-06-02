@@ -1,29 +1,30 @@
 {
-  "data": {
-    "solsSolicitorFirmName": "solfirmperftest",
-    "solsSolicitorIsExec": "Yes",
-    "solsSOTForenames": "solvf",
-    "solsSOTSurname": "solvl",
-    "solsSolicitorIsMainApplicant": "Yes",
-    "solsSolicitorAddress": {
-      "AddressLine1": "18 Hibernia Gardens",
-      "AddressLine2": "",
-      "AddressLine3": "",
-      "PostTown": "Hounslow",
-      "County": "",
-      "PostCode": "TW3 3SD",
-      "Country": "United Kingdom"
+  "data":{
+    "solsSolicitorWillSignSOT":"Yes",
+    "solsSOTForenames":"SolPerf",
+    "solsSOTSurname":"SolTest",
+    "solsSolicitorIsExec":"Yes",
+    "solsSolicitorIsApplying":"Yes",
+    "solsSolicitorFirmName":"solfirmperftest",
+    "solsSolicitorAddress":{
+      "AddressLine1":"${addressLines(0)}",
+      "AddressLine2":"${addressLines(1)}",
+      "AddressLine3":"",
+      "PostTown":"${addressLines(2)}",
+      "County":"",
+      "PostCode":"${addressLines(3)}",
+      "Country":"United Kingdom"
     },
-    "solsSolicitorAppReference": "${appRef}",
-"solsSolicitorEmail": "${caseEmail}",
-    "solsSolicitorPhoneNumber": "07975747275"
+    "solsSolicitorEmail":"${caseEmail}",
+    "solsSolicitorPhoneNumber":null,
+    "solsSolicitorAppReference":"${appRef}"
   },
-  "event": {
-    "id": "solicitorCreateApplication",
-    "summary": "",
-    "description": ""
+  "event":{
+    "id":"solicitorCreateApplication",
+    "summary":"",
+    "description":""
   },
-  "event_token": "${event_token_probate}",
-  "ignore_warning": false,
-  "draft_id": "DRAFT${draftId}"
+  "event_token":"${event_token_probate}",
+  "ignore_warning":false,
+  "draft_id":"DRAFT${draftId}"
 }

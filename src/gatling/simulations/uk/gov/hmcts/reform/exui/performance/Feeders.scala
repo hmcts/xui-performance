@@ -1,5 +1,8 @@
 package uk.gov.hmcts.reform.exui.performance
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import scala.util.Random
 
 object Feeders {
 
@@ -27,6 +30,12 @@ object Feeders {
   var appReferenceName = ""
   var sequence1=0
   var seq = 1
+
+  val rnd = new Random()
+  val now = LocalDate.now()
+  val patternDay = DateTimeFormatter.ofPattern("dd")
+  val patternMonth = DateTimeFormatter.ofPattern("MM")
+  val patternYear = DateTimeFormatter.ofPattern("yyyy")
 
   def nextSeq() : Integer = {
 
@@ -85,6 +94,23 @@ object Feeders {
   def generatePassword() :String = {
     generatedPassword = "Pass19word"
     generatedPassword
+  }
+
+  def getDay(): String = {
+    (1 + rnd.nextInt(28)).toString.format(patternDay).reverse.padTo(2, '0').reverse //pads single-digit dates with a leading zero
+  }
+
+  def getMonth(): String = {
+    (1 + rnd.nextInt(12)).toString.format(patternMonth).reverse.padTo(2, '0').reverse //pads single-digit dates with a leading zero
+  }
+
+  //Dob >= 25 years
+  def getDobYear(): String = {
+    now.minusYears(25 + rnd.nextInt(70)).format(patternYear)
+  }
+  //Dod <= 21 years
+  def getDodYear(): String = {
+    now.minusYears(1 + rnd.nextInt(20)).format(patternYear)
   }
 
 
