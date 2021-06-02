@@ -72,8 +72,7 @@ object ProbateHeader {
   "origin" -> baseURL,
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
-  "sec-fetch-site" -> "same-origin",
-  "x-dtpc" -> "3$484214221_400h50vVNUHLCFUOLBQIRUKGTWUKCORNUWNRADP-0")
+  "sec-fetch-site" -> "same-origin")
 
  val headers_draft = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-draft-create.v2+json;charset=UTF-8",
@@ -131,14 +130,21 @@ object ProbateHeader {
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$306835609_341h50vSMDUDAKNCMTAATPLSUJUKNUHICORKWHS-0e15")
 
+ val probate_navigationHeader = Map(
+  "accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+  "accept-encoding" -> "gzip, deflate, br",
+  "accept-language" -> "en-GB,en;q=0.9",
+  "sec-fetch-dest" -> "document",
+  "sec-fetch-mode" -> "navigate",
+  "sec-fetch-site" -> "same-origin",
+  "sec-fetch-user" -> "?1",
+  "upgrade-insecure-requests" -> "1")
+
  val probate_commonHeader = Map(
   "accept-encoding" -> "gzip, deflate, br",
   "accept-language" -> "en-GB,en;q=0.9",
-  "content-type" -> "application/json",
-  "experimental" -> "true",
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
-  "sec-fetch-site" -> "same-origin",
-  "user-agent" -> "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36")
+  "sec-fetch-site" -> "same-origin")
 
 }

@@ -75,14 +75,16 @@ class ExUI extends Simulation {
 	 ==================================================================================================*/
   val EXUIMCaseProbateScn = scenario("***** Probate Case Journey ******").repeat(1)
   {
-		feed(feedUserDataProbate).feed(Feeders.ProDataFeeder)
-			.exec(EXUIMCLogin.manageCasesHomePage)
-			.exec(EXUIMCLogin.manageCaseslogin)
-		//	.exec(EXUIMCLogin.termsnconditions)
-		.repeat(2) {
-			exec(EXUIProbateMC.casecreation)
-			}
-		.exec(EXUIMCLogin.manageCase_Logout)
+		exitBlockOnFail {
+			feed(feedUserDataProbate).feed(Feeders.ProDataFeeder)
+				.exec(EXUIMCLogin.manageCasesHomePage)
+				.exec(EXUIMCLogin.manageCaseslogin)
+				//	.exec(EXUIMCLogin.termsnconditions)
+				.repeat(2) {
+					exec(EXUIProbateMC.casecreation)
+				}
+				.exec(EXUIMCLogin.manageCase_Logout)
+		}
   }
 	
 	/*===============================================================================================
