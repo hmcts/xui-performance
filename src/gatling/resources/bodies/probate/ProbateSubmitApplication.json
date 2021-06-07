@@ -1,26 +1,35 @@
 {
-  "data": {
-    "solsLegalStatementDocument": {
-      "document_url": "${documentURL}",
-      "document_binary_url": "${documentURL}/binary",
-      "document_filename": "legalStatementProbate.pdf"
+  "data":{
+    "solsLegalStatementDocument":{
+      "document_url":"${documentURL}",
+      "document_binary_url":"${documentURL}/binary",
+      "document_filename":"legalStatementGrantOfProbate.pdf"
     },
-    "solsSOTNeedToUpdate": "No",
-    "solsIHT400Date": "2020-12-01",
-    "solsSolicitorFirmName": "Perf Test",
-    "solsSOTForenames": "Perf",
-    "solsSOTSurname": "Test",
-    "solsSOTJobTitle": "Solicitor",
-    "extraCopiesOfGrant": "1",
-    "outsideUKGrantCopies": "0",
-    "solsPaymentMethods": "fee account",
-    "solsFeeAccountNumber": "PBA001234"
+    "solsSOTNeedToUpdate":"No",
+    "solsReviewSOTConfirm":"By signing the statement of truth by ticking the boxes below, I, PractitionerFirst PractitionerLast confirm the following:\n\nI, PractitionerFirst PractitionerLast, have provided a copy of this application to the executors named below.\n\nI, PractitionerFirst PractitionerLast, have informed the executors that in signing the statement of truth I am confirming that the executors believe the facts set out in this legal statement are true.\n\nI, PractitionerFirst PractitionerLast, have informed the executors of the consequences if it should subsequently appear that the executors did not have an honest belief in the facts set out in the legal statement.\n\nI, PractitionerFirst PractitionerLast, have been authorised by the executors to sign the statement of truth.\n\nI, PractitionerFirst PractitionerLast, understand that proceedings for contempt of court may be brought against anyone who makes, or causes to be made, a false statement in a document verified by a statement of truth without an honest belief in its truth.",
+    "solsReviewSOTConfirmCheckbox1Names":"The executors PractitionerFirst PractitionerLast, Additional Executor, ExecFirstname ExecSurname:",
+    "solsReviewSOTConfirmCheckbox2Names":"The executors PractitionerFirst PractitionerLast, Additional Executor, ExecFirstname ExecSurname:",
+    "extraCopiesOfGrant":"1",
+    "outsideUKGrantCopies":"0",
+    "solsLegalStatementUpload":{
+      "document_url":"${SOTDocumentURL}",
+      "document_binary_url":"${SOTDocumentURL}/binary",
+      "document_filename":"3MB.pdf"
+    },
+    "solsReviewSOTConfirmCheckbox1":[
+      "BelieveTrue"
+    ],
+    "solsReviewSOTConfirmCheckbox2":[
+      "BelieveTrue"
+    ],
+    "solsPaymentMethods":"fee account",
+    "solsFeeAccountNumber":"001234"
   },
-  "event": {
-    "id": "solicitorReviewAndConfirm",
-    "summary": "",
-    "description": ""
+  "event":{
+    "id":"solicitorReviewAndConfirm",
+    "summary":"",
+    "description":""
   },
-  "event_token": "${event_token_probate}",
-  "ignore_warning": false
+  "event_token":"${event_token_probate}",
+  "ignore_warning":false
 }

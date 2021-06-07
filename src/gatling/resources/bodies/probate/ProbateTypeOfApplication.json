@@ -1,35 +1,35 @@
 {
-  "data": {
-    "solsWillType": "WillLeft"
+  "data":{
+    "solsWillType":"WillLeft"
   },
-  "event": {
-    "id": "solicitorUpdateApplication",
-    "summary": "",
-    "description": ""
+  "event":{
+    "id":"solicitorUpdateApplication",
+    "summary":"",
+    "description":""
   },
-  "event_data": {
-    "deceasedForenames": "Perf",
-    "deceasedSurname": "Test",
-    "deceasedDateOfDeath": "1925-01-28",
-    "deceasedDateOfBirth": "2020-03-25",
-    "applicationGrounds": "Perf test application",
-    "deceasedDomicileInEngWales": "Yes",
-    "deceasedAddress": {
-      "AddressLine1": "2 Hibernia Gardens",
-      "AddressLine2": "",
-      "AddressLine3": "",
-      "PostTown": "Hounslow",
-      "County": "",
-      "PostCode": "TW3 3SD",
-      "Country": "United Kingdom"
+  "event_data":{
+    "deceasedForenames":"${deceasedForename}",
+    "deceasedSurname":"${deceasedSurname}",
+    "deceasedDateOfBirth":"${dobYear}-${dobMonth}-${dobDay}",
+    "deceasedDateOfDeath":"${dodYear}-${dodMonth}-${dodDay}",
+    "deceasedDomicileInEngWales":"Yes",
+    "deceasedAddress":{
+      "AddressLine1":"${addressLines(0)}",
+      "AddressLine2":"${addressLines(1)}",
+      "AddressLine3":"",
+      "PostTown":"${addressLines(2)}",
+      "County":"",
+      "PostCode":"${addressLines(3)}",
+      "Country":"United Kingdom"
     },
-    "deceasedAnyOtherNames": "No",
-    "ihtFormId": "IHT400421",
-    "ihtGrossValue": "800000",
-    "ihtNetValue": "800000",
-    "solsWillType": "WillLeft"
+    "deceasedAnyOtherNames":"No",
+    "ihtFormId":"IHT205",
+    "ihtGrossValue":"1000000",
+    "ihtNetValue":"1000000",
+    "iht217":"No",
+    "solsWillType":"WillLeft"
   },
-  "event_token": "${event_token_probate}",
-  "ignore_warning": false,
-  "case_reference": "${caseId}"
+  "event_token":"${event_token_probate}",
+  "ignore_warning":false,
+  "case_reference":"${caseId}"
 }
