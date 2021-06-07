@@ -1,11 +1,10 @@
 {
   "data":{
-    "solsLegalStatementDocument":{
+    "solsLegalStatementUpload":{
       "document_url":"${documentURL}",
       "document_binary_url":"${documentURL}/binary",
-      "document_filename":"legalStatementGrantOfProbate.pdf"
-    },
-    "solsSOTNeedToUpdate":"No"
+      "document_filename":"3MB.pdf"
+    }
   },
   "event":{
     "id":"solicitorReviewAndConfirm",
@@ -18,7 +17,12 @@
       "document_binary_url":"${documentURL}/binary",
       "document_filename":"legalStatementGrantOfProbate.pdf"
     },
-    "solsSOTNeedToUpdate":"No"
+    "solsSOTNeedToUpdate":"No",
+    "solsLegalStatementUpload":{
+      "document_url":"${documentURL}",
+      "document_binary_url":"${documentURL}/binary",
+      "document_filename":"3MB.pdf"
+    }
   },
   "event_token":"${event_token_probate}",
   "ignore_warning":false,

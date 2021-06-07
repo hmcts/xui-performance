@@ -1,22 +1,38 @@
 {
-  "data": {
-    "solicitorIsMainApplicant": "Yes",
-    "willAccessOriginal": "Yes",
-    "willHasCodicils": "Yes",
-    "willNumberOfCodicils": "1"
+  "data":{
+    "solsSolicitorIsApplying":"Yes",
+    "willAccessOriginal":"Yes",
+    "originalWillSignedDate":"${willYear}-${dodMonth}-${dodDay}",
+    "willHasCodicils":"Yes",
+    "codicilAddedDateList":[
+      {
+        "value":{
+          "dateCodicilAdded":"${codicilYear}-${dodMonth}-${dodDay}"
+        },
+        "id":null
+      }
+    ]
   },
-  "event": {
-    "id": "solicitorUpdateProbate",
-    "summary": "",
-    "description": ""
+  "event":{
+    "id":"solicitorUpdateProbate",
+    "summary":"",
+    "description":""
   },
-  "event_data": {
-    "solicitorIsMainApplicant": "Yes",
-    "willAccessOriginal": "Yes",
-    "willHasCodicils": "Yes",
-    "willNumberOfCodicils": 1
+  "event_data":{
+    "solsSolicitorIsApplying":"Yes",
+    "willAccessOriginal":"Yes",
+    "originalWillSignedDate":"${willYear}-${dodMonth}-${dodDay}",
+    "willHasCodicils":"Yes",
+    "codicilAddedDateList":[
+      {
+        "value":{
+          "dateCodicilAdded":"${codicilYear}-${dodMonth}-${dodDay}"
+        },
+        "id":null
+      }
+    ]
   },
-  "event_token": "${event_token_probate}",
-  "ignore_warning": false,
-  "case_reference": "${caseId}"
+  "event_token":"${event_token_probate}",
+  "ignore_warning":false,
+  "case_reference":"${caseId}"
 }

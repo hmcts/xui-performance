@@ -1,27 +1,15 @@
 {
   "data":{
-    "dispenseWithNotice":"No",
-    "titleAndClearingType":"TCTPartSuccPowerRes",
-    "nameOfFirmNamedInWill":"FirmName",
-    "nameOfSucceededFirm":"SucceededFirm",
-    "addressOfSucceededFirm":{
-      "AddressLine1":"${addressLines(0)}",
-      "AddressLine2":"${addressLines(1)}",
-      "AddressLine3":"",
-      "PostTown":"${addressLines(2)}",
-      "County":"",
-      "PostCode":"${addressLines(3)}",
-      "Country":"United Kingdom"
-    },
-    "solsSolicitorIsExec":"Yes",
-    "solsIdentifiedApplyingExecsCcdCopy":"PractitionerFirst PractitionerLast",
-    "solsIdentifiedNotApplyingExecsCcdCopy":"None",
-    "anyOtherApplyingPartners":"Yes",
-    "otherPartnersApplyingAsExecutors":[
+    "solsIdentifiedApplyingExecs":"PractitionerFirst PractitionerLast, Additional Executor",
+    "solsIdentifiedNotApplyingExecs":"None",
+    "otherExecutorExists":"Yes",
+    "solsAdditionalExecutorList":[
       {
         "value":{
-          "additionalExecForenames":"Additional",
-          "additionalExecLastname":"Executor",
+          "additionalExecForenames":"ExecFirstname",
+          "additionalExecLastname":"ExecSurname",
+          "additionalExecNameOnWill":"No",
+          "additionalApplying":"Yes",
           "additionalExecAddress":{
             "AddressLine1":"${addressLines(0)}",
             "AddressLine2":"${addressLines(1)}",
@@ -34,10 +22,6 @@
         },
         "id":null
       }
-    ],
-    "morePartnersHoldingPowerReserved":"No",
-    "whoSharesInCompanyProfits":[
-      "director"
     ]
   },
   "event":{
@@ -55,7 +39,7 @@
         "value":{
           "dateCodicilAdded":"${codicilYear}-${dodMonth}-${dodDay}"
         },
-        "id":"${newCodicilId]"
+        "id":"${newCodicilId}"
       }
     ],
     "dispenseWithNotice":"No",
@@ -72,7 +56,7 @@
       "Country":"United Kingdom"
     },
     "solsSolicitorIsExec":"Yes",
-    "solsIdentifiedApplyingExecsCcdCopy":"PractitionerFirst PractitionerLast",
+    "solsIdentifiedApplyingExecsCcdCopy":"PractitionerFirst PractitionerLast, Additional Executor",
     "solsIdentifiedNotApplyingExecsCcdCopy":"None",
     "anyOtherApplyingPartners":"Yes",
     "otherPartnersApplyingAsExecutors":[
@@ -90,12 +74,35 @@
             "Country":"United Kingdom"
           }
         },
-        "id":null
+        "id":"${newSolExecId]"
       }
     ],
     "morePartnersHoldingPowerReserved":"No",
     "whoSharesInCompanyProfits":[
       "director"
+    ],
+    "solsIdentifiedApplyingExecs":"PractitionerFirst PractitionerLast, Additional Executor",
+    "solsIdentifiedNotApplyingExecs":"None",
+    "otherExecutorExists":"Yes",
+    "solsAdditionalExecutorList":[
+      {
+        "value":{
+          "additionalExecForenames":"ExecFirstname",
+          "additionalExecLastname":"ExecSurname",
+          "additionalExecNameOnWill":"No",
+          "additionalApplying":"Yes",
+          "additionalExecAddress":{
+            "AddressLine1":"${addressLines(0)}",
+            "AddressLine2":"${addressLines(1)}",
+            "AddressLine3":"",
+            "PostTown":"${addressLines(2)}",
+            "County":"",
+            "PostCode":"${addressLines(3)}",
+            "Country":"United Kingdom"
+          }
+        },
+        "id":null
+      }
     ]
   },
   "event_token":"${event_token_probate}",
