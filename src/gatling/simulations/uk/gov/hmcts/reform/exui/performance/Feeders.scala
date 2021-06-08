@@ -21,7 +21,9 @@ object Feeders {
   def randomAlphanumericString(n: Int) =
     randomString("abcdefghijklmnopqrstuvwxyz0123456789")(n)
 
-
+  def randomString(length: Int) = {
+    random.alphanumeric.filter(_.isLetter).take(length).mkString
+  }
 
   var generatedEmail = ""
   var generatedPassword = ""
@@ -104,9 +106,9 @@ object Feeders {
     (1 + rnd.nextInt(12)).toString.format(patternMonth).reverse.padTo(2, '0').reverse //pads single-digit dates with a leading zero
   }
 
-  //Dob >= 25 years
+  //Dob >= 35 years
   def getDobYear(): String = {
-    now.minusYears(25 + rnd.nextInt(70)).format(patternYear)
+    now.minusYears(35 + rnd.nextInt(70)).format(patternYear)
   }
   //Dod <= 21 years
   def getDodYear(): String = {
@@ -185,7 +187,7 @@ object Feeders {
     "PROB"
   }),
     "SignoutNumber" -> ({
-      "100"
+      "300"
     })
   ));
 

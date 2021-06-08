@@ -16,9 +16,6 @@ object EXUIProbateMC {
 
   val postcodeFeeder = csv("postcodes.csv").random
 
-  val getXSRF =
-    exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(Environment.baseDomain).saveAs("XSRFToken")))
-
   def healthcheck(path: String) =
     exec(http("XUI${service}_000_Healthcheck")
       .get(s"/api/healthCheck?path=${path}")
@@ -33,7 +30,7 @@ object EXUIProbateMC {
       .header("accept", "application/json, text/plain, */*")
       .header("content-type", "application/json")
       .header("sec-fetch-site", "same-site")
-      .check(status.in(200, 403)))
+      .check(status.in(200, 304, 403)))
 
   val configurationui =
     exec(http("XUI${service}_000_ConfigurationUI")
@@ -91,26 +88,6 @@ object EXUIProbateMC {
       .header("accept", "application/json, text/plain, */*")
       .check(jsonPath("$.user.idam.id").notNull))
 
-  val workAllocationGet =
-    exec(http("XUI${service}_000_WorkAllocationGet")
-      .get("/workallocation/searchForCompletable")
-      .headers(ProbateHeader.probate_commonHeader)
-      .header("accept", "application/json")
-      .header("content-type", "application/json")
-      .check(substring("message"))
-      .check(status.in(200, 401)))
-
-  val workAllocationPost =
-    exec(http("XUI${service}_000_WorkAllocationPost")
-      .post("/workallocation/searchForCompletable")
-      .headers(ProbateHeader.probate_commonHeader)
-      .header("accept", "application/json")
-      .header("content-type", "application/json")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"solicitorUpdateApplication","jurisdiction":"PROBATE","caseTypeId":"GrantOfRepresentation"}}"""))
-      .check(substring("message"))
-      .check(status.in(200, 401)))
-
   val casecreation =
 
     /*======================================================================================
@@ -144,7 +121,6 @@ object EXUIProbateMC {
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
         .headers(ProbateHeader.probate_commonHeader)
         .header("accept", "application/json")
-        //.header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(substring("PROBATE")))
     }
 
@@ -161,7 +137,7 @@ object EXUIProbateMC {
         .get("/data/internal/case-types/GrantOfRepresentation/event-triggers/solicitorCreateApplication?ignore-warning=false")
         .headers(ProbateHeader.probate_commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
-        //.header("X-XSRF-TOKEN", "${XSRFToken}")
+        .header("content-type", "application/json")
         .check(jsonPath("$.event_token").saveAs("event_token_probate"))
         .check(jsonPath("$.id").is("solicitorCreateApplication")))
 
@@ -169,7 +145,7 @@ object EXUIProbateMC {
 
       .exec(profile)
 
-      .exec(getXSRF)
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(Environment.baseDomain).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -188,8 +164,6 @@ object EXUIProbateMC {
           .header("x-xsrf-token", "${XSRFToken}")
           .body(ElFileBody("bodies/probate/ProbateCreateApplication1.json"))
           .check(substring("""{"data":{}""")))
-
-        .exec(getXSRF)
 
         .exec(http("XUI${service}_060_010_CreateApplicationDraft")
           .post("/data/internal/case-types/GrantOfRepresentation/drafts/")
@@ -214,8 +188,8 @@ object EXUIProbateMC {
           .headers(ProbateHeader.probate_commonHeader)
           .header("accept", "application/json")
           .header("content-type", "application/json")
-          .check(jsonPath("$.totalresults").ofType[Int].gt(0))
-          .check(regex(""""BUILDING_(?:.+)" : "(.+?)",\n      "THOROUGHFARE_NAME" : "(.+?)",\n      "POST_TOWN" : "(.+?)",\n      "POSTCODE" : "(.+?)",\n      """")
+          .check(jsonPath("$.header.totalresults").ofType[Int].gt(0))
+          .check(regex(""""(?:BUILDING|ORGANISATION)_.+" : "(.+?)",(?s).*?"(?:DEPENDENT_LOCALITY|THOROUGHFARE_NAME)" : "(.+?)",.*?"POST_TOWN" : "(.+?)",.*?"POSTCODE" : "(.+?)"""")
             .ofType[(String, String, String, String)].findRandom.saveAs("addressLines")))
     }
 
@@ -240,7 +214,8 @@ object EXUIProbateMC {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-draft-update.v2+json;charset=UTF-8")
         .header("content-type", "application/json")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/probate/ProbateCreateApplication2Draft.json")))
+        .body(ElFileBody("bodies/probate/ProbateCreateApplication2Draft.json"))
+        .check(status.in(200, 400)))
 
       .exec(profile)
 
@@ -256,20 +231,24 @@ object EXUIProbateMC {
       exec(http("XUI${service}_090_005_CaseSubmitted")
         .post("/data/case-types/GrantOfRepresentation/cases?ignore-warning=false")
         .headers(ProbateHeader.probate_commonHeader)
-        //MIGHT NEED TO ADD TWO ADDITIONAL HEADERS FROM THIS CALL ONWARDS
-        //request-context: appId=cid-v1:7922b140-fa5f-482d-89b4-e66e9e6d675a
-        //request-id: |fB7IE.wzkzc
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-case.v2+json;charset=UTF-8")
         .header("content-type", "application/json")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/probate/ProbateCaseSubmitted.json"))
         .check(jsonPath("$.id").optional.saveAs("caseId")))
 
-      .exec(workAllocationGet)
+      .exec(http("XUI${service}_090_010_WorkAllocation")
+        .post("/workallocation/searchForCompletable")
+        .headers(ProbateHeader.probate_commonHeader)
+        .header("accept", "application/json")
+        .header("content-type", "application/json")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"solicitorCreateApplication","jurisdiction":"PROBATE","caseTypeId":"GrantOfRepresentation"}}"""))
+        .check(status.in(200, 400)))
 
       .exec(healthcheck("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI${service}_090_010_ViewCase")
+      .exec(http("XUI${service}_090_015_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(ProbateHeader.probate_commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
@@ -318,6 +297,7 @@ object EXUIProbateMC {
       .headers(ProbateHeader.probate_commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
       .header("content-type", "application/json")
+      .check(jsonPath("$.event_token").saveAs("event_token_probate"))
       .check(substring("solicitorUpdateApplication")))
 
     .exec(activity)
@@ -332,8 +312,8 @@ object EXUIProbateMC {
   ======================================================================================*/
 
   //first generate the Name, DOB and DOD
-  .exec(_.setAll( "deceasedForename" -> ("Perf" + Feeders.randomAlphanumericString(5)),
-                  "deceasedSurname" -> ("Test" + Feeders.randomAlphanumericString(5)),
+  .exec(_.setAll( "deceasedForename" -> ("Perf" + Feeders.randomString(5)),
+                  "deceasedSurname" -> ("Test" + Feeders.randomString(5)),
                   "dobDay" -> Feeders.getDay(),
                   "dobMonth" -> Feeders.getMonth(),
                   "dobYear" -> Feeders.getDobYear(),
@@ -367,8 +347,8 @@ object EXUIProbateMC {
         .headers(ProbateHeader.probate_commonHeader)
         .header("accept", "application/json")
         .header("content-type", "application/json")
-        .check(jsonPath("$.totalresults").ofType[Int].gt(0))
-        .check(regex(""""BUILDING_(?:.+)" : "(.+?)",\n      "THOROUGHFARE_NAME" : "(.+?)",\n      "POST_TOWN" : "(.+?)",\n      "POSTCODE" : "(.+?)",\n      """")
+        .check(jsonPath("$.header.totalresults").ofType[Int].gt(0))
+        .check(regex(""""(?:BUILDING|ORGANISATION)_.+" : "(.+?)",(?s).*?"(?:DEPENDENT_LOCALITY|THOROUGHFARE_NAME)" : "(.+?)",.*?"POST_TOWN" : "(.+?)",.*?"POSTCODE" : "(.+?)"""")
           .ofType[(String, String, String, String)].findRandom.saveAs("addressLines")))
   }
 
@@ -449,7 +429,14 @@ object EXUIProbateMC {
 
     .exec(activity)
 
-    .exec(workAllocationPost)
+    .exec(http("XUI${service}_150_015_WorkAllocation")
+      .post("/workallocation/searchForCompletable")
+      .headers(ProbateHeader.probate_commonHeader)
+      .header("accept", "application/json")
+      .header("content-type", "application/json")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"solicitorUpdateApplication","jurisdiction":"PROBATE","caseTypeId":"GrantOfRepresentation"}}"""))
+      .check(status.in(200, 400)))
 
     .exec(healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
@@ -464,7 +451,7 @@ object EXUIProbateMC {
   .pause(MinThinkTime, MaxThinkTime)
 
   /*======================================================================================
-  * Create Grant of Probate Details Event
+  * Click 'Add application details' link
   ======================================================================================*/
 
   .group("XUI${service}_160_GrantOfProbateDetails") {
@@ -499,6 +486,7 @@ object EXUIProbateMC {
       .headers(ProbateHeader.probate_commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
       .header("content-type", "application/json")
+      .check(jsonPath("$.event_token").saveAs("event_token_probate"))
       .check(substring("solicitorUpdateProbate")))
 
     .exec(profile)
@@ -510,9 +498,14 @@ object EXUIProbateMC {
   * Submit Grant of Probate Details
   ======================================================================================*/
 
-  //first set the will and codicil dates
-  .exec(_.setAll( "willYear" -> ("${dodYear}".toInt - 10).toString,
-                  "codicilYear" -> ("${dodYear}".toInt - 8).toString))
+  //first set the will and codicil dates:
+  //    - will is dated 10 years before date of death
+  //    - codicil is dated 8 years before date of death
+  .exec { session =>
+    session
+      .set("willYear", session("dodYear").as[Int] - 10)
+      .set("codicilYear", session("dodYear").as[Int] - 8)
+  }
 
   .group("XUI${service}_170_SubmitGrantOfProbateDetails") {
     exec(http("XUI${service}_170_010_SubmitGrantOfProbateDetails")
@@ -541,8 +534,8 @@ object EXUIProbateMC {
         .headers(ProbateHeader.probate_commonHeader)
         .header("accept", "application/json")
         .header("content-type", "application/json")
-        .check(jsonPath("$.totalresults").ofType[Int].gt(0))
-        .check(regex(""""BUILDING_(?:.+)" : "(.+?)",\n      "THOROUGHFARE_NAME" : "(.+?)",\n      "POST_TOWN" : "(.+?)",\n      "POSTCODE" : "(.+?)",\n      """")
+        .check(jsonPath("$.header.totalresults").ofType[Int].gt(0))
+        .check(regex(""""(?:BUILDING|ORGANISATION)_.+" : "(.+?)",(?s).*?"(?:DEPENDENT_LOCALITY|THOROUGHFARE_NAME)" : "(.+?)",.*?"POST_TOWN" : "(.+?)",.*?"POSTCODE" : "(.+?)"""")
           .ofType[(String, String, String, String)].findRandom.saveAs("addressLines")))
   }
 
@@ -579,8 +572,8 @@ object EXUIProbateMC {
         .headers(ProbateHeader.probate_commonHeader)
         .header("accept", "application/json")
         .header("content-type", "application/json")
-        .check(jsonPath("$.totalresults").ofType[Int].gt(0))
-        .check(regex(""""BUILDING_(?:.+)" : "(.+?)",\n      "THOROUGHFARE_NAME" : "(.+?)",\n      "POST_TOWN" : "(.+?)",\n      "POSTCODE" : "(.+?)",\n      """")
+        .check(jsonPath("$.header.totalresults").ofType[Int].gt(0))
+        .check(regex(""""(?:BUILDING|ORGANISATION)_.+" : "(.+?)",(?s).*?"(?:DEPENDENT_LOCALITY|THOROUGHFARE_NAME)" : "(.+?)",.*?"POST_TOWN" : "(.+?)",.*?"POSTCODE" : "(.+?)"""")
           .ofType[(String, String, String, String)].findRandom.saveAs("addressLines")))
   }
 
@@ -666,8 +659,7 @@ object EXUIProbateMC {
       .header("content-type", "application/json")
       .header("x-xsrf-token", "${XSRFToken}")
       .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"solicitorUpdateProbate","jurisdiction":"PROBATE","caseTypeId":"GrantOfRepresentation"}}"""))
-      .check(substring("message"))
-      .check(status.in(200, 401)))
+      .check(status.in(200, 400)))
 
     .exec(healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
@@ -692,8 +684,6 @@ object EXUIProbateMC {
       .get("/cases/case-details/1623056630472980/trigger/solicitorReviewAndConfirm/solicitorReviewAndConfirmsolicitorReviewLegalStatementPage1")
       .headers(ProbateHeader.probate_navigationHeader)
       .check(substring("HMCTS Manage cases")))
-      //.check(jsonPath("$.case_fields[?(@.id=='solsLegalStatementDocument')].value.document_url").saveAs("documentURL"))
-      //.check(jsonPath("$.id").is("solicitorReviewAndConfirm")))
 
     .exec(activity)
 
@@ -724,6 +714,7 @@ object EXUIProbateMC {
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
       .header("content-type", "application/json")
       .check(jsonPath("$.case_fields[?(@.id=='solsLegalStatementDocument')].value.document_url").saveAs("documentURL"))
+      .check(jsonPath("$.event_token").saveAs("event_token_probate"))
       .check(jsonPath("$.id").is("solicitorReviewAndConfirm")))
 
     .exec(profile)
@@ -761,12 +752,13 @@ object EXUIProbateMC {
       .header("accept", "application/json, text/plain, */*")
       .header("content-type", "multipart/form-data")
       .header("x-xsrf-token", "${XSRFToken}")
-      .bodyPart(RawFileBodyPart("file", "3MB.pdf")
+      .bodyPart(RawFileBodyPart("files", "3MB.pdf")
         .fileName("3MB.pdf")
         .transferEncoding("binary"))
       .asMultipartForm
+      .formParam("classification", "PUBLIC")
       .check(substring("originalDocumentName"))
-      .check(regex("""\/([0-9a-z-]+?)\/binary""").saveAs("SOTDocumentURL")))
+      .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("SOTDocumentURL")))
   }
 
   .pause(MinThinkTime, MaxThinkTime)
@@ -870,7 +862,6 @@ object EXUIProbateMC {
       .header("content-type", "application/json")
       .header("x-xsrf-token", "${XSRFToken}")
       .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"solicitorReviewAndConfirm","jurisdiction":"PROBATE","caseTypeId":"GrantOfRepresentation"}}"""))
-      .check(substring("message"))
       .check(status.in(200, 401)))
 
     .exec(healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorReviewAndConfirm%2Fconfirm"))
