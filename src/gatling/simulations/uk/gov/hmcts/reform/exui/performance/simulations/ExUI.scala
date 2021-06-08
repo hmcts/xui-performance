@@ -80,10 +80,16 @@ class ExUI extends Simulation {
 				.exec(EXUIMCLogin.manageCasesHomePage)
 				.exec(EXUIMCLogin.manageCaseslogin)
 				//	.exec(EXUIMCLogin.termsnconditions)
-				.repeat(2) {
+				//.repeat(2) {
+				.repeat(1) {
 					exec(EXUIProbateMC.casecreation)
 				}
 				.exec(EXUIMCLogin.manageCase_Logout)
+		}
+		.exec {
+			session =>
+				println(session)
+				session
 		}
   }
 	

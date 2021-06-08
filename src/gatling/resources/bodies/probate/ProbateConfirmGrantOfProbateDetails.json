@@ -38,9 +38,9 @@
             "AddressLine1":"${addressLines(0)}",
             "AddressLine2":"${addressLines(1)}",
             "AddressLine3":"",
-            "PostTown":"${addressLines(1)}",
+            "PostTown":"${addressLines(2)}",
             "County":"",
-            "PostCode":"${addressLines(2)}",
+            "PostCode":"${addressLines(3)}",
             "Country":"United Kingdom"
           }
         },
