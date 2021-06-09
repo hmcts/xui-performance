@@ -80,8 +80,7 @@ class ExUI extends Simulation {
 				.exec(EXUIMCLogin.manageCasesHomePage)
 				.exec(EXUIMCLogin.manageCaseslogin)
 				//	.exec(EXUIMCLogin.termsnconditions)
-				//.repeat(2) {
-				.repeat(1) {
+				.repeat(2) {
 					exec(EXUIProbateMC.CreateProbateCase)
 					.exec(EXUIProbateMC.AddDeceasedDetails)
 					.exec(EXUIProbateMC.AddApplicationDetails)
@@ -228,13 +227,12 @@ class ExUI extends Simulation {
    ==================================================================================================*/
 	
 	 setUp(
-		 EXUIMCaseProbateScn.inject(atOnceUsers(1))
-		 //EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(238) during (1200)),
-		 //EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(20) during (1200)),
-		 //EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(7) during (1200)),
-		 //EXUIMCaseCaseworkerScn.inject(nothingFor(55),rampUsers(900) during (1200)),
-		 //EXUIMCaseCreationDivorceScn.inject(nothingFor(65),rampUsers(238) during (1200)),
-		 //EXUIFinancialRemedyScn.inject(nothingFor(75),rampUsers(98) during (1200))
+		 EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(238) during (1200)),
+		 EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(20) during (1200)),
+		 EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(7) during (1200)),
+		 EXUIMCaseCaseworkerScn.inject(nothingFor(55),rampUsers(900) during (1200)),
+		 EXUIMCaseCreationDivorceScn.inject(nothingFor(65),rampUsers(238) during (1200)),
+		 EXUIFinancialRemedyScn.inject(nothingFor(75),rampUsers(98) during (1200))
         ).protocols(MChttpProtocol)
 
 
