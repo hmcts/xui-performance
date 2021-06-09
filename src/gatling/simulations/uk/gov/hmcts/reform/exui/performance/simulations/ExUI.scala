@@ -82,7 +82,10 @@ class ExUI extends Simulation {
 				//	.exec(EXUIMCLogin.termsnconditions)
 				//.repeat(2) {
 				.repeat(1) {
-					exec(EXUIProbateMC.casecreation)
+					exec(EXUIProbateMC.CreateProbateCase)
+					.exec(EXUIProbateMC.AddDeceasedDetails)
+					.exec(EXUIProbateMC.AddApplicationDetails)
+					.exec(EXUIProbateMC.ReviewAndSubmitApplication)
 				}
 				.exec(EXUIMCLogin.manageCase_Logout)
 		}

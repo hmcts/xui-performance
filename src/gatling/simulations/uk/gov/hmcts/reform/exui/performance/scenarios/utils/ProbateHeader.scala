@@ -17,6 +17,7 @@ object ProbateHeader {
  val probate_commonHeader = Map(
   "accept-encoding" -> "gzip, deflate, br",
   "accept-language" -> "en-GB,en;q=0.9",
+  "content-type" -> "application/json",
   "experimental" -> "true",
   "sec-fetch-dest" -> "empty",
   "sec-fetch-mode" -> "cors",
