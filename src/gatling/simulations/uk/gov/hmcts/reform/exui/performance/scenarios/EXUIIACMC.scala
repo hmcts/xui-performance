@@ -11,10 +11,8 @@ import scala.util.Random
 
 object EXUIIACMC {
 
-  //val BaseURL = Environment.baseURL
   val IdamUrl = Environment.idamURL
   val baseURL = Environment.baseURL
-  //val loginFeeder = csv("OrgId.csv").circular
   //  val feedUserDataIAC = csv("IACDataBackground.csv").circular
 
   val MinThinkTime = Environment.minThinkTimeIACC
@@ -372,7 +370,7 @@ object EXUIIACMC {
       exec(http("XUI${service}_270_ShareACaseAssignments")
            .post("/api/caseshare/case-assignments")
            .headers(IACHeader.headers_userassignment)
-           .body(ElFileBody("IACShareACase.json")).asJson
+           .body(ElFileBody("bodies/iac/IACShareACase.json")).asJson
            .check(status.in(200, 201)))
     }
     .pause(MinThinkTime , MaxThinkTime )
