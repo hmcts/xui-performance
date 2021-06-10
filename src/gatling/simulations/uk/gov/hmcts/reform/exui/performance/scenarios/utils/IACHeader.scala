@@ -21,7 +21,7 @@ object IACHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "2$587801235_171h5vAMKUMUBHAHCQKSABKWFBHHGLAHGGCPVR-0e8",
-  "x-dtreferer" -> ({baseURL+"/cases/case-create/IA/Asylum/startAppeal/startAppealhomeOfficeDecision"}),
+  "x-dtreferer" -> ({baseURL + "/cases/case-create/IA/Asylum/startAppeal/startAppealhomeOfficeDecision"}),
   "x-xsrf-token" -> "${XSRFToken}")
 
  val headers_startcreatecase = Map(
@@ -35,8 +35,6 @@ object IACHeader {
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "1$579436139_19h8vMEARIAIGLUFFNPCKRPQRQVUGOPAKMIJN-0e10",
   "x-xsrf-token" -> "${XSRFToken}")
-
-
 
  val headers_9 = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
