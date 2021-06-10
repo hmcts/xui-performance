@@ -88,7 +88,6 @@ object IACHeader {
   "x-dtpc" -> "1$579436139_19h19vMEARIAIGLUFFNPCKRPQRQVUGOPAKMIJN-0e14",
   "x-xsrf-token" -> "${XSRFToken}")
 
-
  val headers_nationality = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
   "accept-encoding" -> "gzip, deflate, br",
@@ -227,7 +226,7 @@ object IACHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "1$579436139_19h40vMEARIAIGLUFFNPCKRPQRQVUGOPAKMIJN-0e24",
-  "x-dtreferer" ->  ({baseURL+"/cases/case-create/IA/Asylum/startAppeal/startAppeallegalRepresentativeDetails"}),
+  "x-dtreferer" ->  ({baseURL + "/cases/case-create/IA/Asylum/startAppeal/startAppeallegalRepresentativeDetails"}),
   "x-xsrf-token" -> "${XSRFToken}")
 
  val headers_casesave = Map(
@@ -272,19 +271,6 @@ object IACHeader {
   "sec-fetch-site" -> "same-origin",
   "x-xsrf-token" -> "${XSRFToken}")
 
-
-
-
- val headers_32 = Map(
-  "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-case.v2+json;charset=UTF-8",
-  "accept-encoding" -> "gzip, deflate, br",
-  "accept-language" -> "en-US,en;q=0.9",
-  "content-type" -> "application/json",
-  "experimental" -> "true",
-  "origin" -> baseURL,
-  "sec-fetch-mode" -> "cors",
-  "sec-fetch-site" -> "same-origin")
-
  val headers_newsubmitappeal = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8",
   "accept-encoding" -> "gzip, deflate, br",
@@ -295,8 +281,6 @@ object IACHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-xsrf-token" -> "${XSRFToken}")
-
-
 
  val headers_submitdeclaration = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
@@ -321,7 +305,7 @@ object IACHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "1$581183307_826h6vMEARIAIGLUFFNPCKRPQRQVUGOPAKMIJN-0e27",
-  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/submitAppeal/submitAppealdeclaration"}),
+  "x-dtreferer" -> ({baseURL + "/cases/case-details/${caseId}/trigger/submitAppeal/submitAppealdeclaration"}),
   "x-xsrf-token" -> "${XSRFToken}")
 
  val headers_declarationsubmitted = Map(
@@ -337,54 +321,6 @@ object IACHeader {
   "x-dtpc" -> "1$581183307_826h7vMEARIAIGLUFFNPCKRPQRQVUGOPAKMIJN-0e28",
   "x-xsrf-token" -> "${XSRFToken}")
 
-
-
-
-
-
- val headers_42 = Map(
-  "accept" -> "application/json, text/plain, */*",
-  "accept-encoding" -> "gzip, deflate, br",
-  "accept-language" -> "en-US,en;q=0.9",
-  "sec-fetch-dest" -> "empty",
-  "sec-fetch-mode" -> "cors",
-  "sec-fetch-site" -> "same-origin",
-  "x-dtpc" -> "3$38732415_350h7vDTRMSASFKPLKDRFKMHCCHMMCARPGMHGD-0")
-
- val headers_submitpro = Map(
-  "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json",
-  "accept-encoding" -> "gzip, deflate, br",
-  "accept-language" -> "en-US,en;q=0.9",
-  "content-type" -> "application/json",
-  "experimental" -> "true",
-  "sec-fetch-dest" -> "empty",
-  "sec-fetch-mode" -> "cors",
-  "sec-fetch-site" -> "same-origin",
-  "x-dtpc" -> "3$54833124_131h9vATDARLUPBSPUDUSAPAWSHOBJTNRRCQHS-0")
-
- val headers_access_read = Map(
-  "accept" -> "application/json",
-  "accept-encoding" -> "gzip, deflate, br",
-  "accept-language" -> "en-US,en;q=0.9",
-  "content-type" -> "application/json",
-  "sec-fetch-dest" -> "empty",
-  "sec-fetch-mode" -> "cors",
-  "sec-fetch-site" -> "same-origin",
-  "x-dtpc" -> "3$38734236_77h15vDTRMSASFKPLKDRFKMHCCHMMCARPGMHGD-0",
-  "x-dtreferer" -> ({baseURL+"/accept-terms-and-conditions"}))
-
-
-
- val headers_search = Map(
-  "accept" -> "application/json",
-  "content-type" -> "application/json",
-  "sec-fetch-dest" -> "empty",
-  "sec-fetch-mode" -> "cors",
-  "sec-fetch-site" -> "same-origin",
-  "x-dtpc" -> "1$78439528_577h30vMLHQLCSRKNFMUHDPORRGHTRKDKTJURRW-0e38",
-  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}#documents"}))
-
-
  val headers_searchinputs = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-search-input-details.v2+json;charset=UTF-8",
   "content-type" -> "application/json",
@@ -393,25 +329,6 @@ object IACHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "2$536900434_67h8vCCMUBMSCGHNCUOIDBBTTAAOSNMJBIPAF-0e5")
-
- val headers_searchresults = Map(
-  "accept" -> "application/json",
-  "content-type" -> "application/json",
-  "origin" -> baseURL,
-  "sec-fetch-dest" -> "empty",
-  "sec-fetch-mode" -> "cors",
-  "sec-fetch-site" -> "same-origin",
-  "x-dtpc" -> "2$536900434_67h13vCCMUBMSCGHNCUOIDBBTTAAOSNMJBIPAF-0e7")
-
-
-
- val headers_documents = Map(
-  "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
-  "Accept-Encoding" -> "gzip, deflate, br",
-  "Accept-Language" -> "en-US,en;q=0.9",
-  "Sec-Fetch-Mode" -> "navigate",
-  "Sec-Fetch-Site" -> "none",
-  "Upgrade-Insecure-Requests" -> "1")
 
  val headers_data_internal = Map(
   "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8",
@@ -423,7 +340,7 @@ object IACHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "1$579436139_19h11vMEARIAIGLUFFNPCKRPQRQVUGOPAKMIJN-0e10",
-  "x-dtreferer" -> ({baseURL+"/cases/case-filter"}),
+  "x-dtreferer" -> ({baseURL + "/cases/case-filter"}),
   "x-xsrf-token" -> "9PNYZHJX-zWgns_wpICH3RZeczMbC9f8m6w0")
 
  val headers_isauthenticatedsubmit = Map(
@@ -445,102 +362,6 @@ object IACHeader {
   "sec-fetch-site" -> "same-origin",
   "x-xsrf-token" -> "9PNYZHJX-zWgns_wpICH3RZeczMbC9f8m6w0")
 
- val headers_internal_data_Declare= Map(
-  "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8",
-  "accept-encoding" -> "gzip, deflate, br",
-  "accept-language" -> "en-US,en;q=0.9",
-  "content-type" -> "application/json",
-  "experimental" -> "true",
-  "sec-fetch-dest" -> "empty",
-  "sec-fetch-mode" -> "cors",
-  "sec-fetch-site" -> "same-origin",
-  "x-dtpc" -> "3$54833124_131h15vATDARLUPBSPUDUSAPAWSHOBJTNRRCQHS-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-details/${caseId}/trigger/submitAppeal/submitAppealdeclaration")
-
- val headers_data_internal_rep = Map(
-  "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8",
-  "accept-encoding" -> "gzip, deflate, br",
-  "accept-language" -> "en-US,en;q=0.9",
-  "content-type" -> "application/json",
-  "experimental" -> "true",
-  "sec-fetch-dest" -> "empty",
-  "sec-fetch-mode" -> "cors",
-  "sec-fetch-site" -> "same-origin",
-  "x-dtpc" -> "3$54110241_838h36vATDARLUPBSPUDUSAPAWSHOBJTNRRCQHS-0",
-  "x-dtreferer" -> "https://manage-case.perftest.platform.hmcts.net/cases/case-create/IA/Asylum/startAppeal/startAppeallegalRepresentativeDetails")
-
- val headers_data_internal_cases = Map(
-  "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json",
-  "content-type" -> "application/json",
-  "experimental" -> "true",
-  "sec-fetch-dest" -> "empty",
-  "sec-fetch-mode" -> "cors",
-  "sec-fetch-site" -> "same-origin",
-  "x-dtpc" -> "1$78439528_577h37vMLHQLCSRKNFMUHDPORRGHTRKDKTJURRW-0e39")
-
-
- val headers_sharecase1 = Map(
-  "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8",
-  "content-type" -> "application/json",
-  "experimental" -> "true",
-  "sec-fetch-dest" -> "empty",
-  "sec-fetch-mode" -> "cors",
-  "sec-fetch-site" -> "same-origin",
-  "x-dtpc" -> "3$61761456_902h29vGMGKQDHJNJUKWRAKMQJOGGKKAFNQFRAC-0")
-
-
-
- val headers_shareacasesubmit = Map(
-  "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
-  "content-type" -> "application/json",
-  "experimental" -> "true",
-  "origin" -> baseURL,
-  "sec-fetch-dest" -> "empty",
-  "sec-fetch-mode" -> "cors",
-  "sec-fetch-site" -> "same-origin",
-  "x-dtpc" -> "3$54833124_131h35vATDARLUPBSPUDUSAPAWSHOBJTNRRCQHS-0")
-
-
- val headers_shareacase12 = Map(
-  "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8",
-  "content-type" -> "application/json",
-  "experimental" -> "true",
-  "origin" -> baseURL,
-  "sec-fetch-dest" -> "empty",
-  "sec-fetch-mode" -> "cors",
-  "sec-fetch-site" -> "same-origin",
-  "x-dtpc" -> "3$61761456_902h35vGMGKQDHJNJUKWRAKMQJOGGKKAFNQFRAC-0")
-
- val headers_shareacase14 = Map(
-  "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json",
-  "content-type" -> "application/json",
-  "experimental" -> "true",
-  "sec-fetch-dest" -> "empty",
-  "sec-fetch-mode" -> "cors",
-  "sec-fetch-site" -> "same-origin",
-  "x-dtpc" -> "3$61761456_902h37vGMGKQDHJNJUKWRAKMQJOGGKKAFNQFRAC-0")
-
-
- val headers_di_casedetails = Map(
-  "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8",
-  "content-type" -> "application/json",
-  "experimental" -> "true",
-  "sec-fetch-dest" -> "empty",
-  "sec-fetch-mode" -> "cors",
-  "sec-fetch-site" -> "same-origin",
-  "x-dtpc" -> "3$54833124_131h34vATDARLUPBSPUDUSAPAWSHOBJTNRRCQHS-0",
-  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}"}))
-
- val headers_di_shareacase = Map(
-  "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8",
-  "content-type" -> "application/json",
-  "experimental" -> "true",
-  "sec-fetch-dest" -> "empty",
-  "sec-fetch-mode" -> "cors",
-  "sec-fetch-site" -> "same-origin",
-  "x-dtpc" -> "3$54833124_131h37vATDARLUPBSPUDUSAPAWSHOBJTNRRCQHS-0",
-  "x-dtreferer" -> ({baseURL+"/cases/case-details/${caseId}/trigger/shareACase/shareACaseshareACase"}))
- 
  val headers_scase1 = Map(
   "accept" -> "application/json, text/plain, */*",
   "sec-ch-ua" -> """Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99""",
@@ -559,10 +380,5 @@ object IACHeader {
   "sec-fetch-mode" -> "cors",
   "sec-fetch-site" -> "same-origin",
   "x-xsrf-token" -> "${XSRFToken}")
-
-
-
-
-
 
 }
