@@ -116,7 +116,7 @@ object EXUIFPLASDO {
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=addFamilyManCaseNumber1")
         .headers(FPLAHeader.headers_sdo_casenumbercontinue)
             // .body(StringBody(""))
-            .body(ElFileBody("SDOFamilyCaseNumberContinue.json")).asJson
+            .body(ElFileBody("bodies/sdo/SDOFamilyCaseNumberContinue.json")).asJson
             .check(status.in(200, 304)))
 
       .exec(http("XUI${service}_040_010_FamilyCaseNumberContinueProfile")
@@ -136,7 +136,7 @@ object EXUIFPLASDO {
         .post("/data/cases/${caseId}/events")
         .headers(FPLAHeader.headers_sdo_casenumber_view)
             //  .body(StringBody(""))
-            .body(ElFileBody("SDOFamilyCaseNumberSaveContinue.json")).asJson
+            .body(ElFileBody("bodies/sdo/SDOFamilyCaseNumberSaveContinue.json")).asJson
             .check(status.in(200, 304)))
 
 
@@ -176,7 +176,7 @@ object EXUIFPLASDO {
             .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=allocatedJudgeAllocatedJudge")
             .headers(FPLAHeader.headers_128)
             // .body(StringBody(""))
-            .body(ElFileBody("SDOAllocatedJudgeContinue.json")).asJson
+            .body(ElFileBody("bodies/sdo/SDOAllocatedJudgeContinue.json")).asJson
             .check(status.in(200, 304)))
 
       .exec(http("XUI${service}_070_010_AllocatedJudgeContinueProfile")
@@ -191,7 +191,7 @@ object EXUIFPLASDO {
             .post("/data/cases/${caseId}/events")
             .headers(FPLAHeader.headers_133)
             //  .body(StringBody(""))
-            .body(ElFileBody("SDOAllocatedJudgeSaveContinue.json")).asJson
+            .body(ElFileBody("bodies/sdo/SDOAllocatedJudgeSaveContinue.json")).asJson
             .check(status.in(200, 304)))
 
 
@@ -232,7 +232,7 @@ object EXUIFPLASDO {
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=hearingBookingDetails1")
         .headers(FPLAHeader.headers_106)
             //.body(StringBody(""))
-            .body(ElFileBody("SDOHearingBookingDetailsContinue.json")).asJson
+            .body(ElFileBody("bodies/sdo/SDOHearingBookingDetailsContinue.json")).asJson
             .check(status.in(200, 304)))
 
       .exec(http("XUI${service}_100_010_HearingBookingDetailsContinueProfile")
@@ -247,7 +247,7 @@ object EXUIFPLASDO {
         .post("/data/cases/${caseId}/events")
         .headers(FPLAHeader.headers_112)
             // .body(StringBody(""))
-            .body(ElFileBody("SDOHearingBookingDetailsSaveContinue.json")).asJson
+            .body(ElFileBody("bodies/sdo/SDOHearingBookingDetailsSaveContinue.json")).asJson
             .check(status.in(200, 304)))
 
 
@@ -287,7 +287,7 @@ object EXUIFPLASDO {
     .exec(http("XUI${service}_130_005_SendToGateKeeperContinue")
           .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=sendToGatekeeper1")
           .headers(FPLAHeader.headers_148)
-          .body(ElFileBody("SDOSendToGateKeeperContinue.json")).asJson
+          .body(ElFileBody("bodies/sdo/SDOSendToGateKeeperContinue.json")).asJson
           .check(status.in(200, 304)))
 
     .exec(http("XUI${service}_130_010_SendToGateKeeperContinueProfile")
@@ -301,7 +301,7 @@ object EXUIFPLASDO {
     .exec(http("XUI${service}_140_005_SendToGateKeeperSaveContinue")
           .post("/data/cases/${caseId}/events")
           .headers(FPLAHeader.headers_154)
-          .body(ElFileBody("SDOSendToGateKeeperSaveContinue.json")).asJson
+          .body(ElFileBody("bodies/sdo/SDOSendToGateKeeperSaveContinue.json")).asJson
           .check(status.in(200, 304)))
 
     .exec(http("XUI${service}_140_010_SendToGateKeeperSaveViewCase")
@@ -410,7 +410,7 @@ object EXUIFPLASDO {
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOSdoDateOfIssue")
       .headers(FPLAHeader.headers_254)
       //.body(StringBody(""))
-            .body(ElFileBody("SDODateOfIssue.json")).asJson
+            .body(ElFileBody("bodies/sdo/SDODateOfIssue.json")).asJson
       .check(status.in(200, 304)))
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
@@ -420,7 +420,7 @@ object EXUIFPLASDO {
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOjudgeAndLegalAdvisor")
       .headers(FPLAHeader.headers_254)
             // .body(StringBody(""))
-            .body(ElFileBody("SDOJudgeAndLegalAdvisor.json")).asJson
+            .body(ElFileBody("bodies/sdo/SDOJudgeAndLegalAdvisor.json")).asJson
             .check(status.in(200, 304)))
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
@@ -430,7 +430,7 @@ object EXUIFPLASDO {
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOallPartiesDirections")
       .headers(FPLAHeader.headers_254)
             //  .body(StringBody(""))
-            .body(ElFileBody("SDOAllPartiesDirection.json")).asJson
+            .body(ElFileBody("bodies/sdo/SDOAllPartiesDirection.json")).asJson
             .check(status.in(200, 304)))
 
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
@@ -441,7 +441,7 @@ object EXUIFPLASDO {
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOlocalAuthorityDirections")
       .headers(FPLAHeader.headers_254)
             //   .body(StringBody(""))
-            .body(ElFileBody("SDOLocalAuthorityDirection.json")).asJson
+            .body(ElFileBody("bodies/sdo/SDOLocalAuthorityDirection.json")).asJson
             .check(status.in(200, 304)))
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
@@ -450,7 +450,7 @@ object EXUIFPLASDO {
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOparentsAndRespondentsDirections")
       .headers(FPLAHeader.headers_254)
             // .body(StringBody(""))
-            .body(ElFileBody("SDORespondantDirection.json")).asJson
+            .body(ElFileBody("bodies/sdo/SDORespondantDirection.json")).asJson
     )
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
       //new request
@@ -458,7 +458,7 @@ object EXUIFPLASDO {
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOcafcassDirections")
       .headers(FPLAHeader.headers_254)
             //  .body(StringBody(""))
-            .body(ElFileBody("SDOcafcasDirections.json")).asJson
+            .body(ElFileBody("bodies/sdo/SDOcafcasDirections.json")).asJson
             .check(status.in(200, 304)))
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
       //next request
@@ -467,7 +467,7 @@ object EXUIFPLASDO {
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOotherPartiesDirections")
       .headers(FPLAHeader.headers_254)
             //.body(StringBody(""))
-            .body(ElFileBody("SDOOtherPartiesDirections.json")).asJson
+            .body(ElFileBody("bodies/sdo/SDOOtherPartiesDirections.json")).asJson
             .check(status.in(200, 304)))
       .pause(MinThinkTimeSDO, MaxThinkTimeSDO)
 
@@ -476,7 +476,7 @@ object EXUIFPLASDO {
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOcourtDirections")
       .headers(FPLAHeader.headers_254)
             // .body(StringBody(""))
-            .body(ElFileBody("SDOCourtDirections.json")).asJson
+            .body(ElFileBody("bodies/sdo/SDOCourtDirections.json")).asJson
             .check(status.in(200, 304))
             .check(regex("""internal/documents/(.*?)","document_filename""").find(0).saveAs("DocumentID")))
 
@@ -495,7 +495,7 @@ object EXUIFPLASDO {
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=draftSDOdocumentReview")
       .headers(FPLAHeader.headers_254)
             // .body(StringBody(""))
-            .body(ElFileBody("SDODocumentReview.json")).asJson
+            .body(ElFileBody("bodies/sdo/SDODocumentReview.json")).asJson
             .check(status.in(200, 304)))
 
       .exec(http("XUI${service}_270_010_DraftSDODocumentReviewProfile")
@@ -512,7 +512,7 @@ object EXUIFPLASDO {
       .post("/data/cases/${caseId}/events")
       .headers(FPLAHeader.headers_301)
             // .body(StringBody(""))
-            .body(ElFileBody("SDOFinalView.json")).asJson
+            .body(ElFileBody("bodies/sdo/SDOFinalView.json")).asJson
             .check(status.in(200, 304)))
 
 

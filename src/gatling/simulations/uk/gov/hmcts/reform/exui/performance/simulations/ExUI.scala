@@ -28,7 +28,7 @@ class ExUI extends Simulation {
 
 	// below Http Protocol is for the scenario - manage org
   val XUIHttpProtocol = Environment.HttpProtocol
-    .proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
+    //.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
     .baseUrl(orgurl)
     .headers(Environment.commonHeader)
 
@@ -75,14 +75,24 @@ class ExUI extends Simulation {
 	 ==================================================================================================*/
   val EXUIMCaseProbateScn = scenario("***** Probate Case Journey ******").repeat(1)
   {
-		feed(feedUserDataProbate).feed(Feeders.ProDataFeeder)
-			.exec(EXUIMCLogin.manageCasesHomePage)
-			.exec(EXUIMCLogin.manageCaseslogin)
-		//	.exec(EXUIMCLogin.termsnconditions)
-		.repeat(2) {
-			exec(EXUIProbateMC.casecreation)
-			}
-		.exec(EXUIMCLogin.manageCase_Logout)
+		exitBlockOnFail {
+			feed(feedUserDataProbate).feed(Feeders.ProDataFeeder)
+				.exec(EXUIMCLogin.manageCasesHomePage)
+				.exec(EXUIMCLogin.manageCaseslogin)
+				//	.exec(EXUIMCLogin.termsnconditions)
+				.repeat(2) {
+					exec(EXUIProbateMC.CreateProbateCase)
+					.exec(EXUIProbateMC.AddDeceasedDetails)
+					.exec(EXUIProbateMC.AddApplicationDetails)
+					.exec(EXUIProbateMC.ReviewAndSubmitApplication)
+				}
+				.exec(EXUIMCLogin.manageCase_Logout)
+		}
+		.exec {
+			session =>
+				println(session)
+				session
+		}
   }
 	
 	/*===============================================================================================
