@@ -13,7 +13,6 @@ object EXUIIACMC {
 
   val IdamUrl = Environment.idamURL
   val baseURL = Environment.baseURL
-  //  val feedUserDataIAC = csv("IACDataBackground.csv").circular
 
   val MinThinkTime = Environment.minThinkTimeIACC
   val MaxThinkTime = Environment.maxThinkTimeIACC
@@ -94,8 +93,8 @@ object EXUIIACMC {
       exec(http("XUI${service}_040_CreateCase")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
         .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .check(status.in(200, 304))).exitHereIfFailed
+        .header("accept", "application/json"))
+        .exitHereIfFailed
     }
     
     .pause(MinThinkTime, MaxThinkTime)
@@ -110,8 +109,7 @@ object EXUIIACMC {
         .get("/data/internal/case-types/Asylum/event-triggers/startAppeal?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
-        .check(status.is(200))
-        .check(jsonPath("$.event_token").optional.saveAs("event_token")))
+        .check(jsonPath("$.event_token").saveAs("event_token")))
 
       .exec(profile)
 
@@ -131,8 +129,7 @@ object EXUIIACMC {
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/iac/IACStartChecklist.json"))
-      .check(status.is(200)))
+      .body(ElFileBody("bodies/iac/IACStartChecklist.json"))  )
       .exitHereIfFailed
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -143,8 +140,7 @@ object EXUIIACMC {
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/iac/IACOutOfCountry.json"))
-      .check(status.is(200)))
+      .body(ElFileBody("bodies/iac/IACOutOfCountry.json")))
     }
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -159,8 +155,7 @@ object EXUIIACMC {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/iac/IACHomeOfficeDecision.json"))
-        .check(status.in(200, 304)))
+        .body(ElFileBody("bodies/iac/IACHomeOfficeDecision.json")))
     }
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -191,8 +186,7 @@ object EXUIIACMC {
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/iac/IACUploadNoticeDecision.json"))
-      .check(status.in(200, 304)))
+      .body(ElFileBody("bodies/iac/IACUploadNoticeDecision.json")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -208,8 +202,7 @@ object EXUIIACMC {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/iac/IACAppellantBasicDetails.json"))
-        .check(status.in(200, 304)))
+        .body(ElFileBody("bodies/iac/IACAppellantBasicDetails.json")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -225,8 +218,7 @@ object EXUIIACMC {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/iac/IACAppellantNationalities.json"))
-        .check(status.in(200, 304)))
+        .body(ElFileBody("bodies/iac/IACAppellantNationalities.json")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -256,8 +248,7 @@ object EXUIIACMC {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/iac/IACAppellantAddress.json"))
-        .check(status.in(200, 304)))
+        .body(ElFileBody("bodies/iac/IACAppellantAddress.json")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -273,8 +264,7 @@ object EXUIIACMC {
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/iac/IACContactPreference.json"))
-      .check(status.in(200, 304)))
+      .body(ElFileBody("bodies/iac/IACContactPreference.json")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -290,8 +280,7 @@ object EXUIIACMC {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/iac/IACAppealType.json"))
-        .check(status.in(200, 304)))
+        .body(ElFileBody("bodies/iac/IACAppealType.json")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -307,8 +296,7 @@ object EXUIIACMC {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/iac/IACAppealGrounds.json"))
-        .check(status.in(200, 304)))
+        .body(ElFileBody("bodies/iac/IACAppealGrounds.json")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -324,8 +312,7 @@ object EXUIIACMC {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/iac/IACDeportationOrder.json"))
-        .check(status.in(200, 304)))
+        .body(ElFileBody("bodies/iac/IACDeportationOrder.json")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -341,8 +328,7 @@ object EXUIIACMC {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/iac/IACNewMatters.json"))
-        .check(status.in(200, 304)))
+        .body(ElFileBody("bodies/iac/IACNewMatters.json")))
     }
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -357,8 +343,7 @@ object EXUIIACMC {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/iac/IACOtherAppeals.json"))
-        .check(status.in(200, 304)))
+        .body(ElFileBody("bodies/iac/IACOtherAppeals.json")))
     }
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -373,10 +358,9 @@ object EXUIIACMC {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/iac/IACLegalRepresentative.json"))
-        .check(status.in(200, 304)))
+        .body(ElFileBody("bodies/iac/IACLegalRepresentative.json")))
 
-        .exec(profile)
+      .exec(profile)
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -393,8 +377,7 @@ object EXUIIACMC {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-case.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/iac/IACSaveCase.json"))
-        .check(status.in(200, 304, 201))
-        .check(jsonPath("$.id").optional.saveAs("caseId")))
+        .check(jsonPath("$.id").saveAs("caseId")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -407,8 +390,7 @@ object EXUIIACMC {
     .group("XUI${service}_230_005_StartSubmitAppeal") {
       exec(http("XUI${service}_230_005_StartSubmitAppeal")
         .get("/case/IA/Asylum/${caseId}/trigger/submitAppeal")
-        .headers(Headers.navigationHeader)
-        .check(status.in(200, 304)))
+        .headers(Headers.navigationHeader))
 
       .exec(configurationui)
 
@@ -425,7 +407,8 @@ object EXUIIACMC {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .header("x-xsrf-token", "${XSRFToken}")
-        .check(status.in(200, 304, 302)))
+        // .check(status.in(200, 304, 302))
+        )
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -441,8 +424,7 @@ object EXUIIACMC {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .check(status.in(200, 304))
-        .check(jsonPath("$.event_token").optional.saveAs("event_token_submit")))
+        .check(jsonPath("$.event_token").saveAs("event_token_submit")))
 
     .exec(isAuthenticated)
 
@@ -464,8 +446,7 @@ object EXUIIACMC {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/iac/IACAppealDeclaration.json"))
-        .check(status.in(200, 304)))
+        .body(ElFileBody("bodies/iac/IACAppealDeclaration.json")))
 
       .exec(profile)
       
@@ -484,8 +465,7 @@ object EXUIIACMC {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/iac/IACSubmitAppeal.json"))
-        .check(status.in(200, 304, 201)))
+        .body(ElFileBody("bodies/iac/IACSubmitAppeal.json")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -501,7 +481,6 @@ object EXUIIACMC {
         .get("/api/caseshare/cases?case_ids=${caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
-        .check(status.in(200, 304))
         .check(jsonPath("$..email").find(0).optional.saveAs("user0"))
         .check(jsonPath("$..firstName").find(0).optional.saveAs("firstName"))
         .check(jsonPath("$..lastName").find(0).optional.saveAs("lastName"))
@@ -511,7 +490,6 @@ object EXUIIACMC {
         .get("/api/caseshare/users")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
-        .check(status.in(200, 304))
         .check(jsonPath("$..email").find(0).optional.saveAs("user1"))
         .check(jsonPath("$..firstName").find(0).optional.saveAs("firstName1"))
         .check(jsonPath("$..lastName").find(0).optional.saveAs("lastName1"))
@@ -525,8 +503,7 @@ object EXUIIACMC {
         .post("/api/caseshare/case-assignments")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
-        .body(ElFileBody("bodies/iac/IACShareACase.json")).asJson
-        .check(status.in(200, 201)))
+        .body(ElFileBody("bodies/iac/IACShareACase.json")))
     }
 
     .pause(MinThinkTime , MaxThinkTime )
