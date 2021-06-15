@@ -224,18 +224,12 @@ class ExUI extends Simulation {
    ==================================================================================================*/
 	
 	 setUp(
-		 EXUIMCaseProbateScn.inject(atOnceUsers(1)).disablePauses,
-		 EXUIMCaseCreationIACScn.inject(atOnceUsers(1)).disablePauses,
-		 EXUIMCaseCreationFPLAScn.inject(atOnceUsers(1)).disablePauses,
-		 EXUIMCaseCaseworkerScn.inject(atOnceUsers(1)).disablePauses,
-		 EXUIMCaseCreationDivorceScn.inject(atOnceUsers(1)).disablePauses,
-		 EXUIFinancialRemedyScn.inject(atOnceUsers(1)).disablePauses
-		 //EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(238) during (1200)),
-		 //EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(20) during (1200)),
-		 //EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(7) during (1200)),
-		 //EXUIMCaseCaseworkerScn.inject(nothingFor(55),rampUsers(900) during (1200)),
-		 //EXUIMCaseCreationDivorceScn.inject(nothingFor(65),rampUsers(238) during (1200)),
-		 //EXUIFinancialRemedyScn.inject(nothingFor(75),rampUsers(98) during (1200))
+		 EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(238) during (1200)),
+		 EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(20) during (1200)),
+		 EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(7) during (1200)),
+		 EXUIMCaseCaseworkerScn.inject(nothingFor(55),rampUsers(900) during (1200)),
+		 EXUIMCaseCreationDivorceScn.inject(nothingFor(65),rampUsers(238) during (1200)),
+		 EXUIFinancialRemedyScn.inject(nothingFor(75),rampUsers(98) during (1200))
         ).protocols(MChttpProtocol)
 
 
