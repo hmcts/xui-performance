@@ -1,0 +1,82 @@
+{
+  "data": {
+     "legalRepCompany": "test co",
+     "legalRepName": "John",
+     "legalRepReferenceNumber": "123",
+     "isFeePaymentEnabled": null,
+     "isRemissionsEnabled": null
+  },
+  "event": {
+     "id": "startAppeal",
+     "summary": "",
+     "description": ""
+  },
+  "event_data": {
+     "isOutOfCountryEnabled": "Yes",
+     "checklist": {
+        "checklist2": [
+           "isNotDetained"
+        ],
+        "checklist7": [
+           "isNotEUDecision"
+        ]
+     },
+     "appellantInUk": "Yes",
+     "homeOfficeReferenceNumber": "123456789",
+     "homeOfficeDecisionDate": "${currentDate}",
+     "uploadTheNoticeOfDecisionDocs": [
+        {
+           "value": {
+              "description": "test doc",
+              "document": {
+                 "document_url": "${DocumentURL}",
+                 "document_binary_url": "${DocumentURL}/binary",
+                 "document_filename": "3MB.pdf"
+              }
+           },
+           "id": null
+        }
+     ],
+     "appellantTitle": "Mr",
+     "appellantGivenNames": "Steve",
+     "appellantFamilyName": "Test",
+     "appellantDateOfBirth": "1980-09-01",
+     "appellantStateless": "hasNationality",
+     "appellantNationalities": [
+        {
+           "value": {
+              "code": "AF"
+           },
+           "id": null
+        }
+     ],
+     "appellantHasFixedAddress": "Yes",
+     "appellantAddress": {
+        "AddressLine1": "2 Hibernia Gardens",
+        "AddressLine2": "",
+        "AddressLine3": "",
+        "PostTown": "Hounslow",
+        "County": "",
+        "PostCode": "TW3 3SD",
+        "Country": "United Kingdom"
+     },
+     "contactPreference": "wantsEmail",
+     "email": "iacperftest@test.com",
+     "appealType": "refusalOfHumanRights",
+     "appealGroundsHumanRightsRefusal": {
+        "values": [
+           "protectionHumanRights"
+        ]
+     },
+     "deportationOrderOptions": "No",
+     "hasNewMatters": "No",
+     "hasOtherAppeals": "No",
+     "legalRepCompany": "test co",
+     "legalRepName": "John",
+     "legalRepReferenceNumber": "123",
+     "isFeePaymentEnabled": null,
+     "isRemissionsEnabled": null
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false
+}
