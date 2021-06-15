@@ -3,7 +3,7 @@
      "appellantHasFixedAddress": "Yes",
      "appellantAddress": {
         "AddressLine1": "${addressLines(0)}",
-        "AddressLine2": "",
+        "AddressLine2": "${addressLines(1)}",
         "AddressLine3": "",
         "PostTown": "${addressLines(2)}",
         "County": "",
