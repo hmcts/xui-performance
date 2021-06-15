@@ -21,8 +21,8 @@ object EXUIProbateMC {
   val CreateProbateCase =
 
     //Set session variables
-    exec(_.setAll(  "caseEmail" -> ("exui_case" + Common.randomString(6) + "@mailtest.gov.uk"),
-                    "appRef" -> ("case ref perftest" + Common.randomString(6)),
+    exec(_.setAll(  "caseEmail" -> ("exui-probate-" + Common.randomString(6) + "@mailtest.gov.uk"),
+                    "appRef" -> ("RefPerf" + Common.randomString(6)),
                     "deceasedForename" -> ("Perf" + Common.randomString(5)),
                     "deceasedSurname" -> ("Test" + Common.randomString(5)),
                     "dobDay" -> Common.getDay(),
