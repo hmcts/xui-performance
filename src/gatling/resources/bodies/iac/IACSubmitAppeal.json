@@ -1,0 +1,14 @@
+{
+  "data": {
+     "legalRepDeclaration": [
+        "hasDeclared"
+     ]
+  },
+  "event": {
+     "id": "submitAppeal",
+     "summary": "",
+     "description": ""
+  },
+  "event_token": "${event_token_submit}",
+  "ignore_warning": false
+}
