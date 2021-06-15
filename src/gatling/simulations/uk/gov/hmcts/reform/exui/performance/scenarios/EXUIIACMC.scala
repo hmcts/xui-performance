@@ -25,6 +25,8 @@ object EXUIIACMC {
   val now = new Date()
   val timeStamp = sdfDate.format(now)
 
+  val postcodeFeeder = csv("postcodes.csv").random
+
   //Common objects required as part of the e2e journey
 
   val profile =
@@ -68,6 +70,16 @@ object EXUIIACMC {
       .headers(Headers.commonHeader)
       .header("accept", "application/json, text/plain, */*")
       .check(substring("true")))
+
+  val postcodeLookup =
+    feed(postcodeFeeder)
+      .exec(http("XUI${service}_000_PostcodeLookup")
+        .get("/api/addresses?postcode=${postcode}")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json")
+        .check(jsonPath("$.header.totalresults").ofType[Int].gt(0))
+        .check(regex(""""(?:BUILDING|ORGANISATION)_.+" : "(.+?)",(?s).*?"(?:DEPENDENT_LOCALITY|THOROUGHFARE_NAME)" : "(.+?)",.*?"POST_TOWN" : "(.+?)",.*?"POSTCODE" : "(.+?)"""")
+          .ofType[(String, String, String, String)].findRandom.saveAs("addressLines")))
 
   /*======================================================================================
   *Business process : Following business process is for IAC Case Creation
@@ -229,10 +241,7 @@ object EXUIIACMC {
 ======================================================================================*/
     
     .group("XUI${service}_120_StartAppealDetailsAddressSearch") {
-      exec(http("XUI${service}_120_StartAppealDetailsAddressSearch")
-        .get("/api/addresses?postcode=TW33SD")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json"))
+      exec(postcodeLookup)
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -481,19 +490,19 @@ object EXUIIACMC {
         .get("/api/caseshare/cases?case_ids=${caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
-        .check(jsonPath("$..email").find(0).optional.saveAs("user0"))
-        .check(jsonPath("$..firstName").find(0).optional.saveAs("firstName"))
-        .check(jsonPath("$..lastName").find(0).optional.saveAs("lastName"))
-        .check(jsonPath("$..idamId").find(0).optional.saveAs("idamId")))
+        .check(jsonPath("$..email").find(0).saveAs("user0"))
+        .check(jsonPath("$..firstName").find(0).saveAs("firstName"))
+        .check(jsonPath("$..lastName").find(0).saveAs("lastName"))
+        .check(jsonPath("$..idamId").find(0).saveAs("idamId")))
     
       .exec(http("XUI${service}_270_010_ShareACaseUsers")
         .get("/api/caseshare/users")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
-        .check(jsonPath("$..email").find(0).optional.saveAs("user1"))
-        .check(jsonPath("$..firstName").find(0).optional.saveAs("firstName1"))
-        .check(jsonPath("$..lastName").find(0).optional.saveAs("lastName1"))
-        .check(jsonPath("$..idamId").find(0).optional.saveAs("idamId1")))
+        .check(jsonPath("$..email").find(0).saveAs("user1"))
+        .check(jsonPath("$..firstName").find(0).saveAs("firstName1"))
+        .check(jsonPath("$..lastName").find(0).saveAs("lastName1"))
+        .check(jsonPath("$..idamId").find(0).saveAs("idamId1")))
     }
 
     .pause(MinThinkTime , MaxThinkTime)
