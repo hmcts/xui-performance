@@ -5,7 +5,7 @@ import java.util.Date
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import uk.gov.hmcts.reform.exui.performance.scenarios.utils.{Environment, IACHeader}
+import uk.gov.hmcts.reform.exui.performance.scenarios.utils.{Environment, Headers}
 
 import scala.util.Random
 
@@ -25,6 +25,50 @@ object EXUIIACMC {
   val sdfDate = new SimpleDateFormat("yyyy-MM-dd")
   val now = new Date()
   val timeStamp = sdfDate.format(now)
+
+  //Common objects required as part of the e2e journey
+
+  val profile =
+    exec(http("XUI${service}_000_Profile")
+      .get("/data/internal/profile")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8")
+      .check(jsonPath("$.user.idam.id").notNull))
+
+  val configurationui =
+    exec(http("XUI${service}_000_ConfigurationUI")
+      .get("/external/configuration-ui/")
+      .headers(Headers.commonHeader)
+      .header("accept", "*/*")
+      .check(substring("ccdGatewayUrl")))
+
+  val configUI =
+    exec(http("XUI${service}_000_ConfigUI")
+      .get("/external/config/ui")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .check(substring("ccdGatewayUrl")))
+
+  val TsAndCs =
+    exec(http("XUI${service}_000_TsAndCs")
+      .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .check(substring("false")))
+
+  val userDetails =
+    exec(http("XUI${service}_000_UserDetails")
+      .get("/api/user/details")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .check(substring("userInfo")))
+
+  val isAuthenticated =
+    exec(http("XUI${service}_000_IsAuthenticated")
+      .get("/auth/isAuthenticated")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .check(substring("true")))
 
   /*======================================================================================
   *Business process : Following business process is for IAC Case Creation
@@ -49,7 +93,8 @@ object EXUIIACMC {
     .group("XUI${service}_040_CreateCase") {
       exec(http("XUI${service}_040_CreateCase")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
-        .headers(IACHeader.headers_createcase)
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json")
         .check(status.in(200, 304))).exitHereIfFailed
     }
     
@@ -63,19 +108,14 @@ object EXUIIACMC {
     .group("XUI${service}_050_StartCreateCase1") {
       exec(http("XUI${service}_050_005_StartCreateCase1")
         .get("/data/internal/case-types/Asylum/event-triggers/startAppeal?ignore-warning=false")
-        .headers(IACHeader.headers_startcreatecase)
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
         .check(status.is(200))
         .check(jsonPath("$.event_token").optional.saveAs("event_token")))
 
-      .exec(http("XUI${service}_050_010_StartCreateCase2")
-        .get("/data/internal/case-types/Asylum/event-triggers/startAppeal?ignore-warning=false")
-        .headers(IACHeader.headers_startcreatecase)
-        .check(status.is(200)))
+      .exec(profile)
 
-      .exec(http("XUI${service}_050_015_CaseCreateProfile")
-        .get("/data/internal/profile")
-        .headers(IACHeader.headers_data_internal)
-        .check(status.in(200, 304, 302)))
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(Environment.baseDomain).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -88,10 +128,23 @@ object EXUIIACMC {
     .group("XUI${service}_060_StartAppealChecklist") {
       exec(http("XUI${service}_060_StartAppealChecklist")
       .post("/data/case-types/Asylum/validate?pageId=startAppealchecklist")
-      .headers(IACHeader.headers_9)
-      .body(StringBody("{\n  \"data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ]\n    }\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ]\n    }\n  }\n}"))
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(ElFileBody("bodies/iac/IACStartChecklist.json"))
       .check(status.is(200)))
       .exitHereIfFailed
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+    .group("XUI${service}_070_StartAppealOutOfCountry") {
+      exec(http("XUI${service}_070_StartAppealOutOfCountry")
+      .post("/data/case-types/Asylum/validate?pageId=startAppealoutOfCountry")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(ElFileBody("bodies/iac/IACOutOfCountry.json"))
+      .check(status.is(200)))
     }
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -100,11 +153,13 @@ object EXUIIACMC {
   *Below group contains all the requests for appealing home office decision
   ======================================================================================*/
 
-    .group("XUI${service}_070_StartAppealHomeOfficeDecision") {
-      exec(http("XUI${service}_070_StartAppealHomeOfficeDecision")
+    .group("XUI${service}_080_StartAppealHomeOfficeDecision") {
+      exec(http("XUI${service}_080_StartAppealHomeOfficeDecision")
       .post("/data/case-types/Asylum/validate?pageId=startAppealhomeOfficeDecision")
-        .headers(IACHeader.headers_homeofficedecision)
-        .body(StringBody("{\n  \"data\": {\n    \"homeOfficeReferenceNumber\": \"12345678\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\"\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"123456783\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\"\n  }\n}"))
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACHomeOfficeDecision.json"))
         .check(status.in(200, 304)))
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -114,11 +169,29 @@ object EXUIIACMC {
 *Below group contains all the requests for uploading notification Decision
 ======================================================================================*/
 
-    .group("XUI${service}_080_StartUpoadNoticeDecision") {
-      exec(http("XUI${service}_080_StartUpoadNoticeDecision")
+    .group("XUI${service}_090_UploadNoticeDecision") {
+      exec(http("XUI${service}_090_005_UploadNoticeDecision")
+        .post("/documents")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json, text/plain, */*")
+        .header("content-type", "multipart/form-data")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .bodyPart(RawFileBodyPart("files", "3MB.pdf")
+          .fileName("3MB.pdf")
+          .transferEncoding("binary"))
+        .asMultipartForm
+        .formParam("classification", "PUBLIC")
+        .check(substring("originalDocumentName"))
+        .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL")))
+    }
+
+    .group("XUI${service}_090_010_StartUploadNoticeDecision") {
+      exec(http("XUI${service}_090_010_StartUploadNoticeDecision")
       .post("/data/case-types/Asylum/validate?pageId=startAppealuploadTheNoticeOfDecision")
-      .headers(IACHeader.headers_uploadnotice)
-      .body(StringBody("{\n  \"data\": {\n    \"uploadTheNoticeOfDecisionExplanation\": null\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"123456783\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"uploadTheNoticeOfDecisionExplanation\": null\n  }\n}"))
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(ElFileBody("bodies/iac/IACUploadNoticeDecision.json"))
       .check(status.in(200, 304)))
     }
 
@@ -129,11 +202,13 @@ object EXUIIACMC {
 *Below group contains all the requests for Appeal Basic Details
 ======================================================================================*/
 
-    .group("XUI${service}_090_StartAppealBasicDetails") {
-      exec(http("XUI${service}_090_StartAppealBasicDetails")
+    .group("XUI${service}_100_StartAppealBasicDetails") {
+      exec(http("XUI${service}_100_StartAppealBasicDetails")
         .post("/data/case-types/Asylum/validate?pageId=startAppealappellantBasicDetails")
-        .headers(IACHeader.headers_basicdetails)
-        .body(StringBody("{\n  \"data\": {\n    \"appellantTitle\": \"Mr\",\n    \"appellantGivenNames\": \"appealFname\",\n    \"appellantFamilyName\": \"appealLname\",\n    \"appellantDateOfBirth\": \"1995-08-01\"\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"123456783\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"uploadTheNoticeOfDecisionExplanation\": null,\n    \"appellantTitle\": \"Mr\",\n    \"appellantGivenNames\": \"appealFname\",\n    \"appellantFamilyName\": \"appealLname\",\n    \"appellantDateOfBirth\": \"1995-08-01\"\n  }\n}"))
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACAppellantBasicDetails.json"))
         .check(status.in(200, 304)))
     }
 
@@ -144,11 +219,13 @@ object EXUIIACMC {
 *Below group contains all the requests for Appealant nationality
 ======================================================================================*/
 
-    .group("XUI${service}_100_StartAppealantNationality") {
-      exec(http("XUI${service}_100_StartAppealantNationality")
+    .group("XUI${service}_110_StartAppealantNationality") {
+      exec(http("XUI${service}_110_StartAppealantNationality")
         .post("/data/case-types/Asylum/validate?pageId=startAppealappellantNationalities")
-        .headers(IACHeader.headers_nationality)
-        .body(StringBody("{\n  \"data\": {\n    \"appellantStateless\": \"hasNationality\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ]\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"123456783\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"uploadTheNoticeOfDecisionExplanation\": null,\n    \"appellantTitle\": \"Mr\",\n    \"appellantGivenNames\": \"appealFname\",\n    \"appellantFamilyName\": \"appealLname\",\n    \"appellantDateOfBirth\": \"1995-08-01\",\n    \"appellantStateless\": \"hasNationality\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ]\n  }\n}"))
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACAppellantNationalities.json"))
         .check(status.in(200, 304)))
     }
 
@@ -159,10 +236,11 @@ object EXUIIACMC {
 * Below group contains all the requests for Appealant address search
 ======================================================================================*/
     
-    .group("XUI${service}_110_StartAppealDetailsAddressSearch") {
-      exec(http("XUI${service}_110_StartAppealDetailsAddressSearch")
+    .group("XUI${service}_120_StartAppealDetailsAddressSearch") {
+      exec(http("XUI${service}_120_StartAppealDetailsAddressSearch")
         .get("/api/addresses?postcode=TW33SD")
-        .headers(IACHeader.headers_postcode))
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json"))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -172,11 +250,13 @@ object EXUIIACMC {
 * Below group contains all the requests for Appealant address
 ======================================================================================*/
 
-    .group("XUI${service}_120_StartAppealAppellantAddress") {
-      exec(http("XUI${service}_120_StartAppealAppellantAddress")
+    .group("XUI${service}_130_StartAppealAppellantAddress") {
+      exec(http("XUI${service}_130_StartAppealAppellantAddress")
         .post("/data/case-types/Asylum/validate?pageId=startAppealappellantAddress")
-        .headers(IACHeader.headers_appelantaddress)
-        .body(StringBody("{\n  \"data\": {\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"10 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    }\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"123456783\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"uploadTheNoticeOfDecisionExplanation\": null,\n    \"appellantTitle\": \"Mr\",\n    \"appellantGivenNames\": \"appealFname\",\n    \"appellantFamilyName\": \"appealLname\",\n    \"appellantDateOfBirth\": \"1995-08-01\",\n    \"appellantStateless\": \"hasNationality\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"10 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    }\n  }\n}"))
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACAppellantAddress.json"))
         .check(status.in(200, 304)))
     }
 
@@ -187,11 +267,13 @@ object EXUIIACMC {
 *Below group contains all the requests for contact preference
 ======================================================================================*/
       
-    .group("XUI${service}_130_AppellantContactPref") {
-      exec(http("XUI${service}_130_AppellantContactPref")
+    .group("XUI${service}_140_AppellantContactPref") {
+      exec(http("XUI${service}_140_AppellantContactPref")
       .post("/data/case-types/Asylum/validate?pageId=startAppealappellantContactPreference")
-      .headers(IACHeader.headers_contactpref)
-      .body(StringBody("{\n  \"data\": {\n    \"contactPreference\": \"wantsEmail\",\n    \"email\": \"iacpost@mailinator.com\"\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"123456783\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"uploadTheNoticeOfDecisionExplanation\": null,\n    \"appellantTitle\": \"Mr\",\n    \"appellantGivenNames\": \"asasassa\",\n    \"appellantFamilyName\": \"fgfgfgfgfgfgfgfgfgf\",\n    \"appellantDateOfBirth\": \"1995-08-01\",\n    \"appellantStateless\": \"hasNationality\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"10 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    },\n    \"contactPreference\": \"wantsEmail\",\n    \"email\": \"iacpost@mailinator.com\"\n  }\n}"))
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(ElFileBody("bodies/iac/IACContactPreference.json"))
       .check(status.in(200, 304)))
     }
 
@@ -202,11 +284,13 @@ object EXUIIACMC {
 *Below group contains all the requests for entering the details of appeal type
 ======================================================================================*/
 
-    .group("XUI${service}_140_StartAppealAppealType") {
-      exec(http("XUI${service}_140_StartAppealAppealType")
+    .group("XUI${service}_150_StartAppealAppealType") {
+      exec(http("XUI${service}_150_StartAppealAppealType")
         .post("/data/case-types/Asylum/validate?pageId=startAppealappealType")
-        .headers(IACHeader.headers_appealtype)
-        .body(StringBody("{\n  \"data\": {\n    \"appealType\": \"refusalOfHumanRights\"\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"123456783\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"uploadTheNoticeOfDecisionExplanation\": null,\n    \"appellantTitle\": \"Mr\",\n    \"appellantGivenNames\": \"appealFname\",\n    \"appellantFamilyName\": \"appealLname\",\n    \"appellantDateOfBirth\": \"1995-08-01\",\n    \"appellantStateless\": \"hasNationality\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"10 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    },\n    \"contactPreference\": \"wantsEmail\",\n    \"email\": \"iacpost@mailinator.com\",\n    \"appealType\": \"refusalOfHumanRights\"\n  }\n}"))
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACAppealType.json"))
         .check(status.in(200, 304)))
     }
 
@@ -217,26 +301,13 @@ object EXUIIACMC {
 *Below group contains all the requests for entering the details of ground revocation
 ======================================================================================*/
 
-    .group("XUI${service}_150_StartAppealGroundsRevocation") {
-      exec(http("XUI${service}_150_StartAppealGroundsRevocation")
+    .group("XUI${service}_160_StartAppealGroundsRevocation") {
+      exec(http("XUI${service}_160_StartAppealGroundsRevocation")
         .post("/data/case-types/Asylum/validate?pageId=startAppealappealGroundsHumanRightsRefusal")
-        .headers(IACHeader.headers_humanrights)
-        .body(StringBody("{\n  \"data\": {\n    \"appealGroundsHumanRightsRefusal\": {\n      \"values\": [\n        \"protectionHumanRights\"\n      ]\n    }\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"123456783\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"uploadTheNoticeOfDecisionExplanation\": null,\n    \"appellantTitle\": \"Mr\",\n    \"appellantGivenNames\": \"appealFname\",\n    \"appellantFamilyName\": \"appealLname\",\n    \"appellantDateOfBirth\": \"1995-08-01\",\n    \"appellantStateless\": \"hasNationality\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"10 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    },\n    \"contactPreference\": \"wantsEmail\",\n    \"email\": \"iacpost@mailinator.com\",\n    \"appealType\": \"refusalOfHumanRights\",\n    \"appealGroundsHumanRightsRefusal\": {\n      \"values\": [\n        \"protectionHumanRights\"\n      ]\n    }\n  }\n}"))
-        .check(status.in(200, 304)))
-    }
-
-    .pause(MinThinkTime, MaxThinkTime)
-
-/*======================================================================================
-*Business process : Following business process is for IAC Case Creation
-*Below group contains all the requests for entering the details of appeal new matters
-======================================================================================*/
-
-    .group("XUI${service}_160_StartAppealNewMatters") {
-      exec(http("XUI${service}_160_StartAppealNewMatters")
-        .post("/data/case-types/Asylum/validate?pageId=startAppealdeportationOrderPage")
-        .headers(IACHeader.headers_orderpage)
-        .body(StringBody("{\n  \"data\": {\n    \"deportationOrderOptions\": \"No\"\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"123456783\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"uploadTheNoticeOfDecisionExplanation\": null,\n    \"appellantTitle\": \"Mr\",\n    \"appellantGivenNames\": \"appealFname\",\n    \"appellantFamilyName\": \"appealLname\",\n    \"appellantDateOfBirth\": \"1995-08-01\",\n    \"appellantStateless\": \"hasNationality\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"10 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    },\n    \"contactPreference\": \"wantsEmail\",\n    \"email\": \"iacpost@mailinator.com\",\n    \"appealType\": \"refusalOfHumanRights\",\n    \"appealGroundsHumanRightsRefusal\": {\n      \"values\": [\n        \"protectionHumanRights\"\n      ]\n    },\n    \"deportationOrderOptions\": \"No\"\n  }\n}"))
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACAppealGrounds.json"))
         .check(status.in(200, 304)))
     }
 
@@ -249,9 +320,28 @@ object EXUIIACMC {
 
     .group("XUI${service}_170_StartAppealNewMatters") {
       exec(http("XUI${service}_170_StartAppealNewMatters")
+        .post("/data/case-types/Asylum/validate?pageId=startAppealdeportationOrderPage")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACDeportationOrder.json"))
+        .check(status.in(200, 304)))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+/*======================================================================================
+*Business process : Following business process is for IAC Case Creation
+*Below group contains all the requests for entering the details of appeal new matters
+======================================================================================*/
+
+    .group("XUI${service}_180_StartAppealNewMatters") {
+      exec(http("XUI${service}_180_StartAppealNewMatters")
         .post("/data/case-types/Asylum/validate?pageId=startAppealnewMatters")
-        .headers(IACHeader.headers_newmatters)
-        .body(StringBody("{\n  \"data\": {\n    \"hasNewMatters\": \"No\"\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"123456783\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"uploadTheNoticeOfDecisionExplanation\": null,\n    \"appellantTitle\": \"Mr\",\n    \"appellantGivenNames\": \"appealFname\",\n    \"appellantFamilyName\": \"appealLname\",\n    \"appellantDateOfBirth\": \"1995-08-01\",\n    \"appellantStateless\": \"hasNationality\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"10 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    },\n    \"contactPreference\": \"wantsEmail\",\n    \"email\": \"iacpost@mailinator.com\",\n    \"appealType\": \"refusalOfHumanRights\",\n    \"appealGroundsHumanRightsRefusal\": {\n      \"values\": [\n        \"protectionHumanRights\"\n      ]\n    },\n    \"deportationOrderOptions\": \"No\",\n    \"hasNewMatters\": \"No\"\n  }\n}"))
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACNewMatters.json"))
         .check(status.in(200, 304)))
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -261,11 +351,13 @@ object EXUIIACMC {
 *Below group contains all the requests for entering the details if appealant has any other appeals
 ======================================================================================*/
 
-    .group("XUI${service}_180_StartAppealHasOtherAppeals") {
-      exec(http("XUI${service}_180_StartAppealHasOtherAppeals")
+    .group("XUI${service}_190_StartAppealHasOtherAppeals") {
+      exec(http("XUI${service}_190_StartAppealHasOtherAppeals")
         .post("/data/case-types/Asylum/validate?pageId=startAppealhasOtherAppeals")
-        .headers(IACHeader.headers_otherappeals)
-        .body(StringBody("{\n  \"data\": {\n    \"hasOtherAppeals\": \"No\"\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"123456783\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"uploadTheNoticeOfDecisionExplanation\": null,\n    \"appellantTitle\": \"Mr\",\n    \"appellantGivenNames\": \"appealFname\",\n    \"appellantFamilyName\": \"appealLname\",\n    \"appellantDateOfBirth\": \"1995-08-01\",\n    \"appellantStateless\": \"hasNationality\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"10 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    },\n    \"contactPreference\": \"wantsEmail\",\n    \"email\": \"iacpost@mailinator.com\",\n    \"appealType\": \"refusalOfHumanRights\",\n    \"appealGroundsHumanRightsRefusal\": {\n      \"values\": [\n        \"protectionHumanRights\"\n      ]\n    },\n    \"deportationOrderOptions\": \"No\",\n    \"hasNewMatters\": \"No\",\n    \"hasOtherAppeals\": \"No\"\n  }\n}"))
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACOtherAppeals.json"))
         .check(status.in(200, 304)))
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -275,19 +367,16 @@ object EXUIIACMC {
 *Below group contains all the requests for entering the details of appeallant legal representative details
 ======================================================================================*/
 
-    .group("XUI${service}_190_StartAppealLegalRepresentative") {
-      exec(http("XUI${service}_190_StartAppealLegalRepresentative")
+    .group("XUI${service}_200_StartAppealLegalRepresentative") {
+      exec(http("XUI${service}_200_StartAppealLegalRepresentative")
         .post("/data/case-types/Asylum/validate?pageId=startAppeallegalRepresentativeDetails")
-        .headers(IACHeader.headers_repdetails)
-        .body(StringBody("{\n  \"data\": {\n    \"legalRepCompany\": \"legalrepC\",\n    \"legalRepName\": \"legalrepName\",\n    \"legalRepReferenceNumber\": \"myref\",\n    \"isFeePaymentEnabled\": null\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ]\n    },\n    \"homeOfficeReferenceNumber\": \"123456783\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"uploadTheNoticeOfDecisionExplanation\": null,\n    \"appellantTitle\": \"Mr\",\n    \"appellantGivenNames\": \"appealFname\",\n    \"appellantFamilyName\": \"appealLname\",\n    \"appellantDateOfBirth\": \"1995-08-01\",\n    \"appellantStateless\": \"hasNationality\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"10 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    },\n    \"contactPreference\": \"wantsEmail\",\n    \"email\": \"iacpost@mailinator.com\",\n    \"appealType\": \"refusalOfHumanRights\",\n    \"appealGroundsHumanRightsRefusal\": {\n      \"values\": [\n        \"protectionHumanRights\"\n      ]\n    },\n    \"deportationOrderOptions\": \"No\",\n    \"hasNewMatters\": \"No\",\n    \"hasOtherAppeals\": \"No\",\n    \"legalRepCompany\": \"legalrepC\",\n     \"legalRepName\": \"legalrepName\",\n    \"legalRepReferenceNumber\": \"myref\",\n    \"isFeePaymentEnabled\": null\n  }\n}"))
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACLegalRepresentative.json"))
         .check(status.in(200, 304)))
-    }
 
-    .group("XUI${service}_200_RepresentativeProfile") {
-      exec(http("XUI${service}_200_RepresentativeProfile")
-        .get("/data/internal/profile")
-        .headers(IACHeader.headers_repprofile)
-        .check(status.in(200, 304, 302)))
+        .exec(profile)
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -297,11 +386,13 @@ object EXUIIACMC {
 *Below group contains all the requests for starting appeal case save
 ======================================================================================*/
 
-    .group("XUI${service}_210_StartAppealCaseSave") {
-      exec(http("XUI${service}_210_StartAppealCaseSave")
+    .group("XUI${service}_220_StartAppealCaseSave") {
+      exec(http("XUI${service}_220_StartAppealCaseSave")
         .post("/data/case-types/Asylum/cases?ignore-warning=false")
-        .headers(IACHeader.headers_casesave)
-        .body(StringBody("{\n  \"data\": {\n    \"checklist\": {\n      \"checklist5\": [\n        \"isResidingInUK\"\n      ],\n      \"checklist1\": [],\n      \"checklist2\": [\n        \"isNotDetained\"\n      ],\n      \"checklist7\": [\n        \"isNotEUDecision\"\n      ],\n      \"checklist3\": [],\n      \"checklist4\": [],\n      \"checklist6\": []\n    },\n    \"homeOfficeReferenceNumber\": \"123456783\",\n    \"homeOfficeDecisionDate\": \"${currentDate}\",\n    \"uploadTheNoticeOfDecisionExplanation\": null,\n    \"appellantTitle\": \"Mr\",\n    \"appellantGivenNames\": \"appealFname\",\n    \"appellantFamilyName\": \"appealLname\",\n    \"appellantDateOfBirth\": \"1995-08-01\",\n    \"appellantStateless\": \"hasNationality\",\n    \"appellantNationalities\": [\n      {\n        \"id\": null,\n        \"value\": {\n          \"code\": \"ZW\"\n        }\n      }\n    ],\n    \"appellantHasFixedAddress\": \"Yes\",\n    \"appellantAddress\": {\n      \"AddressLine1\": \"10 Hibernia Gardens\",\n      \"AddressLine2\": \"\",\n      \"AddressLine3\": \"\",\n      \"PostTown\": \"Hounslow\",\n      \"County\": \"\",\n      \"PostCode\": \"TW3 3SD\",\n      \"Country\": \"United Kingdom\"\n    },\n    \"contactPreference\": \"wantsEmail\",\n    \"email\": \"iacpost@mailinator.com\",\n    \"mobileNumber\": null,\n    \"appealType\": \"refusalOfHumanRights\",\n    \"appealGroundsHumanRightsRefusal\": {\n      \"values\": [\n        \"protectionHumanRights\"\n      ]\n    },\n    \"deportationOrderOptions\": \"No\",\n    \"hasNewMatters\": \"No\",\n    \"newMatters\": null,\n    \"hasOtherAppeals\": \"No\",\n    \"legalRepCompany\": \"legalrepC\",\n    \"legalRepName\": \"legalrepN\",\n    \"legalRepReferenceNumber\": \"myref\",\n    \"isFeePaymentEnabled\": null\n  },\n  \"event\": {\n    \"id\": \"startAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"draft_id\": null\n}"))
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-case.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACSaveCase.json"))
         .check(status.in(200, 304, 201))
         .check(jsonPath("$.id").optional.saveAs("caseId")))
     }
@@ -313,29 +404,27 @@ object EXUIIACMC {
 *Below group contains all the requests for starting start submit appeal
 ======================================================================================*/
 
-    .group("XUI${service}_220_005_StartSubmitAppeal") {
-      exec(http("XUI${service}_220_005_StartSubmitAppeal")
+    .group("XUI${service}_230_005_StartSubmitAppeal") {
+      exec(http("XUI${service}_230_005_StartSubmitAppeal")
         .get("/case/IA/Asylum/${caseId}/trigger/submitAppeal")
-        .headers(IACHeader.headers_submitappeal)
-        .check(status.in(200, 304)))
-      
-      .exec(http("XUI${service}_220_010_StartSubmitAppealUI").get("/external/config/ui")
-        .headers(IACHeader.headers_configui)
-        .check(status.in(200, 304)))
-      
-      .exec(http("XUI${service}_220_015_SubmitAppealTCEnabled1")
-        .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
-        .headers(IACHeader.headers_configui)
-        .check(status.in(200, 304)))
-        
-      .exec(http("XUI${service}_220_020_IsAuthenticated")
-        .get("/auth/isAuthenticated")
-        .headers(IACHeader.headers_configui)
+        .headers(Headers.navigationHeader)
         .check(status.in(200, 304)))
 
-      .exec(http("XUI${service}_220_025_SaveCaseView")
+      .exec(configurationui)
+
+      .exec(configUI)
+
+      .exec(TsAndCs)
+
+      .exec(userDetails)
+
+      .exec(isAuthenticated)
+
+      .exec(http("XUI${service}_230_035_SaveCaseView")
         .get("/data/internal/cases/${caseId}")
-        .headers(IACHeader.headers_caseview)
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
+        .header("x-xsrf-token", "${XSRFToken}")
         .check(status.in(200, 304, 302)))
     }
 
@@ -346,26 +435,21 @@ object EXUIIACMC {
 *Below group contains all the requests for starting submit appeal
 ======================================================================================*/
 
-    .group("XUI${service}_230_SubmitAppeal") {
-      exec(http("XUI${service}_230_005_SubmitAppeal").get("/data/internal/cases/${caseId}/event-triggers/submitAppeal?ignore-warning=false")
-        .headers(IACHeader.headers_newsubmitappeal)
+    .group("XUI${service}_240_SubmitAppeal") {
+      exec(http("XUI${service}_240_005_SubmitAppeal")
+      .get("/data/internal/cases/${caseId}/event-triggers/submitAppeal?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
         .check(status.in(200, 304))
         .check(jsonPath("$.event_token").optional.saveAs("event_token_submit")))
-      
-    .exec(http("XUI${service}_230_010_IsAuthenticated")
-      .get("/auth/isAuthenticated")
-      .headers(IACHeader.headers_isauthenticatedsubmit)
-      .check(status.in(200, 304, 302)))
 
-    .exec(http("XUI${service}_230_015_UserDetails")
-      .get("/api/user/details")
-      .headers(IACHeader.headers_isauthenticatedsubmit)
-      .check(status.in(200, 304, 302)))
-      
-    .exec(http("XUI${service}_230_020_DataInternalProfile")
-      .get("/data/internal/profile")
-      .headers(IACHeader.headers_internalprofiledatasubmit)
-      .check(status.in(200, 304, 302)))
+    .exec(isAuthenticated)
+
+    .exec(userDetails)
+
+    .exec(profile)
+
     }
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -374,17 +458,17 @@ object EXUIIACMC {
 *Below group contains all the requests for starting submit appeal declaration
 ======================================================================================*/
 
-    .group("XUI${service}_240_SubmitAppealDeclaration") {
-      exec(http("XUI${service}_240_05_SubmitAppealDeclaration")
+    .group("XUI${service}_250_SubmitAppealDeclaration") {
+      exec(http("XUI${service}_250_05_SubmitAppealDeclaration")
         .post("/data/case-types/Asylum/validate?pageId=submitAppealdeclaration")
-        .headers(IACHeader.headers_submitdeclaration)
-        .body(StringBody("{\n  \"data\": {\n    \"legalRepDeclaration\": [\n      \"hasDeclared\"\n    ]\n  },\n  \"event\": {\n    \"id\": \"submitAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token_submit}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"legalRepDeclaration\": [\n      \"hasDeclared\"\n    ]\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACAppealDeclaration.json"))
         .check(status.in(200, 304)))
+
+      .exec(profile)
       
-      .exec(http("XUI${service}_240_010_SubmitAppealProfile")
-        .get("/data/internal/profile")
-        .headers(IACHeader.headers_internaldeclaration)
-        .check(status.in(200, 304)))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -394,11 +478,13 @@ object EXUIIACMC {
 * Below group contains all the requests for starting submit appeal declaration submitted
 ======================================================================================*/
 
-    .group("XUI${service}_250_AppealDeclarationSubmitted") {
-      exec(http("XUI${service}_250_AppealDeclarationSubmitted")
+    .group("XUI${service}_260_AppealDeclarationSubmitted") {
+      exec(http("XUI${service}_260_AppealDeclarationSubmitted")
         .post("/data/cases/${caseId}/events")
-        .headers(IACHeader.headers_declarationsubmitted)
-        .body(StringBody("{\n  \"data\": {\n    \"legalRepDeclaration\": [\n      \"hasDeclared\"\n    ]\n  },\n  \"event\": {\n    \"id\": \"submitAppeal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token_submit}\",\n  \"ignore_warning\": false\n}"))
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACSubmitAppeal.json"))
         .check(status.in(200, 304, 201)))
     }
 
@@ -410,19 +496,21 @@ object EXUIIACMC {
 
   val shareacase =
 
-    group("XUI${service}_260_ShareACase") {
-      exec(http("XUI${service}_260_005_ShareACase")
+    group("XUI${service}_270_ShareACase") {
+      exec(http("XUI${service}_270_005_ShareACase")
         .get("/api/caseshare/cases?case_ids=${caseId}")
-        .headers(IACHeader.headers_scase1)
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json, text/plain, */*")
         .check(status.in(200, 304))
         .check(jsonPath("$..email").find(0).optional.saveAs("user0"))
         .check(jsonPath("$..firstName").find(0).optional.saveAs("firstName"))
         .check(jsonPath("$..lastName").find(0).optional.saveAs("lastName"))
         .check(jsonPath("$..idamId").find(0).optional.saveAs("idamId")))
     
-      .exec(http("XUI${service}_260_010_ShareACaseUsers")
+      .exec(http("XUI${service}_270_010_ShareACaseUsers")
         .get("/api/caseshare/users")
-        .headers(IACHeader.headers_scase1)
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json, text/plain, */*")
         .check(status.in(200, 304))
         .check(jsonPath("$..email").find(0).optional.saveAs("user1"))
         .check(jsonPath("$..firstName").find(0).optional.saveAs("firstName1"))
@@ -432,10 +520,11 @@ object EXUIIACMC {
 
     .pause(MinThinkTime , MaxThinkTime)
 
-    .group("XUI${service}_270_ShareACaseConfirm") {
-      exec(http("XUI${service}_270_ShareACaseAssignments")
+    .group("XUI${service}_280_ShareACaseConfirm") {
+      exec(http("XUI${service}_280_ShareACaseAssignments")
         .post("/api/caseshare/case-assignments")
-        .headers(IACHeader.headers_userassignment)
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json, text/plain, */*")
         .body(ElFileBody("bodies/iac/IACShareACase.json")).asJson
         .check(status.in(200, 201)))
     }
