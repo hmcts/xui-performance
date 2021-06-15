@@ -240,7 +240,7 @@ object EXUIIACMC {
 * Below group contains all the requests for Appealant address search
 ======================================================================================*/
     
-    exec(postcodeLookup)
+    .exec(postcodeLookup)
 
     .pause(MinThinkTime, MaxThinkTime)
 
