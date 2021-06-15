@@ -2,12 +2,12 @@
   "data": {
      "appellantHasFixedAddress": "Yes",
      "appellantAddress": {
-        "AddressLine1": "2 Hibernia Gardens",
+        "AddressLine1": "${addressLines(0)}",
         "AddressLine2": "",
         "AddressLine3": "",
-        "PostTown": "Hounslow",
+        "PostTown": "${addressLines(2)}",
         "County": "",
-        "PostCode": "TW3 3SD",
+        "PostCode": "${addressLines(3)}",
         "Country": "United Kingdom"
      }
   },
@@ -57,12 +57,12 @@
      ],
      "appellantHasFixedAddress": "Yes",
      "appellantAddress": {
-        "AddressLine1": "2 Hibernia Gardens",
-        "AddressLine2": "",
+        "AddressLine1": "${addressLines(0)}",
+        "AddressLine2": "${addressLines(1)}",
         "AddressLine3": "",
-        "PostTown": "Hounslow",
+        "PostTown": "${addressLines(2)}",
         "County": "",
-        "PostCode": "TW3 3SD",
+        "PostCode": "${addressLines(3)}",
         "Country": "United Kingdom"
      }
   },
