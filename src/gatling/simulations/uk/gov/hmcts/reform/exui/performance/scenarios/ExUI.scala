@@ -132,7 +132,7 @@ val createOrg=
 
     .exec(http("request_6")
       .get(url_approve+"/api/environment/config")
-      .check(status.is(200))=)
+      .check(status.is(200)))
 
     .exec(http("request_12")
       .get(url_approve+"/auth/isAuthenticated")
