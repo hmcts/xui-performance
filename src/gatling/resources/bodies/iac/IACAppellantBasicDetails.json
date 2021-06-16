@@ -1,8 +1,8 @@
 {
   "data": {
      "appellantTitle": "Mr",
-     "appellantGivenNames": "Steve",
-     "appellantFamilyName": "Test",
+     "appellantGivenNames": "${firstName}",
+     "appellantFamilyName": "${lastName}",
      "appellantDateOfBirth": "1980-09-01"
   },
   "event": {
@@ -37,8 +37,8 @@
         }
      ],
      "appellantTitle": "Mr",
-     "appellantGivenNames": "Steve",
-     "appellantFamilyName": "Test",
+     "appellantGivenNames": "${firstName}",
+     "appellantFamilyName": "${lastName}",
      "appellantDateOfBirth": "1980-09-01"
   },
   "event_token": "${event_token}",
