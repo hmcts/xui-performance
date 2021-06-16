@@ -5,7 +5,6 @@ import io.gatling.http.Predef._
 object Environment {
 
  val environment: String = System.getProperty("env")
- //if (environment == "perftest") {
  val S2S_ServiceName = "rd_professional_api"
   val S2SUrl = "http://rpe-service-auth-provider-perftest.service.core-compute-perftest.internal/testing-support"
   val PRDUrl = "http://rd-professional-api-perftest.service.core-compute-perftest.internal"
@@ -55,16 +54,5 @@ val baseDomainOrg="manage-org.perftest.platform.hmcts.net"
   val maxThinkTimeFR =55
 
   val constantthinkTime = 5
-  val HttpProtocol = http
-  
- //}
-
- val commonHeader = Map(
-  "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
-  "Accept-Encoding" -> "gzip, deflate, br",
-  "Accept-Language" -> "en-US,en;q=0.9",
-  "Sec-Fetch-Mode" -> "navigate",
-  "Sec-Fetch-Site" -> "cross-site",
-  "Upgrade-Insecure-Requests" -> "1")
 
 }

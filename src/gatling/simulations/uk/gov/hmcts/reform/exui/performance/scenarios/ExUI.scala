@@ -317,12 +317,11 @@ val createOrg=
 
   val sendInvitation =
 
-  feed(Feeders.createDynamicUserDataFeeder).
     exec(http("XUI_CreateSuperUser")
-    .post(idamAPI+"/testing-support/accounts")
-    .header("Content-Type", "application/json")
-    .body(StringBody("{\"email\": \"${orgName}${generatedUserEmail}${n}@mailinator.com\", \"forename\": \"VUser\", \"password\": \"Pass19word\", \"surname\": \"VykUser\"}"))
-      .check(status is 201))
+      .post(idamAPI+"/testing-support/accounts")
+      .header("Content-Type", "application/json")
+      .body(StringBody("{\"email\": \"${orgName}-user${n}@mailinator.com\", \"forename\": \"VUser\", \"password\": \"Pass19word\", \"surname\": \"VykUser\"}"))
+        .check(status is 201))
 
     .pause(20)
 
@@ -345,7 +344,7 @@ val createOrg=
           val client = new NotificationClient(notificationClient)
           val pattern = new Regex("token.+")
          // val str = findEmail(client,session("orgName").as[String]+"_user"+session("userid").as[String]+"@mailinator.com")
-         val str = findEmail(client,session("orgName").as[String]+session("generatedUserEmail").as[String]+session("n").as[String]+"@mailinator.com")
+         val str = findEmail(client,session("orgName").as[String]+"-user"+session("n").as[String]+"@mailinator.com")
           session.set("activationLink", (pattern findFirstMatchIn str.get).mkString.trim.replace(")", ""))
       }
       .pause(40)
