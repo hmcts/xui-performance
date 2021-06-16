@@ -8,7 +8,7 @@ object Feeders {
 
   val createDynamicDataFeeder = Iterator.continually(Map(
     "generatedEmail" -> (orgName + "-su@mailtest.gov.uk"),
-    "orgName" -> orgName))
+    "organisationName" -> orgName))
 
   val FPLCreateDataFeeder = Iterator.continually(Map("service" -> ({
     "FPLC"
