@@ -27,23 +27,17 @@ class ExUI extends Simulation {
 	val caseFeederFPL = csv("CaseworkerSearchesFPL.csv").circular
 
 	// below Http Protocol is for the scenario - manage org
-  val XUIHttpProtocol = Environment.HttpProtocol
-    //.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
+  val XUIHttpProtocol = http
     .baseUrl(orgurl)
-    .headers(Environment.commonHeader)
+    .headers(Headers.navigationHeader)
 
 	//Below Http Protocol will be used for all services
 
-  val MChttpProtocol = Environment.HttpProtocol
-		//.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
-		.baseUrl(BaseURL).inferHtmlResources().silentResources
-		//.baseUrl("https://xui-webapp-perftest.service.core-compute-perftest.internal")
-		//.baseUrl("https://ccd-case-management-web-perftest.service.core-compute-perftest.internal")
+  val MChttpProtocol = http
+		.baseUrl(BaseURL)
+		.inferHtmlResources()
+		.silentResources
 
-   // .inferHtmlResources()
-    .userAgentHeader("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36")
-	
-	
 	/*===============================================================================================
 	* below scenario is for create org, approve org and manage org related business process
 	 ==================================================================================================*/
@@ -71,12 +65,13 @@ class ExUI extends Simulation {
 	
 	
 	/*===============================================================================================
-	* below scenario is for Probate Business Process related scenario
+	* XUI Solicitor Probate Scenario
 	 ==================================================================================================*/
   val EXUIMCaseProbateScn = scenario("***** Probate Case Journey ******").repeat(1)
   {
 		exitBlockOnFail {
-			feed(feedUserDataProbate).feed(Feeders.ProDataFeeder)
+			feed(feedUserDataProbate)
+				.exec(_.set("service", "Probate"))
 				.exec(EXUIMCLogin.manageCasesHomePage)
 				.exec(EXUIMCLogin.manageCaseslogin)
 				//	.exec(EXUIMCLogin.termsnconditions)
@@ -96,11 +91,12 @@ class ExUI extends Simulation {
   }
 	
 	/*===============================================================================================
-	* below scenario is for IAC  Business Process related scenario
+	* XUI Solicitor IAC Scenario
 	 ==================================================================================================*/
 	val EXUIMCaseCreationIACScn = scenario("***** IAC Create Case *****").repeat(1)
 	{
-	  	feed(feedUserDataIACCreate).feed(Feeders.IACCreateDataFeeder)
+	  	feed(feedUserDataIACCreate)
+			.exec(_.set("service", "IAC"))
 	  	.exec(EXUIMCLogin.manageCasesHomePage)
 			.exec(EXUIMCLogin.manageCaseslogin)
 		//	.exec(EXUIMCLogin.termsnconditions)
@@ -191,12 +187,12 @@ class ExUI extends Simulation {
 	 ==================================================================================================*/
 
 	/*setUp(
-		EXUIMCaseCreationDivorceScn.inject(nothingFor(5),rampUsers(10) during (100)),
-		EXUIMCaseCaseworkerScn.inject(rampUsers(10) during 100),
-		EXUIMCaseProbateScn.inject(nothingFor(25),rampUsers(10) during (100)),
-		//EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(1) during (3)),
-		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(10) during (100)),
-		//EXUIFinancialRemedyScn.inject(rampUsers(1) during (2))
+		 EXUIMCaseProbateScn.inject(atOnceUsers(1)).disablePauses,
+		 EXUIMCaseCreationIACScn.inject(atOnceUsers(1)).disablePauses,
+		 EXUIMCaseCreationFPLAScn.inject(atOnceUsers(1)).disablePauses,
+		 EXUIMCaseCaseworkerScn.inject(atOnceUsers(1)).disablePauses,
+		 EXUIMCaseCreationDivorceScn.inject(atOnceUsers(1)).disablePauses,
+		 EXUIFinancialRemedyScn.inject(atOnceUsers(1)).disablePauses
 	)
 			.protocols(MChttpProtocol)*/
 	
@@ -207,7 +203,7 @@ class ExUI extends Simulation {
 	* Below setup  is to do the smoke test to make sure manage org is working, we can uncomment it when we use it
 	 ==================================================================================================*/
 	/*setUp(
-		EXUIScn.inject(rampUsers(209) during (3600))
+		EXUIScn.inject(atOnceUsers(1)).disablePauses
 			.protocols(XUIHttpProtocol)
 	)*/
 	
@@ -225,7 +221,7 @@ class ExUI extends Simulation {
 	/*===============================================================================================
   * Below setup  is for actual test to be run on VM and for reporting, below numbers needs changing as per the agreed load model  nd also need adjust the think times accordingly
    ==================================================================================================*/
-	
+
 	 setUp(
 		 EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(238) during (1200)),
 		 EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(20) during (1200)),
