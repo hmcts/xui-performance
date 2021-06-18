@@ -39,7 +39,8 @@ object EXUIIACMC {
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
         .headers(Headers.commonHeader)
         .header("accept", "application/json"))
-        .exitHereIfFailed
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-create%2FIA%2FAsylum%2FstartAppeal"))
     }
     
     .pause(MinThinkTime, MaxThinkTime)
@@ -58,6 +59,8 @@ object EXUIIACMC {
 
       .exec(Common.profile)
 
+      .exec(Common.healthcheck("%2Fcases%2Fcase-create%2FIA%2FAsylum%2FstartAppeal%2FstartAppealchecklist"))
+
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(Environment.baseDomain).saveAs("XSRFToken")))
     }
 
@@ -75,7 +78,6 @@ object EXUIIACMC {
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("x-xsrf-token", "${XSRFToken}")
       .body(ElFileBody("bodies/iac/IACStartChecklist.json"))  )
-      .exitHereIfFailed
     }
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -310,7 +312,7 @@ object EXUIIACMC {
 *Below group contains all the requests for starting appeal case save
 ======================================================================================*/
 
-    .group("XUI_IAC_220_StartAppealCaseSave") {
+    .group("XUI_IAC_220_005_StartAppealCaseSave") {
       exec(http("XUI_IAC_220_StartAppealCaseSave")
         .post("/data/case-types/Asylum/cases?ignore-warning=false")
         .headers(Headers.commonHeader)
@@ -318,6 +320,14 @@ object EXUIIACMC {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/iac/IACSaveCase.json"))
         .check(jsonPath("$.id").saveAs("caseId")))
+
+      .exec(http("XUI_IAC_220_005_WorkAllocation")
+        .post("/workallocation/searchForCompletable")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"startAppeal","jurisdiction":"IA","caseTypeId":"Asylum"}}"""))
+        .check(status.in(200, 400)))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -342,6 +352,8 @@ object EXUIIACMC {
 
       .exec(Common.isAuthenticated)
 
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAppeal"))
+
       .exec(http("XUI_IAC_230_035_SaveCaseView")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
@@ -350,6 +362,10 @@ object EXUIIACMC {
         // .check(status.in(200, 304, 302))
         )
     }
+
+    .exec(Common.caseActivityGet)
+    .pause(2)
+    .exec(Common.caseActivityPost)
 
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -366,11 +382,17 @@ object EXUIIACMC {
         .header("x-xsrf-token", "${XSRFToken}")
         .check(jsonPath("$.event_token").saveAs("event_token_submit")))
 
-    .exec(Common.isAuthenticated)
+      .exec(Common.isAuthenticated)
 
-    .exec(Common.userDetails)
+      .exec(Common.userDetails)
 
-    .exec(Common.profile)
+      .exec(Common.profile)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAppeal%2FsubmitAppealdeclaration"))
+
+      .exec(Common.caseActivityGet)
+      .pause(2)
+      .exec(Common.caseActivityPost)
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -389,6 +411,12 @@ object EXUIIACMC {
         .body(ElFileBody("bodies/iac/IACAppealDeclaration.json")))
 
       .exec(Common.profile)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAppeal%2Fsubmit"))
+
+      .exec(Common.caseActivityGet)
+      .pause(2)
+      .exec(Common.caseActivityPost)
       
     }
 
@@ -399,14 +427,28 @@ object EXUIIACMC {
 * Below group contains all the requests for starting submit appeal declaration submitted
 ======================================================================================*/
 
-    .group("XUI_IAC_260_AppealDeclarationSubmitted") {
+    .group("XUI_IAC_260_005_AppealDeclarationSubmitted") {
       exec(http("XUI_IAC_260_AppealDeclarationSubmitted")
         .post("/data/cases/${caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/iac/IACSubmitAppeal.json")))
+
+      .exec(http("XUI_IAC_260_010_WorkAllocation")
+        .post("/workallocation/searchForCompletable")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"submitAppeal","jurisdiction":"IA","caseTypeId":"Asylum"}}"""))
+        .check(status.in(200, 400)))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAppeal%2Fconfirm"))
     }
+
+    .exec(Common.caseActivityGet)
+    .pause(2)
+    .exec(Common.caseActivityPost)
 
     .pause(MinThinkTime, MaxThinkTime)
 

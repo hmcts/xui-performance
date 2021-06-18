@@ -215,12 +215,20 @@ object EXUIMCLogin {
         .headers(Headers.commonHeader)
         .check(status.in(200, 304, 403)))
       
-      /*.exec(http("XUI_${service}_020_045_GetDefaultWorkBasketView")
-        .get("/data/internal/searchCases?ctid=FinancialRemedyConsentedRespondent&use_case=WORKBASKET&view=WORKBASKET&state=caseAdded&page=1")
-        .headers(LoginHeader.headers_0))*/
+      .exec(http("XUI_${service}_020_055_GetDefaultWorkBasketView")
+        .post("/data/internal/searchCases?ctid=Caveat&use_case=WORKBASKET&view=WORKBASKET&page=1") //need to make the ctid dynamic
+        .headers(LoginHeader.headers_0)
+        .check(jsonPath("$.results[*].case_id").findAll.transform(_.mkString(",")).optional.saveAs("caseList")))
+
+      .doIf("${caseList.exists()}") {
+        exec(http("XUI_${service}_020_060_CaseActivity")
+          .get("/activity/cases/${caseList}/activity")
+          .headers(Headers.commonHeader)
+          .check(status.in(200, 403)))
+      }
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(baseDomain).saveAs("XSRFToken")))
-      
+
     }
 
     .pause(MinThinkTime, MaxThinkTime)
