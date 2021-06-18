@@ -63,11 +63,42 @@ object Common {
       .check(substring("""{"healthState":true}""")))
 
   val activity =
-    exec(http("XUI_Common_000_Activity")
+    exec(http("XUI_Common_000_ActivityOptions")
+      .options("/activity/cases/${caseId}/activity")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .header("sec-fetch-site", "same-site")
+      .check(status.in(200, 304, 403)))
+
+  val caseActivityGet =
+    exec(http("XUI_Common_000_ActivityOptions")
+      .options("/activity/cases/${caseId}/activity")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .header("sec-fetch-site", "same-site")
+      .check(status.in(200, 304, 403)))
+
+    .exec(http("XUI_Common_000_ActivityGet")
       .get("/activity/cases/${caseId}/activity")
       .headers(Headers.commonHeader)
       .header("accept", "application/json, text/plain, */*")
       .header("sec-fetch-site", "same-site")
+      .check(status.in(200, 304, 403)))
+
+  val caseActivityPost =
+    exec(http("XUI_Common_000_ActivityOptions")
+      .options("/activity/cases/${caseId}/activity")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .header("sec-fetch-site", "same-site")
+      .check(status.in(200, 304, 403)))
+
+    .exec(http("XUI_Common_000_ActivityPost")
+      .post("/activity/cases/${caseId}/activity")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .header("sec-fetch-site", "same-site")
+      .body(StringBody("{\n  \"activity\": \"view\"\n}"))
       .check(status.in(200, 304, 403)))
 
   val configurationui =
