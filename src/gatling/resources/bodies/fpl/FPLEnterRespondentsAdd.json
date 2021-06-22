@@ -146,7 +146,7 @@
         }
      ]
   },
-  "event_token": "${existing_case_event_token}",
+  "event_token": "${${dobYearChild}-${dobMonth}-${dobDay}}",
   "ignore_warning": false,
   "case_reference": "${caseId}"
 }
