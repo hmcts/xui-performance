@@ -6,9 +6,9 @@
               "finalOrderIssued": null,
               "finalOrderIssuedType": null,
               "party": {
-                 "firstName": "Child",
-                 "lastName": "Surname",
-                 "dateOfBirth": "2020-02-01",
+                 "firstName": "${childFirstName}",
+                 "lastName": "${childLastName}",
+                 "dateOfBirth": "${dobYearChild}-${dobMonth}-${dobDay}",
                  "gender": "Boy",
                  "genderIdentification": null,
                  "livingSituation": "Living with respondents",

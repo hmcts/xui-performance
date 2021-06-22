@@ -26,6 +26,11 @@ object EXUIFPLAMC {
     //set session variables
     exec(_.setAll( "firstName" -> ("Perf" + Common.randomString(5)),
                     "lastName" -> ("Test" + Common.randomString(5)),
+                    "childFirstName" -> ("Child" + Common.randomString(5)),
+                    "childLastName" -> ("Test" + Common.randomString(5)),
+                    "dobDay" -> Common.getDay(),
+                    "dobMonth" -> Common.getMonth(),
+                    "dobYearChild" -> Common.getDobYear(),
                     "currentDate" -> timeStamp))
  
     /*======================================================================================

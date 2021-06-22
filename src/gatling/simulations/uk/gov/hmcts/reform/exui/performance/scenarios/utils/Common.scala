@@ -34,6 +34,10 @@ object Common {
   def getDobYear(): String = {
     now.minusYears(35 + rnd.nextInt(70)).format(patternYear)
   }
+  //Date of Birth <= 18 years
+  def getDobYearChild(): String = {
+    now.minusYears(1 + rnd.nextInt(17)).format(patternYear)
+  }
   //Date of Death <= 21 years
   def getDodYear(): String = {
     now.minusYears(1 + rnd.nextInt(20)).format(patternYear)
