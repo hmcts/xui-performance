@@ -132,7 +132,7 @@ object EXUIFPLAMC {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
+        .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(status.in(200, 304, 201)))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FordersNeeded"))
@@ -222,7 +222,7 @@ object EXUIFPLAMC {
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
+      .check(jsonPath("$.event_token").saveAs("event_token"))
       .check(status.in(200, 201)))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FhearingNeeded"))
@@ -306,7 +306,7 @@ val fplChildDetails =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
+      .check(jsonPath("$.event_token").saveAs("event_token"))
       .check(status.in(200, 201)))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterChildren%2FenterChildren1"))
@@ -392,7 +392,7 @@ val fplEnterRespondents =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
+      .check(jsonPath("$.event_token").saveAs("event_token"))
       .check(status.in(200, 201)))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterRespondents"))
@@ -484,7 +484,7 @@ val fplEnterApplicant =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
+      .check(jsonPath("$.event_token").saveAs("event_token"))
       .check(status.in(200, 201)))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterApplicant"))
@@ -577,7 +577,7 @@ val fplEnterGrounds =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
+      .check(jsonPath("$.event_token").saveAs("event_token"))
       .check(status.in(200, 201)))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterGrounds"))
@@ -665,7 +665,7 @@ val fplAllocationProposal =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
+      .check(jsonPath("$.event_token").saveAs("event_token"))
       .check(status.in(200, 201)))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FotherProposal"))
@@ -749,7 +749,7 @@ val fplUploadDocuments =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
+      .check(jsonPath("$.event_token").saveAs("event_token"))
       .check(status.in(200, 201)))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FuploadDocuments"))
@@ -854,7 +854,7 @@ val fplSubmitApplication =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
+      .check(jsonPath("$.event_token").saveAs("event_token"))
       .check(regex("""document_filename":"(.+?).pdf""").saveAs("DocumentName"))
       .check(regex("""document_url":"(.*?)","document_filename""").find(0).saveAs("DocumentURL"))
       .check(regex("""formatted_value":"I, (.+?), believe that""").saveAs("applicantName"))
