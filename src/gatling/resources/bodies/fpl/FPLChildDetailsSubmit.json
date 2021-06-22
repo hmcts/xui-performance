@@ -1,0 +1,61 @@
+{
+  "data": {
+     "children1": [
+        {
+           "value": {
+              "finalOrderIssued": null,
+              "finalOrderIssuedType": null,
+              "party": {
+                 "firstName": "Child",
+                 "lastName": "Surname",
+                 "dateOfBirth": "2020-02-01",
+                 "gender": "Boy",
+                 "genderIdentification": null,
+                 "livingSituation": "Living with respondents",
+                 "livingSituationDetails": null,
+                 "addressChangeDate": null,
+                 "keyDates": null,
+                 "careAndContactPlan": "none",
+                 "adoption": "No",
+                 "placementOrderApplication": null,
+                 "placementCourt": null,
+                 "mothersName": "mother",
+                 "fathersName": "father",
+                 "fathersResponsibility": "Yes",
+                 "socialWorkerName": null,
+                 "additionalNeeds": "No",
+                 "additionalNeedsDetails": null,
+                 "detailsHidden": "No",
+                 "detailsHiddenReason": null,
+                 "litigationIssues": "NO",
+                 "litigationIssuesDetails": null,
+                 "partyId": "4523ce5f-85f1-4eae-8a51-053e75684c7f",
+                 "partyType": null,
+                 "showAddressInConfidentialTab": null,
+                 "address": {
+                    "AddressLine1": null,
+                    "AddressLine2": null,
+                    "AddressLine3": null,
+                    "PostTown": null,
+                    "County": null,
+                    "PostCode": null,
+                    "Country": null
+                 },
+                 "socialWorkerTelephoneNumber": {
+                    "telephoneNumber": "02012312312",
+                    "contactDirection": null
+                 }
+              }
+           },
+           "id": "1fca5338-4597-4ece-b63d-8f1716ef0ad2"
+        }
+     ]
+  },
+  "event": {
+     "id": "enterChildren",
+     "summary": "",
+     "description": ""
+  },
+  "event_token": "${existing_case_event_token}",
+  "ignore_warning": false
+}

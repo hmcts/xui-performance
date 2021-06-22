@@ -1,0 +1,104 @@
+{
+  "data": {
+     "applicants": [
+        {
+           "value": {
+              "leadApplicantIndicator": "Yes",
+              "party": {
+                 "partyId": "236c0e76-c6e6-41b5-a1d1-e68c0fd06621",
+                 "partyType": null,
+                 "organisationName": "firstname",
+                 "legalTeamManager": "legal team member",
+                 "pbaNumber": "PBA1234567",
+                 "clientCode": "CC123",
+                 "customerReference": "123",
+                 "jobTitle": "legal advisor",
+                 "address": {
+                    "AddressLine1": "${addressLines(0)}",
+                    "AddressLine2": "${addressLines(1)}",
+                    "AddressLine3": "",
+                    "PostTown": "${addressLines(2)}",
+                    "County": "",
+                    "PostCode": "${addressLines(3)}",
+                    "Country": null
+                 },
+                 "telephoneNumber": {
+                    "telephoneNumber": "02012334567",
+                    "contactDirection": "mr perf test"
+                 },
+                 "mobileNumber": {
+                    "telephoneNumber": "07123123123"
+                 },
+                 "email": {
+                    "email": "perftest@mailinator.com"
+                 }
+              }
+           },
+           "id": "5c880150-b4e8-4a53-888b-eb52e9da6786"
+        }
+     ],
+     "solicitor": {
+        "name": "perf sol",
+        "mobile": "07123456456",
+        "telephone": "02012999888",
+        "email": "test@solicitortest.com",
+        "dx": "DX8888",
+        "reference": "CC123"
+     }
+  },
+  "event": {
+     "id": "enterApplicant",
+     "summary": "",
+     "description": ""
+  },
+  "event_data": {
+     "applicants": [
+        {
+           "value": {
+              "leadApplicantIndicator": "Yes",
+              "party": {
+                 "partyId": "236c0e76-c6e6-41b5-a1d1-e68c0fd06621",
+                 "partyType": null,
+                 "organisationName": "firstname",
+                 "legalTeamManager": "legal team member",
+                 "pbaNumber": "PBA1234567",
+                 "clientCode": "CC123",
+                 "customerReference": "123",
+                 "jobTitle": "legal advisor",
+                 "address": {
+                    "AddressLine1": "${addressLines(0)}",
+                    "AddressLine2": "${addressLines(1)}",
+                    "AddressLine3": "",
+                    "PostTown": "${addressLines(2)}",
+                    "County": "",
+                    "PostCode": "${addressLines(3)}",
+                    "Country": null
+                 },
+                 "telephoneNumber": {
+                    "telephoneNumber": "02012334567",
+                    "contactDirection": "mr perf test"
+                 },
+                 "mobileNumber": {
+                    "telephoneNumber": "07123123123"
+                 },
+                 "email": {
+                    "email": "perftest@mailinator.com"
+                 }
+              }
+           },
+           "id": "5c880150-b4e8-4a53-888b-eb52e9da6786"
+        }
+     ],
+     "solicitor": {
+        "name": "perf sol",
+        "mobile": "07123456456",
+        "telephone": "02012999888",
+        "email": "test@solicitortest.com",
+        "dx": "DX8888",
+        "reference": "CC123"
+     }
+  },
+  "event_token": "${existing_case_event_token}",
+  "ignore_warning": false,
+  "case_reference": "${caseId}"
+}
