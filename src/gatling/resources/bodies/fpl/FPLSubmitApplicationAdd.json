@@ -30,7 +30,7 @@
      "displayAmountToPay": "Yes",
      "amountToPay": "205500"
   },
-  "event_token": "${${dobYearChild}-${dobMonth}-${dobDay}}",
+  "event_token": "${event_token}",
   "ignore_warning": false,
   "case_reference": "${caseId}"
 }
