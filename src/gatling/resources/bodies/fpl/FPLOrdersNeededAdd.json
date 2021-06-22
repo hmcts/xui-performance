@@ -45,7 +45,7 @@
         "emergencyProtectionOrderDirections": []
      }
   },
-  "event_token": "${${dobYearChild}-${dobMonth}-${dobDay}}",
+  "event_token": "${event_token}",
   "ignore_warning": false,
   "case_reference": "${caseId}"
 }
