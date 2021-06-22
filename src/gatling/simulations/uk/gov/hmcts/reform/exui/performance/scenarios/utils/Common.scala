@@ -156,4 +156,10 @@ object Common {
       .header("accept", "application/json, text/plain, */*")
       .check(jsonPath("$.user.idam.id").notNull))
 
+  val caseShareOrgs =
+    exec(http("XUI_Common_000_CaseShareOrgs")
+      .get("/api/caseshare/orgs")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json, text/plain, */*"))
+
 }

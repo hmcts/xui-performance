@@ -1,0 +1,152 @@
+{
+  "data": {
+     "respondents1": [
+        {
+           "value": {
+              "persistRepresentedBy": null,
+              "leadRespondentIndicator": null,
+              "legalRepresentation": "No",
+              "party": {
+                 "firstName": "Jason",
+                 "lastName": "Smith",
+                 "dateOfBirth": "1980-02-01",
+                 "gender": "Male",
+                 "genderIdentification": null,
+                 "relationshipToChild": "guardian",
+                 "contactDetailsHidden": "No",
+                 "contactDetailsHiddenReason": null,
+                 "litigationIssues": "YES",
+                 "litigationIssuesDetails": null,
+                 "partyId": "26d330db-fb30-4717-91f7-79659ce8ea37",
+                 "partyType": null,
+                 "placeOfBirth": null,
+                 "address": {
+                    "AddressLine1": "${addressLines(0)}",
+                    "AddressLine2": "${addressLines(1)}",
+                    "AddressLine3": "",
+                    "PostTown": "${addressLines(2)}",
+                    "County": "",
+                    "PostCode": "${addressLines(3)}",
+                    "Country": "United Kingdom"
+                 },
+                 "telephoneNumber": {
+                    "telephoneNumber": "02012345678",
+                    "contactDirection": null
+                 }
+              },
+              "representedBy": [],
+              "solicitor": {
+                 "firstName": null,
+                 "lastName": null,
+                 "email": null,
+                 "organisation": {
+                    "OrganisationID": null,
+                    "OrganisationName": null
+                 },
+                 "unregisteredOrganisation": {
+                    "name": null,
+                    "address": {
+                       "AddressLine1": null,
+                       "AddressLine2": null,
+                       "AddressLine3": null,
+                       "PostTown": null,
+                       "County": null,
+                       "PostCode": null,
+                       "Country": null
+                    }
+                 },
+                 "regionalOfficeAddress": {
+                    "AddressLine1": null,
+                    "AddressLine2": null,
+                    "AddressLine3": null,
+                    "PostTown": null,
+                    "County": null,
+                    "PostCode": null,
+                    "Country": null
+                 }
+              }
+           },
+           "id": "a7eb2013-50b9-4afe-9fe2-1bcf5f76c98d"
+        }
+     ]
+  },
+  "event": {
+     "id": "enterRespondents",
+     "summary": "",
+     "description": ""
+  },
+  "event_data": {
+     "respondents1": [
+        {
+           "value": {
+              "persistRepresentedBy": null,
+              "leadRespondentIndicator": null,
+              "legalRepresentation": "No",
+              "party": {
+                 "firstName": "Jason",
+                 "lastName": "Smith",
+                 "dateOfBirth": "1980-02-01",
+                 "gender": "Male",
+                 "genderIdentification": null,
+                 "relationshipToChild": "",
+                 "contactDetailsHidden": "No",
+                 "contactDetailsHiddenReason": null,
+                 "litigationIssues": "YES",
+                 "litigationIssuesDetails": null,
+                 "partyId": "26d330db-fb30-4717-91f7-79659ce8ea37",
+                 "partyType": null,
+                 "placeOfBirth": null,
+                 "address": {
+                    "AddressLine1": "${addressLines(0)}",
+                    "AddressLine2": "${addressLines(1)}",
+                    "AddressLine3": "",
+                    "PostTown": "${addressLines(2)}",
+                    "County": "",
+                    "PostCode": "${addressLines(3)}",
+                    "Country": "United Kingdom"
+                 },
+                 "telephoneNumber": {
+                    "telephoneNumber": "02012345678",
+                    "contactDirection": null
+                 }
+              },
+              "representedBy": [],
+              "solicitor": {
+                 "firstName": null,
+                 "lastName": null,
+                 "email": null,
+                 "organisation": {
+                    "OrganisationID": null,
+                    "OrganisationName": null
+                 },
+                 "unregisteredOrganisation": {
+                    "name": null,
+                    "address": {
+                       "AddressLine1": null,
+                       "AddressLine2": null,
+                       "AddressLine3": null,
+                       "PostTown": null,
+                       "County": null,
+                       "PostCode": null,
+                       "Country": null
+                    }
+                 },
+                 "regionalOfficeAddress": {
+                    "AddressLine1": null,
+                    "AddressLine2": null,
+                    "AddressLine3": null,
+                    "PostTown": null,
+                    "County": null,
+                    "PostCode": null,
+                    "Country": null
+                 }
+              }
+           },
+           "id": "a7eb2013-50b9-4afe-9fe2-1bcf5f76c98d"
+        }
+     ]
+  },
+  "event_token": "${existing_case_event_token}",
+  "ignore_warning": false,
+  "case_reference": "${caseId}"
+}
