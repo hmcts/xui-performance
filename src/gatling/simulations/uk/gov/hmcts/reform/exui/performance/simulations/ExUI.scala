@@ -221,7 +221,7 @@ class ExUI extends Simulation {
 	* Below setup  is to do the smoke test to make sure one particular scenario  is working as part of sanity test
 	 ==================================================================================================*/
 	 setUp(
-     EXUIMCaseCreationFPLAScn.inject(rampUsers(1) during (1)),
+     EXUIMCaseCreationFPLAScn.inject(atOnceUsers(1)).disablePauses
 	  // EXUIMCaseCaseworkerScn.inject(nothingFor(20),rampUsers(1) during (1))
 	 )
       .protocols(MChttpProtocol)
