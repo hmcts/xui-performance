@@ -889,12 +889,18 @@ Business process : Submit the Application
 
   .pause(MinThinkTime , MaxThinkTime )
 
-  .exec(http("XUI_FPL_370_ViewCase")
-    .get("/data/internal/cases/${caseId}")
-    .headers(Headers.commonHeader)
-    .header("X-XSRF-TOKEN", "${XSRFToken}"))
+/*======================================================================================
+Business process : Click on the View case button
+======================================================================================*/
 
-  .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+  .group("XUI_FPL_370_ViewCase") {
+    .exec(http("XUI_FPL_370_ViewCase")
+      .get("/data/internal/cases/${caseId}")
+      .headers(Headers.commonHeader)
+      .header("X-XSRF-TOKEN", "${XSRFToken}"))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+  }
 
   .exec(Common.caseActivityGet)
   .pause(2)
