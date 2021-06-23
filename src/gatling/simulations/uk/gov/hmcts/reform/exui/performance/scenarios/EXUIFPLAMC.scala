@@ -29,7 +29,10 @@ object EXUIFPLAMC {
                     "childLastName" -> ("Test" + Common.randomString(5)),
                     "dobDay" -> Common.getDay(),
                     "dobMonth" -> Common.getMonth(),
-                    "dobYearChild" -> Common.getDobYear(),
+                    "dobYearChild" -> Common.getDobYearChild(),
+                    "dobYearRes" -> Common.getDobYear(),
+                    "respondentFirstName" -> ("Res" + Common.randomString(5)),
+                    "respondentLastName" -> ("Test" + Common.randomString(5)),
                     "currentDate" -> timeStamp))
  
     /*======================================================================================
