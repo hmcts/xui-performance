@@ -129,13 +129,22 @@ class ExUI extends Simulation {
 	 ==================================================================================================*/
 	val EXUIMCaseCreationFPLAScn = scenario("***** FPLA Create Case ***** ").repeat(1)
 	{
-		feed(feedUserDataFPLCreate).feed(Feeders.FPLCreateDataFeeder)
-	  	.exec(EXUIMCLogin.manageCasesHomePage)
+		feed(feedUserDataFPLCreate)
+    .feed(Feeders.FPLCreateDataFeeder)
+    .exec(EXUIMCLogin.manageCasesHomePage)
 		.exec(EXUIMCLogin.manageCaseslogin)
-			//.exec(EXUIMCLogin.termsnconditions)
-		  	.repeat(2) {
-					exec(EXUIFPLAMC.fplacasecreation)
-				}
+      .repeat(1) { //2
+        exec(EXUIFPLAMC.fplcasecreation)
+        .exec(EXUIFPLAMC.fplOrdersNeeded)
+        .exec(EXUIFPLAMC.fplHearingNeeded)
+        .exec(EXUIFPLAMC.fplChildDetails)
+        .exec(EXUIFPLAMC.fplEnterRespondents)
+        .exec(EXUIFPLAMC.fplEnterApplicant)
+        .exec(EXUIFPLAMC.fplEnterGrounds)
+        .exec(EXUIFPLAMC.fplAllocationProposal)
+        .exec(EXUIFPLAMC.fplUploadDocuments)
+        .exec(EXUIFPLAMC.fplSubmitApplication)
+      }
 		.exec(EXUIMCLogin.manageCase_Logout)
 	}
 
@@ -211,18 +220,18 @@ class ExUI extends Simulation {
 	/*===============================================================================================
 	* Below setup  is to do the smoke test to make sure one particular scenario  is working as part of sanity test
 	 ==================================================================================================*/
-	/* setUp(
-     EXUIMCaseCreationDivorceScn.inject(rampUsers(238) during (1800)),
+	 setUp(
+     EXUIMCaseCreationFPLAScn.inject(rampUsers(1) during (1)),
 	  // EXUIMCaseCaseworkerScn.inject(nothingFor(20),rampUsers(1) during (1))
 	 )
       .protocols(MChttpProtocol)
-	*/
+	
 	
 	/*===============================================================================================
   * Below setup  is for actual test to be run on VM and for reporting, below numbers needs changing as per the agreed load model  nd also need adjust the think times accordingly
    ==================================================================================================*/
 
-	 setUp(
+	 /*setUp(
 		 EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(238) during (1200)),
 		 EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(20) during (1200)),
 		 EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(7) during (1200)),
@@ -230,7 +239,7 @@ class ExUI extends Simulation {
 		 EXUIMCaseCreationDivorceScn.inject(nothingFor(65),rampUsers(238) during (1200)),
 		 EXUIFinancialRemedyScn.inject(nothingFor(75),rampUsers(98) during (1200))
         ).protocols(MChttpProtocol)
-
+*/
 
 	
 
