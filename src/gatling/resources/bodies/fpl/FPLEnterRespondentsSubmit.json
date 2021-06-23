@@ -17,7 +17,7 @@
                  "contactDetailsHiddenReason": null,
                  "litigationIssues": "YES",
                  "litigationIssuesDetails": null,
-                 "partyId": "26d330db-fb30-4717-91f7-79659ce8ea37",
+                 "partyId": "${partyId}",
                  "partyType": null,
                  "placeOfBirth": null,
                  "address": {
@@ -66,7 +66,7 @@
                  }
               }
            },
-           "id": "a7eb2013-50b9-4afe-9fe2-1bcf5f76c98d"
+           "id": "${id}"
         }
      ]
   },
