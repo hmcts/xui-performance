@@ -5,7 +5,7 @@
            "value": {
               "leadApplicantIndicator": "Yes",
               "party": {
-                 "partyId": "236c0e76-c6e6-41b5-a1d1-e68c0fd06621",
+                 "partyId": "${partyId}",
                  "partyType": null,
                  "organisationName": "firstname",
                  "legalTeamManager": "legal team member",
@@ -34,7 +34,7 @@
                  }
               }
            },
-           "id": "5c880150-b4e8-4a53-888b-eb52e9da6786"
+           "id": "${id}"
         }
      ],
      "solicitor": {

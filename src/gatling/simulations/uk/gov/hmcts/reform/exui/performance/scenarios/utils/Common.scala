@@ -2,9 +2,12 @@ package uk.gov.hmcts.reform.exui.performance.scenarios.utils
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
+import io.gatling.core.check.CheckBuilder
+import io.gatling.core.structure.ChainBuilder
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import scala.util.Random
+import jodd.lagarto.dom.NodeSelector
 
 object Common {
 
@@ -42,6 +45,8 @@ object Common {
   def getDodYear(): String = {
     now.minusYears(1 + rnd.nextInt(20)).format(patternYear)
   }
+  //Saves partyId
+  def save: CheckBuilder[JsonPathCheckType, JsonNode, String] = jsonpath("$.case_fields[0].value[0].value.party.partyId").saveAs("partyId")
 
   /*======================================================================================
   * Common XUI Calls
