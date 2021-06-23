@@ -24,7 +24,8 @@ object EXUIFPLAMC {
   val fplcasecreation =
 
     //set session variables
-    exec(_.setAll(  "childFirstName" -> ("Child" + Common.randomString(5)),
+    exec(_.setAll(  "firstName"  -> ("Perf" + Common.randomString(5)),
+                    "childFirstName" -> ("Child" + Common.randomString(5)),
                     "childLastName" -> ("Test" + Common.randomString(5)),
                     "dobDay" -> Common.getDay(),
                     "dobMonth" -> Common.getMonth(),
@@ -463,7 +464,9 @@ val fplEnterApplicant =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("event_token")))
+      .check(jsonPath("$.event_token").saveAs("event_token"))
+      .check(jsonPath("$.case_fields[0].value[0].value.party.partyId").saveAs("partyId"))
+      .check(jsonPath("$.case_fields[0].value[0].id").saveAs("id")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterApplicant"))
 
