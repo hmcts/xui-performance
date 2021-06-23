@@ -472,10 +472,8 @@ val fplEnterApplicant =
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
       .check(jsonPath("$.event_token").saveAs("event_token"))
-      // .check(jsonPath("$.case_fields[0].value[0].value.party.partyId").saveAs("partyId"))
       .check(Common.savePartyId)
       .check(Common.saveId))
-      // .check(jsonPath("$.case_fields[0].value[0].id").saveAs("id"))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterApplicant"))
 
@@ -831,7 +829,7 @@ val fplSubmitApplication =
       .header("X-XSRF-TOKEN", "${XSRFToken}")
       .check(jsonPath("$.event_token").saveAs("event_token"))
       .check(regex("""document_filename":"(.+?).pdf""").saveAs("DocumentName"))
-      .check(regex("""document_url":"(.*?)","document_filename""").find(0).saveAs("DocumentURL"))
+      .check(regex("""document_url":"(.*?)","document_filename""").saveAs("DocumentURL"))
       .check(regex("""formatted_value":"I, (.+?), believe that""").saveAs("applicantName")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitApplication"))
