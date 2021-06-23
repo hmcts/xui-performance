@@ -578,7 +578,7 @@ val fplEnterGrounds =
   .pause(MinThinkTime , MaxThinkTime )
 
   /*======================================================================================
-  *Business process : As part of the FPL Case Creation there are different steps
+  *Business process : Select the desired reason and click on Continue
   ======================================================================================*/
 
   .group("XUI_FPL_240_GroundApplicationContinue") {
@@ -601,7 +601,7 @@ val fplEnterGrounds =
   .pause(MinThinkTime , MaxThinkTime )
 
   /*======================================================================================
-  *Business process : As part of the FPL Case Creation there are different steps
+  *Business process : Review details and click Save and Continue
   ======================================================================================*/
 
   .group("XUI_FPL_250_GroundApplicationSaveContinue") {
