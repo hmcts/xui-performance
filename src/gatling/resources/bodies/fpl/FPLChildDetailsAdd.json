@@ -29,7 +29,7 @@
                  "detailsHiddenReason": null,
                  "litigationIssues": "NO",
                  "litigationIssuesDetails": null,
-                 "partyId": "4523ce5f-85f1-4eae-8a51-053e75684c7f",
+                 "partyId": "${partyId}",
                  "partyType": null,
                  "showAddressInConfidentialTab": null,
                  "address": {
@@ -47,7 +47,7 @@
                  }
               }
            },
-           "id": "1fca5338-4597-4ece-b63d-8f1716ef0ad2"
+           "id": "${id}"
         }
      ]
   },
@@ -86,7 +86,7 @@
                  "detailsHiddenReason": null,
                  "litigationIssues": "NO",
                  "litigationIssuesDetails": null,
-                 "partyId": "4523ce5f-85f1-4eae-8a51-053e75684c7f",
+                 "partyId": "${partyId}",
                  "partyType": null,
                  "showAddressInConfidentialTab": null,
                  "address": {
@@ -104,7 +104,7 @@
                  }
               }
            },
-           "id": "1fca5338-4597-4ece-b63d-8f1716ef0ad2"
+           "id": "${id}"
         }
      ]
   },

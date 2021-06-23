@@ -294,7 +294,9 @@ val fplChildDetails =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("event_token")))
+      .check(jsonPath("$.event_token").saveAs("event_token"))
+      .check(Common.savePartyId)
+      .check(Common.saveId))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterChildren%2FenterChildren1"))
 
@@ -376,7 +378,9 @@ val fplEnterRespondents =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("event_token")))
+      .check(jsonPath("$.event_token").saveAs("event_token"))
+      .check(Common.savePartyId)
+      .check(Common.saveId))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterRespondents"))
 
@@ -465,8 +469,10 @@ val fplEnterApplicant =
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
       .check(jsonPath("$.event_token").saveAs("event_token"))
-      .check(jsonPath("$.case_fields[0].value[0].value.party.partyId").saveAs("partyId"))
-      .check(jsonPath("$.case_fields[0].value[0].id").saveAs("id")))
+      // .check(jsonPath("$.case_fields[0].value[0].value.party.partyId").saveAs("partyId"))
+      .check(Common.savePartyId)
+      .check(Common.saveId))
+      // .check(jsonPath("$.case_fields[0].value[0].id").saveAs("id"))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterApplicant"))
 

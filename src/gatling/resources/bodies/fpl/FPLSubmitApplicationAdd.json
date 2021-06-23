@@ -23,7 +23,7 @@
         "document_filename": "${DocumentName}.pdf",
         "document_binary_url": "${DocumentURL}/binary"
      },
-     "submissionConsentLabel": "I, sdsdsdsd hjhjhjhj, believe that the facts stated in this application are true.",
+     "submissionConsentLabel": "I, ${applicantName}, believe that the facts stated in this application are true.",
      "submissionConsent": [
         "agree"
      ],
