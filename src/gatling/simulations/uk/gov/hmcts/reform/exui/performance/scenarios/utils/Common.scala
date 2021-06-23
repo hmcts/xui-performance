@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import scala.util.Random
-import jodd.lagarto.dom.NodeSelector
 
 object Common {
 
