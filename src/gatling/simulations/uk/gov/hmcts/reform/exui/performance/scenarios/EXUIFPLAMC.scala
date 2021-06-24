@@ -2,9 +2,10 @@ package uk.gov.hmcts.reform.exui.performance.scenarios
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import uk.gov.hmcts.reform.exui.performance.scenarios.utils.Environment
-import uk.gov.hmcts.reform.exui.performance.scenarios.utils.FPLAHeader
+import uk.gov.hmcts.reform.exui.performance.scenarios.utils.{Environment, Common, Headers}
 
+import java.text.SimpleDateFormat
+import java.util.Date
 import scala.util.Random
 
 object EXUIFPLAMC {
@@ -15,753 +16,952 @@ object EXUIFPLAMC {
 
   val MinThinkTime = Environment.minThinkTimeFPLC
   val MaxThinkTime = Environment.maxThinkTimeFPLC
-  val MinThinkTimeFPLV = Environment.minThinkTimeFPLV
-  val MaxThinkTimeFPLV = Environment.maxThinkTimeFPLV
   
-  private val rng: Random = new Random()
-  private def firstName(): String = rng.alphanumeric.take(10).mkString
-  private def lastName(): String = rng.alphanumeric.take(10).mkString
-  
-  /*======================================================================================
+  val sdfDate = new SimpleDateFormat("yyyy-MM-dd")
+  val now = new Date()
+  val timeStamp = sdfDate.format(now)
+ 
+  val fplcasecreation =
+
+    //set session variables
+    exec(_.setAll(  "firstName"  -> ("Perf" + Common.randomString(5)),
+                    "childFirstName" -> ("Child" + Common.randomString(5)),
+                    "childLastName" -> ("Test" + Common.randomString(5)),
+                    "dobDay" -> Common.getDay(),
+                    "dobMonth" -> Common.getMonth(),
+                    "dobYearChild" -> Common.getDobYearChild(),
+                    "dobYearRes" -> Common.getDobYear(),
+                    "respondentFirstName" -> ("Res" + Common.randomString(5)),
+                    "respondentLastName" -> ("Test" + Common.randomString(5)),
+                    "currentDate" -> timeStamp))
+ 
+    /*======================================================================================
     *Business process : Click On Create Case for FPL
-    * Below group contains all the requests related to Create Case
     ======================================================================================*/
-  val fplacasecreation =
-  group("XUI${service}_040_CreateCase") {
-    exec(http("XUI${service}_040_CreateCase")
-      .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
-      .headers(FPLAHeader.headers_casecreation)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(status.in(200, 304))).exitHereIfFailed
-  }
-      .pause(MinThinkTime , MaxThinkTime )
+  
+    .group("XUI_FPL_040_CreateCase") {
+      exec(http("XUI_FPL_040_CreateCase")
+        .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("Create Case")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-create%2FPUBLICLAW%2FCARE_SUPERVISION_EPO%2FopenCase"))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime)
     
-  /*======================================================================================
-      *Business process : Select Jurisdiction as Family Law and Casetype as CARE_SUPERVISION_EPO
-      * Below group contains all the requests related to Start the Create Case
+    /*======================================================================================
+    *Business process : Select Jurisdiction as Family Law and Casetype as CARE_SUPERVISION_EPO
     ======================================================================================*/
-    .group("XUI${service}_050_StartCreateCase") {
-      exec(http("XUI${service}_050_005_StartCreateCase")
+
+    .group("XUI_FPL_050_005_StartCreateCase") {
+      exec(http("XUI_FPL_050_005_StartCreateCase")
         .get("/data/internal/case-types/CARE_SUPERVISION_EPO/event-triggers/openCase?ignore-warning=false")
-        .headers(FPLAHeader.headers_startcreatecase)
-        .check(status.is(200))
-        .check(jsonPath("$.event_token").optional.saveAs("event_token")))
-        .exec(http("XUI${service}_050_010_CreateCaseProfile")
-          .get("/data/internal/profile")
-          .headers(FPLAHeader.headers_createprofile)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .check(status.in(200, 304))).exitHereIfFailed
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(substring("Start application")))
+
+      .exec(Common.profile)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-create%2FPUBLICLAW%2FCARE_SUPERVISION_EPO%2FopenCase%2FopenCaseprovideCaseName"))
     }
-      .pause(MinThinkTime , MaxThinkTime )
 
-      //set the random variables as usable parameters
-      .exec(
-      _.setAll(
-        ("firstName", firstName()),
-        ("lastName", lastName())
-      ))
+    .pause(MinThinkTime , MaxThinkTime)
 
-  /*======================================================================================
-    *Business process : As part of the FPL Case Creation there are different steps
-    * Below group contains all the requests related to CaseName details
-  ======================================================================================*/
+    /*======================================================================================
+    *Business process : Enter case name and click Continue
+    ======================================================================================*/
     
-    .group("XUI${service}_060_CaseNameContinue") {
-      exec(http("XUI${service}_060_005_CaseNameContinue")
-        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=openCase1")
-        .headers(FPLAHeader.headers_71)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(StringBody("{\n  \"data\": {\n    \"caseName\": \"${firstName}\"\n  },\n  \"event\": {\n    \"id\": \"openCase\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"caseName\": \"${firstName}\"\n  }\n}"))
-        .check(status.is(200)))
+    .group("XUI_FPL_060_CaseNameContinue") {
+      exec(http("XUI_FPL_060_005_CaseNameContinue")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=openCaseprovideCaseName")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/fpl/FPLOpenCase.json"))
+        .check(substring("caseName")))
 
-
-        .exec(http("XUI${service}_060_010_CaseNameProfile")
-          .get("/data/internal/profile")
-          .headers(FPLAHeader.headers_opencaseprofile)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .check(status.in(200, 304, 201)))
+      .exec(Common.profile)
     }
-      .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-  *Business process : As part of the FPL Case Creation there are different steps
-  * Below group contains all the requests related to CaseName Continue after enter the casename details
-======================================================================================*/
     
-    .group("XUI${service}_070_CaseNameSaveContinue") {
-      exec(http("XUI${service}_070_005_CaseNameSaveContinue")
-        .post("/data/case-types/CARE_SUPERVISION_EPO/cases?ignore-warning=false")
-        .headers(FPLAHeader.headers_72)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(StringBody("{\n  \"data\": {\n    \"caseName\": \"${firstName}\"\n  },\n  \"event\": {\n    \"id\": \"openCase\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"draft_id\": null\n}"))
-        .check(status.in(200, 304, 201, 201))
-        .check(jsonPath("$.id").optional.saveAs("caseId")))
-
-
-        .exec(http("XUI${service}_070_010_CaseNameViewCase")
-          .get("/data/internal/cases/${caseId}")
-          .headers(FPLAHeader.headers_casesprofile)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .check(status.in(200, 304, 201)))
-    }
-      .pause(MinThinkTime , MaxThinkTime )
-
-      //Orders Needed
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to Order Direction  after enter the case Order  details
-======================================================================================*/
-    
-    .group("XUI${service}_080_OrdersDirectionNeededGo") {
-    exec(http("XUI${service}_080_005_OrdersDirectionNeededGo")
-      .get("/data/internal/cases/${caseId}/event-triggers/ordersNeeded?ignore-warning=false")
-      .headers(FPLAHeader.headers_76)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
-      .check(status.in(200, 304, 201)))
-
-      .exec(http("XUI${service}_080_010_OrdersDirectionProfile")
-        .get("/data/internal/profile")
-        .headers(FPLAHeader.headers_orddersprofile)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(status.in(200, 304, 201)))
-  }
-      .pause(MinThinkTime , MaxThinkTime )
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to Order Direction Continue after enter the case Order  details
-======================================================================================*/
-    
-    .group("XUI${service}_090_OrdersDirectionNeededContinue") {
-      exec(http("XUI${service}_090_005_OrdersDirectionNeededContinue")
-        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=ordersNeeded1")
-        .headers(FPLAHeader.headers_71)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(StringBody("{\n  \"data\": {\n    \"orders\": {\n      \"orderType\": [\n        \"CARE_ORDER\"\n      ],\n      \"directions\": null\n    }\n  },\n  \"event\": {\n    \"id\": \"ordersNeeded\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"orders\": {\n      \"orderType\": [\n        \"CARE_ORDER\"\n      ],\n      \"directions\": null\n    }\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
-        .check(status.in(200, 304, 201)))
-
-        .exec(http("XUI${service}_090_010_OrdersDirectionContinueProfile")
-          .get("/data/internal/profile")
-          .headers(FPLAHeader.headers_ordersneed1profile)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .check(status.in(200, 304, 201)))
-    }
-      .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to Order Direction Save  after enter the case Order  details
-======================================================================================*/
-    
-    .group("XUI${service}_100_OrdersDirectionNeededSaveContinue") {
-      exec(http("XUI${service}_100_005_OrdersDirectionNeededSaveContinue")
-        .post("/data/cases/${caseId}/events")
-        .headers(FPLAHeader.headers_81)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(StringBody("{\n  \"data\": {\n    \"orders\": {\n      \"orderType\": [\n        \"CARE_ORDER\"\n      ],\n      \"directions\": null\n    }\n  },\n  \"event\": {\n    \"id\": \"ordersNeeded\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
-        .check(status.in(200, 304, 201)))
-
-        .exec(http("XUI${service}_100_010_OrdersDirectionViewCase")
-          .get("/data/internal/cases/${caseId}")
-          .headers(FPLAHeader.headers_casesprofile)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .check(status.in(200, 304, 201)))
-    }
-      .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to Hearing Needed data to be entered
-======================================================================================*/
-    
-    .group("XUI${service}_110_HearingNeededGo") {
-    exec(http("XUI${service}_110_005_HearingNeededGo")
-      .get("/data/internal/cases/${caseId}/event-triggers/hearingNeeded?ignore-warning=false")
-      .headers(FPLAHeader.headers_76)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
-      .check(status.in(200, 304, 201)))
-
-      .exec(http("XUI${service}_110_010_HearingNeededGoProfile")
-        .get("/data/internal/profile")
-        .headers(FPLAHeader.headers_orddersprofile)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(status.in(200, 304, 201)))
-  }
-      .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to Hearing Needed Continue to be entered
-======================================================================================*/
-    
-    .group("XUI${service}_120_HearingNeededContinue") {
-      exec(http("XUI${service}_120_005_HearingNeededContinue")
-        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=hearingNeeded1")
-        .headers(FPLAHeader.headers_71)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(StringBody("{\n  \"data\": {\n    \"hearing\": {\n      \"timeFrame\": \"Within 18 days\",\n      \"type\": null,\n      \"withoutNotice\": null,\n      \"reducedNotice\": null,\n      \"respondentsAware\": null\n    }\n  },\n  \"event\": {\n    \"id\": \"hearingNeeded\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"hearing\": {\n      \"timeFrame\": \"Within 18 days\",\n      \"type\": null,\n      \"withoutNotice\": null,\n      \"reducedNotice\": null,\n      \"respondentsAware\": null\n    }\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
-        .check(status.in(200, 304, 201)))
-
-        .exec(http("XUI${service}_120_010_HearingNeededContinueProfile")
-          .get("/data/internal/profile")
-          .headers(FPLAHeader.headers_hearingneededprofile)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .check(status.in(200, 304, 201)))
-    }
-      .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to Hearing Needed Save Continue to be entered
-======================================================================================*/
-    
-    .group("XUI${service}_130_HearingNeededSaveContinue") {
-      exec(http("XUI${service}_130_005_HearingNeededSaveContinue")
-        .post("/data/cases/${caseId}/events")
-        .headers(FPLAHeader.headers_80)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(StringBody("{\n  \"data\": {\n    \"hearing\": {\n      \"timeFrame\": \"Within 18 days\",\n      \"type\": null,\n      \"withoutNotice\": null,\n      \"reducedNotice\": null,\n      \"respondentsAware\": null\n    }\n  },\n  \"event\": {\n    \"id\": \"hearingNeeded\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
-        .check(status.in(200, 304, 201)))
-
-
-        .exec(http("XUI${service}_130_010_HearingNeededSaveViewCase")
-          .get("/data/internal/cases/${caseId}")
-          .headers(FPLAHeader.headers_casesprofile)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .check(status.in(200, 304, 201)))
-    }
-      .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to Children Details to Go
-======================================================================================*/
-    .group("XUI${service}_140_ChildrenGo") {
-    exec(http("XUI${service}_140_005_ChildrenGo")
-      .get("/data/internal/cases/${caseId}/event-triggers/enterChildren?ignore-warning=false")
-      .headers(FPLAHeader.headers_76)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
-      .check(status.in(200, 304, 201)))
-
-      .exec(http("XUI${service}_140_010_ChildrenGoProfile")
-        .get("/data/internal/profile")
-        .headers(FPLAHeader.headers_ordersneed1profile)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(status.in(200, 304, 201)))
-  }
-      .pause(MinThinkTime , MaxThinkTime )
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to Children Continue to Go
-======================================================================================*/
-    .group("XUI${service}_150_ChildrenContinue") {
-      exec(http("XUI${service}_150_005_ChildrenContinue")
-        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterChildren1")
-        .headers(FPLAHeader.headers_71)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(StringBody("{\n  \"data\": {\n    \"children1\": [\n      {\n        \"id\": \"d01fbe4f-95df-4023-b2cd-0312639a9700\",\n        \"value\": {\n          \"party\": {\n            \"firstName\": \"test\",\n            \"lastName\": \"testing\",\n            \"dateOfBirth\": \"2011-02-22\",\n            \"gender\": \"Boy\",\n            \"livingSituation\": \"Living with respondents\",\n            \"addressChangeDate\": \"2020-06-01\",\n            \"address\": {\n              \"AddressLine1\": \"Flat 14\",\n              \"AddressLine2\": \"Bramber House\",\n              \"AddressLine3\": \"Seven Kings Way\",\n              \"PostTown\": \"Kingston Upon Thames\",\n              \"County\": \"\",\n              \"PostCode\": \"KT2 5BU\",\n              \"Country\": \"United Kingdom\"\n            },\n            \"keyDates\": \"test\",\n            \"careAndContactPlan\": \"test\",\n            \"adoption\": \"No\",\n            \"mothersName\": \"tess\",\n            \"fathersName\": \"dan\",\n            \"fathersResponsibility\": \"Yes\",\n            \"socialWorkerName\": \"test\",\n            \"socialWorkerTelephoneNumber\": {\n              \"telephoneNumber\": \"02088889966\",\n              \"contactDirection\": \"test\"\n            },\n            \"additionalNeeds\": \"No\",\n            \"detailsHidden\": \"No\",\n            \"litigationIssues\": \"NO\"\n          }\n        }\n      }\n    ]\n  },\n  \"event\": {\n    \"id\": \"enterChildren\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"children1\": [\n      {\n        \"id\": \"d01fbe4f-95df-4023-b2cd-0312639a9700\",\n        \"value\": {\n          \"party\": {\n            \"firstName\": \"test\",\n            \"lastName\": \"testing\",\n            \"dateOfBirth\": \"2011-02-22\",\n            \"gender\": \"Boy\",\n            \"livingSituation\": \"Living with respondents\",\n            \"addressChangeDate\": \"2020-06-01\",\n            \"address\": {\n              \"AddressLine1\": \"Flat 14\",\n              \"AddressLine2\": \"Bramber House\",\n              \"AddressLine3\": \"Seven Kings Way\",\n              \"PostTown\": \"Kingston Upon Thames\",\n              \"County\": \"\",\n              \"PostCode\": \"KT2 5BU\",\n              \"Country\": \"United Kingdom\"\n            },\n            \"keyDates\": \"test\",\n            \"careAndContactPlan\": \"test\",\n            \"adoption\": \"No\",\n            \"mothersName\": \"tess\",\n            \"fathersName\": \"dan\",\n            \"fathersResponsibility\": \"Yes\",\n            \"socialWorkerName\": \"test\",\n            \"socialWorkerTelephoneNumber\": {\n              \"telephoneNumber\": \"02088889966\",\n              \"contactDirection\": \"test\"\n            },\n            \"additionalNeeds\": \"No\",\n            \"detailsHidden\": \"No\",\n            \"litigationIssues\": \"NO\"\n          }\n        }\n      }\n    ]\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
-        .check(status.in(200, 304, 201)))
-
-        .exec(http("XUI${service}_150_010_ChildrenContinueProfile")
-          .get("/data/internal/profile")
-          .headers(FPLAHeader.headers_childrenprofile)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .check(status.in(200, 304, 201)))
-    }
-
-      .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to Children Save Continue to Go
-======================================================================================*/
-    
-    .group("XUI${service}_160_ChildrenSaveContinue") {
-      exec(http("XUI${service}_160_005_ChildrenSaveContinue")
-        .post("/data/cases/${caseId}/events")
-        .headers(FPLAHeader.headers_80)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(StringBody("{\n  \"data\": {\n    \"children1\": [\n      {\n        \"id\": \"d01fbe4f-95df-4023-b2cd-0312639a9700\",\n        \"value\": {\n          \"party\": {\n            \"firstName\": \"test\",\n            \"lastName\": \"testing\",\n            \"dateOfBirth\": \"2011-02-22\",\n            \"gender\": \"Boy\",\n            \"livingSituation\": \"Living with respondents\",\n            \"addressChangeDate\": \"2020-06-01\",\n            \"address\": {\n              \"AddressLine1\": \"Flat 14\",\n              \"AddressLine2\": \"Bramber House\",\n              \"AddressLine3\": \"Seven Kings Way\",\n              \"PostTown\": \"Kingston Upon Thames\",\n              \"County\": \"\",\n              \"PostCode\": \"KT2 5BU\",\n              \"Country\": \"United Kingdom\"\n            },\n            \"keyDates\": \"test\",\n            \"careAndContactPlan\": \"test\",\n            \"adoption\": \"No\",\n            \"mothersName\": \"tess\",\n            \"fathersName\": \"dan\",\n            \"fathersResponsibility\": \"Yes\",\n            \"socialWorkerName\": \"test\",\n            \"socialWorkerTelephoneNumber\": {\n              \"telephoneNumber\": \"02088889966\",\n              \"contactDirection\": \"test\"\n            },\n            \"additionalNeeds\": \"No\",\n            \"detailsHidden\": \"No\",\n            \"litigationIssues\": \"NO\"\n          }\n        }\n      }\n    ]\n  },\n  \"event\": {\n    \"id\": \"enterChildren\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
-        .check(status.in(200, 304, 201)))
-
-
-        .exec(http("XUI${service}_160_010_ChildrenSaveViewCase")
-          .get("/data/internal/cases/${caseId}")
-          .headers(FPLAHeader.headers_casesprofile)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .check(status.in(200, 304, 201)))
-    }
-      .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to Respondent Details to Go
-======================================================================================*/
-    
-    .group("XUI${service}_170_RespondentsGo") {
-    exec(http("XUI${service}_170_005_RespondentsGo")
-      .get("/data/internal/cases/${caseId}/event-triggers/enterRespondents?ignore-warning=false")
-      .headers(FPLAHeader.headers_76)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
-      .check(status.in(200, 304, 201)))
-
-      .exec(http("XUI${service}_170_010_RespondentsGoProfile")
-        .get("/data/internal/profile")
-        .headers(FPLAHeader.headers_ordersneed1profile)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(status.in(200, 304, 201)))
-  }
-      .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to Respondent Address
-======================================================================================*/
-    
-    .group("XUI${service}_180_RespondentsGetAddress") {
-      exec(http("XUI${service}_180_005_RespondentsGetAddress")
-        .get("/addresses?postcode=TW33SD")
-        .headers(FPLAHeader.headers_16)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(status.in(200, 304, 201)))
-    }
-      .pause(MinThinkTime , MaxThinkTime )
-    .group("XUI${service}_190_RespondentsContinue") {
-      exec(http("XUI${service}_190_005_RespondentsContinue")
-        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterRespondents1")
-        .headers(FPLAHeader.headers_71)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        // .body(StringBody("{\n  \"data\": {\n    \"respondents1\": [\n      {\n        \"id\": \"416c4c9c-fdae-4259-8e32-fc7877dc1abf\",\n        \"value\": {\n          \"party\": {\n            \"firstName\": \"tess\",\n            \"lastName\": \"tickles\",\n            \"dateOfBirth\": \"1981-02-22\",\n            \"gender\": \"Female\",\n            \"placeOfBirth\": \"london\",\n            \"address\": {\n              \"AddressLine1\": \"Flat 12\",\n              \"AddressLine2\": \"Bramber House\",\n              \"AddressLine3\": \"Seven Kings Way\",\n              \"PostTown\": \"Kingston Upon Thames\",\n              \"County\": \"\",\n              \"PostCode\": \"KT2 5BU\",\n              \"Country\": \"United Kingdom\"\n            },\n            \"telephoneNumber\": {\n              \"telephoneNumber\": \"02088889966\",\n              \"contactDirection\": \"tess\"\n            },\n            \"relationshipToChild\": \"test\",\n            \"contactDetailsHidden\": \"No\",\n            \"litigationIssues\": \"NO\"\n          }\n        }\n      }\n    ]\n  },\n  \"event\": {\n    \"id\": \"enterRespondents\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"respondents1\": [\n      {\n        \"id\": \"416c4c9c-fdae-4259-8e32-fc7877dc1abf\",\n        \"value\": {\n          \"party\": {\n            \"firstName\": \"tess\",\n            \"lastName\": \"tickles\",\n            \"dateOfBirth\": \"1981-02-22\",\n            \"gender\": \"Female\",\n            \"placeOfBirth\": \"london\",\n            \"address\": {\n              \"AddressLine1\": \"Flat 12\",\n              \"AddressLine2\": \"Bramber House\",\n              \"AddressLine3\": \"Seven Kings Way\",\n              \"PostTown\": \"Kingston Upon Thames\",\n              \"County\": \"\",\n              \"PostCode\": \"KT2 5BU\",\n              \"Country\": \"United Kingdom\"\n            },\n            \"telephoneNumber\": {\n              \"telephoneNumber\": \"02088889999\",\n              \"contactDirection\": \"tess\"\n            },\n            \"relationshipToChild\": \"test\",\n            \"contactDetailsHidden\": \"No\",\n            \"litigationIssues\": \"NO\"\n          }\n        }\n      }\n    ]\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
-        .body(StringBody("{\n   \"data\": {\n      \"respondents1\": [\n         {\n            \"value\": {\n               \"persistRepresentedBy\": null,\n               \"leadRespondentIndicator\": null,\n               \"legalRepresentation\": \"No\",\n               \"party\": {\n                  \"firstName\": \"tess\",\n                  \"lastName\": \"tickles\",\n                  \"dateOfBirth\": \"1980-02-01\",\n                  \"gender\": \"Female\",\n                  \"genderIdentification\": null,\n                  \"relationshipToChild\": \"test\",\n                  \"contactDetailsHidden\": \"No\",\n                  \"contactDetailsHiddenReason\": null,\n                  \"litigationIssues\": \"NO\",\n                  \"litigationIssuesDetails\": null,\n                  \"partyId\": null,\n                  \"partyType\": null,\n                  \"placeOfBirth\": \"london\",\n                  \"address\": {\n                     \"AddressLine1\": \"Flat 12\",\n                     \"AddressLine2\": \"Bramber House\",\n                     \"AddressLine3\": \"Seven Kings Way\",\n                     \"PostTown\": \"Kingston Upon Thames\",\n                     \"County\": null,\n                     \"PostCode\": \"KT2 5BU\",\n                     \"Country\": \"United Kingdom\"\n                  },\n                  \"telephoneNumber\": {\n                     \"telephoneNumber\": \"02088889999\",\n                     \"contactDirection\": \"tess\"\n                  }\n               },\n               \"representedBy\": [],\n               \"solicitor\": {\n                  \"firstName\": null,\n                  \"lastName\": null,\n                  \"email\": null,\n                  \"organisation\": {\n                     \"OrganisationID\": null,\n                     \"OrganisationName\": null\n                  },\n                  \"unregisteredOrganisation\": {\n                     \"name\": null,\n                     \"address\": {\n                        \"AddressLine1\": null,\n                        \"AddressLine2\": null,\n                        \"AddressLine3\": null,\n                        \"PostTown\": null,\n                        \"County\": null,\n                        \"PostCode\": null,\n                        \"Country\": null\n                     }\n                  },\n                  \"regionalOfficeAddress\": {\n                     \"AddressLine1\": null,\n                     \"AddressLine2\": null,\n                     \"AddressLine3\": null,\n                     \"PostTown\": null,\n                     \"County\": null,\n                     \"PostCode\": null,\n                     \"Country\": null\n                  }\n               }\n            },\n            \"id\": \"416c4c9c-fdae-4259-8e32-fc7877dc1abf\"\n         }\n      ]\n   },\n   \"event\": {\n      \"id\": \"enterRespondents\",\n      \"summary\": \"\",\n      \"description\": \"\"\n   },\n   \"event_data\": {\n      \"respondents1\": [\n         {\n            \"value\": {\n               \"persistRepresentedBy\": null,\n               \"leadRespondentIndicator\": null,\n               \"legalRepresentation\": \"No\",\n               \"party\": {\n                  \"firstName\": \"tess\",\n                  \"lastName\": \"tickles\",\n                  \"dateOfBirth\": \"1980-02-01\",\n                  \"gender\": \"Female\",\n                  \"genderIdentification\": null,\n                  \"relationshipToChild\": \"test\",\n                  \"contactDetailsHidden\": \"No\",\n                  \"contactDetailsHiddenReason\": null,\n                  \"litigationIssues\": \"NO\",\n                  \"litigationIssuesDetails\": null,\n                  \"partyId\": null,\n                  \"partyType\": null,\n                  \"placeOfBirth\": \"london\",\n                  \"address\": {\n                     \"AddressLine1\": \"Flat 12\",\n                     \"AddressLine2\": \"Bramber House\",\n                     \"AddressLine3\": \"Seven Kings Way\",\n                     \"PostTown\": \"Kingston Upon Thames\",\n                     \"County\": null,\n                     \"PostCode\": \"KT2 5BU\",\n                     \"Country\": \"United Kingdom\"\n                  },\n                  \"telephoneNumber\": {\n                     \"telephoneNumber\": \"02088889999\",\n                     \"contactDirection\": \"tess\"\n                  }\n               },\n               \"representedBy\": [],\n               \"solicitor\": {\n                  \"firstName\": null,\n                  \"lastName\": null,\n                  \"email\": null,\n                  \"organisation\": {\n                     \"OrganisationID\": null,\n                     \"OrganisationName\": null\n                  },\n                  \"unregisteredOrganisation\": {\n                     \"name\": null,\n                     \"address\": {\n                        \"AddressLine1\": null,\n                        \"AddressLine2\": null,\n                        \"AddressLine3\": null,\n                        \"PostTown\": null,\n                        \"County\": null,\n                        \"PostCode\": null,\n                        \"Country\": null\n                     }\n                  },\n                  \"regionalOfficeAddress\": {\n                     \"AddressLine1\": null,\n                     \"AddressLine2\": null,\n                     \"AddressLine3\": null,\n                     \"PostTown\": null,\n                     \"County\": null,\n                     \"PostCode\": null,\n                     \"Country\": null\n                  }\n               }\n            },\n            \"id\": \"416c4c9c-fdae-4259-8e32-fc7877dc1abf\"\n         }\n      ]\n   },\n   \"event_token\": \"${existing_case_event_token}\",\n   \"ignore_warning\": false,\n   \"case_reference\": \"${caseId}\"\n}"))
-        .check(status.in(200, 304, 201)))
-
-        .exec(http("XUI${service}_190_010_RespondentsContinueProfile")
-          .get("/data/internal/profile")
-          .headers(FPLAHeader.headers_respondantprofile)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .check(status.in(200, 304, 201)))
-    }
-      .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to Respondent Details Ssave
-======================================================================================*/
-    .group("XUI${service}_200_RespondentsSaveContinue") {
-      exec(http("XUI${service}_200_005_RespondentsSaveContinue")
-        .post("/data/cases/${caseId}/events")
-        .headers(FPLAHeader.headers_80)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-//        .body(StringBody("{\n  \"data\": {\n    \"respondents1\": [\n      {\n        \"id\": \"416c4c9c-fdae-4259-8e32-fc7877dc1abf\",\n        \"value\": {\n          \"party\": {\n            \"firstName\": \"tess\",\n            \"lastName\": \"tickles\",\n            \"dateOfBirth\": \"1981-02-22\",\n            \"gender\": \"Female\",\n            \"placeOfBirth\": \"london\",\n            \"address\": {\n              \"AddressLine1\": \"Flat 12\",\n              \"AddressLine2\": \"Bramber House\",\n              \"AddressLine3\": \"Seven Kings Way\",\n              \"PostTown\": \"Kingston Upon Thames\",\n              \"County\": \"\",\n              \"PostCode\": \"KT2 5BU\",\n              \"Country\": \"United Kingdom\"\n            },\n            \"telephoneNumber\": {\n              \"telephoneNumber\": \"02088889966\",\n              \"contactDirection\": \"tess\"\n            },\n            \"relationshipToChild\": \"test\",\n            \"contactDetailsHidden\": \"No\",\n            \"litigationIssues\": \"NO\"\n          }\n        }\n      }\n    ]\n  },\n  \"event\": {\n    \"id\": \"enterRespondents\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
-        .body(StringBody("{\"data\":{\"respondents1\":[{\"value\":{\"persistRepresentedBy\":null,\"leadRespondentIndicator\":null,\"legalRepresentation\":\"No\",\"party\":{\"firstName\":\"tess\",\"lastName\":\"tickles\",\"dateOfBirth\":\"1980-02-01\",\"gender\":\"Female\",\"genderIdentification\":null,\"relationshipToChild\":\"test\",\"contactDetailsHidden\":\"No\",\"contactDetailsHiddenReason\":null,\"litigationIssues\":\"NO\",\"litigationIssuesDetails\":null,\"partyId\":null,\"partyType\":null,\"placeOfBirth\":\"london\",\"address\":{\"AddressLine1\":\"Flat 12\",\"AddressLine2\":\"Bramber House\",\"AddressLine3\":\"Seven Kings Way\",\"PostTown\":\"Kingston Upon Thames\",\"County\":null,\"PostCode\":\"KT2 5BU\",\"Country\":\"United Kingdom\"},\"telephoneNumber\":{\"telephoneNumber\":\"02088889999\",\"contactDirection\":\"tess\"}},\"representedBy\":[],\"solicitor\":{\"firstName\":null,\"lastName\":null,\"email\":null,\"organisation\":{\"OrganisationID\":null,\"OrganisationName\":null},\"unregisteredOrganisation\":{\"name\":null,\"address\":{\"AddressLine1\":null,\"AddressLine2\":null,\"AddressLine3\":null,\"PostTown\":null,\"County\":null,\"PostCode\":null,\"Country\":null}},\"regionalOfficeAddress\":{\"AddressLine1\":null,\"AddressLine2\":null,\"AddressLine3\":null,\"PostTown\":null,\"County\":null,\"PostCode\":null,\"Country\":null}}},\"id\":\"416c4c9c-fdae-4259-8e32-fc7877dc1abf\"}]},\"event\":{\"id\":\"enterRespondents\",\"summary\":\"\",\"description\":\"\"},\"event_token\":\"${existing_case_event_token}\",\"ignore_warning\":false}"))
-        .check(status.in(200, 304, 201)))
-
-
-        .exec(http("XUI${service}_200_010_RespondentsSaveViewCase")
-          .get("/data/internal/cases/${caseId}")
-          .headers(FPLAHeader.headers_casesprofile)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .check(status.in(200, 304, 201)))
-    }
-      .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to enter applicant  Details Save
-======================================================================================*/
-    .group("XUI${service}_210_ApplicantGo") {
-    exec(http("XUI${service}_210_005_ApplicantGo")
-      .get("/data/internal/cases/${caseId}/event-triggers/enterApplicant?ignore-warning=false")
-      .headers(FPLAHeader.headers_76)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
-      .check(status.in(200, 304, 201)))
-
-      .exec(http("XUI${service}_210_010_ApplicantGoProfile")
-        .get("/data/internal/profile")
-        .headers(FPLAHeader.headers_respondantprofile)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(status.in(200, 304, 201)))
-
-  }
-      .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to enter applicant get address  Details Save
-======================================================================================*/
-    
-    .group("XUI${service}_220_ApplicantGetAddress") {
-      exec(http("XUI${service}_220_ApplicantGetAddress")
-        .get("/addresses?postcode=TW33SD")
-        .headers(FPLAHeader.headers_16)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(status.in(200, 304, 201)))
-    }
-      .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to enter applicant  Details Save
-======================================================================================*/
-    
-    .group("XUI${service}_230_ApplicantContinue") {
-      exec(http("XUI${service}_230_005_ApplicantContinue")
-        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterApplicant1")
-        .headers(FPLAHeader.headers_71)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(StringBody("{\n  \"data\": {\n    \"applicants\": [\n      {\n        \"id\": \"9de5744b-26c2-4653-919d-d9b828fc4c3f\",\n        \"value\": {\n          \"party\": {\n            \"organisationName\": \"${firstName}\",\n            \"pbaNumber\": \"1234567\",\n            \"clientCode\": null,\n            \"customerReference\": null,\n            \"address\": {\n              \"AddressLine1\": \"8 Hibernia Gardens\",\n              \"AddressLine2\": \"\",\n              \"AddressLine3\": \"\",\n              \"PostTown\": \"Hounslow\",\n              \"County\": \"\",\n              \"PostCode\": \"TW3 3SD\",\n              \"Country\": \"United Kingdom\"\n            },\n            \"telephoneNumber\": {\n              \"telephoneNumber\": \"07540634567\",\n              \"contactDirection\": \"${firstName}\"\n            },\n            \"jobTitle\": \"kkkuuhhh\",\n            \"mobileNumber\": {\n              \"telephoneNumber\": null\n            },\n            \"email\": {\n              \"email\": \"dddffff@la.gov.uk\"\n            }\n          }\n        }\n      }\n    ],\n    \"solicitor\": {\n      \"name\": \"nhhffsol\",\n      \"mobile\": \"07540687298\",\n      \"telephone\": \"05673245678\",\n      \"email\": \"joe.bloggs@la.gov.uk\",\n      \"dx\": null,\n      \"reference\": null\n    }\n  },\n  \"event\": {\n    \"id\": \"enterApplicant\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"applicants\": [\n      {\n        \"id\": \"9de5744b-26c2-4653-919d-d9b828fc4c3f\",\n        \"value\": {\n          \"party\": {\n            \"organisationName\": \"${firstName}\",\n            \"pbaNumber\": \"1234567\",\n            \"clientCode\": null,\n            \"customerReference\": null,\n            \"address\": {\n              \"AddressLine1\": \"8 Hibernia Gardens\",\n              \"AddressLine2\": \"\",\n              \"AddressLine3\": \"\",\n              \"PostTown\": \"Hounslow\",\n              \"County\": \"\",\n              \"PostCode\": \"TW3 3SD\",\n              \"Country\": \"United Kingdom\"\n            },\n            \"telephoneNumber\": {\n              \"telephoneNumber\": \"07540634567\",\n              \"contactDirection\": \"${firstName}\"\n            },\n            \"jobTitle\": \"kkkuuhhh\",\n            \"mobileNumber\": {\n              \"telephoneNumber\": null\n            },\n            \"email\": {\n              \"email\": \"dddffff@la.gov.uk\"\n            }\n          }\n        }\n      }\n    ],\n    \"solicitor\": {\n      \"name\": \"nhhffsol\",\n      \"mobile\": \"07540687298\",\n      \"telephone\": \"05673245678\",\n      \"email\": \"joe.bloggs@la.gov.uk\",\n      \"dx\": null,\n      \"reference\": null\n    }\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
-        .check(status.in(200, 304, 201)))
-
-        .exec(http("XUI${service}_230_010_ApplicantGoProfile")
-          .get("/data/internal/profile")
-          .headers(FPLAHeader.headers_applicantprofile)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .check(status.in(200, 304, 201)))
-    }
-
-      .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to enter applicant  Details Save
-======================================================================================*/
-    
-    .group("XUI${service}_240_ApplicantSaveContinue") {
-      exec(http("XUI${service}_240_005_ApplicantSaveContinue")
-        .post("/data/cases/${caseId}/events")
-        .headers(FPLAHeader.headers_80)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(StringBody("{\n  \"data\": {\n    \"applicants\": [\n      {\n        \"id\": \"9de5744b-26c2-4653-919d-d9b828fc4c3f\",\n        \"value\": {\n          \"party\": {\n            \"organisationName\": \"${firstName}\",\n            \"pbaNumber\": \"PBA1234567\",\n            \"clientCode\": null,\n            \"customerReference\": null,\n            \"address\": {\n              \"AddressLine1\": \"8 Hibernia Gardens\",\n              \"AddressLine2\": \"\",\n              \"AddressLine3\": \"\",\n              \"PostTown\": \"Hounslow\",\n              \"County\": \"\",\n              \"PostCode\": \"TW3 3SD\",\n              \"Country\": \"United Kingdom\"\n            },\n            \"telephoneNumber\": {\n              \"telephoneNumber\": \"07540634567\",\n              \"contactDirection\": \"${firstName}\"\n            },\n            \"jobTitle\": \"kkkuuhhh\",\n            \"mobileNumber\": {\n              \"telephoneNumber\": null\n            },\n            \"email\": {\n              \"email\": \"dddffff@la.gov.uk\"\n            }\n          }\n        }\n      }\n    ],\n    \"solicitor\": {\n      \"name\": \"nhhffsol\",\n      \"mobile\": \"07540687298\",\n      \"telephone\": \"05673245678\",\n      \"email\": \"joe.bloggs@la.gov.uk\",\n      \"dx\": null,\n      \"reference\": null\n    }\n  },\n  \"event\": {\n    \"id\": \"enterApplicant\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
-        .check(status.in(200, 304, 201)))
-
-        .exec(http("XUI${service}_240_010_ApplicantSaveViewCase")
-          .get("/data/internal/cases/${caseId}")
-          .headers(FPLAHeader.headers_casesprofile)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .check(status.in(200, 304, 201)))
-    }
-      .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to enter Ground details Go
-======================================================================================*/
-    
-    .group("XUI${service}_250_GroundApplicationGo") {
-    exec(http("XUI${service}_250_005_GroundApplicationGo")
-      .get("/data/internal/cases/${caseId}/event-triggers/enterGrounds?ignore-warning=false")
-      .headers(FPLAHeader.headers_76)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
-      .check(status.in(200, 304, 201)))
-
-      .exec(http("XUI${service}_250_010__GroundApplicationGoProfile")
-        .get("/data/internal/profile")
-        .headers(FPLAHeader.headers_ordersneed1profile)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(status.in(200, 304, 201)))
-  }
-      .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to enter applicant  Details Continue
-======================================================================================*/
-    .group("XUI${service}_260_GroundApplicationContinue") {
-      exec(http("XUI${service}_260_005_GroundApplicationContinue")
-        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterGrounds1")
-        .headers(FPLAHeader.headers_71)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(StringBody("{\n  \"data\": {\n    \"grounds\": {\n      \"thresholdReason\": [\n        \"beyondControl\"\n      ],\n      \"thresholdDetails\": \"sdsdsds\"\n    }\n  },\n  \"event\": {\n    \"id\": \"enterGrounds\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"grounds\": {\n      \"thresholdReason\": [\n        \"beyondControl\"\n      ],\n      \"thresholdDetails\": \"sdsdsds\"\n    }\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
-        .check(status.in(200, 304, 201)))
-
-        .exec(http("XUI${service}_260_010_GroundApplicationContinueProfile")
-          .get("/data/internal/profile")
-          .headers(FPLAHeader.headers_groundsprofile)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .check(status.in(200, 304, 201)))
-    }
-      .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to enter applicant  Details Save
-======================================================================================*/
-    .group("XUI${service}_270_GroundApplicationSaveContinue") {
-      exec(http("XUI${service}_270_005_GroundApplicationSaveContinue")
-        .post("/data/cases/${caseId}/events")
-        .headers(FPLAHeader.headers_80)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(StringBody("{\n  \"data\": {\n    \"grounds\": {\n      \"thresholdReason\": [\n        \"beyondControl\"\n      ],\n      \"thresholdDetails\": \"sdsdsds\"\n    }\n  },\n  \"event\": {\n    \"id\": \"enterGrounds\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
-        .check(status.in(200, 304, 201)))
-
-
-        .exec(http("XUI${service}_270_010_GroundApplicationSaveViewCase")
-          .get("/data/internal/cases/${caseId}")
-          .headers(FPLAHeader.headers_casesprofile)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .check(status.in(200, 304, 201)))
-    }
-      .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to enter Allocation proposal Go
-======================================================================================*/
-    
-    .group("XUI${service}_280_AllocationProposalGo") {
-      //other proposal
-      exec(http("XUI${service}_280_005_AllocationProposalGo")
-        .get("/data/internal/cases/${caseId}/event-triggers/otherProposal?ignore-warning=false")
-        .headers(FPLAHeader.headers_76)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
-        .check(status.in(200, 304, 201)))
-
-        .exec(http("XUI${service}_280_010_AllocationProposalGoProfile")
-          .get("/data/internal/profile")
-          .headers(FPLAHeader.headers_ordersneed1profile)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .check(status.in(200, 304, 201)))
-    }
-      .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to enter Allocation proposal Continue
-======================================================================================*/
-    
-    .group("XUI${service}_290_AllocationProposalContinue") {
-      exec(http("XUI${service}_290_005_AllocationProposalContinue")
-        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=otherProposal1")
-        .headers(FPLAHeader.headers_71)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(StringBody("{\n  \"data\": {\n    \"allocationProposal\": {\n      \"proposal\": \"District judge\",\n      \"proposalReason\": \"xccxcx\"\n    }\n  },\n  \"event\": {\n    \"id\": \"otherProposal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"allocationProposal\": {\n      \"proposal\": \"District judge\",\n      \"proposalReason\": \"xccxcx\"\n    }\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
-        .check(status.in(200, 304, 201)))
-
-        .exec(http("XUI${service}_290_010_AllocationProposalContinueProfile")
-          .get("/data/internal/profile")
-          .headers(FPLAHeader.headers_otherprofile)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .check(status.in(200, 304, 201)))
-    }
-      .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to enter Allocation proposal Save Continue
-======================================================================================*/
-    
-    .group("XUI${service}_300_AllocationProposalSaveContinue") {
-      exec(http("XUI${service}_300_005_AllocationProposalSaveContinue")
-        .post("/data/cases/${caseId}/events")
-        .headers(FPLAHeader.headers_80)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(StringBody("{\n  \"data\": {\n    \"allocationProposal\": {\n      \"proposal\": \"District judge\",\n      \"proposalReason\": \"xccxcx\"\n    }\n  },\n  \"event\": {\n    \"id\": \"otherProposal\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
-        .check(status.in(200, 304, 201)))
-
-
-        .exec(http("XUI${service}_300_010_AllocationProposalSaveViewCase")
-          .get("/data/internal/cases/${caseId}")
-          .headers(FPLAHeader.headers_casesprofile)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .check(status.in(200, 304, 201)))
-    }
-      .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to Upload Documents page
-======================================================================================*/
-    .group("XUI${service}_310_DocumentsGo") {
-    exec(http("XUI${service}_310_DocumentsGo")
-      .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/${caseId}/trigger/uploadDocuments")
-      .headers(FPLAHeader.commonHeader)
-      .check(status.in(200, 304, 201)))
-  }
     .pause(MinThinkTime , MaxThinkTime )
+
+    /*======================================================================================
+    *Business process : Click Save and Continue to create the case
+    ======================================================================================*/
+    
+    .group("XUI_FPL_070_CaseNameSaveContinue") {
+      exec(http("XUI_FPL_070_005_CaseNameSaveContinue")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/cases?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-case.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/fpl/FPLSaveCase.json"))
+        .check(jsonPath("$.id").saveAs("caseId"))
+        .check(substring("created_on")))
+
+      .exec(http("XUI_FPL_070_010_WorkAllocation")
+        .post("/workallocation/searchForCompletable")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"openCase","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
+        .check(status.in(200, 400))
+        .check(substring("tasks")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+      .exec(http("XUI_FPL_070_015_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("CCD ID")))
+    }
+      
+    .exec(Common.caseActivityGet)
+    .pause(2)
+    .exec(Common.caseActivityPost)
+      
+    .pause(MinThinkTime , MaxThinkTime )
+
+    /*======================================================================================
+    *Business process : Select Orders and Directions sought case event from the dropdown
+    ======================================================================================*/
+      
+    .group("XUI_FPL_080_OrdersDirectionNeededGo") {
+      exec(http("XUI_FPL_080_005_OrdersDirectionNeededGo")
+        .get("/data/internal/cases/${caseId}/event-triggers/ordersNeeded?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(substring("Orders and directions sought")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FordersNeeded"))
+
+      .exec(Common.profile)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FordersNeeded%2FordersNeeded1"))
+    }
+    
+    .exec(Common.caseActivityGet)
+    .pause(2)
+    .exec(Common.caseActivityPost)
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+  val fplOrdersNeeded =
+  
+    /*======================================================================================
+    *Business process : Select the top option and click Continue
+    ======================================================================================*/
+    
+    group("XUI_FPL_090_OrdersDirectionNeededContinue") {
+      exec(http("XUI_FPL_090_005_OrdersDirectionNeededContinue")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=ordersNeeded1")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/FPL/FPLOrdersNeededAdd.json"))
+        .check(substring("emergencyProtectionOrderDetails")))
+
+      .exec(Common.profile)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FordersNeeded%2Fsubmit"))
+    }
+
+    .exec(Common.caseActivityGet)
+    .pause(2)
+    .exec(Common.caseActivityPost)
+    
+    .pause(MinThinkTime , MaxThinkTime )
+
+    /*======================================================================================
+    *Business process : Review details and click Save and Continue
+    ======================================================================================*/
+    
+    .group("XUI_FPL_100_OrdersDirectionNeededSaveContinue") {
+      exec(http("XUI_FPL_100_005_OrdersDirectionNeededSaveContinue")
+        .post("/data/cases/${caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/FPL/FPLOrdersNeededSubmit.json"))
+        .check(substring("last_modified_on")))
+
+      .exec(http("XUI_FPL_100_010_WorkAllocation")
+        .post("/workallocation/searchForCompletable")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"ordersNeeded","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
+        .check(status.in(200, 400))
+        .check(substring("tasks")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+      .exec(http("XUI_FPL_100_015_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("""event_id":"ordersNeeded""")))
+    }
+
+    .exec(Common.caseActivityGet)
+    .pause(2)
+    .exec(Common.caseActivityPost)
+      
+    .pause(MinThinkTime , MaxThinkTime )
+
+  val fplHearingNeeded =
+
+  /*======================================================================================
+  *Business process : Select Hearing urgency from the dropdown
+  ======================================================================================*/
+    
+  group("XUI_FPL_110_HearingNeededGo") {
+    exec(http("XUI_FPL_110_005_HearingNeededGo")
+      .get("/data/internal/cases/${caseId}/event-triggers/hearingNeeded?ignore-warning=false")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .check(jsonPath("$.event_token").saveAs("event_token"))
+      .check(substring("Hearing urgency")))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FhearingNeeded"))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FhearingNeeded%2FhearingNeeded1"))
+
+    .exec(Common.profile)
+  }
+
+  .exec(Common.caseActivityGet)
+  .pause(2)
+  .exec(Common.caseActivityPost)
+
+  .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+  *Business process : Select desired check boxes and click on Continue
+  ======================================================================================*/
+    
+  .group("XUI_FPL_120_HearingNeededContinue") {
+    exec(http("XUI_FPL_120_005_HearingNeededContinue")
+      .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=hearingNeeded1")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(ElFileBody("bodies/FPL/FPLHearingNeededAdd.json"))
+      .check(substring("Within 18 days")))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FhearingNeeded%2Fsubmit"))
+
+    .exec(Common.profile)
+  }
+
+  .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+  *Business process : Review details and click Save and Continue
+  ======================================================================================*/
+    
+  .group("XUI_FPL_130_HearingNeededSaveContinue") {
+    exec(http("XUI_FPL_130_005_HearingNeededSaveContinue")
+      .post("/data/cases/${caseId}/events")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(ElFileBody("bodies/fpl/FPLHearingNeededSubmit.json"))
+      .check(substring("${caseId}"))
+      .check(substring("last_modified_on")))
+
+    .exec(http("XUI_FPL_130_010_WorkAllocation")
+      .post("/workallocation/searchForCompletable")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"hearingNeeded","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
+      .check(status.in(200, 400))
+      .check(substring("tasks")))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+    .exec(http("XUI_FPL_130_010_ViewCase")
+      .get("/data/internal/cases/${caseId}")
+      .headers(Headers.commonHeader)
+      .header("x-xsrf-token", "${XSRFToken}")
+      .check(substring("""event_id":"hearingNeeded""")))
+  }
+
+  .exec(Common.caseActivityGet)
+  .pause(2)
+  .exec(Common.caseActivityPost)
+
+  .pause(MinThinkTime , MaxThinkTime )
+
+val fplChildDetails =
+
+  /*======================================================================================
+  *Business process : Select Child details from the dropdown
+  ======================================================================================*/
+  
+  group("XUI_FPL_140_ChildrenGo") {
+    exec(http("XUI_FPL_140_005_ChildrenGo")
+      .get("/data/internal/cases/${caseId}/event-triggers/enterChildren?ignore-warning=false")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .check(jsonPath("$.event_token").saveAs("event_token"))
+      .check(Common.savePartyId)
+      .check(Common.saveId)
+      .check(substring("Entering the children for the case")))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterChildren%2FenterChildren1"))
+
+    .exec(Common.profile)
+  }
+
+  .exec(Common.caseActivityGet)
+  .pause(2)
+  .exec(Common.caseActivityPost)
+
+  .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+  *Business process : Enter Children details and click on Continue
+  ======================================================================================*/
+
+  .group("XUI_FPL_150_ChildrenContinue") {
+    exec(http("XUI_FPL_150_005_ChildrenContinue")
+      .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterChildren1")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(ElFileBody("bodies/fpl/FPLChildDetailsAdd.json"))
+      .check(substring("finalOrderIssuedType")))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterChildren%2Fsubmit"))
+
+    .exec(Common.profile)
+  }
+
+  .exec(Common.caseActivityGet)
+  .pause(2)
+  .exec(Common.caseActivityPost)
+
+  .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+  *Business process : Review details and click on Save and Continue
+  ======================================================================================*/
+    
+  .group("XUI_FPL_160_ChildrenSaveContinue") {
+    exec(http("XUI_FPL_160_005_ChildrenSaveContinue")
+      .post("/data/cases/${caseId}/events")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(ElFileBody("bodies/fpl/FPLChildDetailsSubmit.json"))
+      .check(substring("${caseId}"))
+      .check(substring("last_modified_on")))
+
+    .exec(http("XUI_FPL_160_010_WorkAllocation")
+      .post("/workallocation/searchForCompletable")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"enterChildren","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
+      .check(status.in(200, 400))
+      .check(substring("tasks")))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+    .exec(http("XUI_FPL_160_015_ViewCase")
+      .get("/data/internal/cases/${caseId}")
+      .headers(Headers.commonHeader)
+      .header("x-xsrf-token", "${XSRFToken}")
+      .check(substring("""event_id":"enterChildren""")))
+  }
+
+  .exec(Common.caseActivityGet)
+  .pause(2)
+  .exec(Common.caseActivityPost)
+
+  .pause(MinThinkTime , MaxThinkTime )
+
+val fplEnterRespondents = 
+
+  /*======================================================================================
+  *Business process : Select Enter Respondents from the dropdown
+  ======================================================================================*/
+    
+  group("XUI_FPL_170_RespondentsGo") {
+    exec(http("XUI_FPL_170_005_RespondentsGo")
+      .get("/data/internal/cases/${caseId}/event-triggers/enterRespondents?ignore-warning=false")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .check(jsonPath("$.event_token").saveAs("event_token"))
+      .check(Common.savePartyId)
+      .check(Common.saveId)
+      .check(substring("Entering the respondents for the case")))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterRespondents"))
+
+    .exec(Common.profile)
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterRespondents%2FenterRespondents1"))
+
+    .exec(Common.caseShareOrgs)
+  }
+
+  .exec(Common.caseActivityGet)
+  .pause(2)
+  .exec(Common.caseActivityPost)
+      
+  .pause(MinThinkTime , MaxThinkTime)
+
+  /*======================================================================================
+  *Business process : Enter required details and click Continue
+  ======================================================================================*/
+
+  .exec(Common.postcodeLookup)
+
+  .pause(MinThinkTime , MaxThinkTime)
+  
+  .group("XUI_FPL_180_RespondentsContinue") {
+    exec(http("XUI_FPL_180_005_RespondentsContinue")
+      .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterRespondents1")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(ElFileBody("bodies/fpl/FPLEnterRespondentsAdd.json"))
+      .check(substring("livingSituation")))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterRespondents%2Fsubmit"))
+
+    .exec(Common.profile)
+    
+  }
+  
+  .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+  *Business process : Review details and click Save and Continue
+  ======================================================================================*/
+  
+  .group("XUI_FPL_190_RespondentsSaveContinue") {
+    exec(http("XUI_FPL_190_005_RespondentsSaveContinue")
+      .post("/data/cases/${caseId}/events")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(ElFileBody("bodies/fpl/FPLEnterRespondentsSubmit.json"))
+      .check(substring("${caseId}"))
+      .check(substring("last_modified_on")))
+
+    .exec(http("XUI_FPL_190_010_WorkAllocation")
+      .post("/workallocation/searchForCompletable")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"enterRespondents","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
+      .check(status.in(200, 400))
+      .check(substring("tasks")))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+    .exec(http("XUI_FPL_190_015_ViewCase")
+      .get("/data/internal/cases/${caseId}")
+      .headers(Headers.commonHeader)
+      .header("x-xsrf-token", "${XSRFToken}")
+      .check(substring("""event_id":"enterRespondents""")))
+  }
+
+  .exec(Common.caseActivityGet)
+  .pause(2)
+  .exec(Common.caseActivityPost)
+
+  .pause(MinThinkTime , MaxThinkTime )
+
+val fplEnterApplicant =
+
+  /*======================================================================================
+  *Business process : Select Applicant Details from the dropdownh
+  ======================================================================================*/
+    
+  group("XUI_FPL_200_ApplicantGo") {
+    exec(http("XUI_FPL_200_005_ApplicantGo")
+      .get("/data/internal/cases/${caseId}/event-triggers/enterApplicant?ignore-warning=false")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .check(jsonPath("$.event_token").saveAs("event_token"))
+      .check(Common.savePartyId)
+      .check(Common.saveId)
+      .check(substring("Entering the applicant for the case")))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterApplicant"))
+
+    .exec(Common.profile)
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterApplicant%2FenterApplicant1"))
+  }
+
+  .exec(Common.caseActivityGet)
+  .pause(2)
+  .exec(Common.caseActivityPost)
+  
+  .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+  *Business process : Enter postcode and search
+  ======================================================================================*/
+    
+  .exec(Common.postcodeLookup)
+
+  .pause(MinThinkTime , MaxThinkTime )
+
   /*======================================================================================
   *Business process : As part of the FPL Case Creation there are different steps
-  * Below group contains all the requests related to Upload Documents page
   ======================================================================================*/
-.group("XUI${service}_320_DocumentsUploadPage"){
-  exec(http("XUI${service}_320_005_DocumentsUploadPage")
-    .get("/external/configuration-ui/")
-    .headers(FPLAHeader.headers_323)
-    .check(status.in(200, 304, 201)))
+    
+  .group("XUI_FPL_210_ApplicantContinue") {
+    exec(http("XUI_FPL_210_005_ApplicantContinue")
+      .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterApplicant1")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(ElFileBody("bodies/fpl/FPLApplicantDetailsAdd.json"))
+      .check(substring("additionalNeeds")))
 
-    .exec(http("XUI${service}_320_010_DocumentsUploadPage")
-    .get("/assets/config/config.json")
-    .headers(FPLAHeader.commonHeader)
-      .check(status.in(200, 304, 201)))
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterApplicant%2Fsubmit"))
 
-      .exec(http("XUI${service}_320_015_DocumentsUploadPage")
-      .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
-      .headers(FPLAHeader.commonHeader)
-        .check(status.in(200, 304, 201)))
+    .exec(Common.profile)
+  }
 
-      .exec(http("XUI${service}_320_020_DocumentsUploadPage")
-      .get("/auth/isAuthenticated")
-      .headers(FPLAHeader.commonHeader)
-        .check(status.in(200, 304, 201)))
+  .pause(MinThinkTime , MaxThinkTime )
 
-      .exec(http("XUI${service}_320_025_DocumentsUploadPage")
-      .get("/api/user/details")
-      .headers(FPLAHeader.commonHeader)
-        .check(status.in(200, 304, 201)))
+  /*======================================================================================
+  *Business process : Review details and click Save and Continue
+  ======================================================================================*/
+    
+  .group("XUI_FPL_220_ApplicantSaveContinue") {
+    exec(http("XUI_FPL_220_005_ApplicantSaveContinue")
+      .post("/data/cases/${caseId}/events")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(ElFileBody("bodies/fpl/FPLApplicantDetailsSubmit.json"))
+      .check(substring("${caseId}"))
+      .check(substring("last_modified_on")))
 
-      .exec(http("XUI${service}_320_030_DocumentsUploadPageXUI${service}_320_010_DocumentsUploadPage")
+    .exec(http("XUI_FPL_220_010_WorkAllocation")
+      .post("/workallocation/searchForCompletable")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"enterApplicants","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
+      .check(status.in(200, 400))
+      .check(substring("tasks")))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+    .exec(http("XUI_FPL_220_015_ViewCase")
+      .get("/data/internal/cases/${caseId}")
+      .headers(Headers.commonHeader)
+      .header("x-xsrf-token", "${XSRFToken}")
+      .check(substring("""event_id":"enterApplicant""")))
+  }
+
+  .exec(Common.caseActivityGet)
+  .pause(2)
+  .exec(Common.caseActivityPost)
+
+  .pause(MinThinkTime , MaxThinkTime )
+
+val fplEnterGrounds =
+
+  /*======================================================================================
+  *Business process : Select Enter Grounds from the dropdown
+  ======================================================================================*/
+    
+  group("XUI_FPL_230_GroundApplicationGo") {
+    exec(http("XUI_FPL_230_005_GroundApplicationGo")
+      .get("/data/internal/cases/${caseId}/event-triggers/enterGrounds?ignore-warning=false")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .check(jsonPath("$.event_token").saveAs("event_token"))
+      .check(substring("Grounds for the application")))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterGrounds"))
+
+    .exec(Common.profile)
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterGrounds%2FenterGrounds1"))
+  }
+
+  .exec(Common.caseActivityGet)
+  .pause(2)
+  .exec(Common.caseActivityPost)
+  
+  .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+  *Business process : Select the desired reason and click on Continue
+  ======================================================================================*/
+
+  .group("XUI_FPL_240_GroundApplicationContinue") {
+    exec(http("XUI_FPL_240_005_GroundApplicationContinue")
+      .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterGrounds1")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(ElFileBody("bodies/FPL/FPLEnterGroundsAdd.json"))
+      .check(substring("thresholdReason")))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterGrounds%2Fsubmit"))
+
+    .exec(Common.profile)
+  }
+
+  .exec(Common.caseActivityGet)
+  .pause(2)
+  .exec(Common.caseActivityPost)
+
+  .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+  *Business process : Review details and click Save and Continue
+  ======================================================================================*/
+
+  .group("XUI_FPL_250_GroundApplicationSaveContinue") {
+    exec(http("XUI_FPL_250_005_GroundApplicationSaveContinue")
+      .post("/data/cases/${caseId}/events")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(ElFileBody("bodies/fpl/FPLEnterGroundsSubmit.json"))
+      .check(substring("${caseId}"))
+      .check(substring("last_modified_on")))
+
+    .exec(http("XUI_FPL_250_010_WorkAllocation")
+      .post("/workallocation/searchForCompletable")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"enterGrounds","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
+      .check(status.in(200, 400))
+      .check(substring("tasks")))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+    .exec(http("XUI_FPL_250_015_ViewCase")
+      .get("/data/internal/cases/${caseId}")
+      .headers(Headers.commonHeader)
+      .header("x-xsrf-token", "${XSRFToken}")
+      .check(substring("""event_id":"enterGrounds""")))
+  }
+
+  .exec(Common.caseActivityGet)
+  .pause(2)
+  .exec(Common.caseActivityPost)
+
+  .pause(MinThinkTime , MaxThinkTime )
+
+val fplAllocationProposal =
+
+  /*======================================================================================
+  *Business process : Select Allocation Proposal from the dropdown
+  ======================================================================================*/
+  
+  group("XUI_FPL_260_AllocationProposalGo") {
+    exec(http("XUI_FPL_260_005_AllocationProposalGo")
+      .get("/data/internal/cases/${caseId}/event-triggers/otherProposal?ignore-warning=false")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .check(jsonPath("$.event_token").saveAs("event_token"))
+      .check(substring("Allocation proposal")))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FotherProposal"))
+
+    .exec(Common.profile)
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FotherProposal%2FotherProposal1"))
+  }
+
+  .exec(Common.caseActivityGet)
+  .pause(2)
+  .exec(Common.caseActivityPost)
+
+  .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+  *Business process : Select relevant checkboxes and click Continue
+  ======================================================================================*/
+    
+  .group("XUI_FPL_270_AllocationProposalContinue") {
+    exec(http("XUI_FPL_270_005_AllocationProposalContinue")
+      .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=otherProposal1")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(ElFileBody("bodies/fpl/FPLAllocationProposalAdd.json"))
+      .check(substring("District judge")))
+
+    .exec(Common.profile)
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FotherProposal%2Fsubmit"))
+  }
+
+  .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+  *Business process : Review page details and click Save and Continue
+  ======================================================================================*/
+    
+  .group("XUI_FPL_290_AllocationProposalSaveContinue") {
+    exec(http("XUI_FPL_290_005_AllocationProposalSaveContinue")
+      .post("/data/cases/${caseId}/events")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(ElFileBody("bodies/fpl/FPLAllocationProposalSubmit.json"))
+      .check(substring("${caseId}"))
+      .check(substring("last_modified_on")))
+
+    .exec(http("XUI_FPL_290_010_WorkAllocation")
+      .post("/workallocation/searchForCompletable")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"otherProposal","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
+      .check(status.in(200, 400))
+      .check(substring("tasks")))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+    .exec(http("XUI_FPL_290_015_ViewCase")
+      .get("/data/internal/cases/${caseId}")
+      .headers(Headers.commonHeader)
+      .header("x-xsrf-token", "${XSRFToken}")
+      .check(substring("""event_id":"otherProposal""")))
+  }
+
+  .exec(Common.caseActivityGet)
+  .pause(2)
+  .exec(Common.caseActivityPost)
+
+  .pause(MinThinkTime , MaxThinkTime )
+
+val fplUploadDocuments =
+
+  /*======================================================================================
+  *Business process : Select Application Documents from the dropdown
+  ======================================================================================*/
+
+  group("XUI_FPL_300_010_DocumentsUploadPage") {
+    exec(http("XUI_FPL_300_010_DocumentsUploadPage")
       .get("/data/internal/cases/${caseId}/event-triggers/uploadDocuments?ignore-warning=false")
-      .headers(FPLAHeader.headers_76)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
-      .check(status.in(200, 304, 201)))
-  
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .check(jsonPath("$.event_token").saveAs("event_token"))
+      .check(substring("Application documents")))
 
-      .exec(http("XUI${service}_320_035_DocumentsGoProfile")
-        .get("/data/internal/profile")
-        .headers(FPLAHeader.headers_ordersneed1profile)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(status.in(200, 304, 201)))
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FuploadDocuments"))
+
+    .exec(Common.profile)
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FuploadDocuments%2FuploadDocumentsaddApplicationDocuments"))
   }
-      .pause(MinThinkTime , MaxThinkTime )
+
+  .exec(Common.caseActivityGet)
+  .pause(2)
+  .exec(Common.caseActivityPost)
+  
+  .pause(MinThinkTime , MaxThinkTime )
 
   /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to Upload Documents files
-======================================================================================*/
+  *Business process : Click Add New and upload the Document
+  ======================================================================================*/
 
-    .group("XUI${service}_330_UploadFile") {
-      exec(http("XUI${service}_330_UploadFile")
-        .post("/documents")
-        .headers(FPLAHeader.headers_uploadfile)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .bodyPart(RawFileBodyPart("files", "3MB.pdf")
-          .fileName("3MB.pdf")
-          .transferEncoding("binary"))
-        .asMultipartForm
-        .formParam("classification", "PUBLIC")
-        .check(status.is(200))
-        .check(regex("""http://(.+)/""").saveAs("DMURL"))
-        .check(regex("""internal/documents/(.+?)/binary""").saveAs("Document_ID")))
-    }
-      .pause(MinThinkTime , MaxThinkTime )
+  .group("XUI_FPL_310_UploadFile") {
+    exec(http("XUI_FPL_310_UploadFile")
+      .post("/documents")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .header("content-type", "multipart/form-data")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .bodyPart(RawFileBodyPart("files", "3MB.pdf")
+      .fileName("3MB.pdf")
+      .transferEncoding("binary"))
+      .asMultipartForm
+      .formParam("classification", "PUBLIC")
+      .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL")))
+  }
 
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to Upload Documents upload Continue
-======================================================================================*/
-
-    .group("XUI${service}_340_DocumentsContinue") {
-      exec(http("XUI${service}_340_005_DocumentsContinue")
-        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=uploadDocumentsaddApplicationDocuments")
-        .headers(FPLAHeader.headers_71)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(StringBody("{\n  \"data\": {\n    \"applicationDocuments\": [\n      {\n        \"value\": {\n          \"documentType\": \"CARE_PLAN\",\n          \"includedInSWET\": null,\n          \"document\": {\n            \"document_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}\",\n            \"document_binary_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}/binary\",\n            \"document_filename\": \"3MB.pdf\"\n          },\n          \"uploadedBy\": null\n        },\n        \"id\": null\n      }\n    ],\n    \"applicationDocumentsToFollowReason\": \"This is perftest reason\"\n  },\n  \"event\": {\n    \"id\": \"uploadDocuments\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_data\": {\n    \"applicationDocuments\": [\n      {\n        \"value\": {\n          \"documentType\": \"CARE_PLAN\",\n          \"includedInSWET\": null,\n          \"document\": {\n            \"document_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}\",\n            \"document_binary_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}/binary\",\n            \"document_filename\": \"200MB.mp3\"\n          },\n          \"uploadedBy\": null\n        },\n        \"id\": null\n      }\n    ],\n    \"applicationDocumentsToFollowReason\": \"This is perftest reason\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"case_reference\": \"${caseId}\"\n}"))
-        .check(status.in(200, 304, 201)))
-
-        .exec(http("XUI${service}_340_010_DocumentsContinueProfile")
-          .get("/data/internal/profile")
-          .headers(FPLAHeader.headers_uploaddocprofile)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .check(status.in(200, 304, 201)))
-    }
-      .pause(MinThinkTime , MaxThinkTime )
+  .pause(MinThinkTime , MaxThinkTime )
 
   /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to Upload Documents upload save Continue
-======================================================================================*/
+  *Business process : Enter a description and click Continue
+  ======================================================================================*/
+
+  .group("XUI_FPL_320_DocumentsContinue") {
+    exec(http("XUI_FPL_320_005_DocumentsContinue")
+      .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=uploadDocumentsaddApplicationDocuments")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(ElFileBody("bodies/fpl/FPLUploadDocumentAdd.json"))
+      .check(substring("applicationDocumentsToFollowReason")))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FuploadDocuments%2Fsubmit"))
+
+    .exec(Common.profile)
+  }
     
-    .group("XUI${service}_350_DocumentsSaveContinue") {
-      exec(http("XUI${service}_350_005_DocumentsSaveContinue")
-        .post("/data/cases/${caseId}/events")
-        .headers(FPLAHeader.headers_80)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(StringBody("{\n  \"data\": {\n    \"applicationDocuments\": [\n      {\n        \"value\": {\n          \"documentType\": \"CARE_PLAN\",\n          \"includedInSWET\": null,\n          \"document\": {\n            \"document_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}\",\n            \"document_binary_url\": \"http://dm-store-perftest.service.core-compute-perftest.internal/documents/${Document_ID}/binary\",\n            \"document_filename\": \"200MB.mp3\"\n          },\n          \"uploadedBy\": null\n        },\n        \"id\": null\n      }\n    ],\n    \"applicationDocumentsToFollowReason\": \"This is Performance Test\"\n  },\n  \"event\": {\n    \"id\": \"uploadDocuments\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
-        .check(status.in(200, 304, 201)))
-
-
-        .exec(http("XUI${service}_350_010_DocumentsSaveViewCase")
-          .get("/data/internal/cases/${caseId}")
-          .headers(FPLAHeader.headers_casesprofile)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .check(status.in(200, 304, 201)))
-    }
-      .pause(MinThinkTime , MaxThinkTime )
+  .pause(MinThinkTime , MaxThinkTime )
 
   /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to Submit Application Go
-======================================================================================*/
+  *Business process : Review details and click Save and Continue
+  ======================================================================================*/
     
-    .group("XUI${service}_360_SubmitApplicationGo") {
-    exec(http("XUI${service}_360_005_SubmitApplicationGo")
+  .group("XUI_FPL_330_DocumentsSaveContinue") {
+    exec(http("XUI_FPL_330_005_DocumentsSaveContinue")
+      .post("/data/cases/${caseId}/events")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(ElFileBody("bodies/fpl/FPLUploadDocumentSubmit.json"))
+      .check(substring("${caseId}"))
+      .check(substring("last_modified_on")))
+
+    .exec(http("XUI_FPL_330_010_WorkAllocation")
+      .post("/workallocation/searchForCompletable")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"uploadDocuments","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
+      .check(status.in(200, 400))
+      .check(substring("tasks")))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+    .exec(http("XUI_FPL_330_015_ViewCase")
+      .get("/data/internal/cases/${caseId}")
+      .headers(Headers.commonHeader)
+      .header("x-xsrf-token", "${XSRFToken}")
+      .check(substring("""event_id":"uploadDocuments""")))
+  }
+
+  .exec(Common.caseActivityGet)
+  .pause(2)
+  .exec(Common.caseActivityPost)
+  
+  .pause(MinThinkTime , MaxThinkTime )
+
+val fplSubmitApplication =
+
+  /*======================================================================================
+  *Business process : Select Submit Application from the dropdown
+  ======================================================================================*/
+    
+  group("XUI_FPL_340_SubmitApplicationGo") {
+    exec(http("XUI_FPL_340_005_SubmitApplicationGo")
       .get("/data/internal/cases/${caseId}/event-triggers/submitApplication?ignore-warning=false")
-      .headers(FPLAHeader.headers_76)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
-      .check(status.in(200, 304, 201)))
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .check(jsonPath("$.event_token").saveAs("event_token"))
+      .check(regex("""document_filename":"(.+?).pdf""").saveAs("DocumentName"))
+      .check(regex("""document_url":"(.*?)","document_filename""").saveAs("DocumentURL"))
+      .check(regex("""formatted_value":"I, (.+?), believe that""").saveAs("applicantName"))
+      .check(substring("Submit application")))
 
-      .exec(http("XUI${service}_360_010_SubmitApplicationGoProfile")
-        .get("/data/internal/profile")
-        .headers(FPLAHeader.headers_ordersneed1profile)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(status.in(200, 304, 201)))
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitApplication"))
+
+    .exec(Common.profile)
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitApplication%2FsubmitApplication1"))
   }
-      .pause(MinThinkTime , MaxThinkTime )
 
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to Submit Application
-======================================================================================*/
-    
-    .group("XUI${service}_370_SubmitApplicationContinue") {
-      exec(http("XUI${service}_370_005_SubmitApplicationContinue")
-        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=submitApplication1")
-        .headers(FPLAHeader.headers_71)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(StringBody("{\n  \"data\": {\n    \"submissionConsent\": [\n      \"agree\"\n    ],\n    \"submissionConsentLabel\": \"I, ${user} (local-authority), believe that the facts stated in this application are true.\"\n  },\n  \"event\": {\n    \"id\": \"submitApplication\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"submissionConsent\": [\n      \"agree\"\n    ],\n    \"submissionConsentLabel\": \"I, ${user} (local-authority), believe that the facts stated in this application are true.\"\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
-        .check(status.in(200, 304, 201)))
-
-        .exec(http("XUI${service}_370_010_SubmitApplicationContinueProfile")
-          .get("/data/internal/profile")
-          .headers(FPLAHeader.headers_submitprofile)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .check(status.in(200, 304, 201)))
-    }
-      .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-*Business process : As part of the FPL Case Creation there are different steps
-* Below group contains all the requests related to Application Submitted
-======================================================================================*/
-    
-    .group("XUI${service}_380_ApplicationSubmitted") {
-      exec(http("XUI${service}_380_005_ApplicationSubmitted")
-        .post("/data/cases/${caseId}/events")
-        .headers(FPLAHeader.headers_80)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(StringBody("{\n  \"data\": {\n    \"submissionConsent\": [\n      \"agree\"\n    ],\n    \"submissionConsentLabel\": \"I, ${user} (local-authority), believe that the facts stated in this application are true.\"\n  },\n  \"event\": {\n    \"id\": \"submitApplication\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
-        .check(status.in(200, 304, 201)))
-
-
-        .exec(http("XUI${service}_380_010_ApplicationSubmittedViewCase")
-          .get("/data/internal/cases/${caseId}")
-          .headers(FPLAHeader.headers_casesprofile)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-          .check(status.in(200, 304, 201)))
-    }
-      .pause(MinThinkTime , MaxThinkTime )
-
-
-
+  .exec(Common.caseActivityGet)
+  .pause(2)
+  .exec(Common.caseActivityPost)
   
+  .pause(MinThinkTime , MaxThinkTime )
 
+  /*======================================================================================
+  *Business process : Confirm details and click Continue
+  ======================================================================================*/
+    
+  .group("XUI_FPL_350_SubmitApplicationContinue") {
+    exec(http("XUI_FPL_350_005_SubmitApplicationContinue")
+      .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=submitApplication1")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(ElFileBody("bodies/fpl/FPLSubmitApplicationAdd.json"))
+      .check(substring("submissionConsent")))
 
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitApplication%2Fsubmit"))
+
+    .exec(Common.profile)
+  }
+
+  .pause(MinThinkTime , MaxThinkTime )
+
+/*======================================================================================
+Business process : Submit the Application
+======================================================================================*/
+    
+  .group("XUI_FPL_360_ApplicationSubmitted") {
+    exec(http("XUI_FPL_360_005_ApplicationSubmitted")
+      .post("/data/cases/${caseId}/events")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(ElFileBody("bodies/fpl/FPLSubmitApplicationSubmit.json"))
+      .check(substring("Application sent")))
+
+    .exec(http("XUI_FPL_360_010_WorkAllocation")
+      .post("/workallocation/searchForCompletable")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"submitApplication","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
+      .check(status.in(200, 400))
+      .check(substring("tasks")))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitApplication%2Fconfirm"))
+  }
+
+  .pause(MinThinkTime , MaxThinkTime )
+
+/*======================================================================================
+Business process : Click on the Close and Return to case button
+======================================================================================*/
+
+  .group("XUI_FPL_370_ViewCase") {
+    exec(http("XUI_FPL_370_ViewCase")
+      .get("/data/internal/cases/${caseId}")
+      .headers(Headers.commonHeader)
+      .header("x-xsrf-token", "${XSRFToken}")
+      .check(substring("""event_id":"submitApplication""")))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+  }
+
+  .exec(Common.caseActivityGet)
+  .pause(2)
+  .exec(Common.caseActivityPost)
+
+  .pause(MinThinkTime , MaxThinkTime )
 
 }

@@ -1,0 +1,15 @@
+{
+  "data": {
+     "allocationProposal": {
+        "proposal": "District judge",
+        "proposalReason": "Perf testing reason"
+     }
+  },
+  "event": {
+     "id": "otherProposal",
+     "summary": "",
+     "description": ""
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false
+}
