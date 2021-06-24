@@ -165,7 +165,7 @@ object EXUIFPLAMC {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/FPL/FPLOrdersNeededAdd.json"))
+        .body(ElFileBody("bodies/fpl/FPLOrdersNeededAdd.json"))
         .check(substring("emergencyProtectionOrderDetails")))
 
       .exec(Common.profile)
@@ -189,7 +189,7 @@ object EXUIFPLAMC {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/FPL/FPLOrdersNeededSubmit.json"))
+        .body(ElFileBody("bodies/fpl/FPLOrdersNeededSubmit.json"))
         .check(substring("last_modified_on")))
 
       .exec(http("XUI_FPL_100_010_WorkAllocation")
@@ -254,7 +254,7 @@ object EXUIFPLAMC {
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/FPL/FPLHearingNeededAdd.json"))
+      .body(ElFileBody("bodies/fpl/FPLHearingNeededAdd.json"))
       .check(substring("Within 18 days")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FhearingNeeded%2Fsubmit"))
@@ -621,7 +621,7 @@ val fplEnterGrounds =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/FPL/FPLEnterGroundsAdd.json"))
+      .body(ElFileBody("bodies/fpl/FPLEnterGroundsAdd.json"))
       .check(substring("thresholdReason")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterGrounds%2Fsubmit"))
