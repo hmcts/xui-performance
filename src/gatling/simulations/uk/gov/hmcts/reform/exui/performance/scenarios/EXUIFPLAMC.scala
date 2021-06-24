@@ -44,7 +44,8 @@ object EXUIFPLAMC {
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
-        .header("X-XSRF-TOKEN", "${XSRFToken}"))
+        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .check(substring("Create Case")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-create%2FPUBLICLAW%2FCARE_SUPERVISION_EPO%2FopenCase"))
     }
@@ -60,7 +61,8 @@ object EXUIFPLAMC {
         .get("/data/internal/case-types/CARE_SUPERVISION_EPO/event-triggers/openCase?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
-        .check(jsonPath("$.event_token").saveAs("event_token")))
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(substring("Start application")))
 
       .exec(Common.profile)
 
@@ -79,7 +81,8 @@ object EXUIFPLAMC {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(ElFileBody("bodies/fpl/FPLOpenCase.json")))
+        .body(ElFileBody("bodies/fpl/FPLOpenCase.json"))
+        .check(substring("caseName")))
 
       .exec(Common.profile)
     }
@@ -97,7 +100,8 @@ object EXUIFPLAMC {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-case.v2+json;charset=UTF-8")
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .body(ElFileBody("bodies/fpl/FPLSaveCase.json"))
-        .check(jsonPath("$.id").saveAs("caseId")))
+        .check(jsonPath("$.id").saveAs("caseId"))
+        .check(substring("created_on")))
 
       .exec(http("XUI_FPL_070_010_WorkAllocation")
         .post("/workallocation/searchForCompletable")
@@ -105,14 +109,16 @@ object EXUIFPLAMC {
         .header("accept", "application/json")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"openCase","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
-        .check(status.in(200, 400)))
+        .check(status.in(200, 400))
+        .check(substring("tasks")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
       .exec(http("XUI_FPL_070_015_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
-        .header("X-XSRF-TOKEN", "${XSRFToken}"))
+        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .check(substring("CCD ID")))
     }
       
     .exec(Common.caseActivityGet)
@@ -131,7 +137,8 @@ object EXUIFPLAMC {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(jsonPath("$.event_token").saveAs("event_token")))
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(substring("Orders and directions sought")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FordersNeeded"))
 
@@ -158,7 +165,8 @@ object EXUIFPLAMC {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(ElFileBody("bodies/FPL/FPLOrdersNeededAdd.json")))
+        .body(ElFileBody("bodies/FPL/FPLOrdersNeededAdd.json"))
+        .check(substring("emergencyProtectionOrderDetails")))
 
       .exec(Common.profile)
 
@@ -181,7 +189,8 @@ object EXUIFPLAMC {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(ElFileBody("bodies/FPL/FPLOrdersNeededSubmit.json")))
+        .body(ElFileBody("bodies/FPL/FPLOrdersNeededSubmit.json"))
+        .check(substring("last_modified_on")))
 
       .exec(http("XUI_FPL_100_010_WorkAllocation")
         .post("/workallocation/searchForCompletable")
@@ -189,14 +198,16 @@ object EXUIFPLAMC {
         .header("accept", "application/json")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"ordersNeeded","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
-        .check(status.in(200, 400)))
+        .check(status.in(200, 400))
+        .check(substring("tasks")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
       .exec(http("XUI_FPL_100_015_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
-        .header("X-XSRF-TOKEN", "${XSRFToken}"))
+        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .check(substring("""event_id":"ordersNeeded""")))
     }
 
     .exec(Common.caseActivityGet)
@@ -217,7 +228,8 @@ object EXUIFPLAMC {
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("event_token")))
+      .check(jsonPath("$.event_token").saveAs("event_token"))
+      .check(substring("Hearing urgency")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FhearingNeeded"))
 
@@ -242,7 +254,8 @@ object EXUIFPLAMC {
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("bodies/FPL/FPLHearingNeededAdd.json")))
+      .body(ElFileBody("bodies/FPL/FPLHearingNeededAdd.json"))
+      .check(substring("Within 18 days")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FhearingNeeded%2Fsubmit"))
 
@@ -261,7 +274,9 @@ object EXUIFPLAMC {
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLHearingNeededSubmit.json")))
+      .body(ElFileBody("bodies/fpl/FPLHearingNeededSubmit.json"))
+      .check(substring("${caseId}"))
+      .check(substring("last_modified_on")))
 
     .exec(http("XUI_FPL_130_010_WorkAllocation")
       .post("/workallocation/searchForCompletable")
@@ -269,14 +284,16 @@ object EXUIFPLAMC {
       .header("accept", "application/json")
       .header("x-xsrf-token", "${XSRFToken}")
       .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"hearingNeeded","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
-      .check(status.in(200, 400)))
+      .check(status.in(200, 400))
+      .check(substring("tasks")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
     .exec(http("XUI_FPL_130_010_ViewCase")
       .get("/data/internal/cases/${caseId}")
       .headers(Headers.commonHeader)
-      .header("X-XSRF-TOKEN", "${XSRFToken}"))
+      .header("X-XSRF-TOKEN", "${XSRFToken}")
+      .check(substring("""event_id":"hearingNeeded""")))
   }
 
   .exec(Common.caseActivityGet)
@@ -299,7 +316,8 @@ val fplChildDetails =
       .header("X-XSRF-TOKEN", "${XSRFToken}")
       .check(jsonPath("$.event_token").saveAs("event_token"))
       .check(Common.savePartyId)
-      .check(Common.saveId))
+      .check(Common.saveId)
+      .check(substring("Entering the children for the case")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterChildren%2FenterChildren1"))
 
@@ -322,9 +340,10 @@ val fplChildDetails =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLChildDetailsAdd.json")))
+      .body(ElFileBody("bodies/fpl/FPLChildDetailsAdd.json"))
+      .check(substring("finalOrderIssuedType")))
 
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F1624353075977469%2Ftrigger%2FenterChildren%2Fsubmit"))
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterChildren%2Fsubmit"))
 
     .exec(Common.profile)
   }
@@ -345,7 +364,9 @@ val fplChildDetails =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLChildDetailsSubmit.json")))
+      .body(ElFileBody("bodies/fpl/FPLChildDetailsSubmit.json"))
+      .check(substring("${caseId}"))
+      .check(substring("last_modified_on")))
 
     .exec(http("XUI_FPL_160_010_WorkAllocation")
       .post("/workallocation/searchForCompletable")
@@ -353,14 +374,16 @@ val fplChildDetails =
       .header("accept", "application/json")
       .header("x-xsrf-token", "${XSRFToken}")
       .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"enterChildren","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
-      .check(status.in(200, 400)))
+      .check(status.in(200, 400))
+      .check(substring("tasks")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
     .exec(http("XUI_FPL_160_015_ViewCase")
       .get("/data/internal/cases/${caseId}")
       .headers(Headers.commonHeader)
-      .header("X-XSRF-TOKEN", "${XSRFToken}"))
+      .header("X-XSRF-TOKEN", "${XSRFToken}")
+      .check(substring("""event_id":"enterChildren""")))
   }
 
   .exec(Common.caseActivityGet)
@@ -383,7 +406,8 @@ val fplEnterRespondents =
       .header("X-XSRF-TOKEN", "${XSRFToken}")
       .check(jsonPath("$.event_token").saveAs("event_token"))
       .check(Common.savePartyId)
-      .check(Common.saveId))
+      .check(Common.saveId)
+      .check(substring("Entering the respondents for the case")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterRespondents"))
 
@@ -392,7 +416,6 @@ val fplEnterRespondents =
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterRespondents%2FenterRespondents1"))
 
     .exec(Common.caseShareOrgs)
-
   }
 
   .exec(Common.caseActivityGet)
@@ -415,9 +438,10 @@ val fplEnterRespondents =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLEnterRespondentsAdd.json")))
+      .body(ElFileBody("bodies/fpl/FPLEnterRespondentsAdd.json"))
+      .check(substring("livingSituation")))
 
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F1624353075977469%2Ftrigger%2FenterRespondents%2Fsubmit"))
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterRespondents%2Fsubmit"))
 
     .exec(Common.profile)
     
@@ -435,7 +459,9 @@ val fplEnterRespondents =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLEnterRespondentsSubmit.json")))
+      .body(ElFileBody("bodies/fpl/FPLEnterRespondentsSubmit.json"))
+      .check(substring("${caseId}"))
+      .check(substring("last_modified_on")))
 
     .exec(http("XUI_FPL_190_010_WorkAllocation")
       .post("/workallocation/searchForCompletable")
@@ -443,14 +469,16 @@ val fplEnterRespondents =
       .header("accept", "application/json")
       .header("x-xsrf-token", "${XSRFToken}")
       .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"enterRespondents","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
-      .check(status.in(200, 400)))
+      .check(status.in(200, 400))
+      .check(substring("tasks")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
     .exec(http("XUI_FPL_190_015_ViewCase")
       .get("/data/internal/cases/${caseId}")
       .headers(Headers.commonHeader)
-      .header("X-XSRF-TOKEN", "${XSRFToken}"))
+      .header("X-XSRF-TOKEN", "${XSRFToken}")
+      .check(substring("""event_id":"enterRespondents""")))
   }
 
   .exec(Common.caseActivityGet)
@@ -473,14 +501,14 @@ val fplEnterApplicant =
       .header("X-XSRF-TOKEN", "${XSRFToken}")
       .check(jsonPath("$.event_token").saveAs("event_token"))
       .check(Common.savePartyId)
-      .check(Common.saveId))
+      .check(Common.saveId)
+      .check(substring("Entering the applicant for the case")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterApplicant"))
 
     .exec(Common.profile)
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterApplicant%2FenterApplicant1"))
-
   }
 
   .exec(Common.caseActivityGet)
@@ -507,7 +535,8 @@ val fplEnterApplicant =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLApplicantDetailsAdd.json")))
+      .body(ElFileBody("bodies/fpl/FPLApplicantDetailsAdd.json"))
+      .check(substring("additionalNeeds")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterApplicant%2Fsubmit"))
 
@@ -526,7 +555,9 @@ val fplEnterApplicant =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLApplicantDetailsSubmit.json")))
+      .body(ElFileBody("bodies/fpl/FPLApplicantDetailsSubmit.json"))
+      .check(substring("${caseId}"))
+      .check(substring("last_modified_on")))
 
     .exec(http("XUI_FPL_220_010_WorkAllocation")
       .post("/workallocation/searchForCompletable")
@@ -534,14 +565,16 @@ val fplEnterApplicant =
       .header("accept", "application/json")
       .header("x-xsrf-token", "${XSRFToken}")
       .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"enterApplicants","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
-      .check(status.in(200, 400)))
+      .check(status.in(200, 400))
+      .check(substring("tasks")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
     .exec(http("XUI_FPL_220_015_ViewCase")
       .get("/data/internal/cases/${caseId}")
       .headers(Headers.commonHeader)
-      .header("X-XSRF-TOKEN", "${XSRFToken}"))
+      .header("X-XSRF-TOKEN", "${XSRFToken}")
+      .check(substring("""event_id":"enterApplicant""")))
   }
 
   .exec(Common.caseActivityGet)
@@ -562,7 +595,8 @@ val fplEnterGrounds =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("event_token")))
+      .check(jsonPath("$.event_token").saveAs("event_token"))
+      .check(substring("Grounds for the application")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterGrounds"))
 
@@ -587,7 +621,8 @@ val fplEnterGrounds =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("bodies/FPL/FPLEnterGroundsAdd.json")))
+      .body(ElFileBody("bodies/FPL/FPLEnterGroundsAdd.json"))
+      .check(substring("thresholdReason")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterGrounds%2Fsubmit"))
 
@@ -610,7 +645,9 @@ val fplEnterGrounds =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLEnterGroundsSubmit.json")))
+      .body(ElFileBody("bodies/fpl/FPLEnterGroundsSubmit.json"))
+      .check(substring("${caseId}"))
+      .check(substring("last_modified_on")))
 
     .exec(http("XUI_FPL_250_010_WorkAllocation")
       .post("/workallocation/searchForCompletable")
@@ -618,14 +655,16 @@ val fplEnterGrounds =
       .header("accept", "application/json")
       .header("x-xsrf-token", "${XSRFToken}")
       .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"enterGrounds","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
-      .check(status.in(200, 400)))
+      .check(status.in(200, 400))
+      .check(substring("tasks")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
     .exec(http("XUI_FPL_250_015_ViewCase")
       .get("/data/internal/cases/${caseId}")
       .headers(Headers.commonHeader)
-      .header("X-XSRF-TOKEN", "${XSRFToken}"))
+      .header("X-XSRF-TOKEN", "${XSRFToken}")
+      .check(substring("""event_id":"enterGrounds""")))
   }
 
   .exec(Common.caseActivityGet)
@@ -646,7 +685,8 @@ val fplAllocationProposal =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("event_token")))
+      .check(jsonPath("$.event_token").saveAs("event_token"))
+      .check(substring("Allocation proposal")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FotherProposal"))
 
@@ -671,7 +711,8 @@ val fplAllocationProposal =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLAllocationProposalAdd.json")))
+      .body(ElFileBody("bodies/fpl/FPLAllocationProposalAdd.json"))
+      .check(substring("District judge")))
 
     .exec(Common.profile)
 
@@ -690,7 +731,9 @@ val fplAllocationProposal =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLAllocationProposalSubmit.json")))
+      .body(ElFileBody("bodies/fpl/FPLAllocationProposalSubmit.json"))
+      .check(substring("${caseId}"))
+      .check(substring("last_modified_on")))
 
     .exec(http("XUI_FPL_290_010_WorkAllocation")
       .post("/workallocation/searchForCompletable")
@@ -698,14 +741,16 @@ val fplAllocationProposal =
       .header("accept", "application/json")
       .header("x-xsrf-token", "${XSRFToken}")
       .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"otherProposal","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
-      .check(status.in(200, 400)))
+      .check(status.in(200, 400))
+      .check(substring("tasks")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
     .exec(http("XUI_FPL_290_015_ViewCase")
       .get("/data/internal/cases/${caseId}")
       .headers(Headers.commonHeader)
-      .header("X-XSRF-TOKEN", "${XSRFToken}"))
+      .header("X-XSRF-TOKEN", "${XSRFToken}")
+      .check(substring("""event_id":"otherProposal""")))
   }
 
   .exec(Common.caseActivityGet)
@@ -726,7 +771,8 @@ val fplUploadDocuments =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("event_token")))
+      .check(jsonPath("$.event_token").saveAs("event_token"))
+      .check(substring("Application documents")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FuploadDocuments"))
 
@@ -772,7 +818,8 @@ val fplUploadDocuments =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLUploadDocumentAdd.json")))
+      .body(ElFileBody("bodies/fpl/FPLUploadDocumentAdd.json"))
+      .check(substring("applicationDocumentsToFollowReason")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FuploadDocuments%2Fsubmit"))
 
@@ -791,7 +838,9 @@ val fplUploadDocuments =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLUploadDocumentSubmit.json")))
+      .body(ElFileBody("bodies/fpl/FPLUploadDocumentSubmit.json"))
+      .check(substring("${caseId}"))
+      .check(substring("last_modified_on")))
 
     .exec(http("XUI_FPL_330_010_WorkAllocation")
       .post("/workallocation/searchForCompletable")
@@ -799,14 +848,16 @@ val fplUploadDocuments =
       .header("accept", "application/json")
       .header("x-xsrf-token", "${XSRFToken}")
       .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"uploadDocuments","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
-      .check(status.in(200, 400)))
+      .check(status.in(200, 400))
+      .check(substring("tasks")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
     .exec(http("XUI_FPL_330_015_ViewCase")
       .get("/data/internal/cases/${caseId}")
       .headers(Headers.commonHeader)
-      .header("X-XSRF-TOKEN", "${XSRFToken}"))
+      .header("X-XSRF-TOKEN", "${XSRFToken}")
+      .check(substring("""event_id":"uploadDocuments""")))
   }
 
   .exec(Common.caseActivityGet)
@@ -830,7 +881,8 @@ val fplSubmitApplication =
       .check(jsonPath("$.event_token").saveAs("event_token"))
       .check(regex("""document_filename":"(.+?).pdf""").saveAs("DocumentName"))
       .check(regex("""document_url":"(.*?)","document_filename""").saveAs("DocumentURL"))
-      .check(regex("""formatted_value":"I, (.+?), believe that""").saveAs("applicantName")))
+      .check(regex("""formatted_value":"I, (.+?), believe that""").saveAs("applicantName"))
+      .check(substring("Submit application")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitApplication"))
 
@@ -855,7 +907,8 @@ val fplSubmitApplication =
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLSubmitApplicationAdd.json")))
+      .body(ElFileBody("bodies/fpl/FPLSubmitApplicationAdd.json"))
+      .check(substring("submissionConsent")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitApplication%2Fsubmit"))
 
@@ -874,7 +927,8 @@ Business process : Submit the Application
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
       .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLSubmitApplicationSubmit.json")))
+      .body(ElFileBody("bodies/fpl/FPLSubmitApplicationSubmit.json"))
+      .check(substring("Application sent")))
 
     .exec(http("XUI_FPL_360_010_WorkAllocation")
       .post("/workallocation/searchForCompletable")
@@ -882,22 +936,24 @@ Business process : Submit the Application
       .header("accept", "application/json")
       .header("x-xsrf-token", "${XSRFToken}")
       .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"submitApplication","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
-      .check(status.in(200, 400)))
+      .check(status.in(200, 400))
+      .check(substring("tasks")))
 
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F1624353075977469%2Ftrigger%2FsubmitApplication%2Fconfirm"))
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitApplication%2Fconfirm"))
   }
 
   .pause(MinThinkTime , MaxThinkTime )
 
 /*======================================================================================
-Business process : Click on the View case button
+Business process : Click on the Close and Return to case button
 ======================================================================================*/
 
   .group("XUI_FPL_370_ViewCase") {
-    .exec(http("XUI_FPL_370_ViewCase")
+    exec(http("XUI_FPL_370_ViewCase")
       .get("/data/internal/cases/${caseId}")
       .headers(Headers.commonHeader)
-      .header("X-XSRF-TOKEN", "${XSRFToken}"))
+      .header("X-XSRF-TOKEN", "${XSRFToken}")
+      .check(substring("""event_id":"submitApplication""")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
   }
