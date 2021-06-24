@@ -1,0 +1,22 @@
+{
+  "data": {
+     "draftApplicationDocument": {
+        "document_url": "${DocumentURL}",
+        "document_filename": "${DocumentName}.pdf",
+        "document_binary_url": "${DocumentURL}/binary"
+     },
+     "submissionConsentLabel": "I, ${applicantName}, believe that the facts stated in this application are true.",
+     "displayAmountToPay": "Yes",
+     "amountToPay": "205500",
+     "submissionConsent": [
+        "agree"
+     ]
+  },
+  "event": {
+     "id": "submitApplication",
+     "summary": "",
+     "description": ""
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false
+}

@@ -2,6 +2,9 @@ package uk.gov.hmcts.reform.exui.performance.scenarios.utils
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
+import io.gatling.core.check.CheckBuilder
+import io.gatling.core.check.jsonpath.JsonPathCheckType
+import com.fasterxml.jackson.databind.JsonNode
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import scala.util.Random
@@ -34,10 +37,19 @@ object Common {
   def getDobYear(): String = {
     now.minusYears(35 + rnd.nextInt(70)).format(patternYear)
   }
+  //Date of Birth <= 18 years
+  def getDobYearChild(): String = {
+    now.minusYears(1 + rnd.nextInt(17)).format(patternYear)
+  }
   //Date of Death <= 21 years
   def getDodYear(): String = {
     now.minusYears(1 + rnd.nextInt(20)).format(patternYear)
   }
+  //Saves partyId
+  def savePartyId: CheckBuilder[JsonPathCheckType, JsonNode, String] = jsonPath("$.case_fields[0].value[0].value.party.partyId").saveAs("partyId")
+
+  //Saves user ID
+  def saveId: CheckBuilder[JsonPathCheckType, JsonNode, String] = jsonPath("$.case_fields[0].value[0].id").saveAs("id")
 
   /*======================================================================================
   * Common XUI Calls
@@ -155,5 +167,12 @@ object Common {
       .headers(Headers.commonHeader)
       .header("accept", "application/json, text/plain, */*")
       .check(jsonPath("$.user.idam.id").notNull))
+
+  val caseShareOrgs =
+    exec(http("XUI_Common_000_CaseShareOrgs")
+      .get("/api/caseshare/orgs")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .check(jsonPath("$.name").notNull))
 
 }

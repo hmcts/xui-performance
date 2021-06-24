@@ -1,0 +1,21 @@
+{
+  "data": {
+     "EPO_REASONING_SHOW": [],
+     "groundsForEPO": {
+        "reason": []
+     },
+     "grounds": {
+        "thresholdDetails": "perf test",
+        "thresholdReason": [
+           "beyondControl"
+        ]
+     }
+  },
+  "event": {
+     "id": "enterGrounds",
+     "summary": "",
+     "description": ""
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false
+}
