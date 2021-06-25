@@ -41,8 +41,8 @@ val baseDomainOrg="manage-org.perftest.platform.hmcts.net"
   val minThinkTimeIACV = 10//470
   //10
   val maxThinkTimeIACV = 10//490
-  val minThinkTimePROB = 10 //180
-  val maxThinkTimePROB = 10 //190
+  val minThinkTimePROB = 25 //180
+  val maxThinkTimePROB = 25 //190
 
   val minThinkTimeDIV = 60
   val maxThinkTimeDIV = 60
