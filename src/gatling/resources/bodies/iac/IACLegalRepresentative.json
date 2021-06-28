@@ -40,7 +40,7 @@
      "appellantTitle": "Mr",
      "appellantGivenNames": "${firstName}",
      "appellantFamilyName": "${lastName}",
-     "appellantDateOfBirth": "1980-09-01",
+     "appellantDateOfBirth": "${dobYear}-${dobMonth}-${dobDay}",
      "appellantStateless": "hasNationality",
      "appellantNationalities": [
         {

@@ -1,6 +1,7 @@
 {
   "data": {
-     "hasNewMatters": "No"
+     "howToPayLabel": null,
+     "eaHuAppealTypePaymentOption": "payOffline"
   },
   "event": {
      "id": "startAppeal",
@@ -18,12 +19,12 @@
         ]
      },
      "appellantInUk": "Yes",
-     "homeOfficeReferenceNumber": "123456789",
+     "homeOfficeReferenceNumber": "123456123",
      "homeOfficeDecisionDate": "${currentDate}",
      "uploadTheNoticeOfDecisionDocs": [
         {
            "value": {
-              "description": "test doc",
+              "description": "test",
               "document": {
                  "document_url": "${DocumentURL}",
                  "document_binary_url": "${DocumentURL}/binary",
@@ -33,7 +34,7 @@
            "id": null
         }
      ],
-     "appellantTitle": "Mr",
+     "appellantTitle": "mr",
      "appellantGivenNames": "${firstName}",
      "appellantFamilyName": "${lastName}",
      "appellantDateOfBirth": "${dobYear}-${dobMonth}-${dobDay}",
@@ -65,7 +66,16 @@
         ]
      },
      "deportationOrderOptions": "No",
-     "hasNewMatters": "No"
+     "hasNewMatters": "No",
+     "hasOtherAppeals": "No",
+     "legalRepCompany": "test",
+     "legalRepName": "test",
+     "legalRepReferenceNumber": "1123",
+     "isFeePaymentEnabled": "Yes",
+     "isRemissionsEnabled": "No",
+     "decisionHearingFeeOption": "decisionWithHearing",
+     "howToPayLabel": null,
+     "eaHuAppealTypePaymentOption": "payNow"
   },
   "event_token": "${event_token}",
   "ignore_warning": false

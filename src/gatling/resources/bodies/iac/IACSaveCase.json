@@ -28,7 +28,7 @@
      "appellantTitle": "Mr",
      "appellantGivenNames": "${firstName}",
      "appellantFamilyName": "${lastName}",
-     "appellantDateOfBirth": "1980-09-01",
+     "appellantDateOfBirth": "${dobYear}-${dobMonth}-${dobDay}",
      "appellantStateless": "hasNationality",
      "appellantNationalities": [
         {
@@ -62,8 +62,11 @@
      "legalRepCompany": "test co",
      "legalRepName": "John",
      "legalRepReferenceNumber": "123",
-     "isFeePaymentEnabled": null,
-     "isRemissionsEnabled": null
+     "isFeePaymentEnabled": "Yes",
+     "isRemissionsEnabled": "No",
+     "decisionHearingFeeOption": "decisionWithHearing",
+     "howToPayLabel": null,
+     "eaHuAppealTypePaymentOption": "payOffline"
   },
   "event": {
      "id": "startAppeal",
