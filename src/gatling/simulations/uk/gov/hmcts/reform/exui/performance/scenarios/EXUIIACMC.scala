@@ -27,6 +27,9 @@ object EXUIIACMC {
     //set session variables
     exec(_.setAll( "firstName" -> ("Perf" + Common.randomString(5)),
                     "lastName" -> ("Test" + Common.randomString(5)),
+                    "dobDay" -> Common.getDay(),
+                    "dobMonth" -> Common.getMonth(),
+                    "dobYear" -> Common.getDobYear(),
                     "currentDate" -> timeStamp))
 
   /*======================================================================================
