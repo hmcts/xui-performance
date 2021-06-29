@@ -46,10 +46,10 @@ object Common {
     now.minusYears(1 + rnd.nextInt(20)).format(patternYear)
   }
   //Saves partyId
-  def savePartyId: CheckBuilder[JsonPathCheckType, JsonNode, String] = jsonPath("$.case_fields[0].value[0].value.party.partyId").saveAs("partyId")
+  def savePartyId: CheckBuilder[JsonPathCheckType, JsonNode, String] = jsonPath("$.case_fields[*].value[*].value.party.partyId").saveAs("partyId")
 
   //Saves user ID
-  def saveId: CheckBuilder[JsonPathCheckType, JsonNode, String] = jsonPath("$.case_fields[0].value[0].id").saveAs("id")
+  def saveId: CheckBuilder[JsonPathCheckType, JsonNode, String] = jsonPath("$.case_fields[*].value[0].id").saveAs("id")
 
   /*======================================================================================
   * Common XUI Calls
