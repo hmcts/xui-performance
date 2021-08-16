@@ -19,7 +19,7 @@ def channel   = '#xui-pipeline'
 
 withNightlyPipeline("java", product, component) {
 
-    enablePerformanceTest()
+    enablePerformanceTest(30)
 
     after('performanceTest') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'functional-output/**/*'

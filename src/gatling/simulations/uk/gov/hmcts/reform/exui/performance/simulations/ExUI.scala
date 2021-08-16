@@ -59,10 +59,15 @@ class ExUI extends Simulation {
 	val testDurationMins = 60
 
 	val numberOfPipelineUsers = 5
+	val pipelinePausesMillis:Long = 3000 //3 seconds
 
-	//If running in debug mode, disable pauses between steps
+	//Determine the pause pattern to use:
+	//Performance test = use the pauses defined in the script
+	//Pipeline = override pauses in the script with a fixed value (pipelinePauseMillis)
+	//Debug mode = disable all pauses
 	val pauseOption:PauseType = debugMode match{
-		case "off" => constantPauses
+		case "off" if testType == "perftest" => constantPauses
+		case "off" if testType == "pipeline" => customPauses(pipelinePausesMillis)
 		case _ => disabledPauses
 	}
 
