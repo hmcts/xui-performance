@@ -4,21 +4,20 @@ import io.gatling.http.Predef._
 
 object Environment {
 
- val environment: String = System.getProperty("env")
  val S2S_ServiceName = "rd_professional_api"
-  val S2SUrl = "http://rpe-service-auth-provider-perftest.service.core-compute-perftest.internal/testing-support"
-  val PRDUrl = "http://rd-professional-api-perftest.service.core-compute-perftest.internal"
-  val url_approve = "https://administer-orgs.perftest.platform.hmcts.net"
-  val manageOrdURL = "https://manage-org.perftest.platform.hmcts.net"
- val manageOrdDomain = "manage-org.perftest.platform.hmcts.net"
-  val idamURL = "https://idam-web-public.perftest.platform.hmcts.net"
-  val baseURL = "https://manage-case.perftest.platform.hmcts.net"
-  val ccdEnvurl = "https://ccd-case-management-web-perftest.service.core-compute-perftest.internal"
-  val baseFPLAURL = "https://manage-case.perftest.platform.hmcts.net"
- val baseDomain="manage-case.perftest.platform.hmcts.net"
-val baseDomainOrg="manage-org.perftest.platform.hmcts.net"
-  val idamAPI="https://idam-api.perftest.platform.hmcts.net"
-  val notificationClient="sidam_perftest-b7ab8862-25b4-41c9-8311-cb78815f7d2d-ebb113ff-da17-4646-a39e-f93783a993f4"
+  val S2SUrl = "http://rpe-service-auth-provider-${env}.service.core-compute-${env}.internal/testing-support"
+  val PRDUrl = "http://rd-professional-api-${env}.service.core-compute-${env}.internal"
+  val url_approve = "https://administer-orgs.${env}.platform.hmcts.net"
+  val manageOrdURL = "https://manage-org.${env}.platform.hmcts.net"
+ val manageOrdDomain = "manage-org.${env}.platform.hmcts.net"
+  val idamURL = "https://idam-web-public.${env}.platform.hmcts.net"
+  val baseURL = "https://manage-case.${env}.platform.hmcts.net"
+  val ccdEnvurl = "https://ccd-case-management-web-${env}.service.core-compute-${env}.internal"
+  val baseFPLAURL = "https://manage-case.${env}.platform.hmcts.net"
+ val baseDomain="manage-case.${env}.platform.hmcts.net"
+val baseDomainOrg="manage-org.${env}.platform.hmcts.net"
+  val idamAPI="https://idam-api.${env}.platform.hmcts.net"
+  val notificationClient="sidam_${env}-b7ab8862-25b4-41c9-8311-cb78815f7d2d-ebb113ff-da17-4646-a39e-f93783a993f4"
 
  val minThinkTime = 30 //30
   //10
