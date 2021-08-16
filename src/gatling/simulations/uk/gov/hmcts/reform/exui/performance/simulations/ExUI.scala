@@ -5,11 +5,13 @@ import io.gatling.http.Predef._
 import uk.gov.hmcts.reform.exui.performance.Feeders
 import uk.gov.hmcts.reform.exui.performance.scenarios._
 import uk.gov.hmcts.reform.exui.performance.scenarios.utils._
+import io.gatling.core.controller.inject.open.OpenInjectionStep
+import io.gatling.core.pause.PauseType
+
+import scala.concurrent.duration._
 
 class ExUI extends Simulation {
 
-	val BaseURL = Environment.baseURL
-	val orgurl=Environment.manageOrdURL
 	val feedUserDataIACView = csv("IACDataView.csv").circular
 	val feedUserDataFPLView = csv("FPLDataView.csv").circular
 	val feedUserDataIACCreate = csv("IACDataCreate.csv").circular
@@ -26,17 +28,62 @@ class ExUI extends Simulation {
 	val caseFeederIAC = csv("CaseworkerSearchesIAC.csv").circular
 	val caseFeederFPL = csv("CaseworkerSearchesFPL.csv").circular
 
+	/* TEST TYPE DEFINITION */
+	/* pipeline = nightly pipeline against the AAT environment (see the Jenkins_nightly file) */
+	/* perftest (default) = performance test against the perftest environment */
+	val testType = scala.util.Properties.envOrElse("TEST_TYPE", "perftest")
+
+	//set the environment based on the test type
+	val environment = testType match{
+		case "perftest" => "perftest"
+		//TODO: UPDATE PIPELINE TO 'aat' ONCE DATA STRATEGY IS IMPLEMENTED. UNTIL THEN, PIPELINE WILL RUN AGAINST PERFTEST
+		case "pipeline" => "perftest"
+		case _ => "**INVALID**"
+	}
+	/* ******************************** */
+
+	/* ADDITIONAL COMMAND LINE ARGUMENT OPTIONS */
+	val debugMode = System.getProperty("debug", "off") //runs a single user e.g. ./gradle gatlingRun -Ddebug=on (default: off)
+	val env = System.getProperty("env", environment) //manually override the environment aat|perftest e.g. ./gradle gatlingRun -Denv=aat
+	/* ******************************** */
+
+	/* PERFORMANCE TEST CONFIGURATION */
+	val probateTargetPerHour = 238
+	val iacTargetPerHour = 20
+	val fplaTargetPerHour = 7
+	val divorceTargetPerHour = 238
+	val frTargetPerHour = 98
+	val caseworkerTargetPerHour = 900
+
+	val rampUpDurationMins = 20
+	val testDurationMins = 60
+
+	val numberOfPipelineUsers = 5
+
+	//If running in debug mode, disable pauses between steps
+	val pauseOption:PauseType = debugMode match{
+		case "off" => constantPauses
+		case _ => disabledPauses
+	}
+
 	// below Http Protocol is for the scenario - manage org
   val XUIHttpProtocol = http
-    .baseUrl(orgurl)
+    .baseUrl(Environment.manageOrdURL.replace("${env}", s"${env}"))
     .headers(Headers.navigationHeader)
 
 	//Below Http Protocol will be used for all services
 
   val MChttpProtocol = http
-		.baseUrl(BaseURL)
+		.baseUrl(Environment.baseURL.replace("${env}", s"${env}"))
 		.inferHtmlResources()
 		.silentResources
+
+	before{
+		exec(_.set("env", s"${env}"))
+		println(s"Test Type: ${testType}")
+		println(s"Test Environment: ${env}")
+		println(s"Debug Mode: ${debugMode}")
+	}
 
 	/*===============================================================================================
 	* below scenario is for create org, approve org and manage org related business process
@@ -44,23 +91,28 @@ class ExUI extends Simulation {
 
 	val EXUIScn = scenario("EXUI").repeat(1)
 	 {
-		exec(
-		S2SHelper.S2SAuthToken,
-		ExUI.createSuperUser,
-		ExUI.createOrg,
-      ExUI.approveOrgHomePage,
-		ExUI.approveOrganisationlogin,
-			ExUI.approveOrganisationApprove,
-			ExUI.approveOrganisationLogout,
-			ExUI.manageOrgHomePage,
-			ExUI.manageOrganisationLogin,
-			ExUI.usersPage,
-			ExUI.inviteUserPage
-			.repeat(4,"n") {
-				exec(ExUI.sendInvitation)
-				},
-			ExUI.manageOrganisationLogout
-			)
+		 exitBlockOnFail {
+			 exec(_.set("env", s"${env}"))
+			 .exec(
+				 S2SHelper.S2SAuthToken,
+				 ExUI.createSuperUser,
+				 ExUI.createOrg,
+				 ExUI.approveOrgHomePage,
+				 ExUI.approveOrganisationlogin,
+				 ExUI.approveOrganisationApprove,
+				 ExUI.approveOrganisationLogout,
+				 ExUI.manageOrgHomePage,
+				 ExUI.manageOrganisationLogin,
+				 ExUI.usersPage,
+				 ExUI.inviteUserPage
+			 )
+			 .repeat(4, "n") {
+				 exec(ExUI.sendInvitation)
+			 }
+			 .exec(
+				 ExUI.manageOrganisationLogout
+			 )
+		 }
 	 }
 	
 	
@@ -71,7 +123,8 @@ class ExUI extends Simulation {
   {
 		exitBlockOnFail {
 			feed(feedUserDataProbate)
-				.exec(_.set("service", "Probate"))
+				.exec(_.set("service", "Probate")
+							.set("env", s"${env}"))
 				.exec(EXUIMCLogin.manageCasesHomePage)
 				.exec(EXUIMCLogin.manageCaseslogin)
 				//	.exec(EXUIMCLogin.termsnconditions)
@@ -92,7 +145,8 @@ class ExUI extends Simulation {
 	{
 		exitBlockOnFail {
 			feed(feedUserDataIACCreate)
-				.exec(_.set("service", "IAC"))
+				.exec(_.set("service", "IAC")
+							.set("env", s"${env}"))
 				.exec(EXUIMCLogin.manageCasesHomePage)
 				.exec(EXUIMCLogin.manageCaseslogin)
 				//	.exec(EXUIMCLogin.termsnconditions)
@@ -109,15 +163,18 @@ class ExUI extends Simulation {
 	 ==================================================================================================*/
 	val EXUIMCaseCreationDivorceScn = scenario("***** Div Create Case *****").repeat(1)
 	{
-		feed(feedUserDataDivorce).feed(Feeders.DivDataFeeder)
-		.exec(EXUIMCLogin.manageCasesHomePage)
-		.exec(EXUIMCLogin.manageCaseslogin)
-		//	.exec(EXUIMCLogin.termsnconditions)
-		.repeat(2) {
-      exec(EXUIDivorceMC.casecreation)
-      	.exec(EXUIDivorceMC.shareacase)
-    }
-		.exec(EXUIMCLogin.manageCase_Logout)
+		exitBlockOnFail {
+			feed(feedUserDataDivorce).feed(Feeders.DivDataFeeder)
+			.exec(_.set("env", s"${env}"))
+			.exec(EXUIMCLogin.manageCasesHomePage)
+			.exec(EXUIMCLogin.manageCaseslogin)
+			//	.exec(EXUIMCLogin.termsnconditions)
+			.repeat(2) {
+				exec(EXUIDivorceMC.casecreation)
+					.exec(EXUIDivorceMC.shareacase)
+			}
+			.exec(EXUIMCLogin.manageCase_Logout)
+		}
 	}
 	
 	/*===============================================================================================
@@ -128,6 +185,7 @@ class ExUI extends Simulation {
 		exitBlockOnFail {
 			feed(feedUserDataFPLCreate)
 				.feed(Feeders.FPLCreateDataFeeder)
+				.exec(_.set("env", s"${env}"))
 				.exec(EXUIMCLogin.manageCasesHomePage)
 				.exec(EXUIMCLogin.manageCaseslogin)
 				.repeat(2) {
@@ -153,16 +211,19 @@ class ExUI extends Simulation {
 
 	val EXUIMCaseCaseworkerScn = scenario("***** Caseworker Journey ******").repeat(1)
   {
-	  feed(feedUserDataCaseworker).feed(Feeders.CwDataFeeder)
+		exitBlockOnFail {
+			feed(feedUserDataCaseworker).feed(Feeders.CwDataFeeder)
+			.exec(_.set("env", s"${env}"))
 			.exec(EXUIMCLogin.manageCasesHomePage)
 			.exec(EXUIMCLogin.caseworkerLogin)
-		.repeat(4) {
-			exec(EXUICaseWorker.ApplyFilters)
-		  	.exec(EXUICaseWorker.ApplySort)
-				.exec(EXUICaseWorker.ClickFindCase)
-			.exec(EXUICaseWorker.ViewCase)
+			.repeat(4) {
+				exec(EXUICaseWorker.ApplyFilters)
+					.exec(EXUICaseWorker.ApplySort)
+					.exec(EXUICaseWorker.ClickFindCase)
+					.exec(EXUICaseWorker.ViewCase)
 			}
-		.exec(EXUIMCLogin.manageCase_Logout)
+			.exec(EXUIMCLogin.manageCase_Logout)
+		}
   }
 	
 	/*===============================================================================================
@@ -170,22 +231,25 @@ class ExUI extends Simulation {
 	 ==================================================================================================*/
 
 	val EXUIFinancialRemedyScn = scenario("Scenario FR").repeat(1)
-	{	 feed(feedUserDataFR)
-		.feed(Feeders.FRApplicantDataFeeder)
-		.exec(EXUIMCLogin.manageCasesHomePage)
-		.exec(EXUIMCLogin.manageCaseslogin)
-	  	.repeat(2) {
-			  exec(EXUI_FR_Applicant.createCase)
-		  }
-		.exec(EXUIMCLogin.manageCase_Logout)
-	  	/*.pause(20)
-		.feed(Feeders.FRRespondentDataFeeder)
-	  	.feed(feedUserDataRJ)
-		.exec(EXUIMCLogin.manageOrgHomePage)
-		.exec(EXUIMCLogin.manageOrglogin)
-		.exec(EXUI_FR_Respondent.shareCase)
-		.exec(EXUIMCLogin.manageOrg_Logout)*/
-		
+	{
+		exitBlockOnFail {
+			feed(feedUserDataFR)
+			.feed(Feeders.FRApplicantDataFeeder)
+			.exec(_.set("env", s"${env}"))
+			.exec(EXUIMCLogin.manageCasesHomePage)
+			.exec(EXUIMCLogin.manageCaseslogin)
+			.repeat(2) {
+				exec(EXUI_FR_Applicant.createCase)
+			}
+			.exec(EXUIMCLogin.manageCase_Logout)
+			/*.pause(20)
+			.feed(Feeders.FRRespondentDataFeeder)
+				.feed(feedUserDataRJ)
+			.exec(EXUIMCLogin.manageOrgHomePage)
+			.exec(EXUIMCLogin.manageOrglogin)
+			.exec(EXUI_FR_Respondent.shareCase)
+			.exec(EXUIMCLogin.manageOrg_Logout)*/
+		}
 
 	}
 	
@@ -226,11 +290,8 @@ class ExUI extends Simulation {
 
 
 	  */
-	
-	/*===============================================================================================
-  * Below setup  is for actual test to be run on VM and for reporting, below numbers needs changing as per the agreed load model  nd also need adjust the think times accordingly
-   ==================================================================================================*/
 
+/*
 	 setUp(
 		 EXUIMCaseProbateScn.inject(nothingFor(5),rampUsers(238) during (1200)),
 		 EXUIMCaseCreationIACScn.inject(nothingFor(15),rampUsers(20) during (1200)),
@@ -239,9 +300,35 @@ class ExUI extends Simulation {
 		 EXUIMCaseCreationDivorceScn.inject(nothingFor(65),rampUsers(238) during (1200)),
 		 EXUIFinancialRemedyScn.inject(nothingFor(75),rampUsers(98) during (1200))
         ).protocols(MChttpProtocol)
+ */
 
+	def simulationProfile(simulationType: String, users: Int): Seq[OpenInjectionStep] = {
+		simulationType match {
+			case "perftest" =>
+				if (debugMode == "off") {
+					Seq(
+						rampUsers(users) during (rampUpDurationMins minutes)
+					)
+				}
+				else{
+					Seq(atOnceUsers(1))
+				}
+			case "pipeline" =>
+				Seq(rampUsers(numberOfPipelineUsers) during (2 minutes))
+			case _ =>
+				Seq(nothingFor(0))
+		}
+	}
 
-	
+	setUp(
+		EXUIMCaseProbateScn.inject(simulationProfile(testType, probateTargetPerHour)).pauses(pauseOption),
+		EXUIMCaseCreationIACScn.inject(simulationProfile(testType, iacTargetPerHour)).pauses(pauseOption),
+		EXUIMCaseCreationFPLAScn.inject(simulationProfile(testType, fplaTargetPerHour)).pauses(pauseOption),
+		EXUIMCaseCreationDivorceScn.inject(simulationProfile(testType, divorceTargetPerHour)).pauses(pauseOption),
+		EXUIFinancialRemedyScn.inject(simulationProfile(testType, frTargetPerHour)).pauses(pauseOption),
+		EXUIMCaseCaseworkerScn.inject(simulationProfile(testType, caseworkerTargetPerHour)).pauses(pauseOption)
+	).protocols(MChttpProtocol)
+		.assertions(forAll.successfulRequests.percent.gte(80))
 
  
 
