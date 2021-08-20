@@ -793,7 +793,7 @@ val fplUploadDocuments =
 
   .group("XUI_FPL_300_UploadFile") {
     exec(http("XUI_FPL_300_UploadFile")
-      .post("/documents")
+      .post("/documentsv2")
       .headers(Headers.commonHeader)
       .header("accept", "application/json, text/plain, */*")
       .header("content-type", "multipart/form-data")
@@ -803,7 +803,10 @@ val fplUploadDocuments =
       .transferEncoding("binary"))
       .asMultipartForm
       .formParam("classification", "PUBLIC")
-      .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL")))
+      .formParam("caseTypeId", "CARE_SUPERVISION_EPO")
+      .formParam("jurisdictionId", "PUBLICLAW")
+      .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL"))
+      .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash")))
   }
 
   .pause(MinThinkTime , MaxThinkTime )
@@ -888,14 +891,14 @@ val fplLocalAuthority =
       .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.County").saveAs("laCounty"))
       .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.PostCode").saveAs("laPostcode"))
       .check(substring("Local authority's details"))
-      .check(bodyString.saveAs("BODY"))
+      // .check(bodyString.saveAs("BODY"))
       )
 
-    .exec(session => {
-      val response = session("BODY").as[String]
-      println(s"Response body: \n$response")
-      session
-    })
+    // .exec(session => {
+    //   val response = session("BODY").as[String]
+    //   println(s"Response body: \n$response")
+    //   session
+    // })
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterLocalAuthority"))
 
@@ -1051,7 +1054,7 @@ Business process : Submit the Application
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
       .header("x-xsrf-token", "${XSRFToken}")
       .body(ElFileBody("bodies/fpl/FPLSubmitApplicationSubmit.json"))
-      .check(substring("Application sent")))
+      .check(substring("""state":"Submitted"""")))
 
     .exec(http("XUI_FPL_390_010_WorkAllocation")
       .post("/workallocation/searchForCompletable")
