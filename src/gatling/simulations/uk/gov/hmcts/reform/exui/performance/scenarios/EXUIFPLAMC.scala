@@ -159,7 +159,7 @@ object EXUIFPLAMC {
     *Business process : Select the top option and click Continue
     ======================================================================================*/
     
-    group("XUI_FPL_090_OrdersDirectionNeededContinue") {
+    .group("XUI_FPL_090_OrdersDirectionNeededContinue") {
       exec(http("XUI_FPL_090_005_OrdersDirectionNeededContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=ordersNeeded1")
         .headers(Headers.commonHeader)
