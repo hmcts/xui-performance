@@ -15,7 +15,7 @@
                  "relationshipToChild": "guardian",
                  "contactDetailsHidden": "No",
                  "contactDetailsHiddenReason": null,
-                 "litigationIssues": "YES",
+                 "litigationIssues": "NO",
                  "litigationIssuesDetails": null,
                  "partyId": "${partyId}",
                  "partyType": null,
@@ -38,32 +38,7 @@
               "solicitor": {
                  "firstName": null,
                  "lastName": null,
-                 "email": null,
-                 "organisation": {
-                    "OrganisationID": null,
-                    "OrganisationName": null
-                 },
-                 "unregisteredOrganisation": {
-                    "name": null,
-                    "address": {
-                       "AddressLine1": null,
-                       "AddressLine2": null,
-                       "AddressLine3": null,
-                       "PostTown": null,
-                       "County": null,
-                       "PostCode": null,
-                       "Country": null
-                    }
-                 },
-                 "regionalOfficeAddress": {
-                    "AddressLine1": null,
-                    "AddressLine2": null,
-                    "AddressLine3": null,
-                    "PostTown": null,
-                    "County": null,
-                    "PostCode": null,
-                    "Country": null
-                 }
+                 "email": null
               }
            },
            "id": "${id}"
@@ -88,10 +63,10 @@
                  "dateOfBirth": "${dobYearRes}-${dobMonth}-${dobDay}",
                  "gender": "Male",
                  "genderIdentification": null,
-                 "relationshipToChild": "",
+                 "relationshipToChild": "guardian",
                  "contactDetailsHidden": "No",
                  "contactDetailsHiddenReason": null,
-                 "litigationIssues": "YES",
+                 "litigationIssues": "NO",
                  "litigationIssuesDetails": null,
                  "partyId": "${partyId}",
                  "partyType": null,
@@ -114,32 +89,7 @@
               "solicitor": {
                  "firstName": null,
                  "lastName": null,
-                 "email": null,
-                 "organisation": {
-                    "OrganisationID": null,
-                    "OrganisationName": null
-                 },
-                 "unregisteredOrganisation": {
-                    "name": null,
-                    "address": {
-                       "AddressLine1": null,
-                       "AddressLine2": null,
-                       "AddressLine3": null,
-                       "PostTown": null,
-                       "County": null,
-                       "PostCode": null,
-                       "Country": null
-                    }
-                 },
-                 "regionalOfficeAddress": {
-                    "AddressLine1": null,
-                    "AddressLine2": null,
-                    "AddressLine3": null,
-                    "PostTown": null,
-                    "County": null,
-                    "PostCode": null,
-                    "Country": null
-                 }
+                 "email": null
               }
            },
            "id": "${id}"

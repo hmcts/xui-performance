@@ -32,15 +32,6 @@
         "orderType": [
            "CARE_ORDER"
         ],
-        "address": {
-           "AddressLine1": null,
-           "AddressLine2": null,
-           "AddressLine3": null,
-           "PostTown": null,
-           "County": null,
-           "PostCode": null,
-           "Country": null
-        },
         "emergencyProtectionOrders": [],
         "emergencyProtectionOrderDirections": []
      }
