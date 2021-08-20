@@ -92,7 +92,7 @@ class ExUI extends Simulation {
 
 	/*===============================================================================================
 	* below scenario is for create org, approve org and manage org related business process
-	 ==================================================================================================*/
+	===============================================================================================*/
 
 	val EXUIScn = scenario("EXUI").repeat(1)
 	 {
@@ -120,10 +120,10 @@ class ExUI extends Simulation {
 		 }
 	 }
 	
-	
 	/*===============================================================================================
 	* XUI Solicitor Probate Scenario
-	 ==================================================================================================*/
+	===============================================================================================*/
+
   val EXUIMCaseProbateScn = scenario("***** Probate Case Journey ******").repeat(1)
   {
 		exitBlockOnFail {
@@ -145,7 +145,8 @@ class ExUI extends Simulation {
 	
 	/*===============================================================================================
 	* XUI Solicitor IAC Scenario
-	 ==================================================================================================*/
+  ===============================================================================================*/
+
 	val EXUIMCaseCreationIACScn = scenario("***** IAC Create Case *****").repeat(1)
 	{
 		exitBlockOnFail {
@@ -165,7 +166,8 @@ class ExUI extends Simulation {
 	
 	/*===============================================================================================
 	* below scenario is for Divorce Business Process related scenario
-	 ==================================================================================================*/
+	===============================================================================================*/
+
 	val EXUIMCaseCreationDivorceScn = scenario("***** Div Create Case *****").repeat(1)
 	{
 		exitBlockOnFail {
@@ -184,7 +186,8 @@ class ExUI extends Simulation {
 	
 	/*===============================================================================================
 	* below scenario is for FPLA Business Process related scenario
-	 ==================================================================================================*/
+	===============================================================================================*/
+
 	val EXUIMCaseCreationFPLAScn = scenario("***** FPLA Create Case ***** ").repeat(1)
 	{
 		exitBlockOnFail {
@@ -203,6 +206,7 @@ class ExUI extends Simulation {
 						.exec(EXUIFPLAMC.fplEnterGrounds)
 						.exec(EXUIFPLAMC.fplAllocationProposal)
 						.exec(EXUIFPLAMC.fplUploadDocuments)
+            .exec(EXUIFPLAMC.fplLocalAuthority)
 						.exec(EXUIFPLAMC.fplSubmitApplication)
 				}
 				.exec(EXUIMCLogin.manageCase_Logout)
@@ -212,7 +216,7 @@ class ExUI extends Simulation {
 	
 	/*===============================================================================================
 	* below scenario is for search and view case as a case worker
-	 ==================================================================================================*/
+	===============================================================================================*/
 
 	val EXUIMCaseCaseworkerScn = scenario("***** Caseworker Journey ******").repeat(1)
   {
@@ -233,7 +237,7 @@ class ExUI extends Simulation {
 	
 	/*===============================================================================================
 	* below scenario is for Financial Remedy Business Process related scenario
-	 ==================================================================================================*/
+	===============================================================================================*/
 
 	val EXUIFinancialRemedyScn = scenario("Scenario FR").repeat(1)
 	{
@@ -260,7 +264,7 @@ class ExUI extends Simulation {
 	
 	/*===============================================================================================
 	* Below setup is to do the smoke test to make sure all the scripts are working for one user
-	 ==================================================================================================*/
+	===============================================================================================*/
 
 	/*setUp(
 		 EXUIMCaseProbateScn.inject(atOnceUsers(1)).disablePauses,
@@ -271,14 +275,12 @@ class ExUI extends Simulation {
 		 EXUIFinancialRemedyScn.inject(atOnceUsers(1)).disablePauses
 	)
 			.protocols(MChttpProtocol)*/
-	
 
-	
-	
 	/*===============================================================================================
 	* Below setup  is to do the smoke test to make sure manage org is working, we can uncomment it when we use it
-	 ==================================================================================================*/
-	/*setUp(
+	==================================================================================================*/
+	
+  /*setUp(
 		EXUIScn.inject(atOnceUsers(1)).disablePauses
 			.protocols(XUIHttpProtocol)
 	)*/
@@ -286,15 +288,12 @@ class ExUI extends Simulation {
 	
 	/*===============================================================================================
 	* Below setup  is to do the smoke test to make sure one particular scenario  is working as part of sanity test
-	 ==================================================================================================*/
-	 /*setUp(
+	==================================================================================================*/
+	
+  setUp(
      EXUIMCaseCreationFPLAScn.inject(atOnceUsers(1)).disablePauses
-	  // EXUIMCaseCaseworkerScn.inject(nothingFor(20),rampUsers(1) during (1))
 	 )
       .protocols(MChttpProtocol)
-
-
-	  */
 
 /*
 	 setUp(
@@ -307,7 +306,7 @@ class ExUI extends Simulation {
         ).protocols(MChttpProtocol)
  */
 
-	def simulationProfile(simulationType: String, users: Int): Seq[OpenInjectionStep] = {
+	/*def simulationProfile(simulationType: String, users: Int): Seq[OpenInjectionStep] = {
 		simulationType match {
 			case "perftest" =>
 				if (debugMode == "off") {
@@ -334,9 +333,5 @@ class ExUI extends Simulation {
 		EXUIMCaseCaseworkerScn.inject(simulationProfile(testType, caseworkerTargetPerHour)).pauses(pauseOption)
 	).protocols(MChttpProtocol)
 		.assertions(forAll.successfulRequests.percent.gte(80))
-
- 
-
-
-
+*/
 }
