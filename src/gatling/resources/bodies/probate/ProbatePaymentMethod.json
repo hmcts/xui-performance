@@ -27,8 +27,8 @@
   },
   "event_data": {
     "solsLegalStatementDocument": {
-      "document_url": "${SOTDocumentURL}",
-      "document_binary_url": "${SOTDocumentURL}/binary",
+      "document_url": "${documentURL}",
+      "document_binary_url": "${documentURL}/binary",
       "document_filename": "legalStatementGrantOfProbate.pdf"
     },
     "solsSOTNeedToUpdate": "No",
