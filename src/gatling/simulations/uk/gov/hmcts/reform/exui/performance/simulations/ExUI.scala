@@ -193,7 +193,7 @@ class ExUI extends Simulation {
 				.exec(_.set("env", s"${env}"))
 				.exec(EXUIMCLogin.manageCasesHomePage)
 				.exec(EXUIMCLogin.manageCaseslogin)
-				.repeat(2) {
+				.repeat(1) {
 					exec(EXUIFPLAMC.fplcasecreation)
 						.exec(EXUIFPLAMC.fplOrdersNeeded)
 						.exec(EXUIFPLAMC.fplHearingNeeded)
@@ -203,6 +203,7 @@ class ExUI extends Simulation {
 						.exec(EXUIFPLAMC.fplEnterGrounds)
 						.exec(EXUIFPLAMC.fplAllocationProposal)
 						.exec(EXUIFPLAMC.fplUploadDocuments)
+            .exec(EXUIFPLAMC.fplLocalAuthority)
 						.exec(EXUIFPLAMC.fplSubmitApplication)
 				}
 				.exec(EXUIMCLogin.manageCase_Logout)

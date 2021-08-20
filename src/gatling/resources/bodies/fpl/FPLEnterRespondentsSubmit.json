@@ -64,7 +64,8 @@
                     "PostCode": null,
                     "Country": null
                  }
-              }
+              },
+              "legalCounsellors": []
            },
            "id": "${id}"
         }

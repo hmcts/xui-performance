@@ -127,11 +127,13 @@ object EXUIFPLAMC {
       
     .pause(MinThinkTime , MaxThinkTime )
 
+  val fplOrdersNeeded =
+
     /*======================================================================================
     *Business process : Select Orders and Directions sought case event from the dropdown
     ======================================================================================*/
       
-    .group("XUI_FPL_080_OrdersDirectionNeededGo") {
+    group("XUI_FPL_080_OrdersDirectionNeededGo") {
       exec(http("XUI_FPL_080_005_OrdersDirectionNeededGo")
         .get("/data/internal/cases/${caseId}/event-triggers/ordersNeeded?ignore-warning=false")
         .headers(Headers.commonHeader)
@@ -152,14 +154,12 @@ object EXUIFPLAMC {
     .exec(Common.caseActivityPost)
 
     .pause(MinThinkTime , MaxThinkTime )
-
-  val fplOrdersNeeded =
   
     /*======================================================================================
     *Business process : Select the top option and click Continue
     ======================================================================================*/
     
-    group("XUI_FPL_090_OrdersDirectionNeededContinue") {
+    .group("XUI_FPL_090_OrdersDirectionNeededContinue") {
       exec(http("XUI_FPL_090_005_OrdersDirectionNeededContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=ordersNeeded1")
         .headers(Headers.commonHeader)
@@ -725,8 +725,8 @@ val fplAllocationProposal =
   *Business process : Review page details and click Save and Continue
   ======================================================================================*/
     
-  .group("XUI_FPL_290_AllocationProposalSaveContinue") {
-    exec(http("XUI_FPL_290_005_AllocationProposalSaveContinue")
+  .group("XUI_FPL_280_AllocationProposalSaveContinue") {
+    exec(http("XUI_FPL_280_005_AllocationProposalSaveContinue")
       .post("/data/cases/${caseId}/events")
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -735,7 +735,7 @@ val fplAllocationProposal =
       .check(substring("${caseId}"))
       .check(substring("last_modified_on")))
 
-    .exec(http("XUI_FPL_290_010_WorkAllocation")
+    .exec(http("XUI_FPL_280_010_WorkAllocation")
       .post("/workallocation/searchForCompletable")
       .headers(Headers.commonHeader)
       .header("accept", "application/json")
@@ -746,7 +746,7 @@ val fplAllocationProposal =
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-    .exec(http("XUI_FPL_290_015_ViewCase")
+    .exec(http("XUI_FPL_280_015_ViewCase")
       .get("/data/internal/cases/${caseId}")
       .headers(Headers.commonHeader)
       .header("x-xsrf-token", "${XSRFToken}")
@@ -765,8 +765,8 @@ val fplUploadDocuments =
   *Business process : Select Application Documents from the dropdown
   ======================================================================================*/
 
-  group("XUI_FPL_300_010_DocumentsUploadPage") {
-    exec(http("XUI_FPL_300_010_DocumentsUploadPage")
+  group("XUI_FPL_290_010_DocumentsUploadPage") {
+    exec(http("XUI_FPL_290_010_DocumentsUploadPage")
       .get("/data/internal/cases/${caseId}/event-triggers/uploadDocuments?ignore-warning=false")
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -791,9 +791,9 @@ val fplUploadDocuments =
   *Business process : Click Add New and upload the Document
   ======================================================================================*/
 
-  .group("XUI_FPL_310_UploadFile") {
-    exec(http("XUI_FPL_310_UploadFile")
-      .post("/documents")
+  .group("XUI_FPL_300_UploadFile") {
+    exec(http("XUI_FPL_300_UploadFile")
+      .post("/documentsv2")
       .headers(Headers.commonHeader)
       .header("accept", "application/json, text/plain, */*")
       .header("content-type", "multipart/form-data")
@@ -803,7 +803,10 @@ val fplUploadDocuments =
       .transferEncoding("binary"))
       .asMultipartForm
       .formParam("classification", "PUBLIC")
-      .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL")))
+      .formParam("caseTypeId", "CARE_SUPERVISION_EPO")
+      .formParam("jurisdictionId", "PUBLICLAW")
+      .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL"))
+      .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash")))
   }
 
   .pause(MinThinkTime , MaxThinkTime )
@@ -812,8 +815,8 @@ val fplUploadDocuments =
   *Business process : Enter a description and click Continue
   ======================================================================================*/
 
-  .group("XUI_FPL_320_DocumentsContinue") {
-    exec(http("XUI_FPL_320_005_DocumentsContinue")
+  .group("XUI_FPL_310_DocumentsContinue") {
+    exec(http("XUI_FPL_310_005_DocumentsContinue")
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=uploadDocumentsaddApplicationDocuments")
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -832,8 +835,8 @@ val fplUploadDocuments =
   *Business process : Review details and click Save and Continue
   ======================================================================================*/
     
-  .group("XUI_FPL_330_DocumentsSaveContinue") {
-    exec(http("XUI_FPL_330_005_DocumentsSaveContinue")
+  .group("XUI_FPL_320_DocumentsSaveContinue") {
+    exec(http("XUI_FPL_320_005_DocumentsSaveContinue")
       .post("/data/cases/${caseId}/events")
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -842,7 +845,7 @@ val fplUploadDocuments =
       .check(substring("${caseId}"))
       .check(substring("last_modified_on")))
 
-    .exec(http("XUI_FPL_330_010_WorkAllocation")
+    .exec(http("XUI_FPL_320_010_WorkAllocation")
       .post("/workallocation/searchForCompletable")
       .headers(Headers.commonHeader)
       .header("accept", "application/json")
@@ -853,7 +856,130 @@ val fplUploadDocuments =
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-    .exec(http("XUI_FPL_330_015_ViewCase")
+    .exec(http("XUI_FPL_320_015_ViewCase")
+      .get("/data/internal/cases/${caseId}")
+      .headers(Headers.commonHeader)
+      .header("x-xsrf-token", "${XSRFToken}")
+      .check(substring("""event_id":"uploadDocuments""")))
+  }
+
+  .exec(Common.caseActivityGet)
+  .pause(2)
+  .exec(Common.caseActivityPost)
+  
+  .pause(MinThinkTime , MaxThinkTime )
+
+val fplLocalAuthority = 
+
+  /*======================================================================================
+  *Business process : Select Local Authority from the dropdown
+  ======================================================================================*/
+
+  group("XUI_FPL_330_LocalAuthorityPage") {
+    exec(http("XUI_FPL_330_LocalAuthorityPage")
+      .get("/data/internal/cases/${caseId}/event-triggers/enterLocalAuthority?ignore-warning=false")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .check(jsonPath("$.event_token").saveAs("event_token"))
+      .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.name").ofType[Any].saveAs("laName"))
+      .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.id").ofType[Any].saveAs("laId"))
+      .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.AddressLine1").saveAs("laAddressLine1"))
+      .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.AddressLine2").saveAs("laAddressLine2"))
+      .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.AddressLine3").saveAs("laAddressLine3"))
+      .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.PostTown").saveAs("laPostTown"))
+      .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.County").saveAs("laCounty"))
+      .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.PostCode").saveAs("laPostcode"))
+      .check(substring("Local authority's details"))
+      // .check(bodyString.saveAs("BODY"))
+      )
+
+    // .exec(session => {
+    //   val response = session("BODY").as[String]
+    //   println(s"Response body: \n$response")
+    //   session
+    // })
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterLocalAuthority"))
+
+    .exec(Common.profile)
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterLocalAuthority%2FenterLocalAuthorityDetails"))
+  }
+
+  .exec(Common.caseActivityGet)
+  .pause(2)
+  .exec(Common.caseActivityPost)
+  
+  .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+  *Business process : Enter a description and click Continue
+  ======================================================================================*/
+
+  .group("XUI_FPL_340_LocalAuthorityContinue") {
+    exec(http("XUI_FPL_340_LocalAuthorityContinue")
+      .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterLocalAuthorityDetails")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(ElFileBody("bodies/fpl/FPLLocalAuthorityAdd.json"))
+      .check(substring("colleagues")))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterLocalAuthority%2FenterLocalAuthorityColleagues"))
+
+    .exec(Common.profile)
+  }
+    
+  .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+  *Business process : Add Colleague details and click Continue
+  ======================================================================================*/
+
+  .group("XUI_FPL_350_LocalAuthorityAddColleague") {
+    exec(http("XUI_FPL_350_LocalAuthorityAddColleague")
+      .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterLocalAuthorityColleagues")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(ElFileBody("bodies/fpl/FPLLocalAuthorityColleagueAdd.json"))
+      .check(jsonPath("$.data.localAuthorityColleagues[0].id").saveAs("laColleagueId"))
+      .check(substring("localAuthority")))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterLocalAuthority%2Fsubmit"))
+
+    .exec(Common.profile)
+  }
+    
+  .pause(MinThinkTime , MaxThinkTime )
+
+  /*======================================================================================
+  *Business process : Review details and click Save and Continue
+  ======================================================================================*/
+    
+  .group("XUI_FPL_360_LocalAuthoritySaveContinue") {
+    exec(http("XUI_FPL_360_LocalAuthoritySaveContinue")
+      .post("/data/cases/${caseId}/events")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(ElFileBody("bodies/fpl/FPLLocalAuthoritySubmit.json"))
+      .check(substring("${caseId}"))
+      .check(substring("last_modified_on")))
+
+    .exec(http("XUI_FPL_360_010_WorkAllocation")
+      .post("/workallocation/searchForCompletable")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"uploadDocuments","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
+      .check(status.in(200, 400))
+      .check(substring("tasks")))
+
+    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+    .exec(http("XUI_FPL_360_015_ViewCase")
       .get("/data/internal/cases/${caseId}")
       .headers(Headers.commonHeader)
       .header("x-xsrf-token", "${XSRFToken}")
@@ -872,8 +998,8 @@ val fplSubmitApplication =
   *Business process : Select Submit Application from the dropdown
   ======================================================================================*/
     
-  group("XUI_FPL_340_SubmitApplicationGo") {
-    exec(http("XUI_FPL_340_005_SubmitApplicationGo")
+  group("XUI_FPL_370_SubmitApplicationGo") {
+    exec(http("XUI_FPL_370_005_SubmitApplicationGo")
       .get("/data/internal/cases/${caseId}/event-triggers/submitApplication?ignore-warning=false")
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -901,8 +1027,8 @@ val fplSubmitApplication =
   *Business process : Confirm details and click Continue
   ======================================================================================*/
     
-  .group("XUI_FPL_350_SubmitApplicationContinue") {
-    exec(http("XUI_FPL_350_005_SubmitApplicationContinue")
+  .group("XUI_FPL_380_SubmitApplicationContinue") {
+    exec(http("XUI_FPL_380_005_SubmitApplicationContinue")
       .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=submitApplication1")
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -921,16 +1047,16 @@ val fplSubmitApplication =
 Business process : Submit the Application
 ======================================================================================*/
     
-  .group("XUI_FPL_360_ApplicationSubmitted") {
-    exec(http("XUI_FPL_360_005_ApplicationSubmitted")
+  .group("XUI_FPL_390_ApplicationSubmitted") {
+    exec(http("XUI_FPL_390_005_ApplicationSubmitted")
       .post("/data/cases/${caseId}/events")
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
       .header("x-xsrf-token", "${XSRFToken}")
       .body(ElFileBody("bodies/fpl/FPLSubmitApplicationSubmit.json"))
-      .check(substring("Application sent")))
+      .check(substring("""state":"Submitted"""")))
 
-    .exec(http("XUI_FPL_360_010_WorkAllocation")
+    .exec(http("XUI_FPL_390_010_WorkAllocation")
       .post("/workallocation/searchForCompletable")
       .headers(Headers.commonHeader)
       .header("accept", "application/json")
@@ -948,8 +1074,8 @@ Business process : Submit the Application
 Business process : Click on the Close and Return to case button
 ======================================================================================*/
 
-  .group("XUI_FPL_370_ViewCase") {
-    exec(http("XUI_FPL_370_ViewCase")
+  .group("XUI_FPL_400_ViewCase") {
+    exec(http("XUI_FPL_400_ViewCase")
       .get("/data/internal/cases/${caseId}")
       .headers(Headers.commonHeader)
       .header("x-xsrf-token", "${XSRFToken}")

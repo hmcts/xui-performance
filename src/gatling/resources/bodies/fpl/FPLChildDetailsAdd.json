@@ -3,8 +3,12 @@
      "children1": [
         {
            "value": {
+              "representative": null,
+              "solicitor": null,
               "finalOrderIssued": null,
               "finalOrderIssuedType": null,
+              "finalDecisionReason": null,
+              "finalDecisionDate": null,
               "party": {
                  "firstName": "${childFirstName}",
                  "lastName": "${childLastName}",
@@ -14,8 +18,8 @@
                  "livingSituation": "Living with respondents",
                  "livingSituationDetails": null,
                  "addressChangeDate": null,
-                 "keyDates": null,
-                 "careAndContactPlan": "none",
+                 "keyDates": "none",
+                 "careAndContactPlan": null,
                  "adoption": "No",
                  "placementOrderApplication": null,
                  "placementCourt": null,
@@ -32,17 +36,8 @@
                  "partyId": "${partyId}",
                  "partyType": null,
                  "showAddressInConfidentialTab": null,
-                 "address": {
-                    "AddressLine1": null,
-                    "AddressLine2": null,
-                    "AddressLine3": null,
-                    "PostTown": null,
-                    "County": null,
-                    "PostCode": null,
-                    "Country": null
-                 },
                  "socialWorkerTelephoneNumber": {
-                    "telephoneNumber": "02012312312",
+                    "telephoneNumber": "020123123123",
                     "contactDirection": null
                  }
               }
@@ -60,8 +55,12 @@
      "children1": [
         {
            "value": {
+              "representative": null,
+              "solicitor": null,
               "finalOrderIssued": null,
               "finalOrderIssuedType": null,
+              "finalDecisionReason": null,
+              "finalDecisionDate": null,
               "party": {
                  "firstName": "${childFirstName}",
                  "lastName": "${childLastName}",
@@ -71,8 +70,8 @@
                  "livingSituation": "Living with respondents",
                  "livingSituationDetails": null,
                  "addressChangeDate": null,
-                 "keyDates": null,
-                 "careAndContactPlan": "none",
+                 "keyDates": "none",
+                 "careAndContactPlan": null,
                  "adoption": "No",
                  "placementOrderApplication": null,
                  "placementCourt": null,
@@ -89,17 +88,8 @@
                  "partyId": "${partyId}",
                  "partyType": null,
                  "showAddressInConfidentialTab": null,
-                 "address": {
-                    "AddressLine1": null,
-                    "AddressLine2": null,
-                    "AddressLine3": null,
-                    "PostTown": null,
-                    "County": null,
-                    "PostCode": null,
-                    "Country": null
-                 },
                  "socialWorkerTelephoneNumber": {
-                    "telephoneNumber": "02012312312",
+                    "telephoneNumber": "020123123123",
                     "contactDirection": null
                  }
               }
