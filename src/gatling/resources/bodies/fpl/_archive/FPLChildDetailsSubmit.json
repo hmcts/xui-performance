@@ -3,12 +3,8 @@
      "children1": [
         {
            "value": {
-              "representative": {},
-              "solicitor": {},
               "finalOrderIssued": null,
               "finalOrderIssuedType": null,
-              "finalDecisionReason": null,
-              "finalDecisionDate": null,
               "party": {
                  "firstName": "${childFirstName}",
                  "lastName": "${childLastName}",
@@ -18,11 +14,8 @@
                  "livingSituation": "Living with respondents",
                  "livingSituationDetails": null,
                  "addressChangeDate": null,
-                 "datePowersEnd": null,
-                 "careStartDate": null,
-                 "dischargeDate": null,
-                 "keyDates": "none",
-                 "careAndContactPlan": null,
+                 "keyDates": null,
+                 "careAndContactPlan": "none",
                  "adoption": "No",
                  "placementOrderApplication": null,
                  "placementCourt": null,
@@ -49,11 +42,10 @@
                     "Country": null
                  },
                  "socialWorkerTelephoneNumber": {
-                    "telephoneNumber": "020123123123",
+                    "telephoneNumber": "02012312312",
                     "contactDirection": null
                  }
-              },
-              "legalCounsellors": []
+              }
            },
            "id": "${id}"
         }

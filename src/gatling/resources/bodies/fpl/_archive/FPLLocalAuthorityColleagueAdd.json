@@ -1,0 +1,63 @@
+{
+  "data": {
+     "localAuthorityColleagues": [
+        {
+           "value": {
+              "role": "SOLICITOR",
+              "dx": null,
+              "reference": null,
+              "fullName": "Test Solicitor",
+              "email": "colleague@test.com",
+              "phone": null,
+              "notificationRecipient": "No",
+              "mainContact": null
+           },
+           "id": null
+        }
+     ]
+  },
+  "event": {
+     "id": "enterLocalAuthority",
+     "summary": "",
+     "description": ""
+  },
+  "event_data": {
+      "localAuthority": {
+        "name": "${laName}",
+        "email": "${laName}@test.com",
+        "legalTeamManager": "legal test",
+        "pbaNumber": "PBA0082848",
+        "customerReference": "test",
+        "clientCode": "123",
+        "phone": "02012345678",
+        "id": "${laId}",
+        "address": {
+          "AddressLine1": "${laAddressLine1}",
+          "AddressLine2": "${laAddressLine2}",
+          "AddressLine3": "${laAddressLine3}",
+          "PostTown": "${laPostTown}",
+          "County": "${laCounty}",
+          "PostCode": "${laPostcode}",
+          "Country": null
+        }
+     },
+     "localAuthorityColleagues": [
+        {
+           "value": {
+              "role": "SOLICITOR",
+              "dx": null,
+              "reference": null,
+              "fullName": "Test Solicitor",
+              "email": "colleague@test.com",
+              "phone": null,
+              "notificationRecipient": "No",
+              "mainContact": null
+           },
+           "id": null
+        }
+     ]
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false,
+  "case_reference": "${caseId}"
+}
