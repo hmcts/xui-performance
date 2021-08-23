@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.exui.performance.scenarios
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import uk.gov.hmcts.reform.exui.performance.Feeders
 import uk.gov.hmcts.reform.exui.performance.scenarios.utils.{Common, Environment, Headers}
 
 /*======================================================================================
@@ -137,7 +136,7 @@ object EXUIProbateMC {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-draft-update.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/probate/ProbateCreateApplication2Draft.json"))
-        .check(status.in(200, 400)))
+        .check(status.in(200, 400, 500)))
 
       .exec(Common.profile)
 
@@ -609,21 +608,24 @@ object EXUIProbateMC {
     * Upload Document
     ======================================================================================*/
 
-    .group("XUI_Probate_240_UploadStatementOfTruth") {
-      exec(http("XUI_Probate_240_005_UploadStatementOfTruth")
-        .post("/documents")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json, text/plain, */*")
-        .header("content-type", "multipart/form-data")
-        .header("x-xsrf-token", "${XSRFToken}")
-        .bodyPart(RawFileBodyPart("files", "3MB.pdf")
-          .fileName("3MB.pdf")
-          .transferEncoding("binary"))
-        .asMultipartForm
-        .formParam("classification", "PUBLIC")
-        .check(substring("originalDocumentName"))
-        .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("SOTDocumentURL")))
-    }
+      .group("XUI_Probate_240_UploadStatementOfTruth") {
+        exec(http("XUI_Probate_240_005_UploadStatementOfTruth")
+          .post("/documentsv2")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/json, text/plain, */*")
+          .header("content-type", "multipart/form-data")
+          .header("x-xsrf-token", "${XSRFToken}")
+          .bodyPart(RawFileBodyPart("files", "3MB.pdf")
+            .fileName("3MB.pdf")
+            .transferEncoding("binary"))
+          .asMultipartForm
+          .formParam("classification", "PUBLIC")
+          .formParam("caseTypeId", "GrantOfRepresentation")
+          .formParam("jurisdictionId", "PROBATE")
+          .check(substring("originalDocumentName"))
+          .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash"))
+          .check(jsonPath("$.documents[0]._links.self.href").saveAs("SOTDocumentURL")))
+      }
 
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -712,7 +714,8 @@ object EXUIProbateMC {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/probate/ProbateSubmitApplication.json"))
-        .check(jsonPath("$.state").is("CaseCreated")))
+        .check(jsonPath("$.state").is("CaseCreated"))
+        .check(substring("This probate application has now been submitted")))
 
       .exec(http("XUI_Probate_290_010_WorkAllocation")
         .post("/workallocation/searchForCompletable")
