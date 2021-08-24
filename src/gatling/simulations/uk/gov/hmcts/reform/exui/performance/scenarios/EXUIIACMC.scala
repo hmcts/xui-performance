@@ -78,23 +78,23 @@ object EXUIIACMC {
 
     .group("XUI_IAC_060_StartAppealChecklist") {
       exec(http("XUI_IAC_060_StartAppealChecklist")
-      .post("/data/case-types/Asylum/validate?pageId=startAppealchecklist")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/iac/IACStartChecklist.json"))
-      .check(substring("isOutOfCountryEnabled")))
+        .post("/data/case-types/Asylum/validate?pageId=startAppealchecklist")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACStartChecklist.json"))
+        .check(substring("isOutOfCountryEnabled")))
     }
     .pause(MinThinkTime, MaxThinkTime)
 
     .group("XUI_IAC_070_StartAppealOutOfCountry") {
       exec(http("XUI_IAC_070_StartAppealOutOfCountry")
-      .post("/data/case-types/Asylum/validate?pageId=startAppealoutOfCountry")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/iac/IACOutOfCountry.json"))
-      .check(substring("appellantInUk")))
+        .post("/data/case-types/Asylum/validate?pageId=startAppealoutOfCountry")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACOutOfCountry.json"))
+        .check(substring("appellantInUk")))
     }
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -106,11 +106,11 @@ object EXUIIACMC {
     .group("XUI_IAC_080_StartAppealHomeOfficeDecision") {
       exec(http("XUI_IAC_080_StartAppealHomeOfficeDecision")
       .post("/data/case-types/Asylum/validate?pageId=startAppealhomeOfficeDecision")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/iac/IACHomeOfficeDecision.json"))
-        .check(substring("haveHearingAttendeesAndDurationBeenRecorded")))
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "${XSRFToken}")
+      .body(ElFileBody("bodies/iac/IACHomeOfficeDecision.json"))
+      .check(substring("haveHearingAttendeesAndDurationBeenRecorded")))
     }
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -121,18 +121,22 @@ object EXUIIACMC {
 
     .group("XUI_IAC_090_UploadNoticeDecision") {
       exec(http("XUI_IAC_090_005_UploadNoticeDecision")
-        .post("/documents")
+        .post("/documentsv2")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .header("content-type", "multipart/form-data")
         .header("x-xsrf-token", "${XSRFToken}")
         .bodyPart(RawFileBodyPart("files", "3MB.pdf")
-          .fileName("3MB.pdf")
-          .transferEncoding("binary"))
+        .fileName("3MB.pdf")
+        .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
+        .formParam("caseTypeId", "null")
+        .formParam("jurisdictionId", "null")
+        // .formParam("files", """(binary)""")
         .check(substring("originalDocumentName"))
-        .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL")))
+        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL"))
+        .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash")))
     }
 
     .group("XUI_IAC_090_010_StartUploadNoticeDecision") {
@@ -253,7 +257,7 @@ object EXUIIACMC {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/iac/IACAppealGrounds.json"))
-        .check(substring("protectionHumanRights")))
+        .check(substring("appealGroundsDecisionHumanRightsRefusal")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -348,7 +352,7 @@ object EXUIIACMC {
 
 /*======================================================================================
 *Business process : Following business process is for IAC  Case Creation
-*Below group contains all the requests for selecting pay by account
+*Below group contains all the requests for selecting Remission Type
 ======================================================================================*/
 
     .group("XUI_IAC_220_StartAppealPayByAccount") {
@@ -366,12 +370,33 @@ object EXUIIACMC {
     .pause(MinThinkTime, MaxThinkTime)
 
 /*======================================================================================
+*Business process : Following business process is for IAC  Case Creation
+*Below group contains all the requests for selecting Remission Type
+======================================================================================*/
+
+  .group("XUI_IAC_230_StartAppealPaymentType") {
+      exec(http("XUI_IAC_230_StartAppealPaymentType")
+        .post("/data/case-types/Asylum/validate?pageId=startAppealpaymentOptions")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACAppealPaymentOption.json"))
+        .check(substring("howToPayLabel"))
+        // .check(jsonPath("").saveAs("legalRepName"))
+        )
+
+      .exec(Common.profile)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+/*======================================================================================
 *Business process : Following business process is for IAC Case Creation
 *Below group contains all the requests for starting appeal case save
 ======================================================================================*/
 
-    .group("XUI_IAC_220_005_StartAppealCaseSave") {
-      exec(http("XUI_IAC_220_StartAppealCaseSave")
+    .group("XUI_IAC_240_005_StartAppealCaseSave") {
+      exec(http("XUI_IAC_240_StartAppealCaseSave")
         .post("/data/case-types/Asylum/cases?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-case.v2+json;charset=UTF-8")
@@ -380,7 +405,7 @@ object EXUIIACMC {
         .check(jsonPath("$.id").saveAs("caseId"))
         .check(substring("appealStarted")))
 
-      .exec(http("XUI_IAC_220_005_WorkAllocation")
+      .exec(http("XUI_IAC_240_005_WorkAllocation")
         .post("/workallocation/searchForCompletable")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
@@ -397,9 +422,9 @@ object EXUIIACMC {
 *Below group contains all the requests for starting start submit appeal
 ======================================================================================*/
 
-    .group("XUI_IAC_230_005_StartSubmitAppeal") {
-      exec(http("XUI_IAC_230_005_StartSubmitAppeal")
-        .get("/case/IA/Asylum/${caseId}/trigger/submitAppeal")
+    .group("XUI_IAC_250_005_StartSubmitAppeal") {
+      exec(http("XUI_IAC_250_005_StartSubmitAppeal")
+        .get("/case/IA/Asylum/${caseId}/trigger/payAndSubmitAppeal")
         .headers(Headers.navigationHeader)
         .check(substring("HMCTS Manage")))
 
@@ -413,9 +438,9 @@ object EXUIIACMC {
 
       .exec(Common.isAuthenticated)
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAppeal"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FpayAndSubmitAppeal"))
 
-      .exec(http("XUI_IAC_230_035_SaveCaseView")
+      .exec(http("XUI_IAC_250_035_SaveCaseView")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
@@ -434,14 +459,14 @@ object EXUIIACMC {
 *Below group contains all the requests for starting submit appeal
 ======================================================================================*/
 
-    .group("XUI_IAC_240_SubmitAppeal") {
-      exec(http("XUI_IAC_240_005_SubmitAppeal")
-      .get("/data/internal/cases/${caseId}/event-triggers/submitAppeal?ignore-warning=false")
+    .group("XUI_IAC_260_PayAndSubmitAppeal") {
+      exec(http("XUI_IAC_260_005_PayAndSubmitAppeal")
+      .get("/data/internal/cases/${caseId}/event-triggers/payAndSubmitAppeal?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .check(jsonPath("$.event_token").saveAs("event_token_submit"))
-        .check(substring("Submit your appeal")))
+        .check(substring("Pay and submit")))
 
       .exec(Common.isAuthenticated)
 
@@ -460,21 +485,21 @@ object EXUIIACMC {
 
 /*======================================================================================
 *Business process : Following business process is for IAC Case Creation
-*Below group contains all the requests for starting submit appeal declaration
+*Below group contains all the requests for selecting PBA account and clicking continue
 ======================================================================================*/
 
-    .group("XUI_IAC_250_SubmitAppealDeclaration") {
-      exec(http("XUI_IAC_250_05_SubmitAppealDeclaration")
-        .post("/data/case-types/Asylum/validate?pageId=submitAppealdeclaration")
+    .group("XUI_IAC_270_SelectPBAAccount") {
+      exec(http("XUI_IAC_270_005_SelectPBAAccount")
+        .post("/data/case-types/Asylum/validate?pageId=payAndSubmitAppealenterPbaNumber")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/iac/IACAppealDeclaration.json"))
-        .check(substring("submitAppeal")))
+        .body(ElFileBody("bodies/iac/IACPBAAccountSelect.json"))
+        .check(substring("paymentAccountList")))
 
       .exec(Common.profile)
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAppeal%2Fsubmit"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAppeal%2FpayAndSubmitAppealdeclaration"))
 
       .exec(Common.caseActivityGet)
       .pause(2)
@@ -486,11 +511,30 @@ object EXUIIACMC {
 
 /*======================================================================================
 *Business process : Following business process is for IAC Case Creation
+* Below group contains all the requests for confirmation statement and clicking continue
+======================================================================================*/
+
+  .group("XUI_IAC_280_ConfirmDeclaration") {
+      exec(http("XUI_IAC_280_005_ConfirmDeclaration")
+        .post("/data/case-types/Asylum/validate?pageId=payAndSubmitAppealdeclaration")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACAppealDeclaration.json"))
+        .check(substring("hasDeclared")))
+
+      .exec(Common.profile)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FspayAndSubmitAppeal%2Fsubmit"))
+  }
+
+/*======================================================================================
+*Business process : Following business process is for IAC Case Creation
 * Below group contains all the requests for starting submit appeal declaration submitted
 ======================================================================================*/
 
-    .group("XUI_IAC_260_005_AppealDeclarationSubmitted") {
-      exec(http("XUI_IAC_260_AppealDeclarationSubmitted")
+    .group("XUI_IAC_290_005_AppealDeclarationSubmitted") {
+      exec(http("XUI_IAC_290_AppealDeclarationSubmitted")
         .post("/data/cases/${caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -498,7 +542,7 @@ object EXUIIACMC {
         .body(ElFileBody("bodies/iac/IACSubmitAppeal.json"))
         .check(substring("hasDeclared")))
 
-      .exec(http("XUI_IAC_260_010_WorkAllocation")
+      .exec(http("XUI_IAC_290_010_WorkAllocation")
         .post("/workallocation/searchForCompletable")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
@@ -507,7 +551,7 @@ object EXUIIACMC {
         .check(status.in(200, 400))
         .check(substring("tasks")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAppeal%2Fconfirm"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FpayAndSubmitAppeal%2Fconfirm"))
     }
 
     .exec(Common.caseActivityGet)
@@ -522,8 +566,8 @@ object EXUIIACMC {
 
   val shareacase =
 
-    group("XUI_IAC_270_ShareACase") {
-      exec(http("XUI_IAC_270_005_ShareACase")
+    group("XUI_IAC_300_ShareACase") {
+      exec(http("XUI_IAC_300_005_ShareACase")
         .get("/api/caseshare/cases?case_ids=${caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -532,7 +576,7 @@ object EXUIIACMC {
         .check(jsonPath("$..lastName").find(0).saveAs("lastName"))
         .check(jsonPath("$..idamId").find(0).saveAs("idamId")))
     
-      .exec(http("XUI_IAC_270_010_ShareACaseUsers")
+      .exec(http("XUI_IAC_300_010_ShareACaseUsers")
         .get("/api/caseshare/users")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -544,8 +588,8 @@ object EXUIIACMC {
 
     .pause(MinThinkTime , MaxThinkTime)
 
-    .group("XUI_IAC_280_ShareACaseConfirm") {
-      exec(http("XUI_IAC_280_ShareACaseAssignments")
+    .group("XUI_IAC_310_ShareACaseConfirm") {
+      exec(http("XUI_IAC_310_ShareACaseAssignments")
         .post("/api/caseshare/case-assignments")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")

@@ -2,16 +2,22 @@
   "data": {
      "isOutOfCountryEnabled": "Yes",
      "checklist": {
-        "checklist2": [
-           "isNotDetained"
-        ],
-        "checklist7": [
-           "isNotEUDecision"
-        ]
+      "checklist5": [],
+      "checklist1": [],
+      "checklist2": [
+         "isNotDetained"
+      ],
+      "checklist7": [
+         "isNotEUDecision"
+      ],
+      "checklist3": [],
+      "checklist4": [],
+      "checklist6": []
      },
      "appellantInUk": "Yes",
      "homeOfficeReferenceNumber": "123456789",
      "homeOfficeDecisionDate": "${currentDate}",
+     "decisionLetterReceivedDate": null,
      "uploadTheNoticeOfDecisionDocs": [
         {
            "value": {
@@ -19,7 +25,8 @@
               "document": {
                  "document_url": "${DocumentURL}",
                  "document_binary_url": "${DocumentURL}/binary",
-                 "document_filename": "3MB.pdf"
+                 "document_filename": "3MB.pdf",
+                 "document_hash": "${documentHash}"
               }
            },
            "id": null
@@ -51,22 +58,27 @@
      "contactPreference": "wantsEmail",
      "email": "iacperftest@test.com",
      "appealType": "refusalOfHumanRights",
-     "appealGroundsHumanRightsRefusal": {
+     "appealGroundsDecisionHumanRightsRefusal": {
         "values": [
-           "protectionHumanRights"
+           "humanRightsRefusal"
         ]
      },
      "deportationOrderOptions": "No",
      "hasNewMatters": "No",
+     "newMatters": null,
      "hasOtherAppeals": "No",
-     "legalRepCompany": "test co",
+     "legalRepCompany": "${orgname}",
      "legalRepName": "John",
      "legalRepReferenceNumber": "123",
      "isFeePaymentEnabled": "Yes",
-     "isRemissionsEnabled": "No",
+     "isRemissionsEnabled": "Yes",
      "decisionHearingFeeOption": "decisionWithHearing",
+     "remissionType": "noRemission",
+     "feeWithHearing": null,
+     "feeWithoutHearing": null,
      "howToPayLabel": null,
-     "eaHuAppealTypePaymentOption": "payOffline"
+     "paAppealTypePaymentOption": null,
+     "eaHuAppealTypePaymentOption": "payNow"
   },
   "event": {
      "id": "startAppeal",
