@@ -1,0 +1,134 @@
+{
+  "data": {
+    "isAdmin": "No",
+    "applicantRepresented": null,
+    "applicantAddress": null,
+    "applicantPhone": null,
+    "applicantEmail": null,
+    "solicitorName": "${firmName}",
+    "solicitorFirm": "${firmName}",
+    "solicitorReference": "${firmRef}",
+    "solicitorAddress": {
+      "AddressLine1": "${firmAddress1}",
+      "AddressLine2": "${firmAddress2}",
+      "AddressLine3": "${firmAddress3}",
+      "PostTown": "${firmPostTown}",
+      "County": "${firmCounty}",
+      "PostCode": "${firmPostcode}",
+      "Country": "UK"
+    },
+    "solicitorPhone": null,
+    "solicitorEmail": "${firmName}@test.com",
+    "solicitorDXnumber": null,
+    "solicitorAgreeToReceiveEmails": "No",
+    "divorceCaseNumber": "EZ12D91234",
+    "divorceStageReached": "Petition Issued",
+    "divorceUploadEvidence1": null,
+    "divorceDecreeNisiDate": null,
+    "divorceUploadEvidence2": null,
+    "divorceDecreeAbsoluteDate": null,
+    "applicantFMName": "ApplicantPerf",
+    "applicantLName": "ApplicantTest",
+    "regionList": "midlands",
+    "midlandsFRCList": "nottingham",
+    "londonFRCList": null,
+    "northWestFRCList": null,
+    "northEastFRCList": null,
+    "southEastFRCList": null,
+    "southWestFRCList": null,
+    "walesFRCList": null,
+    "nottinghamCourtList": "FR_nottinghamList_1",
+    "birminghamCourtList": null,
+    "londonCourtList": null,
+    "liverpoolCourtList": null,
+    "manchesterCourtList": null,
+    "otherNWCourtList": null,
+    "clevelandCourtList": null,
+    "nwyorkshireCourtList": null,
+    "humberCourtList": null,
+    "kentSurreyCourtList": null,
+    "otherSECourtList": null,
+    "otherSWCourtList": null,
+    "newportCourtList": null,
+    "swanseaCourtList": null,
+    "welshOtherCourtList": null,
+    "appRespondentFMName": "RespondentPerf",
+    "appRespondentLName": "RespondentTest",
+    "appRespondentRep": "Yes",
+    "rSolicitorName": "${orgs(0)}",
+    "rSolicitorFirm": "${orgs(0)}",
+    "rSolicitorReference": null,
+    "rSolicitorPhone": null,
+    "rSolicitorEmail": null,
+    "rSolicitorDXnumber": null,
+    "respondentPhone": null,
+    "respondentEmail": null,
+    "natureOfApplication3a": null,
+    "natureOfApplication3b": null,
+    "rOrgPolicy": {
+      "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
+      "OrgPolicyReference": "Ref123",
+      "PrepopulateToUsersOrganisation": "Yes",
+      "Organisation": {
+        "OrganisationID": "${orgs(1)}",
+        "OrganisationName": "${orgs(0)}"
+      },
+      "PreviousOrganisations": [
+        {
+          "value": {
+            "FromTimestamp": "2019-01-01T00:00:00.000",
+            "ToTimestamp": "2021-01-01T00:00:00.000",
+            "OrganisationName": "PrevOrgName",
+            "OrganisationAddress": {
+              "AddressLine1": "${addressLines(0)}",
+              "AddressLine2": "${addressLines(1)}",
+              "AddressLine3": "",
+              "PostTown": "${addressLines(2)}",
+              "County": null,
+              "PostCode": "${addressLines(3)}",
+              "Country": "United Kingdom"
+            }
+          },
+          "id": null
+        }
+      ]
+    },
+    "rSolicitorAddress": {
+      "AddressLine1": "${addressLines(0)}",
+      "AddressLine2": "${addressLines(1)}",
+      "AddressLine3": "",
+      "PostTown": "${addressLines(2)}",
+      "County": null,
+      "PostCode": "${addressLines(3)}",
+      "Country": "United Kingdom"
+    },
+    "respondentAddress": null,
+    "natureOfApplication2": [
+      "Lump Sum Order"
+    ],
+    "consentOrder": {
+      "document_url": "${ConsentOrderDocumentURL}",
+      "document_binary_url": "${ConsentOrderDocumentURL}/binary",
+      "document_filename": "3MB.pdf",
+      "document_hash": "${documentHash}"
+    },
+    "d81Question": "Yes",
+    "d81Joint": {
+      "document_url": "${D81DocumentURL}",
+      "document_binary_url": "${D81DocumentURL}/binary",
+      "document_filename": "3MB.pdf",
+      "document_hash": "${documentHashD81}"
+    },
+    "d81Applicant": null,
+    "d81Respondent": null,
+    "otherCollection": []
+  },
+  "event": {
+    "id": "FR_solicitorCreate",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false,
+  "draft_id": null
+}

@@ -1,0 +1,129 @@
+{
+  "data": {
+    "appRespondentFMName": "RespondentPerf",
+    "appRespondentLName": "RespondentTest",
+    "appRespondentRep": "Yes",
+    "rSolicitorName": "${orgs(0)}",
+    "rOrgPolicy": {
+      "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
+      "OrgPolicyReference": "Ref123",
+      "PrepopulateToUsersOrganisation": "Yes",
+      "Organisation": {
+        "OrganisationID": "${orgs(1)}",
+        "OrganisationName": "${orgs(0)}"
+      },
+      "PreviousOrganisations": [
+        {
+          "value": {
+            "FromTimestamp": "2019-01-01T00:00:00.000",
+            "ToTimestamp": "2021-01-01T00:00:00.000",
+            "OrganisationName": "PrevOrgName",
+            "OrganisationAddress": {
+              "AddressLine1": "${addressLines(0)}",
+              "AddressLine2": "${addressLines(1)}",
+              "AddressLine3": "",
+              "PostTown": "${addressLines(2)}",
+              "County": "",
+              "PostCode": "${addressLines(3)}",
+              "Country": "United Kingdom"
+            }
+          },
+          "id": null
+        }
+      ]
+    },
+    "rSolicitorFirm": "${orgs(0)}",
+    "rSolicitorReference": null,
+    "rSolicitorAddress": {
+      "AddressLine1": "${addressLines(0)}",
+      "AddressLine2": "${addressLines(1)}",
+      "AddressLine3": "",
+      "PostTown": "${addressLines(2)}",
+      "County": "",
+      "PostCode": "${addressLines(3)}",
+      "Country": "United Kingdom"
+    },
+    "rSolicitorPhone": null,
+    "rSolicitorEmail": null,
+    "rSolicitorDXnumber": null
+  },
+  "event": {
+    "id": "FR_solicitorCreate",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "isAdmin": "No",
+    "solicitorName": "${firmName}",
+    "solicitorFirm": "${firmName}",
+    "solicitorReference": "${firmRef}",
+    "solicitorAddress": {
+      "AddressLine1": "${firmAddress1}",
+      "AddressLine2": "${firmAddress2}",
+      "AddressLine3": "${firmAddress3}",
+      "PostTown": "${firmPostTown}",
+      "County": "${firmCounty}",
+      "PostCode": "${firmPostcode}",
+      "Country": "UK"
+    },
+    "solicitorPhone": null,
+    "solicitorEmail": "${firmName}@test.com",
+    "solicitorDXnumber": null,
+    "solicitorAgreeToReceiveEmails": "No",
+    "divorceCaseNumber": "EZ12D91234",
+    "divorceStageReached": "Petition Issued",
+    "applicantFMName": "ApplicantPerf",
+    "applicantLName": "ApplicantTest",
+    "regionList": "midlands",
+    "midlandsFRCList": "nottingham",
+    "nottinghamCourtList": "FR_nottinghamList_1",
+    "appRespondentFMName": "RespondentPerf",
+    "appRespondentLName": "RespondentTest",
+    "appRespondentRep": "Yes",
+    "rSolicitorName": "${orgs(0)}",
+    "rOrgPolicy": {
+      "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
+      "OrgPolicyReference": "Ref123",
+      "PrepopulateToUsersOrganisation": "Yes",
+      "Organisation": {
+        "OrganisationID": "${orgs(1)}",
+        "OrganisationName": "${orgs(0)}"
+      },
+      "PreviousOrganisations": [
+        {
+          "value": {
+            "FromTimestamp": "2019-01-01T00:00:00.000",
+            "ToTimestamp": "2021-01-01T00:00:00.000",
+            "OrganisationName": "PrevOrgName",
+            "OrganisationAddress": {
+              "AddressLine1": "${addressLines(0)}",
+              "AddressLine2": "${addressLines(1)}",
+              "AddressLine3": "",
+              "PostTown": "${addressLines(2)}",
+              "County": "",
+              "PostCode": "${addressLines(3)}",
+              "Country": "United Kingdom"
+            }
+          },
+          "id": null
+        }
+      ]
+    },
+    "rSolicitorFirm": "${orgs(0)}",
+    "rSolicitorReference": null,
+    "rSolicitorAddress": {
+      "AddressLine1": "${addressLines(0)}",
+      "AddressLine2": "${addressLines(1)}",
+      "AddressLine3": "",
+      "PostTown": "${addressLines(2)}",
+      "County": "",
+      "PostCode": "${addressLines(3)}",
+      "Country": "United Kingdom"
+    },
+    "rSolicitorPhone": null,
+    "rSolicitorEmail": null,
+    "rSolicitorDXnumber": null
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false
+}
