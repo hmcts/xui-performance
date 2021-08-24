@@ -27,7 +27,8 @@
               "document": {
                  "document_url": "${DocumentURL}",
                  "document_binary_url": "${DocumentURL}/binary",
-                 "document_filename": "3MB.pdf"
+                 "document_filename": "3MB.pdf",
+                 "document_hash": "${documentHash}"
               }
            },
            "id": null
@@ -59,17 +60,17 @@
      "contactPreference": "wantsEmail",
      "email": "iacperftest@test.com",
      "appealType": "refusalOfHumanRights",
-     "appealGroundsHumanRightsRefusal": {
+     "appealGroundsDecisionHumanRightsRefusal": {
         "values": [
-           "protectionHumanRights"
+           "humanRightsRefusal"
         ]
      },
      "deportationOrderOptions": "No",
      "hasNewMatters": "No",
      "hasOtherAppeals": "No",
-     "legalRepCompany": "test",
-     "legalRepName": "test",
-     "legalRepReferenceNumber": "1123",
+     "legalRepCompany": "${orgname}",
+     "legalRepName": "John",
+     "legalRepReferenceNumber": "123",
      "isFeePaymentEnabled": "Yes",
      "isRemissionsEnabled": "No",
      "decisionHearingFeeOption": "decisionWithHearing"
