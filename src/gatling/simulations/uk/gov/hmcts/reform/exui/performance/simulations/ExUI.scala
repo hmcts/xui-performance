@@ -190,7 +190,8 @@ class ExUI extends Simulation {
 		exitBlockOnFail {
 			feed(feedUserDataFPLCreate)
 				.feed(Feeders.FPLCreateDataFeeder)
-				.exec(_.set("env", s"${env}"))
+				.exec(_.set("service", "FPL")
+							.set("env", s"${env}"))
 				.exec(EXUIMCLogin.manageCasesHomePage)
 				.exec(EXUIMCLogin.manageCaseslogin)
 				.repeat(1) {
@@ -240,12 +241,12 @@ class ExUI extends Simulation {
 	{
 		exitBlockOnFail {
 			feed(feedUserDataFR)
-			.feed(Feeders.FRApplicantDataFeeder)
-			.exec(_.set("env", s"${env}"))
+			.exec(_.set("service", "FR")
+						.set("env", s"${env}"))
 			.exec(EXUIMCLogin.manageCasesHomePage)
 			.exec(EXUIMCLogin.manageCaseslogin)
 			.repeat(2) {
-				exec(EXUI_FR_Applicant.createCase)
+				exec(EXUI_FR_Applicant.createFRCase)
 			}
 			.exec(EXUIMCLogin.manageCase_Logout)
 			/*.pause(20)
