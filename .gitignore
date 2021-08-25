@@ -7,3 +7,6 @@ target/**
 .gradle/
 *.log
 build/*
+bin/*
+.classpath
+.settings/*
