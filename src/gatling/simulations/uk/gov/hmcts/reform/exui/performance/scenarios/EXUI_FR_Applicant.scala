@@ -152,12 +152,6 @@ object EXUI_FR_Applicant  {
     * Enter the Respondent's details and click Continue
     ======================================================================================*/
 
-      .exec { session =>
-        println(session)
-        session
-      }
-
-
     .group("XUI_FR_090_AddRespondentDetails") {
       exec(http("XUI_FR_090_005_AddRespondentDetails")
         .post("/data/case-types/FinancialRemedyMVP2/validate?pageId=FR_solicitorCreate5")
