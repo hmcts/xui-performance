@@ -58,8 +58,8 @@ object EXUI_FR_Applicant  {
     * Click Continue
     ======================================================================================*/
 
-    .group("XUI_FR_060_ContinueToApplication") {
-      exec(http("XUI_FR_060_005_ContinueToApplication")
+    .group("XUI_FR_050_ContinueToApplication") {
+      exec(http("XUI_FR_050_005_ContinueToApplication")
         .post("/data/case-types/FinancialRemedyMVP2/validate?pageId=FR_solicitorCreate1")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -76,7 +76,7 @@ object EXUI_FR_Applicant  {
 
       //select applicant and respondent solicitor orgs now, as this call will be retrieved from cache in future
       //requests, where checks aren't performed by Gatling https://gatling.io/docs/gatling/reference/current/http/protocol/#caching
-      .exec(http("XUI_FR_060_010_GetOrgs")
+      .exec(http("XUI_FR_050_010_GetOrgs")
         .get("/api/caseshare/orgs")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -91,8 +91,8 @@ object EXUI_FR_Applicant  {
     * Complete Solicitor details (some are pre-populated) and click Continue
     ======================================================================================*/
 
-    .group("XUI_FR_070_AddSolicitorDetails") {
-      exec(http("XUI_FR_070_005_AddSolicitorDetails")
+    .group("XUI_FR_060_AddSolicitorDetails") {
+      exec(http("XUI_FR_060_005_AddSolicitorDetails")
         .post("/data/case-types/FinancialRemedyMVP2/validate?pageId=FR_solicitorCreate2")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -107,8 +107,8 @@ object EXUI_FR_Applicant  {
     * Complete Divorce case details (FamilyMan code = EZ12D91234) and click Continue
     ======================================================================================*/
 
-    .group("XUI_FR_080_AddDivorceCaseDetails") {
-      exec(http("XUI_FR_080_005_AddDivorceCaseDetails")
+    .group("XUI_FR_070_AddDivorceCaseDetails") {
+      exec(http("XUI_FR_070_005_AddDivorceCaseDetails")
         .post("/data/case-types/FinancialRemedyMVP2/validate?pageId=FR_solicitorCreate3")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -123,8 +123,8 @@ object EXUI_FR_Applicant  {
     * Enter the Applicant's details and click Continue
     ======================================================================================*/
 
-    .group("XUI_FR_090_AddApplicantDetails") {
-      exec(http("XUI_FR_090_005_AddApplicantDetails")
+    .group("XUI_FR_080_AddApplicantDetails") {
+      exec(http("XUI_FR_080_005_AddApplicantDetails")
         .post("/data/case-types/FinancialRemedyMVP2/validate?pageId=FR_solicitorCreate4")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -132,7 +132,7 @@ object EXUI_FR_Applicant  {
         .body(ElFileBody("bodies/fr/FRAddApplicantDetails.json"))
         .check(jsonPath("$.data.applicantFMName").is("ApplicantPerf")))
 
-      .exec(http("XUI_FR_090_010_GetOrgs")
+      .exec(http("XUI_FR_080_010_GetOrgs")
         .get("/api/caseshare/orgs")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*"))
@@ -158,8 +158,8 @@ object EXUI_FR_Applicant  {
       }
 
 
-    .group("XUI_FR_100_AddRespondentDetails") {
-      exec(http("XUI_FR_100_005_AddRespondentDetails")
+    .group("XUI_FR_090_AddRespondentDetails") {
+      exec(http("XUI_FR_090_005_AddRespondentDetails")
         .post("/data/case-types/FinancialRemedyMVP2/validate?pageId=FR_solicitorCreate5")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -174,8 +174,8 @@ object EXUI_FR_Applicant  {
     * Select Lump Sum Order as the Nature of the Application and click Continue
     ======================================================================================*/
 
-    .group("XUI_FR_110_AddNatureOfApplication") {
-      exec(http("XUI_FR_110_005_AddNatureOfApplication")
+    .group("XUI_FR_100_AddNatureOfApplication") {
+      exec(http("XUI_FR_100_005_AddNatureOfApplication")
         .post("/data/case-types/FinancialRemedyMVP2/validate?pageId=FR_solicitorCreate6")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -190,8 +190,8 @@ object EXUI_FR_Applicant  {
     * Upload Consent Order PDF
     ======================================================================================*/
 
-    .group("XUI_FR_120_UploadConsentOrder") {
-      exec(http("XUI_FR_120_005_UploadConsentOrder")
+    .group("XUI_FR_110_UploadConsentOrder") {
+      exec(http("XUI_FR_110_005_UploadConsentOrder")
         .post("/documentsv2")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -215,8 +215,8 @@ object EXUI_FR_Applicant  {
     * Click Continue to submit Consent Order document
     ======================================================================================*/
 
-    .group("XUI_FR_130_SubmitConsentOrderDocument") {
-      exec(http("XUI_FR_130_005_SubmitConsentOrderDocument")
+    .group("XUI_FR_120_SubmitConsentOrderDocument") {
+      exec(http("XUI_FR_120_005_SubmitConsentOrderDocument")
         .post("/data/case-types/FinancialRemedyMVP2/validate?pageId=FR_solicitorCreate8")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -231,8 +231,8 @@ object EXUI_FR_Applicant  {
     * Select Yes to Uploading a Joint D81 and upload the D81 PDF
     ======================================================================================*/
 
-    .group("XUI_FR_140_UploadJointD81") {
-      exec(http("XUI_FR_140_005_UploadJointD81")
+    .group("XUI_FR_130_UploadJointD81") {
+      exec(http("XUI_FR_130_005_UploadJointD81")
         .post("/documentsv2")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -256,8 +256,8 @@ object EXUI_FR_Applicant  {
     * Click Continue to submit D81 document
     ======================================================================================*/
 
-    .group("XUI_FR_150_SubmitD81Document") {
-      exec(http("XUI_FR_150_005_SubmitD81Document")
+    .group("XUI_FR_140_SubmitD81Document") {
+      exec(http("XUI_FR_140_005_SubmitD81Document")
         .post("/data/case-types/FinancialRemedyMVP2/validate?pageId=FR_solicitorCreate9")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -272,8 +272,8 @@ object EXUI_FR_Applicant  {
     * Other Documents - click Continue
     ======================================================================================*/
 
-    .group("XUI_FR_160_OtherDocuments") {
-      exec(http("XUI_FR_160_005_OtherDocuments")
+    .group("XUI_FR_150_OtherDocuments") {
+      exec(http("XUI_FR_150_005_OtherDocuments")
         .post("/data/case-types/FinancialRemedyMVP2/validate?pageId=FR_solicitorCreate11")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -288,8 +288,8 @@ object EXUI_FR_Applicant  {
     * Consent Order Application - click Continue
     ======================================================================================*/
 
-    .group("XUI_FR_170_ContinueToCheckYourAnswers") {
-      exec(http("XUI_FR_170_005_ContinueToCheckYourAnswers")
+    .group("XUI_FR_160_ContinueToCheckYourAnswers") {
+      exec(http("XUI_FR_160_005_ContinueToCheckYourAnswers")
         .post("/data/case-types/FinancialRemedyMVP2/validate?pageId=FR_solicitorCreate12")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -297,7 +297,7 @@ object EXUI_FR_Applicant  {
         .body(ElFileBody("bodies/fr/FRContinueToCheckYourAnswers.json"))
         .check(substring(""""data":{}""")))
 
-      .exec(http("XUI_FR_170_010_GetOrgs")
+      .exec(http("XUI_FR_160_010_GetOrgs")
         .get("/api/caseshare/orgs")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*"))
@@ -309,8 +309,8 @@ object EXUI_FR_Applicant  {
     * Review Application - click Submit
     ======================================================================================*/
 
-    .group("XUI_FR_180_SubmitApplication") {
-      exec(http("XUI_FR_180_005_SubmitApplication")
+    .group("XUI_FR_170_SubmitApplication") {
+      exec(http("XUI_FR_170_005_SubmitApplication")
         .post("/data/case-types/FinancialRemedyMVP2/cases?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-case.v2+json;charset=UTF-8")
@@ -321,13 +321,13 @@ object EXUI_FR_Applicant  {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_FR_180_010_ViewCase")
+      .exec(http("XUI_FR_170_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .check(jsonPath("$.state.id").is("caseAdded")))
 
-      .exec(http("XUI_FR_180_015_GetOrgs")
+      .exec(http("XUI_FR_170_015_GetOrgs")
         .get("/api/caseshare/orgs")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*"))
