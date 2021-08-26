@@ -6,15 +6,25 @@
     "applicantPhone": null,
     "applicantEmail": null,
     "solicitorName": "${firmName}",
+    "ApplicantOrganisationPolicy": {
+      "OrgPolicyCaseAssignedRole": "[APPSOLICITOR]",
+      "OrgPolicyReference": null,
+      "PrepopulateToUsersOrganisation": null,
+      "Organisation": {
+        "OrganisationID": "${applicantOrgs(1)}",
+        "OrganisationName": "${applicantOrgs(0)}"
+      },
+      "PreviousOrganisations": []
+    },
     "solicitorFirm": "${firmName}",
     "solicitorReference": "${firmRef}",
     "solicitorAddress": {
-      "AddressLine1": "${firmAddress1}",
-      "AddressLine2": "${firmAddress2}",
-      "AddressLine3": "${firmAddress3}",
-      "PostTown": "${firmPostTown}",
-      "County": "${firmCounty}",
-      "PostCode": "${firmPostcode}",
+      "AddressLine1": "${addressLines(0)}",
+      "AddressLine2": "${addressLines(1)}",
+      "AddressLine3": "",
+      "PostTown": "${addressLines(2)}",
+      "County": "",
+      "PostCode": "${addressLines(3)}",
       "Country": "UK"
     },
     "solicitorPhone": null,
@@ -29,95 +39,80 @@
     "divorceDecreeAbsoluteDate": null,
     "applicantFMName": "ApplicantPerf",
     "applicantLName": "ApplicantTest",
-    "regionList": "midlands",
-    "midlandsFRCList": "nottingham",
-    "londonFRCList": null,
+    "regionList": "london",
+    "midlandsFRCList": null,
+    "londonFRCList": "london",
     "northWestFRCList": null,
     "northEastFRCList": null,
     "southEastFRCList": null,
     "southWestFRCList": null,
     "walesFRCList": null,
-    "nottinghamCourtList": "FR_nottinghamList_1",
+    "nottinghamCourtList": null,
     "birminghamCourtList": null,
-    "londonCourtList": null,
+    "londonCourtList": "FR_londonList_10",
     "liverpoolCourtList": null,
     "manchesterCourtList": null,
-    "otherNWCourtList": null,
+    "lancashireCourtList": null,
     "clevelandCourtList": null,
     "nwyorkshireCourtList": null,
     "humberCourtList": null,
     "kentSurreyCourtList": null,
-    "otherSECourtList": null,
-    "otherSWCourtList": null,
+    "bedfordshireCourtList": null,
+    "thamesvalleyCourtList": null,
+    "devonCourtList": null,
+    "dorsetCourtList": null,
+    "bristolCourtList": null,
     "newportCourtList": null,
     "swanseaCourtList": null,
-    "welshOtherCourtList": null,
+    "northWalesCourtList": null,
     "appRespondentFMName": "RespondentPerf",
     "appRespondentLName": "RespondentTest",
     "appRespondentRep": "Yes",
-    "rSolicitorName": "${orgs(0)}",
-    "rSolicitorFirm": "${orgs(0)}",
-    "rSolicitorReference": null,
-    "rSolicitorPhone": null,
-    "rSolicitorEmail": null,
-    "rSolicitorDXnumber": null,
-    "respondentPhone": null,
-    "respondentEmail": null,
-    "natureOfApplication3a": null,
-    "natureOfApplication3b": null,
-    "rOrgPolicy": {
+    "rSolicitorName": "${respondentOrgs(0)}",
+    "RespondentOrganisationPolicy": {
       "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
-      "OrgPolicyReference": "Ref123",
-      "PrepopulateToUsersOrganisation": "Yes",
+      "OrgPolicyReference": null,
+      "PrepopulateToUsersOrganisation": null,
       "Organisation": {
-        "OrganisationID": "${orgs(1)}",
-        "OrganisationName": "${orgs(0)}"
+        "OrganisationID": "${respondentOrgs(1)}",
+        "OrganisationName": "${respondentOrgs(0)}"
       },
-      "PreviousOrganisations": [
-        {
-          "value": {
-            "FromTimestamp": "2019-01-01T00:00:00.000",
-            "ToTimestamp": "2021-01-01T00:00:00.000",
-            "OrganisationName": "PrevOrgName",
-            "OrganisationAddress": {
-              "AddressLine1": "${addressLines(0)}",
-              "AddressLine2": "${addressLines(1)}",
-              "AddressLine3": "",
-              "PostTown": "${addressLines(2)}",
-              "County": null,
-              "PostCode": "${addressLines(3)}",
-              "Country": "United Kingdom"
-            }
-          },
-          "id": null
-        }
-      ]
+      "PreviousOrganisations": []
     },
+    "rSolicitorFirm": "${respondentOrgs(0)}",
+    "rSolicitorReference": null,
     "rSolicitorAddress": {
       "AddressLine1": "${addressLines(0)}",
       "AddressLine2": "${addressLines(1)}",
       "AddressLine3": "",
       "PostTown": "${addressLines(2)}",
-      "County": null,
+      "County": "",
       "PostCode": "${addressLines(3)}",
       "Country": "United Kingdom"
     },
+    "rSolicitorPhone": null,
+    "rSolicitorEmail": null,
+    "rSolicitorDXnumber": null,
     "respondentAddress": null,
+    "respondentPhone": null,
+    "respondentEmail": null,
     "natureOfApplication2": [
       "Lump Sum Order"
     ],
+    "natureOfApplication3a": null,
+    "natureOfApplication3b": null,
     "consentOrder": {
       "document_url": "${ConsentOrderDocumentURL}",
       "document_binary_url": "${ConsentOrderDocumentURL}/binary",
       "document_filename": "3MB.pdf",
-      "document_hash": "${documentHash}"
+      "document_hash": "${ConsentOrderDocumentHash}"
     },
     "d81Question": "Yes",
     "d81Joint": {
       "document_url": "${D81DocumentURL}",
       "document_binary_url": "${D81DocumentURL}/binary",
       "document_filename": "3MB.pdf",
-      "document_hash": "${documentHashD81}"
+      "document_hash": "${D81DocumentHash}"
     },
     "d81Applicant": null,
     "d81Respondent": null,

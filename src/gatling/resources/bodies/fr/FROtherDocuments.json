@@ -10,15 +10,24 @@
   "event_data": {
     "isAdmin": "No",
     "solicitorName": "${firmName}",
+    "ApplicantOrganisationPolicy": {
+      "OrgPolicyCaseAssignedRole": "[APPSOLICITOR]",
+      "OrgPolicyReference": null,
+      "PrepopulateToUsersOrganisation": null,
+      "Organisation": {
+        "OrganisationID": "${applicantOrgs(1)}",
+        "OrganisationName": "${applicantOrgs(0)}"
+      }
+    },
     "solicitorFirm": "${firmName}",
     "solicitorReference": "${firmRef}",
     "solicitorAddress": {
-      "AddressLine1": "${firmAddress1}",
-      "AddressLine2": "${firmAddress2}",
-      "AddressLine3": "${firmAddress3}",
-      "PostTown": "${firmPostTown}",
-      "County": "${firmCounty}",
-      "PostCode": "${firmPostcode}",
+      "AddressLine1": "${addressLines(0)}",
+      "AddressLine2": "${addressLines(1)}",
+      "AddressLine3": "",
+      "PostTown": "${addressLines(2)}",
+      "County": "",
+      "PostCode": "${addressLines(3)}",
       "Country": "UK"
     },
     "solicitorPhone": null,
@@ -29,55 +38,36 @@
     "divorceStageReached": "Petition Issued",
     "applicantFMName": "ApplicantPerf",
     "applicantLName": "ApplicantTest",
-    "regionList": "midlands",
-    "midlandsFRCList": "nottingham",
-    "nottinghamCourtList": "FR_nottinghamList_1",
+    "regionList": "london",
+    "londonFRCList": "london",
+    "londonCourtList": "FR_londonList_10",
     "appRespondentFMName": "RespondentPerf",
     "appRespondentLName": "RespondentTest",
     "appRespondentRep": "Yes",
-    "rSolicitorName": "${orgs(0)}",
-    "rSolicitorFirm": "${orgs(0)}",
-    "rSolicitorReference": null,
-    "rSolicitorPhone": null,
-    "rSolicitorEmail": null,
-    "rSolicitorDXnumber": null,
-    "rOrgPolicy": {
+    "rSolicitorName": "${respondentOrgs(0)}",
+    "RespondentOrganisationPolicy": {
       "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
-      "OrgPolicyReference": "Ref123",
-      "PrepopulateToUsersOrganisation": "Yes",
+      "OrgPolicyReference": null,
+      "PrepopulateToUsersOrganisation": null,
       "Organisation": {
-        "OrganisationID": "${orgs(1)}",
-        "OrganisationName": "${orgs(0)}"
-      },
-      "PreviousOrganisations": [
-        {
-          "value": {
-            "FromTimestamp": "2019-01-01T00:00:00.000",
-            "ToTimestamp": "2021-01-01T00:00:00.000",
-            "OrganisationName": "PrevOrgName",
-            "OrganisationAddress": {
-              "AddressLine1": "${addressLines(0)}",
-              "AddressLine2": "${addressLines(1)}",
-              "AddressLine3": "",
-              "PostTown": "${addressLines(2)}",
-              "County": null,
-              "PostCode": "${addressLines(3)}",
-              "Country": "United Kingdom"
-            }
-          },
-          "id": null
-        }
-      ]
+        "OrganisationID": "${respondentOrgs(1)}",
+        "OrganisationName": "${respondentOrgs(0)}"
+      }
     },
+    "rSolicitorFirm": "${respondentOrgs(0)}",
+    "rSolicitorReference": null,
     "rSolicitorAddress": {
       "AddressLine1": "${addressLines(0)}",
       "AddressLine2": "${addressLines(1)}",
       "AddressLine3": "",
       "PostTown": "${addressLines(2)}",
-      "County": null,
+      "County": "",
       "PostCode": "${addressLines(3)}",
       "Country": "United Kingdom"
     },
+    "rSolicitorPhone": null,
+    "rSolicitorEmail": null,
+    "rSolicitorDXnumber": null,
     "natureOfApplication2": [
       "Lump Sum Order"
     ],
@@ -85,14 +75,14 @@
       "document_url": "${ConsentOrderDocumentURL}",
       "document_binary_url": "${ConsentOrderDocumentURL}/binary",
       "document_filename": "3MB.pdf",
-      "document_hash": "${documentHash}"
+      "document_hash": "${ConsentOrderDocumentHash}"
     },
     "d81Question": "Yes",
     "d81Joint": {
       "document_url": "${D81DocumentURL}",
       "document_binary_url": "${D81DocumentURL}/binary",
       "document_filename": "3MB.pdf",
-      "document_hash": "${documentHashD81}"
+      "document_hash": "${D81DocumentHash}"
     },
     "otherCollection": []
   },
