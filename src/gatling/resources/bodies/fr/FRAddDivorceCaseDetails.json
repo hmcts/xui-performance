@@ -11,6 +11,15 @@
   "event_data": {
     "isAdmin": "No",
     "solicitorName": "${firmName}",
+    "ApplicantOrganisationPolicy": {
+      "OrgPolicyCaseAssignedRole": "[APPSOLICITOR]",
+      "OrgPolicyReference": null,
+      "PrepopulateToUsersOrganisation": null,
+      "Organisation": {
+        "OrganisationID": "${applicantOrgs(1)}",
+        "OrganisationName": "${applicantOrgs(0)}"
+      }
+    },
     "solicitorFirm": "${firmName}",
     "solicitorReference": "${firmRef}",
     "solicitorAddress": {
