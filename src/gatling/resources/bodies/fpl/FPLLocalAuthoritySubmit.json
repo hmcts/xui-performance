@@ -1,46 +1,47 @@
 {
   "data": {
-      "localAuthority": {
-        "name": "${laName}",
-        "email": "${laName}@test.com",
-        "legalTeamManager": "legal test",
-        "pbaNumber": "PBA0066906",
-        "customerReference": "test",
-        "clientCode": "123",
-        "phone": "02012345678",
-        "id": "${laId}",
-        "address": {
-          "AddressLine1": "${laAddressLine1}",
-          "AddressLine2": "${laAddressLine2}",
-          "AddressLine3": null,
-          "PostTown": "${laPostTown}",
-          "County": "${laCounty}",
-          "PostCode": "${laPostcode}",
-          "Country": null
+    "localAuthority": {
+      "name": "${laName}",
+      "email": "${laName}@test.com",
+      "legalTeamManager": null,
+      "pbaNumber": "PBA0066906",
+      "customerReference": null,
+      "clientCode": null,
+      "phone": "07000000000",
+      "id": "${laId}",
+      "designated": null,
+      "address": {
+        "AddressLine1": "${laAddressLine1}",
+        "AddressLine2": "${laAddressLine2}",
+        "AddressLine3": "",
+        "PostTown": "${laPostTown}",
+        "County": "",
+        "PostCode": "${laPostcode}",
+        "Country": "UK"
+      },
+      "colleagues": []
+    },
+    "localAuthorityColleagues": [
+      {
+        "value": {
+          "role": "SOLICITOR",
+          "dx": null,
+          "title": null,
+          "reference": null,
+          "fullName": "Perf Test",
+          "email": "${laName}@test.com",
+          "phone": null,
+          "notificationRecipient": "No",
+          "mainContact": null
         },
-        "colleagues": []
-     },
-     "localAuthorityColleagues": [
-        {
-           "value": {
-              "role": "SOLICITOR",
-              "dx": null,
-              "title": null,
-              "reference": null,
-              "fullName": "Test Solicitor",
-              "email": "colleague@test.com",
-              "phone": null,
-              "notificationRecipient": "No",
-              "mainContact": null
-           },
-           "id": "${laColleagueId}"
-        }
-     ]
+        "id": "${colleagueId}"
+      }
+    ]
   },
   "event": {
-     "id": "enterLocalAuthority",
-     "summary": "",
-     "description": ""
+    "id": "enterLocalAuthority",
+    "summary": "",
+    "description": ""
   },
   "event_token": "${event_token}",
   "ignore_warning": false
