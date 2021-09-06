@@ -196,16 +196,15 @@ class ExUI extends Simulation {
 				.exec(EXUIMCLogin.manageCaseslogin)
 				.repeat(1) {
 					exec(EXUIFPLAMC.fplcasecreation)
-						.exec(EXUIFPLAMC.fplOrdersNeeded)
-						.exec(EXUIFPLAMC.fplHearingNeeded)
+						.exec(EXUIFPLAMC.fplOrdersAndDirections)
+						.exec(EXUIFPLAMC.fplHearingUrgency)
+						.exec(EXUIFPLAMC.fplGrounds)
+						.exec(EXUIFPLAMC.fplLocalAuthority)
 						.exec(EXUIFPLAMC.fplChildDetails)
-						.exec(EXUIFPLAMC.fplEnterRespondents)
-						.exec(EXUIFPLAMC.fplEnterApplicant)
-						.exec(EXUIFPLAMC.fplEnterGrounds)
+						.exec(EXUIFPLAMC.fplRespondentDetails)
 						.exec(EXUIFPLAMC.fplAllocationProposal)
-						.exec(EXUIFPLAMC.fplUploadDocuments)
-            .exec(EXUIFPLAMC.fplLocalAuthority)
 						.exec(EXUIFPLAMC.fplSubmitApplication)
+						.exec(EXUIFPLAMC.fplReturnToCase)
 				}
 				.exec(EXUIMCLogin.manageCase_Logout)
 		}
