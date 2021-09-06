@@ -1,6 +1,6 @@
 {
   "data": {
-     "caseName": "${firstName}"
+     "caseName": "${caseName}"
   },
   "event": {
      "id": "openCase",

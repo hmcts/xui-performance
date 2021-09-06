@@ -11,7 +11,7 @@ object Feeders {
     "organisationName" -> orgName))
 
   val FPLCreateDataFeeder = Iterator.continually(Map("service" -> ({
-    "FPLC"
+    "FPL"
   }),
     "SignoutNumber" -> ({
       "390"
