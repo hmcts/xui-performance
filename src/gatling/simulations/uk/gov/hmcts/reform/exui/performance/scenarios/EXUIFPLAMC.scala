@@ -11,7 +11,6 @@ object EXUIFPLAMC {
 
   val IdamUrl = Environment.idamURL
   val baseURL = Environment.baseURL
-  val loginFeeder = csv("FPLUserData.csv").circular
 
   val MinThinkTime = Environment.minThinkTimeFPLC
   val MaxThinkTime = Environment.maxThinkTimeFPLC
@@ -24,7 +23,7 @@ object EXUIFPLAMC {
   val fplcasecreation =
 
     //set session variables
-    exec(_.setAll(  "caseName"  -> (Common.randomString(5) + " vs " + Common.randomString(5)),
+    exec(_.setAll(  "caseName"  -> ("Perf" + Common.randomString(5) + " vs Perf" + Common.randomString(5)),
                     "firstName"  -> ("Perf" + Common.randomString(5)),
                     "childFirstName" -> ("Child" + Common.randomString(5)),
                     "childLastName" -> ("Test" + Common.randomString(5)),
