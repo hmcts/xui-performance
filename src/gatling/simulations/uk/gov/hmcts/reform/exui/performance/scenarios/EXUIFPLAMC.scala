@@ -971,7 +971,6 @@ object EXUIFPLAMC {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/fpl/FPLSubmitApplicationSubmit.json"))
         .check(jsonPath("$.data.submissionConsent[0]").is("agree"))
-        .check(substring("Application sent"))
         .check(jsonPath("$.state").is("Submitted")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitApplication%2Fconfirm"))
