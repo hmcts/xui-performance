@@ -1,14 +1,14 @@
 {
   "data": {
-     "allocationProposal": {
-        "proposal": "District judge",
-        "proposalReason": "Perf testing reason"
-     }
+    "allocationProposal": {
+      "proposal": "Circuit judge",
+      "proposalReason": "Reason text"
+    }
   },
   "event": {
-     "id": "otherProposal",
-     "summary": "",
-     "description": ""
+    "id": "otherProposal",
+    "summary": "",
+    "description": ""
   },
   "event_token": "${event_token}",
   "ignore_warning": false

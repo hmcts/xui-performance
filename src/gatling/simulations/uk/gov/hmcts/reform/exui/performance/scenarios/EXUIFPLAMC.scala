@@ -4,39 +4,42 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import uk.gov.hmcts.reform.exui.performance.scenarios.utils.{Environment, Common, Headers}
 
-import java.text.SimpleDateFormat
-import java.util.Date
-import scala.util.Random
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 object EXUIFPLAMC {
 
   val IdamUrl = Environment.idamURL
   val baseURL = Environment.baseURL
-  val loginFeeder = csv("FPLUserData.csv").circular
 
   val MinThinkTime = Environment.minThinkTimeFPLC
   val MaxThinkTime = Environment.maxThinkTimeFPLC
-  
-  val sdfDate = new SimpleDateFormat("yyyy-MM-dd")
-  val now = new Date()
-  val timeStamp = sdfDate.format(now)
+
+  val patternDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+  val patternYear = DateTimeFormatter.ofPattern("yyyy")
+  val now = LocalDate.now()
+
  
   val fplcasecreation =
 
     //set session variables
-    exec(_.setAll(  "firstName"  -> ("Perf" + Common.randomString(5)),
+    exec(_.setAll(  "caseName"  -> ("Perf" + Common.randomString(5) + " vs Perf" + Common.randomString(5)),
+                    "firstName"  -> ("Perf" + Common.randomString(5)),
                     "childFirstName" -> ("Child" + Common.randomString(5)),
                     "childLastName" -> ("Test" + Common.randomString(5)),
                     "dobDay" -> Common.getDay(),
                     "dobMonth" -> Common.getMonth(),
                     "dobYearChild" -> Common.getDobYearChild(),
-                    "dobYearRes" -> Common.getDobYear(),
-                    "respondentFirstName" -> ("Res" + Common.randomString(5)),
+                    "livingWithSinceDay" -> Common.getDay(),
+                    "livingWithSinceMonth" -> Common.getMonth(),
+                    "livingWithSinceYear" -> now.minusYears(1).format(patternYear),
+                    "respondentFirstName" -> ("Resp" + Common.randomString(5)),
                     "respondentLastName" -> ("Test" + Common.randomString(5)),
-                    "currentDate" -> timeStamp))
+                    "dobYearResp" -> Common.getDobYear(),
+                    "currentDate" -> now.format(patternDate)))
  
     /*======================================================================================
-    *Business process : Click On Create Case for FPL
+    Click On Create Case for FPL
     ======================================================================================*/
   
     .group("XUI_FPL_040_CreateCase") {
@@ -53,18 +56,18 @@ object EXUIFPLAMC {
     .pause(MinThinkTime , MaxThinkTime)
     
     /*======================================================================================
-    *Business process : Select Jurisdiction as Family Law and Casetype as CARE_SUPERVISION_EPO
+    Select Jurisdiction as Family Law and Casetype as CARE_SUPERVISION_EPO
     ======================================================================================*/
 
     .group("XUI_FPL_050_005_StartCreateCase") {
-      exec(http("XUI_FPL_050_005_StartCreateCase")
+      exec(Common.healthcheck("%2Fcases%2Fcase-create%2FPUBLICLAW%2FCARE_SUPERVISION_EPO%2FopenCase"))
+
+      .exec(http("XUI_FPL_050_005_StartCreateCase")
         .get("/data/internal/case-types/CARE_SUPERVISION_EPO/event-triggers/openCase?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(substring("Start application")))
-
-      .exec(Common.profile)
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-create%2FPUBLICLAW%2FCARE_SUPERVISION_EPO%2FopenCase%2FopenCaseprovideCaseName"))
     }
@@ -72,7 +75,7 @@ object EXUIFPLAMC {
     .pause(MinThinkTime , MaxThinkTime)
 
     /*======================================================================================
-    *Business process : Enter case name and click Continue
+    Enter case name and click Continue
     ======================================================================================*/
     
     .group("XUI_FPL_060_CaseNameContinue") {
@@ -83,14 +86,12 @@ object EXUIFPLAMC {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/fpl/FPLOpenCase.json"))
         .check(substring("caseName")))
-
-      .exec(Common.profile)
     }
     
     .pause(MinThinkTime , MaxThinkTime )
 
     /*======================================================================================
-    *Business process : Click Save and Continue to create the case
+    Click Save and Continue to create the case
     ======================================================================================*/
     
     .group("XUI_FPL_070_CaseNameSaveContinue") {
@@ -103,15 +104,6 @@ object EXUIFPLAMC {
         .check(jsonPath("$.id").saveAs("caseId"))
         .check(substring("created_on")))
 
-      .exec(http("XUI_FPL_070_010_WorkAllocation")
-        .post("/workallocation/searchForCompletable")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "${XSRFToken}")
-        .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"openCase","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
-        .check(status.in(200, 400))
-        .check(substring("tasks")))
-
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
       .exec(http("XUI_FPL_070_015_ViewCase")
@@ -121,973 +113,886 @@ object EXUIFPLAMC {
         .check(substring("CCD ID")))
     }
       
-    .exec(Common.caseActivityGet)
-    .pause(2)
-    .exec(Common.caseActivityPost)
-      
     .pause(MinThinkTime , MaxThinkTime )
 
-  val fplOrdersNeeded =
+  val fplOrdersAndDirections =
 
     /*======================================================================================
-    *Business process : Select Orders and Directions sought case event from the dropdown
+    Click on the 'Orders and directions sought' link
     ======================================================================================*/
       
-    group("XUI_FPL_080_OrdersDirectionNeededGo") {
-      exec(http("XUI_FPL_080_005_OrdersDirectionNeededGo")
+    group("XUI_FPL_080_OrdersAndDirections") {
+      exec(http("XUI_FPL_080_005_OrdersAndDirectionsTrigger")
+        .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/${caseId}/trigger/ordersNeeded")
+        .headers(Headers.navigationHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("MCTS Manage cases")))
+
+      .exec(Common.configurationui)
+
+      .exec(Common.configJson)
+
+      .exec(Common.TsAndCs)
+
+      .exec(Common.configUI)
+
+      .exec(Common.userDetails)
+
+      .exec(Common.isAuthenticated)
+
+      .exec(Common.monitoringTools)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FordersNeeded"))
+
+      .exec(http("XUI_FPL_080_010_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("CCD ID")))
+
+      .exec(Common.profile)
+
+      .exec(http("XUI_FPL_080_015_OrdersAndDirectionsEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/ordersNeeded?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .check(jsonPath("$.event_token").saveAs("event_token"))
-        .check(substring("Orders and directions sought")))
+        .check(jsonPath("$.id").is("ordersNeeded")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FordersNeeded"))
-
-      .exec(Common.profile)
+      .exec(Common.isAuthenticated)
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FordersNeeded%2FordersNeeded1"))
     }
     
     .exec(Common.caseActivityGet)
-    .pause(2)
-    .exec(Common.caseActivityPost)
 
     .pause(MinThinkTime , MaxThinkTime )
   
     /*======================================================================================
-    *Business process : Select the top option and click Continue
+    Select options and click Continue:
+    Orders = Care order
+    Directions = No
     ======================================================================================*/
     
-    .group("XUI_FPL_090_OrdersDirectionNeededContinue") {
-      exec(http("XUI_FPL_090_005_OrdersDirectionNeededContinue")
+    .group("XUI_FPL_090_AddOrdersAndDirections") {
+      exec(http("XUI_FPL_090_005_AddOrdersAndDirections")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=ordersNeeded1")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/fpl/FPLOrdersNeededAdd.json"))
+        .body(ElFileBody("bodies/fpl/FPLOrdersAndDirectionsAdd.json"))
         .check(substring("emergencyProtectionOrderDetails")))
-
-      .exec(Common.profile)
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FordersNeeded%2Fsubmit"))
     }
-
-    .exec(Common.caseActivityGet)
-    .pause(2)
-    .exec(Common.caseActivityPost)
     
     .pause(MinThinkTime , MaxThinkTime )
 
     /*======================================================================================
-    *Business process : Review details and click Save and Continue
+    Review details and click Save and Continue
     ======================================================================================*/
     
-    .group("XUI_FPL_100_OrdersDirectionNeededSaveContinue") {
-      exec(http("XUI_FPL_100_005_OrdersDirectionNeededSaveContinue")
+    .group("XUI_FPL_100_SubmitOrdersAndDirections") {
+      exec(http("XUI_FPL_100_005_SubmitOrdersAndDirections")
         .post("/data/cases/${caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/fpl/FPLOrdersNeededSubmit.json"))
-        .check(substring("last_modified_on")))
-
-      .exec(http("XUI_FPL_100_010_WorkAllocation")
-        .post("/workallocation/searchForCompletable")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "${XSRFToken}")
-        .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"ordersNeeded","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
-        .check(status.in(200, 400))
-        .check(substring("tasks")))
+        .body(ElFileBody("bodies/fpl/FPLOrdersAndDirectionsSubmit.json"))
+        .check(jsonPath("$.state").is("Open")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_FPL_100_015_ViewCase")
+      .exec(http("XUI_FPL_100_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
         .check(substring("""event_id":"ordersNeeded""")))
     }
-
-    .exec(Common.caseActivityGet)
-    .pause(2)
-    .exec(Common.caseActivityPost)
       
     .pause(MinThinkTime , MaxThinkTime )
 
-  val fplHearingNeeded =
-
-  /*======================================================================================
-  *Business process : Select Hearing urgency from the dropdown
-  ======================================================================================*/
-    
-  group("XUI_FPL_110_HearingNeededGo") {
-    exec(http("XUI_FPL_110_005_HearingNeededGo")
-      .get("/data/internal/cases/${caseId}/event-triggers/hearingNeeded?ignore-warning=false")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("event_token"))
-      .check(substring("Hearing urgency")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FhearingNeeded"))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FhearingNeeded%2FhearingNeeded1"))
-
-    .exec(Common.profile)
-  }
-
-  .exec(Common.caseActivityGet)
-  .pause(2)
-  .exec(Common.caseActivityPost)
-
-  .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-  *Business process : Select desired check boxes and click on Continue
-  ======================================================================================*/
-    
-  .group("XUI_FPL_120_HearingNeededContinue") {
-    exec(http("XUI_FPL_120_005_HearingNeededContinue")
-      .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=hearingNeeded1")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLHearingNeededAdd.json"))
-      .check(substring("Within 18 days")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FhearingNeeded%2Fsubmit"))
-
-    .exec(Common.profile)
-  }
-
-  .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-  *Business process : Review details and click Save and Continue
-  ======================================================================================*/
-    
-  .group("XUI_FPL_130_HearingNeededSaveContinue") {
-    exec(http("XUI_FPL_130_005_HearingNeededSaveContinue")
-      .post("/data/cases/${caseId}/events")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLHearingNeededSubmit.json"))
-      .check(substring("${caseId}"))
-      .check(substring("last_modified_on")))
-
-    .exec(http("XUI_FPL_130_010_WorkAllocation")
-      .post("/workallocation/searchForCompletable")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/json")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"hearingNeeded","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
-      .check(status.in(200, 400))
-      .check(substring("tasks")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
-
-    .exec(http("XUI_FPL_130_010_ViewCase")
-      .get("/data/internal/cases/${caseId}")
-      .headers(Headers.commonHeader)
-      .header("x-xsrf-token", "${XSRFToken}")
-      .check(substring("""event_id":"hearingNeeded""")))
-  }
-
-  .exec(Common.caseActivityGet)
-  .pause(2)
-  .exec(Common.caseActivityPost)
-
-  .pause(MinThinkTime , MaxThinkTime )
-
-val fplChildDetails =
-
-  /*======================================================================================
-  *Business process : Select Child details from the dropdown
-  ======================================================================================*/
-  
-  group("XUI_FPL_140_ChildrenGo") {
-    exec(http("XUI_FPL_140_005_ChildrenGo")
-      .get("/data/internal/cases/${caseId}/event-triggers/enterChildren?ignore-warning=false")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("event_token"))
-      .check(Common.savePartyId)
-      .check(Common.saveId)
-      .check(substring("Entering the children for the case")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterChildren%2FenterChildren1"))
-
-    .exec(Common.profile)
-  }
-
-  .exec(Common.caseActivityGet)
-  .pause(2)
-  .exec(Common.caseActivityPost)
-
-  .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-  *Business process : Enter Children details and click on Continue
-  ======================================================================================*/
-
-  .group("XUI_FPL_150_ChildrenContinue") {
-    exec(http("XUI_FPL_150_005_ChildrenContinue")
-      .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterChildren1")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLChildDetailsAdd.json"))
-      .check(substring("finalOrderIssuedType")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterChildren%2Fsubmit"))
-
-    .exec(Common.profile)
-  }
-
-  .exec(Common.caseActivityGet)
-  .pause(2)
-  .exec(Common.caseActivityPost)
-
-  .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-  *Business process : Review details and click on Save and Continue
-  ======================================================================================*/
-    
-  .group("XUI_FPL_160_ChildrenSaveContinue") {
-    exec(http("XUI_FPL_160_005_ChildrenSaveContinue")
-      .post("/data/cases/${caseId}/events")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLChildDetailsSubmit.json"))
-      .check(substring("${caseId}"))
-      .check(substring("last_modified_on")))
-
-    .exec(http("XUI_FPL_160_010_WorkAllocation")
-      .post("/workallocation/searchForCompletable")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/json")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"enterChildren","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
-      .check(status.in(200, 400))
-      .check(substring("tasks")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
-
-    .exec(http("XUI_FPL_160_015_ViewCase")
-      .get("/data/internal/cases/${caseId}")
-      .headers(Headers.commonHeader)
-      .header("x-xsrf-token", "${XSRFToken}")
-      .check(substring("""event_id":"enterChildren""")))
-  }
-
-  .exec(Common.caseActivityGet)
-  .pause(2)
-  .exec(Common.caseActivityPost)
-
-  .pause(MinThinkTime , MaxThinkTime )
-
-val fplEnterRespondents = 
-
-  /*======================================================================================
-  *Business process : Select Enter Respondents from the dropdown
-  ======================================================================================*/
-    
-  group("XUI_FPL_170_RespondentsGo") {
-    exec(http("XUI_FPL_170_005_RespondentsGo")
-      .get("/data/internal/cases/${caseId}/event-triggers/enterRespondents?ignore-warning=false")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("event_token"))
-      .check(Common.savePartyId)
-      .check(Common.saveId)
-      .check(substring("Entering the respondents for the case")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterRespondents"))
-
-    .exec(Common.profile)
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterRespondents%2FenterRespondents1"))
-
-    .exec(Common.caseShareOrgs)
-  }
-
-  .exec(Common.caseActivityGet)
-  .pause(2)
-  .exec(Common.caseActivityPost)
-      
-  .pause(MinThinkTime , MaxThinkTime)
-
-  /*======================================================================================
-  *Business process : Enter required details and click Continue
-  ======================================================================================*/
-
-  .exec(Common.postcodeLookup)
-
-  .pause(MinThinkTime , MaxThinkTime)
-  
-  .group("XUI_FPL_180_RespondentsContinue") {
-    exec(http("XUI_FPL_180_005_RespondentsContinue")
-      .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterRespondents1")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLEnterRespondentsAdd.json"))
-      .check(substring("livingSituation")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterRespondents%2Fsubmit"))
-
-    .exec(Common.profile)
-    
-  }
-  
-  .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-  *Business process : Review details and click Save and Continue
-  ======================================================================================*/
-  
-  .group("XUI_FPL_190_RespondentsSaveContinue") {
-    exec(http("XUI_FPL_190_005_RespondentsSaveContinue")
-      .post("/data/cases/${caseId}/events")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLEnterRespondentsSubmit.json"))
-      .check(substring("${caseId}"))
-      .check(substring("last_modified_on")))
-
-    .exec(http("XUI_FPL_190_010_WorkAllocation")
-      .post("/workallocation/searchForCompletable")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/json")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"enterRespondents","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
-      .check(status.in(200, 400))
-      .check(substring("tasks")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
-
-    .exec(http("XUI_FPL_190_015_ViewCase")
-      .get("/data/internal/cases/${caseId}")
-      .headers(Headers.commonHeader)
-      .header("x-xsrf-token", "${XSRFToken}")
-      .check(substring("""event_id":"enterRespondents""")))
-  }
-
-  .exec(Common.caseActivityGet)
-  .pause(2)
-  .exec(Common.caseActivityPost)
-
-  .pause(MinThinkTime , MaxThinkTime )
-
-val fplEnterApplicant =
-
-  /*======================================================================================
-  *Business process : Select Applicant Details from the dropdownh
-  ======================================================================================*/
-    
-  group("XUI_FPL_200_ApplicantGo") {
-    exec(http("XUI_FPL_200_005_ApplicantGo")
-      .get("/data/internal/cases/${caseId}/event-triggers/enterApplicant?ignore-warning=false")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("event_token"))
-      .check(Common.savePartyId)
-      .check(Common.saveId)
-      .check(substring("Entering the applicant for the case")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterApplicant"))
-
-    .exec(Common.profile)
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterApplicant%2FenterApplicant1"))
-  }
-
-  .exec(Common.caseActivityGet)
-  .pause(2)
-  .exec(Common.caseActivityPost)
-  
-  .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-  *Business process : Enter postcode and search
-  ======================================================================================*/
-    
-  .exec(Common.postcodeLookup)
-
-  .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-  *Business process : As part of the FPL Case Creation there are different steps
-  ======================================================================================*/
-    
-  .group("XUI_FPL_210_ApplicantContinue") {
-    exec(http("XUI_FPL_210_005_ApplicantContinue")
-      .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterApplicant1")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLApplicantDetailsAdd.json"))
-      .check(substring("additionalNeeds")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterApplicant%2Fsubmit"))
-
-    .exec(Common.profile)
-  }
-
-  .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-  *Business process : Review details and click Save and Continue
-  ======================================================================================*/
-    
-  .group("XUI_FPL_220_ApplicantSaveContinue") {
-    exec(http("XUI_FPL_220_005_ApplicantSaveContinue")
-      .post("/data/cases/${caseId}/events")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLApplicantDetailsSubmit.json"))
-      .check(substring("${caseId}"))
-      .check(substring("last_modified_on")))
-
-    .exec(http("XUI_FPL_220_010_WorkAllocation")
-      .post("/workallocation/searchForCompletable")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/json")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"enterApplicants","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
-      .check(status.in(200, 400))
-      .check(substring("tasks")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
-
-    .exec(http("XUI_FPL_220_015_ViewCase")
-      .get("/data/internal/cases/${caseId}")
-      .headers(Headers.commonHeader)
-      .header("x-xsrf-token", "${XSRFToken}")
-      .check(substring("""event_id":"enterApplicant""")))
-  }
-
-  .exec(Common.caseActivityGet)
-  .pause(2)
-  .exec(Common.caseActivityPost)
-
-  .pause(MinThinkTime , MaxThinkTime )
-
-val fplEnterGrounds =
-
-  /*======================================================================================
-  *Business process : Select Enter Grounds from the dropdown
-  ======================================================================================*/
-    
-  group("XUI_FPL_230_GroundApplicationGo") {
-    exec(http("XUI_FPL_230_005_GroundApplicationGo")
-      .get("/data/internal/cases/${caseId}/event-triggers/enterGrounds?ignore-warning=false")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("event_token"))
-      .check(substring("Grounds for the application")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterGrounds"))
-
-    .exec(Common.profile)
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterGrounds%2FenterGrounds1"))
-  }
-
-  .exec(Common.caseActivityGet)
-  .pause(2)
-  .exec(Common.caseActivityPost)
-  
-  .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-  *Business process : Select the desired reason and click on Continue
-  ======================================================================================*/
-
-  .group("XUI_FPL_240_GroundApplicationContinue") {
-    exec(http("XUI_FPL_240_005_GroundApplicationContinue")
-      .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterGrounds1")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLEnterGroundsAdd.json"))
-      .check(substring("thresholdReason")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterGrounds%2Fsubmit"))
-
-    .exec(Common.profile)
-  }
-
-  .exec(Common.caseActivityGet)
-  .pause(2)
-  .exec(Common.caseActivityPost)
-
-  .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-  *Business process : Review details and click Save and Continue
-  ======================================================================================*/
-
-  .group("XUI_FPL_250_GroundApplicationSaveContinue") {
-    exec(http("XUI_FPL_250_005_GroundApplicationSaveContinue")
-      .post("/data/cases/${caseId}/events")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLEnterGroundsSubmit.json"))
-      .check(substring("${caseId}"))
-      .check(substring("last_modified_on")))
-
-    .exec(http("XUI_FPL_250_010_WorkAllocation")
-      .post("/workallocation/searchForCompletable")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/json")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"enterGrounds","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
-      .check(status.in(200, 400))
-      .check(substring("tasks")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
-
-    .exec(http("XUI_FPL_250_015_ViewCase")
-      .get("/data/internal/cases/${caseId}")
-      .headers(Headers.commonHeader)
-      .header("x-xsrf-token", "${XSRFToken}")
-      .check(substring("""event_id":"enterGrounds""")))
-  }
-
-  .exec(Common.caseActivityGet)
-  .pause(2)
-  .exec(Common.caseActivityPost)
-
-  .pause(MinThinkTime , MaxThinkTime )
-
-val fplAllocationProposal =
-
-  /*======================================================================================
-  *Business process : Select Allocation Proposal from the dropdown
-  ======================================================================================*/
-  
-  group("XUI_FPL_260_AllocationProposalGo") {
-    exec(http("XUI_FPL_260_005_AllocationProposalGo")
-      .get("/data/internal/cases/${caseId}/event-triggers/otherProposal?ignore-warning=false")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("event_token"))
-      .check(substring("Allocation proposal")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FotherProposal"))
-
-    .exec(Common.profile)
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FotherProposal%2FotherProposal1"))
-  }
-
-  .exec(Common.caseActivityGet)
-  .pause(2)
-  .exec(Common.caseActivityPost)
-
-  .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-  *Business process : Select relevant checkboxes and click Continue
-  ======================================================================================*/
-    
-  .group("XUI_FPL_270_AllocationProposalContinue") {
-    exec(http("XUI_FPL_270_005_AllocationProposalContinue")
-      .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=otherProposal1")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLAllocationProposalAdd.json"))
-      .check(substring("District judge")))
-
-    .exec(Common.profile)
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FotherProposal%2Fsubmit"))
-  }
-
-  .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-  *Business process : Review page details and click Save and Continue
-  ======================================================================================*/
-    
-  .group("XUI_FPL_280_AllocationProposalSaveContinue") {
-    exec(http("XUI_FPL_280_005_AllocationProposalSaveContinue")
-      .post("/data/cases/${caseId}/events")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLAllocationProposalSubmit.json"))
-      .check(substring("${caseId}"))
-      .check(substring("last_modified_on")))
-
-    .exec(http("XUI_FPL_280_010_WorkAllocation")
-      .post("/workallocation/searchForCompletable")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/json")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"otherProposal","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
-      .check(status.in(200, 400))
-      .check(substring("tasks")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
-
-    .exec(http("XUI_FPL_280_015_ViewCase")
-      .get("/data/internal/cases/${caseId}")
-      .headers(Headers.commonHeader)
-      .header("x-xsrf-token", "${XSRFToken}")
-      .check(substring("""event_id":"otherProposal""")))
-  }
-
-  .exec(Common.caseActivityGet)
-  .pause(2)
-  .exec(Common.caseActivityPost)
-
-  .pause(MinThinkTime , MaxThinkTime )
-
-val fplUploadDocuments =
-
-  /*======================================================================================
-  *Business process : Select Application Documents from the dropdown
-  ======================================================================================*/
-
-  group("XUI_FPL_290_010_DocumentsUploadPage") {
-    exec(http("XUI_FPL_290_010_DocumentsUploadPage")
-      .get("/data/internal/cases/${caseId}/event-triggers/uploadDocuments?ignore-warning=false")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("event_token"))
-      .check(substring("Application documents")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FuploadDocuments"))
-
-    .exec(Common.profile)
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FuploadDocuments%2FuploadDocumentsaddApplicationDocuments"))
-  }
-
-  .exec(Common.caseActivityGet)
-  .pause(2)
-  .exec(Common.caseActivityPost)
-  
-  .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-  *Business process : Click Add New and upload the Document
-  ======================================================================================*/
-
-  .group("XUI_FPL_300_UploadFile") {
-    exec(http("XUI_FPL_300_UploadFile")
-      .post("/documentsv2")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/json, text/plain, */*")
-      .header("content-type", "multipart/form-data")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .bodyPart(RawFileBodyPart("files", "3MB.pdf")
-      .fileName("3MB.pdf")
-      .transferEncoding("binary"))
-      .asMultipartForm
-      .formParam("classification", "PUBLIC")
-      .formParam("caseTypeId", "CARE_SUPERVISION_EPO")
-      .formParam("jurisdictionId", "PUBLICLAW")
-      .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL"))
-      .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash")))
-  }
-
-  .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-  *Business process : Enter a description and click Continue
-  ======================================================================================*/
-
-  .group("XUI_FPL_310_DocumentsContinue") {
-    exec(http("XUI_FPL_310_005_DocumentsContinue")
-      .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=uploadDocumentsaddApplicationDocuments")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLUploadDocumentAdd.json"))
-      .check(substring("applicationDocumentsToFollowReason")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FuploadDocuments%2Fsubmit"))
-
-    .exec(Common.profile)
-  }
-    
-  .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-  *Business process : Review details and click Save and Continue
-  ======================================================================================*/
-    
-  .group("XUI_FPL_320_DocumentsSaveContinue") {
-    exec(http("XUI_FPL_320_005_DocumentsSaveContinue")
-      .post("/data/cases/${caseId}/events")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLUploadDocumentSubmit.json"))
-      .check(substring("${caseId}"))
-      .check(substring("last_modified_on")))
-
-    .exec(http("XUI_FPL_320_010_WorkAllocation")
-      .post("/workallocation/searchForCompletable")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/json")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"uploadDocuments","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
-      .check(status.in(200, 400))
-      .check(substring("tasks")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
-
-    .exec(http("XUI_FPL_320_015_ViewCase")
-      .get("/data/internal/cases/${caseId}")
-      .headers(Headers.commonHeader)
-      .header("x-xsrf-token", "${XSRFToken}")
-      .check(substring("""event_id":"uploadDocuments""")))
-  }
-
-  .exec(Common.caseActivityGet)
-  .pause(2)
-  .exec(Common.caseActivityPost)
-  
-  .pause(MinThinkTime , MaxThinkTime )
-
-val fplLocalAuthority = 
-
-  /*======================================================================================
-  *Business process : Select Local Authority from the dropdown
-  ======================================================================================*/
-
-  group("XUI_FPL_330_LocalAuthorityPage") {
-    exec(http("XUI_FPL_330_LocalAuthorityPage")
-      .get("/data/internal/cases/${caseId}/event-triggers/enterLocalAuthority?ignore-warning=false")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("event_token"))
-      .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.name").ofType[Any].saveAs("laName"))
-      .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.id").ofType[Any].saveAs("laId"))
-      .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.AddressLine1").saveAs("laAddressLine1"))
-      .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.AddressLine2").saveAs("laAddressLine2"))
-      .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.AddressLine3").saveAs("laAddressLine3"))
-      .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.PostTown").saveAs("laPostTown"))
-      .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.County").saveAs("laCounty"))
-      .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.PostCode").saveAs("laPostcode"))
-      .check(substring("Local authority's details"))
-      // .check(bodyString.saveAs("BODY"))
-      )
-
-    // .exec(session => {
-    //   val response = session("BODY").as[String]
-    //   println(s"Response body: \n$response")
-    //   session
-    // })
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterLocalAuthority"))
-
-    .exec(Common.profile)
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterLocalAuthority%2FenterLocalAuthorityDetails"))
-  }
-
-  .exec(Common.caseActivityGet)
-  .pause(2)
-  .exec(Common.caseActivityPost)
-  
-  .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-  *Business process : Enter a description and click Continue
-  ======================================================================================*/
-
-  .group("XUI_FPL_340_LocalAuthorityContinue") {
-    exec(http("XUI_FPL_340_LocalAuthorityContinue")
-      .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterLocalAuthorityDetails")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLLocalAuthorityAdd.json"))
-      .check(substring("colleagues")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterLocalAuthority%2FenterLocalAuthorityColleagues"))
-
-    .exec(Common.profile)
-  }
-    
-  .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-  *Business process : Add Colleague details and click Continue
-  ======================================================================================*/
-
-  .group("XUI_FPL_350_LocalAuthorityAddColleague") {
-    exec(http("XUI_FPL_350_LocalAuthorityAddColleague")
-      .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterLocalAuthorityColleagues")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLLocalAuthorityColleagueAdd.json"))
-      .check(jsonPath("$.data.localAuthorityColleagues[0].id").saveAs("laColleagueId"))
-      .check(substring("localAuthority")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterLocalAuthority%2Fsubmit"))
-
-    .exec(Common.profile)
-  }
-    
-  .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-  *Business process : Review details and click Save and Continue
-  ======================================================================================*/
-    
-  .group("XUI_FPL_360_LocalAuthoritySaveContinue") {
-    exec(http("XUI_FPL_360_LocalAuthoritySaveContinue")
-      .post("/data/cases/${caseId}/events")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLLocalAuthoritySubmit.json"))
-      .check(substring("${caseId}"))
-      .check(substring("last_modified_on")))
-
-    .exec(http("XUI_FPL_360_010_WorkAllocation")
-      .post("/workallocation/searchForCompletable")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/json")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"uploadDocuments","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
-      .check(status.in(200, 400))
-      .check(substring("tasks")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
-
-    .exec(http("XUI_FPL_360_015_ViewCase")
-      .get("/data/internal/cases/${caseId}")
-      .headers(Headers.commonHeader)
-      .header("x-xsrf-token", "${XSRFToken}")
-      .check(substring("""event_id":"uploadDocuments""")))
-  }
-
-  .exec(Common.caseActivityGet)
-  .pause(2)
-  .exec(Common.caseActivityPost)
-  
-  .pause(MinThinkTime , MaxThinkTime )
-
-val fplSubmitApplication =
-
-  /*======================================================================================
-  *Business process : Select Submit Application from the dropdown
-  ======================================================================================*/
-    
-  group("XUI_FPL_370_SubmitApplicationGo") {
-    exec(http("XUI_FPL_370_005_SubmitApplicationGo")
-      .get("/data/internal/cases/${caseId}/event-triggers/submitApplication?ignore-warning=false")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("event_token"))
-      .check(regex("""document_filename":"(.+?).pdf""").saveAs("DocumentName"))
-      .check(regex("""document_url":"(.*?)","document_filename""").saveAs("DocumentURL"))
-      .check(regex("""formatted_value":"I, (.+?), believe that""").saveAs("applicantName"))
-      .check(substring("Submit application")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitApplication"))
-
-    .exec(Common.profile)
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitApplication%2FsubmitApplication1"))
-  }
-
-  .exec(Common.caseActivityGet)
-  .pause(2)
-  .exec(Common.caseActivityPost)
-  
-  .pause(MinThinkTime , MaxThinkTime )
-
-  /*======================================================================================
-  *Business process : Confirm details and click Continue
-  ======================================================================================*/
-    
-  .group("XUI_FPL_380_SubmitApplicationContinue") {
-    exec(http("XUI_FPL_380_005_SubmitApplicationContinue")
-      .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=submitApplication1")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLSubmitApplicationAdd.json"))
-      .check(substring("submissionConsent")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitApplication%2Fsubmit"))
-
-    .exec(Common.profile)
-  }
-
-  .pause(MinThinkTime , MaxThinkTime )
-
-/*======================================================================================
-Business process : Submit the Application
-======================================================================================*/
-    
-  .group("XUI_FPL_390_ApplicationSubmitted") {
-    exec(http("XUI_FPL_390_005_ApplicationSubmitted")
-      .post("/data/cases/${caseId}/events")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(ElFileBody("bodies/fpl/FPLSubmitApplicationSubmit.json"))
-      .check(substring("""state":"Submitted"""")))
-
-    .exec(http("XUI_FPL_390_010_WorkAllocation")
-      .post("/workallocation/searchForCompletable")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/json")
-      .header("x-xsrf-token", "${XSRFToken}")
-      .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"submitApplication","jurisdiction":"PUBLICLAW","caseTypeId":"CASE_SUPERVISION_EPO"}}"""))
-      .check(status.in(200, 400))
-      .check(substring("tasks")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitApplication%2Fconfirm"))
-  }
-
-  .pause(MinThinkTime , MaxThinkTime )
-
-/*======================================================================================
-Business process : Click on the Close and Return to case button
-======================================================================================*/
-
-  .group("XUI_FPL_400_ViewCase") {
-    exec(http("XUI_FPL_400_ViewCase")
-      .get("/data/internal/cases/${caseId}")
-      .headers(Headers.commonHeader)
-      .header("x-xsrf-token", "${XSRFToken}")
-      .check(substring("""event_id":"submitApplication""")))
-
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
-  }
-
-  .exec(Common.caseActivityGet)
-  .pause(2)
-  .exec(Common.caseActivityPost)
-
-  .pause(MinThinkTime , MaxThinkTime )
+  val fplHearingUrgency =
+
+    /*======================================================================================
+    Click on the 'Hearing urgency' link
+    ======================================================================================*/
+
+    group("XUI_FPL_110_HearingUrgency") {
+      exec(http("XUI_FPL_110_005_HearingUrgencyTrigger")
+        .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/${caseId}/trigger/hearingNeeded")
+        .headers(Headers.navigationHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("HMCTS Manage cases")))
+
+      .exec(Common.configurationui)
+
+      .exec(Common.configJson)
+
+      .exec(Common.TsAndCs)
+
+      .exec(Common.configUI)
+
+      .exec(Common.userDetails)
+
+      .exec(Common.isAuthenticated)
+
+      .exec(Common.monitoringTools)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FhearingNeeded"))
+
+      .exec(http("XUI_FPL_110_010_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("CCD ID")))
+
+      .exec(Common.profile)
+
+      .exec(http("XUI_FPL_110_015_HearingUrgencyEvent")
+        .get("/data/internal/cases/${caseId}/event-triggers/hearingNeeded?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("hearingNeeded")))
+
+      .exec(Common.isAuthenticated)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FhearingNeeded%2FhearingNeeded1"))
+
+    }
+
+    .exec(Common.caseActivityGet)
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    /*======================================================================================
+    Select options and click Continue:
+    Urgency = Within 7 days
+    Type = Standard
+    Without Notice Hearing = No
+    Reduced Notice = No
+    Respondents Aware = No
+    ======================================================================================*/
+
+    .group("XUI_FPL_120_AddHearingUrgency") {
+      exec(http("XUI_FPL_120_005_AddHearingUrgency")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=hearingNeeded1")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/fpl/FPLHearingUrgencyAdd.json"))
+        .check(substring("Within 7 days")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FhearingNeeded%2Fsubmit"))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    /*======================================================================================
+    Review details and click Save and Continue
+    ======================================================================================*/
+
+    .group("XUI_FPL_130_SubmitHearingUrgency") {
+      exec(http("XUI_FPL_130_005_SubmitHearingUrgency")
+        .post("/data/cases/${caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/fpl/FPLHearingUrgencySubmit.json"))
+        .check(jsonPath("$.data.hearing.timeFrame").is("Within 7 days"))
+        .check(jsonPath("$.state").is("Open")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+      .exec(http("XUI_FPL_130_010_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("""event_id":"hearingNeeded""")))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+  val fplGrounds =
+
+    /*======================================================================================
+    Click on the 'Hearing urgency' link
+    ======================================================================================*/
+
+    group("XUI_FPL_140_GroundsForTheApplication") {
+      exec(http("XUI_FPL_140_005_GroundsTrigger")
+        .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/${caseId}/trigger/enterGrounds")
+        .headers(Headers.navigationHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("HMCTS Manage cases")))
+
+      .exec(Common.configurationui)
+
+      .exec(Common.configJson)
+
+      .exec(Common.TsAndCs)
+
+      .exec(Common.configUI)
+
+      .exec(Common.userDetails)
+
+      .exec(Common.isAuthenticated)
+
+      .exec(Common.monitoringTools)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterGrounds"))
+
+      .exec(http("XUI_FPL_140_010_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("CCD ID")))
+
+      .exec(Common.profile)
+
+      .exec(http("XUI_FPL_140_015_GroundsEvent")
+        .get("/data/internal/cases/${caseId}/event-triggers/enterGrounds?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("enterGrounds")))
+
+      .exec(Common.isAuthenticated)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterGrounds%2FenterGrounds1"))
+
+    }
+
+    .exec(Common.caseActivityGet)
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    /*======================================================================================
+    Select options and click Continue:
+    Beyond parental control
+    ======================================================================================*/
+
+    .group("XUI_FPL_150_AddGrounds") {
+      exec(http("XUI_FPL_150_005_AddGrounds")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterGrounds1")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/fpl/FPLGroundsAdd.json"))
+        .check(substring("beyondControl")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterGrounds%2Fsubmit"))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    /*======================================================================================
+     Review details and click Save and Continue
+     ======================================================================================*/
+
+    .group("XUI_FPL_160_SubmitGrounds") {
+      exec(http("XUI_FPL_160_005_SubmitGrounds")
+        .post("/data/cases/${caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/fpl/FPLGroundsSubmit.json"))
+        .check(jsonPath("$.data.grounds.thresholdReason[0]").is("beyondControl"))
+        .check(jsonPath("$.state").is("Open")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+      .exec(http("XUI_FPL_160_010_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("""event_id":"enterGrounds""")))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+  val fplLocalAuthority =
+
+    /*======================================================================================
+    Click on the 'Local authority's details' link
+    ======================================================================================*/
+
+    group("XUI_FPL_170_LocalAuthorityDetails") {
+      exec(http("XUI_FPL_170_005_LocalAuthorityTrigger")
+        .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/${caseId}/trigger/enterLocalAuthority")
+        .headers(Headers.navigationHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("HMCTS Manage cases")))
+
+      .exec(Common.configurationui)
+
+      .exec(Common.configJson)
+
+      .exec(Common.TsAndCs)
+
+      .exec(Common.configUI)
+
+      .exec(Common.userDetails)
+
+      .exec(Common.isAuthenticated)
+
+      .exec(Common.monitoringTools)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterLocalAuthority"))
+
+      .exec(http("XUI_FPL_170_010_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("CCD ID")))
+
+      .exec(Common.profile)
+
+      .exec(http("XUI_FPL_170_015_LocalAuthorityEvent")
+        .get("/data/internal/cases/${caseId}/event-triggers/enterLocalAuthority?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.name").saveAs("laName"))
+        .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.id").saveAs("laId"))
+        .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.AddressLine1").saveAs("laAddressLine1"))
+        .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.AddressLine2").saveAs("laAddressLine2"))
+        .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.PostTown").saveAs("laPostTown"))
+        .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.PostCode").saveAs("laPostcode"))
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("enterLocalAuthority")))
+
+      .exec(Common.isAuthenticated)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterLocalAuthority%2FenterLocalAuthorityDetails"))
+
+    }
+
+    .exec(Common.caseActivityGet)
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    /*======================================================================================
+    Select options and click Continue:
+    Local Authority Name: pre-filled (captured)
+    Local Authority Group Email Address: Text
+    PBA Number: PBA0066906
+    Address: pre-filled (captured)
+    Phone Number: 07000000000
+    ======================================================================================*/
+
+    .group("XUI_FPL_180_AddLocalAuthorityDetails") {
+      exec(http("XUI_FPL_180_005_AddLocalAuthority")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterLocalAuthorityDetails")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/fpl/FPLLocalAuthorityAdd.json"))
+        .check(substring("${laName}")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterLocalAuthority%2FenterLocalAuthorityColleagues"))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    /*======================================================================================
+    Select Add New colleague, select the options and click Continue:
+    Role: Solicitor
+    Full Name: Text
+    Email: Text
+    Update Notifications: No
+    ======================================================================================*/
+
+    .group("XUI_FPL_190_AddLocalAuthorityColleagues") {
+      exec(http("XUI_FPL_190_005_AddLocalAuthorityColleagues")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterLocalAuthorityColleagues")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/fpl/FPLLocalAuthorityColleagueAdd.json"))
+        .check(jsonPath("$.data.localAuthorityColleagues[0].id").saveAs("colleagueId"))
+        .check(substring("localAuthorityColleaguesList")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2F2FenterLocalAuthority"))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    /*======================================================================================
+     Review details and click Save and Continue
+     ======================================================================================*/
+
+    .group("XUI_FPL_200_SubmitLocalAuthority") {
+      exec(http("XUI_FPL_200_005_SubmitLocalAuthority")
+        .post("/data/cases/${caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/fpl/FPLLocalAuthoritySubmit.json"))
+        .check(jsonPath("$.data.localAuthorities[0].value.name").is("${laName}"))
+        .check(jsonPath("$.state").is("Open")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+      .exec(http("XUI_FPL_200_010_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("""event_id":"enterLocalAuthority""")))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+  val fplChildDetails =
+
+    /*======================================================================================
+    Click on the 'Child's details' link
+    ======================================================================================*/
+
+    group("XUI_FPL_210_ChildDetails") {
+      exec(http("XUI_FPL_210_005_ChildTrigger")
+        .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/${caseId}/trigger/enterChildren")
+        .headers(Headers.navigationHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("HMCTS Manage cases")))
+
+      .exec(Common.configurationui)
+
+      .exec(Common.configJson)
+
+      .exec(Common.TsAndCs)
+
+      .exec(Common.configUI)
+
+      .exec(Common.userDetails)
+
+      .exec(Common.isAuthenticated)
+
+      .exec(Common.monitoringTools)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterChildren"))
+
+      .exec(http("XUI_FPL_210_010_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("CCD ID")))
+
+      .exec(Common.profile)
+
+      .exec(http("XUI_FPL_210_015_ChildEvent")
+        .get("/data/internal/cases/${caseId}/event-triggers/enterChildren?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(Common.savePartyId)
+        .check(Common.saveId)
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("enterChildren")))
+
+      .exec(Common.isAuthenticated)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterChildren%2FenterChildren1"))
+
+    }
+
+    .exec(Common.caseActivityGet)
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    /*======================================================================================
+    Select options and click Continue:
+    First Name: Text
+    Last Name: Text
+    DOB: anything under 18
+    Gender: Boy
+    Living Situation: Living with respondents
+    Started staying here: date after DOB and before current date
+    Address: Captured from lookup
+    Adoption: No
+    Mother Name: Text
+    Father Name: Text
+    Father responsibility: Yes
+    Social Worker Phone Number: Any
+    Additional Needs: No
+    Contact Details Hidden: No
+    Ability to Take Part: No
+    ======================================================================================*/
+
+    .exec(Common.postcodeLookup)
+
+    .group("XUI_FPL_220_AddChildDetails") {
+      exec(http("XUI_FPL_220_005_AddChildDetails")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterChildren1")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/fpl/FPLChildDetailsAdd.json"))
+        .check(substring("finalDecisionDate")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterChildren%2Fsubmit"))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    /*======================================================================================
+     Review details and click Save and Continue
+     ======================================================================================*/
+
+    .group("XUI_FPL_230_SubmitChildDetails") {
+      exec(http("XUI_FPL_230_005_SubmitChildDetails")
+        .post("/data/cases/${caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/fpl/FPLChildDetailsSubmit.json"))
+        .check(jsonPath("$.data.children1[0].id").is("${id}"))
+        .check(jsonPath("$.state").is("Open")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+      .exec(http("XUI_FPL_230_010_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("""event_id":"enterChildren""")))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+  val fplRespondentDetails =
+
+    /*======================================================================================
+    Click on the 'Respondents' details' link
+    ======================================================================================*/
+
+    group("XUI_FPL_240_RespondentDetails") {
+      exec(http("XUI_FPL_240_005_RespondentTrigger")
+        .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/${caseId}/trigger/enterRespondents")
+        .headers(Headers.navigationHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("HMCTS Manage cases")))
+
+      .exec(Common.configurationui)
+
+      .exec(Common.configJson)
+
+      .exec(Common.TsAndCs)
+
+      .exec(Common.configUI)
+
+      .exec(Common.userDetails)
+
+      .exec(Common.isAuthenticated)
+
+      .exec(Common.monitoringTools)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterRespondents"))
+
+      .exec(http("XUI_FPL_240_010_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("CCD ID")))
+
+      .exec(Common.profile)
+
+      .exec(http("XUI_FPL_240_015_RespondentEvent")
+        .get("/data/internal/cases/${caseId}/event-triggers/enterRespondents?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(Common.savePartyId)
+        .check(Common.saveId)
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("enterRespondents")))
+
+      .exec(Common.isAuthenticated)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterRespondents%2FenterRespondents1"))
+
+      .exec(http("XUI_FPL_240_020_GetOrgs")
+        .get("/api/caseshare/orgs")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json, text/plain, */*")
+        .check(regex(""""name":"(.+?)","organisationIdentifier":"([0-9A-Z]+?)"""").ofType[(String, String)].findRandom.saveAs("respondentOrgs")))
+
+    }
+
+    .exec(Common.caseActivityGet)
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    /*======================================================================================
+    Select options and click Continue:
+    First Name: Text
+    Last Name: Text
+    DOB: anything over 18
+    Address: Captured from lookup
+    Telephone Number: any
+    Relationship: Free text
+    Contact Details Hidden: No
+    Ability to Take Part: No
+    Legal Representation: No
+    ======================================================================================*/
+
+    .exec(Common.postcodeLookup)
+
+    .group("XUI_FPL_250_AddRespondentDetails") {
+      exec(http("XUI_FPL_250_005_AddRespondentDetails")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterRespondents1")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/fpl/FPLRespondentDetailsAdd.json"))
+        .check(substring("respondents1")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterRespondents%2Fsubmit"))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    /*======================================================================================
+     Review details and click Save and Continue
+     ======================================================================================*/
+
+    .group("XUI_FPL_260_SubmitRespondentDetails") {
+      exec(http("XUI_FPL_260_005_SubmitRespondentDetails")
+        .post("/data/cases/${caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/fpl/FPLRespondentDetailsSubmit.json"))
+        .check(jsonPath("$.data.respondents1[0].id").is("${id}"))
+        .check(jsonPath("$.state").is("Open")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+      .exec(http("XUI_FPL_260_010_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("""event_id":"enterRespondents""")))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+  val fplAllocationProposal =
+
+    /*======================================================================================
+    Click on the 'Allocation proposal' link
+    ======================================================================================*/
+
+    group("XUI_FPL_270_AllocationProposal") {
+      exec(http("XUI_FPL_270_005_AllocationProposalTrigger")
+        .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/${caseId}/trigger/otherProposal")
+        .headers(Headers.navigationHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("HMCTS Manage cases")))
+
+      .exec(Common.configurationui)
+
+      .exec(Common.configJson)
+
+      .exec(Common.TsAndCs)
+
+      .exec(Common.configUI)
+
+      .exec(Common.userDetails)
+
+      .exec(Common.isAuthenticated)
+
+      .exec(Common.monitoringTools)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FotherProposal"))
+
+      .exec(http("XUI_FPL_270_010_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("CCD ID")))
+
+      .exec(Common.profile)
+
+      .exec(http("XUI_FPL_270_015_AllocationProposalEvent")
+        .get("/data/internal/cases/${caseId}/event-triggers/otherProposal?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("otherProposal")))
+
+      .exec(Common.isAuthenticated)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FotherProposal%2FotherProposal1"))
+
+    }
+
+    .exec(Common.caseActivityGet)
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    /*======================================================================================
+    Select options and click Continue:
+    Allocation Proposal: Circuit Judge
+    Reason: Free text
+    ======================================================================================*/
+
+    .group("XUI_FPL_280_AddAllocationProposalDetails") {
+      exec(http("XUI_FPL_280_005_AddAllocationProposalDetails")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=otherProposal1")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/fpl/FPLAllocationProposalAdd.json"))
+        .check(substring("allocationProposal")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FotherProposal%2Fsubmit"))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    /*======================================================================================
+     Review details and click Save and Continue
+     ======================================================================================*/
+
+    .group("XUI_FPL_290_SubmitAllocationProposalDetails") {
+      exec(http("XUI_FPL_290_005_SubmitAllocationProposalDetails")
+        .post("/data/cases/${caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/fpl/FPLAllocationProposalSubmit.json"))
+        .check(jsonPath("$.data.allocationProposal.proposal").is("Circuit judge"))
+        .check(jsonPath("$.state").is("Open")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+      .exec(http("XUI_FPL_290_010_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("""event_id":"otherProposal""")))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+  val fplSubmitApplication =
+
+    /*======================================================================================
+    Click on the 'Submit application' link
+    ======================================================================================*/
+
+    group("XUI_FPL_300_SubmitApplication") {
+      exec(http("XUI_FPL_300_005_SubmitApplicationTrigger")
+        .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/${caseId}/trigger/submitApplication")
+        .headers(Headers.navigationHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("HMCTS Manage cases")))
+
+      .exec(Common.configurationui)
+
+      .exec(Common.configJson)
+
+      .exec(Common.TsAndCs)
+
+      .exec(Common.configUI)
+
+      .exec(Common.userDetails)
+
+      .exec(Common.isAuthenticated)
+
+      .exec(Common.monitoringTools)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2FsubmitApplication"))
+
+      .exec(http("XUI_FPL_300_010_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("CCD ID")))
+
+      .exec(Common.profile)
+
+      .exec(http("XUI_FPL_300_015_SubmitApplicationEvent")
+        .get("/data/internal/cases/${caseId}/event-triggers/submitApplication?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(jsonPath("$.case_fields[?(@.id=='draftApplicationDocument')].value.document_filename").saveAs("documentFilename"))
+        .check(jsonPath("$.case_fields[?(@.id=='draftApplicationDocument')].value.document_url").saveAs("documentURL"))
+        .check(jsonPath("$.case_fields[?(@.id=='submissionConsentLabel')].formatted_value").saveAs("consentText"))
+        .check(jsonPath("$.case_fields[?(@.id=='amountToPay')].formatted_value").saveAs("amountToPay"))
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("submitApplication")))
+
+      .exec(Common.isAuthenticated)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitApplication%2FsubmitApplication1"))
+
+    }
+
+    .exec(Common.caseActivityGet)
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    /*======================================================================================
+    Select options and click Continue:
+    Agree with Statement: Tick
+    ======================================================================================*/
+
+    .group("XUI_FPL_310_AddSubmitApplicationDetails") {
+      exec(http("XUI_FPL_310_005_AddSubmitApplicationDetails")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=submitApplication1")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/fpl/FPLSubmitApplicationAdd.json"))
+        .check(substring("submissionConsent")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitApplication%2Fsubmit"))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    /*======================================================================================
+     Click Submit
+     ======================================================================================*/
+
+    .group("XUI_FPL_320_SubmitApplication") {
+      exec(http("XUI_FPL_320_005_SubmitApplication")
+        .post("/data/cases/${caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/fpl/FPLSubmitApplicationSubmit.json"))
+        .check(jsonPath("$.data.submissionConsent[0]").is("agree"))
+        .check(substring("Application sent"))
+        .check(jsonPath("$.state").is("Submitted")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitApplication%2Fconfirm"))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+  val fplReturnToCase =
+
+    /*======================================================================================
+    Click on the 'Close and Return to case details' button
+    ======================================================================================*/
+
+    group("XUI_FPL_330_ReturnToCase") {
+      exec(http("XUI_FPL_330_010_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(substring("CCD ID")))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
 
 }
