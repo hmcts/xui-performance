@@ -197,7 +197,7 @@ object EXUIMCLogin {
       }
 
       .exec(http("XUI_${service}_020_035_GetWorkBasketInputs")
-        .get("/data/internal/case-types/FinancialRemedyMVP2/work-basket-inputs")
+        .get("/data/internal/case-types/FinancialRemedyMVP2_XUI/work-basket-inputs")
         .headers(LoginHeader.headers_17)
         .check(status.in(200, 304, 302)))
       
