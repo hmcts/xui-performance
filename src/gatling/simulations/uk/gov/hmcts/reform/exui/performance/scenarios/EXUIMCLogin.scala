@@ -188,7 +188,7 @@ object EXUIMCLogin {
         .get("/api/user/details")
         .headers(LoginHeader.headers_0)
         .check(status.in(200, 304)))
-      
+
       .repeat(1, "count") {
         exec(http("XUI_${service}_020_030_AcceptT&CAccessJurisdictions${count}")
           .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
@@ -196,10 +196,16 @@ object EXUIMCLogin {
           .check(status.in(200, 304, 302)))
       }
 
+      .exec(http("XUI_${service}_020_032_APIOrg")
+        .get("/api/organisation")
+        .headers(LoginHeader.headers_0)
+        .check(jsonPath("$.name").saveAs("orgName"))
+        .check(jsonPath("$.organisationIdentifier").saveAs("orgCode")))
+
       .exec(http("XUI_${service}_020_035_GetWorkBasketInputs")
         .get("/data/internal/case-types/FinancialRemedyMVP2_XUI/work-basket-inputs")
         .headers(LoginHeader.headers_17)
-        .check(status.in(200, 304, 302)))
+        .check(status.in(200, 304, 302, 404)))
       
       .exec(http("XUI_${service}_020_040_HomepageIsAuthenticated")
         .get("/auth/isAuthenticated")

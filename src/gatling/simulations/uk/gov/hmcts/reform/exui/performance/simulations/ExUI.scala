@@ -169,14 +169,15 @@ class ExUI extends Simulation {
 	val EXUIMCaseCreationDivorceScn = scenario("***** Div Create Case *****").repeat(1)
 	{
 		exitBlockOnFail {
-			feed(feedUserDataDivorce).feed(Feeders.DivDataFeeder)
-			.exec(_.set("env", s"${env}"))
+			feed(feedUserDataDivorce)
+			.exec(_.set("service", "Divorce")
+						.set("env", s"${env}"))
 			.exec(EXUIMCLogin.manageCasesHomePage)
 			.exec(EXUIMCLogin.manageCaseslogin)
 			//	.exec(EXUIMCLogin.termsnconditions)
 			.repeat(2) {
-				exec(EXUIDivorceMC.casecreation)
-					.exec(EXUIDivorceMC.shareacase)
+				exec(EXUIDivorceMC.createDivorceCase)
+				//.exec(EXUIDivorceMC.shareacase)
 			}
 			.exec(EXUIMCLogin.manageCase_Logout)
 		}
