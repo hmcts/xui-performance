@@ -20,6 +20,7 @@ object Common {
   val patternDay = DateTimeFormatter.ofPattern("dd")
   val patternMonth = DateTimeFormatter.ofPattern("MM")
   val patternYear = DateTimeFormatter.ofPattern("yyyy")
+  val patternReference = DateTimeFormatter.ofPattern("d MMM yyyy")
 
   def randomString(length: Int) = {
     rnd.alphanumeric.filter(_.isLetter).take(length).mkString
@@ -33,6 +34,18 @@ object Common {
     (1 + rnd.nextInt(12)).toString.format(patternMonth).reverse.padTo(2, '0').reverse //pads single-digit dates with a leading zero
   }
 
+  //Date of Marriage >= 30 years
+  def getMarriageYear(): String = {
+    now.minusYears(30 + rnd.nextInt(30)).format(patternYear)
+  }
+  //Date of Separation >= 6 years < 30 years
+  def getSeparationYear(): String = {
+    now.minusYears(6 + rnd.nextInt(23)).format(patternYear)
+  }
+  //Reference Date = 5 years and 6 months before the current date in the format 8 May 2016
+  def getReferenceDate(): String = {
+    now.minusYears(5).minusMonths(6).format(patternReference)
+  }
   //Date of Birth >= 35 years
   def getDobYear(): String = {
     now.minusYears(35 + rnd.nextInt(70)).format(patternYear)
