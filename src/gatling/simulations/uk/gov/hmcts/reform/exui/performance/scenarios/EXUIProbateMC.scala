@@ -163,7 +163,7 @@ object EXUIProbateMC {
         .header("accept", "application/json")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"solicitorCreateApplication","jurisdiction":"PROBATE","caseTypeId":"GrantOfRepresentation"}}"""))
-        .check(status.in(200, 400)))
+        .check(status.in(200, 400, 401)))
 
       .exec(Common.healthcheck("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseId}"))
 
