@@ -53,10 +53,11 @@ class ExUI extends Simulation {
 	val fplaTargetPerHour = 7
 	val divorceTargetPerHour = 238
 	val frTargetPerHour = 98
-	val caseworkerTargetPerHour = 900
+	val caseworkerTargetPerHour = 100
 
-	val rampUpDurationMins = 20
-	val testDurationMins = 60
+
+	val rampUpDurationMins = 5
+	val testDurationMins = 10
 
 	val numberOfPipelineUsers = 5
 	val pipelinePausesMillis:Long = 3000 //3 seconds
@@ -223,13 +224,13 @@ class ExUI extends Simulation {
 			.exec(_.set("env", s"${env}"))
 			.exec(EXUIMCLogin.manageCasesHomePage)
 			.exec(EXUIMCLogin.caseworkerLogin)
-			.repeat(4) {
+			/* .repeat(4) {
 				exec(EXUICaseWorker.ApplyFilters)
 					.exec(EXUICaseWorker.ApplySort)
 					.exec(EXUICaseWorker.ClickFindCase)
 					.exec(EXUICaseWorker.ViewCase)
 			}
-			.exec(EXUIMCLogin.manageCase_Logout)
+		*/	.exec(EXUIMCLogin.manageCase_Logout)
 		}
   }
 	
@@ -328,12 +329,12 @@ class ExUI extends Simulation {
 	}
 
 	setUp(
-		EXUIMCaseProbateScn.inject(simulationProfile(testType, probateTargetPerHour)).pauses(pauseOption),
+		/*EXUIMCaseProbateScn.inject(simulationProfile(testType, probateTargetPerHour)).pauses(pauseOption),
 		EXUIMCaseCreationIACScn.inject(simulationProfile(testType, iacTargetPerHour)).pauses(pauseOption),
 		EXUIMCaseCreationFPLAScn.inject(simulationProfile(testType, fplaTargetPerHour)).pauses(pauseOption),
 		EXUIMCaseCreationDivorceScn.inject(simulationProfile(testType, divorceTargetPerHour)).pauses(pauseOption),
 		EXUIFinancialRemedyScn.inject(simulationProfile(testType, frTargetPerHour)).pauses(pauseOption),
-		EXUIMCaseCaseworkerScn.inject(simulationProfile(testType, caseworkerTargetPerHour)).pauses(pauseOption)
+	*/	EXUIMCaseCaseworkerScn.inject(simulationProfile(testType, caseworkerTargetPerHour)).pauses(pauseOption)
 	).protocols(MChttpProtocol)
 		.assertions(forAll.successfulRequests.percent.gte(80))
 
