@@ -21,6 +21,7 @@ class ExUI extends Simulation {
 	val feedUserDataRJ = csv("FRRespondentData.csv").circular
 	val feedUserDataCaseworker = csv("Caseworkers.csv").circular
 	val feedUserDataDivorce = csv("DivorceUserData.csv").circular
+	val feedUserDataNFD = csv("NFDUserData.csv").circular
 	val feedUserDataFPLCases = csv("FPLCases.csv").circular
 	val caseFeederProbate = csv("CaseworkerSearchesProbate.csv").circular
 	val caseFeederDivorce = csv("CaseworkerSearchesDivorce.csv").circular
@@ -52,6 +53,7 @@ class ExUI extends Simulation {
 	val iacTargetPerHour = 20
 	val fplaTargetPerHour = 7
 	val divorceTargetPerHour = 238
+	val nfdTargetPerHour = 238
 	val frTargetPerHour = 98
 	val caseworkerTargetPerHour = 100
 
@@ -183,7 +185,30 @@ class ExUI extends Simulation {
 			.exec(EXUIMCLogin.manageCase_Logout)
 		}
 	}
-	
+
+	/*===============================================================================================
+	* XUI Solicitor NFD Scenario
+	 ==================================================================================================*/
+	val NFDScenario = scenario("***** NFD Create Case *****")
+		.exitBlockOnFail {
+			//feed two rows of data - applicant1's solicitor and applicant2's solicitor
+			feed(feedUserDataNFD, 2)
+				.exec(_.set("service", "NFD")
+					.set("env", s"${env}"))
+				.exec(EXUIMCLogin.manageCasesHomePage)
+				//since two records were grabbed, set 'user' to the first one (applicant1's solicitor) for login
+				.exec(session => session.set("user", session("user1").as[String]))
+				.exec(EXUIMCLogin.manageCaseslogin)
+				.exec(NFD.createNFDCase)
+				.exec(EXUIMCLogin.manageCase_Logout)
+		}
+
+		.exec {
+			session =>
+				println(session)
+				session
+		}
+
 	/*===============================================================================================
 	* below scenario is for FPLA Business Process related scenario
 	 ==================================================================================================*/
@@ -212,7 +237,7 @@ class ExUI extends Simulation {
 		}
 	}
 
-	
+
 	/*===============================================================================================
 	* below scenario is for search and view case as a case worker
 	 ==================================================================================================*/
@@ -233,7 +258,7 @@ class ExUI extends Simulation {
 		*/	.exec(EXUIMCLogin.manageCase_Logout)
 		}
   }
-	
+
 	/*===============================================================================================
 	* below scenario is for Financial Remedy Business Process related scenario
 	 ==================================================================================================*/
@@ -260,7 +285,7 @@ class ExUI extends Simulation {
 		}
 
 	}
-	
+
 	/*===============================================================================================
 	* Below setup is to do the smoke test to make sure all the scripts are working for one user
 	 ==================================================================================================*/
@@ -274,10 +299,10 @@ class ExUI extends Simulation {
 		 EXUIFinancialRemedyScn.inject(atOnceUsers(1)).disablePauses
 	)
 			.protocols(MChttpProtocol)*/
-	
 
-	
-	
+
+
+
 	/*===============================================================================================
 	* Below setup  is to do the smoke test to make sure manage org is working, we can uncomment it when we use it
 	 ==================================================================================================*/
@@ -285,8 +310,8 @@ class ExUI extends Simulation {
 		EXUIScn.inject(atOnceUsers(1)).disablePauses
 			.protocols(XUIHttpProtocol)
 	)*/
-	
-	
+
+
 	/*===============================================================================================
 	* Below setup  is to do the smoke test to make sure one particular scenario  is working as part of sanity test
 	 ==================================================================================================*/
@@ -329,12 +354,13 @@ class ExUI extends Simulation {
 	}
 
 	setUp(
-		/*EXUIMCaseProbateScn.inject(simulationProfile(testType, probateTargetPerHour)).pauses(pauseOption),
-		EXUIMCaseCreationIACScn.inject(simulationProfile(testType, iacTargetPerHour)).pauses(pauseOption),
-		EXUIMCaseCreationFPLAScn.inject(simulationProfile(testType, fplaTargetPerHour)).pauses(pauseOption),
-		EXUIMCaseCreationDivorceScn.inject(simulationProfile(testType, divorceTargetPerHour)).pauses(pauseOption),
-		EXUIFinancialRemedyScn.inject(simulationProfile(testType, frTargetPerHour)).pauses(pauseOption),
-	*/	EXUIMCaseCaseworkerScn.inject(simulationProfile(testType, caseworkerTargetPerHour)).pauses(pauseOption)
+		//EXUIMCaseProbateScn.inject(simulationProfile(testType, probateTargetPerHour)).pauses(pauseOption),
+		//EXUIMCaseCreationIACScn.inject(simulationProfile(testType, iacTargetPerHour)).pauses(pauseOption),
+		//EXUIMCaseCreationFPLAScn.inject(simulationProfile(testType, fplaTargetPerHour)).pauses(pauseOption),
+		//EXUIMCaseCreationDivorceScn.inject(simulationProfile(testType, divorceTargetPerHour)).pauses(pauseOption),
+		NFDScenario.inject(simulationProfile(testType, nfdTargetPerHour)).pauses(pauseOption)
+		//EXUIFinancialRemedyScn.inject(simulationProfile(testType, frTargetPerHour)).pauses(pauseOption),
+		//EXUIMCaseCaseworkerScn.inject(simulationProfile(testType, caseworkerTargetPerHour)).pauses(pauseOption)
 	).protocols(MChttpProtocol)
 		.assertions(forAll.successfulRequests.percent.gte(80))
 

@@ -1,0 +1,89 @@
+{
+  "data": {
+    "applicant1FirstName": "${applicant1FirstName}",
+    "applicant1MiddleName": "",
+    "applicant1LastName": "${applicant1LastName}",
+    "applicant1NameDifferentToMarriageCertificate": "No",
+    "divorceWho": "wife",
+    "marriageFormationType": "oppositeSexCouple",
+    "applicant1Email": "applicant1@perftest12345.com",
+    "applicant1PhoneNumber": "07000000000",
+    "applicant1HomeAddress": {
+      "AddressLine1": "${addressLines(0)}",
+      "AddressLine2": "${addressLines(1)}",
+      "AddressLine3": "",
+      "PostTown": "${addressLines(2)}",
+      "County": "",
+      "Country": "United Kingdom",
+      "PostCode": "${addressLines(3)}"
+    },
+    "applicant1ContactDetailsType": "public"
+  },
+  "event": {
+    "id": "solicitor-create-application",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "labelContentApplicant2": "respondent",
+    "labelContentApplicant2UC": "Respondent",
+    "labelContentTheApplicant2": "the respondent",
+    "labelContentTheApplicant2UC": "The respondent",
+    "labelContentUnionType": "divorce",
+    "labelContentUnionTypeUC": "Divorce",
+    "labelContentDivorceOrCivilPartnership": "divorce",
+    "labelContentDivorceOrCivilPartnershipApplication": "divorce application",
+    "labelContentFinaliseDivorceOrEndCivilPartnership": "finalise the divorce",
+    "labelContentApplicantOrApplicant1": "the applicant’s",
+    "labelContentDivorceOrEndCivilPartnership": "for divorce",
+    "labelContentMarriageOrCivilPartnership": "marriage",
+    "labelContentDivorceOrLegallyEnd": "get a divorce",
+    "labelContentApplicantsOrApplicant1s": "Applicant’s",
+    "labelContentTheApplicantOrApplicant1": "the applicant",
+    "labelContentGotMarriedOrFormedCivilPartnership": "got married",
+    "labelContentRespondentsOrApplicant2s": "Respondent's",
+    "coApplicant1IsDrafted": "No",
+    "coApplicant1IsSubmitted": "No",
+    "coApplicant2IsDrafted": null,
+    "coApplicant2IsSubmitted": null,
+    "divorceOrDissolution": "divorce",
+    "applicationType": "soleApplication",
+    "applicant1SolicitorName": "AppSolicitor",
+    "applicant1SolicitorReference": "ApplicantSolRef",
+    "applicant1SolicitorPhone": "07000000000",
+    "applicant1SolicitorEmail": "${user1}",
+    "applicant1SolicitorAgreeToReceiveEmailsCheckbox": [
+      "Yes"
+    ],
+    "applicant1SolicitorOrganisationPolicy": {
+      "OrgPolicyCaseAssignedRole": "[APPONESOLICITOR]",
+      "OrgPolicyReference": null,
+      "PrepopulateToUsersOrganisation": null,
+      "Organisation": {
+        "OrganisationID": "${orgref1}",
+        "OrganisationName": "${orgname1}"
+      }
+    },
+    "applicant1ScreenHasMarriageBroken": "Yes",
+    "applicant1FirstName": "${applicant1FirstName}",
+    "applicant1MiddleName": "",
+    "applicant1LastName": "${applicant1LastName}",
+    "applicant1NameDifferentToMarriageCertificate": "No",
+    "divorceWho": "wife",
+    "marriageFormationType": "oppositeSexCouple",
+    "applicant1Email": "applicant1@perftest12345.com",
+    "applicant1PhoneNumber": "07000000000",
+    "applicant1HomeAddress": {
+      "AddressLine1": "${addressLines(0)}",
+      "AddressLine2": "${addressLines(1)}",
+      "AddressLine3": "",
+      "PostTown": "${addressLines(2)}",
+      "County": "",
+      "Country": "United Kingdom",
+      "PostCode": "${addressLines(3)}"
+    },
+    "applicant1ContactDetailsType": "public"
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false
+}
