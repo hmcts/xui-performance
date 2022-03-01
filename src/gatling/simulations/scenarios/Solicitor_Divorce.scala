@@ -11,12 +11,12 @@ import utils.{Common, Environment, Headers}
 object Solicitor_Divorce {
 
   val IdamUrl = Environment.idamURL
-  val baseURL = Environment.baseURL
+  val BaseURL = Environment.baseURL
 
-  val minThinkTime = Environment.minThinkTime
-  val maxThinkTime = Environment.maxThinkTime
+  val MinThinkTime = Environment.minThinkTime
+  val MaxThinkTime = Environment.maxThinkTime
 
-  val createDivorceCase =
+  val CreateDivorceCase =
 
     //set session variables
     exec(_.setAll(
@@ -49,7 +49,7 @@ object Solicitor_Divorce {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Jurisdiction = Family Divorce; Case Type = Divorce case - v115.00; Event = Apply for a divorce
@@ -78,10 +78,10 @@ object Solicitor_Divorce {
       .exec(Common.userDetails)
       .exec(Common.userDetails)
 
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(Environment.baseDomain).saveAs("XSRFToken")))
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Complete Solicitor Details and click Continue
@@ -100,7 +100,7 @@ object Solicitor_Divorce {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Complete Petitioner Details and click Continue
@@ -119,7 +119,7 @@ object Solicitor_Divorce {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Complete Respondent Details and click Continue
@@ -143,7 +143,7 @@ object Solicitor_Divorce {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Add respondent's solicitor details and click Continue
@@ -164,7 +164,7 @@ object Solicitor_Divorce {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Add marriage certificate details and click Continue
@@ -183,7 +183,7 @@ object Solicitor_Divorce {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Add jurisdiction details and click Continue
@@ -203,7 +203,7 @@ object Solicitor_Divorce {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Add reason for divorce and click Continue
@@ -223,7 +223,7 @@ object Solicitor_Divorce {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Add dates for separation and click Continue
@@ -243,7 +243,7 @@ object Solicitor_Divorce {
         .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Lived Apart - Select Yes and click Continue
@@ -262,7 +262,7 @@ object Solicitor_Divorce {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Other legal proceedings - Select No and click Continue
@@ -281,7 +281,7 @@ object Solicitor_Divorce {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Financial Orders - Select No and click Continue
@@ -300,7 +300,7 @@ object Solicitor_Divorce {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Claim for Costs - Select No and click Continue
@@ -319,7 +319,7 @@ object Solicitor_Divorce {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Upload Marriage Certificate
@@ -343,7 +343,7 @@ object Solicitor_Divorce {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Click Continue
@@ -362,7 +362,7 @@ object Solicitor_Divorce {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Select Language - No to Welsh andClick Continue
@@ -386,7 +386,7 @@ object Solicitor_Divorce {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Check Your Answers - Save Petition
@@ -414,7 +414,7 @@ object Solicitor_Divorce {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Select Case submission from the dropdown and click Go
@@ -438,7 +438,7 @@ object Solicitor_Divorce {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Statement of Truth - enter details and click Continue
@@ -459,7 +459,7 @@ object Solicitor_Divorce {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Payment Method - Select Fee Account and click Continue
@@ -480,7 +480,7 @@ object Solicitor_Divorce {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Select a PBA account from the dropdown enter a reference and click Continue
@@ -501,7 +501,7 @@ object Solicitor_Divorce {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Order Summary - Click Continue
@@ -522,7 +522,7 @@ object Solicitor_Divorce {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Case Submission - Click Continue
@@ -543,7 +543,7 @@ object Solicitor_Divorce {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Check Your Answers - Click Submit Petition
@@ -570,7 +570,7 @@ object Solicitor_Divorce {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     .exec {
       session =>

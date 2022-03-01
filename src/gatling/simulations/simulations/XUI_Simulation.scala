@@ -104,7 +104,7 @@ class XUI_Simulation extends Simulation {
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.repeat(2) {
-					exec(Solicitor_IAC.iaccasecreation)
+					exec(Solicitor_IAC.CreateIACCase)
 					.exec(Solicitor_IAC.shareacase)
 				}
 				.exec(Logout.XUILogout)
@@ -120,7 +120,7 @@ class XUI_Simulation extends Simulation {
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.repeat(2) {
-					exec(Solicitor_Divorce.createDivorceCase)
+					exec(Solicitor_Divorce.CreateDivorceCase)
 				}
 				.exec(Logout.XUILogout)
 		}
@@ -137,7 +137,7 @@ class XUI_Simulation extends Simulation {
 				//since two records were grabbed, set 'user' to the first one (applicant1's solicitor) for login
 				.exec(session => session.set("user", session("user1").as[String]))
 				.exec(Login.XUILogin)
-				.exec(Solicitor_NFD.createNFDCase)
+				.exec(Solicitor_NFD.CreateNFDCase)
 				.exec(Logout.XUILogout)
 		}
 
@@ -151,7 +151,7 @@ class XUI_Simulation extends Simulation {
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.repeat(2) {
-					exec(Solicitor_FR.createFRCase)
+					exec(Solicitor_FR.CreateFRCase)
 				}
 				.exec(Logout.XUILogout)
 		}
@@ -165,7 +165,7 @@ class XUI_Simulation extends Simulation {
 				.exec(_.set("env", s"${env}"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
-				.exec(Solicitor_FPL.fplcasecreation)
+				.exec(Solicitor_FPL.CreateFPLCase)
 				.exec(Solicitor_FPL.fplOrdersAndDirections)
 				.exec(Solicitor_FPL.fplHearingUrgency)
 				.exec(Solicitor_FPL.fplGrounds)

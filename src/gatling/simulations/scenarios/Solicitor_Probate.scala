@@ -10,6 +10,8 @@ import utils.{Common, Environment, Headers}
 
 object Solicitor_Probate {
 
+  val BaseURL = Environment.baseURL
+
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
 
@@ -81,7 +83,7 @@ object Solicitor_Probate {
 
       .exec(Common.profile)
 
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(Environment.baseDomain).saveAs("XSRFToken")))
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)

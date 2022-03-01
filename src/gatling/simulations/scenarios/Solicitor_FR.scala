@@ -10,14 +10,16 @@ import utils.{Common, Environment, Headers}
 
 object Solicitor_FR  {
 
-  val minThinkTime = Environment.minThinkTime
-  val maxThinkTime = Environment.maxThinkTime
+  val BaseURL = Environment.baseURL
+
+  val MinThinkTime = Environment.minThinkTime
+  val MaxThinkTime = Environment.maxThinkTime
 
   /*======================================================================================
   * Click the Create Case link
   ======================================================================================*/
 
-  val createFRCase =
+  val CreateFRCase =
 
     group("XUI_FR_030_CreateCase") {
       exec(Common.healthcheck("%2Fcases%2Fcase-filter"))
@@ -29,7 +31,7 @@ object Solicitor_FR  {
         .check(substring("DIVORCE")))
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
      * Jurisdiction = Family Divorce; Case Type = Financial Rem Consented Resp; Event = Consent Order Application
@@ -49,10 +51,10 @@ object Solicitor_FR  {
 
         .exec(Common.profile)
 
-        .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(Environment.baseDomain).saveAs("XSRFToken")))
+        .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Click Continue
@@ -85,7 +87,7 @@ object Solicitor_FR  {
 
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Complete Solicitor details (some are pre-populated) and click Continue
@@ -101,7 +103,7 @@ object Solicitor_FR  {
         .check(substring("solicitorAgreeToReceiveEmails")))
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Complete Divorce case details (FamilyMan code = EZ12D91234) and click Continue
@@ -117,7 +119,7 @@ object Solicitor_FR  {
         .check(jsonPath("$.data.divorceStageReached").is("Petition Issued")))
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Enter the Applicant's details and click Continue
@@ -138,7 +140,7 @@ object Solicitor_FR  {
         .header("accept", "application/json, text/plain, */*"))
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Postcode Lookup for Respondent's Solicitor
@@ -146,7 +148,7 @@ object Solicitor_FR  {
 
     .exec(Common.postcodeLookup)
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Enter the Respondent's details and click Continue
@@ -162,7 +164,7 @@ object Solicitor_FR  {
         .check(jsonPath("$.data.RespondentOrganisationPolicy.OrgPolicyCaseAssignedRole").is("[RESPSOLICITOR]")))
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Select Lump Sum Order as the Nature of the Application and click Continue
@@ -178,7 +180,7 @@ object Solicitor_FR  {
         .check(jsonPath("$.data.natureOfApplication2[0]").is("Lump Sum Order")))
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Upload Consent Order PDF
@@ -203,7 +205,7 @@ object Solicitor_FR  {
         .check(jsonPath("$.documents[0]._links.self.href").saveAs("ConsentOrderDocumentURL")))
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Click Continue to submit Consent Order document
@@ -219,7 +221,7 @@ object Solicitor_FR  {
         .check(jsonPath("$.data.consentOrder.document_hash").is("${ConsentOrderDocumentHash}")))
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Select Yes to Uploading a Joint D81 and upload the D81 PDF
@@ -244,7 +246,7 @@ object Solicitor_FR  {
         .check(jsonPath("$.documents[0]._links.self.href").saveAs("D81DocumentURL")))
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Click Continue to submit D81 document
@@ -260,7 +262,7 @@ object Solicitor_FR  {
         .check(jsonPath("$.data.d81Joint.document_hash").is("${D81DocumentHash}")))
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Other Documents - click Continue
@@ -276,7 +278,7 @@ object Solicitor_FR  {
         .check(substring("otherCollection")))
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Consent Order Application - click Continue
@@ -297,7 +299,7 @@ object Solicitor_FR  {
         .header("accept", "application/json, text/plain, */*"))
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Review Application - click Submit
@@ -327,6 +329,6 @@ object Solicitor_FR  {
         .header("accept", "application/json, text/plain, */*"))
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
 }
