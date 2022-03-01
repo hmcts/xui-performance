@@ -15,7 +15,6 @@ properties([
 
 def product = "xui"
 def component = "MANAGE ORGANISATION"
-def channel   = '#xui-pipeline'
 
 withNightlyPipeline("java", product, component) {
 
