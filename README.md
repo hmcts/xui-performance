@@ -6,7 +6,8 @@ This script runs a suite of services against XUI in a cohabitation scenario:
 - Divorce solicitor journey
 - Financial Remedy solicitor journey
 - Family Public Law solicitor journey
-- Immigration and Asylum solicitor journey 
+- Immigration and Asylum solicitor journey
+- No Fault Divorce solicitor journey
 
 To run locally:
 - Performance test against the perftest environment: `./gradlew gatlingRun`
