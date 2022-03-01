@@ -9,7 +9,7 @@ import utils.{Environment, Common, Headers}
 
 object Solicitor_IAC {
 
-  val baseURL = Environment.baseURL
+  val BaseURL = Environment.baseURL
 
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
@@ -22,7 +22,7 @@ object Solicitor_IAC {
   * IAC Case Creation
   ======================================================================================*/
 
-  val iaccasecreation =
+  val CreateIACCase =
 
     //set session variables
     exec(_.setAll( "firstName" -> ("Perf" + Common.randomString(5)),
@@ -66,7 +66,7 @@ object Solicitor_IAC {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-create%2FIA%2FAsylum%2FstartAppeal%2FstartAppealchecklist"))
 
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(Environment.baseDomain).saveAs("XSRFToken")))
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)

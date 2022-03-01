@@ -11,12 +11,12 @@ import utils.{Common, Environment, Headers}
 object Solicitor_NFD {
 
   val IdamUrl = Environment.idamURL
-  val baseURL = Environment.baseURL
+  val BaseURL = Environment.baseURL
 
-  val minThinkTime = Environment.minThinkTime
-  val maxThinkTime = Environment.maxThinkTime
+  val MinThinkTime = Environment.minThinkTime
+  val MaxThinkTime = Environment.maxThinkTime
 
-  val createNFDCase =
+  val CreateNFDCase =
 
     //set session variables
     exec(_.setAll(
@@ -44,7 +44,7 @@ object Solicitor_NFD {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Jurisdiction = Family Divorce; Case Type = New Law Case - v115.00; Event = Apply: divorce or dissolution
@@ -64,10 +64,10 @@ object Solicitor_NFD {
 
       .exec(Common.userDetails)
 
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(Environment.baseDomain).saveAs("XSRFToken")))
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Select case type - Divorce (Sole)
@@ -92,7 +92,7 @@ object Solicitor_NFD {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * About the Solicitor
@@ -110,7 +110,7 @@ object Solicitor_NFD {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Has the Marriage broken down?
@@ -128,7 +128,7 @@ object Solicitor_NFD {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * About the Applicant
@@ -148,7 +148,7 @@ object Solicitor_NFD {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * About the Other Party
@@ -173,7 +173,7 @@ object Solicitor_NFD {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Is the Respondent Represented by a Solicitor?
@@ -196,7 +196,7 @@ object Solicitor_NFD {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Marriage Certificate Details
@@ -214,7 +214,7 @@ object Solicitor_NFD {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Jurisdiction - Both applicants domiciled in the UK (connection = F)
@@ -232,7 +232,7 @@ object Solicitor_NFD {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Other Legal Proceedings - No
@@ -250,7 +250,7 @@ object Solicitor_NFD {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Financial Order - No
@@ -268,7 +268,7 @@ object Solicitor_NFD {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Upload Document
@@ -289,7 +289,7 @@ object Solicitor_NFD {
         .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL")))
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Submit Document
@@ -312,7 +312,7 @@ object Solicitor_NFD {
         .header("accept", "application/json, text/plain, */*"))
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Check Your Answers
@@ -339,7 +339,7 @@ object Solicitor_NFD {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Select 'Sign and submit' from the dropdown
@@ -368,7 +368,7 @@ object Solicitor_NFD {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Statement Of Truth
@@ -388,7 +388,7 @@ object Solicitor_NFD {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Payment Method
@@ -408,7 +408,7 @@ object Solicitor_NFD {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Select PBA Account
@@ -428,7 +428,7 @@ object Solicitor_NFD {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Order Summary
@@ -448,7 +448,7 @@ object Solicitor_NFD {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Sign & Submit: Check Your Answers
@@ -474,7 +474,7 @@ object Solicitor_NFD {
       .exec(Common.userDetails)
     }
 
-    .pause(minThinkTime, maxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
 
     .exec {

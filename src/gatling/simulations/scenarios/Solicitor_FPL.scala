@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter
 object Solicitor_FPL {
 
   val IdamUrl = Environment.idamURL
-  val baseURL = Environment.baseURL
+  val BaseURL = Environment.baseURL
 
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
@@ -20,7 +20,7 @@ object Solicitor_FPL {
   val now = LocalDate.now()
 
  
-  val fplcasecreation =
+  val CreateFPLCase =
 
     //set session variables
     exec(_.setAll(  "caseName"  -> ("Perf" + Common.randomString(5) + " vs Perf" + Common.randomString(5)),
