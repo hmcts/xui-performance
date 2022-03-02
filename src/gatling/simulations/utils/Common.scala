@@ -124,7 +124,7 @@ object Common {
       .header("accept", "application/json, text/plain, */*")
       .header("sec-fetch-site", "same-site")
       .body(StringBody("{\n  \"activity\": \"view\"\n}"))
-      .check(status.in(200, 304, 403)))
+      .check(status.in(200, 201, 304, 403)))
 
   val configurationui =
     exec(http("XUI_Common_000_ConfigurationUI")
@@ -192,6 +192,7 @@ object Common {
       .get("/api/organisation")
       .headers(Headers.commonHeader)
       .header("accept", "application/json, text/plain, */*")
-      .check(jsonPath("$.name").notNull))
+      .check(regex("name|Organisation route error"))
+      .check(status.in(200, 304, 403)))
 
 }

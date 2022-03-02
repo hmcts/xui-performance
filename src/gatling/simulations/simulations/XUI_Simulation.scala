@@ -68,7 +68,7 @@ class XUI_Simulation extends Simulation {
   val httpProtocol = http
 		.baseUrl(Environment.baseURL.replace("${env}", s"${env}"))
 		.inferHtmlResources()
-		//.silentResources
+		.silentResources
 
 	before{
 		println(s"Test Type: ${testType}")
@@ -82,7 +82,8 @@ class XUI_Simulation extends Simulation {
   val ProbateSolicitorScenario = scenario("***** Probate Create Case *****")
 		.exitBlockOnFail {
 			feed(UserFeederProbate)
-				.exec(_.set("env", s"${env}"))
+				.exec(_.set("env", s"${env}")
+							.set("caseType", "GrantOfRepresentation"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.repeat(2) {
@@ -100,7 +101,8 @@ class XUI_Simulation extends Simulation {
 	val ImmigrationAndAsylumSolicitorScenario = scenario("***** IAC Create Case *****")
 		.exitBlockOnFail {
 			feed(UserFeederIAC)
-				.exec(_.set("env", s"${env}"))
+				.exec(_.set("env", s"${env}")
+							.set("caseType", "Asylum"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.repeat(2) {
@@ -116,7 +118,8 @@ class XUI_Simulation extends Simulation {
 	val DivorceSolicitorScenario = scenario("***** Divorce Create Case *****")
 		.exitBlockOnFail {
 			feed(UserFeederDivorce)
-				.exec(_.set("env", s"${env}"))
+				.exec(_.set("env", s"${env}")
+							.set("caseType", "DIVORCE"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.repeat(2) {
@@ -132,7 +135,8 @@ class XUI_Simulation extends Simulation {
 		.exitBlockOnFail {
 			//feed two rows of data - applicant1's solicitor and applicant2's solicitor
 			feed(UserFeederNFD, 2)
-				.exec(_.set("env", s"${env}"))
+				.exec(_.set("env", s"${env}")
+							.set("caseType", "NFD"))
 				.exec(Homepage.XUIHomePage)
 				//since two records were grabbed, set 'user' to the first one (applicant1's solicitor) for login
 				.exec(session => session.set("user", session("user1").as[String]))
@@ -147,7 +151,8 @@ class XUI_Simulation extends Simulation {
 	val FinancialRemedySolicitorScenario = scenario("***** FR Create Case *****")
 		.exitBlockOnFail {
 			feed(UserFeederFR)
-				.exec(_.set("env", s"${env}"))
+				.exec(_.set("env", s"${env}")
+							.set("caseType", "FinancialRemedyMVP2"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.repeat(2) {
@@ -162,7 +167,8 @@ class XUI_Simulation extends Simulation {
 	val FamilyPublicLawSolicitorScenario = scenario("***** FPL Create Case *****")
 		.exitBlockOnFail {
 			feed(UserFeederFPL)
-				.exec(_.set("env", s"${env}"))
+				.exec(_.set("env", s"${env}")
+							.set("caseType", "CARE_SUPERVISION_EPO"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.exec(Solicitor_FPL.CreateFPLCase)
@@ -184,16 +190,25 @@ class XUI_Simulation extends Simulation {
 	val CaseworkerScenario = scenario("***** Caseworker Journey ******")
 		.exitBlockOnFail {
 			feed(CaseworkerUserFeeder)
-				.exec(_.set("env", s"${env}"))
+				//TODO: UPDATE caseType with something more dynamic
+				.exec(_.set("env", s"${env}")
+					.set("caseType", "NFD"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
-				/* .repeat(4) {
-					exec(EXUICaseWorker.ApplyFilters)
-						.exec(EXUICaseWorker.ApplySort)
-						.exec(EXUICaseWorker.ClickFindCase)
-						.exec(EXUICaseWorker.ViewCase)
-				}*/
+				.exec(Caseworker_Navigation.ApplyFilter)
+				.exec(Caseworker_Navigation.SortByLastModifiedDate)
+				.exec(Caseworker_Navigation.LoadPage2)
+				.exec(Caseworker_Navigation.SearchByCaseNumber)
+				.exec(Caseworker_Navigation.ViewCase)
+				.exec(Caseworker_Navigation.NavigateTabs)
+				.exec(Caseworker_Navigation.LoadCaseList)
 				.exec(Logout.XUILogout)
+		}
+
+		.exec {
+			session =>
+				println(session)
+				session
 		}
 
 
@@ -222,18 +237,7 @@ class XUI_Simulation extends Simulation {
 		}
 	}
 
-	val XUILogin = scenario("Login")
-		.exitBlockOnFail {
-			feed(UserFeederNFD)
-				.exec(_.set("env", s"${env}"))
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.exec(Logout.XUILogout)
-		}
-
 	setUp(
-		XUILogin.inject(atOnceUsers(1))
-		/*
 		ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplaTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
@@ -241,7 +245,6 @@ class XUI_Simulation extends Simulation {
 		NoFaultDivorceSolicitorScenario.inject(simulationProfile(testType, nfdTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
-		 */
 	).protocols(httpProtocol)
 		.assertions(forAll.successfulRequests.percent.gte(80))
 
