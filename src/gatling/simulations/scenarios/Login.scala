@@ -68,17 +68,15 @@ object Login {
 
       .exec(Common.caseActivityGet)
 
-      //TODO: Make the following calls dynamic based on the case type
-
       .exec(http("XUI_020_015_WorkBasketInputs")
-        .get("/data/internal/case-types/NFD/work-basket-inputs")
+        .get("/data/internal/case-types/${caseType}/work-basket-inputs")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-workbasket-input-details.v2+json;charset=UTF-8")
         .check(regex("workbasketInputs|Not Found"))
         .check(status.in(200, 404)))
 
       .exec(http("XUI_020_020_SearchCases")
-        .post("/data/internal/searchCases?ctid=NFD&use_case=WORKBASKET&view=WORKBASKET&page=1")
+        .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&page=1")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
         .formParam("x-xsrf-token", "${XSRFToken}")
