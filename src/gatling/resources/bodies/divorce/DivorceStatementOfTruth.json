@@ -7,7 +7,7 @@
     "D8StatementOfTruth": "Yes",
     "solSignStatementofTruth": "Yes",
     "SolStatementOfReconciliationName": "PerfSolicitorFirst SolicitorLast",
-    "SolStatementOfReconciliationFirm": "${orgName}",
+    "SolStatementOfReconciliationFirm": "${orgname}",
     "StatementOfReconciliationComments": null,
     "solApplicationFeeInPounds": "593"
   },
@@ -24,7 +24,7 @@
     "D8StatementOfTruth": "Yes",
     "solSignStatementofTruth": "Yes",
     "SolStatementOfReconciliationName": "PerfSolicitorFirst SolicitorLast",
-    "SolStatementOfReconciliationFirm": "${orgName}",
+    "SolStatementOfReconciliationFirm": "${orgname}",
     "StatementOfReconciliationComments": null,
     "solApplicationFeeInPounds": "593"
   },

@@ -34,33 +34,16 @@ object Solicitor_Probate {
                     "dodYear" -> Common.getDodYear(),
                     "caseId" -> "0")) // initialise the caseId to 0 for the activity calls
 
-    .group("XUI_Probate_040_CreateCase") {
-      exec(http("XUI_Probate_040_005_CaseFilter")
-        .get("/cases/case-filter")
-        .headers(Headers.navigationHeader)
-        .check(substring("HMCTS Manage cases")))
+    .group("XUI_Probate_030_CreateCase") {
+      exec(Common.healthcheck("%2Fcases%2Fcase-filter"))
 
-      .exec(Common.configurationui)
+        .exec(http("XUI_Probate_030_005_CreateCase")
+          .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/json")
+          .check(substring("PROBATE")))
 
-      .exec(Common.configJson)
-
-      .exec(Common.TsAndCs)
-
-      .exec(Common.userDetails)
-
-      .exec(Common.configUI)
-
-      .exec(Common.isAuthenticated)
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-filter"))
-
-      .exec(Common.activity)
-
-      .exec(http("XUI_Probate_040_010_CreateCase")
-        .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .check(substring("PROBATE")))
+        .exec(Common.userDetails)
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -81,7 +64,7 @@ object Solicitor_Probate {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-create%2FPROBATE%2FGrantOfRepresentation%2FsolicitorCreateApplication%2FsolicitorCreateApplicationsolicitorCreateApplicationPage1"))
 
-      .exec(Common.profile)
+      .exec(Common.userDetails)
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
@@ -108,6 +91,8 @@ object Solicitor_Probate {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/probate/ProbateCreateApplication1Draft.json"))
         .check(jsonPath("$.id").saveAs("draftId")))
+
+      .exec(Common.userDetails)
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -140,9 +125,8 @@ object Solicitor_Probate {
         .body(ElFileBody("bodies/probate/ProbateCreateApplication2Draft.json"))
         .check(status.in(200, 400, 500)))
 
-      .exec(Common.profile)
+      .exec(Common.userDetails)
 
-      .exec(Common.monitoringTools)
     }
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -159,25 +143,17 @@ object Solicitor_Probate {
         .body(ElFileBody("bodies/probate/ProbateCaseSubmitted.json"))
         .check(jsonPath("$.id").optional.saveAs("caseId")))
 
-      .exec(http("XUI_Probate_080_010_WorkAllocation")
-        .post("/workallocation/searchForCompletable")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "${XSRFToken}")
-        .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"solicitorCreateApplication","jurisdiction":"PROBATE","caseTypeId":"GrantOfRepresentation"}}"""))
-        .check(status.in(200, 400, 401)))
-
       .exec(Common.healthcheck("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_Probate_080_015_ViewCase")
+      .exec(http("XUI_Probate_080_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .header("x-xsrf-token", "${XSRFToken}")
         .check(jsonPath("$.state.name").is("Application created (deceased details)"))
-        .check(regex("""Add Probate practitioner details(?:.+?)title=."COMPLETED."(?:.+?)Add deceased details""")))
+        .check(substring("Add Probate practitioner details")))
 
-      .exec(Common.activity)
+      .exec(Common.userDetails)
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -208,6 +184,8 @@ object Solicitor_Probate {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorUpdateApplication%2FsolicitorUpdateApplicationsolicitorUpdateApplicationPage1"))
 
+      .exec(Common.monitoringTools)
+
       .exec(http("XUI_Probate_090_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
@@ -221,9 +199,11 @@ object Solicitor_Probate {
         .check(jsonPath("$.event_token").saveAs("event_token_probate"))
         .check(substring("solicitorUpdateApplication")))
 
-      .exec(Common.activity)
+      .exec(Common.caseActivityGet)
 
       .exec(Common.profile)
+
+      .exec(Common.userDetails)
     }
 
     .pause(MinThinkTime, MaxThinkTime)

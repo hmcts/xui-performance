@@ -22,8 +22,8 @@
       "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
-        "OrganisationID": "${orgCode}",
-        "OrganisationName": "${orgName}"
+        "OrganisationID": "${orgref}",
+        "OrganisationName": "${orgname}"
       }
     },
     "D8PetitionerFirstName": "${petitionerFirstName}",

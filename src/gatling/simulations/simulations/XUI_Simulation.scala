@@ -41,11 +41,11 @@ class XUI_Simulation extends Simulation {
 	/* PERFORMANCE TEST CONFIGURATION */
 	val probateTargetPerHour:Double = 238
 	val iacTargetPerHour:Double = 20
-	val fplaTargetPerHour:Double = 7
+	val fplTargetPerHour:Double = 7
 	val divorceTargetPerHour:Double = 238
 	val nfdTargetPerHour:Double = 238
 	val frTargetPerHour:Double = 98
-	val caseworkerTargetPerHour:Double = 100 //TODO: Used to be 900
+	val caseworkerTargetPerHour:Double = 900
 
 
 	val rampUpDurationMins = 5
@@ -69,6 +69,7 @@ class XUI_Simulation extends Simulation {
 		.baseUrl(Environment.baseURL.replace("${env}", s"${env}"))
 		.inferHtmlResources()
 		.silentResources
+		.header("experimental", "true") //used to send through client id, s2s and bearer tokens. Might be temporary
 
 	before{
 		println(s"Test Type: ${testType}")
@@ -138,8 +139,8 @@ class XUI_Simulation extends Simulation {
 				.exec(_.set("env", s"${env}")
 							.set("caseType", "NFD"))
 				.exec(Homepage.XUIHomePage)
-				//since two records were grabbed, set 'user' to the first one (applicant1's solicitor) for login
-				.exec(session => session.set("user", session("user1").as[String]))
+				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
+				.exec(session => session.set("user", session("user1").as[String]).set("password", session("password1").as[String]))
 				.exec(Login.XUILogin)
 				.exec(Solicitor_NFD.CreateNFDCase)
 				.exec(Logout.XUILogout)
@@ -205,12 +206,6 @@ class XUI_Simulation extends Simulation {
 				.exec(Logout.XUILogout)
 		}
 
-		.exec {
-			session =>
-				println(session)
-				session
-		}
-
 
 	/*===============================================================================================
 	* Simulation Configuration
@@ -238,9 +233,9 @@ class XUI_Simulation extends Simulation {
 	}
 
 	setUp(
-		ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		//ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplaTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		DivorceSolicitorScenario.inject(simulationProfile(testType, divorceTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		NoFaultDivorceSolicitorScenario.inject(simulationProfile(testType, nfdTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),

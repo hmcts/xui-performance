@@ -11,8 +11,8 @@
       "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
-        "OrganisationID": "${orgCode}",
-        "OrganisationName": "${orgName}"
+        "OrganisationID": "${orgref}",
+        "OrganisationName": "${orgname}"
       }
     }
   },
@@ -33,8 +33,8 @@
       "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
-        "OrganisationID": "${orgCode}",
-        "OrganisationName": "${orgName}"
+        "OrganisationID": "${orgref}",
+        "OrganisationName": "${orgname}"
       }
     }
   },
