@@ -43,14 +43,16 @@ object Solicitor_FPL {
     ======================================================================================*/
   
     .group("XUI_FPL_040_CreateCase") {
-      exec(http("XUI_FPL_040_CreateCase")
+      exec(Common.healthcheck("%2Fcases%2Fcase-filter"))
+
+      .exec(http("XUI_FPL_040_CreateCase")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
         .header("x-xsrf-token", "${XSRFToken}")
         .check(substring("Create Case")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-create%2FPUBLICLAW%2FCARE_SUPERVISION_EPO%2FopenCase"))
+      .exec(Common.userDetails)
     }
 
     .pause(MinThinkTime , MaxThinkTime)
