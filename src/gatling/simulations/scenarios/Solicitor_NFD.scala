@@ -50,7 +50,7 @@ object Solicitor_NFD {
     * Jurisdiction = Family Divorce; Case Type = New Law Case - v115.00; Event = Apply: divorce or dissolution
     ======================================================================================*/
 
-    .group("XUI_Divorce_040_SelectCaseType") {
+    .group("XUI_NFD_040_SelectCaseType") {
       exec(Common.healthcheck("%2Fcases%2Fcase-create%2FDIVORCE%2FNFD%2Fsolicitor-create-application"))
 
       .exec(http("XUI_NFD_040_005_StartApplication")
@@ -73,8 +73,8 @@ object Solicitor_NFD {
     * Select case type - Divorce (Sole)
     ======================================================================================*/
 
-    .group("XUI_NFD_050_ChooseCaseType") {
-      exec(http("XUI_NFD_050_005_ChooseCaseType")
+    .group("XUI_NFD_050_ChooseSoleOrJoint") {
+      exec(http("XUI_NFD_050_005_ChooseSoleOrJoint")
         .post("/data/case-types/NFD/validate?pageId=solicitor-create-applicationhowDoYouWantToApplyForDivorce")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
