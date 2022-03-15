@@ -16,7 +16,24 @@ properties([
 def product = "xui"
 def component = "MANAGE ORGANISATION"
 
+def secrets = [
+        'ccd-perftest': [
+                secret('ccd-api-gateway-oauth2-client-secret', 'CLIENT_SECRET')
+        ]
+]
+
+static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
+    [$class     : 'AzureKeyVaultSecret',
+     secretType : 'Secret',
+     name       : secretName,
+     version    : '',
+     envVariable: envVar
+    ]
+}
+
 withNightlyPipeline("java", product, component) {
+
+    loadVaultSecrets(secrets)
 
     enablePerformanceTest(30)
 

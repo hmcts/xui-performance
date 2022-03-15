@@ -15,7 +15,10 @@ object Homepage {
   
   val XUIHomePage =
 
-    group("XUI_010_Homepage") {
+    exec(flushHttpCache)
+    .exec(flushCookieJar)
+
+    .group("XUI_010_Homepage") {
       exec(http("XUI_010_005_Homepage")
         .get("/")
         .headers(Headers.navigationHeader)

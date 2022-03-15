@@ -47,7 +47,7 @@ object Solicitor_NFD {
     .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
-    * Jurisdiction = Family Divorce; Case Type = New Law Case - v115.00; Event = Apply: divorce or dissolution
+    * Jurisdiction = Family Divorce; Case Type = New Law Case; Event = Apply: divorce or dissolution
     ======================================================================================*/
 
     .group("XUI_NFD_040_SelectCaseType") {
@@ -482,5 +482,272 @@ object Solicitor_NFD {
         println(session)
         session
     }
+
+  val RespondToNFDCase =
+
+    /*======================================================================================
+    * View Case
+    ======================================================================================*/
+
+    group("XUI_NFD_240_ViewCase") {
+      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+      .exec(http("XUI_NFD_240_005_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(jsonPath("$.state.id").is("Submitted")))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Select Draft AoS from the dropdown
+    ======================================================================================*/
+
+    .group("XUI_NFD_250_StartDraftAOS") {
+      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fdraft-aos"))
+
+      .exec(Common.profile)
+
+      .exec(http("XUI_NFD_250_005_StartDraftAOS")
+        .get("/data/internal/cases/${caseId}/event-triggers/draft-aos?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.case_fields[?(@.id=='miniApplicationLink')].document_filename").saveAs("filename"))
+        .check(jsonPath("$.case_fields[?(@.id=='miniApplicationLink')].document_url").saveAs("documentURL"))
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("draft-aos")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fdraft-aos%2Fdraft-aosApplicant2SolConfirmContactDetails"))
+
+      .exec(Common.userDetails)
+
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Confirm Solicitor Details
+    ======================================================================================*/
+
+    .group("XUI_NFD_260_ConfirmSolicitorDetails") {
+      exec(http("XUI_NFD_260_005_ConfirmSolicitorDetails")
+        .post("/data/case-types/NFD/validate?pageId=draft-aosApplicant2SolConfirmContactDetails")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDRespSolicitorDetails.json"))
+        .check(substring("applicant2SolicitorName")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fdraft-aos%2Fdraft-aosApplicant2SolReviewApplicant1Application"))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Review Application
+    ======================================================================================*/
+
+    .group("XUI_NFD_270_ReviewApplication") {
+      exec(http("XUI_NFD_270_005_ReviewApplication")
+        .post("/data/case-types/NFD/validate?pageId=draft-aosApplicant2SolReviewApplicant1Application")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDRespReviewApplication.json"))
+        .check(substring("confirmReadPetition")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fdraft-aos%2Fdraft-aosapplicant2HowToResponseToApplication"))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Continue Without Disputing
+    ======================================================================================*/
+
+    .group("XUI_NFD_280_ContinueWithoutDisputing") {
+      exec(http("XUI_NFD_280_005_ContinueWithoutDisputing")
+        .post("/data/case-types/NFD/validate?pageId=draft-aosapplicant2HowToResponseToApplication")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDRespContinueWithoutDisputing.json"))
+        .check(substring("howToRespondApplication")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fdraft-aos%2Fdraft-aosApplicant2SolAosJurisdiction"))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Jurisdictions
+    ======================================================================================*/
+
+    .group("XUI_NFD_290_Jurisdictions") {
+      exec(http("XUI_NFD_290_005_Jurisdictions")
+        .post("/data/case-types/NFD/validate?pageId=draft-aosApplicant2SolAosJurisdiction")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDRespJurisdictions.json"))
+        .check(substring("jurisdictionAgree")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fdraft-aos%2Fdraft-aosApplicant2SolAosOtherProceedings"))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Legal Proceedings
+    ======================================================================================*/
+
+    .group("XUI_NFD_300_LegalProceedings") {
+      exec(http("XUI_NFD_300_005_LegalProceedings")
+        .post("/data/case-types/NFD/validate?pageId=draft-aosApplicant2SolAosOtherProceedings")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDRespLegalProceedings.json"))
+        .check(substring("applicant2LegalProceedings")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fdraft-aos%2Fsubmit"))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Save AOS
+    ======================================================================================*/
+
+    .group("XUI_NFD_310_SaveAOS") {
+      exec(http("XUI_NFD_310_005_SaveAOS")
+        .post("/data/cases/${caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDRespSaveAOS.json"))
+        .check(jsonPath("$.state").is("AosDrafted")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+      .exec(http("XUI_Divorce_310_010_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(jsonPath("$.state.id").is("AosDrafted")))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Select Submit AoS from the dropdown menu
+    ======================================================================================*/
+
+    .group("XUI_NFD_320_StartSubmitAOS") {
+      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsubmit-aos"))
+
+      .exec(Common.profile)
+
+      .exec(http("XUI_NFD_320_005_StartSubmitAOS")
+        .get("/data/internal/cases/${caseId}/event-triggers/submit-aos?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("submit-aos")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsubmit-aos%2Fsubmit-aosApplicant2SolStatementOfTruth"))
+
+      .exec(Common.userDetails)
+
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Continue to Statement Of Truth
+    ======================================================================================*/
+
+    .group("XUI_NFD_330_ContinueToStatementOfTruth") {
+
+      exec(http("XUI_NFD_330_005_ContinueToStatementOfTruth")
+        .post("/data/case-types/NFD/validate?pageId=submit-aosApplicant2SolStatementOfTruth")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDRespContinueToSOT.json"))
+        .check(substring("labelContentMarriageOrCivilPartnership")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsubmit-aos%2Fsubmit-aosSubmitAos"))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Statement Of Truth
+    ======================================================================================*/
+
+    .group("XUI_NFD_340_StatementOfTruth") {
+
+      exec(http("XUI_NFD_340_005_StatementOfTruth")
+        .post("/data/case-types/NFD/validate?pageId=submit-aosSubmitAos")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDRespSOT.json"))
+        .check(substring("statementOfTruth")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsubmit-aos%2Fsubmit"))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Submit AOS
+    ======================================================================================*/
+
+    .group("XUI_NFD_350_SubmitAOS") {
+
+      exec(http("XUI_NFD_350_005_SubmitAOS")
+        .post("/data/cases/${caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDRespSubmitAOS.json"))
+        .check(jsonPath("$.state").is("Holding")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+      .exec(http("XUI_Divorce_350_010_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(jsonPath("$.state.id").is("Holding")))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
 
 }

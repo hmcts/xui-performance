@@ -8,7 +8,7 @@
     "marriageFormationType": "oppositeSexCouple",
     "applicant1Email": "applicant1@perftest12345.com",
     "applicant1PhoneNumber": "07000000000",
-    "applicant1HomeAddress": {
+    "applicant1Address": {
       "AddressLine1": "${addressLines(0)}",
       "AddressLine2": "${addressLines(1)}",
       "AddressLine3": "",
@@ -40,6 +40,7 @@
     "labelContentDivorceOrLegallyEnd": "get a divorce",
     "labelContentApplicantsOrApplicant1s": "Applicant’s",
     "labelContentTheApplicantOrApplicant1": "the applicant",
+    "labelContentTheApplicantOrApplicant1UC": "The applicant",
     "labelContentGotMarriedOrFormedCivilPartnership": "got married",
     "labelContentRespondentsOrApplicant2s": "Respondent's",
     "coApplicant1IsDrafted": "No",
@@ -73,7 +74,7 @@
     "marriageFormationType": "oppositeSexCouple",
     "applicant1Email": "applicant1@perftest12345.com",
     "applicant1PhoneNumber": "07000000000",
-    "applicant1HomeAddress": {
+    "applicant1Address": {
       "AddressLine1": "${addressLines(0)}",
       "AddressLine2": "${addressLines(1)}",
       "AddressLine3": "",

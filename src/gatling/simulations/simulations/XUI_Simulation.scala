@@ -138,12 +138,28 @@ class XUI_Simulation extends Simulation {
 			feed(UserFeederNFD, 2)
 				.exec(_.set("env", s"${env}")
 							.set("caseType", "NFD"))
+				//Solicitor 1 - Divorce Application
 				.exec(Homepage.XUIHomePage)
 				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
 				.exec(session => session.set("user", session("user1").as[String]).set("password", session("password1").as[String]))
 				.exec(Login.XUILogin)
 				.exec(Solicitor_NFD.CreateNFDCase)
 				.exec(Logout.XUILogout)
+			//Caseworker - Issue Application
+			.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-issue-application", "bodies/nfd/CWIssueApplication.json"))
+			//set 'user'/'password' to the second one (applicant2's solicitor) for login
+			.exec(session => session.set("user", session("user2").as[String]).set("password", session("password2").as[String]))
+			//Update the case in CCD to assign it to the second solicitor
+			.exec(CCDAPI.AssignCase)
+			//Solicitor 2 - Respond to Divorce Application
+			.exec(Homepage.XUIHomePage)
+			.exec(Login.XUILogin)
+			.exec(Solicitor_NFD.RespondToNFDCase)
+			.exec(Logout.XUILogout)
+			//Caseworker - Mark the Case as Awaiting Conditional Order (to bypass 20-week holding)
+			.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-progress-held-case", "bodies/nfd/CWAwaitingConditionalOrder.json"))
+			//Solicitor 1 - Apply for Conditional Order
+			//TODO: CONTINUE HERE
 		}
 
 	/*===============================================================================================
@@ -233,13 +249,13 @@ class XUI_Simulation extends Simulation {
 	}
 
 	setUp(
-		ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		DivorceSolicitorScenario.inject(simulationProfile(testType, divorceTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		NoFaultDivorceSolicitorScenario.inject(simulationProfile(testType, nfdTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+		//ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		//ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		//FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		//DivorceSolicitorScenario.inject(simulationProfile(testType, divorceTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		NoFaultDivorceSolicitorScenario.inject(simulationProfile(testType, nfdTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+		//FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		//CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 	).protocols(httpProtocol)
 		.assertions(forAll.successfulRequests.percent.gte(80))
 
