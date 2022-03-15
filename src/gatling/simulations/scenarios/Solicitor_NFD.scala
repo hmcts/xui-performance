@@ -496,7 +496,7 @@ object Solicitor_NFD {
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
-        .check(jsonPath("$.state.id").is("Submitted")))
+        .check(jsonPath("$.state.id").is("AwaitingAos")))
 
       .exec(Common.userDetails)
     }
@@ -516,8 +516,8 @@ object Solicitor_NFD {
         .get("/data/internal/cases/${caseId}/event-triggers/draft-aos?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-        .check(jsonPath("$.case_fields[?(@.id=='miniApplicationLink')].document_filename").saveAs("filename"))
-        .check(jsonPath("$.case_fields[?(@.id=='miniApplicationLink')].document_url").saveAs("documentURL"))
+        .check(jsonPath("$.case_fields[?(@.id=='miniApplicationLink')].value.document_filename").saveAs("filename"))
+        .check(jsonPath("$.case_fields[?(@.id=='miniApplicationLink')].value.document_url").saveAs("documentURL"))
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("draft-aos")))
 
