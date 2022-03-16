@@ -4,6 +4,7 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import scenarios._
 import utils._
+import scala.io.Source
 import io.gatling.core.controller.inject.open.OpenInjectionStep
 import io.gatling.core.pause.PauseType
 
@@ -20,10 +21,10 @@ class XUI_Simulation extends Simulation {
 	val UserFeederProbate = csv("UserDataProbate.csv").circular
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
-	val nfdSoleLabelsInitialised = scala.io.Source.fromFile("src/gatling/resources/bodies/nfd/labels/soleLabelsInitialised.txt").mkString
-	val nfdSoleLabelsPopulated = scala.io.Source.fromFile("src/gatling/resources/bodies/nfd/labels/soleLabelsPopulated.txt").mkString
-	val nfdJointLabelsInitialised = scala.io.Source.fromFile("src/gatling/resources/bodies/nfd/labels/jointLabelsInitialised.txt").mkString
-	val nfdJointLabelsPopulated = scala.io.Source.fromFile("src/gatling/resources/bodies/nfd/labels/jointLabelsPopulated.txt").mkString
+	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
+	val nfdSoleLabelsPopulated = Source.fromResource("bodies/nfd/labels/soleLabelsPopulated.txt").mkString
+	val nfdJointLabelsInitialised = Source.fromResource("bodies/nfd/labels/jointLabelsInitialised.txt").mkString
+	val nfdJointLabelsPopulated = Source.fromResource("bodies/nfd/labels/jointLabelsPopulated.txt").mkString
 
 	/* TEST TYPE DEFINITION */
 	/* pipeline = nightly pipeline against the AAT environment (see the Jenkins_nightly file) */
