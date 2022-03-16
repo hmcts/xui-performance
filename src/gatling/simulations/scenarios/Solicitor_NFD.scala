@@ -750,4 +750,188 @@ object Solicitor_NFD {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+  val ApplyForCO =
+
+    /*======================================================================================
+    * View Case
+    ======================================================================================*/
+
+    group("XUI_NFD_360_ViewCase") {
+      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+      .exec(http("XUI_NFD_360_005_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(jsonPath("$.state.id").is("AwaitingConditionalOrder")))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Select Draft Conditional Order from the dropdown
+    ======================================================================================*/
+
+    .group("XUI_NFD_370_StartDraftCO") {
+      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fdraft-conditional-order"))
+
+      .exec(Common.profile)
+
+      .exec(http("XUI_NFD_370_005_StartDraftCO")
+        .get("/data/internal/cases/${caseId}/event-triggers/draft-conditional-order?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.case_fields[?(@.id=='coRespondentAnswersLink')].value.document_filename").saveAs("respondentAnswers"))
+        .check(jsonPath("$.case_fields[?(@.id=='coRespondentAnswersLink')].value.document_url").saveAs("respondentAnswersURL"))
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("draft-conditional-order")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fdraft-conditional-order%2Fdraft-conditional-orderConditionalOrderReviewAoS"))
+
+      .exec(Common.userDetails)
+
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Continue with Conditional Order
+    ======================================================================================*/
+
+    .group("XUI_NFD_380_ContinueWithCO") {
+      exec(http("XUI_NFD_380_005_ContinueWithCO")
+        .post("/data/case-types/NFD/validate?pageId=draft-conditional-orderConditionalOrderReviewAoS")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDCOContinueWithCO.json"))
+        .check(substring("coApplicant1ApplyForConditionalOrder")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fdraft-conditional-order%2Fdraft-conditional-orderConditionalOrderReviewApplicant1"))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Confirm Application Info
+    ======================================================================================*/
+
+      .group("XUI_NFD_390_ConfirmApplicationInfo") {
+        exec(http("XUI_NFD_390_005_ConfirmApplicationInfo")
+          .post("/data/case-types/NFD/validate?pageId=draft-conditional-orderConditionalOrderReviewApplicant1")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+          .header("x-xsrf-token", "${XSRFToken}")
+          .body(ElFileBody("bodies/nfd/NFDCOConfirmAppInfo.json"))
+          .check(substring("coApplicant1ConfirmInformationStillCorrect")))
+
+        .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fdraft-conditional-order%2Fsubmit"))
+
+        .exec(Common.userDetails)
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Check Your Answers - Save CO
+    ======================================================================================*/
+
+    .group("XUI_NFD_400_SaveCO") {
+      exec(http("XUI_NFD_400_005_SaveCO")
+        .post("/data/cases/${caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDCOSaveCO.json"))
+        .check(jsonPath("$.state").is("ConditionalOrderDrafted")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+      .exec(http("XUI_Divorce_400_010_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(jsonPath("$.state.id").is("ConditionalOrderDrafted")))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Select Submit Conditional Order from the dropdown
+    ======================================================================================*/
+
+    .group("XUI_NFD_410_StartSubmitCO") {
+      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsubmit-conditional-order"))
+
+      .exec(Common.profile)
+
+      .exec(http("XUI_NFD_410_005_StartSubmitCO")
+        .get("/data/internal/cases/${caseId}/event-triggers/submit-conditional-order?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("submit-conditional-order")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsubmit-conditional-order%2Fsubmit-conditional-orderConditionalOrderSoT"))
+
+      .exec(Common.userDetails)
+
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Continue to Submit Conditional Order
+    ======================================================================================*/
+
+    .group("XUI_NFD_420_ContinueToSubmitCO") {
+      exec(http("XUI_NFD_420_005_ContinueToSubmitCO")
+        .post("/data/case-types/NFD/validate?pageId=submit-conditional-orderConditionalOrderSoT")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDCOContinueToSubmitCO.json"))
+        .check(substring("coApplicant1StatementOfTruth")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsubmit-conditional-order%2Fsubmit"))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Submit CO
+    ======================================================================================*/
+
+    .group("XUI_NFD_430_SubmitCO") {
+      exec(http("XUI_NFD_430_005_SubmitCO")
+        .post("/data/cases/${caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDCOSubmitCO.json"))
+        .check(jsonPath("$.state").is("AwaitingLegalAdvisorReferral")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+      .exec(http("XUI_Divorce_430_010_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(jsonPath("$.state.id").is("AwaitingLegalAdvisorReferral")))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
 }
