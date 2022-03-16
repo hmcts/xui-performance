@@ -1,0 +1,33 @@
+{
+  "data": {
+    "solPaymentHowToPay": "feePayByAccount"
+  },
+  "event": {
+    "id": "solicitor-submit-application",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "applicant2SolicitorRepresented": "Yes",
+    "applicant2SolicitorAnswersLink": null,
+    "applicationType": "jointApplication",
+    "divorceOrDissolution": "divorce",
+    "solUrgentCase": "No",
+    "applicant1FinancialOrder": "No",
+    "solStatementOfReconciliationCertify": "Yes",
+    "solStatementOfReconciliationDiscussed": "Yes",
+    "applicant1PrayerHasBeenGivenCheckbox": [
+      "Yes"
+    ],
+    "applicant1StatementOfTruth": "Yes",
+    "solSignStatementOfTruth": "Yes",
+    "solStatementOfReconciliationName": "AppSolicitor",
+    "solStatementOfReconciliationFirm": "${orgname1}",
+    "statementOfReconciliationComments": null,
+    "solApplicationFeeInPounds": "${feeInPounds}",
+    "solPaymentHowToPay": "feePayByAccount"
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false,
+  "case_reference": "${caseId}"
+}

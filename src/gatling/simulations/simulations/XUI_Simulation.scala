@@ -19,6 +19,12 @@ class XUI_Simulation extends Simulation {
 	val UserFeederNFD = csv("UserDataNFD.csv").circular
 	val UserFeederProbate = csv("UserDataProbate.csv").circular
 
+	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
+	val nfdSoleLabelsInitialised = scala.io.Source.fromFile("src/gatling/resources/bodies/nfd/labels/soleLabelsInitialised.txt").mkString
+	val nfdSoleLabelsPopulated = scala.io.Source.fromFile("src/gatling/resources/bodies/nfd/labels/soleLabelsPopulated.txt").mkString
+	val nfdJointLabelsInitialised = scala.io.Source.fromFile("src/gatling/resources/bodies/nfd/labels/jointLabelsInitialised.txt").mkString
+	val nfdJointLabelsPopulated = scala.io.Source.fromFile("src/gatling/resources/bodies/nfd/labels/jointLabelsPopulated.txt").mkString
+
 	/* TEST TYPE DEFINITION */
 	/* pipeline = nightly pipeline against the AAT environment (see the Jenkins_nightly file) */
 	/* perftest (default) = performance test against the perftest environment */
@@ -43,7 +49,8 @@ class XUI_Simulation extends Simulation {
 	val iacTargetPerHour:Double = 20
 	val fplTargetPerHour:Double = 7
 	val divorceTargetPerHour:Double = 238
-	val nfdTargetPerHour:Double = 238
+	val nfdSoleTargetPerHour:Double = 119
+	val nfdJointTargetPerHour:Double = 119
 	val frTargetPerHour:Double = 98
 	val caseworkerTargetPerHour:Double = 900
 
@@ -130,58 +137,106 @@ class XUI_Simulation extends Simulation {
 		}
 
 	/*===============================================================================================
-	* XUI Solicitor NFD Scenario
+	* XUI Solicitor NFD Scenario (Sole Application)
 	 ===============================================================================================*/
-	val NoFaultDivorceSolicitorScenario = scenario("***** NFD Create Case *****")
+	val NoFaultDivorceSolicitorSoleScenario = scenario("***** NFD Create Case (Sole) *****")
 		.exitBlockOnFail {
 			//feed two rows of data - applicant1's solicitor and applicant2's solicitor
 			feed(UserFeederNFD, 2)
 				.exec(_.set("env", s"${env}")
-							.set("caseType", "NFD"))
+							.set("caseType", "NFD")
+							.set("nfdCaseType", "sole")
+							.set("NFDLabelsInitialised", nfdSoleLabelsInitialised) //sets the initialised labels for JSON bodies
+							.set("NFDLabelsPopulated", nfdSoleLabelsPopulated)) //sets the populated labels for JSON bodies
 				//Solicitor 1 - Divorce Application
 				.exec(Homepage.XUIHomePage)
 				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
 				.exec(session => session.set("user", session("user1").as[String]).set("password", session("password1").as[String]))
 				.exec(Login.XUILogin)
 				.exec(Solicitor_NFD.CreateNFDCase)
+				.exec(Solicitor_NFD.SignAndSubmitSole)
 				.exec(Logout.XUILogout)
-			//Caseworker - Issue Application
-			.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-issue-application", "bodies/nfd/CWIssueApplication.json"))
-			//set 'user'/'password' to the second one (applicant2's solicitor) for assigning the case and login
-			.exec(session => session.set("user", session("user2").as[String]).set("password", session("password2").as[String]))
-			//Update the case in CCD to assign it to the second solicitor
-			.exec(CCDAPI.AssignCase)
-			//Solicitor 2 - Respond to Divorce Application
-			.exec(Homepage.XUIHomePage)
-			.exec(Login.XUILogin)
-			.exec(Solicitor_NFD.RespondToNFDCase)
-			.exec(Logout.XUILogout)
-			//Caseworker - Mark the Case as Awaiting Conditional Order (to bypass 20-week holding)
-			.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-progress-held-case", "bodies/nfd/CWAwaitingConditionalOrder.json"))
-			//Solicitor 1 - Apply for Conditional Order
-			.exec(Homepage.XUIHomePage)
-			//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
-			.exec(session => session.set("user", session("user1").as[String]).set("password", session("password1").as[String]))
-			.exec(Login.XUILogin)
-			.exec(Solicitor_NFD.ApplyForCO)
-			.exec(Logout.XUILogout)
-			//Legal Advisor - Grant Conditional Order
-			.exec(CCDAPI.CreateEvent("Legal", "DIVORCE", "NFD", "legal-advisor-make-decision", "bodies/nfd/LAMakeDecision.json"))
-			//Caseworker - Make Eligible for Final Order
-			.exec(
-				//link with bulk case
-				CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-link-with-bulk-case", "bodies/nfd/CWLinkWithBulkCase.json"),
-				//set case hearing and decision dates to a date in the past
-				CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-update-case-court-hearing", "bodies/nfd/CWUpdateCaseWithCourtHearing.json"),
-				//set judge details, CO granted and issued dates in the past
-				CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-amend-case", "bodies/nfd/CWSetCODetails.json"),
-				//pronounce case
-				CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-pronounce-case", "bodies/nfd/CWPronounceCase.json"),
-				//set final order eligibility dates
-				CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-amend-case", "bodies/nfd/CWSetFOEligibilityDates.json"),
-				//set case as awaiting final order
-				CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-progress-case-awaiting-final-order", "bodies/nfd/CWAwaitingFinalOrder.json"))
-				//TODO: ADD FINAL ORDER HERE ONCE DEVELOPED
+				//Caseworker - Issue Application
+				.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-issue-application", "bodies/nfd/CWIssueApplication.json"))
+				//set 'user'/'password' to the second one (applicant2's solicitor) for assigning the case and login
+				.exec(session => session.set("user", session("user2").as[String]).set("password", session("password2").as[String]))
+				//Update the case in CCD to assign it to the second solicitor
+				.exec(CCDAPI.AssignCase)
+				//Solicitor 2 - Respond to Divorce Application
+				.exec(Homepage.XUIHomePage)
+				.exec(Login.XUILogin)
+				.exec(Solicitor_NFD.RespondToNFDCase)
+				.exec(Logout.XUILogout)
+				//Caseworker - Mark the Case as Awaiting Conditional Order (to bypass 20-week holding)
+				.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-progress-held-case", "bodies/nfd/CWAwaitingConditionalOrder.json"))
+				//Solicitor 1 - Apply for Conditional Order
+				.exec(Homepage.XUIHomePage)
+				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
+				.exec(session => session.set("user", session("user1").as[String]).set("password", session("password1").as[String]))
+				.exec(Login.XUILogin)
+				.exec(Solicitor_NFD.ApplyForCO)
+				.exec(Logout.XUILogout)
+				//Legal Advisor - Grant Conditional Order
+				.exec(CCDAPI.CreateEvent("Legal", "DIVORCE", "NFD", "legal-advisor-make-decision", "bodies/nfd/LAMakeDecision.json"))
+				//Caseworker - Make Eligible for Final Order
+				.exec(
+					//link with bulk case
+					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-link-with-bulk-case", "bodies/nfd/CWLinkWithBulkCase.json"),
+					//set case hearing and decision dates to a date in the past
+					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-update-case-court-hearing", "bodies/nfd/CWUpdateCaseWithCourtHearing.json"),
+					//set judge details, CO granted and issued dates in the past
+					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-amend-case", "bodies/nfd/CWSetCODetails.json"),
+					//pronounce case
+					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-pronounce-case", "bodies/nfd/CWPronounceCase.json"),
+					//set final order eligibility dates
+					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-amend-case", "bodies/nfd/CWSetFOEligibilityDates.json"),
+					//set case as awaiting final order
+					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-progress-case-awaiting-final-order", "bodies/nfd/CWAwaitingFinalOrder.json"))
+			//TODO: ADD FINAL ORDER HERE ONCE DEVELOPED
+		}
+
+	/*===============================================================================================
+	* XUI Solicitor NFD Scenario (Joint Application)
+	 ===============================================================================================*/
+	val NoFaultDivorceSolicitorJointScenario = scenario("***** NFD Create Case (Joint) *****")
+		.exitBlockOnFail {
+			//feed two rows of data - applicant1's solicitor and applicant2's solicitor
+			feed(UserFeederNFD, 2)
+				.exec(_.set("env", s"${env}")
+							.set("caseType", "NFD")
+							.set("nfdCaseType", "joint")
+							.set("NFDLabelsInitialised", nfdJointLabelsInitialised) //sets the initialised labels for JSON bodies
+							.set("NFDLabelsPopulated", nfdJointLabelsPopulated)) //sets the populated labels for JSON bodies
+				//Solicitor 1 - Divorce Application
+				.exec(Homepage.XUIHomePage)
+				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
+				.exec(session => session.set("user", session("user1").as[String]).set("password", session("password1").as[String]))
+				.exec(Login.XUILogin)
+				.exec(Solicitor_NFD.CreateNFDCase)
+				.exec(Solicitor_NFD.JointInviteApplicant2)
+				.exec(Logout.XUILogout)
+				//set 'user'/'password' to the second one (applicant2's solicitor) for assigning the case and login
+				.exec(session => session.set("user", session("user2").as[String]).set("password", session("password2").as[String]))
+				//Update the case in CCD to assign it to the second solicitor
+				.exec(CCDAPI.AssignCase)
+				//Solicitor 2 - Confirm Divorce Application
+				.exec(Homepage.XUIHomePage)
+				.exec(Login.XUILogin)
+				.exec(Solicitor_NFD.SubmitJointApplication)
+				.exec(Logout.XUILogout)
+				//Solicitor 1 - Submit Application
+				.exec(Homepage.XUIHomePage)
+				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
+				.exec(session => session.set("user", session("user1").as[String]).set("password", session("password1").as[String]))
+				.exec(Login.XUILogin)
+				.exec(Solicitor_NFD.SignAndSubmitJoint)
+				.exec(Logout.XUILogout)
+				//Caseworker - Issue Application
+				.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-issue-application", "bodies/nfd/CWIssueApplication.json"))
+				//Caseworker - Mark the Case as Awaiting Conditional Order (to bypass 20-week holding)
+				.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-progress-held-case", "bodies/nfd/CWAwaitingConditionalOrder.json"))
+			//TODO: ADD CONDITIONAL ORDER HERE ONCE DEVELOPED
+			//TODO: ADD FINAL ORDER HERE ONCE DEVELOPED
 		}
 
 	/*===============================================================================================
@@ -271,13 +326,14 @@ class XUI_Simulation extends Simulation {
 	}
 
 	setUp(
-		//ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//DivorceSolicitorScenario.inject(simulationProfile(testType, divorceTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		NoFaultDivorceSolicitorScenario.inject(simulationProfile(testType, nfdTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
-		//FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+		ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		DivorceSolicitorScenario.inject(simulationProfile(testType, divorceTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 	).protocols(httpProtocol)
 		.assertions(forAll.successfulRequests.percent.gte(80))
 
