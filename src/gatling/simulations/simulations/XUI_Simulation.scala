@@ -147,7 +147,7 @@ class XUI_Simulation extends Simulation {
 				.exec(Logout.XUILogout)
 			//Caseworker - Issue Application
 			.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-issue-application", "bodies/nfd/CWIssueApplication.json"))
-			//set 'user'/'password' to the second one (applicant2's solicitor) for login
+			//set 'user'/'password' to the second one (applicant2's solicitor) for assigning the case and login
 			.exec(session => session.set("user", session("user2").as[String]).set("password", session("password2").as[String]))
 			//Update the case in CCD to assign it to the second solicitor
 			.exec(CCDAPI.AssignCase)
@@ -159,7 +159,29 @@ class XUI_Simulation extends Simulation {
 			//Caseworker - Mark the Case as Awaiting Conditional Order (to bypass 20-week holding)
 			.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-progress-held-case", "bodies/nfd/CWAwaitingConditionalOrder.json"))
 			//Solicitor 1 - Apply for Conditional Order
-			//TODO: CONTINUE HERE
+			.exec(Homepage.XUIHomePage)
+			//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
+			.exec(session => session.set("user", session("user1").as[String]).set("password", session("password1").as[String]))
+			.exec(Login.XUILogin)
+			.exec(Solicitor_NFD.ApplyForCO)
+			.exec(Logout.XUILogout)
+			//Legal Advisor - Grant Conditional Order
+			.exec(CCDAPI.CreateEvent("Legal", "DIVORCE", "NFD", "legal-advisor-make-decision", "bodies/nfd/LAMakeDecision.json"))
+			//Caseworker - Make Eligible for Final Order
+			.exec(
+				//link with bulk case
+				CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-link-with-bulk-case", "bodies/nfd/CWLinkWithBulkCase.json"),
+				//set case hearing and decision dates to a date in the past
+				CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-update-case-court-hearing", "bodies/nfd/CWUpdateCaseWithCourtHearing.json"),
+				//set judge details, CO granted and issued dates in the past
+				CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-amend-case", "bodies/nfd/CWSetCODetails.json"),
+				//pronounce case
+				CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-pronounce-case", "bodies/nfd/CWPronounceCase.json"),
+				//set final order eligibility dates
+				CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-amend-case", "bodies/nfd/CWSetFOEligibilityDates.json"),
+				//set case as awaiting final order
+				CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-progress-case-awaiting-final-order", "bodies/nfd/CWAwaitingFinalOrder.json"))
+				//TODO: ADD FINAL ORDER HERE ONCE DEVELOPED
 		}
 
 	/*===============================================================================================
