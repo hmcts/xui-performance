@@ -341,16 +341,240 @@ object Solicitor_NFD {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+  val JointInviteApplicant2 =
+
+    /*======================================================================================
+    * Joint Select 'Invite Applicant 2' from the dropdown
+    ======================================================================================*/
+
+    group("XUI_NFD_180_JointInviteApplicant2") {
+      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Finvite-applicant2"))
+
+      .exec(Common.profile)
+
+      .exec(http("XUI_NFD_180_005_JointInviteApplicant2")
+        .get("/data/internal/cases/${caseId}/event-triggers/invite-applicant2?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("invite-applicant2")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Finvite-applicant2%2Fsubmit"))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Joint Save and Continue
+    ======================================================================================*/
+
+    .group("XUI_NFD_190_JointSaveInviteApplicant2") {
+      exec(http("XUI_NFD_190_005_JointSaveInviteApplicant2")
+        .post("/data/cases/${caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDJointSaveInviteApplicant2.json"))
+        .check(jsonPath("$.state").is("AwaitingApplicant2Response")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+      .exec(http("XUI_Divorce_190_010_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(jsonPath("$.state.id").is("AwaitingApplicant2Response")))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+  val SubmitJointApplication =
+
+    /*======================================================================================
+    * View Case
+    ======================================================================================*/
+
+    group("XUI_NFD_195_ViewCase") {
+      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+      .exec(http("XUI_NFD_195_005_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(jsonPath("$.state.id").is("AwaitingApplicant2Response")))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Joint Select 'Submit Joint Application' from the dropdown
+    ======================================================================================*/
+
+    .group("XUI_NFD_200_JointStartSubmitApplication") {
+      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-joint-application"))
+
+      .exec(Common.profile)
+
+      .exec(http("XUI_NFD_200_005_JointStartSubmitApplication")
+        .get("/data/internal/cases/${caseId}/event-triggers/solicitor-submit-joint-application?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("solicitor-submit-joint-application")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-joint-application%2Fsolicitor-submit-joint-applicationMarriageIrretrievablyBroken"))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Joint Marriage Broken Down
+    ======================================================================================*/
+
+    .group("XUI_NFD_210_JointMarriageBrokenDown") {
+      exec(http("XUI_NFD_210_005_JointMarriageBrokenDown")
+        .post("/data/case-types/NFD/validate?pageId=solicitor-submit-joint-applicationMarriageIrretrievablyBroken")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDJointMarriageBrokenDown.json"))
+        .check(substring("applicant2ScreenHasMarriageBroken")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-joint-application%2Fsolicitor-submit-joint-applicationFinancialOrdersForApplicant2"))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Joint Financial Orders
+    ======================================================================================*/
+
+    .group("XUI_NFD_220_JointFinancialOrder") {
+      exec(http("XUI_NFD_220_005_JointFinancialOrder")
+        .post("/data/case-types/NFD/validate?pageId=solicitor-submit-joint-applicationFinancialOrdersForApplicant2")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDJointFinancialOrder.json"))
+        .check(substring("applicant2FinancialOrder")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-joint-application%2Fsolicitor-submit-joint-applicationHelpWithFeesPageForApplicant2"))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Joint Help with Fees
+    ======================================================================================*/
+
+    .group("XUI_NFD_230_JointHelpWithFees") {
+      exec(http("XUI_NFD_230_005_JointHelpWithFees")
+        .post("/data/case-types/NFD/validate?pageId=solicitor-submit-joint-applicationHelpWithFeesPageForApplicant2")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDJointHelpWithFees.json"))
+        .check(jsonPath("$.data.applicant1SolicitorAnswersLink.document_filename").saveAs("app1AnswersFilename"))
+        .check(jsonPath("$.data.applicant1SolicitorAnswersLink.document_url").saveAs("app1AnswersDocumentURL"))
+        .check(substring("applicant2NeedsHelpWithFees")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-joint-application%2Fsolicitor-submit-joint-applicationcheckTheirAnswers"))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Joint Any Corrections
+    ======================================================================================*/
+
+    .group("XUI_NFD_240_JointAnyCorrections") {
+      exec(http("XUI_NFD_240_005_JointAnyCorrections")
+        .post("/data/case-types/NFD/validate?pageId=solicitor-submit-joint-applicationcheckTheirAnswers")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDJointAnyCorrections.json"))
+        .check(substring("applicant2ConfirmApplicant1Information")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-joint-application%2Fsolicitor-submit-joint-applicationSolStatementOfTruthApplicant2"))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Joint Statement of Truth (Applicant 2)
+    ======================================================================================*/
+
+    .group("XUI_NFD_250_JointApp2StatementOfTruth") {
+      exec(http("XUI_NFD_250_005_JointApp2StatementOfTruth")
+        .post("/data/case-types/NFD/validate?pageId=solicitor-submit-joint-applicationSolStatementOfTruthApplicant2")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDJointApp2SOT.json"))
+        .check(substring("applicant2SolSignStatementOfTruth")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-joint-application%2Fsubmit"))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Joint App2 Submit Application
+    ======================================================================================*/
+
+    .group("XUI_NFD_260_JointApp2SubmitApplication") {
+      exec(http("XUI_NFD_260_005_JointApp2SubmitApplication")
+        .post("/data/cases/${caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDJointSubmitApplication.json"))
+        .check(jsonPath("$.state").is("Applicant2Approved")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+      .exec(http("XUI_Divorce_260_010_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(jsonPath("$.state.id").is("Applicant2Approved")))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+  val SignAndSubmitSole =
+
     /*======================================================================================
     * Select 'Sign and submit' from the dropdown
     ======================================================================================*/
 
-    .group("XUI_NFD_180_StartEventSignAndSubmit") {
+    group("XUI_NFD_270_StartEventSignAndSubmit") {
       exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-application"))
 
       .exec(Common.profile)
 
-      .exec(http("XUI_NFD_180_005_StartEventSignAndSubmit")
+      .exec(http("XUI_NFD_270_005_StartEventSignAndSubmit")
         .get("/data/internal/cases/${caseId}/event-triggers/solicitor-submit-application?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -374,8 +598,8 @@ object Solicitor_NFD {
     * Statement Of Truth
     ======================================================================================*/
 
-    .group("XUI_NFD_190_StatementOfTruth") {
-      exec(http("XUI_NFD_190_005_StatementOfTruth")
+    .group("XUI_NFD_280_StatementOfTruth") {
+      exec(http("XUI_NFD_280_005_StatementOfTruth")
         .post("/data/case-types/NFD/validate?pageId=solicitor-submit-applicationSolStatementOfTruth")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -394,8 +618,8 @@ object Solicitor_NFD {
     * Payment Method
     ======================================================================================*/
 
-    .group("XUI_NFD_200_PaymentMethod") {
-      exec(http("XUI_NFD_200_005_PaymentMethod")
+    .group("XUI_NFD_290_PaymentMethod") {
+      exec(http("XUI_NFD_290_005_PaymentMethod")
         .post("/data/case-types/NFD/validate?pageId=solicitor-submit-applicationSolPayment")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -414,8 +638,8 @@ object Solicitor_NFD {
     * Select PBA Account
     ======================================================================================*/
 
-    .group("XUI_NFD_210_PaymentDetails") {
-      exec(http("XUI_NFD_210_005_PaymentDetails")
+    .group("XUI_NFD_300_PaymentDetails") {
+      exec(http("XUI_NFD_300_005_PaymentDetails")
         .post("/data/case-types/NFD/validate?pageId=solicitor-submit-applicationSolPayAccount")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -434,8 +658,8 @@ object Solicitor_NFD {
     * Order Summary
     ======================================================================================*/
 
-    .group("XUI_NFD_220_OrderSummary") {
-      exec(http("XUI_NFD_220_005_OrderSummary")
+    .group("XUI_NFD_310_OrderSummary") {
+      exec(http("XUI_NFD_310_005_OrderSummary")
         .post("/data/case-types/NFD/validate?pageId=solicitor-submit-applicationSolPaymentSummary")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -454,8 +678,8 @@ object Solicitor_NFD {
     * Sign & Submit: Check Your Answers
     ======================================================================================*/
 
-    .group("XUI_NFD_230_SignCheckYourAnswers") {
-      exec(http("XUI_NFD_230_005_SignCheckYourAnswers")
+    .group("XUI_NFD_320_SignCheckYourAnswers") {
+      exec(http("XUI_NFD_320_005_SignCheckYourAnswers")
         .post("/data/cases/${caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -465,7 +689,7 @@ object Solicitor_NFD {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_Divorce_230_010_ViewCase")
+      .exec(http("XUI_Divorce_320_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
@@ -476,12 +700,180 @@ object Solicitor_NFD {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+  val SignAndSubmitJoint =
 
-    .exec {
-      session =>
-        println(session)
-        session
+    /*======================================================================================
+    * View Case
+    ======================================================================================*/
+
+    group("XUI_NFD_325_ViewCase") {
+      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+      .exec(http("XUI_NFD_325_005_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(jsonPath("$.state.id").is("Applicant2Approved")))
+
+      .exec(Common.userDetails)
     }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Select 'Sign and submit' from the dropdown
+    ======================================================================================*/
+
+    .group("XUI_NFD_330_JointStartEventSignAndSubmit") {
+      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-application"))
+
+      .exec(Common.profile)
+
+      .exec(http("XUI_NFD_330_005_StartEventSignAndSubmit")
+        .get("/data/internal/cases/${caseId}/event-triggers/solicitor-submit-application?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("solicitor-submit-application"))
+        .check(jsonPath("$.case_fields[?(@.id=='solApplicationFeeInPounds')].value").saveAs("feeInPounds"))
+        .check(jsonPath("$.case_fields[?(@.id=='applicationFeeOrderSummary')].value.Fees[0].value.FeeAmount").saveAs("feeAmount"))
+        .check(jsonPath("$.case_fields[?(@.id=='applicationFeeOrderSummary')].value.Fees[0].value.FeeCode").saveAs("feeCode"))
+        .check(jsonPath("$.case_fields[?(@.id=='applicationFeeOrderSummary')].value.Fees[0].value.FeeDescription").saveAs("feeDescription"))
+        .check(jsonPath("$.case_fields[?(@.id=='applicationFeeOrderSummary')].value.Fees[0].value.FeeVersion").saveAs("feeVersion"))
+        .check(jsonPath("$.case_fields[?(@.id=='applicationFeeOrderSummary')].value.PaymentTotal").saveAs("paymentTotal")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-application%2Fsolicitor-submit-applicationConfirmJointApplication"))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Joint Review Application
+    ======================================================================================*/
+
+    .group("XUI_NFD_340_JointReviewApplication") {
+      exec(http("XUI_NFD_340_005_JointReviewApplication")
+        .post("/data/case-types/NFD/validate?pageId=solicitor-submit-applicationConfirmJointApplication")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDJointLinkToApp2.json"))
+        .check(substring("applicant2SolicitorAnswersLink")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-application%2Fsolicitor-submit-applicationSolStatementOfTruth"))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Joint App1 Statement Of Truth
+    ======================================================================================*/
+
+    .group("XUI_NFD_350_JointApp1StatementOfTruth") {
+      exec(http("XUI_NFD_350_005_JointApp1StatementOfTruth")
+        .post("/data/case-types/NFD/validate?pageId=solicitor-submit-applicationSolStatementOfTruth")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDJointApp1SOT.json"))
+        .check(substring("applicant1StatementOfTruth")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-application%2Fsolicitor-submit-applicationSolPayment"))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+     * Joint Payment Method
+     ======================================================================================*/
+
+    .group("XUI_NFD_360_JointPaymentMethod") {
+      exec(http("XUI_NFD_360_005_JointPaymentMethod")
+        .post("/data/case-types/NFD/validate?pageId=solicitor-submit-applicationSolPayment")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDJointPaymentMethod.json"))
+        .check(substring("pbaNumbers")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-application%2Fsolicitor-submit-applicationSolPayAccount"))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Joint Select PBA Account
+    ======================================================================================*/
+
+    .group("XUI_NFD_370_JointPaymentDetails") {
+      exec(http("XUI_NFD_370_005_JointPaymentDetails")
+        .post("/data/case-types/NFD/validate?pageId=solicitor-submit-applicationSolPayAccount")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDJointPaymentDetails.json"))
+        .check(substring("feeAccountReference")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-application%2Fsolicitor-submit-applicationSolPaymentSummary"))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Joint Order Summary
+    ======================================================================================*/
+
+    .group("XUI_NFD_380_JointOrderSummary") {
+      exec(http("XUI_NFD_380_005_JointOrderSummary")
+        .post("/data/case-types/NFD/validate?pageId=solicitor-submit-applicationSolPaymentSummary")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDJointPaymentSummary.json"))
+        .check(substring("applicationFeeOrderSummary")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-application%2Fsubmit"))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Sign & Submit: Check Your Answers
+    ======================================================================================*/
+
+    .group("XUI_NFD_390_JointSignCheckYourAnswers") {
+      exec(http("XUI_NFD_390_005_JointSignCheckYourAnswers")
+        .post("/data/cases/${caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/nfd/NFDJointSignCheckYourAnswers.json"))
+        .check(jsonPath("$.state").is("Submitted")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+      .exec(http("XUI_Divorce_390_010_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(jsonPath("$.state.id").is("Submitted")))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
 
   val RespondToNFDCase =
 
@@ -489,10 +881,10 @@ object Solicitor_NFD {
     * View Case
     ======================================================================================*/
 
-    group("XUI_NFD_240_ViewCase") {
+    group("XUI_NFD_400_ViewCase") {
       exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_NFD_240_005_ViewCase")
+      .exec(http("XUI_NFD_400_005_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
@@ -507,12 +899,12 @@ object Solicitor_NFD {
     * Select Draft AoS from the dropdown
     ======================================================================================*/
 
-    .group("XUI_NFD_250_StartDraftAOS") {
+    .group("XUI_NFD_410_StartDraftAOS") {
       exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fdraft-aos"))
 
       .exec(Common.profile)
 
-      .exec(http("XUI_NFD_250_005_StartDraftAOS")
+      .exec(http("XUI_NFD_410_005_StartDraftAOS")
         .get("/data/internal/cases/${caseId}/event-triggers/draft-aos?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -534,8 +926,8 @@ object Solicitor_NFD {
     * Confirm Solicitor Details
     ======================================================================================*/
 
-    .group("XUI_NFD_260_ConfirmSolicitorDetails") {
-      exec(http("XUI_NFD_260_005_ConfirmSolicitorDetails")
+    .group("XUI_NFD_420_ConfirmSolicitorDetails") {
+      exec(http("XUI_NFD_420_005_ConfirmSolicitorDetails")
         .post("/data/case-types/NFD/validate?pageId=draft-aosApplicant2SolConfirmContactDetails")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -554,8 +946,8 @@ object Solicitor_NFD {
     * Review Application
     ======================================================================================*/
 
-    .group("XUI_NFD_270_ReviewApplication") {
-      exec(http("XUI_NFD_270_005_ReviewApplication")
+    .group("XUI_NFD_430_ReviewApplication") {
+      exec(http("XUI_NFD_430_005_ReviewApplication")
         .post("/data/case-types/NFD/validate?pageId=draft-aosApplicant2SolReviewApplicant1Application")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -574,8 +966,8 @@ object Solicitor_NFD {
     * Continue Without Disputing
     ======================================================================================*/
 
-    .group("XUI_NFD_280_ContinueWithoutDisputing") {
-      exec(http("XUI_NFD_280_005_ContinueWithoutDisputing")
+    .group("XUI_NFD_440_ContinueWithoutDisputing") {
+      exec(http("XUI_NFD_440_005_ContinueWithoutDisputing")
         .post("/data/case-types/NFD/validate?pageId=draft-aosapplicant2HowToResponseToApplication")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -594,8 +986,8 @@ object Solicitor_NFD {
     * Jurisdictions
     ======================================================================================*/
 
-    .group("XUI_NFD_290_Jurisdictions") {
-      exec(http("XUI_NFD_290_005_Jurisdictions")
+    .group("XUI_NFD_450_Jurisdictions") {
+      exec(http("XUI_NFD_450_005_Jurisdictions")
         .post("/data/case-types/NFD/validate?pageId=draft-aosApplicant2SolAosJurisdiction")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -614,8 +1006,8 @@ object Solicitor_NFD {
     * Legal Proceedings
     ======================================================================================*/
 
-    .group("XUI_NFD_300_LegalProceedings") {
-      exec(http("XUI_NFD_300_005_LegalProceedings")
+    .group("XUI_NFD_460_LegalProceedings") {
+      exec(http("XUI_NFD_460_005_LegalProceedings")
         .post("/data/case-types/NFD/validate?pageId=draft-aosApplicant2SolAosOtherProceedings")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -634,8 +1026,8 @@ object Solicitor_NFD {
     * Save AOS
     ======================================================================================*/
 
-    .group("XUI_NFD_310_SaveAOS") {
-      exec(http("XUI_NFD_310_005_SaveAOS")
+    .group("XUI_NFD_470_SaveAOS") {
+      exec(http("XUI_NFD_470_005_SaveAOS")
         .post("/data/cases/${caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -645,7 +1037,7 @@ object Solicitor_NFD {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_Divorce_310_010_ViewCase")
+      .exec(http("XUI_Divorce_470_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
@@ -660,12 +1052,12 @@ object Solicitor_NFD {
     * Select Submit AoS from the dropdown menu
     ======================================================================================*/
 
-    .group("XUI_NFD_320_StartSubmitAOS") {
+    .group("XUI_NFD_480_StartSubmitAOS") {
       exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsubmit-aos"))
 
       .exec(Common.profile)
 
-      .exec(http("XUI_NFD_320_005_StartSubmitAOS")
+      .exec(http("XUI_NFD_480_005_StartSubmitAOS")
         .get("/data/internal/cases/${caseId}/event-triggers/submit-aos?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -685,9 +1077,9 @@ object Solicitor_NFD {
     * Continue to Statement Of Truth
     ======================================================================================*/
 
-    .group("XUI_NFD_330_ContinueToStatementOfTruth") {
+    .group("XUI_NFD_490_ContinueToStatementOfTruth") {
 
-      exec(http("XUI_NFD_330_005_ContinueToStatementOfTruth")
+      exec(http("XUI_NFD_490_005_ContinueToStatementOfTruth")
         .post("/data/case-types/NFD/validate?pageId=submit-aosApplicant2SolStatementOfTruth")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -706,9 +1098,9 @@ object Solicitor_NFD {
     * Statement Of Truth
     ======================================================================================*/
 
-    .group("XUI_NFD_340_StatementOfTruth") {
+    .group("XUI_NFD_500_StatementOfTruth") {
 
-      exec(http("XUI_NFD_340_005_StatementOfTruth")
+      exec(http("XUI_NFD_500_005_StatementOfTruth")
         .post("/data/case-types/NFD/validate?pageId=submit-aosSubmitAos")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -727,9 +1119,9 @@ object Solicitor_NFD {
     * Submit AOS
     ======================================================================================*/
 
-    .group("XUI_NFD_350_SubmitAOS") {
+    .group("XUI_NFD_510_SubmitAOS") {
 
-      exec(http("XUI_NFD_350_005_SubmitAOS")
+      exec(http("XUI_NFD_510_005_SubmitAOS")
         .post("/data/cases/${caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -739,7 +1131,7 @@ object Solicitor_NFD {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_Divorce_350_010_ViewCase")
+      .exec(http("XUI_Divorce_510_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
@@ -756,10 +1148,10 @@ object Solicitor_NFD {
     * View Case
     ======================================================================================*/
 
-    group("XUI_NFD_360_ViewCase") {
+    group("XUI_NFD_520_ViewCase") {
       exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_NFD_360_005_ViewCase")
+      .exec(http("XUI_NFD_520_005_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
@@ -774,12 +1166,12 @@ object Solicitor_NFD {
     * Select Draft Conditional Order from the dropdown
     ======================================================================================*/
 
-    .group("XUI_NFD_370_StartDraftCO") {
+    .group("XUI_NFD_530_StartDraftCO") {
       exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fdraft-conditional-order"))
 
       .exec(Common.profile)
 
-      .exec(http("XUI_NFD_370_005_StartDraftCO")
+      .exec(http("XUI_NFD_530_005_StartDraftCO")
         .get("/data/internal/cases/${caseId}/event-triggers/draft-conditional-order?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -801,8 +1193,8 @@ object Solicitor_NFD {
     * Continue with Conditional Order
     ======================================================================================*/
 
-    .group("XUI_NFD_380_ContinueWithCO") {
-      exec(http("XUI_NFD_380_005_ContinueWithCO")
+    .group("XUI_NFD_540_ContinueWithCO") {
+      exec(http("XUI_NFD_540_005_ContinueWithCO")
         .post("/data/case-types/NFD/validate?pageId=draft-conditional-orderConditionalOrderReviewAoS")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -821,8 +1213,8 @@ object Solicitor_NFD {
     * Confirm Application Info
     ======================================================================================*/
 
-      .group("XUI_NFD_390_ConfirmApplicationInfo") {
-        exec(http("XUI_NFD_390_005_ConfirmApplicationInfo")
+      .group("XUI_NFD_550_ConfirmApplicationInfo") {
+        exec(http("XUI_NFD_550_005_ConfirmApplicationInfo")
           .post("/data/case-types/NFD/validate?pageId=draft-conditional-orderConditionalOrderReviewApplicant1")
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -841,8 +1233,8 @@ object Solicitor_NFD {
     * Check Your Answers - Save CO
     ======================================================================================*/
 
-    .group("XUI_NFD_400_SaveCO") {
-      exec(http("XUI_NFD_400_005_SaveCO")
+    .group("XUI_NFD_560_SaveCO") {
+      exec(http("XUI_NFD_560_005_SaveCO")
         .post("/data/cases/${caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -852,7 +1244,7 @@ object Solicitor_NFD {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_Divorce_400_010_ViewCase")
+      .exec(http("XUI_Divorce_560_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
@@ -867,12 +1259,12 @@ object Solicitor_NFD {
     * Select Submit Conditional Order from the dropdown
     ======================================================================================*/
 
-    .group("XUI_NFD_410_StartSubmitCO") {
+    .group("XUI_NFD_570_StartSubmitCO") {
       exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsubmit-conditional-order"))
 
       .exec(Common.profile)
 
-      .exec(http("XUI_NFD_410_005_StartSubmitCO")
+      .exec(http("XUI_NFD_570_005_StartSubmitCO")
         .get("/data/internal/cases/${caseId}/event-triggers/submit-conditional-order?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -892,8 +1284,8 @@ object Solicitor_NFD {
     * Continue to Submit Conditional Order
     ======================================================================================*/
 
-    .group("XUI_NFD_420_ContinueToSubmitCO") {
-      exec(http("XUI_NFD_420_005_ContinueToSubmitCO")
+    .group("XUI_NFD_580_ContinueToSubmitCO") {
+      exec(http("XUI_NFD_580_005_ContinueToSubmitCO")
         .post("/data/case-types/NFD/validate?pageId=submit-conditional-orderConditionalOrderSoT")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -912,8 +1304,8 @@ object Solicitor_NFD {
     * Submit CO
     ======================================================================================*/
 
-    .group("XUI_NFD_430_SubmitCO") {
-      exec(http("XUI_NFD_430_005_SubmitCO")
+    .group("XUI_NFD_590_SubmitCO") {
+      exec(http("XUI_NFD_590_005_SubmitCO")
         .post("/data/cases/${caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -923,7 +1315,7 @@ object Solicitor_NFD {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_Divorce_430_010_ViewCase")
+      .exec(http("XUI_Divorce_590_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
