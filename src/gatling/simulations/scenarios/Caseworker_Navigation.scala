@@ -12,14 +12,14 @@ object Caseworker_Navigation {
   val MaxThinkTime = Environment.maxThinkTime
 
   /*====================================================================================
-  *Apply a filter from the dropdowns (State = Draft)
+  *Apply a filter from the dropdowns (State = Submitted)
   *=====================================================================================*/
 
   val ApplyFilter =
 
     group("XUI_Caseworker_030_ApplyFilter") {
       exec(http("XUI_Caseworker_030_005_FilterRecordsByDraftState")
-        .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&state=Draft&page=1")
+        .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&state=Submitted&page=1")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
         .formParam("x-xsrf-token", "${XSRFToken}")
@@ -39,7 +39,7 @@ object Caseworker_Navigation {
 
     group("XUI_Caseworker_040_SortByLastModifiedDate") {
       exec(http("XUI_Caseworker_040_005_SortByLastModifiedDate")
-        .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&state=Draft&page=1")
+        .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&state=Submitted&page=1")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
         .formParam("x-xsrf-token", "${XSRFToken}")
@@ -61,7 +61,7 @@ object Caseworker_Navigation {
 
       group("XUI_Caseworker_050_LoadPage2") {
         exec(http("XUI_Caseworker_050_005_LoadPage2")
-          .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&state=Draft&page=2")
+          .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&state=Submitted&page=2")
           .headers(Headers.commonHeader)
           .header("accept", "application/json")
           .formParam("x-xsrf-token", "${XSRFToken}")
@@ -81,7 +81,7 @@ object Caseworker_Navigation {
 
     group("XUI_Caseworker_060_SearchByCaseNumber") {
       exec(http("XUI_Caseworker_060_005_SearchByCaseNumber")
-        .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&state=Draft&page=1&case_reference=${caseId}")
+        .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&state=Submitted&page=1&case_reference=${caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
         .formParam("x-xsrf-token", "${XSRFToken}")
