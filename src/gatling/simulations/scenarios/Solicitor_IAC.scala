@@ -42,7 +42,7 @@ object Solicitor_IAC {
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
-        .check(substring("Create Case")))
+        .check(substring("IA")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-create%2FIA%2FAsylum%2FstartAppeal"))
     }

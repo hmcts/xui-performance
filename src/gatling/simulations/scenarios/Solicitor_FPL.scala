@@ -50,7 +50,7 @@ object Solicitor_FPL {
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
         .header("x-xsrf-token", "${XSRFToken}")
-        .check(substring("Create Case")))
+        .check(substring("PUBLICLAW")))
 
       .exec(Common.userDetails)
     }
