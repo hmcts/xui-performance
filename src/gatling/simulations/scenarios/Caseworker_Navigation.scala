@@ -26,7 +26,7 @@ object Caseworker_Navigation {
         .body(StringBody("""{"size":25}"""))
         .check(substring("columns"))
         .check(jsonPath("$.total").saveAs("numberOfResults"))
-        .check(jsonPath("$.results[*].case_id").findRandom.saveAs("caseId")))
+        .check(jsonPath("$.results[*].case_id").findRandom.optional.saveAs("caseId")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)

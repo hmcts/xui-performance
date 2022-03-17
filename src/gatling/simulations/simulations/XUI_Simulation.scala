@@ -293,9 +293,12 @@ class XUI_Simulation extends Simulation {
 				.exec(Caseworker_Navigation.ApplyFilter)
 				.exec(Caseworker_Navigation.SortByLastModifiedDate)
 				.exec(Caseworker_Navigation.LoadPage2)
-				.exec(Caseworker_Navigation.SearchByCaseNumber)
-				.exec(Caseworker_Navigation.ViewCase)
-				.exec(Caseworker_Navigation.NavigateTabs)
+				//Only continue with the case activities if results were returned
+				.doIf(session => session("numberOfResults").as[Int] > 0) {
+					exec(Caseworker_Navigation.SearchByCaseNumber)
+					.exec(Caseworker_Navigation.ViewCase)
+					.exec(Caseworker_Navigation.NavigateTabs)
+				}
 				.exec(Caseworker_Navigation.LoadCaseList)
 				.exec(Logout.XUILogout)
 		}
