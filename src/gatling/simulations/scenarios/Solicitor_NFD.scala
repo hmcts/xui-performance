@@ -426,6 +426,8 @@ object Solicitor_NFD {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.case_fields[?(@.id=='applicant1SolicitorAnswersLink')].value.document_filename").saveAs("app1AnswersFilename"))
+        .check(jsonPath("$.case_fields[?(@.id=='applicant1SolicitorAnswersLink')].value.document_url").saveAs("app1AnswersDocumentURL"))
         .check(jsonPath("$.id").is("solicitor-submit-joint-application")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-joint-application%2Fsolicitor-submit-joint-applicationMarriageIrretrievablyBroken"))
@@ -486,8 +488,6 @@ object Solicitor_NFD {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/nfd/NFDJointHelpWithFees.json"))
-        .check(jsonPath("$.data.applicant1SolicitorAnswersLink.document_filename").saveAs("app1AnswersFilename"))
-        .check(jsonPath("$.data.applicant1SolicitorAnswersLink.document_url").saveAs("app1AnswersDocumentURL"))
         .check(substring("applicant2NeedsHelpWithFees")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-joint-application%2Fsolicitor-submit-joint-applicationcheckTheirAnswers"))
@@ -548,7 +548,7 @@ object Solicitor_NFD {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/nfd/NFDJointSubmitApplication.json"))
-        .check(jsonPath("$.state").is("Applicant2Approved")))
+        .check(jsonPath("$.state").is("AwaitingApplicant2Response")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
@@ -556,7 +556,7 @@ object Solicitor_NFD {
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
-        .check(jsonPath("$.state.id").is("Applicant2Approved")))
+        .check(jsonPath("$.state.id").is("AwaitingApplicant2Response")))
 
       .exec(Common.userDetails)
     }
