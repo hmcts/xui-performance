@@ -572,10 +572,4 @@ object Solicitor_Divorce {
 
     .pause(MinThinkTime, MaxThinkTime)
 
-    .exec {
-      session =>
-        println(session)
-        session
-    }
-
 }
