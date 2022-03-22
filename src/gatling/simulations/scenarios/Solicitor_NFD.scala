@@ -330,7 +330,7 @@ object Solicitor_NFD {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_Divorce_170_010_ViewCase")
+      .exec(http("XUI_NFD_170_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
@@ -381,7 +381,7 @@ object Solicitor_NFD {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_Divorce_190_010_ViewCase")
+      .exec(http("XUI_NFD_190_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
@@ -552,7 +552,7 @@ object Solicitor_NFD {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_Divorce_260_010_ViewCase")
+      .exec(http("XUI_NFD_260_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
@@ -689,7 +689,7 @@ object Solicitor_NFD {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_Divorce_320_010_ViewCase")
+      .exec(http("XUI_NFD_320_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
@@ -864,7 +864,7 @@ object Solicitor_NFD {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_Divorce_390_010_ViewCase")
+      .exec(http("XUI_NFD_390_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
@@ -1037,7 +1037,7 @@ object Solicitor_NFD {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_Divorce_470_010_ViewCase")
+      .exec(http("XUI_NFD_470_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
@@ -1131,7 +1131,7 @@ object Solicitor_NFD {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_Divorce_510_010_ViewCase")
+      .exec(http("XUI_NFD_510_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
@@ -1244,7 +1244,7 @@ object Solicitor_NFD {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_Divorce_560_010_ViewCase")
+      .exec(http("XUI_NFD_560_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
@@ -1315,7 +1315,7 @@ object Solicitor_NFD {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_Divorce_590_010_ViewCase")
+      .exec(http("XUI_NFD_590_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
