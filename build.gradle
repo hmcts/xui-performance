@@ -17,24 +17,14 @@ sourceCompatibility = "11"
 targetCompatibility = "11"
 
 tasks.withType(JavaExec) {
-    jvmArgs = ['-Xms512m', '-Xmx4096m']
+    jvmArgs = ['-Xms1024m', '-Xmx2048m']
+    /* Use the following args to build a report when a test was terminated
+    args = [
+        "--reports-only", "fact-20201109092032896",
+        '--results-folder', file('build/reports/gatling').absolutePath,
+        ]
+    */
 }
-
-/*
-jar {
-    manifest {
-        attributes 'Implementation-Title': 'EXUI Performance Tests',
-                'Implementation-Version': version
-    }
-}
- */
-
-/*dependencyCheck {
-    // Specifies if the build should be failed if a CVSS score above a specified level is identified.
-    // range of 0-10 fails the build, anything greater and it doesn't fail the build
-    failBuildOnCVSS = System.getProperty('dependencyCheck.failBuild') == 'true' ? 0 : 11
-    suppressionFile = 'dependency-check-suppressions.xml'
-}*/
 
 repositories {
     jcenter()
@@ -54,14 +44,15 @@ dependencies {
     gatling "org.scala-lang:scala-library:${scalaVersion}"
     gatling "io.gatling:gatling-app:${gatlingVersion}"
     gatling "io.gatling.highcharts:gatling-charts-highcharts:${gatlingVersion}"
-    gatling 'com.warrenstrange:googleauth:1.5.0'
-    gatling 'uk.gov.service.notify:notifications-java-client:3.14.1-RELEASE'
+    //gatlingImplementation "groupio.rest-assured:rest-assured:4.3.1"
+    gatling "com.warrenstrange:googleauth:1.5.0"
 }
 
 gatling {
     toolVersion '3.3.1'
     scalaVersion '2.12.12'
-    simulations = [ 'uk.gov.hmcts.reform.exui.performance.simulations.ExUI'
+    simulations = [
+            'simulations.XUI_Simulation'
     ]
 }
 
@@ -78,6 +69,8 @@ pluginBundle {
     vcsUrl = 'https://github.com/lkishalmi/gradle-gatling-plugin'
     description = 'Gatling Simulation Execution'
     tags = ['gatling', 'load test', 'stress test', 'performance test', 'scala']
+
+
 }
 
 ext ['netty.version'] = '4.0.51.Final'

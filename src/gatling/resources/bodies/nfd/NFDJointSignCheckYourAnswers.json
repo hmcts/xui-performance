@@ -1,0 +1,61 @@
+{
+  "data": {
+    "applicant2SolicitorRepresented": "Yes",
+    "applicationType": "jointApplication",
+    "divorceOrDissolution": "divorce",
+    "solUrgentCase": "No",
+    "solUrgentCaseSupportingInformation": null,
+    "applicant1FinancialOrder": "No",
+    "solServiceMethod": null,
+    "solStatementOfReconciliationCertify": "Yes",
+    "solStatementOfReconciliationDiscussed": "Yes",
+    "applicant1PrayerHasBeenGivenCheckbox": [
+      "Yes"
+    ],
+    "applicant1StatementOfTruth": "Yes",
+    "solSignStatementOfTruth": "Yes",
+    "solStatementOfReconciliationName": "AppSolicitor",
+    "solStatementOfReconciliationFirm": "${orgname1}",
+    "statementOfReconciliationComments": null,
+    "solApplicationFeeInPounds": "${feeInPounds}",
+    "solPaymentHowToPay": "feePayByAccount",
+    "pbaNumbers": {
+      "value": {
+        "code": "c2413b40-3b13-449b-80e2-4b0c4f5987b0",
+        "label": "PBA0066906"
+      },
+      "list_items": [
+        {
+          "code": "c2413b40-3b13-449b-80e2-4b0c4f5987b0",
+          "label": "PBA0066906"
+        },
+        {
+          "code": "c5b008b1-10ab-4fc1-8b47-a53cc9d1ac57",
+          "label": "PBAVRQSJEP"
+        }
+      ]
+    },
+    "feeAccountReference": "PerfPayRef",
+    "applicationFeeOrderSummary": {
+      "PaymentReference": null,
+      "PaymentTotal": "${paymentTotal}",
+      "Fees": [
+        {
+          "value": {
+            "FeeCode": "${feeCode}",
+            "FeeAmount": "${feeAmount}",
+            "FeeDescription": "${feeDescription}",
+            "FeeVersion": "${feeVersion}"
+          }
+        }
+      ]
+    }
+  },
+  "event": {
+    "id": "solicitor-submit-application",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false
+}
