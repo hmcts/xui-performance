@@ -98,6 +98,7 @@ class XUI_Simulation extends Simulation {
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.exec(Solicitor_PRL.CreatePrivateLawCase)
+				.exec(Solicitor_PRL.TypeOfApplication)
 				.exec(Logout.XUILogout)
 		}
 
