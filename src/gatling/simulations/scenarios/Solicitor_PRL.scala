@@ -318,7 +318,8 @@ object Solicitor_PRL {
     .pause(MinThinkTime, MaxThinkTime)
 
 
-    val HearingUrgency =
+  val HearingUrgency =
+
     /*======================================================================================
     * Hearing Urgency
     ======================================================================================*/
@@ -326,13 +327,12 @@ object Solicitor_PRL {
     group("XUI_PRL_160_HearingUrgency") {
       exec(http("XUI_PRL_160_005_HearingUrgency")
         .get("/cases/case-details/${caseId}/trigger/hearingUrgency/hearingUrgency1")
-        .headers(Headers.commonHeader)
-        .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
+        .headers(Headers.navigationHeader)
         .header("x-xsrf-token", "${XSRFToken}"))
 
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
-
       .exec(Common.configurationui)
+
+      .exec(Common.configJson)
 
       .exec(Common.TsAndCs)
 
@@ -346,26 +346,50 @@ object Solicitor_PRL {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FhearingUrgency%2FhearingUrgency1"))
 
-      .exec(http("XUI_PRL_160_010_HearingUrgency")
+      .exec(http("XUI_PRL_160_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .header("x-xsrf-token", "${XSRFToken}"))
 
-        .exec(Common.profile)
+      .exec(Common.caseActivityGet)
 
-        .exec(http("XUI_PRL_160_015_HearingUrgency")
-          .get("/data/internal/cases/${caseId}/event-triggers/hearingUrgency?ignore-warning=false")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-          .header("x-xsrf-token", "${XSRFToken}"))
+      .exec(Common.profile)
 
-        .exec(Common.userDetails)
+      .exec(http("XUI_PRL_160_015_HearingUrgency")
+        .get("/data/internal/cases/${caseId}/event-triggers/hearingUrgency?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("hearingUrgency")))
 
-        .exec(Common.userDetails)
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
 
-        .exec(Common.userDetails)
+      .exec(Common.userDetails)
 
+      .exec(Common.userDetails)
+
+      .exec(Common.userDetails)
+
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Hearing Urgency Questions
+    ======================================================================================*/
+
+    .group("XUI_PRL_170_HearingUrgencyQuestions") {
+      exec(http("XUI_PRL_170_005_HearingUrgencyQuestions")
+        .post("/data/case-types/PRLAPPS/validate?pageId=hearingUrgency1")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/prl/PRLHearingUrgency.json"))
+        .check(substring("areRespondentsAwareOfProceedings")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FhearingUrgency%2Fsubmit"))
+
+      .exec(Common.userDetails)
     }
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -373,51 +397,34 @@ object Solicitor_PRL {
     * Hearing Urgency Check Your Answers
     ======================================================================================*/
 
-      .group("XUI_PRL_170_HearingUrgencyCheckYourAnswers") {
-        exec(http("XUI_PRL_170_005_HearingUrgencyCheckYourAnswers")
-          .post("/data/case-types/PRLAPPS/validate?pageId=hearingUrgency1")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-          .header("x-xsrf-token", "${XSRFToken}")
-          .body(ElFileBody("bodies/prl/PRLHearingUrgency.json"))
-          .check(substring("areRespondentsAwareOfProceedings")))
+    .group("XUI_PRL_180_HearingUrgencyCheckYourAnswers") {
+      exec(http("XUI_PRL_180_005_HearingUrgencyCheckYourAnswers")
+        .post("/data/cases/${caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/prl/PRLHearingUrgencyAnswers.json")))
 
-        .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FhearingUrgency%2Fsubmit"))
+      .exec(http("XUI_PRL_180_010_WorkAllocation")
+        .post("/workallocation/searchForCompletable")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"hearingUrgency","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
+        .check(substring("tasks")))
 
-        .exec(Common.userDetails)
-      }
-      .pause(MinThinkTime, MaxThinkTime)
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
+      .exec(http("XUI_PRL_180_015_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(jsonPath("$.events[?(@.event_id=='hearingUrgency')]"))
+        .check(jsonPath("$.state.id").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
-    /*======================================================================================
-    * Hearing Urgency Submit
-    ======================================================================================*/
-
-      .group("XUI_PRL_180_HearingUrgencySubmit") {
-        exec(http("XUI_PRL_180_005_HearingUrgencySubmit")
-          .post("/data/cases/${caseId}/events")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-          .header("x-xsrf-token", "${XSRFToken}")
-          .body(ElFileBody("bodies/prl/PRLHearingUrgencyAnswers.json")))
-
-        .exec(http("XUI_PRL_180_010_HearingUrgencySubmit")
-          .post("/workallocation/searchForCompletable")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/json")
-          .header("x-xsrf-token", "${XSRFToken}"))
-
-
-        .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
-
-          .exec(http("XUI_PRL_180_015_HearingUrgencySubmit")
-            .get("/data/internal/cases/${caseId}")
-            .headers(Headers.commonHeader)
-            .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-            .header("x-xsrf-token", "${XSRFToken}"))
-
-        .exec(Common.userDetails)
-      }
-      .pause(MinThinkTime, MaxThinkTime)
+      .exec(Common.userDetails)
+    }
+    .pause(MinThinkTime, MaxThinkTime)
 
 }
