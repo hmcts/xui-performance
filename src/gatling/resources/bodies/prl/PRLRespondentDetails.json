@@ -1,0 +1,120 @@
+{
+  "data": {
+    "respondents": [
+      {
+        "value": {
+          "firstName": "Jack",
+          "lastName": "John",
+          "previousName": null,
+          "isDateOfBirthKnown": "Yes",
+          "dateOfBirth": "2007-11-12",
+          "gender": "male",
+          "otherGender": null,
+          "isPlaceOfBirthKnown": "Yes",
+          "placeOfBirth": "London",
+          "isCurrentAddressKnown": "Yes",
+          "isAtAddressLessThan5YearsWithDontKnow": "yes",
+          "addressLivedLessThan5YearsDetails": "asdfg",
+          "canYouProvideEmailAddress": "Yes",
+          "email": "yay@gmail.com",
+          "canYouProvidePhoneNumber": "Yes",
+          "phoneNumber": "0123456789",
+          "doTheyHaveLegalRepresentation": "yes",
+          "representativeFirstName": "First",
+          "representativeLastName": "Name",
+          "solicitorEmail": "Solicitor@gmail.com",
+          "dxNumber": null,
+          "sendSignUpLink": null,
+          "isDateOfBirthUnknown": null,
+          "isAddressUnknown": null,
+          "isAddressConfidential": null,
+          "isAtAddressLessThan5Years": null,
+          "isEmailAddressConfidential": null,
+          "landline": null,
+          "isPhoneNumberConfidential": null,
+          "relationshipToChildren": null,
+          "solicitorReference": null,
+          "solicitorTelephone": null,
+          "respondentLivedWithApplicant": null,
+          "address": {
+            "AddressLine1": "8 Millwood Road",
+            "AddressLine2": "",
+            "AddressLine3": "",
+            "PostTown": "Hounslow",
+            "County": "",
+            "PostCode": "TW3 2HH",
+            "Country": "United Kingdom"
+          },
+          "solicitorOrg": {
+            "OrganisationID": "S46F334",
+            "OrganisationName": "YAyCkCHEPG"
+          }
+        },
+        "id": null
+      }
+    ]
+  },
+  "event": {
+    "id": "respondentsDetails",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "respondents": [
+      {
+        "value": {
+          "firstName": "Jack",
+          "lastName": "John",
+          "previousName": null,
+          "isDateOfBirthKnown": "Yes",
+          "dateOfBirth": "2007-11-12",
+          "gender": "male",
+          "otherGender": null,
+          "isPlaceOfBirthKnown": "Yes",
+          "placeOfBirth": "London",
+          "isCurrentAddressKnown": "Yes",
+          "isAtAddressLessThan5YearsWithDontKnow": "yes",
+          "addressLivedLessThan5YearsDetails": "asdfg",
+          "canYouProvideEmailAddress": "Yes",
+          "email": "yay@gmail.com",
+          "canYouProvidePhoneNumber": "Yes",
+          "phoneNumber": "0123456789",
+          "doTheyHaveLegalRepresentation": "yes",
+          "representativeFirstName": "First",
+          "representativeLastName": "Name",
+          "solicitorEmail": "Solicitor@gmail.com",
+          "dxNumber": null,
+          "sendSignUpLink": null,
+          "isDateOfBirthUnknown": null,
+          "isAddressUnknown": null,
+          "isAddressConfidential": null,
+          "isAtAddressLessThan5Years": null,
+          "isEmailAddressConfidential": null,
+          "landline": null,
+          "isPhoneNumberConfidential": null,
+          "relationshipToChildren": null,
+          "solicitorReference": null,
+          "solicitorTelephone": null,
+          "respondentLivedWithApplicant": null,
+          "address": {
+            "AddressLine1": "8 Millwood Road",
+            "AddressLine2": "",
+            "AddressLine3": "",
+            "PostTown": "Hounslow",
+            "County": "",
+            "PostCode": "TW3 2HH",
+            "Country": "United Kingdom"
+          },
+          "solicitorOrg": {
+            "OrganisationID": "S46F334",
+            "OrganisationName": "YAyCkCHEPG"
+          }
+        },
+        "id": null
+      }
+    ]
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false,
+  "case_reference": "${caseId}"
+}

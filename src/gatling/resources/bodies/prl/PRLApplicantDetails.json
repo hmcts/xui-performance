@@ -1,0 +1,250 @@
+{
+  "data": {
+    "applicants": [
+      {
+        "value": {
+          "firstName": "Tester",
+          "lastName": "1",
+          "previousName": null,
+          "dateOfBirth": "2020-11-12",
+          "gender": "male",
+          "placeOfBirth": "London",
+          "isAddressConfidential": "Yes",
+          "isAtAddressLessThan5Years": "No",
+          "canYouProvideEmailAddress": "Yes",
+          "email": "yay@gmail.com",
+          "isEmailAddressConfidential": "Yes",
+          "phoneNumber": "0123456789",
+          "isPhoneNumberConfidential": "Yes",
+          "representativeFirstName": "First",
+          "representativeLastName": "Last",
+          "solicitorEmail": "null@gmail.com",
+          "solicitorReference": "1234567890",
+          "dxNumber": "1234567890",
+          "isDateOfBirthUnknown": null,
+          "isAddressUnknown": null,
+          "landline": null,
+          "relationshipToChildren": null,
+          "isDateOfBirthKnown": null,
+          "isCurrentAddressKnown": null,
+          "canYouProvidePhoneNumber": null,
+          "isPlaceOfBirthKnown": null,
+          "isAtAddressLessThan5YearsWithDontKnow": null,
+          "doTheyHaveLegalRepresentation": null,
+          "sendSignUpLink": null,
+          "solicitorTelephone": null,
+          "respondentLivedWithApplicant": null,
+          "address": {
+            "AddressLine1": "8 Millwood Road",
+            "AddressLine2": null,
+            "AddressLine3": null,
+            "PostTown": "Hounslow",
+            "County": null,
+            "PostCode": "TW3 2HH",
+            "Country": "United Kingdom"
+          },
+          "solicitorOrg": {
+            "OrganisationID": "S46F334",
+            "OrganisationName": "YAyCkCHEPG"
+          },
+          "solicitorAddress": {
+            "AddressLine1": "8 Millwood Road",
+            "AddressLine2": null,
+            "AddressLine3": null,
+            "PostTown": "Hounslow",
+            "County": null,
+            "PostCode": "TW3 2HH",
+            "Country": "United Kingdom"
+          }
+        },
+        "id": "71dcf128-41b5-4460-96bb-b337a4a41fe9"
+      },
+      {
+        "value": {
+          "firstName": "Tester",
+          "lastName": "2",
+          "previousName": null,
+          "dateOfBirth": "2020-12-11",
+          "gender": "male",
+          "placeOfBirth": "London",
+          "isAddressConfidential": "Yes",
+          "isAtAddressLessThan5Years": "No",
+          "canYouProvideEmailAddress": "Yes",
+          "email": "fake@gmail.com",
+          "isEmailAddressConfidential": "Yes",
+          "phoneNumber": "0123456789",
+          "isPhoneNumberConfidential": "Yes",
+          "representativeFirstName": "First",
+          "representativeLastName": "Last",
+          "solicitorEmail": "test@gmail.com",
+          "solicitorReference": "1234567890",
+          "dxNumber": "1234567890",
+          "isDateOfBirthUnknown": null,
+          "isAddressUnknown": null,
+          "landline": null,
+          "relationshipToChildren": null,
+          "isDateOfBirthKnown": null,
+          "isCurrentAddressKnown": null,
+          "canYouProvidePhoneNumber": null,
+          "isPlaceOfBirthKnown": null,
+          "isAtAddressLessThan5YearsWithDontKnow": null,
+          "doTheyHaveLegalRepresentation": null,
+          "sendSignUpLink": null,
+          "solicitorTelephone": null,
+          "respondentLivedWithApplicant": null,
+          "address": {
+            "AddressLine1": "12 Millwood Road",
+            "AddressLine2": "",
+            "AddressLine3": "",
+            "PostTown": "Hounslow",
+            "County": "",
+            "PostCode": "TW3 2HH",
+            "Country": "United Kingdom"
+          },
+          "solicitorOrg": {
+            "OrganisationID": "B3MDEOM",
+            "OrganisationName": "KapilvUSCgBGivr8jWf3Urc71 Jain1vBKtHzkN8RsnrMP6iDz"
+          },
+          "solicitorAddress": {
+            "AddressLine1": "28 Millwood Road",
+            "AddressLine2": "",
+            "AddressLine3": "",
+            "PostTown": "Hounslow",
+            "County": "",
+            "PostCode": "TW3 2HH",
+            "Country": "United Kingdom"
+          }
+        },
+        "id": null
+      }
+    ]
+  },
+  "event": {
+    "id": "applicantsDetails",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "applicants": [
+      {
+        "value": {
+          "firstName": "Tester",
+          "lastName": "1",
+          "previousName": null,
+          "dateOfBirth": "2020-11-12",
+          "gender": "male",
+          "placeOfBirth": "London",
+          "isAddressConfidential": "Yes",
+          "isAtAddressLessThan5Years": "No",
+          "canYouProvideEmailAddress": "Yes",
+          "email": "yay@gmail.com",
+          "isEmailAddressConfidential": "Yes",
+          "phoneNumber": "0123456789",
+          "isPhoneNumberConfidential": "Yes",
+          "representativeFirstName": "First",
+          "representativeLastName": "Last",
+          "solicitorEmail": "null@gmail.com",
+          "solicitorReference": "1234567890",
+          "dxNumber": "1234567890",
+          "isDateOfBirthUnknown": null,
+          "isAddressUnknown": null,
+          "landline": null,
+          "relationshipToChildren": null,
+          "isDateOfBirthKnown": null,
+          "isCurrentAddressKnown": null,
+          "canYouProvidePhoneNumber": null,
+          "isPlaceOfBirthKnown": null,
+          "isAtAddressLessThan5YearsWithDontKnow": null,
+          "doTheyHaveLegalRepresentation": null,
+          "sendSignUpLink": null,
+          "solicitorTelephone": null,
+          "respondentLivedWithApplicant": null,
+          "address": {
+            "AddressLine1": "8 Millwood Road",
+            "AddressLine2": null,
+            "AddressLine3": null,
+            "PostTown": "Hounslow",
+            "County": null,
+            "PostCode": "TW3 2HH",
+            "Country": "United Kingdom"
+          },
+          "solicitorOrg": {
+            "OrganisationID": "S46F334",
+            "OrganisationName": "YAyCkCHEPG"
+          },
+          "solicitorAddress": {
+            "AddressLine1": "8 Millwood Road",
+            "AddressLine2": null,
+            "AddressLine3": null,
+            "PostTown": "Hounslow",
+            "County": null,
+            "PostCode": "TW3 2HH",
+            "Country": "United Kingdom"
+          }
+        },
+        "id": "71dcf128-41b5-4460-96bb-b337a4a41fe9"
+      },
+      {
+        "value": {
+          "firstName": "Tester",
+          "lastName": "2",
+          "previousName": null,
+          "dateOfBirth": "2020-12-11",
+          "gender": "male",
+          "placeOfBirth": "London",
+          "isAddressConfidential": "Yes",
+          "isAtAddressLessThan5Years": "No",
+          "canYouProvideEmailAddress": "Yes",
+          "email": "fake@gmail.com",
+          "isEmailAddressConfidential": "Yes",
+          "phoneNumber": "0123456789",
+          "isPhoneNumberConfidential": "Yes",
+          "representativeFirstName": "First",
+          "representativeLastName": "Last",
+          "solicitorEmail": "test@gmail.com",
+          "solicitorReference": "1234567890",
+          "dxNumber": "1234567890",
+          "isDateOfBirthUnknown": null,
+          "isAddressUnknown": null,
+          "landline": null,
+          "relationshipToChildren": null,
+          "isDateOfBirthKnown": null,
+          "isCurrentAddressKnown": null,
+          "canYouProvidePhoneNumber": null,
+          "isPlaceOfBirthKnown": null,
+          "isAtAddressLessThan5YearsWithDontKnow": null,
+          "doTheyHaveLegalRepresentation": null,
+          "sendSignUpLink": null,
+          "solicitorTelephone": null,
+          "respondentLivedWithApplicant": null,
+          "address": {
+            "AddressLine1": "12 Millwood Road",
+            "AddressLine2": "",
+            "AddressLine3": "",
+            "PostTown": "Hounslow",
+            "County": "",
+            "PostCode": "TW3 2HH",
+            "Country": "United Kingdom"
+          },
+          "solicitorOrg": {
+            "OrganisationID": "B3MDEOM",
+            "OrganisationName": "KapilvUSCgBGivr8jWf3Urc71 Jain1vBKtHzkN8RsnrMP6iDz"
+          },
+          "solicitorAddress": {
+            "AddressLine1": "28 Millwood Road",
+            "AddressLine2": "",
+            "AddressLine3": "",
+            "PostTown": "Hounslow",
+            "County": "",
+            "PostCode": "TW3 2HH",
+            "Country": "United Kingdom"
+          }
+        },
+        "id": null
+      }
+    ]
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false,
+  "case_reference": "${caseId}"
+}
