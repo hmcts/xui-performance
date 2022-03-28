@@ -100,6 +100,13 @@ class XUI_Simulation extends Simulation {
 				.exec(Solicitor_PRL.CreatePrivateLawCase)
 				.exec(Solicitor_PRL.TypeOfApplication)
 				.exec(Solicitor_PRL.HearingUrgency)
+				.exec(Solicitor_PRL.ApplicantDetails)
+				.exec(Solicitor_PRL.ChildDetails)
+				.exec(Solicitor_PRL.RespondentDetails)
+				.exec(Solicitor_PRL.MIAM)
+				.exec(Solicitor_PRL.AllegationsOfHarm)
+				.exec(Solicitor_PRL.ViewPdfApplication)
+				.exec(Solicitor_PRL.SubmitAndPay)
 				.exec(Logout.XUILogout)
 		}
 
