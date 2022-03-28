@@ -168,7 +168,7 @@ object Solicitor_PRL_FL401 {
 
     group("XUI_PRL_FL401_090_CreateTypeOfApplicationEvent") {
       exec(http("XUI_PRL_FL401_090_005_TypeOfApplicationTrigger")
-        .get("/data/internal/cases/${caseId}/trigger/fl401TypeOfApplication/fl401TypeOfApplication1")
+        .get("/cases/case-details/${caseId}/trigger/fl401TypeOfApplication/fl401TypeOfApplication1")
         .headers(Headers.navigationHeader)
         .check(substring("Manage cases")))
 
@@ -293,7 +293,7 @@ object Solicitor_PRL_FL401 {
 
     group("XUI_PRL_FL401_130_CreateWithoutNoticeOrderEvent") {
       exec(http("XUI_PRL_FL401_130_005_WithoutNoticeOrderTrigger")
-        .get("/data/internal/cases/${caseId}/trigger/withoutNoticeOrderDetails/withoutNoticeOrderDetails1")
+        .get("/cases/case-details/${caseId}/trigger/withoutNoticeOrderDetails/withoutNoticeOrderDetails1")
         .headers(Headers.navigationHeader)
         .check(substring("Manage cases")))
 
@@ -464,7 +464,7 @@ object Solicitor_PRL_FL401 {
 
     group("XUI_PRL_FL401_190_CreateApplicantDetailsEvent") {
       exec(http("XUI_PRL_FL401_190_005_ApplicantDetailsTrigger")
-        .get("/data/internal/cases/${caseId}/trigger/applicantsDetails/applicantsDetails1")
+        .get("/cases/case-details/${caseId}/trigger/applicantsDetails/applicantsDetails1")
         .headers(Headers.navigationHeader)
         .check(substring("Manage cases")))
 
@@ -588,7 +588,7 @@ object Solicitor_PRL_FL401 {
 
     group("XUI_PRL_FL401_220_CreateRespondentDetailsEvent") {
       exec(http("XUI_PRL_FL401_220_005_RespondentDetailsTrigger")
-        .get("/data/internal/cases/${caseId}/trigger/respondentsDetails/respondentsDetails1")
+        .get("/cases/case-details/${caseId}/trigger/respondentsDetails/respondentsDetails1")
         .headers(Headers.navigationHeader)
         .check(substring("Manage cases")))
 
@@ -710,7 +710,7 @@ object Solicitor_PRL_FL401 {
 
     group("XUI_PRL_FL401_250_CreateApplicantsFamilyEvent") {
       exec(http("XUI_PRL_FL401_250_005_CreateApplicantsFamilyTrigger")
-        .get("/data/internal/cases/${caseId}/trigger/fl401ApplicantFamilyDetails/fl401ApplicantFamilyDetails1")
+        .get("/cases/case-details/${caseId}/trigger/fl401ApplicantFamilyDetails/fl401ApplicantFamilyDetails1")
         .headers(Headers.navigationHeader)
         .check(substring("Manage cases")))
 
@@ -827,7 +827,7 @@ object Solicitor_PRL_FL401 {
 
     group("XUI_PRL_FL401_280_CreateRelationshipEvent") {
       exec(http("XUI_PRL_FL401_280_005_CreateRelationshipTrigger")
-        .get("/data/internal/cases/${caseId}/trigger/respondentRelationship/respondentRelationship1")
+        .get("/cases/case-details/${caseId}/trigger/respondentRelationship/respondentRelationship1")
         .headers(Headers.navigationHeader)
         .check(substring("Manage cases")))
 
@@ -958,7 +958,7 @@ object Solicitor_PRL_FL401 {
 
     group("XUI_PRL_FL401_320_CreateBehaviourEvent") {
       exec(http("XUI_PRL_FL401_320_005_CreateBehaviourTrigger")
-        .get("/data/internal/cases/${caseId}/trigger/respondentBehaviour/respondentBehaviour1")
+        .get("/cases/case-details/${caseId}/trigger/respondentBehaviour/respondentBehaviour1")
         .headers(Headers.navigationHeader)
         .check(substring("Manage cases")))
 
@@ -1069,7 +1069,7 @@ object Solicitor_PRL_FL401 {
 
     group("XUI_PRL_FL401_350_CreateTheHomeEvent") {
       exec(http("XUI_PRL_FL401_350_005_CreateTheHomeTrigger")
-        .get("/data/internal/cases/${caseId}/trigger/fl401Home/fl401Home1")
+        .get("/cases/case-details/${caseId}/trigger/fl401Home/fl401Home1")
         .headers(Headers.navigationHeader)
         .check(substring("Manage cases")))
 
@@ -1182,7 +1182,7 @@ object Solicitor_PRL_FL401 {
 
     group("XUI_PRL_FL401_380_CreateUploadDocumentsEvent") {
       exec(http("XUI_PRL_FL401_380_005_CreateUploadDocumentsTrigger")
-        .get("/data/internal/cases/${caseId}/trigger/fl401UploadDocuments/fl401UploadDocuments1")
+        .get("/cases/case-details/${caseId}/trigger/fl401UploadDocuments/fl401UploadDocuments1")
         .headers(Headers.navigationHeader)
         .check(substring("Manage cases")))
 
@@ -1314,7 +1314,7 @@ object Solicitor_PRL_FL401 {
 
     group("XUI_PRL_FL401_420_CreateViewPDFEvent") {
       exec(http("XUI_PRL_FL401_420_005_CreateViewPDFTrigger")
-        .get("/data/internal/cases/${caseId}/trigger/viewPdfDocument/viewPdfDocument1")
+        .get("/cases/case-details/${caseId}/trigger/viewPdfDocument/viewPdfDocument1")
         .headers(Headers.navigationHeader)
         .check(substring("Manage cases")))
 
@@ -1428,7 +1428,7 @@ object Solicitor_PRL_FL401 {
 
     group("XUI_PRL_FL401_450_CreateSOTEvent") {
       exec(http("XUI_PRL_FL401_450_005_CreateSOTTrigger")
-        .get("/data/internal/cases/${caseId}/trigger/fl401StatementOfTruthAndSubmit/fl401StatementOfTruthAndSubmit1")
+        .get("/cases/case-details/${caseId}/trigger/fl401StatementOfTruthAndSubmit/fl401StatementOfTruthAndSubmit1")
         .headers(Headers.navigationHeader)
         .check(substring("Manage cases")))
 
