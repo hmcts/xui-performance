@@ -4,11 +4,13 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import scenarios._
 import utils._
+
 import scala.io.Source
 import io.gatling.core.controller.inject.open.OpenInjectionStep
 import io.gatling.core.pause.PauseType
 
 import scala.concurrent.duration._
+import scala.util.Random
 
 class XUI_Simulation extends Simulation {
 
@@ -26,6 +28,8 @@ class XUI_Simulation extends Simulation {
 	val nfdSoleLabelsPopulated = Source.fromResource("bodies/nfd/labels/soleLabelsPopulated.txt").mkString
 	val nfdJointLabelsInitialised = Source.fromResource("bodies/nfd/labels/jointLabelsInitialised.txt").mkString
 	val nfdJointLabelsPopulated = Source.fromResource("bodies/nfd/labels/jointLabelsPopulated.txt").mkString
+
+	val randomFeeder = Iterator.continually(Map("prl-percentage" -> Random.nextInt(100)))
 
 	/* TEST TYPE DEFINITION */
 	/* pipeline = nightly pipeline against the AAT environment (see the Jenkins_nightly file) */
@@ -56,6 +60,9 @@ class XUI_Simulation extends Simulation {
 	val nfdJointTargetPerHour:Double = 119
 	val frTargetPerHour:Double = 98
 	val caseworkerTargetPerHour:Double = 900
+
+	//This determines the percentage split of PRL journeys, by C100 or FL401
+	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s)
 
 
 	val rampUpDurationMins = 5
@@ -97,16 +104,34 @@ class XUI_Simulation extends Simulation {
 					.set("caseType", "PRLAPPS"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
-				.exec(Solicitor_PRL.CreatePrivateLawCase)
-				.exec(Solicitor_PRL.TypeOfApplication)
-				.exec(Solicitor_PRL.HearingUrgency)
-				.exec(Solicitor_PRL.ApplicantDetails)
-				.exec(Solicitor_PRL.ChildDetails)
-				.exec(Solicitor_PRL.RespondentDetails)
-				.exec(Solicitor_PRL.MIAM)
-				.exec(Solicitor_PRL.AllegationsOfHarm)
-				.exec(Solicitor_PRL.ViewPdfApplication)
-				.exec(Solicitor_PRL.SubmitAndPay)
+				.feed(randomFeeder)
+				.doIfOrElse(session => session("prl-percentage").as[Int] < prlC100Percentage) {
+					//C100 Journey
+					exec(Solicitor_PRL_C100.CreatePrivateLawCase)
+					.exec(Solicitor_PRL_C100.TypeOfApplication)
+					.exec(Solicitor_PRL_C100.HearingUrgency)
+					.exec(Solicitor_PRL_C100.ApplicantDetails)
+					.exec(Solicitor_PRL_C100.ChildDetails)
+					.exec(Solicitor_PRL_C100.RespondentDetails)
+					.exec(Solicitor_PRL_C100.MIAM)
+					.exec(Solicitor_PRL_C100.AllegationsOfHarm)
+					.exec(Solicitor_PRL_C100.ViewPdfApplication)
+					.exec(Solicitor_PRL_C100.SubmitAndPay)
+				} {
+					//FL401 Journey
+					exec(Solicitor_PRL_FL401.CreatePrivateLawCase)
+					.exec(Solicitor_PRL_FL401.TypeOfApplication)
+					.exec(Solicitor_PRL_FL401.WithoutNoticeOrder)
+					.exec(Solicitor_PRL_FL401.ApplicantDetails)
+					.exec(Solicitor_PRL_FL401.RespondentDetails)
+					.exec(Solicitor_PRL_FL401.ApplicantsFamily)
+					.exec(Solicitor_PRL_FL401.Relationship)
+					.exec(Solicitor_PRL_FL401.Behaviour)
+					.exec(Solicitor_PRL_FL401.TheHome)
+					.exec(Solicitor_PRL_FL401.UploadDocuments)
+					.exec(Solicitor_PRL_FL401.ViewPDF)
+					.exec(Solicitor_PRL_FL401.StatementOfTruth)
+				}
 				.exec(Logout.XUILogout)
 		}
 
