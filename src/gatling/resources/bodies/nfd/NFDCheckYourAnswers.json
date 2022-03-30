@@ -4,8 +4,8 @@
     "isJudicialSeparation": "No",
     "coApplicant1IsDrafted": "No",
     "coApplicant1IsSubmitted": "No",
-    "coApplicant2IsDrafted": null,
-    "coApplicant2IsSubmitted": null,
+    "coApplicant2IsDrafted": "No",
+    "coApplicant2IsSubmitted": "No",
     "divorceOrDissolution": "divorce",
     "applicationType": "${nfdCaseType}Application",
     "applicant1SolicitorName": "AppSolicitor",
@@ -29,6 +29,9 @@
     "applicant1MiddleName": null,
     "applicant1LastName": "${applicant1LastName}",
     "applicant1NameDifferentToMarriageCertificate": "No",
+    "applicant1NameChangedHow": [],
+    "applicant1NameChangedHowOtherDetails": null,
+    "applicant1Gender": null,
     "divorceWho": "wife",
     "marriageFormationType": "oppositeSexCouple",
     "applicant1Email": "applicant1@perftest12345.com",
@@ -46,7 +49,9 @@
     "applicant2FirstName": "${applicant2FirstName}",
     "applicant2MiddleName": null,
     "applicant2LastName": "${applicant2LastName}",
-    "applicant2NameDifferentToMarriageCertificate": "No",
+    "applicant2NameDifferentToMarriageCertificate": null,
+    "applicant2NameChangedHow": [],
+    "applicant2NameChangedHowOtherDetails": null,
     "applicant2SolicitorRepresented": "Yes",
     "applicant2SolicitorName": "RespSolicitor",
     "applicant2SolicitorReference": "RespondentSolRef",
@@ -60,7 +65,8 @@
       "Organisation": {
         "OrganisationID": "${orgref2}",
         "OrganisationName": "${orgname2}"
-      }
+      },
+      "PreviousOrganisations": []
     },
     "applicant2Email": "applicant2@perftest12345.com",
     "applicant2Address": {
@@ -76,11 +82,15 @@
     "marriageApplicant1Name": "${applicant1FirstName} ${applicant1LastName}",
     "marriageApplicant2Name": "${applicant2FirstName} ${applicant2LastName}",
     "marriageMarriedInUk": "Yes",
+    "marriagePlaceOfMarriage": null,
+    "marriageCountryOfMarriage": null,
     "jurisdictionConnections": [
       "F"
     ],
     "applicant1LegalProceedings": "No",
+    "applicant1LegalProceedingsDetails": null,
     "applicant1FinancialOrder": "No",
+    "applicant1FinancialOrdersFor": [],
     "applicant1DocumentsUploaded": [
       {
         "value": {

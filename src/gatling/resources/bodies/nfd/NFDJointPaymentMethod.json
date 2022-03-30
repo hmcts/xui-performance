@@ -9,15 +9,25 @@
   },
   "event_data": {
     "applicant2SolicitorRepresented": "Yes",
-    "applicant2SolicitorAnswersLink": null,
+    "applicant2SolicitorAnswersLink": {
+      "document_url": "${app2AnswersUrl}",
+      "document_filename": "${app2AnswersFilename}",
+      "document_binary_url": "${app2AnswersUrl}/binary"
+    },
     "applicationType": "jointApplication",
     "divorceOrDissolution": "divorce",
     "solUrgentCase": "No",
     "applicant1FinancialOrder": "No",
     "solStatementOfReconciliationCertify": "Yes",
     "solStatementOfReconciliationDiscussed": "Yes",
-    "applicant1PrayerHasBeenGivenCheckbox": [
-      "Yes"
+    "applicant1PrayerDissolveDivorce": [
+      "dissolveDivorce"
+    ],
+    "applicant1PrayerFinancialOrdersThemselves": [
+      "financialOrdersThemselves"
+    ],
+    "applicant1PrayerFinancialOrdersChild": [
+      "financialOrdersChild"
     ],
     "applicant1StatementOfTruth": "Yes",
     "solSignStatementOfTruth": "Yes",
