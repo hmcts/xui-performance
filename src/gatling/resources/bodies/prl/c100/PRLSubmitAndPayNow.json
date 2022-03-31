@@ -7,7 +7,7 @@
     },
     "applicantSolicitorEmailAddress": "fprl_caseworker_solicitor@mailinator.com",
     "caseworkerEmailAddress": "prl_caseworker_solicitor@mailinator.com",
-    "solicitorName": "Henry Harper",
+    "solicitorName": "${C100SolicitorName}",
     "payAgreeStatement": [
       "agree"
     ],
@@ -21,7 +21,7 @@
       "document_hash": "${DocumentHash}"
     },
     "isWelshDocGen": null,
-    "paymentServiceRequestReferenceNumber": "2022-1648223081249"
+    "paymentServiceRequestReferenceNumber": "${paymentReferenceNumber}"
   },
   "event": {
     "id": "submitAndPay",

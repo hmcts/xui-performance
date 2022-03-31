@@ -23,7 +23,34 @@ object Solicitor_PRL_C100 {
     ======================================================================================*/
 
     group("XUI_PRL_C100_C100_030_CreateCase") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-filter"))
+
+      exec(_.setAll(
+        "C100ApplicantFirstName1" -> ("App" + Common.randomString(5)),
+        "C100ApplicantLastName1" -> ("Test" + Common.randomString(5)),
+        "C100ApplicantFirstName2" -> ("App" + Common.randomString(5)),
+        "C100ApplicantLastName2" -> ("Test" + Common.randomString(5)),
+        "C100RespondentFirstName" -> ("Resp" + Common.randomString(5)),
+        "C100RespondentLastName" -> ("Test" + Common.randomString(5)),
+        "C100ChildFirstName" -> ("Child" + Common.randomString(5)),
+        "C100ChildLastName" -> ("Test" + Common.randomString(5)),
+        "C100RepresentativeFirstName" -> ("Rep" + Common.randomString(5)),
+        "C100RepresentativeLastName" -> ("Test" + Common.randomString(5)),
+        "C100SoleTraderName" -> ("Sole" + Common.randomString(5)),
+        "C100SolicitorName" -> ("Soli" + Common.randomString(5)),
+        "C100AppDobDay" -> Common.getDay(),
+        "C100AppDobMonth" -> Common.getMonth(),
+        "C100AppDobYear" -> Common.getDobYear(),
+        "C100AppDobDay2" -> Common.getDay(),
+        "C100AppDobMonth2" -> Common.getMonth(),
+        "C100AppDobYear2" -> Common.getDobYear(),
+        "C100ChildAppDobDay" -> Common.getDay(),
+        "C100ChildAppDobMonth" -> Common.getMonth(),
+        "C100ChildDobYear" -> Common.getDobYearChild(),
+        "C100RespDobDay" -> Common.getDay(),
+        "C100RespDobMonth" -> Common.getMonth(),
+        "C100RespDobYear" -> Common.getDobYear()))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-filter"))
 
       .exec(http("XUI_Divorce_030_CreateCase")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
@@ -466,11 +493,11 @@ object Solicitor_PRL_C100 {
       .exec(Common.profile)
 
       .exec(http("XUI_PRL_C100_190_010_ApplicantDetailsEvent")
-        .get("/data/internal/cases/${caseId}/event-triggers/hearingUrgency?ignore-warning=false")
+        .get("/data/internal/cases/${caseId}/event-triggers/applicantsDetails?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-        .check(jsonPath("$.event_token").saveAs("event_token")))
-        //.check(jsonPath("$.id").is("Applicant")))
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("applicantsDetails")))
 
       .exec(Common.userDetails)
     }
@@ -485,31 +512,7 @@ object Solicitor_PRL_C100 {
 
       exec(Common.caseShareOrgs)
 
-      .exec(http("XUI_PRL_C100_210_005_Postcode1")
-        .get("/api/addresses?postcode=TW32HH")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "${XSRFToken}"))
-
-      .exec(http("XUI_PRL_C100_210_010_Postcode2")
-        .get("/api/addresses?postcode=TW32HH")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "${XSRFToken}"))
-
-      .exec(Common.caseShareOrgs)
-
-      .exec(http("XUI_PRL_C100_210_010_Postcode3")
-        .get("/api/addresses?postcode=TW32HH")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "${XSRFToken}"))
-
-      .exec(http("XUI_PRL_C100_210_010_Postcode4")
-        .get("/api/addresses?postcode=TW32HH")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "${XSRFToken}"))
+      .exec(Common.postcodeLookup)
 
       .exec(http("XUI_PRL_C100_210_015_ApplicantDetailValidate")
         .post("/data/case-types/PRLAPPS/validate?pageId=applicantsDetails1")
@@ -534,7 +537,10 @@ object Solicitor_PRL_C100 {
     ======================================================================================*/
 
     .group("XUI_PRL_C100_220_ApplicantDetailsCheckYourAnswers") {
-      exec(http("XUI_PRL_C100_220_005_ApplicantDetailsCheckYourAnswers")
+
+      exec(Common.postcodeLookup)
+
+      .exec(http("XUI_PRL_C100_220_005_ApplicantDetailsCheckYourAnswers")
         .post("/data/cases/${caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -611,7 +617,8 @@ object Solicitor_PRL_C100 {
         .get("/data/internal/cases/${caseId}/event-triggers/childDetails?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-        .check(jsonPath("$.event_token").saveAs("event_token")))
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("childDetails")))
 
       .exec(Common.userDetails)
 
@@ -643,7 +650,10 @@ object Solicitor_PRL_C100 {
     ======================================================================================*/
 
     .group("XUI_PRL_C100_250_ChildDetailsAdditionalDetails") {
-      exec(http("XUI_PRL_C100_250_005_ChildDetailsAdditionalDetails")
+
+      exec(Common.postcodeLookup)
+
+      .exec(http("XUI_PRL_C100_250_005_ChildDetailsAdditionalDetails")
         .post("/data/case-types/PRLAPPS/validate?pageId=childDetails2")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -701,7 +711,9 @@ object Solicitor_PRL_C100 {
     ======================================================================================*/
 
     group("XUI_PRL_C100_270_RespondentDetailsRedirect") {
-      exec(http("XUI_PRL_C100_270_005_RespondentDetailsRedirect")
+      exec(Common.postcodeLookup)
+
+      .exec(http("XUI_PRL_C100_270_005_RespondentDetailsRedirect")
         .get("/cases/case-details/${caseId}/trigger/respondentsDetails/respondentsDetails1")
         .headers(Headers.navigationHeader)
         .header("x-xsrf-token", "${XSRFToken}"))
@@ -751,6 +763,8 @@ object Solicitor_PRL_C100 {
     .group("XUI_PRL_C100_280_RespondentDetailsAddNew") {
 
       exec(Common.caseShareOrgs)
+
+      .exec(Common.postcodeLookup)
 
       .exec(http("XUI_PRL_C100_280_005_RespondentDetailsAddNew")
         .post("/data/case-types/PRLAPPS/validate?pageId=respondentsDetails1")
@@ -1304,7 +1318,8 @@ object Solicitor_PRL_C100 {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100/PRLSubmitAndPayConfidentialityStatement.json")))
+        .body(ElFileBody("bodies/prl/c100/PRLSubmitAndPayConfidentialityStatement.json"))
+        .check(jsonPath("$.data.paymentServiceRequestReferenceNumber").saveAs("paymentReferenceNumber")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAndPay%2FsubmitAndPay2"))
 
