@@ -503,8 +503,6 @@ object Solicitor_PRL_FL401 {
         .check(jsonPath("$.id").is("applicantsDetails")))
 
       .exec(Common.userDetails)
-      .exec(Common.userDetails)
-      .exec(Common.userDetails)
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FapplicantsDetails%2FapplicantsDetails2"))
 
