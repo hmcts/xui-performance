@@ -1,6 +1,6 @@
 {
   "data": {
-    "applicantCaseName": "PerfTest Case"
+    "applicantCaseName": "PerfTest C100 Case"
   },
   "event": {
     "id": "solicitorCreate",
@@ -12,7 +12,7 @@
     "c100ConfidentialityStatementDisclaimer": [
       "confidentialityStatementUnderstood"
     ],
-    "applicantCaseName": "PerfTest Case"
+    "applicantCaseName": "PerfTest C100 Case"
   },
   "event_token": "${event_token}",
   "ignore_warning": false

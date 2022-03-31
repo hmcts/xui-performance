@@ -62,7 +62,7 @@ class XUI_Simulation extends Simulation {
 	val caseworkerTargetPerHour:Double = 900
 
 	//This determines the percentage split of PRL journeys, by C100 or FL401
-	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s)
+	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
 
 
 	val rampUpDurationMins = 5
@@ -111,12 +111,15 @@ class XUI_Simulation extends Simulation {
 					.exec(Solicitor_PRL_C100.TypeOfApplication)
 					.exec(Solicitor_PRL_C100.HearingUrgency)
 					.exec(Solicitor_PRL_C100.ApplicantDetails)
+						/*
 					.exec(Solicitor_PRL_C100.ChildDetails)
 					.exec(Solicitor_PRL_C100.RespondentDetails)
 					.exec(Solicitor_PRL_C100.MIAM)
 					.exec(Solicitor_PRL_C100.AllegationsOfHarm)
 					.exec(Solicitor_PRL_C100.ViewPdfApplication)
 					.exec(Solicitor_PRL_C100.SubmitAndPay)
+
+						 */
 				} {
 					//FL401 Journey
 					exec(Solicitor_PRL_FL401.CreatePrivateLawCase)
