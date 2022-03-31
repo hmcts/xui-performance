@@ -3,11 +3,11 @@
     "respondents": [
       {
         "value": {
-          "firstName": "Jack",
-          "lastName": "John",
+          "firstName": "${C100RespondentFirstName}",
+          "lastName": "${C100RespondentLastName}",
           "previousName": null,
           "isDateOfBirthKnown": "Yes",
-          "dateOfBirth": "2007-11-12",
+          "dateOfBirth": "${C100RespDobYear}-${C100RespDobMonth}-${C100RespDobDay}",
           "gender": "male",
           "otherGender": null,
           "isPlaceOfBirthKnown": "Yes",
@@ -16,7 +16,7 @@
           "isAtAddressLessThan5YearsWithDontKnow": "yes",
           "addressLivedLessThan5YearsDetails": "asdfg",
           "canYouProvideEmailAddress": "Yes",
-          "email": "yay@gmail.com",
+          "email": "test@gmail.com",
           "canYouProvidePhoneNumber": "Yes",
           "phoneNumber": "0123456789",
           "doTheyHaveLegalRepresentation": "yes",
@@ -37,17 +37,17 @@
           "solicitorTelephone": null,
           "respondentLivedWithApplicant": null,
           "address": {
-            "AddressLine1": "8 Millwood Road",
-            "AddressLine2": "",
+            "AddressLine1": "${addressLines(0)}",
+            "AddressLine2": "${addressLines(1)}",
             "AddressLine3": "",
-            "PostTown": "Hounslow",
+            "PostTown": "${addressLines(2)}",
             "County": "",
-            "PostCode": "TW3 2HH",
+            "PostCode": "${addressLines(3)}",
             "Country": "United Kingdom"
           },
           "solicitorOrg": {
-            "OrganisationID": "S46F334",
-            "OrganisationName": "YAyCkCHEPG"
+            "OrganisationID": "${orgref}",
+            "OrganisationName": "${orgname}"
           }
         },
         "id": null
@@ -63,11 +63,11 @@
     "respondents": [
       {
         "value": {
-          "firstName": "Jack",
-          "lastName": "John",
+          "firstName": "${C100RespondentFirstName}",
+          "lastName": "${C100RespondentLastName}",
           "previousName": null,
           "isDateOfBirthKnown": "Yes",
-          "dateOfBirth": "2007-11-12",
+          "dateOfBirth": "${C100RespDobYear}-${C100RespDobMonth}-${C100RespDobDay}",
           "gender": "male",
           "otherGender": null,
           "isPlaceOfBirthKnown": "Yes",
@@ -76,7 +76,7 @@
           "isAtAddressLessThan5YearsWithDontKnow": "yes",
           "addressLivedLessThan5YearsDetails": "asdfg",
           "canYouProvideEmailAddress": "Yes",
-          "email": "yay@gmail.com",
+          "email": "test@gmail.com",
           "canYouProvidePhoneNumber": "Yes",
           "phoneNumber": "0123456789",
           "doTheyHaveLegalRepresentation": "yes",
@@ -97,17 +97,17 @@
           "solicitorTelephone": null,
           "respondentLivedWithApplicant": null,
           "address": {
-            "AddressLine1": "8 Millwood Road",
-            "AddressLine2": "",
+            "AddressLine1": "${addressLines(0)}",
+            "AddressLine2": "${addressLines(1)}",
             "AddressLine3": "",
-            "PostTown": "Hounslow",
+            "PostTown": "${addressLines(2)}",
             "County": "",
-            "PostCode": "TW3 2HH",
+            "PostCode": "${addressLines(3)}",
             "Country": "United Kingdom"
           },
           "solicitorOrg": {
-            "OrganisationID": "S46F334",
-            "OrganisationName": "YAyCkCHEPG"
+            "OrganisationID": "${orgref}",
+            "OrganisationName": "${orgname}"
           }
         },
         "id": null

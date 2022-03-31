@@ -5,7 +5,7 @@
     "familyMediatorMiam": null,
     "mediatorRegistrationNumber": "123456",
     "familyMediatorServiceName": "Name",
-    "soleTraderName": "John",
+    "soleTraderName": "${C100SoleTraderName}",
     "miamCertificationDocumentUpload": {
       "document_url": "${DocumentURL}",
       "document_binary_url": "${DocumentURL}/binary",
