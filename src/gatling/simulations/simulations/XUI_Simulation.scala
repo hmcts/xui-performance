@@ -4,11 +4,13 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import scenarios._
 import utils._
+
 import scala.io.Source
 import io.gatling.core.controller.inject.open.OpenInjectionStep
 import io.gatling.core.pause.PauseType
 
 import scala.concurrent.duration._
+import scala.util.Random
 
 class XUI_Simulation extends Simulation {
 
@@ -19,12 +21,15 @@ class XUI_Simulation extends Simulation {
 	val UserFeederIAC = csv("UserDataIAC.csv").circular
 	val UserFeederNFD = csv("UserDataNFD.csv").circular
 	val UserFeederProbate = csv("UserDataProbate.csv").circular
+	val UserFeederPRL = csv("UserDataPRL.csv").circular
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
 	val nfdSoleLabelsPopulated = Source.fromResource("bodies/nfd/labels/soleLabelsPopulated.txt").mkString
 	val nfdJointLabelsInitialised = Source.fromResource("bodies/nfd/labels/jointLabelsInitialised.txt").mkString
 	val nfdJointLabelsPopulated = Source.fromResource("bodies/nfd/labels/jointLabelsPopulated.txt").mkString
+
+	val randomFeeder = Iterator.continually(Map("prl-percentage" -> Random.nextInt(100)))
 
 	/* TEST TYPE DEFINITION */
 	/* pipeline = nightly pipeline against the AAT environment (see the Jenkins_nightly file) */
@@ -46,6 +51,7 @@ class XUI_Simulation extends Simulation {
 	/* ******************************** */
 
 	/* PERFORMANCE TEST CONFIGURATION */
+	val prlTargetPerHour:Double = 100
 	val probateTargetPerHour:Double = 238
 	val iacTargetPerHour:Double = 20
 	val fplTargetPerHour:Double = 7
@@ -54,6 +60,9 @@ class XUI_Simulation extends Simulation {
 	val nfdJointTargetPerHour:Double = 119
 	val frTargetPerHour:Double = 98
 	val caseworkerTargetPerHour:Double = 900
+
+	//This determines the percentage split of PRL journeys, by C100 or FL401
+	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
 
 
 	val rampUpDurationMins = 5
@@ -84,6 +93,48 @@ class XUI_Simulation extends Simulation {
 		println(s"Test Environment: ${env}")
 		println(s"Debug Mode: ${debugMode}")
 	}
+
+	/*===============================================================================================
+	* XUI Solicitor Private Law Scenario
+ 	===============================================================================================*/
+	val PRLSolicitorScenario = scenario("***** Private Law Create Case *****")
+		.exitBlockOnFail {
+			feed(UserFeederPRL)
+				.exec(_.set("env", s"${env}")
+					.set("caseType", "PRLAPPS"))
+				.exec(Homepage.XUIHomePage)
+				.exec(Login.XUILogin)
+				.feed(randomFeeder)
+				.doIfOrElse(session => session("prl-percentage").as[Int] < prlC100Percentage) {
+					//C100 Journey
+					exec(Solicitor_PRL_C100.CreatePrivateLawCase)
+					.exec(Solicitor_PRL_C100.TypeOfApplication)
+					.exec(Solicitor_PRL_C100.HearingUrgency)
+					.exec(Solicitor_PRL_C100.ApplicantDetails)
+					.exec(Solicitor_PRL_C100.ChildDetails)
+					.exec(Solicitor_PRL_C100.RespondentDetails)
+					.exec(Solicitor_PRL_C100.MIAM)
+					.exec(Solicitor_PRL_C100.AllegationsOfHarm)
+					.exec(Solicitor_PRL_C100.ViewPdfApplication)
+					.exec(Solicitor_PRL_C100.SubmitAndPay)
+
+				} {
+					//FL401 Journey
+					exec(Solicitor_PRL_FL401.CreatePrivateLawCase)
+					.exec(Solicitor_PRL_FL401.TypeOfApplication)
+					.exec(Solicitor_PRL_FL401.WithoutNoticeOrder)
+					.exec(Solicitor_PRL_FL401.ApplicantDetails)
+					.exec(Solicitor_PRL_FL401.RespondentDetails)
+					.exec(Solicitor_PRL_FL401.ApplicantsFamily)
+					.exec(Solicitor_PRL_FL401.Relationship)
+					.exec(Solicitor_PRL_FL401.Behaviour)
+					.exec(Solicitor_PRL_FL401.TheHome)
+					.exec(Solicitor_PRL_FL401.UploadDocuments)
+					.exec(Solicitor_PRL_FL401.ViewPDF)
+					.exec(Solicitor_PRL_FL401.StatementOfTruth)
+				}
+				.exec(Logout.XUILogout)
+		}
 
 	/*===============================================================================================
 	* XUI Solicitor Probate Scenario
@@ -330,6 +381,7 @@ class XUI_Simulation extends Simulation {
 	}
 
 	setUp(
+		PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
