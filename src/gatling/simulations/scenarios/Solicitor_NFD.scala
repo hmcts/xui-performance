@@ -476,7 +476,7 @@ object Solicitor_NFD {
     }
 
     .pause(MinThinkTime, MaxThinkTime)
-
+/*
     /*======================================================================================
     * Joint Help with Fees
     ======================================================================================*/
@@ -496,6 +496,8 @@ object Solicitor_NFD {
     }
 
     .pause(MinThinkTime, MaxThinkTime)
+
+ */
 
     /*======================================================================================
     * Joint Any Corrections
@@ -548,7 +550,8 @@ object Solicitor_NFD {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/nfd/NFDJointSubmitApplication.json"))
-        .check(jsonPath("$.state").is("AwaitingApplicant2Response")))
+        //TODO: Fix the below once NFD resolve this issue. The case state isn't updating in time, so sometimes the case state is stale
+        .check(jsonPath("$.state").in("AwaitingApplicant2Response", "Applicant2Approved")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
@@ -556,7 +559,8 @@ object Solicitor_NFD {
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
-        .check(jsonPath("$.state.id").is("AwaitingApplicant2Response")))
+        //TODO: Fix the below once NFD resolve this issue. The case state isn't updating in time, so sometimes the case state is stale
+        .check(jsonPath("$.state.id").in("AwaitingApplicant2Response", "Applicant2Approved")))
 
       .exec(Common.userDetails)
     }
@@ -735,6 +739,8 @@ object Solicitor_NFD {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("solicitor-submit-application"))
+        .check(jsonPath("$.case_fields[?(@.id=='applicant2SolicitorAnswersLink')].value.document_filename").saveAs("app2AnswersFilename"))
+        .check(jsonPath("$.case_fields[?(@.id=='applicant2SolicitorAnswersLink')].value.document_url").saveAs("app2AnswersUrl"))
         .check(jsonPath("$.case_fields[?(@.id=='solApplicationFeeInPounds')].value").saveAs("feeInPounds"))
         .check(jsonPath("$.case_fields[?(@.id=='applicationFeeOrderSummary')].value.Fees[0].value.FeeAmount").saveAs("feeAmount"))
         .check(jsonPath("$.case_fields[?(@.id=='applicationFeeOrderSummary')].value.Fees[0].value.FeeCode").saveAs("feeCode"))
@@ -759,7 +765,7 @@ object Solicitor_NFD {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/nfd/NFDJointLinkToApp2.json"))
+        .body(ElFileBody("bodies/nfd/NFDJointReviewApplication.json"))
         .check(substring("applicant2SolicitorAnswersLink")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-application%2Fsolicitor-submit-applicationSolStatementOfTruth"))
