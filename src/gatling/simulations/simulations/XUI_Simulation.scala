@@ -111,7 +111,6 @@ class XUI_Simulation extends Simulation {
 					.exec(Solicitor_PRL_C100.TypeOfApplication)
 					.exec(Solicitor_PRL_C100.HearingUrgency)
 					.exec(Solicitor_PRL_C100.ApplicantDetails)
-						/*
 					.exec(Solicitor_PRL_C100.ChildDetails)
 					.exec(Solicitor_PRL_C100.RespondentDetails)
 					.exec(Solicitor_PRL_C100.MIAM)
@@ -119,7 +118,6 @@ class XUI_Simulation extends Simulation {
 					.exec(Solicitor_PRL_C100.ViewPdfApplication)
 					.exec(Solicitor_PRL_C100.SubmitAndPay)
 
-						 */
 				} {
 					//FL401 Journey
 					exec(Solicitor_PRL_FL401.CreatePrivateLawCase)
