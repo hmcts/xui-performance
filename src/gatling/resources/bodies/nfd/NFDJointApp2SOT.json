@@ -3,8 +3,14 @@
     "divorceOrDissolution": "divorce",
     "solStatementOfReconciliationCertify": "Yes",
     "solStatementOfReconciliationDiscussed": "Yes",
-    "applicant2PrayerHasBeenGivenCheckbox": [
-      "Yes"
+    "applicant2PrayerDissolveDivorce": [
+      "dissolveDivorce"
+    ],
+    "applicant2PrayerFinancialOrdersThemselves": [
+      "financialOrdersThemselves"
+    ],
+    "applicant2PrayerFinancialOrdersChild": [
+      "financialOrdersChild"
     ],
     "applicant2StatementOfTruth": "Yes",
     "applicant2SolSignStatementOfTruth": "Yes",
