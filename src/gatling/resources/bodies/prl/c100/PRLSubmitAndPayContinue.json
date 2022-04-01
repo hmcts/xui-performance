@@ -1,0 +1,35 @@
+{
+  "data": {
+    "paymentServiceRequestReferenceNumber": "2022-1648217231695"
+  },
+  "event": {
+    "id": "submitAndPay",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "confidentialityDisclaimer": {
+      "confidentialityChecksChecked": [
+        "confidentialityChecksChecked"
+      ]
+    },
+    "applicantSolicitorEmailAddress": "fprl_caseworker_solicitor@mailinator.com",
+    "caseworkerEmailAddress": "prl_caseworker_solicitor@mailinator.com",
+    "solicitorName": "${C100SolicitorName}",
+    "payAgreeStatement": [
+      "agree"
+    ],
+    "feeAmount": "232.00",
+    "submitAndPayDownloadApplicationWelshLink": null,
+    "submitAndPayDownloadApplicationLink": {
+      "document_url": "${DocumentUrl}",
+      "document_binary_url": "${DocumentUrl}/binary",
+      "document_filename": "${DocumentFileName}",
+      "document_hash": "${DocumentHash}"
+    },
+    "paymentServiceRequestReferenceNumber": "${paymentReferenceNumber}"
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false,
+  "case_reference": "${caseId}"
+}

@@ -405,7 +405,7 @@ object Solicitor_IAC {
         .check(jsonPath("$.id").saveAs("caseId"))
         .check(substring("appealStarted")))
 
-      .exec(http("XUI_IAC_240_005_WorkAllocation")
+      .exec(http("XUI_IAC_240_005_Allocation")
         .post("/workallocation/searchForCompletable")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
