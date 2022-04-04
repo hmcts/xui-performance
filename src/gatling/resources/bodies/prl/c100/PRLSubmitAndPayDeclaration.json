@@ -19,7 +19,7 @@
     "description": ""
   },
   "event_data": {
-    "applicantSolicitorEmailAddress": "perf-prl-aALof-user0@mailinator.com",
+    "applicantSolicitorEmailAddress": "${user}",
     "caseworkerEmailAddress": "C100applications@justice.gov.uk",
     "solicitorName": "Perftest Solicitor",
     "feeAmount": "£232.00",
