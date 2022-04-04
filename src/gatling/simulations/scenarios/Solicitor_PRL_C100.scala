@@ -81,7 +81,7 @@ object Solicitor_PRL_C100 {
 
       .exec(Common.userDetails)
 
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+  //    .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1211,7 +1211,8 @@ object Solicitor_PRL_C100 {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100/PRLViewPdfContinue.json")))
+        .body(ElFileBody("bodies/prl/c100/PRLViewPdfContinue.json"))
+        .check(substring("isEngDocGen")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FallegationsOfHarm%2Fsubmit"))
 
@@ -1291,17 +1292,20 @@ object Solicitor_PRL_C100 {
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-        .header("x-xsrf-token", "${XSRFToken}"))
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(jsonPath("$.state.id").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
       .exec(Common.profile)
 
       .exec(http("XUI_PRL_C100_430_015_SubmitAndPayRedirectEvent")
-        .get("/data/internal/cases/${caseId}/event-triggers/viewPdfDocument?ignore-warning=false")
+        .get("/data/internal/cases/${caseId}/event-triggers/submitAndPay?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-        .check(jsonPath("$.event_token").saveAs("event_token")))
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("submitAndPay")))
 
       .exec(Common.userDetails)
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -1319,9 +1323,32 @@ object Solicitor_PRL_C100 {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/prl/c100/PRLSubmitAndPayConfidentialityStatement.json"))
-        .check(jsonPath("$.data.paymentServiceRequestReferenceNumber").saveAs("paymentReferenceNumber")))
+        .check(jsonPath("$.data.paymentServiceRequestReferenceNumber").saveAs("paymentReferenceNumber"))
+        .check(substring("paymentServiceRequestReferenceNumber")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAndPay%2FsubmitAndPay2"))
+
+      .exec(Common.userDetails)
+
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Submit and Pay Declaration
+    ======================================================================================*/
+
+    .group("XUI_PRL_C100_445_SubmitAndPayDeclaration") {
+
+
+      exec(http("XUI_PRL_C100_445_005_SubmitAndPayDeclaration")
+        .post("/data/case-types/PRLAPPS/validate?pageId=submitAndPay2")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/prl/c100/PRLSubmitAndPayDeclaration.json"))
+        .check(substring("feeAmount")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAndPay%2FsubmitAndPay3"))
 
       .exec(Common.userDetails)
 
@@ -1335,13 +1362,13 @@ object Solicitor_PRL_C100 {
 
     .group("XUI_PRL_C100_450_SubmitAndPayContinue") {
 
-
       exec(http("XUI_PRL_C100_450_005_SubmitAndPayContinue")
         .post("/data/case-types/PRLAPPS/validate?pageId=submitAndPay3")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100/PRLSubmitAndPayContinue.json")))
+        .body(ElFileBody("bodies/prl/c100/PRLSubmitAndPayContinue.json"))
+        .check(substring("paymentServiceRequestReferenceNumber")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAndPay%2FsubmitAndPay2"))
 
@@ -1350,39 +1377,40 @@ object Solicitor_PRL_C100 {
     }
     .pause(MinThinkTime, MaxThinkTime)
 
-      /*======================================================================================
-        * Submit and Pay Now
-        ======================================================================================*/
+    /*======================================================================================
+    * Submit and Pay Now
+    ======================================================================================*/
 
-      .group("XUI_PRL_C100_460_SubmitAndPayNow") {
-        exec(http("XUI_PRL_C100_460_005_SubmitAndPayNow")
-          .post("/data/cases/${caseId}/events")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-          .header("x-xsrf-token", "${XSRFToken}")
-          .body(ElFileBody("bodies/prl/c100/PRLSubmitAndPayNow.json")))
+    .group("XUI_PRL_C100_460_SubmitAndPayNow") {
+      exec(http("XUI_PRL_C100_460_005_SubmitAndPayNow")
+        .post("/data/cases/${caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/prl/c100/PRLSubmitAndPayNow.json"))
+        .check(substring("created_on")))
 
-          .exec(http("XUI_PRL_C100_460_010_SubmitAndPayNowWorkAllocation")
-            .post("/workallocation/searchForCompletable")
-            .headers(Headers.commonHeader)
-            .header("accept", "application/json")
-            .header("x-xsrf-token", "${XSRFToken}")
-            .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"submitAndPay","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
-            .check(substring("tasks")))
+      .exec(http("XUI_PRL_C100_460_010_SubmitAndPayNowWorkAllocation")
+        .post("/workallocation/searchForCompletable")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"submitAndPay","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
+        .check(substring("tasks")))
 
-          .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-          .exec(http("XXUI_PRL_C100_460_015_SubmitAndPayNowViewCase")
-            .get("/data/internal/cases/${caseId}")
-            .headers(Headers.commonHeader)
-            .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-            .header("x-xsrf-token", "${XSRFToken}")
-            .check(jsonPath("$.events[?(@.event_id=='allegationsOfHarm')]"))
-            .check(jsonPath("$.state.id").is("SUBMITTED_NOT_PAID")))
+      .exec(http("XXUI_PRL_C100_460_015_SubmitAndPayNowViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .check(jsonPath("$.events[?(@.event_id=='submitAndPay')]"))
+        .check(jsonPath("$.state.id").is("SUBMITTED_NOT_PAID")))
 
-          .exec(Common.userDetails)
+      .exec(Common.userDetails)
 
-      }
-      .pause(MinThinkTime, MaxThinkTime)
+    }
+    .pause(MinThinkTime, MaxThinkTime)
 
 }
