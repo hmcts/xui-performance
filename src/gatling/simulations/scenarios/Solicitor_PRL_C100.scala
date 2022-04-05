@@ -183,7 +183,7 @@ object Solicitor_PRL_C100 {
 
     group("XUI_PRL_C100_090_CreateTypeOfApplicationEvent") {
 
-      exec(http("XUI_PRL_C100_090_005_CreateTypeOfApplicationEventLink")
+      exec(http("XUI_PRL_C100_090_005_CreateTypeOfApplicationViewCase")
         .get("/cases/case-details/${caseId}/trigger/selectApplicationType/selectApplicationType1")
         .headers(Headers.navigationHeader)
         .header("x-xsrf-token", "${XSRFToken}"))
@@ -230,7 +230,7 @@ object Solicitor_PRL_C100 {
     * Type of Application Profile
     ======================================================================================*/
 
-    .group("XUI_PRL_C100_95_TypeOfApplicationProfile") {
+    .group("XUI_PRL_C100_095_TypeOfApplicationProfile") {
       exec(Common.profile)
     }
     .pause(MinThinkTime, MaxThinkTime)
