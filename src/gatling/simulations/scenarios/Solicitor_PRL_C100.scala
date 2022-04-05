@@ -52,7 +52,7 @@ object Solicitor_PRL_C100 {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-filter"))
 
-      .exec(http("XUI_Divorce_030_CreateCase")
+      .exec(http("XUI_PRL_C100_030_CreateCase")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
@@ -182,20 +182,48 @@ object Solicitor_PRL_C100 {
     ======================================================================================*/
 
     group("XUI_PRL_C100_090_CreateTypeOfApplicationEvent") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FselectApplicationType"))
 
-      .exec(Common.profile)
+      exec(http("XUI_PRL_C100_160_005_HearingUrgencyRedirect")
+        .get("/cases/case-details/${caseId}/trigger/selectApplicationType/selectApplicationType1")
+        .headers(Headers.navigationHeader)
+        .header("x-xsrf-token", "${XSRFToken}"))
 
-      .exec(http("XUI_PRL_C100_090_005_CreateTypeOfApplicationEvent")
-        .get("/data/internal/cases/${caseId}/event-triggers/selectApplicationType?ignore-warning=false")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-        .check(jsonPath("$.event_token").saveAs("event_token"))
-        .check(jsonPath("$.id").is("selectApplicationType")))
+        .exec(Common.configurationui)
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FselectApplicationType%2FselectApplicationType1"))
+        .exec(Common.configJson)
 
-      .exec(Common.userDetails)
+        .exec(Common.TsAndCs)
+
+        .exec(Common.configUI)
+
+        .exec(Common.userDetails)
+
+        .exec(Common.isAuthenticated)
+
+        .exec(Common.monitoringTools)
+
+        .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FselectApplicationType%2FselectApplicationType1"))
+
+        .exec(http("XUI_PRL_C100_160_010_HearingUrgencyViewCase")
+          .get("/data/internal/cases/${caseId}")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
+          .header("x-xsrf-token", "${XSRFToken}"))
+
+        .exec(Common.caseActivityGet)
+
+        .exec(Common.profile)
+
+        .exec(http("XUI_PRL_C100_160_015_HearingUrgencyEvent")
+          .get("/data/internal/cases/${caseId}/event-triggers/selectApplicationType?ignore-warning=false")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+          .check(jsonPath("$.event_token").saveAs("event_token"))
+          .check(jsonPath("$.id").is("selectApplicationType")))
+
+        .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+
+        .exec(Common.userDetails)
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
