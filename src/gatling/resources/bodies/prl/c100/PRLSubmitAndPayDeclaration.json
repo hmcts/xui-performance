@@ -1,6 +1,6 @@
 {
   "data": {
-    "solicitorName": "Perftest Solicitor",
+    "solicitorName": "${C100SolicitorName}",
     "feeAmount": "£232.00",
     "submitAndPayDownloadApplicationWelshLink": null,
     "submitAndPayDownloadApplicationLink": {
@@ -20,8 +20,8 @@
   },
   "event_data": {
     "applicantSolicitorEmailAddress": "${user}",
-    "caseworkerEmailAddress": "C100applications@justice.gov.uk",
-    "solicitorName": "Perftest Solicitor",
+    "caseworkerEmailAddress": "prl_caseworker_solicitor@mailinator.com",
+    "solicitorName": "${C100SolicitorName}",
     "feeAmount": "£232.00",
     "submitAndPayDownloadApplicationWelshLink": null,
     "submitAndPayDownloadApplicationLink": {
