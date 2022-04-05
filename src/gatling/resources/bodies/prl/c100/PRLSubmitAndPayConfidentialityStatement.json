@@ -5,7 +5,7 @@
         "confidentialityChecksChecked"
       ]
     },
-    "applicantSolicitorEmailAddress": "fprl_caseworker_solicitor@mailinator.com",
+    "applicantSolicitorEmailAddress": "${user}",
     "caseworkerEmailAddress": "prl_caseworker_solicitor@mailinator.com"
   },
   "event": {
@@ -19,7 +19,7 @@
         "confidentialityChecksChecked"
       ]
     },
-    "applicantSolicitorEmailAddress": "fprl_caseworker_solicitor@mailinator.com",
+    "applicantSolicitorEmailAddress": "${user}",
     "caseworkerEmailAddress": "prl_caseworker_solicitor@mailinator.com"
   },
   "event_token": "${event_token}",
