@@ -190,7 +190,6 @@ object Solicitor_PRL_FL401 {
 
       .exec(Common.caseActivityGet)
 
-      .exec(Common.profile)
 
       .exec(http("XUI_PRL_FL401_090_010_CreateTypeOfApplicationEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/fl401TypeOfApplication?ignore-warning=false")
@@ -204,6 +203,16 @@ object Solicitor_PRL_FL401 {
       .exec(Common.userDetails)
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Type Of Application Profile
+    ======================================================================================*/
+
+    .group("XUI_PRL_FL401_95_TypeOfApplicationProfile") {
+      exec(Common.profile)
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -322,8 +331,6 @@ object Solicitor_PRL_FL401 {
         .check(jsonPath("$.events[?(@.event_id=='fl401TypeOfApplication')]"))
         .check(jsonPath("$.state.id").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
-      .exec(Common.profile)
-
       .exec(http("XUI_PRL_FL401_130_015_CreateWithoutNoticeOrderEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/withoutNoticeOrderDetails?ignore-warning=false")
         .headers(Headers.commonHeader)
@@ -336,6 +343,16 @@ object Solicitor_PRL_FL401 {
       .exec(Common.userDetails)
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Without Notice Order Profile
+    ======================================================================================*/
+
+    .group("XUI_PRL_FL401_135_ApplyWithoutNoticeProfile") {
+      exec(Common.profile)
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -493,8 +510,6 @@ object Solicitor_PRL_FL401 {
         .check(jsonPath("$.events[?(@.event_id=='withoutNoticeOrderDetails')]"))
         .check(jsonPath("$.state.id").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
-      .exec(Common.profile)
-
       .exec(http("XUI_PRL_FL401_190_015_CreateApplicantDetailsEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/applicantsDetails?ignore-warning=false")
         .headers(Headers.commonHeader)
@@ -517,6 +532,17 @@ object Solicitor_PRL_FL401 {
     }
 
     .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Applicant Details Profile
+    ======================================================================================*/
+
+    .group("XUI_PRL_FL401_195_ApplicantDetailsProfile") {
+      exec(Common.profile)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
 
     /*======================================================================================
     * Applicant Details
@@ -615,8 +641,6 @@ object Solicitor_PRL_FL401 {
         .check(jsonPath("$.events[?(@.event_id=='applicantsDetails')]"))
         .check(jsonPath("$.state.id").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
-      .exec(Common.profile)
-
       .exec(http("XUI_PRL_FL401_220_015_CreateRespondentDetailsEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/respondentsDetails?ignore-warning=false")
         .headers(Headers.commonHeader)
@@ -638,6 +662,16 @@ object Solicitor_PRL_FL401 {
       .exec(Common.userDetails)
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Respondent Details Profile
+    ======================================================================================*/
+
+    .group("XUI_PRL_FL401_225_RespondentDetailsProfile") {
+      exec(Common.profile)
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -743,8 +777,6 @@ object Solicitor_PRL_FL401 {
         .check(jsonPath("$.events[?(@.event_id=='respondentsDetails')]"))
         .check(jsonPath("$.state.id").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
-      .exec(Common.profile)
-
       .exec(http("XUI_PRL_FL401_250_020_CreateRespondentDetailsEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/fl401ApplicantFamilyDetails?ignore-warning=false")
         .headers(Headers.commonHeader)
@@ -757,6 +789,16 @@ object Solicitor_PRL_FL401 {
       .exec(Common.userDetails)
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Applicants Family Profile
+    ======================================================================================*/
+
+    .group("XUI_PRL_FL401_255_ApplicantsFamilyDetailsProfile") {
+      exec(Common.profile)
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -854,8 +896,6 @@ object Solicitor_PRL_FL401 {
         .check(jsonPath("$.events[?(@.event_id=='fl401ApplicantFamilyDetails')]"))
         .check(jsonPath("$.state.id").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
-      .exec(Common.profile)
-
       .exec(http("XUI_PRL_FL401_280_015_CreateRelationshipEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/respondentRelationship?ignore-warning=false")
         .headers(Headers.commonHeader)
@@ -868,6 +908,16 @@ object Solicitor_PRL_FL401 {
       .exec(Common.userDetails)
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Select relationship Profile
+    ======================================================================================*/
+
+    .group("XUI_PRL_FL401_285_RelationshipProfile") {
+      exec(Common.profile)
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -985,8 +1035,6 @@ object Solicitor_PRL_FL401 {
         .check(jsonPath("$.events[?(@.event_id=='respondentRelationship')]"))
         .check(jsonPath("$.state.id").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
-      .exec(Common.profile)
-
       .exec(http("XUI_PRL_FL401_320_015_CreateRelationshipEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/respondentBehaviour?ignore-warning=false")
         .headers(Headers.commonHeader)
@@ -999,6 +1047,16 @@ object Solicitor_PRL_FL401 {
       .exec(Common.userDetails)
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Select Behaviour Profile
+    ======================================================================================*/
+
+    .group("XUI_PRL_FL401_325_BehaviourProfile") {
+      exec(Common.profile)
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1096,8 +1154,6 @@ object Solicitor_PRL_FL401 {
         .check(jsonPath("$.events[?(@.event_id=='respondentBehaviour')]"))
         .check(jsonPath("$.state.id").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
-      .exec(Common.profile)
-
       .exec(http("XUI_PRL_FL401_350_015_CreateTheHomeEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/fl401Home?ignore-warning=false")
         .headers(Headers.commonHeader)
@@ -1110,6 +1166,16 @@ object Solicitor_PRL_FL401 {
       .exec(Common.userDetails)
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Complete The Home Details Profile
+    ======================================================================================*/
+
+    .group("XUI_PRL_FL401_355_TheHomeProfile") {
+      exec(Common.profile)
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1209,8 +1275,6 @@ object Solicitor_PRL_FL401 {
         .check(jsonPath("$.events[?(@.event_id=='fl401Home')]"))
         .check(jsonPath("$.state.id").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
-      .exec(Common.profile)
-
       .exec(http("XUI_PRL_FL401_380_015_CreateUploadDocumentsEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/fl401UploadDocuments?ignore-warning=false")
         .headers(Headers.commonHeader)
@@ -1223,6 +1287,16 @@ object Solicitor_PRL_FL401 {
       .exec(Common.userDetails)
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Upload Documents Profile
+    ======================================================================================*/
+
+    .group("XUI_PRL_FL401_385_UploadDocumentProfile") {
+      exec(Common.profile)
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1341,8 +1415,6 @@ object Solicitor_PRL_FL401 {
         .check(jsonPath("$.events[?(@.event_id=='fl401UploadDocuments')]"))
         .check(jsonPath("$.state.id").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
-      .exec(Common.profile)
-
       .exec(http("XUI_PRL_FL401_420_015_CreateViewPDFEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/viewPdfDocument?ignore-warning=false")
         .headers(Headers.commonHeader)
@@ -1358,6 +1430,16 @@ object Solicitor_PRL_FL401 {
       .exec(Common.userDetails)
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Continue Profile
+    ======================================================================================*/
+
+    .group("XUI_PRL_FL401_425_ViewPDFContinueProfile") {
+      exec(Common.profile)
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1455,8 +1537,6 @@ object Solicitor_PRL_FL401 {
         .check(jsonPath("$.events[?(@.event_id=='viewPdfDocument')]"))
         .check(jsonPath("$.state.id").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
-      .exec(Common.profile)
-
       .exec(http("XUI_PRL_FL401_450_015_CreateSOTEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/fl401StatementOfTruthAndSubmit?ignore-warning=false")
         .headers(Headers.commonHeader)
@@ -1469,6 +1549,16 @@ object Solicitor_PRL_FL401 {
       .exec(Common.userDetails)
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Statement of Truth (SOT) Profile
+    ======================================================================================*/
+
+    .group("XUI_PRL_FL401_455_SOTProfile") {
+      exec(Common.profile)
     }
 
     .pause(MinThinkTime, MaxThinkTime)
