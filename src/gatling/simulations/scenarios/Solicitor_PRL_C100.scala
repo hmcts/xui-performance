@@ -22,7 +22,7 @@ object Solicitor_PRL_C100 {
     * Click the Create Case link
     ======================================================================================*/
 
-    group("XUI_PRL_C100_C100_030_CreateCase") {
+    group("XUI_PRL_C100_030_CreateCase") {
 
       exec(_.setAll(
         "C100ApplicantFirstName1" -> ("App" + Common.randomString(5)),
@@ -52,7 +52,7 @@ object Solicitor_PRL_C100 {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-filter"))
 
-      .exec(http("XUI_Divorce_030_CreateCase")
+      .exec(http("XUI_PRL_C100_030_CreateCase")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
@@ -67,7 +67,7 @@ object Solicitor_PRL_C100 {
     * Jurisdiction = Family Private Law; Case Type = C100 & FL401 Applications; Event = Solicitor Application
     ======================================================================================*/
 
-    .group("XUI_PRL_C100_C100_040_SelectCaseType") {
+    .group("XUI_PRL_C100_040_SelectCaseType") {
       exec(Common.healthcheck("%2Fcases%2Fcase-create%2FPRIVATELAW%2FPRLAPPS%2FsolicitorCreate"))
 
       .exec(http("XUI_FPL_040_005_StartApplication")
@@ -90,8 +90,8 @@ object Solicitor_PRL_C100 {
     * Select Type of Application (C100 or FL401) - C100
     ======================================================================================*/
 
-    .group("XUI_PRL_C100_C100_050_SelectApplicationType") {
-      exec(http("XUI_PRL_C100_C100_050_005_SelectApplicationType")
+    .group("XUI_PRL__C100_050_SelectApplicationType") {
+      exec(http("XUI_PRL_C100_050_005_SelectApplicationType")
         .post("/data/case-types/PRLAPPS/validate?pageId=solicitorCreate2")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -178,28 +178,61 @@ object Solicitor_PRL_C100 {
   val TypeOfApplication =
 
     /*======================================================================================
-    * Select "Type of Application" in the dropdown
+    * Click on 'Type of Application' link
     ======================================================================================*/
 
     group("XUI_PRL_C100_090_CreateTypeOfApplicationEvent") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FselectApplicationType"))
 
-      .exec(Common.profile)
+      exec(http("XUI_PRL_C100_090_005_CreateTypeOfApplicationViewCase")
+        .get("/cases/case-details/${caseId}/trigger/selectApplicationType/selectApplicationType1")
+        .headers(Headers.navigationHeader)
+        .header("x-xsrf-token", "${XSRFToken}"))
 
-      .exec(http("XUI_PRL_C100_090_005_CreateTypeOfApplicationEvent")
+      .exec(Common.configurationui)
+
+      .exec(Common.configJson)
+
+      .exec(Common.TsAndCs)
+
+      .exec(Common.configUI)
+
+      .exec(Common.userDetails)
+
+      .exec(Common.isAuthenticated)
+
+      .exec(Common.monitoringTools)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FselectApplicationType%2FselectApplicationType1"))
+
+      .exec(http("XUI_PRL_C100_090_010_CreateTypeOfApplicationEventLink")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
+        .header("x-xsrf-token", "${XSRFToken}"))
+
+      .exec(Common.caseActivityGet)
+
+      .exec(http("XUI_PRL_C100_090_015_CreateTypeOfApplicationEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/selectApplicationType?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("selectApplicationType")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FselectApplicationType%2FselectApplicationType1"))
-
       .exec(Common.userDetails)
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
 
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Type of Application Profile
+    ======================================================================================*/
+
+    .group("XUI_PRL_C100_095_TypeOfApplicationProfile") {
+      exec(Common.profile)
+    }
     .pause(MinThinkTime, MaxThinkTime)
 
 
@@ -347,7 +380,7 @@ object Solicitor_PRL_C100 {
   val HearingUrgency =
 
     /*======================================================================================
-    * Hearing Urgency Redirect
+    * Click on 'Hearing Urgency'
     ======================================================================================*/
 
     group("XUI_PRL_C100_160_HearingUrgency") {
@@ -380,7 +413,6 @@ object Solicitor_PRL_C100 {
 
       .exec(Common.caseActivityGet)
 
-      .exec(Common.profile)
 
       .exec(http("XUI_PRL_C100_160_015_HearingUrgencyEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/hearingUrgency?ignore-warning=false")
@@ -399,6 +431,16 @@ object Solicitor_PRL_C100 {
 
     }
     .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Hearing Urgency Profile
+    ======================================================================================*/
+
+    .group("XUI_PRL_C100_165_HearingUrgencyProfile") {
+      exec(Common.profile)
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
 
     /*======================================================================================
     * Hearing Urgency Questions
@@ -457,7 +499,7 @@ object Solicitor_PRL_C100 {
   val ApplicantDetails =
 
     /*======================================================================================
-    * Applicant Details Redirect
+    * Click on 'Applicant Details'
     ======================================================================================*/
 
     group("XUI_PRL_C100_190_ApplicantDetails") {
@@ -490,7 +532,6 @@ object Solicitor_PRL_C100 {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .header("x-xsrf-token", "${XSRFToken}"))
 
-      .exec(Common.profile)
 
       .exec(http("XUI_PRL_C100_190_010_ApplicantDetailsEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/applicantsDetails?ignore-warning=false")
@@ -500,6 +541,15 @@ object Solicitor_PRL_C100 {
         .check(jsonPath("$.id").is("applicantsDetails")))
 
       .exec(Common.userDetails)
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Applicant Details Profile
+    ======================================================================================*/
+
+    .group("XUI_PRL_C100_200_ApplicantDetailsProfile") {
+      exec(Common.profile)
     }
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -578,7 +628,7 @@ object Solicitor_PRL_C100 {
   val ChildDetails =
 
     /*======================================================================================
-    * Child Details Redirect
+    * Click on 'Child Details'
     ======================================================================================*/
 
     group("XUI_PRL_C100_230_ChildDetailsRedirect") {
@@ -611,8 +661,6 @@ object Solicitor_PRL_C100 {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .header("x-xsrf-token", "${XSRFToken}"))
 
-      .exec(Common.profile)
-
       .exec(http("XUI_PRL_C100_230_015_ChildDetailsEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/childDetails?ignore-warning=false")
         .headers(Headers.commonHeader)
@@ -622,6 +670,16 @@ object Solicitor_PRL_C100 {
 
       .exec(Common.userDetails)
 
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+
+    /*======================================================================================
+    * Child Details Profile
+    ======================================================================================*/
+
+    .group("XUI_PRL_C100_235_ChildDetailsProfile") {
+      exec(Common.profile)
     }
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -707,7 +765,7 @@ object Solicitor_PRL_C100 {
   val RespondentDetails =
 
     /*======================================================================================
-    * Respondent Details Redirect
+    * Click on 'Respondent Details'
     ======================================================================================*/
 
     group("XUI_PRL_C100_270_RespondentDetailsRedirect") {
@@ -742,8 +800,6 @@ object Solicitor_PRL_C100 {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .header("x-xsrf-token", "${XSRFToken}"))
 
-      .exec(Common.profile)
-
       .exec(http("XUI_PRL_C100_270_015_RespondentDetailsCaseEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/respondentsDetails?ignore-warning=false")
         .headers(Headers.commonHeader)
@@ -752,6 +808,15 @@ object Solicitor_PRL_C100 {
 
       .exec(Common.userDetails)
 
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Respondent Details Profile
+    ======================================================================================*/
+
+    .group("XUI_PRL_C100_275_RespondentDetailsProfile") {
+      exec(Common.profile)
     }
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -820,7 +885,7 @@ object Solicitor_PRL_C100 {
   val MIAM =
 
     /*======================================================================================
-    * Miam Redirect
+    * Click on 'Miam'
     ======================================================================================*/
 
     group("XUI_PRL_C100_300_MIAMRedirect") {
@@ -853,8 +918,6 @@ object Solicitor_PRL_C100 {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .header("x-xsrf-token", "${XSRFToken}"))
 
-      .exec(Common.profile)
-
       .exec(http("XUI_PRL_C100_300_015_MIAMCaseEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/respondentsDetails?ignore-warning=false")
         .headers(Headers.commonHeader)
@@ -866,6 +929,14 @@ object Solicitor_PRL_C100 {
     }
     .pause(MinThinkTime, MaxThinkTime)
 
+    /*======================================================================================
+    * MIAM Profile
+    ======================================================================================*/
+
+    .group("XUI_PRL_C100_305_MIAMProfile") {
+      exec(Common.profile)
+    }
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Has the applicant attended a Mediation information & Assessment Meeting (MIAM)?
@@ -972,7 +1043,7 @@ object Solicitor_PRL_C100 {
   val AllegationsOfHarm =
 
     /*======================================================================================
-    * Allegations Of Harm Redirect
+    * Click on 'Allegations Of Harm'
     ======================================================================================*/
 
     group("XUI_PRL_C100_340_AllegationsOfHarmRedirect") {
@@ -1005,8 +1076,6 @@ object Solicitor_PRL_C100 {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .header("x-xsrf-token", "${XSRFToken}"))
 
-      .exec(Common.profile)
-
       .exec(http("XUI_PRL_C100_340_015_AllegationsOfHarmEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/allegationsOfHarm?ignore-warning=false")
         .headers(Headers.commonHeader)
@@ -1015,6 +1084,15 @@ object Solicitor_PRL_C100 {
 
       .exec(Common.userDetails)
 
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Allegations of Harm Profile
+    ======================================================================================*/
+
+    .group("XUI_PRL_C100_345_AllegationsOfHarmProfile") {
+      exec(Common.profile)
     }
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -1148,7 +1226,7 @@ object Solicitor_PRL_C100 {
   val ViewPdfApplication =
 
     /*======================================================================================
-    * View PDF Application Redirect
+    * Click on 'View PDF Application'
     ======================================================================================*/
 
     group("XUI_PRL_C100_400_ViewPdfApplicationRedirect") {
@@ -1181,8 +1259,6 @@ object Solicitor_PRL_C100 {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .header("x-xsrf-token", "${XSRFToken}"))
 
-      .exec(Common.profile)
-
       .exec(http("XUI_PRL_C100_400_015_ViewPdfApplicationRedirectEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/viewPdfDocument?ignore-warning=false")
         .headers(Headers.commonHeader)
@@ -1194,6 +1270,15 @@ object Solicitor_PRL_C100 {
 
       .exec(Common.userDetails)
 
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * View PDF Profile
+    ======================================================================================*/
+
+    .group("XUI_PRL_C100_405_ViewPdfProfile") {
+      exec(Common.profile)
     }
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -1261,7 +1346,7 @@ object Solicitor_PRL_C100 {
   val SubmitAndPay =
 
     /*======================================================================================
-    * SubmitAndPay Redirect
+    * Click on 'SubmitAndPay'
     ======================================================================================*/
 
     group("XUI_PRL_C100_430_SubmitAndPayRedirect") {
@@ -1296,8 +1381,6 @@ object Solicitor_PRL_C100 {
         .check(jsonPath("$.events[?(@.event_id=='viewPdfDocument')]"))
         .check(jsonPath("$.state.id").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
-      .exec(Common.profile)
-
       .exec(http("XUI_PRL_C100_430_015_SubmitAndPayRedirectEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/submitAndPay?ignore-warning=false")
         .headers(Headers.commonHeader)
@@ -1308,6 +1391,15 @@ object Solicitor_PRL_C100 {
       .exec(Common.userDetails)
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
 
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Submit and Pay Profile
+    ======================================================================================*/
+
+    .group("XUI_PRL_C100_435_SubmitAndPayProfile") {
+      exec(Common.profile)
     }
     .pause(MinThinkTime, MaxThinkTime)
 
