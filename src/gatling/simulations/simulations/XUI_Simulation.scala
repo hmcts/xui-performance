@@ -328,6 +328,19 @@ class XUI_Simulation extends Simulation {
 				.exec(Solicitor_FPL.fplSubmitApplication)
 				.exec(Solicitor_FPL.fplReturnToCase)
 				.exec(Logout.XUILogout)
+				//REDACTED BUNDLES - TESTING THE MIGRATION OF COURT BUNDLES
+				//Court Admin: Add FamilyMan Case Number
+				.exec(CCDAPI.CreateEvent("PublicLawCA", "PUBLICLAW", "CARE_SUPERVISION_EPO", "addFamilyManCaseNumber", "bodies/fpl/courtbundle/CAAddCaseNumber.json"))
+				//Court Admin: Send to GateKeeper
+				.exec(CCDAPI.CreateEvent("PublicLawCA", "PUBLICLAW", "CARE_SUPERVISION_EPO", "sendToGatekeeper", "bodies/fpl/courtbundle/CASendToGateKeeper.json"))
+				//Gatekeeper: Allocate Judge
+				.exec(CCDAPI.CreateEvent("PublicLawGK", "PUBLICLAW", "CARE_SUPERVISION_EPO", "allocatedJudge", "bodies/fpl/courtbundle/GKAllocateJudge.json"))
+				//Gatekeeper: Manage Hearings
+				.exec(CCDAPI.CreateEvent("PublicLawGK", "PUBLICLAW", "CARE_SUPERVISION_EPO", "manageHearings", "bodies/fpl/courtbundle/GKManageHearings.json"))
+				//Gatekeeper: Add Gatekeeping Order
+				.exec(CCDAPI.CreateEvent("PublicLawGK", "PUBLICLAW", "CARE_SUPERVISION_EPO", "addGatekeepingOrder", "bodies/fpl/courtbundle/GKAddGatekeepingOrder.json"))
+				//Solicitor: Upload Court Bundle
+				.exec(CCDAPI.CreateEvent("PublicLawSol", "PUBLICLAW", "CARE_SUPERVISION_EPO", "manageDocumentsLA", "bodies/fpl/courtbundle/SolUploadCourtBundle.json"))
 		}
 
 	/*===============================================================================================
@@ -381,15 +394,15 @@ class XUI_Simulation extends Simulation {
 	}
 
 	setUp(
-		PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		DivorceSolicitorScenario.inject(simulationProfile(testType, divorceTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+		//PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		//ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		//ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+		//DivorceSolicitorScenario.inject(simulationProfile(testType, divorceTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		//NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		//NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		//FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		//CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 	).protocols(httpProtocol)
 		.assertions(forAll.successfulRequests.percent.gte(80))
 

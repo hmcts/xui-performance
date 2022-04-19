@@ -1,0 +1,12 @@
+{
+  "data": {
+    "familyManCaseNumber": "1234567890"
+  },
+  "event": {
+    "id": "addFamilyManCaseNumber",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${eventToken}",
+  "ignore_warning": false
+}

@@ -1,0 +1,85 @@
+{
+  "data": {
+    "gatekeepingOrderRouter": "SERVICE",
+    "gatekeepingOrderHasHearing1": "YES",
+    "gatekeepingOrderHearingDate1": "1 June 2022, 9:00am",
+    "directionsForAllParties": [
+      "ATTEND_HEARING"
+    ],
+    "directionsForLocalAuthority": [
+      "LODGE_BUNDLE"
+    ],
+    "directionsForRespondents": [],
+    "directionsForCafcass": [],
+    "directionsForOthers": [],
+    "directionsForCourt": [],
+    "direction-REQUEST_PERMISSION_FOR_EXPERT_EVIDENCE": null,
+    "direction-REQUEST_HELP_TO_TAKE_PART_IN_PROCEEDINGS": null,
+    "direction-ASK_FOR_DISCLOSURE": null,
+    "direction-ATTEND_HEARING": {
+      "title": "Attend the pre-hearing and hearing",
+      "description": "Parties and their legal representatives must attend the pre-hearing and hearing",
+      "assignee": "ALL_PARTIES",
+      "dueDateType": "DAYS",
+      "daysBeforeHearing": "0",
+      "dateToBeCompletedBy": "2022-06-01T00:00:00",
+      "type": "ATTEND_HEARING"
+    },
+    "direction-CONTACT_ALTERNATIVE_CARERS": null,
+    "direction-SEND_DOCUMENTS_TO_ALL_PARTIES": null,
+    "direction-SEND_MISSING_ANNEX": null,
+    "direction-IDENTIFY_ALTERNATIVE_CARERS": null,
+    "direction-SEND_TRANSLATED_DOCUMENTS": null,
+    "direction-LODGE_BUNDLE": {
+      "title": "Lodge a bundle",
+      "description": "It must comply with practice direction 27A from Family Procedure Rules 2010.",
+      "type": "LODGE_BUNDLE",
+      "assignee": "LOCAL_AUTHORITY",
+      "dueDateType": "DAYS",
+      "dateToBeCompletedBy": "2022-05-30T16:00:00",
+      "daysBeforeHearing": "2"
+    },
+    "direction-SEND_CASE_SUMMARY": null,
+    "direction-CONSIDER_JURISDICTION": null,
+    "direction-SEND_RESPONSE_TO_THRESHOLD_STATEMENT": null,
+    "direction-ARRANGE_ADVOCATES_MEETING": null,
+    "direction-SEND_GUARDIANS_ANALYSIS": null,
+    "direction-APPOINT_CHILDREN_GUARDIAN": null,
+    "direction-OBJECT_TO_REQUEST_FOR_DISCLOSURE": null,
+    "direction-ARRANGE_INTERPRETERS": null,
+    "gatekeepingOrderHearingDate2": "1 June 2022, 9:00am",
+    "gatekeepingOrderHasHearing2": "YES",
+    "customDirections": [],
+    "useServiceRoute": null,
+    "useUploadRoute": null,
+    "gatekeepingOrderIssuingJudge": {
+      "allocatedJudgeLabel": "Case assigned to: Her Honour Judge Judge Perftest",
+      "useAllocatedJudge": "Yes",
+      "judgeTitle": null,
+      "otherTitle": null,
+      "judgeLastName": null,
+      "judgeFullName": null,
+      "judgeEmailAddress": null,
+      "legalAdvisorName": null
+    },
+    "gatekeepingOrderSealDecision": {
+      "draftDocument": {
+        "document_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/8eefe523-453a-4696-bd8f-e80ed778759c",
+        "document_filename": "draft-standard-directions-order.pdf",
+        "document_binary_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/8eefe523-453a-4696-bd8f-e80ed778759c/binary"
+      },
+      "orderStatus": "SEALED",
+      "dateOfIssue": "2022-04-19",
+      "nextSteps": null
+    },
+    "languageRequirement": null,
+    "gatekeepingTranslationRequirements": null
+  },
+  "event": {
+    "id": "addGatekeepingOrder",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${eventToken}",
+  "ignore_warning": false
+}

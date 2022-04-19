@@ -23,6 +23,9 @@ object CCDAPI {
       case "Caseworker" => session.set("emailAddressCCD", "ccdloadtest-cw@gmail.com").set("passwordCCD", "Password12").set("microservice", "ccd_data")
       case "Legal" => session.set("emailAddressCCD", "ccdloadtest-la@gmail.com").set("passwordCCD", "Password12").set("microservice", "ccd_data")
       case "Solicitor" => session.set("emailAddressCCD", session("user").as[String]).set("passwordCCD", session("password").as[String]).set("microservice", "nfdiv_case_api")
+      case "PublicLawSol" => session.set("emailAddressCCD", session("user").as[String]).set("passwordCCD", session("password").as[String]).set("microservice", "ccd_data")
+      case "PublicLawCA" => session.set("emailAddressCCD", "fpl-courtadmin@gmail.com").set("passwordCCD", "Password12").set("microservice", "ccd_data")
+      case "PublicLawGK" => session.set("emailAddressCCD", "fpl-gatekeeper@gmail.com").set("passwordCCD", "Password12").set("microservice", "ccd_data")
     })
 
     .exec(http("XUI_000_Auth")
@@ -80,6 +83,8 @@ object CCDAPI {
       .header("Authorization", "Bearer ${bearerToken}")
       .header("ServiceAuthorization", "${authToken}")
       .header("Content-Type", "application/json")
+      .check(jsonPath("$.case_details.case_data.gatekeeperEmails[0].id").optional.saveAs("gatekeeperId")) //Only used for FPL bundles
+      .check(jsonPath("$.case_details.case_data.manageDocumentsHearingList.list_items[0].code").optional.saveAs("hearingListCode")) //Only used for FPL bundles
       .check(jsonPath("$.token").saveAs("eventToken")))
 
     .pause(1)
