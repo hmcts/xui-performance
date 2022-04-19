@@ -1,0 +1,21 @@
+{
+  "data": {
+    "allocatedJudge": {
+      "judgeTitle": "HER_HONOUR_JUDGE",
+      "otherTitle": null,
+      "judgeFullName": null,
+      "judgeLastName": "Judge Perftest",
+      "judgeEmailAddress": "judgeperftest@perftest12345.com",
+      "allocatedJudgeLabel": null,
+      "useAllocatedJudge": null,
+      "legalAdvisorName": null
+    }
+  },
+  "event": {
+    "id": "allocatedJudge",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${eventToken}",
+  "ignore_warning": false
+}

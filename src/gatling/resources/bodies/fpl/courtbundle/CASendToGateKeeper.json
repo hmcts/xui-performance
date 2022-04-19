@@ -1,0 +1,19 @@
+{
+  "data": {
+    "gatekeeperEmails": [
+      {
+        "value": {
+          "email": "fpl-gatekeeper@gmail.com"
+        },
+        "id": "${gatekeeperId}"
+      }
+    ]
+  },
+  "event": {
+    "id": "sendToGatekeeper",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${eventToken}",
+  "ignore_warning": false
+}

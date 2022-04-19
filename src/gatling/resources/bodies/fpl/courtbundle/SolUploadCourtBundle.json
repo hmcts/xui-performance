@@ -1,0 +1,39 @@
+{
+  "data": {
+    "manageDocumentLA": {
+      "hasC2s": "No",
+      "hasHearings": "Yes",
+      "type": "COURT_BUNDLE"
+    },
+    "courtBundleHearingList": {
+      "value": {
+        "code": "${hearingListCode}",
+        "label": "Case management hearing, 1 June 2022"
+      },
+      "list_items": [
+        {
+          "code": "${hearingListCode}",
+          "label": "Case management hearing, 1 June 2022"
+        }
+      ]
+    },
+    "manageDocumentsSupportingC2List": null,
+    "manageDocumentsCourtBundle": {
+      "hearing": "Case management hearing, 1 June 2022",
+      "dateTimeUploaded": null,
+      "uploadedBy": null,
+      "document": {
+        "document_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/7ab68a4c-4695-4f75-9550-99f70ecc986a",
+        "document_binary_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/7ab68a4c-4695-4f75-9550-99f70ecc986a/binary",
+        "document_filename": "GKorder.docx"
+      }
+    }
+  },
+  "event": {
+    "id": "manageDocumentsLA",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${eventToken}",
+  "ignore_warning": false
+}
