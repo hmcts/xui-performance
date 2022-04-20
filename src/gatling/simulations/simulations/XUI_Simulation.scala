@@ -79,7 +79,7 @@ class XUI_Simulation extends Simulation {
 	val pauseOption:PauseType = debugMode match{
 		case "off" if testType == "perftest" => constantPauses
 		case "off" if testType == "pipeline" => customPauses(pipelinePausesMillis)
-		case _ => disabledPauses
+		case _ => constantPauses //disabledPauses
 	}
 
   val httpProtocol = http
@@ -326,7 +326,6 @@ class XUI_Simulation extends Simulation {
 				.exec(Solicitor_FPL.fplRespondentDetails)
 				.exec(Solicitor_FPL.fplAllocationProposal)
 				.exec(Solicitor_FPL.fplSubmitApplication)
-				.exec(Solicitor_FPL.fplReturnToCase)
 				.exec(Logout.XUILogout)
 				//REDACTED BUNDLES - TESTING THE MIGRATION OF COURT BUNDLES
 				//Court Admin: Add FamilyMan Case Number
@@ -338,6 +337,7 @@ class XUI_Simulation extends Simulation {
 				//Gatekeeper: Manage Hearings
 				.exec(CCDAPI.CreateEvent("PublicLawGK", "PUBLICLAW", "CARE_SUPERVISION_EPO", "manageHearings", "bodies/fpl/courtbundle/GKManageHearings.json"))
 				//Gatekeeper: Add Gatekeeping Order
+				.pause(30)
 				.exec(CCDAPI.CreateEvent("PublicLawGK", "PUBLICLAW", "CARE_SUPERVISION_EPO", "addGatekeepingOrder", "bodies/fpl/courtbundle/GKAddGatekeepingOrder.json"))
 				//Solicitor: Upload Court Bundle
 				.exec(CCDAPI.CreateEvent("PublicLawSol", "PUBLICLAW", "CARE_SUPERVISION_EPO", "manageDocumentsLA", "bodies/fpl/courtbundle/SolUploadCourtBundle.json"))

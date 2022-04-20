@@ -84,7 +84,7 @@ object CCDAPI {
       .header("ServiceAuthorization", "${authToken}")
       .header("Content-Type", "application/json")
       .check(jsonPath("$.case_details.case_data.gatekeeperEmails[0].id").optional.saveAs("gatekeeperId")) //Only used for FPL bundles
-      .check(jsonPath("$.case_details.case_data.manageDocumentsHearingList.list_items[0].code").optional.saveAs("hearingListCode")) //Only used for FPL bundles
+      .check(jsonPath("$.case_details.case_data.courtBundleHearingList.list_items[0].code").optional.saveAs("hearingListCode")) //Only used for FPL bundles
       .check(jsonPath("$.token").saveAs("eventToken")))
 
     .pause(1)

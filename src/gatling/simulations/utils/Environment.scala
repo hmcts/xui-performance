@@ -8,7 +8,7 @@ object Environment {
  val rpeAPIURL = "http://rpe-service-auth-provider-${env}.service.core-compute-${env}.internal"
  val ccdAPIURL = "http://ccd-data-store-api-${env}.service.core-compute-${env}.internal"
 
- val minThinkTime = 5
- val maxThinkTime = 7
+ val minThinkTime = 1
+ val maxThinkTime = 1
 
 }
