@@ -19,24 +19,7 @@ object Homepage {
     .exec(flushCookieJar)
 
     .group("XUI_010_Homepage") {
-      exec(http("XUI_010_005_Homepage")
-        .get("/")
-        .headers(Headers.navigationHeader)
-        .header("sec-fetch-site", "none"))
-
-      .exec(Common.configurationui)
-
-      .exec(Common.configJson)
-
-      .exec(Common.TsAndCs)
-
-      .exec(Common.configUI)
-
-      .exec(Common.userDetails)
-
-      .exec(Common.isAuthenticated)
-
-      .exec(http("XUI_010_010_AuthLogin")
+      exec(http("XUI_010_010_AuthLogin")
         .get("/auth/login")
         .headers(Headers.navigationHeader)
         .check(CsrfCheck.save)
