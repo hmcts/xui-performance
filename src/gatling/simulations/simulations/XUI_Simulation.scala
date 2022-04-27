@@ -54,7 +54,7 @@ class XUI_Simulation extends Simulation {
 	val prlTargetPerHour:Double = 100
 	val probateTargetPerHour:Double = 238
 	val iacTargetPerHour:Double = 20
-	val fplTargetPerHour:Double = 100
+	val fplTargetPerHour:Double = 1000
 	val divorceTargetPerHour:Double = 238
 	val nfdSoleTargetPerHour:Double = 119
 	val nfdJointTargetPerHour:Double = 119
@@ -67,7 +67,7 @@ class XUI_Simulation extends Simulation {
 
 	val rampUpDurationMins = 5
 	val rampDownDurationMins = 5
-	val testDurationMins = 20
+	val testDurationMins = 60
 
 	val numberOfPipelineUsers = 5
 	val pipelinePausesMillis:Long = 3000 //3 seconds
