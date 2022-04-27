@@ -54,7 +54,7 @@ class XUI_Simulation extends Simulation {
 	val prlTargetPerHour:Double = 100
 	val probateTargetPerHour:Double = 238
 	val iacTargetPerHour:Double = 20
-	val fplTargetPerHour:Double = 1000
+	val fplTargetPerHour:Double = 2000
 	val divorceTargetPerHour:Double = 238
 	val nfdSoleTargetPerHour:Double = 119
 	val nfdJointTargetPerHour:Double = 119
