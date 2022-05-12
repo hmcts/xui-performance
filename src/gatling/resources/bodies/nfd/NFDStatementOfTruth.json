@@ -4,7 +4,7 @@
     "divorceOrDissolution": "divorce",
     "solUrgentCase": "No",
     "applicant1FinancialOrder": "No",
-    "solServiceMethod": "courtService",
+    "serviceMethod": "courtService",
     "solStatementOfReconciliationCertify": "Yes",
     "solStatementOfReconciliationDiscussed": "Yes",
     "applicant1PrayerDissolveDivorce": [
@@ -33,7 +33,7 @@
     "divorceOrDissolution": "divorce",
     "solUrgentCase": "No",
     "applicant1FinancialOrder": "No",
-    "solServiceMethod": "courtService",
+    "serviceMethod": "courtService",
     "solStatementOfReconciliationCertify": "Yes",
     "solStatementOfReconciliationDiscussed": "Yes",
     "applicant1PrayerDissolveDivorce": [
