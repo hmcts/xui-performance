@@ -21,12 +21,11 @@
     "description": ""
   },
   "event_data": {
-    "solPaymentHowToPay": "feePayByAccount",
     "applicationType": "soleApplication",
     "divorceOrDissolution": "divorce",
     "solUrgentCase": "No",
     "applicant1FinancialOrder": "No",
-    "solServiceMethod": "courtService",
+    "serviceMethod": "courtService",
     "solStatementOfReconciliationCertify": "Yes",
     "solStatementOfReconciliationDiscussed": "Yes",
     "applicant1PrayerDissolveDivorce": [
@@ -44,18 +43,19 @@
     "solStatementOfReconciliationFirm": "${orgname1}",
     "statementOfReconciliationComments": null,
     "solApplicationFeeInPounds": "${feeInPounds}",
+    "solPaymentHowToPay": "feePayByAccount",
     "pbaNumbers": {
       "value": {
-        "code": "8e08b4b0-5ec6-4c87-b495-bbe690a7ac3d",
+        "code": "12fb13f2-960a-419d-895f-dd7955bd3da1",
         "label": "PBA0066906"
       },
       "list_items": [
         {
-          "code": "8e08b4b0-5ec6-4c87-b495-bbe690a7ac3d",
+          "code": "12fb13f2-960a-419d-895f-dd7955bd3da1",
           "label": "PBA0066906"
         },
         {
-          "code": "ed536c51-5864-4de9-858b-6a2bd1166419",
+          "code": "3254d1df-79ad-4892-a530-f1b9cefc412c",
           "label": "PBAVRQSJEP"
         }
       ]

@@ -8,12 +8,11 @@
     "description": ""
   },
   "event_data": {
-    "solPaymentHowToPay": "feePayByAccount",
     "applicationType": "soleApplication",
     "divorceOrDissolution": "divorce",
     "solUrgentCase": "No",
     "applicant1FinancialOrder": "No",
-    "solServiceMethod": "courtService",
+    "serviceMethod": "courtService",
     "solStatementOfReconciliationCertify": "Yes",
     "solStatementOfReconciliationDiscussed": "Yes",
     "applicant1PrayerDissolveDivorce": [
@@ -30,7 +29,8 @@
     "solStatementOfReconciliationName": "AppSolicitor",
     "solStatementOfReconciliationFirm": "${orgname1}",
     "statementOfReconciliationComments": null,
-    "solApplicationFeeInPounds": "${feeInPounds}"
+    "solApplicationFeeInPounds": "${feeInPounds}",
+    "solPaymentHowToPay": "feePayByAccount"
   },
   "event_token": "${event_token}",
   "ignore_warning": false,
