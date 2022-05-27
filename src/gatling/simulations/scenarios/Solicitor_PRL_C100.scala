@@ -1416,8 +1416,7 @@ object Solicitor_PRL_C100 {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/prl/c100/PRLSubmitAndPayConfidentialityStatement.json"))
-        .check(jsonPath("$.data.paymentServiceRequestReferenceNumber").saveAs("paymentReferenceNumber"))
-        .check(substring("paymentServiceRequestReferenceNumber")))
+        .check(substring("applicantSolicitorEmailAddress")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAndPay%2FsubmitAndPay2"))
 
@@ -1431,7 +1430,6 @@ object Solicitor_PRL_C100 {
     ======================================================================================*/
 
     .group("XUI_PRL_C100_445_SubmitAndPayDeclaration") {
-
 
       exec(http("XUI_PRL_C100_445_005_SubmitAndPayDeclaration")
         .post("/data/case-types/PRLAPPS/validate?pageId=submitAndPay2")
