@@ -1500,6 +1500,7 @@ object Solicitor_PRL_FL401 {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+
   val StatementOfTruth =
 
     /*======================================================================================
@@ -1603,6 +1604,27 @@ object Solicitor_PRL_FL401 {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+
+    /*======================================================================================
+    * Select the family court
+    ======================================================================================*/
+
+    .group("XUI_PRL_FL401_480_SelectFamilyCourt") {
+      exec(http("XUI_PRL_FL401_480_005_SelectFamilyCourt")
+        .post("/data/case-types/PRLAPPS/validate?pageId=fl401StatementOfTruthAndSubmit3")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/prl/fl401/PRLFL401SelectFamilyCourt.json"))
+        .check(substring("submitCountyCourtSelection")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Ffl401StatementOfTruthAndSubmit%2Fsubmit"))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
     /*======================================================================================
     * Submit
     ======================================================================================*/
@@ -1637,6 +1659,6 @@ object Solicitor_PRL_FL401 {
       .exec(Common.userDetails)
     }
 
-    .pause(MinThinkTime, MaxThinkTime)
+  .pause(MinThinkTime, MaxThinkTime)
 
 }
