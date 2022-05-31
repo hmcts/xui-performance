@@ -1500,6 +1500,7 @@ object Solicitor_PRL_FL401 {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+
   val StatementOfTruth =
 
     /*======================================================================================
@@ -1596,7 +1597,28 @@ object Solicitor_PRL_FL401 {
         .body(ElFileBody("bodies/prl/fl401/PRLFL401SOTContinue.json"))
         .check(substring("fl401ConfidentialityCheck")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Ffl401StatementOfTruthAndSubmit%2Fsubmit"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F{caseId}%2Ftrigger%2Ffl401StatementOfTruthAndSubmit%2Ffl401StatementOfTruthAndSubmit3"))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+
+    /*======================================================================================
+    * Select the family court
+    ======================================================================================*/
+
+    .group("XUI_PRL_FL401_480_SelectFamilyCourt") {
+      exec(http("XUI_PRL_FL401_480_005_SelectFamilyCourt")
+        .post("/data/case-types/PRLAPPS/validate?pageId=fl401StatementOfTruthAndSubmit3")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/prl/fl401/PRLFL401SelectFamilyCourt.json"))
+        .check(substring("submitCountyCourtSelection")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F{caseId}%2Ftrigger%2Ffl401StatementOfTruthAndSubmit%2Fsubmit"))
 
       .exec(Common.userDetails)
     }
@@ -1607,8 +1629,8 @@ object Solicitor_PRL_FL401 {
     * Submit
     ======================================================================================*/
 
-    .group("XUI_PRL_FL401_480_SOTSubmit") {
-      exec(http("XUI_PRL_FL401_480_005_SOTSubmit")
+    .group("XUI_PRL_FL401_490_SOTSubmit") {
+      exec(http("XUI_PRL_FL401_490_005_SOTSubmit")
         .post("/data/cases/${caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -1617,7 +1639,7 @@ object Solicitor_PRL_FL401 {
         .check(substring("fl401StmtOfTruth"))
         .check(jsonPath("$.state").is("SUBMITTED_PAID")))
 
-      .exec(http("XUI_PRL_FL401_480_010_WorkAllocation")
+      .exec(http("XUI_PRL_FL401_490_010_WorkAllocation")
         .post("/workallocation/searchForCompletable")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
@@ -1627,7 +1649,7 @@ object Solicitor_PRL_FL401 {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_PRL_FL401_480_015_ViewCase")
+      .exec(http("XUI_PRL_FL401_490_015_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
@@ -1637,6 +1659,6 @@ object Solicitor_PRL_FL401 {
       .exec(Common.userDetails)
     }
 
-    .pause(MinThinkTime, MaxThinkTime)
+  .pause(MinThinkTime, MaxThinkTime)
 
 }

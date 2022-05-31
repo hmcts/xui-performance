@@ -37,7 +37,7 @@ class XUI_Simulation extends Simulation {
 	val testType = scala.util.Properties.envOrElse("TEST_TYPE", "perftest")
 
 	//set the environment based on the test type
-	val environment = testType match{
+	val environment = testType match {
 		case "perftest" => "perftest"
 		//TODO: UPDATE PIPELINE TO 'aat' ONCE DATA STRATEGY IS IMPLEMENTED. UNTIL THEN, PIPELINE WILL RUN AGAINST PERFTEST
 		case "pipeline" => "perftest"
@@ -51,44 +51,43 @@ class XUI_Simulation extends Simulation {
 	/* ******************************** */
 
 	/* PERFORMANCE TEST CONFIGURATION */
-	val prlTargetPerHour:Double = 100
-	val probateTargetPerHour:Double = 238
-	val iacTargetPerHour:Double = 20
-	val fplTargetPerHour:Double = 7
-	val divorceTargetPerHour:Double = 238
-	val nfdSoleTargetPerHour:Double = 119
-	val nfdJointTargetPerHour:Double = 119
-	val frTargetPerHour:Double = 98
-	val caseworkerTargetPerHour:Double = 900
+	val prlTargetPerHour: Double = 100
+	val probateTargetPerHour: Double = 238
+	val iacTargetPerHour: Double = 20
+	val fplTargetPerHour: Double = 7
+	val divorceTargetPerHour: Double = 238
+	val nfdSoleTargetPerHour: Double = 119
+	val nfdJointTargetPerHour: Double = 119
+	val frTargetPerHour: Double = 98
+	val caseworkerTargetPerHour: Double = 900
 
 	//This determines the percentage split of PRL journeys, by C100 or FL401
 	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
-
 
 	val rampUpDurationMins = 5
 	val rampDownDurationMins = 5
 	val testDurationMins = 60
 
 	val numberOfPipelineUsers = 5
-	val pipelinePausesMillis:Long = 3000 //3 seconds
+	val pipelinePausesMillis: Long = 3000 //3 seconds
 
 	//Determine the pause pattern to use:
 	//Performance test = use the pauses defined in the scripts
 	//Pipeline = override pauses in the script with a fixed value (pipelinePauseMillis)
 	//Debug mode = disable all pauses
-	val pauseOption:PauseType = debugMode match{
+	val pauseOption: PauseType = debugMode match {
 		case "off" if testType == "perftest" => constantPauses
 		case "off" if testType == "pipeline" => customPauses(pipelinePausesMillis)
 		case _ => disabledPauses
 	}
 
-  val httpProtocol = http
+	val httpProtocol = http
 		.baseUrl(Environment.baseURL.replace("${env}", s"${env}"))
 		.inferHtmlResources()
 		.silentResources
 		.header("experimental", "true") //used to send through client id, s2s and bearer tokens. Might be temporary
 
-	before{
+	before {
 		println(s"Test Type: ${testType}")
 		println(s"Test Environment: ${env}")
 		println(s"Debug Mode: ${debugMode}")
@@ -108,30 +107,30 @@ class XUI_Simulation extends Simulation {
 				.doIfOrElse(session => session("prl-percentage").as[Int] < prlC100Percentage) {
 					//C100 Journey
 					exec(Solicitor_PRL_C100.CreatePrivateLawCase)
-					.exec(Solicitor_PRL_C100.TypeOfApplication)
-					.exec(Solicitor_PRL_C100.HearingUrgency)
-					.exec(Solicitor_PRL_C100.ApplicantDetails)
-					.exec(Solicitor_PRL_C100.ChildDetails)
-					.exec(Solicitor_PRL_C100.RespondentDetails)
-					.exec(Solicitor_PRL_C100.MIAM)
-					.exec(Solicitor_PRL_C100.AllegationsOfHarm)
-					.exec(Solicitor_PRL_C100.ViewPdfApplication)
-					.exec(Solicitor_PRL_C100.SubmitAndPay)
+						.exec(Solicitor_PRL_C100.TypeOfApplication)
+						.exec(Solicitor_PRL_C100.HearingUrgency)
+						.exec(Solicitor_PRL_C100.ApplicantDetails)
+						.exec(Solicitor_PRL_C100.ChildDetails)
+						.exec(Solicitor_PRL_C100.RespondentDetails)
+						.exec(Solicitor_PRL_C100.MIAM)
+						.exec(Solicitor_PRL_C100.AllegationsOfHarm)
+						.exec(Solicitor_PRL_C100.ViewPdfApplication)
+						.exec(Solicitor_PRL_C100.SubmitAndPay)
 
 				} {
 					//FL401 Journey
 					exec(Solicitor_PRL_FL401.CreatePrivateLawCase)
-					.exec(Solicitor_PRL_FL401.TypeOfApplication)
-					.exec(Solicitor_PRL_FL401.WithoutNoticeOrder)
-					.exec(Solicitor_PRL_FL401.ApplicantDetails)
-					.exec(Solicitor_PRL_FL401.RespondentDetails)
-					.exec(Solicitor_PRL_FL401.ApplicantsFamily)
-					.exec(Solicitor_PRL_FL401.Relationship)
-					.exec(Solicitor_PRL_FL401.Behaviour)
-					.exec(Solicitor_PRL_FL401.TheHome)
-					.exec(Solicitor_PRL_FL401.UploadDocuments)
-					.exec(Solicitor_PRL_FL401.ViewPDF)
-					.exec(Solicitor_PRL_FL401.StatementOfTruth)
+						.exec(Solicitor_PRL_FL401.TypeOfApplication)
+						.exec(Solicitor_PRL_FL401.WithoutNoticeOrder)
+						.exec(Solicitor_PRL_FL401.ApplicantDetails)
+						.exec(Solicitor_PRL_FL401.RespondentDetails)
+						.exec(Solicitor_PRL_FL401.ApplicantsFamily)
+						.exec(Solicitor_PRL_FL401.Relationship)
+						.exec(Solicitor_PRL_FL401.Behaviour)
+						.exec(Solicitor_PRL_FL401.TheHome)
+						.exec(Solicitor_PRL_FL401.UploadDocuments)
+						.exec(Solicitor_PRL_FL401.ViewPDF)
+						.exec(Solicitor_PRL_FL401.StatementOfTruth)
 				}
 				.exec(Logout.XUILogout)
 		}
@@ -139,18 +138,18 @@ class XUI_Simulation extends Simulation {
 	/*===============================================================================================
 	* XUI Solicitor Probate Scenario
 	 ===============================================================================================*/
-  val ProbateSolicitorScenario = scenario("***** Probate Create Case *****")
+	val ProbateSolicitorScenario = scenario("***** Probate Create Case *****")
 		.exitBlockOnFail {
 			feed(UserFeederProbate)
 				.exec(_.set("env", s"${env}")
-							.set("caseType", "GrantOfRepresentation"))
+					.set("caseType", "GrantOfRepresentation"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.repeat(2) {
 					exec(Solicitor_Probate.CreateProbateCase)
-					.exec(Solicitor_Probate.AddDeceasedDetails)
-					.exec(Solicitor_Probate.AddApplicationDetails)
-					.exec(Solicitor_Probate.ReviewAndSubmitApplication)
+						.exec(Solicitor_Probate.AddDeceasedDetails)
+						.exec(Solicitor_Probate.AddApplicationDetails)
+						.exec(Solicitor_Probate.ReviewAndSubmitApplication)
 				}
 				.exec(Logout.XUILogout)
 		}
@@ -162,12 +161,12 @@ class XUI_Simulation extends Simulation {
 		.exitBlockOnFail {
 			feed(UserFeederIAC)
 				.exec(_.set("env", s"${env}")
-							.set("caseType", "Asylum"))
+					.set("caseType", "Asylum"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.repeat(2) {
 					exec(Solicitor_IAC.CreateIACCase)
-					.exec(Solicitor_IAC.shareacase)
+						.exec(Solicitor_IAC.shareacase)
 				}
 				.exec(Logout.XUILogout)
 		}
@@ -179,7 +178,7 @@ class XUI_Simulation extends Simulation {
 		.exitBlockOnFail {
 			feed(UserFeederDivorce)
 				.exec(_.set("env", s"${env}")
-							.set("caseType", "DIVORCE"))
+					.set("caseType", "DIVORCE"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.repeat(2) {
@@ -196,10 +195,10 @@ class XUI_Simulation extends Simulation {
 			//feed two rows of data - applicant1's solicitor and applicant2's solicitor
 			feed(UserFeederNFD, 2)
 				.exec(_.set("env", s"${env}")
-							.set("caseType", "NFD")
-							.set("nfdCaseType", "sole")
-							.set("NFDLabelsInitialised", nfdSoleLabelsInitialised) //sets the initialised labels for JSON bodies
-							.set("NFDLabelsPopulated", nfdSoleLabelsPopulated)) //sets the populated labels for JSON bodies
+					.set("caseType", "NFD")
+					.set("nfdCaseType", "sole")
+					.set("NFDLabelsInitialised", nfdSoleLabelsInitialised) //sets the initialised labels for JSON bodies
+					.set("NFDLabelsPopulated", nfdSoleLabelsPopulated)) //sets the populated labels for JSON bodies
 				//Solicitor 1 - Divorce Application
 				.exec(Homepage.XUIHomePage)
 				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
@@ -255,10 +254,10 @@ class XUI_Simulation extends Simulation {
 			//feed two rows of data - applicant1's solicitor and applicant2's solicitor
 			feed(UserFeederNFD, 2)
 				.exec(_.set("env", s"${env}")
-							.set("caseType", "NFD")
-							.set("nfdCaseType", "joint")
-							.set("NFDLabelsInitialised", nfdJointLabelsInitialised) //sets the initialised labels for JSON bodies
-							.set("NFDLabelsPopulated", nfdJointLabelsPopulated)) //sets the populated labels for JSON bodies
+					.set("caseType", "NFD")
+					.set("nfdCaseType", "joint")
+					.set("NFDLabelsInitialised", nfdJointLabelsInitialised) //sets the initialised labels for JSON bodies
+					.set("NFDLabelsPopulated", nfdJointLabelsPopulated)) //sets the populated labels for JSON bodies
 				//Solicitor 1 - Divorce Application
 				.exec(Homepage.XUIHomePage)
 				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
@@ -298,7 +297,7 @@ class XUI_Simulation extends Simulation {
 		.exitBlockOnFail {
 			feed(UserFeederFR)
 				.exec(_.set("env", s"${env}")
-							.set("caseType", "FinancialRemedyMVP2"))
+					.set("caseType", "FinancialRemedyMVP2"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.repeat(2) {
@@ -314,7 +313,7 @@ class XUI_Simulation extends Simulation {
 		.exitBlockOnFail {
 			feed(UserFeederFPL)
 				.exec(_.set("env", s"${env}")
-							.set("caseType", "CARE_SUPERVISION_EPO"))
+					.set("caseType", "CARE_SUPERVISION_EPO"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.exec(Solicitor_FPL.CreateFPLCase)
@@ -347,8 +346,8 @@ class XUI_Simulation extends Simulation {
 				//Only continue with the case activities if results were returned
 				.doIf(session => session("numberOfResults").as[Int] > 0) {
 					exec(Caseworker_Navigation.SearchByCaseNumber)
-					.exec(Caseworker_Navigation.ViewCase)
-					.exec(Caseworker_Navigation.NavigateTabs)
+						.exec(Caseworker_Navigation.ViewCase)
+						.exec(Caseworker_Navigation.NavigateTabs)
 				}
 				.exec(Caseworker_Navigation.LoadCaseList)
 				.exec(Logout.XUILogout)
@@ -370,7 +369,7 @@ class XUI_Simulation extends Simulation {
 						rampUsersPerSec(userPerSecRate) to (0.00) during (rampDownDurationMins minutes)
 					)
 				}
-				else{
+				else {
 					Seq(atOnceUsers(1))
 				}
 			case "pipeline" =>
@@ -392,5 +391,6 @@ class XUI_Simulation extends Simulation {
 		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 	).protocols(httpProtocol)
 		.assertions(forAll.successfulRequests.percent.gte(80))
+
 
 }
