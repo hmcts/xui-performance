@@ -37,7 +37,7 @@ class XUI_Simulation extends Simulation {
 	val testType = scala.util.Properties.envOrElse("TEST_TYPE", "perftest")
 
 	//set the environment based on the test type
-	val environment = testType match{
+	val environment = testType match {
 		case "perftest" => "perftest"
 		//TODO: UPDATE PIPELINE TO 'aat' ONCE DATA STRATEGY IS IMPLEMENTED. UNTIL THEN, PIPELINE WILL RUN AGAINST PERFTEST
 		case "pipeline" => "perftest"
@@ -51,15 +51,15 @@ class XUI_Simulation extends Simulation {
 	/* ******************************** */
 
 	/* PERFORMANCE TEST CONFIGURATION */
-	val prlTargetPerHour:Double = 100
-	val probateTargetPerHour:Double = 238
-	val iacTargetPerHour:Double = 20
-	val fplTargetPerHour:Double = 7
-	val divorceTargetPerHour:Double = 238
-	val nfdSoleTargetPerHour:Double = 119
-	val nfdJointTargetPerHour:Double = 119
-	val frTargetPerHour:Double = 98
-	val caseworkerTargetPerHour:Double = 900
+	val prlTargetPerHour: Double = 100
+	val probateTargetPerHour: Double = 238
+	val iacTargetPerHour: Double = 20
+	val fplTargetPerHour: Double = 7
+	val divorceTargetPerHour: Double = 238
+	val nfdSoleTargetPerHour: Double = 119
+	val nfdJointTargetPerHour: Double = 119
+	val frTargetPerHour: Double = 98
+	val caseworkerTargetPerHour: Double = 900
 
 	//This determines the percentage split of PRL journeys, by C100 or FL401
 	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
@@ -70,13 +70,13 @@ class XUI_Simulation extends Simulation {
 	val testDurationMins = 60
 
 	val numberOfPipelineUsers = 5
-	val pipelinePausesMillis:Long = 3000 //3 seconds
+	val pipelinePausesMillis: Long = 3000 //3 seconds
 
 	//Determine the pause pattern to use:
 	//Performance test = use the pauses defined in the scripts
 	//Pipeline = override pauses in the script with a fixed value (pipelinePauseMillis)
 	//Debug mode = disable all pauses
-	val pauseOption:PauseType = debugMode match{
+	val pauseOption: PauseType = debugMode match {
 		case "off" if testType == "perftest" => constantPauses
 		case "off" if testType == "pipeline" => customPauses(pipelinePausesMillis)
 		case _ => disabledPauses
@@ -88,7 +88,7 @@ class XUI_Simulation extends Simulation {
 		.silentResources
 		.header("experimental", "true") //used to send through client id, s2s and bearer tokens. Might be temporary
 
-	before{
+	before {
 		println(s"Test Type: ${testType}")
 		println(s"Test Environment: ${env}")
 		println(s"Debug Mode: ${debugMode}")
@@ -370,7 +370,7 @@ class XUI_Simulation extends Simulation {
 						rampUsersPerSec(userPerSecRate) to (0.00) during (rampDownDurationMins minutes)
 					)
 				}
-				else{
+				else {
 					Seq(atOnceUsers(1))
 				}
 			case "pipeline" =>
@@ -392,3 +392,6 @@ class XUI_Simulation extends Simulation {
 		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 	).protocols(httpProtocol)
 		.assertions(forAll.successfulRequests.percent.gte(80))
+
+
+}
