@@ -1629,8 +1629,8 @@ object Solicitor_PRL_FL401 {
     * Submit
     ======================================================================================*/
 
-    .group("XUI_PRL_FL401_480_SOTSubmit") {
-      exec(http("XUI_PRL_FL401_480_005_SOTSubmit")
+    .group("XUI_PRL_FL401_490_SOTSubmit") {
+      exec(http("XUI_PRL_FL401_490_005_SOTSubmit")
         .post("/data/cases/${caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -1639,7 +1639,7 @@ object Solicitor_PRL_FL401 {
         .check(substring("fl401StmtOfTruth"))
         .check(jsonPath("$.state").is("SUBMITTED_PAID")))
 
-      .exec(http("XUI_PRL_FL401_480_010_WorkAllocation")
+      .exec(http("XUI_PRL_FL401_490_010_WorkAllocation")
         .post("/workallocation/searchForCompletable")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
@@ -1649,7 +1649,7 @@ object Solicitor_PRL_FL401 {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_PRL_FL401_480_015_ViewCase")
+      .exec(http("XUI_PRL_FL401_490_015_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")

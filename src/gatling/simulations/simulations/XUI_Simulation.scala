@@ -82,7 +82,7 @@ class XUI_Simulation extends Simulation {
 		case _ => disabledPauses
 	}
 
-  val httpProtocol = http
+	val httpProtocol = http
 		.baseUrl(Environment.baseURL.replace("${env}", s"${env}"))
 		.inferHtmlResources()
 		.silentResources
@@ -108,30 +108,30 @@ class XUI_Simulation extends Simulation {
 				.doIfOrElse(session => session("prl-percentage").as[Int] < prlC100Percentage) {
 					//C100 Journey
 					exec(Solicitor_PRL_C100.CreatePrivateLawCase)
-					.exec(Solicitor_PRL_C100.TypeOfApplication)
-					.exec(Solicitor_PRL_C100.HearingUrgency)
-					.exec(Solicitor_PRL_C100.ApplicantDetails)
-					.exec(Solicitor_PRL_C100.ChildDetails)
-					.exec(Solicitor_PRL_C100.RespondentDetails)
-					.exec(Solicitor_PRL_C100.MIAM)
-					.exec(Solicitor_PRL_C100.AllegationsOfHarm)
-					.exec(Solicitor_PRL_C100.ViewPdfApplication)
-					.exec(Solicitor_PRL_C100.SubmitAndPay)
+						.exec(Solicitor_PRL_C100.TypeOfApplication)
+						.exec(Solicitor_PRL_C100.HearingUrgency)
+						.exec(Solicitor_PRL_C100.ApplicantDetails)
+						.exec(Solicitor_PRL_C100.ChildDetails)
+						.exec(Solicitor_PRL_C100.RespondentDetails)
+						.exec(Solicitor_PRL_C100.MIAM)
+						.exec(Solicitor_PRL_C100.AllegationsOfHarm)
+						.exec(Solicitor_PRL_C100.ViewPdfApplication)
+						.exec(Solicitor_PRL_C100.SubmitAndPay)
 
 				} {
 					//FL401 Journey
 					exec(Solicitor_PRL_FL401.CreatePrivateLawCase)
-					.exec(Solicitor_PRL_FL401.TypeOfApplication)
-					.exec(Solicitor_PRL_FL401.WithoutNoticeOrder)
-					.exec(Solicitor_PRL_FL401.ApplicantDetails)
-					.exec(Solicitor_PRL_FL401.RespondentDetails)
-					.exec(Solicitor_PRL_FL401.ApplicantsFamily)
-					.exec(Solicitor_PRL_FL401.Relationship)
-					.exec(Solicitor_PRL_FL401.Behaviour)
-					.exec(Solicitor_PRL_FL401.TheHome)
-					.exec(Solicitor_PRL_FL401.UploadDocuments)
-					.exec(Solicitor_PRL_FL401.ViewPDF)
-					.exec(Solicitor_PRL_FL401.StatementOfTruth)
+						.exec(Solicitor_PRL_FL401.TypeOfApplication)
+						.exec(Solicitor_PRL_FL401.WithoutNoticeOrder)
+						.exec(Solicitor_PRL_FL401.ApplicantDetails)
+						.exec(Solicitor_PRL_FL401.RespondentDetails)
+						.exec(Solicitor_PRL_FL401.ApplicantsFamily)
+						.exec(Solicitor_PRL_FL401.Relationship)
+						.exec(Solicitor_PRL_FL401.Behaviour)
+						.exec(Solicitor_PRL_FL401.TheHome)
+						.exec(Solicitor_PRL_FL401.UploadDocuments)
+						.exec(Solicitor_PRL_FL401.ViewPDF)
+						.exec(Solicitor_PRL_FL401.StatementOfTruth)
 				}
 				.exec(Logout.XUILogout)
 		}
@@ -139,18 +139,18 @@ class XUI_Simulation extends Simulation {
 	/*===============================================================================================
 	* XUI Solicitor Probate Scenario
 	 ===============================================================================================*/
-  val ProbateSolicitorScenario = scenario("***** Probate Create Case *****")
+	val ProbateSolicitorScenario = scenario("***** Probate Create Case *****")
 		.exitBlockOnFail {
 			feed(UserFeederProbate)
 				.exec(_.set("env", s"${env}")
-							.set("caseType", "GrantOfRepresentation"))
+					.set("caseType", "GrantOfRepresentation"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.repeat(2) {
 					exec(Solicitor_Probate.CreateProbateCase)
-					.exec(Solicitor_Probate.AddDeceasedDetails)
-					.exec(Solicitor_Probate.AddApplicationDetails)
-					.exec(Solicitor_Probate.ReviewAndSubmitApplication)
+						.exec(Solicitor_Probate.AddDeceasedDetails)
+						.exec(Solicitor_Probate.AddApplicationDetails)
+						.exec(Solicitor_Probate.ReviewAndSubmitApplication)
 				}
 				.exec(Logout.XUILogout)
 		}
@@ -162,12 +162,12 @@ class XUI_Simulation extends Simulation {
 		.exitBlockOnFail {
 			feed(UserFeederIAC)
 				.exec(_.set("env", s"${env}")
-							.set("caseType", "Asylum"))
+					.set("caseType", "Asylum"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.repeat(2) {
 					exec(Solicitor_IAC.CreateIACCase)
-					.exec(Solicitor_IAC.shareacase)
+						.exec(Solicitor_IAC.shareacase)
 				}
 				.exec(Logout.XUILogout)
 		}
@@ -179,7 +179,7 @@ class XUI_Simulation extends Simulation {
 		.exitBlockOnFail {
 			feed(UserFeederDivorce)
 				.exec(_.set("env", s"${env}")
-							.set("caseType", "DIVORCE"))
+					.set("caseType", "DIVORCE"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.repeat(2) {
@@ -196,10 +196,10 @@ class XUI_Simulation extends Simulation {
 			//feed two rows of data - applicant1's solicitor and applicant2's solicitor
 			feed(UserFeederNFD, 2)
 				.exec(_.set("env", s"${env}")
-							.set("caseType", "NFD")
-							.set("nfdCaseType", "sole")
-							.set("NFDLabelsInitialised", nfdSoleLabelsInitialised) //sets the initialised labels for JSON bodies
-							.set("NFDLabelsPopulated", nfdSoleLabelsPopulated)) //sets the populated labels for JSON bodies
+					.set("caseType", "NFD")
+					.set("nfdCaseType", "sole")
+					.set("NFDLabelsInitialised", nfdSoleLabelsInitialised) //sets the initialised labels for JSON bodies
+					.set("NFDLabelsPopulated", nfdSoleLabelsPopulated)) //sets the populated labels for JSON bodies
 				//Solicitor 1 - Divorce Application
 				.exec(Homepage.XUIHomePage)
 				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
@@ -255,10 +255,10 @@ class XUI_Simulation extends Simulation {
 			//feed two rows of data - applicant1's solicitor and applicant2's solicitor
 			feed(UserFeederNFD, 2)
 				.exec(_.set("env", s"${env}")
-							.set("caseType", "NFD")
-							.set("nfdCaseType", "joint")
-							.set("NFDLabelsInitialised", nfdJointLabelsInitialised) //sets the initialised labels for JSON bodies
-							.set("NFDLabelsPopulated", nfdJointLabelsPopulated)) //sets the populated labels for JSON bodies
+					.set("caseType", "NFD")
+					.set("nfdCaseType", "joint")
+					.set("NFDLabelsInitialised", nfdJointLabelsInitialised) //sets the initialised labels for JSON bodies
+					.set("NFDLabelsPopulated", nfdJointLabelsPopulated)) //sets the populated labels for JSON bodies
 				//Solicitor 1 - Divorce Application
 				.exec(Homepage.XUIHomePage)
 				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
@@ -298,7 +298,7 @@ class XUI_Simulation extends Simulation {
 		.exitBlockOnFail {
 			feed(UserFeederFR)
 				.exec(_.set("env", s"${env}")
-							.set("caseType", "FinancialRemedyMVP2"))
+					.set("caseType", "FinancialRemedyMVP2"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.repeat(2) {
@@ -314,7 +314,7 @@ class XUI_Simulation extends Simulation {
 		.exitBlockOnFail {
 			feed(UserFeederFPL)
 				.exec(_.set("env", s"${env}")
-							.set("caseType", "CARE_SUPERVISION_EPO"))
+					.set("caseType", "CARE_SUPERVISION_EPO"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.exec(Solicitor_FPL.CreateFPLCase)
@@ -347,8 +347,8 @@ class XUI_Simulation extends Simulation {
 				//Only continue with the case activities if results were returned
 				.doIf(session => session("numberOfResults").as[Int] > 0) {
 					exec(Caseworker_Navigation.SearchByCaseNumber)
-					.exec(Caseworker_Navigation.ViewCase)
-					.exec(Caseworker_Navigation.NavigateTabs)
+						.exec(Caseworker_Navigation.ViewCase)
+						.exec(Caseworker_Navigation.NavigateTabs)
 				}
 				.exec(Caseworker_Navigation.LoadCaseList)
 				.exec(Logout.XUILogout)
@@ -392,5 +392,3 @@ class XUI_Simulation extends Simulation {
 		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 	).protocols(httpProtocol)
 		.assertions(forAll.successfulRequests.percent.gte(80))
-
-}
