@@ -1,6 +1,6 @@
 {
   "data": {
-    "paymentServiceRequestReferenceNumber": "${paymentReferenceNumber}"
+    "paymentServiceRequestReferenceNumber": null
   },
   "event": {
     "id": "submitAndPay",
@@ -27,7 +27,7 @@
       "document_filename": "${DocumentFileName}",
       "document_hash": "${DocumentHash}"
     },
-    "paymentServiceRequestReferenceNumber": "${paymentReferenceNumber}"
+    "paymentServiceRequestReferenceNumber": null
   },
   "event_token": "${event_token}",
   "ignore_warning": false,

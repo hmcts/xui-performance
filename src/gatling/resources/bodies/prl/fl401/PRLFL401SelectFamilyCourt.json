@@ -1,6 +1,13 @@
 {
   "data": {
-    "submitCountyCourtSelection": "swanseaCountyCourt",
+    "submitCountyCourtSelection": "swanseaCountyCourt"
+  },
+  "event": {
+    "id": "fl401StatementOfTruthAndSubmit",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
     "fl401StmtOfTruth": {
       "date": "2022-01-01",
       "fullname": "Perf Solicitor",
@@ -14,13 +21,10 @@
       "confidentialityConsent": [
         "fl401ConfidentialConsent"
       ]
-    }
-  },
-  "event": {
-    "id": "fl401StatementOfTruthAndSubmit",
-    "summary": "",
-    "description": ""
+    },
+    "submitCountyCourtSelection": "swanseaCountyCourt"
   },
   "event_token": "${event_token}",
-  "ignore_warning": false
+  "ignore_warning": false,
+  "case_reference": "${caseId}"
 }
