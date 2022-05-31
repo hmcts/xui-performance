@@ -7,6 +7,7 @@ import utils._
 
 import scala.io.Source
 import io.gatling.core.controller.inject.open.OpenInjectionStep
+import io.gatling.commons.stats.assertion.Assertion
 import io.gatling.core.pause.PauseType
 
 import scala.concurrent.duration._
@@ -380,6 +381,26 @@ class XUI_Simulation extends Simulation {
 		}
 	}
 
+	//defines the test assertions, based on the test type
+	def assertions(simulationType: String): Seq[Assertion] = {
+		simulationType match {
+			case "perftest" | "pipeline" => //currently using the same assertions for a performance test and the pipeline
+				Seq(global.successfulRequests.percent.gte(95),
+					details("XUI_PRL_C100_460_SubmitAndPayNow").successfulRequests.percent.gte(80),
+					details("XUI_PRL_FL401_480_SOTSubmit").successfulRequests.percent.gte(80),
+					details("XUI_Probate_300_ViewCase").successfulRequests.percent.gte(80),
+					details("XUI_IAC_310_ShareACaseConfirm").successfulRequests.percent.gte(80),
+					details("XUI_FPL_330_ReturnToCase").successfulRequests.percent.gte(80),
+					details("XUI_Divorce_270_SubmitPetition").successfulRequests.percent.gte(80),
+					details("XUI_000_CCDEvent-system-progress-case-awaiting-final-order").successfulRequests.percent.gte(80), //NFD Sole
+					details("XUI_000_CCDEvent-system-progress-held-case").successfulRequests.percent.gte(80), //NFD Joint
+					details("XUI_FR_170_SubmitApplication").successfulRequests.percent.gte(80),
+					details("XUI_Caseworker_080_CaseList").successfulRequests.percent.gte(80))
+			case _ =>
+				Seq()
+		}
+	}
+
 	setUp(
 		PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
@@ -391,6 +412,6 @@ class XUI_Simulation extends Simulation {
 		FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 	).protocols(httpProtocol)
-		.assertions(forAll.successfulRequests.percent.gte(80))
+		.assertions(assertions(testType))
 
 }
