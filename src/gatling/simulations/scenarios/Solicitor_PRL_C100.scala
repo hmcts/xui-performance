@@ -1491,7 +1491,7 @@ object Solicitor_PRL_C100 {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XXUI_PRL_C100_460_015_SubmitAndPayNowViewCase")
+      .exec(http("XUI_PRL_C100_460_015_SubmitAndPayNowViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")

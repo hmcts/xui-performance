@@ -1597,7 +1597,7 @@ object Solicitor_PRL_FL401 {
         .body(ElFileBody("bodies/prl/fl401/PRLFL401SOTContinue.json"))
         .check(substring("fl401ConfidentialityCheck")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Ffl401StatementOfTruthAndSubmit%2Fsubmit"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F{caseId}%2Ftrigger%2Ffl401StatementOfTruthAndSubmit%2Ffl401StatementOfTruthAndSubmit3"))
 
       .exec(Common.userDetails)
     }
@@ -1618,7 +1618,7 @@ object Solicitor_PRL_FL401 {
         .body(ElFileBody("bodies/prl/fl401/PRLFL401SelectFamilyCourt.json"))
         .check(substring("submitCountyCourtSelection")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Ffl401StatementOfTruthAndSubmit%2Fsubmit"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F{caseId}%2Ftrigger%2Ffl401StatementOfTruthAndSubmit%2Fsubmit"))
 
       .exec(Common.userDetails)
     }
