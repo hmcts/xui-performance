@@ -211,7 +211,7 @@ object Solicitor_PRL_FL401 {
     * Type Of Application Profile
     ======================================================================================*/
 
-    .group("XUI_PRL_FL401_95_TypeOfApplicationProfile") {
+    .group("XUI_PRL_FL401_095_TypeOfApplicationProfile") {
       exec(Common.profile)
     }
 
