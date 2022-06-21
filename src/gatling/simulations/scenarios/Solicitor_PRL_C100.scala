@@ -90,7 +90,7 @@ object Solicitor_PRL_C100 {
     * Select Type of Application (C100 or FL401) - C100
     ======================================================================================*/
 
-    .group("XUI_PRL__C100_050_SelectApplicationType") {
+    .group("XUI_PRL_C100_050_SelectApplicationType") {
       exec(http("XUI_PRL_C100_050_005_SelectApplicationType")
         .post("/data/case-types/PRLAPPS/validate?pageId=solicitorCreate2")
         .headers(Headers.commonHeader)
