@@ -1,0 +1,16 @@
+{
+  "data": {
+    "judgeDetailsName": "${BailsJudgeName}"
+  },
+  "event": {
+    "id": "recordTheDecision",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "judgeDetailsName": "myself"
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false,
+  "case_reference": "${case_Id}"
+}

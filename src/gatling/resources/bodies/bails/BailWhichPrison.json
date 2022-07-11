@@ -1,0 +1,34 @@
+{
+  "data": {
+    "prisonName": "Liverpool"
+  },
+  "event": {
+    "id": "startApplication",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "hasPreviousBailApplication": "No",
+    "previousApplicationDoneViaAria": "No",
+    "previousApplicationDoneViaCcd": "No",
+    "applicantGivenNames": "${BailsApplicantFirstName}",
+    "applicantFamilyName": "${BailsApplicantLastName}",
+    "applicantDateOfBirth": "${BailsAppDobYear}-${BailsAppDobMonth}-${BailsAppDobDay}",
+    "applicantGender": "Male",
+    "applicantNationality": "HAS_NATIONALITY",
+    "applicantNationalities": [
+      {
+        "value": {
+          "code": "English"
+        },
+        "id": null
+      }
+    ],
+    "homeOfficeReferenceNumber": "${BailsHomeOfficeRefNum}",
+    "applicantDetainedLoc": "prison",
+    "applicantPrisonDetails": "${BailsNomsNumber}",
+    "prisonName": "Liverpool"
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false
+}

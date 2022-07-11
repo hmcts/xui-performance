@@ -23,6 +23,9 @@ class XUI_Simulation extends Simulation {
 	val UserFeederNFD = csv("UserDataNFD.csv").circular
 	val UserFeederProbate = csv("UserDataProbate.csv").circular
 	val UserFeederPRL = csv("UserDataPRL.csv").circular
+	val UserFeederBails = csv("UserDataBails.csv").circular
+	val UserFeederBailsHO = csv("UserDataBailsHO.csv").circular
+	val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
@@ -52,6 +55,7 @@ class XUI_Simulation extends Simulation {
 	/* ******************************** */
 
 	/* PERFORMANCE TEST CONFIGURATION */
+	val bailsTargetPerHour: Double = 7
 	val prlTargetPerHour: Double = 100
 	val probateTargetPerHour: Double = 238
 	val iacTargetPerHour: Double = 20
@@ -134,6 +138,44 @@ class XUI_Simulation extends Simulation {
 					.exec(Solicitor_PRL_FL401.StatementOfTruth)
 				}
 				.exec(Logout.XUILogout)
+		}
+
+
+
+	/*===============================================================================================
+	* XUI Legal Rep Bails Scenario
+ 	===============================================================================================*/
+	val BailsScenario = scenario("***** Bails Create Application *****")
+		.exitBlockOnFail {
+			feed(UserFeederBails)
+				.exec(_.set("env", s"${env}")
+					.set("caseType", "Bail"))
+				.exec(Homepage.XUIHomePage)
+				.exec(Login.XUILogin)
+					.exec(Solicitor_Bails.CreateBailApplication)
+					.exec(Solicitor_Bails.SubmitBailApplication)
+				.exec(Logout.XUILogout)
+				.feed(UserFeederBailsHO)
+				.exec(Homepage.XUIHomePage)
+					.exec(flushHttpCache)
+					.exec(flushCookieJar)
+				.exec(Login.XUILogin)
+					.exec(Solicitor_Bails.UploadBailSummary)
+				.exec(Logout.XUILogout)
+				.feed(UserFeederBailsJudge)
+				.exec(Homepage.XUIHomePage)
+					.exec(flushHttpCache)
+					.exec(flushCookieJar)
+				.exec(Login.XUILogin)
+					.exec(Solicitor_Bails.RecordBailDecision)
+					.exec(Solicitor_Bails.UploadSignedDecision)
+				.exec(Logout.XUILogout)
+
+				.exec {
+					session =>
+						println(session)
+						session
+				}
 		}
 
 	/*===============================================================================================
@@ -406,7 +448,8 @@ class XUI_Simulation extends Simulation {
 	}
 
 	setUp(
-		PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 		ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),

@@ -1,0 +1,72 @@
+{
+  "data": {
+    "supporterImmigration": "${BailsSupporterImmigration}"
+  },
+  "event": {
+    "id": "startApplication",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "hasPreviousBailApplication": "No",
+    "previousApplicationDoneViaAria": "No",
+    "previousApplicationDoneViaCcd": "No",
+    "applicantGivenNames": "${BailsApplicantFirstName}",
+    "applicantFamilyName": "${BailsApplicantLastName}",
+    "applicantDateOfBirth": "${BailsAppDobYear}-${BailsAppDobMonth}-${BailsAppDobDay}",
+    "applicantGender": "Male",
+    "applicantNationality": "HAS_NATIONALITY",
+    "applicantNationalities": [
+      {
+        "value": {
+          "code": "English"
+        },
+        "id": "${applicantNationalitiesId}"
+      }
+    ],
+    "homeOfficeReferenceNumber": "${BailsHomeOfficeRefNum}",
+    "applicantDetainedLoc": "prison",
+    "applicantPrisonDetails": "${BailsNomsNumber}",
+    "prisonName": "Liverpool",
+    "applicantArrivalInUKDate": "${BailsArrivedYear}-${BailsAppDobMonth}-${BailsAppDobDay}",
+    "applicantHasMobile": "Yes",
+    "applicantMobileNumber1": "${BailsAppPhoneNumber}",
+    "hasAppealHearingPending": "YesWithoutAppealNumber",
+    "applicantHasAddress": "Yes",
+    "agreesToBoundByFinancialCond": "Yes",
+    "financialCondAmount1": "100",
+    "applicantAddress": {
+      "AddressLine1": "${addressLines(0)}",
+      "AddressLine2": "${addressLines(1)}",
+      "AddressLine3": "",
+      "PostTown": "${addressLines(2)}",
+      "County": "",
+      "PostCode": "${addressLines(3)}",
+      "Country": "United Kingdom"
+    },
+    "hasFinancialCondSupporter": "Yes",
+    "supporterGivenNames": "${BailsFinancialFirstName}",
+    "supporterFamilyNames": "${BailsFinancialLastName}",
+    "supporterAddressDetails": {
+      "AddressLine1": "${addressLines(0)}",
+      "AddressLine2": "${addressLines(1)}",
+      "AddressLine3": "",
+      "PostTown": "${addressLines(2)}",
+      "County": "",
+      "PostCode": "${addressLines(3)}",
+      "Country": "United Kingdom"
+    },
+    "supporterContactDetails": [
+      "mobile",
+      "email"
+    ],
+    "supporterMobileNumber1": "${BailsSupporterPhoneNumber}",
+    "supporterEmailAddress1": "${BailsSupporterEmail}",
+    "supporterDOB": "${BailsSupporterDobYear}-${BailsSupporterDobMonth}-${BailsSupporterDobDay}",
+    "supporterRelation": "${BailsSupporterRelationship}",
+    "supporterOccupation": "${BailsSupporterOccupation}",
+    "supporterImmigration": "${BailsSupporterImmigration}"
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false
+}
