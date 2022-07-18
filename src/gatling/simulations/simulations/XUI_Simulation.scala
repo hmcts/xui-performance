@@ -55,7 +55,7 @@ class XUI_Simulation extends Simulation {
 	/* ******************************** */
 
 	/* PERFORMANCE TEST CONFIGURATION */
-	val bailsTargetPerHour: Double = 7
+	val bailsTargetPerHour: Double = 5
 	val prlTargetPerHour: Double = 100
 	val probateTargetPerHour: Double = 238
 	val iacTargetPerHour: Double = 20
@@ -157,15 +157,11 @@ class XUI_Simulation extends Simulation {
 				.exec(Logout.XUILogout)
 				.feed(UserFeederBailsHO)
 				.exec(Homepage.XUIHomePage)
-					.exec(flushHttpCache)
-					.exec(flushCookieJar)
 				.exec(Login.XUILogin)
 					.exec(Solicitor_Bails.UploadBailSummary)
 				.exec(Logout.XUILogout)
 				.feed(UserFeederBailsJudge)
 				.exec(Homepage.XUIHomePage)
-					.exec(flushHttpCache)
-					.exec(flushCookieJar)
 				.exec(Login.XUILogin)
 					.exec(Solicitor_Bails.RecordBailDecision)
 					.exec(Solicitor_Bails.UploadSignedDecision)
@@ -460,6 +456,7 @@ class XUI_Simulation extends Simulation {
 		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 	).protocols(httpProtocol)
 		.assertions(assertions(testType))
+		.maxDuration(75 minutes)
 
 
 }

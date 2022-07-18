@@ -17,50 +17,49 @@ object Solicitor_Bails {
 
   val CreateBailApplication =
 
+    exec(_.setAll(
+      "BailsApplicantFirstName" -> ("Bails" + Common.randomString(5)),
+      "BailsApplicantLastName" -> ("Test" + Common.randomString(5)),
+      "BailsFinancialFirstName" -> ("App" + Common.randomString(5)),
+      "BailsFinancialLastName" -> ("Test" + Common.randomString(5)),
+      "BailsLegalRepFirstName" -> ("Legal" + Common.randomString(5)),
+      "BailsJudgeName" -> ("Judge" + Common.randomString(5)),
+      "BailsAppDobDay" -> Common.getDay(),
+      "BailsAppDobMonth" -> Common.getMonth(),
+      "BailsAppDobYear" -> Common.getDobYear(),
+      "BailsHomeOfficeRefNum" -> (Common.randomNumber(7)),
+      "BailsNomsNumber" -> (Common.randomNumber(7)),
+      "BailsArrivedYear" -> Common.getDobYearChild(),
+      "BailsAppPhoneNumber" -> ("07" + Common.randomNumber(9)),
+      "BailsSupporterPhoneNumber" -> ("07" + Common.randomNumber(9)),
+      "BailsSupporterEmail" -> (Common.randomString(7) + "@gmail.com"),
+      "BailsSupporterDobDay" -> Common.getDay(),
+      "BailsSupporterDobMonth" -> Common.getMonth(),
+      "BailsSupporterDobYear" -> Common.getDobYear(),
+      "BailsSupporterRelationship" -> (Common.randomString(7)),
+      "BailsSupporterOccupation" -> (Common.randomString(7)),
+      "BailsPassportNumber" -> (Common.randomNumber(7)),
+      "BailsEvidenceDescription" -> (Common.randomString(7) + "" + Common.randomString(6) + "" +Common.randomString(5)),
+      "BailsSupporterImmigration" -> (Common.randomString(7)),
+      "BailsLegalRepReference" -> (Common.randomString(7) + "" + Common.randomString(7)),
+      "BailsConditionsAppearance" -> (Common.randomString(7) + "" +  Common.randomString(7)),
+      "BailsConditionsActivities" -> (Common.randomString(7) + "" +  Common.randomString(7)),
+      "BailTransferDirections" -> (Common.randomString(7) + "" +  Common.randomString(7)),
+      "BailsGroundsForBailReasons" -> (Common.randomString(7) + "" + Common.randomString(6) + "" + Common.randomString(5))))
+
 
     /*======================================================================================
     * Click the Create Case link
     ======================================================================================*/
 
-    group("XUI_Bails_030_CreateCase") {
+    .group("XUI_Bails_030_CreateCase") {
+      exec(Common.healthcheck("%2Fcases%2Fcase-filter"))
 
-      exec(_.setAll(
-        "BailsApplicantFirstName" -> ("Bails" + Common.randomString(5)),
-        "BailsApplicantLastName" -> ("Test" + Common.randomString(5)),
-        "BailsFinancialFirstName" -> ("App" + Common.randomString(5)),
-        "BailsFinancialLastName" -> ("Test" + Common.randomString(5)),
-        "BailsLegalRepFirstName" -> ("Legal" + Common.randomString(5)),
-        "BailsJudgeName" -> ("Judge" + Common.randomString(5)),
-        "BailsAppDobDay" -> Common.getDay(),
-        "BailsAppDobMonth" -> Common.getMonth(),
-        "BailsAppDobYear" -> Common.getDobYear(),
-        "BailsHomeOfficeRefNum" -> (Common.randomNumber(7)),
-        "BailsNomsNumber" -> (Common.randomNumber(7)),
-        "BailsArrivedYear" -> Common.getDobYearChild(),
-        "BailsAppPhoneNumber" -> ("07" + Common.randomNumber(9)),
-        "BailsSupporterPhoneNumber" -> ("07" + Common.randomNumber(9)),
-        "BailsSupporterEmail" -> (Common.randomString(7) + "@gmail.com"),
-        "BailsSupporterDobDay" -> Common.getDay(),
-        "BailsSupporterDobMonth" -> Common.getMonth(),
-        "BailsSupporterDobYear" -> Common.getDobYear(),
-        "BailsSupporterRelationship" -> (Common.randomString(7)),
-        "BailsSupporterOccupation" -> (Common.randomString(7)),
-        "BailsPassportNumber" -> (Common.randomNumber(7)),
-        "BailsEvidenceDescription" -> (Common.randomString(7) + Common.randomString(6) + Common.randomString(5)),
-        "BailsSupporterImmigration" -> (Common.randomString(7)),
-        "BailsLegalRepReference" -> (Common.randomString(7) + Common.randomString(7)),
-        "BailsConditionsAppearance" -> (Common.randomString(7) + "" +  Common.randomString(7) +  Common.randomString(7) +  Common.randomString(7)),
-        "BailsConditionsActivities" -> (Common.randomString(7) + "" +  Common.randomString(7) +  Common.randomString(7) +  Common.randomString(7)),
-        "BailTransferDirections" -> (Common.randomString(7) + "" +  Common.randomString(7) +  Common.randomString(7) +  Common.randomString(7)),
-        "BailsGroundsForBailReasons" -> (Common.randomString(7) + Common.randomString(6) + Common.randomString(5))))
-
-        .exec(Common.healthcheck("%2Fcases%2Fcase-filter"))
-
-        .exec(http("XUI_Bails_030_005_CreateCase")
-          .get(BaseURL + "/aggregated/caseworkers/:uid/jurisdictions?access=create")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/json")
-          .check(substring("Immigration & Asylum")))
+      .exec(http("XUI_Bails_030_005_CreateCase")
+        .get(BaseURL + "/aggregated/caseworkers/:uid/jurisdictions?access=create")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json")
+        .check(substring("Bail")))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -82,6 +81,7 @@ object Solicitor_Bails {
       .exec(Common.healthcheck("%2Fcases%2Fcase-create%2FIA%2FBail%2FstartApplication%2FstartApplicationhasPreviousBailApplication"))
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+
     }
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -112,7 +112,7 @@ object Solicitor_Bails {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/bails/BailsCreateNewApplication.json"))
-        .check(regex("startApplicationnoAccessToPreviousApplications")))
+        .check(substring("startApplication")))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -796,11 +796,11 @@ object Solicitor_Bails {
 
       exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}"))
 
-      .exec(http("XUI_Bails_440_005_CreateCase")
+      .exec(http("XUI_Bails_440_005_Open_Case")
         .get("/data/internal/cases/${case_Id}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-        .check(jsonPath("$.case_id").is("${case_Id}")))
+        .check(jsonPath("$.state.name").is("Application started")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%23Overview"))
 
@@ -882,7 +882,7 @@ object Solicitor_Bails {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/bails/BailsSubmitTheApplication.json"))
-        .check(jsonPath("$.callback_response_status").is("CALLBACK_COMPLETED")))
+        .check(jsonPath("$.state").is("applicationSubmitted")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FsubmitApplication%2Fconfirm"))
 
@@ -904,7 +904,7 @@ object Solicitor_Bails {
         .get("/data/internal/cases/${case_Id}")
         .headers(Headers.navigationHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-        .check(jsonPath("$.case_id").is("${case_Id}")))
+        .check(jsonPath("$.state.name").is("Application submitted")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%23Overview"))
 
@@ -1009,7 +1009,7 @@ object Solicitor_Bails {
         .get("/data/internal/cases/${case_Id}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-        .check(jsonPath("$.case_id").is("${case_Id}")))
+        .check(jsonPath("$.state.name").is("Bail summary")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%23Overview"))
 
@@ -1284,6 +1284,26 @@ object Solicitor_Bails {
 
 
   val UploadSignedDecision =
+
+    /*======================================================================================
+    * Load case
+    ======================================================================================*/
+
+    group("XUI_Bails_645_Open_Case") {
+
+      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}"))
+
+      .exec(http("XUI_Bails_645_005_Open_Case")
+        .get("/data/internal/cases/${case_Id}")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
+        .check(jsonPath("$.state.name").is("Unsigned decision")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%23Overview"))
+
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
 
     /*======================================================================================
     * Upload Signed Decision
