@@ -7,7 +7,7 @@
           "document": {
             "document_url": "${DocumentURL}",
             "document_binary_url": "${DocumentURL}/binary",
-            "document_filename": "3MB.pdf",
+            "document_filename": "120KB.pdf",
             "document_hash": "${DocumentHash}"
           }
         },
@@ -38,5 +38,5 @@
   },
   "event_token": "${event_token}",
   "ignore_warning": false,
-  "case_reference": "${case_Id}"
+  "case_reference": "${caseId}"
 }

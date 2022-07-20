@@ -1,0 +1,150 @@
+{
+  "data": {
+    "appeal": {
+      "mrnDetails": {
+        "dwpIssuingOffice": "DWP PIP (1)",
+        "mrnDate": "2022-07-10",
+        "mrnLateReason": "",
+        "mrnMissingReason": null
+      },
+      "appellant": {
+        "id": "1",
+        "identity": {
+          "dob": "1990-02-26",
+          "nino": "AB877533I"
+        },
+        "name": {
+          "title": "Mr",
+          "firstName": "Joe",
+          "lastName": "Bloggs"
+        },
+        "address": {
+          "line1": "123 Hairy Lane",
+          "line2": "Off Hairy Park",
+          "town": "Hairyfield",
+          "county": "Kent",
+          "postcode": "CF24 4AD"
+        },
+        "contact": {
+          "email": "joe@bloggs.com",
+          "phone": null,
+          "mobile": "07411222222"
+        },
+        "organisation": null,
+        "isAppointee": "No",
+        "appointee": {
+          "id": "2",
+          "identity": {
+            "dob": null,
+            "nino": null
+          },
+          "name": {
+            "title": null,
+            "firstName": null,
+            "lastName": null
+          },
+          "address": {},
+          "contact": {
+            "email": null,
+            "phone": null,
+            "mobile": null
+          },
+          "organisation": null
+        },
+        "role": {},
+        "confidentialityRequired": null,
+        "isAddressSameAsAppointee": null
+      },
+      "benefitType": {
+        "code": "PIP",
+        "description": "Personal Independence Payment"
+      },
+      "hearingOptions": {
+        "arrangements---LABEL": []
+      },
+      "appealReasons": {
+        "reasons": [
+          {
+            "value": {
+              "reason": "aaaaaaaaaa",
+              "description": "aaaaaaaaaa"
+            },
+            "id": "${appealId}"
+          }
+        ],
+        "otherReasons": ""
+      },
+      "rep": {
+        "id": "3",
+        "identity": {
+          "dob": null,
+          "nino": null
+        },
+        "name": {
+          "title": null,
+          "firstName": null,
+          "lastName": null
+        },
+        "address": {},
+        "contact": {
+          "email": null,
+          "phone": null,
+          "mobile": null
+        },
+        "organisation": null,
+        "hasRepresentative": "No"
+      },
+      "signer": "Joe Bloggs",
+      "hearingType": null,
+      "hearingSubtype": {},
+      "receivedVia": "Online"
+    },
+    "dwpResponseDocument": {
+      "documentFileName": null,
+      "documentLink": {
+        "document_url": "${DocumentURLFTAResponse}",
+        "document_binary_url": "${DocumentURLFTAResponse}/binary",
+        "document_filename": "120KB.pdf",
+        "document_hash": "${DocumentHashFTAResponse}"
+      }
+    },
+    "dwpAT38Document": {
+      "documentFileName": null,
+      "documentLink": {
+        "document_url": "${DocumentURLAT38}",
+        "document_binary_url": "${DocumentURLAT38}/binary",
+        "document_filename": "120KB.pdf",
+        "document_hash": "${DocumentHashAT38}"
+      }
+    },
+    "dwpEvidenceBundleDocument": {
+      "documentFileName": null,
+      "documentLink": {
+        "document_url": "${DocumentURLFTAEvidence}",
+        "document_binary_url": "${DocumentURLFTAEvidence}/binary",
+        "document_filename": "120KB.pdf",
+        "document_hash": "${DocumentHashFTA}"
+      }
+    },
+    "dwpEditedEvidenceReason": null,
+    "dwpEditedResponseDocument": null,
+    "dwpEditedEvidenceBundleDocument": null,
+    "appendix12Doc": null,
+    "dwpUploadAudioVideoEvidence": [],
+    "benefitCode": "002",
+    "issueCode": "ML",
+    "dwpFurtherInfo": "No",
+    "dwpUCB": "No",
+    "dwpUcbEvidenceDocument": null,
+    "dwpFurtherEvidenceStates": null,
+    "dwpState": "UnRegistered",
+    "dwpIsOfficerAttending": "No"
+  },
+  "event": {
+    "id": "dwpUploadResponse",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false
+}

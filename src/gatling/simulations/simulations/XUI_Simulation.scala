@@ -26,6 +26,10 @@ class XUI_Simulation extends Simulation {
 	val UserFeederBails = csv("UserDataBails.csv").circular
 	val UserFeederBailsHO = csv("UserDataBailsHO.csv").circular
 	val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
+	val UserFeederHearing = csv("UserDataHearings.csv").circular
+	val UserFeederHearingCases = csv("UserDataHearingsCases.csv").circular
+	val feedCMCUserData = csv("CMCUserData.csv").circular
+	val feedCMCCaseData = csv("CMCCaseData.csv").circular
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
@@ -55,7 +59,8 @@ class XUI_Simulation extends Simulation {
 	/* ******************************** */
 
 	/* PERFORMANCE TEST CONFIGURATION */
-	val bailsTargetPerHour: Double = 5
+	val hearingsTargetPerHour: Double = 100
+	val bailsTargetPerHour: Double = 100
 	val prlTargetPerHour: Double = 100
 	val probateTargetPerHour: Double = 238
 	val iacTargetPerHour: Double = 20
@@ -206,6 +211,26 @@ class XUI_Simulation extends Simulation {
 				.repeat(2) {
 					exec(Solicitor_IAC.CreateIACCase)
 					.exec(Solicitor_IAC.shareacase)
+				}
+				.exec(Logout.XUILogout)
+		}
+
+
+	/*===============================================================================================
+	* XUI Solicitor IAC Scenario
+	 ===============================================================================================*/
+	val HearingsScenario = scenario("***** Upload Hearing *****")
+		.exitBlockOnFail {
+			feed(UserFeederHearing)
+				.exec(_.set("env", s"${env}")
+					.set("caseType", "Benefit"))
+				.exec(Homepage.XUIHomePage)
+				.exec(Login.XUILogin)
+				.repeat(1) {
+					feed(UserFeederHearingCases)
+					.exec(Solicitor_Hearings.SelectCase)
+				//		.exec(Solicitor_Hearings.UploadResponse)
+						.exec(Solicitor_Hearings.RequestHearing)
 				}
 				.exec(Logout.XUILogout)
 		}
@@ -444,6 +469,8 @@ class XUI_Simulation extends Simulation {
 	}
 
 	setUp(
+		HearingsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+			/*
 		BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
@@ -454,6 +481,8 @@ class XUI_Simulation extends Simulation {
 		NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+
+			 */
 	).protocols(httpProtocol)
 		.assertions(assertions(testType))
 		.maxDuration(75 minutes)
