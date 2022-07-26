@@ -990,7 +990,6 @@ object Solicitor_Bails {
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FuploadBailSummary%2FuploadBailSummarybailSummaryDocumentUpload"))
 
-
     }
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -1309,23 +1308,9 @@ object Solicitor_Bails {
     * Upload Signed Decision
     ======================================================================================*/
 
-    group("XUI_Bails_650_Signed_Decision_Open") {
+    .group("XUI_Bails_650_Signed_Decision_Open") {
 
-      exec(Common.configurationui)
-
-      .exec(Common.configJson)
-
-      .exec(Common.TsAndCs)
-
-      .exec(Common.configUI)
-
-      .exec(Common.userDetails)
-
-      .exec(Common.monitoringTools)
-
-      .exec(Common.isAuthenticated)
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FuploadSignedDecisionNotice%2FuploadSignedDecisionNoticesignedDecisionNoticeUpload"))
+      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FuploadSignedDecisionNotice"))
 
       .exec(Common.profile)
 
@@ -1337,10 +1322,11 @@ object Solicitor_Bails {
         .check(jsonPath("$.case_id").is("${case_Id}"))
         .check(substring("access_granted")))
 
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FuploadSignedDecisionNotice%2FuploadSignedDecisionNoticesignedDecisionNoticeUpload"))
+
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
 
     }
-
     .pause(MinThinkTime, MaxThinkTime)
 
 
@@ -1357,8 +1343,8 @@ object Solicitor_Bails {
         .header("content-type", "multipart/form-data")
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .formParam("classification", "PUBLIC")
-        .formParam("caseTypeId", "null")
-        .formParam("jurisdictionId", "null")
+        .formParam("caseTypeId", "Bail")
+        .formParam("jurisdictionId", "IA")
         .bodyPart(RawFileBodyPart("files", "120KB.pdf")
           .fileName("120KB.pdf")
           .transferEncoding("binary"))
@@ -1366,7 +1352,17 @@ object Solicitor_Bails {
         .check(jsonPath("$.documents[0].hashToken").saveAs("DocumentHash"))
         .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL")))
 
-      .exec(http("XUI_Bails_660_010_Upload_Decision_Notice")
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+
+    /*======================================================================================
+    * Submit the Uploaded Decision Notice
+    ======================================================================================*/
+
+    .group("XUI_Bails_665_Upload_Decision_Notice") {
+
+      exec(http("XUI_Bails_665_005_Upload_Decision_Notice")
         .post("/data/case-types/Bail/validate?pageId=uploadSignedDecisionNoticesignedDecisionNoticeUpload")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -1378,7 +1374,6 @@ object Solicitor_Bails {
 
     }
     .pause(MinThinkTime, MaxThinkTime)
-
 
 
     /*======================================================================================
@@ -1393,7 +1388,7 @@ object Solicitor_Bails {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/bails/BailsUploadSignedNoticeSubmit.json"))
-        .check(jsonPath("$.state").is("decisionDecided")))
+        .check(jsonPath("$.after_submit_callback_response.confirmation_header").is("# You uploaded the signed decision notice")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FuploadSignedDecisionNotice%2Fconfirm"))
 
