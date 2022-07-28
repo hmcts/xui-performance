@@ -28,8 +28,7 @@ class XUI_Simulation extends Simulation {
 	val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
 	val UserFeederHearing = csv("UserDataHearings.csv").circular
 	val UserFeederHearingCases = csv("UserDataHearingsCases.csv").circular
-	val feedCMCUserData = csv("CMCUserData.csv").circular
-	val feedCMCCaseData = csv("CMCCaseData.csv").circular
+//	val UserFeederHearingDetails = csv("HearingDetails.csv").circular
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
@@ -59,7 +58,7 @@ class XUI_Simulation extends Simulation {
 	/* ******************************** */
 
 	/* PERFORMANCE TEST CONFIGURATION */
-	val hearingsTargetPerHour: Double = 100
+	val hearingsTargetPerHour: Double = 10
 	val bailsTargetPerHour: Double = 100
 	val prlTargetPerHour: Double = 100
 	val probateTargetPerHour: Double = 238
@@ -229,8 +228,8 @@ class XUI_Simulation extends Simulation {
 				.repeat(1) {
 					feed(UserFeederHearingCases)
 					.exec(Solicitor_Hearings.SelectCase)
-				//		.exec(Solicitor_Hearings.UploadResponse)
-						.exec(Solicitor_Hearings.RequestHearing)
+						.exec(Solicitor_Hearings.UploadResponse)
+				//		.exec(Solicitor_Hearings.RequestHearing)
 				}
 				.exec(Logout.XUILogout)
 		}
