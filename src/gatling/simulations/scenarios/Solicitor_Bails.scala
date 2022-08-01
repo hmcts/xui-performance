@@ -18,34 +18,14 @@ object Solicitor_Bails {
   val CreateBailApplication =
 
     exec(_.setAll(
-      "BailsApplicantFirstName" -> ("Bails" + Common.randomString(5)),
-      "BailsApplicantLastName" -> ("Test" + Common.randomString(5)),
-      "BailsFinancialFirstName" -> ("App" + Common.randomString(5)),
-      "BailsFinancialLastName" -> ("Test" + Common.randomString(5)),
-      "BailsLegalRepFirstName" -> ("Legal" + Common.randomString(5)),
-      "BailsJudgeName" -> ("Judge" + Common.randomString(5)),
-      "BailsAppDobDay" -> Common.getDay(),
-      "BailsAppDobMonth" -> Common.getMonth(),
-      "BailsAppDobYear" -> Common.getDobYear(),
-      "BailsHomeOfficeRefNum" -> (Common.randomNumber(7)),
-      "BailsNomsNumber" -> (Common.randomNumber(7)),
+      "BailsRandomString" -> (Common.randomString(7)),
+      "BailsRandomNumber" -> (Common.randomNumber(7)),
+      "BailsDobDay" -> Common.getDay(),
+      "BailsDobMonth" -> Common.getMonth(),
+      "BailsDobYear" -> Common.getDobYear(),
       "BailsArrivedYear" -> Common.getDobYearChild(),
-      "BailsAppPhoneNumber" -> ("07" + Common.randomNumber(9)),
-      "BailsSupporterPhoneNumber" -> ("07" + Common.randomNumber(9)),
-      "BailsSupporterEmail" -> (Common.randomString(7) + "@gmail.com"),
-      "BailsSupporterDobDay" -> Common.getDay(),
-      "BailsSupporterDobMonth" -> Common.getMonth(),
-      "BailsSupporterDobYear" -> Common.getDobYear(),
-      "BailsSupporterRelationship" -> (Common.randomString(7)),
-      "BailsSupporterOccupation" -> (Common.randomString(7)),
-      "BailsPassportNumber" -> (Common.randomNumber(7)),
-      "BailsEvidenceDescription" -> (Common.randomString(7) + "" + Common.randomString(6) + "" +Common.randomString(5)),
-      "BailsSupporterImmigration" -> (Common.randomString(7)),
-      "BailsLegalRepReference" -> (Common.randomString(7) + "" + Common.randomString(7)),
-      "BailsConditionsAppearance" -> (Common.randomString(7) + "" +  Common.randomString(7)),
-      "BailsConditionsActivities" -> (Common.randomString(7) + "" +  Common.randomString(7)),
-      "BailTransferDirections" -> (Common.randomString(7) + "" +  Common.randomString(7)),
-      "BailsGroundsForBailReasons" -> (Common.randomString(7) + "" + Common.randomString(6) + "" + Common.randomString(5))))
+      "BailsPhoneNumber" -> ("07" + Common.randomNumber(9)),
+      "BailsSupporterEmail" -> (Common.randomString(7) + "@gmail.com")))
 
 
     /*======================================================================================
@@ -779,7 +759,7 @@ object Solicitor_Bails {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-case.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/bails/BailsCheckYourAnswers.json"))
-        .check(jsonPath("$.id").saveAs("case_Id"))
+        .check(jsonPath("$.id").saveAs("caseId"))
         .check(jsonPath("$.callback_response_status").is("CALLBACK_COMPLETED")))
 
     }
@@ -794,15 +774,15 @@ object Solicitor_Bails {
 
     group("XUI_Bails_440_Open_Case") {
 
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}"))
+      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
       .exec(http("XUI_Bails_440_005_Open_Case")
-        .get("/data/internal/cases/${case_Id}")
+        .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .check(jsonPath("$.state.name").is("Application started")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%23Overview"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%23Overview"))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -828,21 +808,21 @@ object Solicitor_Bails {
 
       .exec(Common.isAuthenticated)
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FsubmitApplication"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitApplication"))
 
       .exec(Common.profile)
 
       .exec(http("XUI_Bails_450_005_Open_Sumbit_Application")
-        .get("/data/internal/cases/${case_Id}/event-triggers/submitApplication?ignore-warning=false")
+        .get("/data/internal/cases/${caseId}/event-triggers/submitApplication?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .check(jsonPath("$.event_token").saveAs("event_token"))
-        .check(jsonPath("$.case_id").is("${case_Id}"))
+        .check(jsonPath("$.caseId").is("${caseId}"))
         .check(substring("access_granted")))
 
       .exec(Common.isAuthenticated)
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FsubmitApplication%2FsubmitApplicationdeclarationOnSubmit"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitApplication%2FsubmitApplicationdeclarationOnSubmit"))
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
 
@@ -864,7 +844,7 @@ object Solicitor_Bails {
         .body(ElFileBody("bodies/bails/BailsFactsAreTrue.json"))
         .check(substring("isLegalRep")))
 
-      .exec(Common.healthcheck("2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FsubmitApplication%2Fsubmit"))
+      .exec(Common.healthcheck("2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitApplication%2Fsubmit"))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -877,14 +857,14 @@ object Solicitor_Bails {
     .group("XUI_Bails_470_Submit_The_Application") {
 
       exec(http("XUI_Bails_470_005_Submit_The_Application")
-        .post("/data/cases/${case_Id}/events")
+        .post("/data/cases/${caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/bails/BailsSubmitTheApplication.json"))
         .check(jsonPath("$.state").is("applicationSubmitted")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FsubmitApplication%2Fconfirm"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitApplication%2Fconfirm"))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -898,15 +878,15 @@ object Solicitor_Bails {
 
     group("XUI_Bails_480_Open_Case") {
 
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}"))
+      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
       .exec(http("XUI_Bails_480_005_Open_Case")
-        .get("/data/internal/cases/${case_Id}")
+        .get("/data/internal/cases/${caseId}")
         .headers(Headers.navigationHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .check(jsonPath("$.state.name").is("Application submitted")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%23Overview"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%23Overview"))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -918,19 +898,19 @@ object Solicitor_Bails {
 
     .group("XUI_Bails_490_Upload_Bail_Open") {
 
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FuploadBailSummary"))
+      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FuploadBailSummary"))
 
       .exec(Common.profile)
 
       .exec(http("XUI_Bails_490_005_Upload_Bail_Open")
-        .get("/data/internal/cases/${case_Id}/event-triggers/uploadBailSummary?ignore-warning=false")
+        .get("/data/internal/cases/${caseId}/event-triggers/uploadBailSummary?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
-        .check(jsonPath("$.case_id").is("${case_Id}"))
+        .check(jsonPath("$.caseId").is("${caseId}"))
         .check(substring("access_granted")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FuploadBailSummary%2FuploadBailSummarybailSummaryDocumentUpload"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FuploadBailSummary%2FuploadBailSummarybailSummaryDocumentUpload"))
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
 
@@ -968,7 +948,7 @@ object Solicitor_Bails {
         .body(ElFileBody("bodies/bails/BailsBailUpload.json"))
         .check(substring("uploadBailSummaryDocs")))
 
-      .exec(Common.healthcheck("%%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FuploadBailSummary%2Fsubmit"))
+      .exec(Common.healthcheck("%%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FuploadBailSummary%2Fsubmit"))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -981,14 +961,14 @@ object Solicitor_Bails {
     .group("XUI_Bails_510_Upload_Bail_Submit") {
 
       exec(http("XUI_Bails_510_005_Upload_Bail_Submit")
-        .post(BaseURL + "/data/cases/${case_Id}/events")
+        .post(BaseURL + "/data/cases/${caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/bails/BailsUploadSubmit.json"))
         .check(jsonPath("$.state").is("bailSummaryUploaded")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FuploadBailSummary%2FuploadBailSummarybailSummaryDocumentUpload"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FuploadBailSummary%2FuploadBailSummarybailSummaryDocumentUpload"))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -1002,15 +982,15 @@ object Solicitor_Bails {
 
     group("XUI_Bails_520_Open_Case") {
 
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}"))
+      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
       .exec(http("XUI_Bails_520_005_Open_Case")
-        .get("/data/internal/cases/${case_Id}")
+        .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .check(jsonPath("$.state.name").is("Bail summary")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%23Overview"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%23Overview"))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -1022,19 +1002,19 @@ object Solicitor_Bails {
 
     .group("XUI_Bails_530_Record_Decision_Open") {
 
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FrecordTheDecision"))
+      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FrecordTheDecision"))
 
       .exec(Common.profile)
 
       .exec(http("XUI_Bails_530_Record_Decision_Open")
-        .get("/data/internal/cases/${case_Id}/event-triggers/recordTheDecision?ignore-warning=false")
+        .get("/data/internal/cases/${caseId}/event-triggers/recordTheDecision?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
-        .check(jsonPath("$.case_id").is("${case_Id}"))
+        .check(jsonPath("$.caseId").is("${caseId}"))
         .check(substring("access_granted")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FrecordTheDecision%2FrecordTheDecisionrecordDecisionJudgeDetails"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FrecordTheDecision%2FrecordTheDecisionrecordDecisionJudgeDetails"))
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
 
@@ -1056,7 +1036,7 @@ object Solicitor_Bails {
         .body(ElFileBody("bodies/bails/BailsJudgeName.json"))
         .check(substring("judgeDetailsName")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FrecordTheDecision%2FrecordTheDecisionrecordDecisionConsentDetails"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FrecordTheDecision%2FrecordTheDecisionrecordDecisionConsentDetails"))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -1076,7 +1056,7 @@ object Solicitor_Bails {
         .body(ElFileBody("bodies/bails/BailsSecretaryConsent.json"))
         .check(substring("secretaryOfStateConsentYesOrNo")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FrecordTheDecision%2FrecordTheDecisiondecisionGrantedOrRefusedDetails"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FrecordTheDecision%2FrecordTheDecisiondecisionGrantedOrRefusedDetails"))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -1096,7 +1076,7 @@ object Solicitor_Bails {
         .body(ElFileBody("bodies/bails/BailsTribunalDecision.json"))
         .check(substring("decisionGrantedOrRefused")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FrecordTheDecision%2FrecordTheDecisionreleaseStatus"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FrecordTheDecision%2FrecordTheDecisionreleaseStatus"))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -1116,7 +1096,7 @@ object Solicitor_Bails {
         .body(ElFileBody("bodies/bails/BailsImmediateEffect.json"))
         .check(substring("releaseStatusYesOrNo")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FrecordTheDecision%2FrecordTheDecisionconditionDetails"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FrecordTheDecision%2FrecordTheDecisionconditionDetails"))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -1136,7 +1116,7 @@ object Solicitor_Bails {
         .body(ElFileBody("bodies/bails/BailsConditionsForApplicant.json"))
         .check(substring("conditionsForBail")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FrecordTheDecision%2FrecordTheDecisionrecordFinancialCondition"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FrecordTheDecision%2FrecordTheDecisionrecordFinancialCondition"))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -1156,7 +1136,7 @@ object Solicitor_Bails {
         .body(ElFileBody("bodies/bails/BailsSubjectToFinancial.json"))
         .check(substring("recordFinancialConditionYesOrNo")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FrecordTheDecision%2FrecordTheDecisionrecordFinancialConditionDetails"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FrecordTheDecision%2FrecordTheDecisionrecordFinancialConditionDetails"))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -1176,7 +1156,7 @@ object Solicitor_Bails {
         .body(ElFileBody("bodies/bails/BailsFinancialConditionDetails.json"))
         .check(substring("recordFinancialConditionCorrectYesOrEdit")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FrecordTheDecision%2FrecordTheDecisionconfirmFinancialConditionAmount"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FrecordTheDecision%2FrecordTheDecisionconfirmFinancialConditionAmount"))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -1196,7 +1176,7 @@ object Solicitor_Bails {
         .body(ElFileBody("bodies/bails/BailsFinancialConditionConfirm.json"))
         .check(substring("financialCondAmount1")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FrecordTheDecision%2FrecordTheDecisionfinancialConditionSupporter1JudgeAgree"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FrecordTheDecision%2FrecordTheDecisionfinancialConditionSupporter1JudgeAgree"))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -1216,7 +1196,7 @@ object Solicitor_Bails {
         .body(ElFileBody("bodies/bails/BailsAcceptFinancialCondition.json"))
         .check(substring("judgeHasAgreedToSupporter1")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FrecordTheDecision%2FrecordTheDecisionfinancialConditionSupporter1Confirmation"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FrecordTheDecision%2FrecordTheDecisionfinancialConditionSupporter1Confirmation"))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -1236,7 +1216,7 @@ object Solicitor_Bails {
         .body(ElFileBody("bodies/bails/BailsFinancialSupporterDetails.json"))
         .check(substring("financialAmountSupporterUndertakes1")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FrecordTheDecision%2FrecordTheDecisionrecordTheDecisionBailTransfer"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FrecordTheDecision%2FrecordTheDecisionrecordTheDecisionBailTransfer"))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -1256,7 +1236,7 @@ object Solicitor_Bails {
         .body(ElFileBody("bodies/bails/BailsTransferToSecretary.json"))
         .check(substring("bailTransferDirections")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FrecordTheDecision%2Fsubmit"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FrecordTheDecision%2Fsubmit"))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -1269,14 +1249,14 @@ object Solicitor_Bails {
     .group("XUI_Bails_640_Check_Your_Answers") {
 
       exec(http("XUI_Bails_640_005_Check_Your_Answers")
-        .post("/data/cases/${case_Id}/events")
+        .post("/data/cases/${caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/bails/BailsJudgeCheckAnswers.json"))
         .check(jsonPath("$.state").is("unsignedDecision")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FrecordTheDecision%2Fconfirm"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FrecordTheDecision%2Fconfirm"))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -1290,15 +1270,15 @@ object Solicitor_Bails {
 
     group("XUI_Bails_645_Open_Case") {
 
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}"))
+      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
       .exec(http("XUI_Bails_645_005_Open_Case")
-        .get("/data/internal/cases/${case_Id}")
+        .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .check(jsonPath("$.state.name").is("Unsigned decision")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%23Overview"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%23Overview"))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -1310,19 +1290,19 @@ object Solicitor_Bails {
 
     .group("XUI_Bails_650_Signed_Decision_Open") {
 
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FuploadSignedDecisionNotice"))
+      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FuploadSignedDecisionNotice"))
 
       .exec(Common.profile)
 
       .exec(http("XUI_Bails_650_005_Signed_Decision_Open")
-        .get("/data/internal/cases/${case_Id}/event-triggers/uploadSignedDecisionNotice?ignore-warning=false")
+        .get("/data/internal/cases/${caseId}/event-triggers/uploadSignedDecisionNotice?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
-        .check(jsonPath("$.case_id").is("${case_Id}"))
+        .check(jsonPath("$.caseId").is("${caseId}"))
         .check(substring("access_granted")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FuploadSignedDecisionNotice%2FuploadSignedDecisionNoticesignedDecisionNoticeUpload"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FuploadSignedDecisionNotice%2FuploadSignedDecisionNoticesignedDecisionNoticeUpload"))
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
 
@@ -1370,7 +1350,7 @@ object Solicitor_Bails {
         .body(ElFileBody("bodies/bails/BailsUploadDecisionNotice.json"))
         .check(substring("uploadSignedDecisionNoticeDocument")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FuploadSignedDecisionNotice%2Fsubmit"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FuploadSignedDecisionNotice%2Fsubmit"))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -1383,14 +1363,14 @@ object Solicitor_Bails {
     .group("XUI_Bails_670_Upload_Signed_Notice_Submit") {
 
       exec(http("XUI_Bails_670_Upload_Signed_Notice_Submit")
-        .post("/data/cases/${case_Id}/events")
+        .post("/data/cases/${caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/bails/BailsUploadSignedNoticeSubmit.json"))
         .check(jsonPath("$.after_submit_callback_response.confirmation_header").is("# You uploaded the signed decision notice")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${case_Id}%2Ftrigger%2FuploadSignedDecisionNotice%2Fconfirm"))
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FuploadSignedDecisionNotice%2Fconfirm"))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
