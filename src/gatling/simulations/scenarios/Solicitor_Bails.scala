@@ -128,7 +128,7 @@ object Solicitor_Bails {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/bails/BailsBeforeYouStart.json"))
-        .check(regex("startApplicationbeforeYouStart")))
+        .check(substring("startApplicationbeforeYouStart")))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -604,7 +604,7 @@ object Solicitor_Bails {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/bails/BailsGroundsForBail.json"))
-        .check(regex("startApplicationgroundsForBailInfo")))
+        .check(substring("startApplicationgroundsForBailInfo")))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
