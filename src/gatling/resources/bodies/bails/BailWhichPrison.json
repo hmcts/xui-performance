@@ -11,7 +11,7 @@
     "hasPreviousBailApplication": "No",
     "previousApplicationDoneViaAria": "No",
     "previousApplicationDoneViaCcd": "No",
-    "applicantGivenNames": "${BailsApplicantFirstName}",
+    "applicantGivenNames": "Bails ${BailsRandomString}",
     "applicantFamilyName": "${BailsApplicantLastName}",
     "applicantDateOfBirth": "${BailsAppDobYear}-${BailsAppDobMonth}-${BailsAppDobDay}",
     "applicantGender": "Male",

@@ -1,7 +1,7 @@
 {
   "data": {
-    "applicantGivenNames": "${BailsApplicantFirstName}",
-    "applicantFamilyName": "${BailsApplicantLastName}"
+    "applicantGivenNames": "Bails${BailsRandomString}",
+    "applicantFamilyName": "Test${BailsRandomString}"
   },
   "event": {
     "id": "startApplication",
@@ -12,8 +12,8 @@
     "hasPreviousBailApplication": "No",
     "previousApplicationDoneViaAria": "No",
     "previousApplicationDoneViaCcd": "No",
-    "applicantGivenNames": "${BailsApplicantFirstName}",
-    "applicantFamilyName": "${BailsApplicantLastName}"
+    "applicantGivenNames": "Bails${BailsRandomString}",
+    "applicantFamilyName": "Test${BailsRandomString}"
   },
   "event_token": "${event_token}",
   "ignore_warning": false
