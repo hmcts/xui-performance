@@ -46,7 +46,6 @@ object Solicitor_Hearings {
     group("XUI_Hearing_040_SelectUploadResponse") {
 
       exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FdwpUploadResponse"))
-        //Need to unhardcode this
 
       .exec(Common.profile)
 
@@ -56,9 +55,22 @@ object Solicitor_Hearings {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.case_fields[33].value.appealReasons.reasons[0].id").saveAs("appealId"))
-        .check(jsonPath("$.id").is("dwpUploadResponse")))
+        .check(jsonPath("$.id").is("dwpUploadResponse"))
+        .check(substring("access_granted").optional.saveAs("accessGranted")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FdwpUploadResponse%2FdwpUploadResponse1.0"))
+
+
+
+      .doIf("${accessGranted.isUndefined()}") {
+          exec { session =>
+            val fw = new BufferedWriter(new FileWriter("HearingDetailsErrors.csv", true))
+            try {
+              fw.write(session("caseId").as[String] + "\r\n")
+            } finally fw.close()
+            session
+          }
+        }
     }
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -172,10 +184,11 @@ object Solicitor_Hearings {
 
         .post("/data/cases/${caseId}/events")
         .headers(Headers.commonHeader)
+        .header("accept", "application/json, text/plain, */*")
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+      //  .check((status.is(201)).optional.saveAs("yes"))
         .body(ElFileBody("bodies/hearings/HearingsUploadResponseSubmit.json"))
-        .check(status.is(201).saveAs("yes"))
-        .check(substring("responseReceived")))
+        .check(substring("responseReceived").optional.saveAs("responseReceived")))
         //       .check(bodyString.saveAs("BODY1"))
         /*       .exec {
           session =>
@@ -184,16 +197,17 @@ object Solicitor_Hearings {
         }
 
   */
-    //    .doIf("${yes.isDefined()}") {
-          .exec { session =>
+        .doIf("${responseReceived.exists()}") {
+          exec { session =>
             val fw = new BufferedWriter(new FileWriter("HearingDetails.csv", true))
             try {
               fw.write(session("caseId").as[String] + "\r\n")
             } finally fw.close()
             session
           }
+        }
 
-     /*   .doIf("${yes.isUndefined()}") {
+        .doIf("${responseReceived.isUndefined()}") {
           exec { session =>
             val fw = new BufferedWriter(new FileWriter("HearingDetailsErrors.csv", true))
             try {
@@ -201,8 +215,7 @@ object Solicitor_Hearings {
             } finally fw.close()
             session
           }
-
-      */
+        }
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -236,10 +249,6 @@ object Solicitor_Hearings {
     * Hearing Requirements
     ======================================================================================*/
 
-    /*======================================================================================
-    * Hearing Requirements
-    ======================================================================================*/
-
     .group("XUI_Hearing_080_Hearing_Requirements") {
 
       exec(http("XUI_Hearing_080_005_Hearing_Requirements")
@@ -252,7 +261,8 @@ object Solicitor_Hearings {
       .headers(Headers.commonHeader)
       .header("accept", "application/json, text/plain, */*")
       .body(ElFileBody("bodies/hearings/HearingsRequirements.json"))
-      .check(jsonPath("$.screenFlow[0].screenName").is("hearing-requirements")))
+      .check(substring("hearing-requirements")))
+      //.check(jsonPath("$.screenFlow[0].screenName").is("hearing-requirements")))
 
       //.get("/api/prd/lov/getLovRefData?category=Facilities&service=BBA3&isChildRequired=N")
       //.headers(Headers.commonHeader)
@@ -303,7 +313,7 @@ object Solicitor_Hearings {
 
 
     /*======================================================================================
-    How will each participant attend the hearing? - In Person, 2
+    How will each participant attend the hearing? - In Person, 1
     ======================================================================================*/
 
       .group("XUI_Hearing_110_How_Each_Participant") {
@@ -351,6 +361,7 @@ object Solicitor_Hearings {
         .get("/api/prd/lov/getLovRefData?category=PanelMemberType&service=BBA3&isChildRequired=Y")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
+        .formParam("jurisdictionId", "SSCS")
         .check(substring("PanelMemberType")))
         //.check(jsonPath("$.[0].category_key").is("PanelMemberType")))
 
@@ -385,6 +396,7 @@ object Solicitor_Hearings {
         .post("/api/hearings/loadServiceLinkedCases?jurisdictionId=SSCS")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
+        .formParam("jurisdictionId", "SSCS")
         .body(ElFileBody("bodies/hearings/HearingsLength.json")))
 
     }
@@ -394,6 +406,19 @@ object Solicitor_Hearings {
     /*======================================================================================
     Will this hearing need to be linked to other hearings? - no
     ======================================================================================*/
+
+  //    .group("XUI_Hearing_155_Linked_To_Hearings") {
+
+ // exec(http("XUI_Hearing_155_005_Linked_To_Hearings")
+  //  .post("/api/hearings/loadServiceLinkedCases?jurisdictionId=SSCS")
+  //  .headers(Headers.commonHeader)
+  //  .header("accept", "application/json, text/plain, */*")
+  //  .body(ElFileBody("bodies/hearings/HearingsLinkToHearingsNo.json")))
+ //   .check(substring("HearingChannel")))
+  //  .check(jsonPath("$.[0].category_key").is("HearingChannel")))
+
+//}
+//.pause(MinThinkTime, MaxThinkTime)
 
 
     /*======================================================================================
@@ -423,10 +448,64 @@ object Solicitor_Hearings {
           .post("/api/hearings/submitHearingRequest")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
-          .body(ElFileBody("bodies/hearings/HearingsRequestSubmit.json")))
+          .body(ElFileBody("bodies/hearings/HearingsRequestSubmit.json"))
+          .check(jsonPath("$.hearingRequestID").saveAs("hearingRequest")))
 
       }
-
       .pause(MinThinkTime, MaxThinkTime)
 
+
+  val GetCase =
+
+  /*======================================================================================
+  * Get a singular case
+  ======================================================================================*/
+
+    group("XUI_Hearing_180_Get_Case") {
+      exec(http("XUI_Hearing_180_005_Get_Case")
+
+        .get("/api/hearings/getHearing?hearingId=${hearingRequest}")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json, text/plain, */*")
+        .check(jsonPath("$.requestDetails.versionNumber").saveAs("versionNumber"))
+        .check(substring("otherReasonableAdjustmentDetails")))
+
+      .exec(Common.isAuthenticated)
+
+      .exec(Common.healthcheck("%2Fhearings%2Frequest%2Fhearing-view-edit-summary"))
+
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+  val AmendHearing =
+
+  /*======================================================================================
+  * Change 'How many people will attend the hearing in person?'
+  ======================================================================================*/
+
+    group("XUI_Hearing_190_Amend_Hearing") {
+      exec(http("XUI_Hearing_190_005_Amend_Hearing")
+        .get("/api/prd/lov/getLovRefData?category=HearingChannel&service=BBA3&isChildRequired=N")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json, text/plain, */*")
+        .check(substring("HearingChannel")))
+
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+
+  /*======================================================================================
+  * Change 'How many people will attend the hearing in person?' to 2 and submit
+  ======================================================================================*/
+
+  .group("XUI_Hearing_200_Amend_Hearing_Submit") {
+    exec(http("XUI_Hearing_200_005_Amend_Hearing_Submit")
+      .put("/api/hearings/updateHearingRequest?hearingId=${hearingRequest}")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .body(ElFileBody("bodies/hearings/AmendHearingSubmit.json"))
+      .check(substring("UPDATE_REQUESTED")))
+
+  }
+    .pause(MinThinkTime, MaxThinkTime)
 }
