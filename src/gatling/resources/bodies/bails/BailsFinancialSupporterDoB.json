@@ -1,6 +1,6 @@
 {
   "data": {
-    "supporterDOB": "${BailsSupporterDobYear}-${BailsSupporterDobMonth}-${BailsSupporterDobDay}"
+    "supporterDOB": "${BailsAppDobYear}-${BailsAppDobMonth}-${BailsAppDobDay}"
   },
   "event": {
     "id": "startApplication",
@@ -11,8 +11,8 @@
     "hasPreviousBailApplication": "No",
     "previousApplicationDoneViaAria": "No",
     "previousApplicationDoneViaCcd": "No",
-    "applicantGivenNames": "${BailsApplicantFirstName}",
-    "applicantFamilyName": "${BailsApplicantLastName}",
+    "applicantGivenNames": "Bails${BailsRandomString}",
+    "applicantFamilyName": "Test${BailsRandomString}",
     "applicantDateOfBirth": "${BailsAppDobYear}-${BailsAppDobMonth}-${BailsAppDobDay}",
     "applicantGender": "Male",
     "applicantNationality": "HAS_NATIONALITY",

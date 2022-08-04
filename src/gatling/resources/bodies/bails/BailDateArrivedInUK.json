@@ -11,8 +11,8 @@
     "hasPreviousBailApplication": "No",
     "previousApplicationDoneViaAria": "No",
     "previousApplicationDoneViaCcd": "No",
-    "applicantGivenNames": "${BailsApplicantFirstName}",
-    "applicantFamilyName": "${BailsApplicantLastName}",
+    "applicantGivenNames": "Bails${BailsRandomString}",
+    "applicantFamilyName": "Test${BailsRandomString}",
     "applicantDateOfBirth": "${BailsAppDobYear}-${BailsAppDobMonth}-${BailsAppDobDay}",
     "applicantGender": "Male",
     "applicantNationality": "HAS_NATIONALITY",
@@ -24,9 +24,9 @@
         "id": null
       }
     ],
-    "homeOfficeReferenceNumber": "${BailsHomeOfficeRefNum}",
+    "homeOfficeReferenceNumber": "${BailsRandomNumber}",
     "applicantDetainedLoc": "prison",
-    "applicantPrisonDetails": "${BailsNomsNumber}",
+    "applicantPrisonDetails": "${BailsRandomNumber}",
     "prisonName": "Liverpool",
     "applicantArrivalInUKDate": "${BailsArrivedYear}-${BailsAppDobMonth}-${BailsAppDobDay}"
   },
