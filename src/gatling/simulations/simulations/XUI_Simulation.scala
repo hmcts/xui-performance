@@ -219,17 +219,20 @@ class XUI_Simulation extends Simulation {
 	* XUI Solicitor IAC Scenario
 	 ===============================================================================================*/
 	val HearingsScenario = scenario("***** Upload Hearing *****")
-		.exitBlockOnFail {
+	//	.exitBlockOnFail {
+			.repeat(1) {
 			feed(UserFeederHearing)
 				.exec(_.set("env", s"${env}")
 					.set("caseType", "Benefit"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
-				.repeat(1) {
+				.repeat(60) {
 					feed(UserFeederHearingCases)
 					.exec(Solicitor_Hearings.SelectCase)
 						.exec(Solicitor_Hearings.UploadResponse)
-				//		.exec(Solicitor_Hearings.RequestHearing)
+					//	.exec(Solicitor_Hearings.RequestHearing)
+				//		.exec(Solicitor_Hearings.GetCase)
+				//		.exec(Solicitor_Hearings.AmendHearing)
 				}
 				.exec(Logout.XUILogout)
 		}
@@ -468,7 +471,7 @@ class XUI_Simulation extends Simulation {
 	}
 
 	setUp(
-		HearingsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+		HearingsScenario.inject(simulationProfile(testType, hearingsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 			/*
 		BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
@@ -484,7 +487,7 @@ class XUI_Simulation extends Simulation {
 			 */
 	).protocols(httpProtocol)
 		.assertions(assertions(testType))
-		.maxDuration(75 minutes)
+		.maxDuration(120 minutes)
 
 
 }
