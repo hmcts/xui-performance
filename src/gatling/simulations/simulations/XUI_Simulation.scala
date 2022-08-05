@@ -226,9 +226,10 @@ class XUI_Simulation extends Simulation {
 					.set("caseType", "Benefit"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
-				.repeat(60) {
+				.repeat(100) {
 					feed(UserFeederHearingCases)
 					.exec(Solicitor_Hearings.SelectCase)
+				//		.exec(Solicitor_Hearings.LinkCase)
 						.exec(Solicitor_Hearings.UploadResponse)
 					//	.exec(Solicitor_Hearings.RequestHearing)
 				//		.exec(Solicitor_Hearings.GetCase)

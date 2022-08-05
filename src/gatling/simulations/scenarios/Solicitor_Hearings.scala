@@ -61,7 +61,6 @@ object Solicitor_Hearings {
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FdwpUploadResponse%2FdwpUploadResponse1.0"))
 
 
-
       .doIf("${accessGranted.isUndefined()}") {
           exec { session =>
             val fw = new BufferedWriter(new FileWriter("HearingDetailsErrors.csv", true))
@@ -393,7 +392,7 @@ object Solicitor_Hearings {
     .group("XUI_Hearing_150_Length_Date") {
 
       exec(http("XUI_Hearing_150_005_Length_Date")
-        .post("/api/hearings/loadServiceLinkedCases?jurisdictionId=SSCS")
+          .post("/api/hearings/loadServiceLinkedCases?jurisdictionId=SSCS")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .formParam("jurisdictionId", "SSCS")
@@ -507,5 +506,24 @@ object Solicitor_Hearings {
       .check(substring("UPDATE_REQUESTED")))
 
   }
+    .pause(MinThinkTime, MaxThinkTime)
+
+
+
+  val LinkCase =
+
+  /*======================================================================================
+  * Get a singular case
+  ======================================================================================*/
+
+    group("XUI_Hearing_180_Get_Case") {
+      exec(http("XUI_Hearing_150_005_Length_Date")
+        .post("/api/hearings/loadServiceLinkedCases?jurisdictionId=SSCS")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json, text/plain, */*")
+        .formParam("jurisdictionId", "SSCS")
+        .body(ElFileBody("bodies/hearings/HearingsLength.json")))
+
+    }
     .pause(MinThinkTime, MaxThinkTime)
 }
