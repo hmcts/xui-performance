@@ -24,9 +24,9 @@
         "id": "${applicantNationalitiesId}"
       }
     ],
-    "homeOfficeReferenceNumber": "${BailsHomeOfficeRefNum}",
+    "homeOfficeReferenceNumber": "${BailsRandomNumber}",
     "applicantDetainedLoc": "prison",
-    "applicantPrisonDetails": "${BailsNomsNumber}",
+    "applicantPrisonDetails": "${BailsRandomNumber}",
     "prisonName": "Liverpool",
     "applicantArrivalInUKDate": "${BailsArrivedYear}-${BailsAppDobMonth}-${BailsAppDobDay}",
     "applicantHasMobile": "Yes",
@@ -45,8 +45,8 @@
       "Country": "United Kingdom"
     },
     "hasFinancialCondSupporter": "Yes",
-    "supporterGivenNames": "${BailsFinancialFirstName}",
-    "supporterFamilyNames": "${BailsFinancialLastName}",
+    "supporterGivenNames": "Suppoter${BailsRandomString}",
+    "supporterFamilyNames": "Sup${BailsFinancialLastName}",
     "supporterAddressDetails": {
       "AddressLine1": "${addressLines(0)}",
       "AddressLine2": "${addressLines(1)}",
@@ -60,7 +60,7 @@
       "mobile",
       "email"
     ],
-    "supporterMobileNumber1": "${BailsSupporterPhoneNumber}",
+    "supporterMobileNumber1": "${BailsPhoneNumber}",
     "supporterEmailAddress1": "${BailsSupporterEmail}",
     "supporterDOB": "${BailsSupporterDobYear}-${BailsSupporterDobMonth}-${BailsSupporterDobDay}"
   },

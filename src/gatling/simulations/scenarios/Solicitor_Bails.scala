@@ -548,7 +548,7 @@ object Solicitor_Bails {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/bails/BailsFinancialCondition_Amount.json"))
+        .body(ElFileBody("bodies/bails/BailsFinancialConditionAmount.json"))
         .check(substring("financialAmountSupporterUndertakes1")))
 
     }
@@ -1206,9 +1206,9 @@ object Solicitor_Bails {
     * Financial condition supporter details
     ======================================================================================*/
 
-    .group("XUI_Bails_620_Financial_Supporter_Details") {
+    .group("XUI_Bails_630_Financial_Supporter_Details") {
 
-      exec(http("XUI_Bails_620_005_Financial_Supporter_Details")
+      exec(http("XUI_Bails_630_005_Financial_Supporter_Details")
         .post("/data/case-types/Bail/validate?pageId=recordTheDecisionfinancialConditionSupporter1Confirmation")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -1226,9 +1226,9 @@ object Solicitor_Bails {
     * Will the future management of bail for this applicant transfer to the Secretary of State? - Yes
     ================================================================================================*/
 
-    .group("XUI_Bails_630_Transfer_To_Secretary") {
+    .group("XUI_Bails_640_Transfer_To_Secretary") {
 
-      exec(http("XUI_Bails_630_005_Transfer_To_Secretary")
+      exec(http("XUI_Bails_640_005_Transfer_To_Secretary")
         .post("/data/case-types/Bail/validate?pageId=recordTheDecisionrecordTheDecisionBailTransfer")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -1246,9 +1246,9 @@ object Solicitor_Bails {
     * Check your answers
     ======================================================================================*/
 
-    .group("XUI_Bails_640_Check_Your_Answers") {
+    .group("XUI_Bails_650_Check_Your_Answers") {
 
-      exec(http("XUI_Bails_640_005_Check_Your_Answers")
+      exec(http("XUI_Bails_650_005_Check_Your_Answers")
         .post("/data/cases/${caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -1268,11 +1268,11 @@ object Solicitor_Bails {
     * Load case
     ======================================================================================*/
 
-    group("XUI_Bails_645_Open_Case") {
+    group("XUI_Bails_660_Open_Case") {
 
       exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_Bails_645_005_Open_Case")
+      .exec(http("XUI_Bails_660_005_Open_Case")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
@@ -1288,13 +1288,13 @@ object Solicitor_Bails {
     * Upload Signed Decision
     ======================================================================================*/
 
-    .group("XUI_Bails_650_Signed_Decision_Open") {
+    .group("XUI_Bails_670_Signed_Decision_Open") {
 
       exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FuploadSignedDecisionNotice"))
 
       .exec(Common.profile)
 
-      .exec(http("XUI_Bails_650_005_Signed_Decision_Open")
+      .exec(http("XUI_Bails_670_005_Signed_Decision_Open")
         .get("/data/internal/cases/${caseId}/event-triggers/uploadSignedDecisionNotice?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -1314,9 +1314,9 @@ object Solicitor_Bails {
     * Upload Decision Notice
     ======================================================================================*/
 
-    .group("XUI_Bails_660_Upload_Decision_Notice") {
+    .group("XUI_Bails_680_Upload_Decision_Notice") {
 
-      exec(http("XUI_Bails_660_005_Upload_Decision_Notice")
+      exec(http("XUI_Bails_680_005_Upload_Decision_Notice")
         .post("/documentsv2")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -1340,9 +1340,9 @@ object Solicitor_Bails {
     * Submit the Uploaded Decision Notice
     ======================================================================================*/
 
-    .group("XUI_Bails_665_Upload_Decision_Notice") {
+    .group("XUI_Bails_690_Upload_Decision_Notice") {
 
-      exec(http("XUI_Bails_665_005_Upload_Decision_Notice")
+      exec(http("XUI_Bails_690_005_Upload_Decision_Notice")
         .post("/data/case-types/Bail/validate?pageId=uploadSignedDecisionNoticesignedDecisionNoticeUpload")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -1360,9 +1360,9 @@ object Solicitor_Bails {
     * Upload signed decision notice Submit
     ======================================================================================*/
 
-    .group("XUI_Bails_670_Upload_Signed_Notice_Submit") {
+    .group("XUI_Bails_700_Upload_Signed_Notice_Submit") {
 
-      exec(http("XUI_Bails_670_Upload_Signed_Notice_Submit")
+      exec(http("XUI_Bails_700_Upload_Signed_Notice_Submit")
         .post("/data/cases/${caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
