@@ -3,7 +3,7 @@
     "uploadBailSummaryDocs": [
       {
         "value": {
-          "description": "${BailsEvidenceDescription}",
+          "description": "${BailsRandomString}",
           "document": {
             "document_url": "${DocumentURL}",
             "document_binary_url": "${DocumentURL}/binary",

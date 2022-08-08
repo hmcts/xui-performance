@@ -4,8 +4,8 @@
     "previousBailApplicationNumber": null,
     "previousApplicationDoneViaAria": "No",
     "previousApplicationDoneViaCcd": "No",
-    "applicantGivenNames": "${BailsApplicantFirstName}",
-    "applicantFamilyName": "${BailsApplicantLastName}",
+    "applicantGivenNames": "Bails${BailsRandomString}",
+    "applicantFamilyName": "Test${BailsRandomString}",
     "applicantDateOfBirth": "${BailsAppDobYear}-${BailsAppDobMonth}-${BailsAppDobDay}",
     "applicantGender": "Male",
     "applicantGenderEnterDetails": null,
@@ -18,9 +18,9 @@
         "id": "${applicantNationalitiesId}"
       }
     ],
-    "homeOfficeReferenceNumber": "${BailsHomeOfficeRefNum}",
+    "homeOfficeReferenceNumber": "${BailsRandomNumber}",
     "applicantDetainedLoc": "prison",
-    "applicantPrisonDetails": "${BailsNomsNumber}",
+    "applicantPrisonDetails": "${BailsRandomNumber}",
     "prisonName": "Liverpool",
     "applicantArrivalInUKDate": "${BailsArrivedYear}-${BailsAppDobMonth}-${BailsAppDobDay}",
     "applicantHasMobile": "Yes",
@@ -40,8 +40,8 @@
       "Country": "United Kingdom"
     },
     "hasFinancialCondSupporter": "Yes",
-    "supporterGivenNames": "${BailsFinancialFirstName}",
-    "supporterFamilyNames": "${BailsFinancialLastName}",
+    "supporterGivenNames": "Suppoter${BailsRandomString}",
+    "supporterFamilyNames": "Sup${BailsFinancialLastName}",
     "supporterAddressDetails": {
       "AddressLine1": "${addressLines(0)}",
       "AddressLine2": "${addressLines(1)}",
@@ -56,12 +56,12 @@
       "email"
     ],
     "supporterTelephoneNumber1": null,
-    "supporterMobileNumber1": "${BailsSupporterPhoneNumber}",
+    "supporterMobileNumber1": "${BailsPhoneNumber}",
     "supporterEmailAddress1": "${BailsSupporterEmail}",
     "supporterDOB": "${BailsSupporterDobYear}-${BailsSupporterDobMonth}-${BailsSupporterDobDay}",
-    "supporterRelation": "${BailsSupporterRelationship}",
-    "supporterOccupation": "${BailsSupporterOccupation}",
-    "supporterImmigration": "${BailsSupporterImmigration}",
+    "supporterRelation": "${BailsRandomString}",
+    "supporterOccupation": "${BailsRandomString}",
+    "supporterImmigration": "${BailsRandomString}",
     "supporterNationality": [
       {
         "value": {
@@ -71,15 +71,15 @@
       }
     ],
     "supporterHasPassport": "Yes",
-    "supporterPassport": "${BailsPassportNumber}",
+    "supporterPassport": "${BailsRandomNumber}",
     "financialAmountSupporterUndertakes1": "100",
     "hasFinancialCondSupporter2": "No",
-    "groundsForBailReasons": "${BailsGroundsForBailReasons}",
+    "groundsForBailReasons": "${BailsRandomString}",
     "groundsForBailProvideEvidenceOption": "Yes",
     "uploadTheBailEvidenceDocs": [
       {
         "value": {
-          "description": "${BailsEvidenceDescription}",
+          "description": "${BailsRandomString}",
           "document": {
             "document_url": "${DocumentURL}",
             "document_binary_url": "${DocumentURL}/binary",
@@ -100,10 +100,10 @@
     "videoHearingDetails": null,
     "isLegalRep": "Yes",
     "legalRepCompany": "${orgname}",
-    "legalRepName": "${BailsLegalRepFirstName}",
+    "legalRepName": "Legal${BailsRandomString}",
     "legalRepEmail": "${user}",
     "legalRepPhone": "${BailsAppPhoneNumber}",
-    "legalRepReference": "${BailsLegalRepReference}"
+    "legalRepReference": "${BailsRandomString}"
   },
   "event": {
     "id": "startApplication",
