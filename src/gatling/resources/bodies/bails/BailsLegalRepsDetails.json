@@ -4,7 +4,7 @@
     "legalRepCompany": "${orgname}",
     "legalRepName": "Legal${BailsRandomString}",
     "legalRepEmail": "${user}",
-    "legalRepPhone": "${BailsAppPhoneNumber}",
+    "legalRepPhone": "${BailsPhoneNumber}",
     "legalRepReference": "${BailsRandomString}"
   },
   "event": {
@@ -18,7 +18,7 @@
     "previousApplicationDoneViaCcd": "No",
     "applicantGivenNames": "Bails${BailsRandomString}",
     "applicantFamilyName": "Test${BailsRandomString}",
-    "applicantDateOfBirth": "${BailsAppDobYear}-${BailsAppDobMonth}-${BailsAppDobDay}",
+    "applicantDateOfBirth": "${BailsDobYear}-${BailsDobMonth}-${BailsDobDay}",
     "applicantGender": "Male",
     "applicantNationality": "HAS_NATIONALITY",
     "applicantNationalities": [
@@ -33,9 +33,9 @@
     "applicantDetainedLoc": "prison",
     "applicantPrisonDetails": "${BailsRandomNumber}",
     "prisonName": "Liverpool",
-    "applicantArrivalInUKDate": "${BailsArrivedYear}-${BailsAppDobMonth}-${BailsAppDobDay}",
+    "applicantArrivalInUKDate": "${BailsArrivedYear}-${BailsDobMonth}-${BailsDobDay}",
     "applicantHasMobile": "Yes",
-    "applicantMobileNumber1": "${BailsAppPhoneNumber}",
+    "applicantMobileNumber1": "${BailsPhoneNumber}",
     "hasAppealHearingPending": "YesWithoutAppealNumber",
     "applicantHasAddress": "Yes",
     "agreesToBoundByFinancialCond": "Yes",
@@ -51,7 +51,7 @@
     },
     "hasFinancialCondSupporter": "Yes",
     "supporterGivenNames": "Suppoter${BailsRandomString}",
-    "supporterFamilyNames": "Sup${BailsFinancialLastName}",
+    "supporterFamilyNames": "Sup${BailsRandomString}",
     "supporterAddressDetails": {
       "AddressLine1": "${addressLines(0)}",
       "AddressLine2": "${addressLines(1)}",
@@ -67,7 +67,7 @@
     ],
     "supporterMobileNumber1": "${BailsPhoneNumber}",
     "supporterEmailAddress1": "${BailsSupporterEmail}",
-    "supporterDOB": "${BailsSupporterDobYear}-${BailsSupporterDobMonth}-${BailsSupporterDobDay}",
+    "supporterDOB": "${BailsDobYear}-${BailsDobMonth}-${BailsDobDay}",
     "supporterRelation": "${BailsRandomString}",
     "supporterOccupation": "${BailsRandomString}",
     "supporterImmigration": "${BailsRandomString}",
@@ -107,7 +107,7 @@
     "legalRepCompany": "${orgname}",
     "legalRepName": "Legal${BailsRandomString}",
     "legalRepEmail": "${user}",
-    "legalRepPhone": "${BailsAppPhoneNumber}",
+    "legalRepPhone": "${BailsPhoneNumber}",
     "legalRepReference": "${BailsRandomString}"
   },
   "event_token": "${event_token}",

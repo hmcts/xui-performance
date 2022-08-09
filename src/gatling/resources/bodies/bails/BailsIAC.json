@@ -13,7 +13,7 @@
     "previousApplicationDoneViaCcd": "No",
     "applicantGivenNames": "Bails${BailsRandomString}",
     "applicantFamilyName": "Test${BailsRandomString}",
-    "applicantDateOfBirth": "${BailsAppDobYear}-${BailsAppDobMonth}-${BailsAppDobDay}",
+    "applicantDateOfBirth": "${BailsDobYear}-${BailsDobMonth}-${BailsDobDay}",
     "applicantGender": "Male",
     "applicantNationality": "HAS_NATIONALITY",
     "applicantNationalities": [
@@ -28,7 +28,7 @@
     "applicantDetainedLoc": "prison",
     "applicantPrisonDetails": "${BailsRandomNumber}",
     "prisonName": "Liverpool",
-    "applicantArrivalInUKDate": "${BailsArrivedYear}-${BailsAppDobMonth}-${BailsAppDobDay}",
+    "applicantArrivalInUKDate": "${BailsArrivedYear}-${BailsDobMonth}-${BailsDobDay}",
     "applicantHasMobile": "Yes",
     "applicantMobileNumber1": "${BailsPhoneNumber}",
     "hasAppealHearingPending": "YesWithoutAppealNumber"
