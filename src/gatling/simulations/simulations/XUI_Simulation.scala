@@ -231,7 +231,7 @@ class XUI_Simulation extends Simulation {
 					.exec(Solicitor_Hearings.SelectCase)
 				//		.exec(Solicitor_Hearings.LinkCase)
 						.exec(Solicitor_Hearings.UploadResponse)
-					//	.exec(Solicitor_Hearings.RequestHearing)
+				//		.exec(Solicitor_Hearings.RequestHearing)
 				//		.exec(Solicitor_Hearings.GetCase)
 				//		.exec(Solicitor_Hearings.AmendHearing)
 				}
