@@ -315,7 +315,7 @@ object Solicitor_Bails {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/bails/BailsApplicantAddress.json"))
-        .check(substring("AddressLine1")))
+        .check(substring("applicantAddress")))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -387,7 +387,7 @@ object Solicitor_Bails {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/bails/BailsFinancialSupporterAddress.json"))
-        .check(substring("AddressLine1")))
+        .check(substring("supporterAddressDetails")))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -405,7 +405,7 @@ object Solicitor_Bails {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/bails/BailsFinancialSupporterContact.json"))
-        .check(substring("supporterEmailAddress1")))
+        .check(substring("supporterContactDetails")))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -646,7 +646,17 @@ object Solicitor_Bails {
         .check(jsonPath("$.documents[0].hashToken").saveAs("DocumentHash"))
         .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL")))
 
-    .exec(http("XUI_Bails_370_010_Upload_Evidence")
+    }
+      .pause(MinThinkTime, MaxThinkTime)
+
+
+      /*=======================================================================================
+      * Submit evidence
+      ========================================================================================*/
+
+      .group("XUI_Bails_375_Submit_Evidence") {
+
+    exec(http("XUI_Bails_375_005_Upload_Evidence")
       .post("/data/case-types/Bail/validate?pageId=startApplicationgroundsForBailEvidenceDocumentUpload")
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -817,7 +827,7 @@ object Solicitor_Bails {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .check(jsonPath("$.event_token").saveAs("event_token"))
-        .check(jsonPath("$.caseId").is("${caseId}"))
+        .check(jsonPath("$.case_id").is("${caseId}"))
         .check(substring("access_granted")))
 
       .exec(Common.isAuthenticated)
@@ -842,7 +852,7 @@ object Solicitor_Bails {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/bails/BailsFactsAreTrue.json"))
-        .check(substring("isLegalRep")))
+        .check(substring("declarationOnSubmit")))
 
       .exec(Common.healthcheck("2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitApplication%2Fsubmit"))
 
@@ -907,7 +917,7 @@ object Solicitor_Bails {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
-        .check(jsonPath("$.caseId").is("${caseId}"))
+        .check(jsonPath("$.case_id").is("${caseId}"))
         .check(substring("access_granted")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FuploadBailSummary%2FuploadBailSummarybailSummaryDocumentUpload"))
@@ -1011,7 +1021,7 @@ object Solicitor_Bails {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
-        .check(jsonPath("$.caseId").is("${caseId}"))
+        .check(jsonPath("$.case_id").is("${caseId}"))
         .check(substring("access_granted")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FrecordTheDecision%2FrecordTheDecisionrecordDecisionJudgeDetails"))
@@ -1299,7 +1309,7 @@ object Solicitor_Bails {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
-        .check(jsonPath("$.caseId").is("${caseId}"))
+        .check(jsonPath("$.case_id").is("${caseId}"))
         .check(substring("access_granted")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FuploadSignedDecisionNotice%2FuploadSignedDecisionNoticesignedDecisionNoticeUpload"))
