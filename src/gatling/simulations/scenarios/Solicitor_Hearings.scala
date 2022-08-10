@@ -28,10 +28,13 @@ object Solicitor_Hearings {
 
 
       .exec(http("XUI_Hearing_030_005_SelectCase")
-        .get("/data/internal/cases/${caseId}")
+     //   .get("/data/internal/cases/${caseId}")
+        .get("/api/hearings/getHearings?caseId=${caseId}")
         .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-        .check(jsonPath("$.case_id").is("${caseId}")))
+        .header("accept", "application/json, text/plain, */*")
+        .header("accept-language", "en-GB,en-US;q=0.9,en;q=0.8")
+        .check(jsonPath("$.caseRef").is("${caseId}"))
+        .check(substring("caseHearings")))
         //.check(jsonPath("$.metadataFields[1].value").is("${caseId}")))
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -525,5 +528,49 @@ object Solicitor_Hearings {
         .body(ElFileBody("bodies/hearings/HearingsLength.json")))
 
     }
+    .pause(MinThinkTime, MaxThinkTime)
+
+
+  val CancelHearing =
+
+  /*======================================================================================
+  * Click on 'Cancel'
+  ======================================================================================*/
+
+    group("XUI_Hearing_210_Cancel_Hearing") {
+
+      exec(_.setAll(
+        "hearingRequest" -> ("2000002705")))
+
+
+      .exec(Common.isAuthenticated)
+
+        .exec(Common.healthcheck("%2Fhearings%2Fcancel%2F${hearingRequest}"))
+
+    }
+      .pause(MinThinkTime, MaxThinkTime)
+
+
+  /*======================================================================================
+ * Click on 'Withdrawn' and then submmit
+ ======================================================================================*/
+
+  .group("XUI_Hearing_220_Cancel_Hearing_Submit") {
+
+    exec(Common.isAuthenticated)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${hearingRequest}%2Fhearings"))
+
+
+    .exec(http("XUI_Hearing_220_005_Cancel_Hearing_Submit")
+      .delete("/api/hearings/cancelHearings?hearingId=${hearingRequest}")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .header("accept-language", "en-GB,en-US;q=0.9,en;q=0.8")
+      .formParam("jurisdictionId", "SSCS")
+      .body(ElFileBody("bodies/hearings/HearingsCancel.json"))
+      .check(substring("CANCELLATION_REQUESTED")))
+
+  }
     .pause(MinThinkTime, MaxThinkTime)
 }
