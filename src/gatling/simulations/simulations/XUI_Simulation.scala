@@ -226,14 +226,15 @@ class XUI_Simulation extends Simulation {
 					.set("caseType", "Benefit"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
-				.repeat(100) {
+				.repeat(1) {
 					feed(UserFeederHearingCases)
 					.exec(Solicitor_Hearings.SelectCase)
 				//		.exec(Solicitor_Hearings.LinkCase)
-						.exec(Solicitor_Hearings.UploadResponse)
+			//			.exec(Solicitor_Hearings.UploadResponse)
 				//		.exec(Solicitor_Hearings.RequestHearing)
 				//		.exec(Solicitor_Hearings.GetCase)
 				//		.exec(Solicitor_Hearings.AmendHearing)
+						.exec(Solicitor_Hearings.CancelHearing)
 				}
 				.exec(Logout.XUILogout)
 		}
