@@ -113,7 +113,7 @@ object Solicitor_NFD {
     .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
-    * Has the Marriage broken down?
+    * Has the Marriage broken down? - Select Yes
     ======================================================================================*/
 
     .group("XUI_NFD_070_MarriageBrokenDown") {
@@ -176,7 +176,7 @@ object Solicitor_NFD {
     .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
-    * Is the Respondent Represented by a Solicitor?
+    * Is the Respondent Represented by a Solicitor? - Select Yes
     ======================================================================================*/
 
     //Not calling postcode lookup here, as it will override the applicant's address in the session.
@@ -276,17 +276,21 @@ object Solicitor_NFD {
 
     .group("XUI_NFD_150_UploadDocument") {
       exec(http("XUI_NFD_150_005_UploadDocument")
-        .post("/documents")
+        .post("/documentsv2")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .header("content-type", "multipart/form-data")
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .header("x-xsrf-token", "${XSRFToken}")
         .bodyPart(RawFileBodyPart("files", "3MB.pdf")
           .fileName("3MB.pdf")
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
-        .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL")))
+        .formParam("caseTypeId", "NFD")
+        .formParam("jurisdictionId", "DIVORCE")
+        .check(substring("originalDocumentName"))
+        .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash"))
+        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)

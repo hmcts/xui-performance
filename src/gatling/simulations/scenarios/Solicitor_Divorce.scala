@@ -327,17 +327,21 @@ object Solicitor_Divorce {
 
     .group("XUI_Divorce_170_UploadMarriageCertificate") {
       exec(http("XUI_Divorce_170_005_UploadMarriageCertificate")
-        .post("/documents")
+        .post("/documentsv2")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .header("content-type", "multipart/form-data")
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .header("x-xsrf-token", "${XSRFToken}")
         .bodyPart(RawFileBodyPart("files", "3MB.pdf")
           .fileName("3MB.pdf")
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
-        .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL")))
+        .formParam("caseTypeId", "DIVORCE")
+        .formParam("jurisdictionId", "DIVORCE")
+        .check(substring("originalDocumentName"))
+        .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash"))
+        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL")))
 
       .exec(Common.userDetails)
       .exec(Common.userDetails)
