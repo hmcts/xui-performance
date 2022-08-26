@@ -262,17 +262,21 @@ object Solicitor_PRL_C100 {
 
     .group("XUI_PRL_C100_110_ConsentOrderUpload") {
       exec(http("XUI_PRL_C100_110_005_ConsentOrderUpload")
-        .post("/documents")
+        .post("/documentsv2")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .header("content-type", "multipart/form-data")
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .header("x-xsrf-token", "${XSRFToken}")
         .bodyPart(RawFileBodyPart("files", "3MB.pdf")
           .fileName("3MB.pdf")
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
-        .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL")))
+        .formParam("caseTypeId", "PRLAPPS")
+        .formParam("jurisdictionId", "PRIVATELAW")
+        .check(substring("originalDocumentName"))
+        .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash"))
+        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -622,9 +626,6 @@ object Solicitor_PRL_C100 {
     }
     .pause(MinThinkTime, MaxThinkTime)
 
-
-
-
   val ChildDetails =
 
     /*======================================================================================
@@ -673,7 +674,6 @@ object Solicitor_PRL_C100 {
     }
     .pause(MinThinkTime, MaxThinkTime)
 
-
     /*======================================================================================
     * Child Details Profile
     ======================================================================================*/
@@ -698,7 +698,6 @@ object Solicitor_PRL_C100 {
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FchildDetails%2FchildDetails2"))
 
       .exec(Common.userDetails)
-
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -761,7 +760,6 @@ object Solicitor_PRL_C100 {
     }
     .pause(MinThinkTime, MaxThinkTime)
 
-
   val RespondentDetails =
 
     /*======================================================================================
@@ -820,7 +818,6 @@ object Solicitor_PRL_C100 {
     }
     .pause(MinThinkTime, MaxThinkTime)
 
-
     /*======================================================================================
     * Respondent Details Add Respondent Details
     ======================================================================================*/
@@ -844,7 +841,6 @@ object Solicitor_PRL_C100 {
 
     }
     .pause(MinThinkTime, MaxThinkTime)
-
 
     /*======================================================================================
     * Respondent Details Submit
@@ -880,7 +876,6 @@ object Solicitor_PRL_C100 {
 
     }
     .pause(MinThinkTime, MaxThinkTime)
-
 
   val MIAM =
 
@@ -965,23 +960,25 @@ object Solicitor_PRL_C100 {
     ======================================================================================*/
 
     .group("XUI_PRL_C100_320_MIAMUpload") {
-
       exec(http("XUI_PRL_C100_320_005_MIAMUpload")
-        .post("/documents")
+        .post("/documentsv2")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .header("content-type", "multipart/form-data")
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .header("x-xsrf-token", "${XSRFToken}")
         .bodyPart(RawFileBodyPart("files", "3MB.pdf")
           .fileName("3MB.pdf")
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
-        .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL")))
+        .formParam("caseTypeId", "PRLAPPS")
+        .formParam("jurisdictionId", "PRIVATELAW")
+        .check(substring("originalDocumentName"))
+        .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash"))
+        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL")))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
-
 
     /*======================================================================================
     * MIAM Details
@@ -1002,7 +999,6 @@ object Solicitor_PRL_C100 {
 
     }
     .pause(MinThinkTime, MaxThinkTime)
-
 
     /*======================================================================================
     * MIAM Submit
@@ -1038,7 +1034,6 @@ object Solicitor_PRL_C100 {
 
     }
     .pause(MinThinkTime, MaxThinkTime)
-
 
   val AllegationsOfHarm =
 
@@ -1096,7 +1091,6 @@ object Solicitor_PRL_C100 {
     }
     .pause(MinThinkTime, MaxThinkTime)
 
-
     /*======================================================================================
     * Are there Allegations of Harm?
     ======================================================================================*/
@@ -1118,7 +1112,6 @@ object Solicitor_PRL_C100 {
 
     }
     .pause(MinThinkTime, MaxThinkTime)
-
 
     /*======================================================================================
     * Allegations of Harm details
@@ -1164,7 +1157,6 @@ object Solicitor_PRL_C100 {
     }
     .pause(MinThinkTime, MaxThinkTime)
 
-
     /*======================================================================================
     * Allegations of Harm Other Concerns
     ======================================================================================*/
@@ -1186,7 +1178,6 @@ object Solicitor_PRL_C100 {
 
     }
     .pause(MinThinkTime, MaxThinkTime)
-
 
     /*======================================================================================
     * Allegations of Harm Submit
@@ -1282,7 +1273,6 @@ object Solicitor_PRL_C100 {
     }
     .pause(MinThinkTime, MaxThinkTime)
 
-
     /*======================================================================================
     * View PDF Continue
     ======================================================================================*/
@@ -1305,7 +1295,6 @@ object Solicitor_PRL_C100 {
 
     }
     .pause(MinThinkTime, MaxThinkTime)
-
 
     /*======================================================================================
     * View PDF Submit
@@ -1341,7 +1330,6 @@ object Solicitor_PRL_C100 {
 
     }
     .pause(MinThinkTime, MaxThinkTime)
-
 
   val SubmitAndPay =
 
@@ -1403,7 +1391,6 @@ object Solicitor_PRL_C100 {
     }
     .pause(MinThinkTime, MaxThinkTime)
 
-
     /*======================================================================================
     * Submit and Pay Confidentiality Statement
     ======================================================================================*/
@@ -1446,7 +1433,6 @@ object Solicitor_PRL_C100 {
     }
     .pause(MinThinkTime, MaxThinkTime)
 
-
     /*======================================================================================
     * Submit and Pay Continue
     ======================================================================================*/
@@ -1456,6 +1442,7 @@ object Solicitor_PRL_C100 {
       exec(http("XUI_PRL_C100_450_005_SubmitAndPayContinue")
         .post("/data/case-types/PRLAPPS/validate?pageId=submitAndPay3")
         .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/prl/c100/PRLSubmitAndPayContinue.json"))
