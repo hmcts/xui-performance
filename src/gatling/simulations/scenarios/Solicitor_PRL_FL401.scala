@@ -1307,17 +1307,21 @@ object Solicitor_PRL_FL401 {
 
     .group("XUI_PRL_FL401_390_UploadDocument") {
       exec(http("XUI_PRL_FL401_390_005_UploadDocument")
-        .post("/documents")
+        .post("/documentsv2")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .header("content-type", "multipart/form-data")
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .header("x-xsrf-token", "${XSRFToken}")
         .bodyPart(RawFileBodyPart("files", "3MB.pdf")
           .fileName("3MB.pdf")
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
-        .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL")))
+        .formParam("caseTypeId", "PRLAPPS")
+        .formParam("jurisdictionId", "PRIVATELAW")
+        .check(substring("originalDocumentName"))
+        .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash"))
+        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
