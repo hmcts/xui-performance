@@ -17,6 +17,7 @@ object Solicitor_Hearings {
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
   val UserFeederHearingCases = csv("UserDataHearingsCases.csv").circular
+  val UserFeederHearingUploadCases = csv("UserDataHearingsUploadCases.csv").circular
   val UserFeederHearingCasesLink = csv("UserDataHearingsCasesLinked.csv").circular
   val UserFeederHearingId = csv("HearingId.csv").circular
   val UserFeederHearingIdCancels = csv("HearingIdCancels.csv").circular
@@ -62,7 +63,7 @@ object Solicitor_Hearings {
 
     group("XUI_Hearing_040_SelectUploadResponse") {
 
-      feed(UserFeederHearingCases)
+      feed(UserFeederHearingUploadCases)
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FdwpUploadResponse"))
 
@@ -376,9 +377,9 @@ Hearing Venue Details
     ======================================================================================*/
 
     .doIfOrElse(session => session("hearings-percentage").as[Int] < hearingPercentage) {
-      group("XUI_Hearing_150_Length_Date") {
+      group("XUI_Hearing_150_Unlinked") {
 
-        exec(http("XUI_Hearing_150_005_Length_Date")
+        exec(http("XUI_Hearing_150_005_Unlinked")
           .post("/api/hearings/loadServiceLinkedCases?jurisdictionId=SSCS")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
@@ -390,9 +391,9 @@ Hearing Venue Details
       .pause(MinThinkTime, MaxThinkTime)
 
     }{
-      group("XUI_Hearing_155_Length_Link") {
+      group("XUI_Hearing_155_Linked") {
 
-        exec(http("XUI_Hearing_155_005_Length_Link")
+        exec(http("XUI_Hearing_155_005_Linked")
           .post("/api/hearings/loadServiceLinkedCases?jurisdictionId=SSCS")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
@@ -437,13 +438,23 @@ Hearing Venue Details
     ======================================================================================*/
 
     .group("XUI_Hearing_170_Request_Hearing_Submit") {
+      doIfOrElse(session => session("hearings-percentage").as[Int] < hearingPercentage) {
+        exec(http("XUI_Hearing_170_005_Request_Hearing_Submit")
+          .post("/api/hearings/submitHearingRequest")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/hearings/HearingsRequestSubmit.json"))
+          .check(jsonPath("$.hearingRequestID").saveAs("hearingRequest")))
 
-      exec(http("XUI_Hearing_170_005_Request_Hearing_Submit")
-        .post("/api/hearings/submitHearingRequest")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json, text/plain, */*")
-        .body(ElFileBody("bodies/hearings/HearingsRequestSubmit.json"))
-        .check(jsonPath("$.hearingRequestID").saveAs("hearingRequest")))
+      }{
+        exec(http("XUI_Hearing_170_005_Request_Hearing_Submit")
+          .post("/api/hearings/submitHearingRequest")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/hearings/HearingsRequestSubmitLinked.json"))
+          .check(jsonPath("$.hearingRequestID").saveAs("hearingRequest")))
+      }
+
 
       .exec { session =>
         val fw = new BufferedWriter(new FileWriter("HearingId.csv", true))
