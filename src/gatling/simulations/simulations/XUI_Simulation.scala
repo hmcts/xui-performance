@@ -58,7 +58,7 @@ class XUI_Simulation extends Simulation {
 	/* ******************************** */
 
 	/* PERFORMANCE TEST CONFIGURATION */
-	val hearingsTargetPerHour: Double = 8
+	val hearingsTargetPerHour: Double = 10
 
 	val bailsTargetPerHour: Double = 100
 	val prlTargetPerHour: Double = 100
@@ -226,15 +226,17 @@ class XUI_Simulation extends Simulation {
 					.set("caseType", "Benefit"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
-				.repeat(4) {
+				.repeat(5) {
 					repeat(6) {
 						exec(Solicitor_Hearings.ViewAllHearings)
 					//		exec(Solicitor_Hearings.UploadResponse)
 							.exec(Solicitor_Hearings.RequestHearing)
+							.exec(Solicitor_Hearings.UploadResponse)
 								.exec(Solicitor_Hearings.ViewId)
 				}
 					.exec(Solicitor_Hearings.ViewAllHearings)
 						.exec(Solicitor_Hearings.RequestHearing)
+						.exec(Solicitor_Hearings.UploadResponse)
 				.exec(Solicitor_Hearings.AmendHearing)
 				.repeat(13) {
 					exec(Solicitor_Hearings.ViewAllHearings)
@@ -543,7 +545,7 @@ class XUI_Simulation extends Simulation {
 			 */
 	).protocols(httpProtocol)
 		.assertions(assertions(testType))
-		.maxDuration(60 minutes)
+		.maxDuration(120 minutes)
 
 
 }
