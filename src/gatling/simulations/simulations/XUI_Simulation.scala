@@ -58,7 +58,7 @@ class XUI_Simulation extends Simulation {
 	/* ******************************** */
 
 	/* PERFORMANCE TEST CONFIGURATION */
-	val hearingsTargetPerHour: Double = 10
+	val hearingsTargetPerHour: Double = 1
 
 	val bailsTargetPerHour: Double = 100
 	val prlTargetPerHour: Double = 100
@@ -226,15 +226,17 @@ class XUI_Simulation extends Simulation {
 					.set("caseType", "Benefit"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
-				.repeat(5) {//5
-					repeat(6) {//6
+				.repeat(5) { //5
+					repeat(6) { //6
 						exec(Solicitor_Hearings.ViewAllHearings)
-					//		exec(Solicitor_Hearings.UploadResponse)
+							//	.exec(Solicitor_Hearings.AmendHearing)
+							.exec(Solicitor_Hearings.UploadResponse)
 							.exec(Solicitor_Hearings.RequestHearing)
-				//			.exec(Solicitor_Hearings.UploadResponse)
-								.exec(Solicitor_Hearings.ViewId)
-				}
+						//			.exec(Solicitor_Hearings.UploadResponse)
+									.exec(Solicitor_Hearings.ViewId)
+					}
 					.exec(Solicitor_Hearings.ViewAllHearings)
+							.exec(Solicitor_Hearings.UploadResponse)
 						.exec(Solicitor_Hearings.RequestHearing)
 		//				.exec(Solicitor_Hearings.UploadResponse)
 				.exec(Solicitor_Hearings.AmendHearing)
@@ -247,7 +249,8 @@ class XUI_Simulation extends Simulation {
 
 						.exec(Logout.XUILogout)
 
-				}
+
+		}
 
 		/*
 
@@ -528,8 +531,8 @@ class XUI_Simulation extends Simulation {
 		}
 	}
 
-	setUp(
-		HearingsScenario.inject(simulationProfile(testType, hearingsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+//	setUp(
+	//	HearingsScenario.inject(simulationProfile(testType, hearingsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 			/*
 		BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
@@ -543,9 +546,14 @@ class XUI_Simulation extends Simulation {
 		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 
 			 */
-	).protocols(httpProtocol)
-		.assertions(assertions(testType))
-		.maxDuration(150 minutes)
+	//).protocols(httpProtocol)
+//		.assertions(assertions(testType))
+//		.maxDuration(60 minutes)
+
+	setUp(HearingsScenario.inject(rampUsers(10).during(2400)))
+	// (RUDH.inject(rampUsers(250).during(3200))))
+	   .protocols(httpProtocol)
+	   .maxDuration(3800)
 
 
 }
