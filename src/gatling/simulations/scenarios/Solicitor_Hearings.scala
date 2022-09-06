@@ -23,7 +23,7 @@ object Solicitor_Hearings {
   val UserFeederHearingIdCancels = csv("HearingIdCancels.csv").circular
   val UserFeederHearingIdAmend = csv("HearingIdAmend.csv").circular
   val randomFeeder = Iterator.continually(Map("hearings-percentage" -> Random.nextInt(100)))
-  val hearingPercentage = 90
+  val hearingPercentage = 100
 
   val ViewAllHearings =
 
@@ -40,11 +40,11 @@ object Solicitor_Hearings {
     * Select the Case you want to view
     ======================================================================================*/
 
-    .group("XUI_Hearing_030_SelectCase") {
+    .group("XUI_Hearing_030_ViewAllHearings") {
 
       exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_Hearing_030_005_SelectCase")
+      .exec(http("XUI_Hearing_030_005_ViewAllHearings")
         .get("/api/hearings/getHearings?caseId=${caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -457,9 +457,9 @@ Hearing Venue Details
 
 
       .exec { session =>
-        val fw = new BufferedWriter(new FileWriter("HearingId.csv", true))
+        val fw = new BufferedWriter(new FileWriter("HearingIdAmend.csv", true))
         try {
-          fw.write(session("hearingRequest").as[String] + "\r\n")
+          fw.write(session("caseId").as[String] + "," + session("hearingRequest").as[String] + "\r\n")
         } finally fw.close()
         session
       }
@@ -476,9 +476,9 @@ Hearing Venue Details
 
     feed(UserFeederHearingId)
 
-    .group("XUI_Hearing_180_Get_Case") {
+    .group("XUI_Hearing_180_View_Hearing") {
 
-      exec(http("XUI_Hearing_180_005_Get_Case")
+      exec(http("XUI_Hearing_180_005_View_Hearing")
         .get("/api/hearings/getHearing?hearingId=${hearingRequest}")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -500,9 +500,9 @@ Hearing Venue Details
 
     feed(UserFeederHearingIdAmend)
 
-      .group("XUI_Hearing_180_Get_Case") {
+      .group("XUI_Hearing_180_View_Hearing") {
 
-        exec(http("XUI_Hearing_180_005_Get_Case")
+        exec(http("XUI_Hearing_180_005_View_Hearing")
           .get("/api/hearings/getHearing?hearingId=${hearingRequest}")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
