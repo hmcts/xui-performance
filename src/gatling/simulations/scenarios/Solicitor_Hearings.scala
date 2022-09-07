@@ -23,7 +23,7 @@ object Solicitor_Hearings {
   val UserFeederHearingIdCancels = csv("HearingIdCancels.csv").circular
   val UserFeederHearingIdAmend = csv("HearingIdAmend.csv").circular
   val randomFeeder = Iterator.continually(Map("hearings-percentage" -> Random.nextInt(100)))
-  val hearingPercentage = 100
+  val hearingPercentage = 90
 
   val ViewAllHearings =
 
@@ -40,11 +40,11 @@ object Solicitor_Hearings {
     * Select the Case you want to view
     ======================================================================================*/
 
-    .group("XUI_Hearing_030_ViewAllHearings") {
+    .group("XUI_GetAllHearings_030_ViewAllHearings") {
 
       exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_Hearing_030_005_ViewAllHearings")
+      .exec(http("XUI_GetAllHearings_030_005_ViewAllHearings")
         .get("/api/hearings/getHearings?caseId=${caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -61,7 +61,7 @@ object Solicitor_Hearings {
     * Select Upload Response
     ======================================================================================*/
 
-    group("XUI_Hearing_040_SelectUploadResponse") {
+    group("XUI_UploadResponse_040_SelectUploadResponse") {
 
       feed(UserFeederHearingUploadCases)
 
@@ -69,7 +69,7 @@ object Solicitor_Hearings {
 
       .exec(Common.profile)
 
-      .exec(http("XUI_Hearing_040_005_SelectUploadResponse")
+      .exec(http("XUI_UploadResponse_040_005_SelectUploadResponse")
         .get("/data/internal/cases/${caseId}/event-triggers/dwpUploadResponse?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
@@ -98,9 +98,9 @@ object Solicitor_Hearings {
     * Upload Response Document
     =====================================================================*/
 
-    .group("XUI_Hearing_050_Upload_Response_Document") {
+    .group("XUI_UploadResponse_050_UploadDocument") {
 
-      exec(http("XUI_Hearing_050_005_Upload_Response_Document")
+      exec(http("XUI_UploadResponse_050_005_UploadResponse")
         .post("/documentsv2")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -124,9 +124,9 @@ object Solicitor_Hearings {
     * Upload AT38 Document
     =====================================================================*/
 
-    .group("XUI_Hearing_051_AT38_Document") {
+    .group("XUI_UploadResponse_051_AT38Document") {
 
-      exec(http("XUI_Hearing_051_005_AT38_Document")
+      exec(http("XUI_UploadResponse_051_005_AT38Document")
         .post("/documentsv2")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -150,9 +150,9 @@ object Solicitor_Hearings {
     * Upload Evidence Bundle Document
     =====================================================================*/
 
-    .group("XUI_Hearing_052_Evidence_Bundle_Document") {
+    .group("XUI_UploadResponse_052_Evidence") {
 
-      exec(http("XUI_Hearing_052_005_Evidence_Bundle_Document")
+      exec(http("XUI_UploadResponse_052_005_Evidence")
         .post("/documentsv2")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -176,9 +176,9 @@ object Solicitor_Hearings {
     * Upload Response Documents Submit
     =====================================================================*/
 
-    .group("XUI_Hearing_053_Upload_Response_Documents_Submit") {
+    .group("XUI_UploadResponse_053_DocumentsSubmit") {
 
-      exec(http("XUI_Hearing_053_005_Upload_Response_Documents_Submit")
+      exec(http("XUI_UploadResponse_053_005_DocumentsSubmit")
         .post("/data/case-types/Benefit/validate?pageId=dwpUploadResponse1.0")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -195,9 +195,9 @@ object Solicitor_Hearings {
     Check your answers
     ======================================================================================*/
 
-    .group("XUI_Hearing_060_UploadResponseSubmit") {
+    .group("XUI_UploadResponse_060_SubmitResponse") {
 
-      exec(http("XUI_Hearing_060_005_UploadResponseSubmit")
+      exec(http("XUI_UploadResponse_060_005_SubmitResponse")
         .post("/data/cases/${caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -236,19 +236,19 @@ object Solicitor_Hearings {
     * Request a hearing
     ======================================================================================*/
 
-    group("XUI_Hearing_070_ClickRequestHearing") {
+    group("XUI_RequestHearing_070_ClickRequestHearing") {
 
       exec(Common.isAuthenticated)
 
       .exec(Common.healthcheck("%2Fhearings%2Frequest%2Fhearing-requirements"))
 
-      .exec(http("XUI_Hearing_070_005_ClickRequestHearing")
+      .exec(http("XUI_RequestHearing_070_005_ClickRequestHearing")
         .get(BaseURL + "/api/prd/caseFlag/getCaseFlagRefData?serviceId=BBA3")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .check(substring("FlagDetails")))
 
-      .exec(http("XUI_Hearing_070_010_ClickRequestHearing")
+      .exec(http("XUI_RequestHearing_070_010_ClickRequestHearing")
         .get(BaseURL + "/api/prd/location/getLocationById?epimms_id=372653")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -262,16 +262,16 @@ object Solicitor_Hearings {
     * Hearing Requirements
     ======================================================================================*/
 
-    .group("XUI_Hearing_080_Hearing_Requirements") {
+    .group("XUI_RequestHearing_080_Requirements") {
 
-      exec(http("XUI_Hearing_080_005_Hearing_Requirements")
+      exec(http("XUI_RequestHearing_080_005_Requirements")
         .post(BaseURL + "/api/hearings/loadServiceHearingValues?jurisdictionId=SSCS")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .body(ElFileBody("bodies/hearings/HearingsRequirements.json"))
         .check(substring("hearing-requirements")))
 
-      .exec(http("XUI_Hearing_080_010_Hearing_Requirements")
+      .exec(http("XUI_RequestHearing_080_010_Requirements")
         .get(BaseURL + "/api/prd/caseFlag/getCaseFlagRefData?serviceId=BBA3")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -290,9 +290,9 @@ object Solicitor_Hearings {
     What stage is this hearing at? - Substantive
     ======================================================================================*/
 
-    .group("XUI_Hearing_100_Hearing_Stage") {
+    .group("XUI_RequestHearing_100_HearingStage") {
 
-      exec(http("XUI_Hearing_100_005_Hearing_Stage")
+      exec(http("XUI_RequestHearing_100_005_HearingStage")
         .get("/api/prd/lov/getLovRefData?category=HearingChannel&service=BBA3&isChildRequired=N")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -306,9 +306,9 @@ object Solicitor_Hearings {
     How will each participant attend the hearing? - In Person, 1
     ======================================================================================*/
 
-      .group("XUI_Hearing_110_How_Each_Participant") {
+      .group("XUI_RequestHearing_110_ParticipantAttend") {
 
-        exec(http("XUI_Hearing_110_005_How_Each_Participant")
+        exec(http("XUI_RequestHearing_110_005_ParticipantAttend")
           .get("/api/prd/location/getLocationById?epimms_id=372653")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
@@ -377,9 +377,9 @@ Hearing Venue Details
     ======================================================================================*/
 
     .doIfOrElse(session => session("hearings-percentage").as[Int] < hearingPercentage) {
-      group("XUI_Hearing_150_Unlinked") {
+      group("XUI_RequestHearing_150_Unlinked") {
 
-        exec(http("XUI_Hearing_150_005_Unlinked")
+        exec(http("XUI_RequestHearing_150_005_Unlinked")
           .post("/api/hearings/loadServiceLinkedCases?jurisdictionId=SSCS")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
@@ -391,9 +391,9 @@ Hearing Venue Details
       .pause(MinThinkTime, MaxThinkTime)
 
     }{
-      group("XUI_Hearing_155_Linked") {
+      group("XUI_RequestHearing_155_Linked") {
 
-        exec(http("XUI_Hearing_155_005_Linked")
+        exec(http("XUI_RequestHearing_155_005_Linked")
           .post("/api/hearings/loadServiceLinkedCases?jurisdictionId=SSCS")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
@@ -410,21 +410,21 @@ Hearing Venue Details
     Enter any additional instructions for the hearing
     ======================================================================================*/
 
-    .group("XUI_Hearing_160_Additional_Instructions") {
+    .group("XUI_RequestHearing_160_AdditionalInstructions") {
 
-      exec(http("XUI_Hearing_160_005_Additional_Instructions")
+      exec(http("XUI_RequestHearing_160_005_AdditionalInstructions")
         .get("/api/prd/caseFlag/getCaseFlagRefData?serviceId=BBA3")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .check(substring("CATGRY")))
 
-      .exec(http("XUI_Hearing_160_010_Additional_Instructions")
+      .exec(http("XUI_RequestHearing_160_010_AdditionalInstructions")
         .get("/api/prd/lov/getLovRefData?category=HearingChannel&service=BBA3&isChildRequired=N")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .check(substring("HearingChannel")))
 
-      .exec(http("XUI_Hearing_160_015_Additional_Instructions")
+      .exec(http("XUI_RequestHearing_160_015_AdditionalInstructions")
         .get("/api/prd/location/getLocationById?epimms_id=372653")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -437,9 +437,9 @@ Hearing Venue Details
     Check your answers
     ======================================================================================*/
 
-    .group("XUI_Hearing_170_Request_Hearing_Submit") {
+    .group("XUI_RequestHearing_170_SubmitRequest") {
       doIfOrElse(session => session("hearings-percentage").as[Int] < hearingPercentage) {
-        exec(http("XUI_Hearing_170_005_Request_Hearing_Submit")
+        exec(http("XUI_RequestHearing_170_005_SubmitRequest")
           .post("/api/hearings/submitHearingRequest")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
@@ -447,7 +447,7 @@ Hearing Venue Details
           .check(jsonPath("$.hearingRequestID").saveAs("hearingRequest")))
 
       }{
-        exec(http("XUI_Hearing_170_005_Request_Hearing_Submit")
+        exec(http("XUI_RequestHearing_170_005_SubmitRequest")
           .post("/api/hearings/submitHearingRequest")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
@@ -457,7 +457,7 @@ Hearing Venue Details
 
 
       .exec { session =>
-        val fw = new BufferedWriter(new FileWriter("HearingIdAmend.csv", true))
+        val fw = new BufferedWriter(new FileWriter("HearingId.csv", true))
         try {
           fw.write(session("caseId").as[String] + "," + session("hearingRequest").as[String] + "\r\n")
         } finally fw.close()
@@ -468,7 +468,7 @@ Hearing Venue Details
     .pause(MinThinkTime, MaxThinkTime)
 
   
-  val ViewId =
+  val GetHearing =
 
     /*======================================================================================
     * Get a singular case
@@ -476,9 +476,9 @@ Hearing Venue Details
 
     feed(UserFeederHearingId)
 
-    .group("XUI_Hearing_180_View_Hearing") {
+    .group("XUI_GetHearing_180_GetHearing") {
 
-      exec(http("XUI_Hearing_180_005_View_Hearing")
+      exec(http("XUI_GetHearing_180_005_GetHearing")
         .get("/api/hearings/getHearing?hearingId=${hearingRequest}")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -492,7 +492,7 @@ Hearing Venue Details
     }
     .pause(MinThinkTime, MaxThinkTime)
 
-  val AmendHearing =
+  val UpdateHearing =
 
     /*======================================================================================
     * Get a singular case
@@ -500,9 +500,9 @@ Hearing Venue Details
 
     feed(UserFeederHearingIdAmend)
 
-      .group("XUI_Hearing_180_View_Hearing") {
+      .group("XUI_GetHearing_180_GetHearing") {
 
-        exec(http("XUI_Hearing_180_005_View_Hearing")
+        exec(http("XUI_GetHearing_180_005_GetHearing")
           .get("/api/hearings/getHearing?hearingId=${hearingRequest}")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
@@ -520,9 +520,9 @@ Hearing Venue Details
     * Change 'How many people will attend the hearing in person?'
     ======================================================================================*/
 
-    .group("XUI_Hearing_190_Amend_Hearing") {
+    .group("XUI_UpdateHearing_190_Update") {
 
-      exec(http("XUI_Hearing_190_005_Amend_Hearing")
+      exec(http("XUI_UpdateHearing_190_005_UpdateHearing")
         .get("/api/prd/lov/getLovRefData?category=HearingChannel&service=BBA3&isChildRequired=N")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -536,8 +536,8 @@ Hearing Venue Details
     * Change 'How many people will attend the hearing in person?' to 2 and submit
     ======================================================================================*/
 
-    .group("XUI_Hearing_200_Amend_Hearing_Submit") {
-      exec(http("XUI_Hearing_200_005_Amend_Hearing_Submit")
+    .group("XUI_UpdateHearing_200_SubmitUpdate") {
+      exec(http("XUI_UpdateHearing_200_005_SubmitUpdate")
         .put("/api/hearings/updateHearingRequest?hearingId=${hearingRequest}")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -548,32 +548,13 @@ Hearing Venue Details
     .pause(MinThinkTime, MaxThinkTime)
 
 
-
-  val LinkCase =
-
-    /*======================================================================================
-    * Get a singular case
-    ======================================================================================*/
-
-    group("XUI_Hearing_180_Get_Case") {
-      exec(http("XUI_Hearing_150_005_Length_Date")
-        .post("/api/hearings/loadServiceLinkedCases?jurisdictionId=SSCS")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json, text/plain, */*")
-        .formParam("jurisdictionId", "SSCS")
-        .body(ElFileBody("bodies/hearings/HearingsLength.json")))
-
-    }
-    .pause(MinThinkTime, MaxThinkTime)
-
-
-  val CancelHearing =
+  val DeleteHearing =
 
     /*======================================================================================
     * Click on 'Cancel'
     ======================================================================================*/
 
-    group("XUI_Hearing_210_Cancel_Hearing") {
+    group("XUI_DeleteHearing_210_DeleteHearing") {
 
       feed(UserFeederHearingIdCancels)
 
@@ -589,13 +570,13 @@ Hearing Venue Details
     * Click on 'Withdrawn' and then submmit
     ======================================================================================*/
 
-    .group("XUI_Hearing_220_Cancel_Hearing_Submit") {
+    .group("XUI_DeleteHearing_220_DeleteSubmit") {
 
       exec(Common.isAuthenticated)
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${hearingRequest}%2Fhearings"))
 
-      .exec(http("XUI_Hearing_220_005_Cancel_Hearing_Submit")
+      .exec(http("XUI_DeleteHearing_220_005_SubmitDelete")
         .delete("/api/hearings/cancelHearings?hearingId=${hearingRequest}")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
