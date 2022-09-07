@@ -233,18 +233,18 @@ class XUI_Simulation extends Simulation {
 							.exec(Solicitor_Hearings.UploadResponse)
 							.exec(Solicitor_Hearings.RequestHearing)
 						//			.exec(Solicitor_Hearings.UploadResponse)
-									.exec(Solicitor_Hearings.ViewId)
+									.exec(Solicitor_Hearings.GetHearing)
 					}
 					.exec(Solicitor_Hearings.ViewAllHearings)
 							.exec(Solicitor_Hearings.UploadResponse)
 						.exec(Solicitor_Hearings.RequestHearing)
 		//				.exec(Solicitor_Hearings.UploadResponse)
-				.exec(Solicitor_Hearings.AmendHearing)
+				.exec(Solicitor_Hearings.UpdateHearing)
 				.repeat(13) {//13
 					exec(Solicitor_Hearings.ViewAllHearings)
-						.exec(Solicitor_Hearings.ViewId)
+						.exec(Solicitor_Hearings.GetHearing)
 				}
-				.exec(Solicitor_Hearings.CancelHearing)
+				.exec(Solicitor_Hearings.DeleteHearing)
 			}
 
 						.exec(Logout.XUILogout)
@@ -550,7 +550,7 @@ class XUI_Simulation extends Simulation {
 //		.assertions(assertions(testType))
 //		.maxDuration(60 minutes)
 
-	setUp(HearingsScenario.inject(rampUsers(10).during(2400)))
+	setUp(HearingsScenario.inject(rampUsers(10).during(1600)))
 	// (RUDH.inject(rampUsers(250).during(3200))))
 	   .protocols(httpProtocol)
 	   .maxDuration(3800)
