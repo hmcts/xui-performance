@@ -201,8 +201,8 @@ object Solicitor_FR  {
         .formParam("caseTypeId", "null")
         .formParam("jurisdictionId", "null")
         .check(substring("originalDocumentName"))
-        .check(jsonPath("$.documents[0].hashToken").saveAs("ConsentOrderDocumentHash1"))
-        .check(jsonPath("$.documents[0]._links.self.href").saveAs("ConsentOrderDocumentURL1")))
+        .check(jsonPath("$.documents[0].hashToken").saveAs("ConsentOrderDocumentHash"))
+        .check(jsonPath("$.documents[0]._links.self.href").saveAs("ConsentOrderDocumentURL")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
