@@ -55,11 +55,11 @@ class XUI_Simulation extends Simulation {
 	/* ******************************** */
 
 	/* PERFORMANCE TEST CONFIGURATION */
-	val bailsTargetPerHour: Double = 5
+	val bailsTargetPerHour: Double = 10
 	val prlTargetPerHour: Double = 100
 	val probateTargetPerHour: Double = 238
-	val iacTargetPerHour: Double = 20
-	val fplTargetPerHour: Double = 7
+	val iacTargetPerHour: Double = 100
+	val fplTargetPerHour: Double = 10
 	val divorceTargetPerHour: Double = 238
 	val nfdSoleTargetPerHour: Double = 119
 	val nfdJointTargetPerHour: Double = 119
@@ -387,6 +387,7 @@ class XUI_Simulation extends Simulation {
 					exec(Caseworker_Navigation.SearchByCaseNumber)
 					.exec(Caseworker_Navigation.ViewCase)
 					.exec(Caseworker_Navigation.NavigateTabs)
+          .exec(Caseworker_Navigation.ViewDocument)
 				}
 				.exec(Caseworker_Navigation.LoadCaseList)
 				.exec(Logout.XUILogout)
@@ -433,7 +434,7 @@ class XUI_Simulation extends Simulation {
 						details("XUI_000_CCDEvent-system-progress-case-awaiting-final-order").successfulRequests.percent.gte(80), //NFD Sole
 						details("XUI_000_CCDEvent-system-progress-held-case").successfulRequests.percent.gte(80), //NFD Joint
 						details("XUI_FR_170_SubmitApplication").successfulRequests.percent.gte(80),
-						details("XUI_Caseworker_080_CaseList").successfulRequests.percent.gte(80))
+						details("XUI_Caseworker_100_CaseList").successfulRequests.percent.gte(80))
 				}
 				else {
 					Seq(global.successfulRequests.percent.is(100))

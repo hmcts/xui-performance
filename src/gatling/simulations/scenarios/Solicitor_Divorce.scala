@@ -170,8 +170,8 @@ object Solicitor_Divorce {
     * Add marriage certificate details and click Continue
     ======================================================================================*/
 
-    .group("XUI_Divorce_090_AddMarraigeCertDetails") {
-      exec(http("XUI_Divorce_090_005_AddMarraigeCertDetails")
+    .group("XUI_Divorce_090_AddMarriageCertDetails") {
+      exec(http("XUI_Divorce_090_005_AddMarriageCertDetails")
         .post("/data/case-types/DIVORCE/validate?pageId=solicitorCreateSolMarriageCertificate")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -340,8 +340,52 @@ object Solicitor_Divorce {
         .formParam("caseTypeId", "DIVORCE")
         .formParam("jurisdictionId", "DIVORCE")
         .check(substring("originalDocumentName"))
-        .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash"))
-        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL")))
+        .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash1"))
+        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL1")))
+
+      .exec(Common.userDetails)
+      .exec(Common.userDetails)
+    }
+
+    .group("XUI_Divorce_175_UploadMarriageCertificate") {
+      exec(http("XUI_Divorce_175_005_UploadMarriageCertificate")
+        .post("/documentsv2")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json, text/plain, */*")
+        .header("content-type", "multipart/form-data")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .bodyPart(RawFileBodyPart("files", "3MB.pdf")
+          .fileName("3MB.pdf")
+          .transferEncoding("binary"))
+        .asMultipartForm
+        .formParam("classification", "PUBLIC")
+        .formParam("caseTypeId", "DIVORCE")
+        .formParam("jurisdictionId", "DIVORCE")
+        .check(substring("originalDocumentName"))
+        .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash2"))
+        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL2")))
+
+      .exec(Common.userDetails)
+      .exec(Common.userDetails)
+    }
+
+    .group("XUI_Divorce_176_UploadMarriageCertificate") {
+      exec(http("XUI_Divorce_176_005_UploadMarriageCertificate")
+        .post("/documentsv2")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json, text/plain, */*")
+        .header("content-type", "multipart/form-data")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .bodyPart(RawFileBodyPart("files", "120KB.pdf")
+          .fileName("120KB.pdf")
+          .transferEncoding("binary"))
+        .asMultipartForm
+        .formParam("classification", "PUBLIC")
+        .formParam("caseTypeId", "DIVORCE")
+        .formParam("jurisdictionId", "DIVORCE")
+        .check(substring("originalDocumentName"))
+        .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash3"))
+        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL3")))
 
       .exec(Common.userDetails)
       .exec(Common.userDetails)
