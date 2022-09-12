@@ -19,11 +19,11 @@ object Caseworker_Navigation {
 
     group("XUI_Caseworker_030_ApplyFilter") {
       exec(http("XUI_Caseworker_030_005_FilterRecordsByDraftState")
-        .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&state=Submitted&page=1")
+        .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&page=1") //&state=Any
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
         .formParam("x-xsrf-token", "${XSRFToken}")
-        .body(StringBody("""{"size":25}"""))
+        .body(StringBody("""{"sort":{"column":"[LAST_MODIFIED_DATE]","order":1,"type":"DateTime"},"size":25}"""))
         .check(substring("columns"))
         .check(jsonPath("$.total").saveAs("numberOfResults"))
         .check(jsonPath("$.results[*].case_id").findRandom.optional.saveAs("caseId")))
@@ -39,7 +39,7 @@ object Caseworker_Navigation {
 
     group("XUI_Caseworker_040_SortByLastModifiedDate") {
       exec(http("XUI_Caseworker_040_005_SortByLastModifiedDate")
-        .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&state=Submitted&page=1")
+        .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&page=1") //&state=Any
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
         .formParam("x-xsrf-token", "${XSRFToken}")
@@ -61,7 +61,7 @@ object Caseworker_Navigation {
 
       group("XUI_Caseworker_050_LoadPage2") {
         exec(http("XUI_Caseworker_050_005_LoadPage2")
-          .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&state=Submitted&page=2")
+          .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&page=2") //&state=Any
           .headers(Headers.commonHeader)
           .header("accept", "application/json")
           .formParam("x-xsrf-token", "${XSRFToken}")
@@ -81,7 +81,7 @@ object Caseworker_Navigation {
 
     group("XUI_Caseworker_060_SearchByCaseNumber") {
       exec(http("XUI_Caseworker_060_005_SearchByCaseNumber")
-        .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&state=Submitted&page=1&case_reference=${caseId}")
+        .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&page=1&case_reference=${caseId}") //&state=Any
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
         .formParam("x-xsrf-token", "${XSRFToken}")
@@ -110,11 +110,12 @@ object Caseworker_Navigation {
           .check(jsonPath("$.case_id").is("${caseId}"))
           .check(jsonPath("$.tabs[?(@.show_condition==null)].label").findAll.saveAs("tabNames"))
           //find all the document urls and capture only the document identifiers e.g. d513fccc-44e1-4326-880a-38a7627355ef
-          .check(jsonPath("$.tabs[*].fields[*].value[*].value.DocumentLink.document_url").findAll.transform( x =>
+          .check(jsonPath("$.tabs[*].fields[*].value[*].value.documentLink.document_url").findAll.transform( x =>
           {
             val pattern = "/documents/([0-9a-z-]+)".r
             x.map(pattern.findAllIn(_).group(1))
-          }).optional.saveAs("documentUrl")))
+          }).optional.saveAs("documentUrl"))
+        )
 
         .exec(Common.caseActivityPost)
 
@@ -164,7 +165,8 @@ object Caseworker_Navigation {
             .header("Accept", "*/*")
             .header("content-type", "")
             .check(responseTimeInMillis.saveAs("responseTime"))
-            .check(bodyBytes.transform(_.length > 200000).is(true)))
+            .check(bodyBytes.transform(_.length > 2000).is(true)) //200000
+            )
       }
 
         .pause(MinThinkTime, MaxThinkTime)
