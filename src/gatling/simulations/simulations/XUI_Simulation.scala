@@ -57,14 +57,14 @@ class XUI_Simulation extends Simulation {
 	/* PERFORMANCE TEST CONFIGURATION */
 	val bailsTargetPerHour: Double = 10
 	val prlTargetPerHour: Double = 100
-	val probateTargetPerHour: Double = 238
+	val probateTargetPerHour: Double = 250
 	val iacTargetPerHour: Double = 150
-	val fplTargetPerHour: Double = 10
-	val divorceTargetPerHour: Double = 288
-	val nfdSoleTargetPerHour: Double = 119
-	val nfdJointTargetPerHour: Double = 119
-	val frTargetPerHour: Double = 98
-	val caseworkerTargetPerHour: Double = 900
+	val fplTargetPerHour: Double = 50
+	val divorceTargetPerHour: Double = 300
+	val nfdSoleTargetPerHour: Double = 120
+	val nfdJointTargetPerHour: Double = 120
+	val frTargetPerHour: Double = 100
+	val caseworkerTargetPerHour: Double = 5000
 
 	//This determines the percentage split of PRL journeys, by C100 or FL401
 	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
