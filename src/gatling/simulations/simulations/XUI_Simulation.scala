@@ -550,10 +550,10 @@ class XUI_Simulation extends Simulation {
 //		.assertions(assertions(testType))
 //		.maxDuration(60 minutes)
 
-	setUp(HearingsScenario.inject(rampUsers(40).during(11880)))
+	setUp(HearingsScenario.inject(rampUsers(10).during(1600)))
 	// (RUDH.inject(rampUsers(250).during(3200))))
 	   .protocols(httpProtocol)
-		.maxDuration(18000)
+		.maxDuration(4500)
 	  // .maxDuration(4000)
 
 
