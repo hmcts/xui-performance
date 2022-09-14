@@ -226,7 +226,7 @@ class XUI_Simulation extends Simulation {
 					.set("caseType", "Benefit"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
-				.repeat(6) { //5, 1st year = 4
+				.repeat(5) { //5, 1st year = 4
 					repeat(6) { //6
 						exec(Solicitor_Hearings.ViewAllHearings)
 							//	.exec(Solicitor_Hearings.AmendHearing)
