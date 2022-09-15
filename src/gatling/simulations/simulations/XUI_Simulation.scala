@@ -229,17 +229,14 @@ class XUI_Simulation extends Simulation {
 				.repeat(5) { //5, 1st year = 4
 					repeat(6) { //6
 						exec(Solicitor_Hearings.ViewAllHearings)
-							//	.exec(Solicitor_Hearings.AmendHearing)
 										.exec(Solicitor_Hearings.UploadResponse)
 							.exec(Solicitor_Hearings.RequestHearing)
-							//			.exec(Solicitor_Hearings.UploadResponse)
 											.exec(Solicitor_Hearings.GetHearing)
 					}
 
 					.exec(Solicitor_Hearings.ViewAllHearings)
 							.exec(Solicitor_Hearings.UploadResponse)
 						.exec(Solicitor_Hearings.RequestHearing)
-		//				.exec(Solicitor_Hearings.UploadResponse)
 				.exec(Solicitor_Hearings.UpdateHearing)
 				.repeat(13) {//13, first year = 14
 					exec(Solicitor_Hearings.ViewAllHearings)
@@ -248,7 +245,7 @@ class XUI_Simulation extends Simulation {
 				.exec(Solicitor_Hearings.DeleteHearing)
 			}
 
-							.exec(Logout.XUILogout)
+				.exec(Logout.XUILogout)
 
 		}
 
