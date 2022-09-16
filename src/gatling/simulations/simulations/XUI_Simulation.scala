@@ -372,7 +372,7 @@ class XUI_Simulation extends Simulation {
 	* XUI Caseworker - Search & View Case Scenario
 	 ===============================================================================================*/
 	val CaseworkerScenario = scenario("***** Caseworker Journey ******")
-		// .exitBlockOnFail {
+		.exitBlockOnFail {
 			.feed(CaseworkerUserFeeder)
 				//TODO: UPDATE caseType with something more dynamic
 				.exec(_.set("env", s"${env}")
@@ -391,7 +391,7 @@ class XUI_Simulation extends Simulation {
 				}
 				.exec(Caseworker_Navigation.LoadCaseList)
 				.exec(Logout.XUILogout)
-		// }
+		}
 
 
 	/*===============================================================================================
