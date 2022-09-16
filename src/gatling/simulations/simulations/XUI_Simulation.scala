@@ -373,7 +373,7 @@ class XUI_Simulation extends Simulation {
 	 ===============================================================================================*/
 	val CaseworkerScenario = scenario("***** Caseworker Journey ******")
 		.exitBlockOnFail {
-			.feed(CaseworkerUserFeeder)
+			feed(CaseworkerUserFeeder)
 				//TODO: UPDATE caseType with something more dynamic
 				.exec(_.set("env", s"${env}")
 							.set("caseType", "NFD"))
