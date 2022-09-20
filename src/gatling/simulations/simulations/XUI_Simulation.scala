@@ -109,9 +109,9 @@ class XUI_Simulation extends Simulation {
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.feed(randomFeeder)
-				.doIfOrElse(session => session("prl-percentage").as[Int] < prlC100Percentage) {
+				// .doIfOrElse(session => session("prl-percentage").as[Int] < prlC100Percentage) {
 					//C100 Journey
-					exec(Solicitor_PRL_C100.CreatePrivateLawCase)
+					.exec(Solicitor_PRL_C100.CreatePrivateLawCase)
 					.exec(Solicitor_PRL_C100.TypeOfApplication)
 					.exec(Solicitor_PRL_C100.HearingUrgency)
 					.exec(Solicitor_PRL_C100.ApplicantDetails)
@@ -121,10 +121,10 @@ class XUI_Simulation extends Simulation {
 					.exec(Solicitor_PRL_C100.AllegationsOfHarm)
 					.exec(Solicitor_PRL_C100.ViewPdfApplication)
 					.exec(Solicitor_PRL_C100.SubmitAndPay)
-				} 
+				/*} 
         {
 					//FL401 Journey
-					/*exec(Solicitor_PRL_FL401.CreatePrivateLawCase)
+					exec(Solicitor_PRL_FL401.CreatePrivateLawCase)
 					.exec(Solicitor_PRL_FL401.TypeOfApplication)
 					.exec(Solicitor_PRL_FL401.WithoutNoticeOrder)
 					.exec(Solicitor_PRL_FL401.ApplicantDetails)
@@ -135,8 +135,8 @@ class XUI_Simulation extends Simulation {
 					.exec(Solicitor_PRL_FL401.TheHome)
 					.exec(Solicitor_PRL_FL401.UploadDocuments)
 					.exec(Solicitor_PRL_FL401.ViewPDF)
-					.exec(Solicitor_PRL_FL401.StatementOfTruth)*/
-				}
+					.exec(Solicitor_PRL_FL401.StatementOfTruth)
+				}*/
 				.exec(Logout.XUILogout)
 		}
 
