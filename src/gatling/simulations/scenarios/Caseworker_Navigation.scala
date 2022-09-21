@@ -159,14 +159,14 @@ object Caseworker_Navigation {
           .header("sec-fetch-site", "none")
           .check(substring("HMCTS Manage cases")))
 
-          .exec(http("XUI_Caseworker_090_010_ViewDocument")
-            .get("/documentsv2/${documentLink}/binary")
-            .headers(Headers.commonHeader)
-            .header("Accept", "*/*")
-            .header("content-type", "")
-            .check(responseTimeInMillis.saveAs("responseTime"))
-            .check(bodyBytes.transform(_.length > 2000).is(true)) //200000
-            )
+        .exec(http("XUI_Caseworker_090_010_ViewDocument")
+          .get("/documentsv2/${documentLink}/binary")
+          .headers(Headers.commonHeader)
+          .header("Accept", "*/*")
+          .header("content-type", "")
+          .check(responseTimeInMillis.saveAs("responseTime"))
+          .check(status.in(200, 201, 403, 404))
+          .check(bodyBytes.transform(_.length > 2000).is(true))) //200000
       }
 
         .pause(MinThinkTime, MaxThinkTime)
