@@ -305,13 +305,13 @@ object Solicitor_Probate {
 
       .exec(Common.activity)
 
-      .exec(http("XUI_Probate_140_010_WorkAllocation")
-        .post("/workallocation/searchForCompletable")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "${XSRFToken}")
-        .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"solicitorUpdateApplication","jurisdiction":"PROBATE","caseTypeId":"GrantOfRepresentation"}}"""))
-        .check(status.in(200, 400)))
+      // .exec(http("XUI_Probate_140_010_WorkAllocation")
+      //   .post("/workallocation/searchForCompletable")
+      //   .headers(Headers.commonHeader)
+      //   .header("accept", "application/json")
+      //   .header("x-xsrf-token", "${XSRFToken}")
+      //   .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"solicitorUpdateApplication","jurisdiction":"PROBATE","caseTypeId":"GrantOfRepresentation"}}"""))
+      //   .check(status.in(200, 400)))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
@@ -500,13 +500,13 @@ object Solicitor_Probate {
         .body(ElFileBody("bodies/probate/ProbateConfirmGrantOfProbateDetails.json"))
         .check(jsonPath("$.state").is("SolAppUpdated")))
 
-      .exec(http("XUI_Probate_210_010_WorkAllocation")
-        .post("/workallocation/searchForCompletable")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "${XSRFToken}")
-        .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"solicitorUpdateProbate","jurisdiction":"PROBATE","caseTypeId":"GrantOfRepresentation"}}"""))
-        .check(status.in(200, 400)))
+      // .exec(http("XUI_Probate_210_010_WorkAllocation")
+      //   .post("/workallocation/searchForCompletable")
+      //   .headers(Headers.commonHeader)
+      //   .header("accept", "application/json")
+      //   .header("x-xsrf-token", "${XSRFToken}")
+      //   .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"solicitorUpdateProbate","jurisdiction":"PROBATE","caseTypeId":"GrantOfRepresentation"}}"""))
+      //   .check(status.in(200, 400)))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
@@ -699,13 +699,13 @@ object Solicitor_Probate {
         .check(jsonPath("$.state").is("CaseCreated"))
         .check(substring("This probate application has now been submitted")))
 
-      .exec(http("XUI_Probate_290_010_WorkAllocation")
-        .post("/workallocation/searchForCompletable")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "${XSRFToken}")
-        .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"solicitorReviewAndConfirm","jurisdiction":"PROBATE","caseTypeId":"GrantOfRepresentation"}}"""))
-        .check(status.in(200, 401)))
+      // .exec(http("XUI_Probate_290_010_WorkAllocation")
+      //   .post("/workallocation/searchForCompletable")
+      //   .headers(Headers.commonHeader)
+      //   .header("accept", "application/json")
+      //   .header("x-xsrf-token", "${XSRFToken}")
+      //   .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"solicitorReviewAndConfirm","jurisdiction":"PROBATE","caseTypeId":"GrantOfRepresentation"}}"""))
+      //   .check(status.in(200, 401)))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorReviewAndConfirm%2Fconfirm"))
     }
