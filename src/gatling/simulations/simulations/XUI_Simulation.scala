@@ -2,6 +2,7 @@ package simulations
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
+import io.gatling.core.scenario.Simulation
 import scenarios._
 import utils._
 
@@ -65,6 +66,7 @@ class XUI_Simulation extends Simulation {
 	val nfdJointTargetPerHour: Double = 120
 	val frTargetPerHour: Double = 100
 	val caseworkerTargetPerHour: Double = 1000
+  val caseworkerUsers = 5
 
 	//This determines the percentage split of PRL journeys, by C100 or FL401
 	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
@@ -141,8 +143,6 @@ class XUI_Simulation extends Simulation {
 				.exec(Logout.XUILogout)
 		}
 
-
-
 	/*===============================================================================================
 	* XUI Legal Rep Bails Scenario
  	===============================================================================================*/
@@ -167,12 +167,6 @@ class XUI_Simulation extends Simulation {
 					.exec(Solicitor_Bails.RecordBailDecision)
 					.exec(Solicitor_Bails.UploadSignedDecision)
 				.exec(Logout.XUILogout)
-
-				.exec {
-					session =>
-						println(session)
-						session
-				}
 		}
 
 	/*===============================================================================================
@@ -394,7 +388,6 @@ class XUI_Simulation extends Simulation {
 				.exec(Logout.XUILogout)
 		}
 
-
 	/*===============================================================================================
 	* Simulation Configuration
 	 ===============================================================================================*/
@@ -456,6 +449,7 @@ class XUI_Simulation extends Simulation {
 		 NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		 FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		 CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+		//  CaseworkerScenario.inject(rampUsers(caseworkerUsers) during (5 minutes)).pauses(pauseOption)
 	).protocols(httpProtocol)
 		.assertions(assertions(testType))
 		.maxDuration(75 minutes)
