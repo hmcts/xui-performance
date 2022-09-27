@@ -229,23 +229,24 @@ class XUI_Simulation extends Simulation {
 				.repeat(4) { //5, 1st year = 4
 					repeat(6) { //6
 						exec(Solicitor_Hearings.ViewAllHearings)
-										.exec(Solicitor_Hearings.UploadResponse)
-							.exec(Solicitor_Hearings.RequestHearing)
-											.exec(Solicitor_Hearings.GetHearing)
-					}
-
-					.exec(Solicitor_Hearings.ViewAllHearings)
+						//	exec(Solicitor_Hearings.SendToWithFTA)
 							.exec(Solicitor_Hearings.UploadResponse)
-						.exec(Solicitor_Hearings.RequestHearing)
-				.exec(Solicitor_Hearings.UpdateHearing)
-				.repeat(14) {//13, first year = 14
-					exec(Solicitor_Hearings.ViewAllHearings)
-						.exec(Solicitor_Hearings.GetHearing)
-				}
-				.exec(Solicitor_Hearings.DeleteHearing)
-			}
+									.exec(Solicitor_Hearings.RequestHearing)
+													.exec(Solicitor_Hearings.GetHearing)
+					}
+											.exec(Solicitor_Hearings.ViewAllHearings)
+													.exec(Solicitor_Hearings.UploadResponse)
+												.exec(Solicitor_Hearings.RequestHearing)
+										.exec(Solicitor_Hearings.UpdateHearing)
+										.repeat(14) {//13, first year = 14
+											exec(Solicitor_Hearings.ViewAllHearings)
+												.exec(Solicitor_Hearings.GetHearing)
+										}
+										.exec(Solicitor_Hearings.DeleteHearing)
+									}
 
-				.exec(Logout.XUILogout)
+						.exec(Logout.XUILogout)
+
 
 		}
 
@@ -547,7 +548,7 @@ class XUI_Simulation extends Simulation {
 //		.assertions(assertions(testType))
 //		.maxDuration(60 minutes)
 
-	setUp(HearingsScenario.inject(rampUsers(32).during(11000)))
+	setUp(HearingsScenario.inject(rampUsers(32).during(12000)))
 	// (RUDH.inject(rampUsers(250).during(3200))))
 	   .protocols(httpProtocol)
 		.maxDuration(20000)

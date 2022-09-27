@@ -2,7 +2,7 @@ package scenarios
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import utils.{Common, Environment, Headers}
+import utils.{Common, Environment, Headers,CsrfCheck}
 import java.io.{BufferedWriter, FileWriter}
 import scala.util.Random
 
@@ -17,6 +17,7 @@ object Solicitor_Hearings {
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
   val UserFeederHearingCases = csv("UserDataHearingsCases.csv").circular
+  val UserFeederHearingRequestCases = csv("HearingDetailsRequest.csv").circular
   val UserFeederHearingUploadCases = csv("UserDataHearingsUploadCases.csv").circular
   val UserFeederHearingCasesLink = csv("UserDataHearingsCasesLinked.csv").circular
   val UserFeederHearingId = csv("HearingId.csv").circular
@@ -28,13 +29,7 @@ object Solicitor_Hearings {
   val ViewAllHearings =
 
 
-  feed(randomFeeder)
-  .doIfOrElse(session => session("hearings-percentage").as[Int] < hearingPercentage) {
-    feed(UserFeederHearingCases)
-
-  }{
-    feed(UserFeederHearingCasesLink)
-  }
+  feed(UserFeederHearingCases)
 
     /*======================================================================================
     * Select the Case you want to view
@@ -55,17 +50,124 @@ object Solicitor_Hearings {
     .pause(MinThinkTime, MaxThinkTime)
 
 
+  val SendToWithFTA =
+
+  /*======================================================================================
+  * Select SendtoWithFTA
+  ======================================================================================*/
+
+
+    group("XUI_UploadResponse_031_SelectSendtoWithFTA") {
+
+      feed(UserFeederHearingUploadCases)
+        //should I change this so it does the whole case search first with the upload case?
+
+        .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2FadminSendToWithDwp"))
+
+        .exec(Common.profile)
+
+        .exec(http("XUI_Common_000_SSCS")
+          .get("/workallocation2/case/tasks/${caseId}/event/adminSendToWithDwp/caseType/Benefit/jurisdiction/SSCS")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/json")
+          .header("sec-fetch-site", "same-origin")
+          .check(status.in(200, 304, 403)))
+
+
+        .exec(http("XUI_UploadResponse_031_005_SelectSendtoWithFTA")
+          .get("/data/internal/cases/${caseId}/event-triggers/adminSendToWithDwp?ignore-warning=false")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+          .check(jsonPath("$.event_token").saveAs("event_token"))
+          .check(jsonPath("$.id").is("adminSendToWithDwp")))
+     //     .check(substring("access_granted").optional.saveAs("STANDARD")))
+
+        .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+    }
+
+
+      .group("XUI_UploadResponse_032_SubmitResponseFTA") {
+
+        exec(http("XUI_UploadResponse_032_005_SubmitResponseFTA")
+          .post(BaseURL + "/data/cases/${caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+          .header("accept-language", "en-GB,en-US;q=0.9,en;q=0.8")
+          .body(ElFileBody("bodies/hearings/FTAHearingSubmit.json"))
+          .check(substring("responseReceived").optional.saveAs("responseReceived")))
+
+        .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%23Summary"))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+      }
+      .pause(MinThinkTime, MaxThinkTime)
+
   val UploadResponse =
+
+  /*======================================================================================
+* Select SendtoWithFTA
+======================================================================================*/
+
+
+    group("XUI_UploadResponse_031_SelectSendtoWithFTA") {
+
+      feed(UserFeederHearingUploadCases)
+        //should I change this so it does the whole case search first with the upload case?
+
+        .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2FadminSendToWithDwp"))
+
+        .exec(Common.profile)
+
+        .exec(http("XUI_Common_000_SSCS")
+          .get("/workallocation2/case/tasks/${caseId}/event/adminSendToWithDwp/caseType/Benefit/jurisdiction/SSCS")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/json")
+          .header("sec-fetch-site", "same-origin")
+          .check(status.in(200, 304, 403)))
+
+
+        .exec(http("XUI_UploadResponse_031_005_SelectSendtoWithFTA")
+          .get("/data/internal/cases/${caseId}/event-triggers/adminSendToWithDwp?ignore-warning=false")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+          .check(jsonPath("$.event_token").saveAs("event_token"))
+          .check(jsonPath("$.id").is("adminSendToWithDwp")))
+        //     .check(substring("access_granted").optional.saveAs("STANDARD")))
+
+        .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+    }
+
+
+      .group("XUI_UploadResponse_032_SubmitResponseFTA") {
+
+        exec(http("XUI_UploadResponse_032_005_SubmitResponseFTA")
+          .post(BaseURL + "/data/cases/${caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+          .header("accept-language", "en-GB,en-US;q=0.9,en;q=0.8")
+          .body(ElFileBody("bodies/hearings/FTAHearingSubmit.json"))
+          .check(substring("responseReceived").optional.saveAs("responseReceived")))
+
+          .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%23Summary"))
+
+          .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+
+      }
+      .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Select Upload Response
     ======================================================================================*/
 
-    group("XUI_UploadResponse_040_SelectUploadResponse") {
+    .group("XUI_UploadResponse_040_SelectUploadResponse") {
 
-      feed(UserFeederHearingUploadCases)
+      //feed(UserFeederHearingUploadCases)
+        //should I change this so it does the whole case search first with the upload case?
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FdwpUploadResponse"))
+      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FdwpUploadResponse"))
 
       .exec(Common.profile)
 
@@ -74,9 +176,11 @@ object Solicitor_Hearings {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .check(jsonPath("$.event_token").saveAs("event_token"))
-        .check(jsonPath("$.case_fields[33].value.appealReasons.reasons[0].id").saveAs("appealId"))
+        .check(jsonPath("$.case_fields[33].value.appealReasons.reasons[0].id").saveAs("appealId1"))
+        .check(jsonPath("$.case_fields[33].value.appealReasons.reasons[1].id").saveAs("appealId2"))
+        .check(jsonPath("$.case_fields[33].value.appealReasons.reasons[2].id").saveAs("appealId3"))
         .check(jsonPath("$.id").is("dwpUploadResponse"))
-        .check(substring("access_granted").optional.saveAs("accessGranted")))
+        .check(substring("description").optional.saveAs("Upload a response")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FdwpUploadResponse%2FdwpUploadResponse1.0"))
 
@@ -183,7 +287,7 @@ object Solicitor_Hearings {
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .body(ElFileBody("bodies/hearings/HearingsUploadResponse.json"))
-        .check(substring("personalIndependencePayment")))
+        .check(substring("disabilityLivingAllowance")))
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FdwpUploadResponse%2Fsubmit"))
 
@@ -236,7 +340,16 @@ object Solicitor_Hearings {
     * Request a hearing
     ======================================================================================*/
 
-    group("XUI_RequestHearing_070_ClickRequestHearing") {
+
+    feed(randomFeeder)
+      .doIfOrElse(session => session("hearings-percentage").as[Int] < hearingPercentage) {
+        feed(UserFeederHearingRequestCases)
+
+      }{
+        feed(UserFeederHearingCasesLink)
+      }
+
+    .group("XUI_RequestHearing_070_ClickRequestHearing") {
 
       exec(Common.isAuthenticated)
 

@@ -2,28 +2,28 @@
   "data": {
     "appeal": {
       "mrnDetails": {
-        "dwpIssuingOffice": "DWP PIP (1)",
-        "mrnDate": "2022-07-26",
-        "mrnLateReason": "",
+        "dwpIssuingOffice": "The Pension Service 11",
+        "mrnDate": "2021-01-01",
+        "mrnLateReason": "Lost my paperwork",
         "mrnMissingReason": null
       },
       "appellant": {
-        "id": "1",
+        "id": null,
         "identity": {
           "dob": "1990-02-26",
-          "nino": "AB877533I"
+          "nino": "AB142843K"
         },
         "name": {
           "title": "Mr",
-          "firstName": "HMCPerformance",
-          "lastName": "Tester"
+          "firstName": "Joe",
+          "lastName": "Bloggs"
         },
         "address": {
           "line1": "123 Hairy Lane",
           "line2": "Off Hairy Park",
           "town": "Hairyfield",
           "county": "Kent",
-          "postcode": "CF24 4AD"
+          "postcode": "CF24 3AD"
         },
         "contact": {
           "email": "sscs_citizen_1@mailinator.com",
@@ -33,7 +33,7 @@
         "organisation": null,
         "isAppointee": "No",
         "appointee": {
-          "id": "2",
+          "id": null,
           "identity": {
             "dob": null,
             "nino": null
@@ -56,11 +56,23 @@
         "isAddressSameAsAppointee": null
       },
       "benefitType": {
-        "code": "PIP",
-        "description": "Personal Independence Payment"
+        "code": "DLA",
+        "description": "Disability Living Allowance"
       },
       "hearingOptions": {
-        "arrangements---LABEL": []
+        "wantsToAttend": "Yes",
+        "wantsSupport": "Yes",
+        "languageInterpreter": "Yes",
+        "languages": "danish",
+        "arrangements": [
+          "hearingLoop"
+        ],
+        "scheduleHearing": "Yes",
+        "excludeDates": [],
+        "other": "Yes, this...",
+        "arrangements---LABEL": [
+          "Hearing loop"
+        ]
       },
       "appealReasons": {
         "reasons": [
@@ -69,13 +81,27 @@
               "reason": "aaaaaaaaaa",
               "description": "aaaaaaaaaa"
             },
-            "id": "${appealId}"
+            "id": "{appealId1}"
+          },
+          {
+            "value": {
+              "reason": "bbbbbbbbbb",
+              "description": "bbbbbbbbbb"
+            },
+            "id": "{appealId2}"
+          },
+          {
+            "value": {
+              "reason": "cccccccccc",
+              "description": "cccccccccc"
+            },
+            "id": "{appealId3}"
           }
         ],
-        "otherReasons": ""
+        "otherReasons": "Another reason"
       },
       "rep": {
-        "id": "3",
+        "id": null,
         "identity": {
           "dob": null,
           "nino": null
@@ -94,13 +120,18 @@
         "organisation": null,
         "hasRepresentative": "No"
       },
-      "signer": "HMCPerformance Tester",
-      "hearingType": null,
-      "hearingSubtype": {},
+      "signer": "Performance Tester",
+      "hearingType": "oral",
+      "hearingSubtype": {
+        "wantsHearingTypeTelephone": "Yes",
+        "hearingTelephoneNumber": "07398785050",
+        "wantsHearingTypeVideo": "Yes",
+        "hearingVideoEmail": "sscs_citizen_1@mailinator.com",
+        "wantsHearingTypeFaceToFace": "Yes"
+      },
       "receivedVia": "Online"
     },
     "dwpResponseDocument": {
-      "documentFileName": null,
       "documentLink": {
         "document_url": "${DocumentURLFTAResponse}",
         "document_binary_url": "${DocumentURLFTAResponse}/binary",
@@ -118,7 +149,6 @@
       }
     },
     "dwpEvidenceBundleDocument": {
-      "documentFileName": null,
       "documentLink": {
         "document_url": "${DocumentURLFTAEvidence}",
         "document_binary_url": "${DocumentURLFTAEvidence}/binary",
@@ -131,13 +161,13 @@
     "dwpEditedEvidenceBundleDocument": null,
     "appendix12Doc": null,
     "dwpUploadAudioVideoEvidence": [],
-    "benefitCode": "002",
-    "issueCode": "ML",
+    "benefitCode": "037",
+    "issueCode": "EI",
     "dwpFurtherInfo": "No",
-    "dwpUCB": "No",
+    "dwpUCB": null,
     "dwpUcbEvidenceDocument": null,
     "dwpFurtherEvidenceStates": null,
-    "dwpState": "UnRegistered",
+    "dwpState": "Registered",
     "dwpIsOfficerAttending": "No"
   },
   "event": {
