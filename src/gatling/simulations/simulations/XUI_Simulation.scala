@@ -226,7 +226,7 @@ class XUI_Simulation extends Simulation {
 					.set("caseType", "Benefit"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
-				.repeat(5) { //5, 1st year = 4
+				.repeat(4) { //5, 1st year = 4
 					repeat(6) { //6
 						exec(Solicitor_Hearings.ViewAllHearings)
 							.exec(Solicitor_Hearings.UploadResponse)
@@ -237,7 +237,7 @@ class XUI_Simulation extends Simulation {
 													.exec(Solicitor_Hearings.UploadResponse)
 												.exec(Solicitor_Hearings.RequestHearing)
 										.exec(Solicitor_Hearings.UpdateHearing)
-										.repeat(13) {//13, first year = 14
+										.repeat(14) {//13, first year = 14
 											exec(Solicitor_Hearings.ViewAllHearings)
 												.exec(Solicitor_Hearings.GetHearing)
 										}
@@ -547,10 +547,10 @@ class XUI_Simulation extends Simulation {
 //		.assertions(assertions(testType))
 //		.maxDuration(60 minutes)
 
-	setUp(HearingsScenario.inject(rampUsers(10).during(1600)))
+	setUp(HearingsScenario.inject(rampUsers(32).during(11880)))
 	// (RUDH.inject(rampUsers(250).during(3200))))
 	   .protocols(httpProtocol)
-		.maxDuration(4500)
+		.maxDuration(20000)
 	  // .maxDuration(20000)
 
 
