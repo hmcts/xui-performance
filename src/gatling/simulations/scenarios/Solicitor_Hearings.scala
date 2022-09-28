@@ -87,7 +87,7 @@ object Solicitor_Hearings {
     }
 
 
-      .group("XUI_UploadResponse_032_SubmitResponseFTA") {
+      .group("XUI_FTA_032_SubmitResponseFTA") {
 
         exec(http("XUI_UploadResponse_032_005_SubmitResponseFTA")
           .post(BaseURL + "/data/cases/${caseId}/events")
@@ -111,7 +111,7 @@ object Solicitor_Hearings {
 ======================================================================================*/
 
 
-    group("XUI_UploadResponse_031_SelectSendtoWithFTA") {
+    group("XUI_FTA_031_SelectSendtoWithFTA") {
 
       feed(UserFeederHearingUploadCases)
         //should I change this so it does the whole case search first with the upload case?
@@ -128,7 +128,7 @@ object Solicitor_Hearings {
           .check(status.in(200, 304, 403)))
 
 
-        .exec(http("XUI_UploadResponse_031_005_SelectSendtoWithFTA")
+        .exec(http("XUI_FTA_031_005_SelectSendtoWithFTA")
           .get("/data/internal/cases/${caseId}/event-triggers/adminSendToWithDwp?ignore-warning=false")
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -141,9 +141,9 @@ object Solicitor_Hearings {
     }
 
 
-      .group("XUI_UploadResponse_032_SubmitResponseFTA") {
+      .group("XUI_FTA_032_SubmitResponseFTA") {
 
-        exec(http("XUI_UploadResponse_032_005_SubmitResponseFTA")
+        exec(http("XUI_FTA_032_005_SubmitResponseFTA")
           .post(BaseURL + "/data/cases/${caseId}/events")
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
