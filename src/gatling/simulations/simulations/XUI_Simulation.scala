@@ -64,7 +64,7 @@ class XUI_Simulation extends Simulation {
 	val nfdSoleTargetPerHour: Double = 120
 	val nfdJointTargetPerHour: Double = 120
 	val frTargetPerHour: Double = 100
-	val caseworkerTargetPerHour: Double = 5000
+	val caseworkerTargetPerHour: Double = 1000
 
 	//This determines the percentage split of PRL journeys, by C100 or FL401
 	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
