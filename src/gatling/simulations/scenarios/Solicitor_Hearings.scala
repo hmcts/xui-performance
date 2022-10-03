@@ -110,7 +110,7 @@ object Solicitor_Hearings {
 * Select SendtoWithFTA
 ======================================================================================*/
 
-
+/*
     group("XUI_FTA_031_SelectSendtoWithFTA") {
 
       feed(UserFeederHearingUploadCases)
@@ -157,14 +157,14 @@ object Solicitor_Hearings {
 
       }
       .pause(MinThinkTime, MaxThinkTime)
-
+*/
     /*======================================================================================
     * Select Upload Response
     ======================================================================================*/
 
-    .group("XUI_UploadResponse_040_SelectUploadResponse") {
+    group("XUI_UploadResponse_040_SelectUploadResponse") {
 
-      //feed(UserFeederHearingUploadCases)
+      feed(UserFeederHearingUploadCases)
         //should I change this so it does the whole case search first with the upload case?
 
       exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FdwpUploadResponse"))
