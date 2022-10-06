@@ -45,10 +45,9 @@ object Caseworker_Navigation {
         .formParam("x-xsrf-token", "${XSRFToken}")
         .body(StringBody("""{"sort":{"column":"[LAST_MODIFIED_DATE]","order":1,"type":"DateTime"},"size":25}"""))
         .check(substring("columns")))
-
     }
 
-      .pause(MinThinkTime, MaxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
   /*====================================================================================
   *Navigate to Page 2
@@ -69,7 +68,7 @@ object Caseworker_Navigation {
           .check(substring("columns")))
       }
 
-        .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
     }
 
@@ -90,7 +89,7 @@ object Caseworker_Navigation {
         .check(jsonPath("$.total").ofType[Int].is(1)))
     }
 
-      .pause(MinThinkTime, MaxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
   /*====================================================================================
   *View Case
@@ -99,30 +98,31 @@ object Caseworker_Navigation {
   val ViewCase =
 
     group("XUI_Caseworker_070_ViewCase") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-        .exec(http("XUI_Caseworker_070_005_ViewCase")
-          .get("/data/internal/cases/${caseId}")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-          .header("x-xsrf-token", "${XSRFToken}")
-          .header("experimental", "true")
-          .check(jsonPath("$.case_id").is("${caseId}"))
-          .check(jsonPath("$.tabs[?(@.show_condition==null)].label").findAll.saveAs("tabNames"))
-          //find all the document urls and capture only the document identifiers e.g. d513fccc-44e1-4326-880a-38a7627355ef
-          .check(jsonPath("$.tabs[*].fields[*].value[*].value.documentLink.document_url").findAll.transform( x =>
-          {
-            val pattern = "/documents/([0-9a-z-]+)".r
-            x.map(pattern.findAllIn(_).group(1))
-          }).optional.saveAs("documentUrl"))
-        )
+      exec(http("XUI_Caseworker_070_005_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .header("experimental", "true")
+        .check(jsonPath("$.case_id").is("${caseId}"))
+        .check(jsonPath("$.tabs[?(@.show_condition==null)].label").findAll.saveAs("tabNames"))
+        //find all the document urls and capture only the document identifiers e.g. d513fccc-44e1-4326-880a-38a7627355ef
+        .check(jsonPath("$.tabs[*].fields[*].value[*].value.documentLink.document_url").findAll.transform( x =>
+        {
+          val pattern = "/documents/([0-9a-z-]+)".r
+          x.map(pattern.findAllIn(_).group(1))
+        }).optional.saveAs("documentUrl"))
+      )
 
-        .exec(Common.caseActivityPost)
+      .exec(Common.caseActivityPost)
+      .pause(2)
+      .exec(Common.caseActivityGet)
 
-        .exec(Common.userDetails)
+      .exec(Common.userDetails)
     }
 
-      .pause(MinThinkTime, MaxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
   /*====================================================================================
   *Navigate To Each Tab
@@ -159,17 +159,17 @@ object Caseworker_Navigation {
           .header("sec-fetch-site", "none")
           .check(substring("HMCTS Manage cases")))
 
-          .exec(http("XUI_Caseworker_090_010_ViewDocument")
-            .get("/documentsv2/${documentLink}/binary")
-            .headers(Headers.commonHeader)
-            .header("Accept", "*/*")
-            .header("content-type", "")
-            .check(responseTimeInMillis.saveAs("responseTime"))
-            .check(bodyBytes.transform(_.length > 2000).is(true)) //200000
-            )
+        .exec(http("XUI_Caseworker_090_010_ViewDocument")
+          .get("/documentsv2/${documentLink}/binary")
+          .headers(Headers.commonHeader)
+          .header("Accept", "*/*")
+          .header("content-type", "")
+          .check(responseTimeInMillis.saveAs("responseTime"))
+          .check(bodyBytes.transform(_.length > 2000).is(true)) //200000
+          )
       }
 
-        .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
     }
 
@@ -180,37 +180,36 @@ object Caseworker_Navigation {
   val LoadCaseList =
 
     group("XUI_Caseworker_100_CaseList") {
-      exec(Common.healthcheck("%2Fcases"))
 
-        .exec(http("XUI_100_005_Jurisdictions")
-          .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/json")
-          .check(substring("id")))
+      .exec(http("XUI_100_005_Jurisdictions")
+        .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json")
+        .check(substring("id")))
 
-        .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
 
-        .exec(Common.orgDetails)
+      .exec(Common.orgDetails)
 
-        .exec(Common.userDetails)
+      .exec(Common.userDetails)
 
-        .exec(http("XUI_100_010_WorkBasketInputs")
-          .get("/data/internal/case-types/${caseType}/work-basket-inputs")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-workbasket-input-details.v2+json;charset=UTF-8")
-          .check(regex("workbasketInputs|Not Found"))
-          .check(status.in(200, 404)))
+      .exec(http("XUI_100_010_WorkBasketInputs")
+        .get("/data/internal/case-types/${caseType}/work-basket-inputs")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-workbasket-input-details.v2+json;charset=UTF-8")
+        .check(regex("workbasketInputs|Not Found"))
+        .check(status.in(200, 404)))
 
-        .exec(http("XUI_100_015_SearchCases")
-          .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&page=1")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/json")
-          .formParam("x-xsrf-token", "${XSRFToken}")
-          .body(StringBody("""{"size":25}"""))
-          .check(substring("columns")))
+      .exec(http("XUI_100_015_SearchCases")
+        .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&page=1")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json")
+        .formParam("x-xsrf-token", "${XSRFToken}")
+        .body(StringBody("""{"size":25}"""))
+        .check(substring("columns")))
     }
 
-      .pause(MinThinkTime, MaxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
 }
 

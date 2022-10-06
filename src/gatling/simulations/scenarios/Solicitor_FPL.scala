@@ -45,7 +45,7 @@ object Solicitor_FPL {
     .group("XUI_FPL_040_CreateCase") {
       exec(Common.healthcheck("%2Fcases%2Fcase-filter"))
 
-      .exec(http("XUI_FPL_040_CreateCase")
+      exec(http("XUI_FPL_040_CreateCase")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
@@ -64,7 +64,7 @@ object Solicitor_FPL {
     .group("XUI_FPL_050_005_StartCreateCase") {
       exec(Common.healthcheck("%2Fcases%2Fcase-create%2FPUBLICLAW%2FCARE_SUPERVISION_EPO%2FopenCase"))
 
-      .exec(http("XUI_FPL_050_005_StartCreateCase")
+      exec(http("XUI_FPL_050_005_StartCreateCase")
         .get("/data/internal/case-types/CARE_SUPERVISION_EPO/event-triggers/openCase?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
