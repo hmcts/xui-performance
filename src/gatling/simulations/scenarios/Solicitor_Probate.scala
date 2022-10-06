@@ -35,8 +35,6 @@ object Solicitor_Probate {
                     "caseId" -> "0")) // initialise the caseId to 0 for the activity calls
 
     .group("XUI_Probate_030_CreateCase") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-filter"))
-
         .exec(http("XUI_Probate_030_005_CreateCase")
           .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
           .headers(Headers.commonHeader)
@@ -53,16 +51,12 @@ object Solicitor_Probate {
     ======================================================================================*/
 
     .group("XUI_Probate_050_SelectCaseType") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-create%2FPROBATE%2FGrantOfRepresentation%2FsolicitorCreateApplication"))
-
       .exec(http("XUI_Probate_050_005_StartApplication")
         .get("/data/internal/case-types/GrantOfRepresentation/event-triggers/solicitorCreateApplication?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token_probate"))
         .check(jsonPath("$.id").is("solicitorCreateApplication")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-create%2FPROBATE%2FGrantOfRepresentation%2FsolicitorCreateApplication%2FsolicitorCreateApplicationsolicitorCreateApplicationPage1"))
 
       .exec(Common.userDetails)
 
@@ -143,8 +137,6 @@ object Solicitor_Probate {
         .body(ElFileBody("bodies/probate/ProbateCaseSubmitted.json"))
         .check(jsonPath("$.id").optional.saveAs("caseId")))
 
-      .exec(Common.healthcheck("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseId}"))
-
       .exec(http("XUI_Probate_080_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
@@ -182,8 +174,6 @@ object Solicitor_Probate {
 
       .exec(Common.isAuthenticated)
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorUpdateApplication%2FsolicitorUpdateApplicationsolicitorUpdateApplicationPage1"))
-
       .exec(Common.monitoringTools)
 
       .exec(http("XUI_Probate_090_010_ViewCase")
@@ -220,8 +210,6 @@ object Solicitor_Probate {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/probate/ProbateDeceasedNameDodDob.json"))
         .check(substring("deceasedDateOfDeath")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorUpdateApplication%2FsolicitorUpdateApplicationsolicitorUpdateApplicationPage2"))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -246,8 +234,6 @@ object Solicitor_Probate {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/probate/ProbateDeceasedAddressIHT.json"))
         .check(substring("deceasedAddress")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorUpdateApplication%2FsolicitorUpdateApplicationsolicitorUpdateApplicationPage3"))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -264,8 +250,6 @@ object Solicitor_Probate {
           .header("x-xsrf-token", "${XSRFToken}")
           .body(ElFileBody("bodies/probate/ProbateTypeOfApplication.json"))
           .check(substring("solsWillType")))
-
-        .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorUpdateApplication%2FsolicitorUpdateApplicationsolicitorUpdateApplicationPage4"))
       }
 
       .pause(MinThinkTime, MaxThinkTime)
@@ -282,8 +266,6 @@ object Solicitor_Probate {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/probate/ProbateEnglandOrWales.json"))
         .check(substring("appointExec")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorUpdateApplication%2Fsubmit"))
 
       .exec(Common.profile)
     }
@@ -312,8 +294,6 @@ object Solicitor_Probate {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"solicitorUpdateApplication","jurisdiction":"PROBATE","caseTypeId":"GrantOfRepresentation"}}"""))
         .check(status.in(200, 400)))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
       .exec(http("XUI_Probate_140_015_ViewCase")
         .get("/data/internal/cases/${caseId}")
@@ -347,8 +327,6 @@ object Solicitor_Probate {
       .exec(Common.configUI)
 
       .exec(Common.isAuthenticated)
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorUpdateProbate%2FsolicitorUpdateProbatesolicitorUpdateProbatePage1"))
 
       .exec(http("XUI_Probate_150_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
@@ -390,8 +368,6 @@ object Solicitor_Probate {
         .body(ElFileBody("bodies/probate/ProbateGrantOfProbateDetails.json"))
         .check(substring("willHasCodicils"))
         .check(jsonPath("$.data.codicilAddedDateList[0].id").saveAs("newCodicilId")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorUpdateProbate%2FsolicitorUpdateProbatesolicitorUpdateProbatePage2"))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -417,8 +393,6 @@ object Solicitor_Probate {
         .body(ElFileBody("bodies/probate/ProbateExecutorDetails.json"))
         .check(jsonPath("$.data.titleAndClearingType").is("TCTPartSuccPowerRes"))
         .check(jsonPath("$.data.otherPartnersApplyingAsExecutors[0].id").saveAs("newSolExecId")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorUpdateProbate%2FsolicitorUpdateProbatesolicitorUpdateProbatePage4"))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -443,8 +417,6 @@ object Solicitor_Probate {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/probate/ProbateExtraExecDetails.json"))
         .check(jsonPath("$.data.solsAdditionalExecutorList[0].id").saveAs("newExecId")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorUpdateProbate%2FsolicitorUpdateProbatesolicitorUpdateProbatePage5"))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -461,8 +433,6 @@ object Solicitor_Probate {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/probate/ProbateExtraEvidence.json"))
         .check(substring("furtherEvidenceForApplication")))
-
-        .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorUpdateProbate%2FsolicitorUpdateProbatesolicitorUpdateProbatePage6"))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -479,8 +449,6 @@ object Solicitor_Probate {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/probate/ProbateExtraInfo.json"))
         .check(substring("solsAdditionalInfo")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorUpdateProbate%2Fsubmit"))
 
       .exec(Common.profile)
     }
@@ -507,8 +475,6 @@ object Solicitor_Probate {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"solicitorUpdateProbate","jurisdiction":"PROBATE","caseTypeId":"GrantOfRepresentation"}}"""))
         .check(status.in(200, 400)))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
       .exec(http("XUI_Probate_210_015_ViewCase")
         .get("/data/internal/cases/${caseId}")
@@ -547,8 +513,6 @@ object Solicitor_Probate {
 
       .exec(Common.isAuthenticated)
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorReviewAndConfirm%2FsolicitorReviewAndConfirmsolicitorReviewLegalStatementPage1"))
-
       .exec(http("XUI_Probate_220_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
@@ -581,8 +545,6 @@ object Solicitor_Probate {
         .body(ElFileBody("bodies/probate/ProbateLegalStatement.json"))
         .check(substring("solsLegalStatementDocument")))
     }
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorReviewAndConfirm%2FsolicitorReviewAndConfirmsolicitorReviewLegalStatementPage3"))
 
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -625,8 +587,6 @@ object Solicitor_Probate {
         .check(substring("document_filename")))
     }
 
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorReviewAndConfirm%2FsolicitorReviewAndConfirmsolicitorReviewLegalStatementPage4"))
-
     .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
@@ -643,8 +603,6 @@ object Solicitor_Probate {
         .check(substring("BelieveTrue")))
     }
 
-    .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorReviewAndConfirm%2FsolicitorReviewAndConfirmsolicitorConfirmPage2"))
-
     .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
@@ -659,8 +617,6 @@ object Solicitor_Probate {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/probate/ProbateExtraCopies.json"))
         .check(substring("extraCopiesOfGrant")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorReviewAndConfirm%2FsolicitorReviewAndConfirmsolicitorConfirmPage3"))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -677,8 +633,6 @@ object Solicitor_Probate {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/probate/ProbatePaymentMethod.json"))
         .check(substring("solsPaymentMethods")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorReviewAndConfirm%2Fsubmit"))
 
       .exec(Common.profile)
     }
@@ -706,8 +660,6 @@ object Solicitor_Probate {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"solicitorReviewAndConfirm","jurisdiction":"PROBATE","caseTypeId":"GrantOfRepresentation"}}"""))
         .check(status.in(200, 401)))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorReviewAndConfirm%2Fconfirm"))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -717,8 +669,6 @@ object Solicitor_Probate {
     ======================================================================================*/
 
     .group("XUI_Probate_300_ViewCase") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
-
       .exec(http("XUI_Probate_300_005_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)

@@ -22,7 +22,6 @@ object Solicitor_FR  {
   val CreateFRCase =
 
     group("XUI_FR_030_CreateCase") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-filter"))
 
       .exec(http("XUI_FR_030_CreateCase")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
@@ -38,7 +37,6 @@ object Solicitor_FR  {
      ======================================================================================*/
 
     .group("XUI_FR_040_SelectCaseType") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-create%2FDIVORCE%2FFinancialRemedyMVP2%2FFR_solicitorCreate"))
 
         .exec(http("XUI_FR_040_005_StartApplication")
           .get("/data/internal/case-types/FinancialRemedyMVP2/event-triggers/FR_solicitorCreate?ignore-warning=false")
@@ -46,8 +44,6 @@ object Solicitor_FR  {
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
           .check(jsonPath("$.event_token").saveAs("event_token"))
           .check(jsonPath("$.id").is("FR_solicitorCreate")))
-
-        .exec(Common.healthcheck("%2Fcases%2Fcase-create%2FDIVORCE%2FFinancialRemedyMVP2%2FFR_solicitorCreate%2FFR_solicitorCreate1"))
 
         .exec(Common.profile)
 
@@ -314,8 +310,6 @@ object Solicitor_FR  {
         .body(ElFileBody("bodies/fr/FRSubmitApplication.json"))
         .check(jsonPath("$.state").is("caseAdded"))
         .check(jsonPath("$.id").saveAs("caseId")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
       .exec(http("XUI_FR_170_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
