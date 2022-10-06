@@ -166,12 +166,6 @@ class XUI_Simulation extends Simulation {
 					.exec(Solicitor_Bails.RecordBailDecision)
 					.exec(Solicitor_Bails.UploadSignedDecision)
 				.exec(Logout.XUILogout)
-
-				.exec {
-					session =>
-						println(session)
-						session
-				}
 		}
 
 	/*===============================================================================================
