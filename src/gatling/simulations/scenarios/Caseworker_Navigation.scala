@@ -29,7 +29,7 @@ object Caseworker_Navigation {
         .check(jsonPath("$.results[*].case_id").findRandom.optional.saveAs("caseId")))
     }
 
-      .pause(MinThinkTime, MaxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
   /*====================================================================================
   *Sort By Last Modified Date
@@ -135,11 +135,11 @@ object Caseworker_Navigation {
       group("XUI_Caseworker_080_NavigateTabs") {
         exec(ViewCase)
 
-          .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%23${tabName}".replace(" ", "%2520")))
+        .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%23${tabName}".replace(" ", "%2520")))
 
       }
 
-        .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
     }
 
@@ -169,6 +169,10 @@ object Caseworker_Navigation {
           )
       }
 
+      .exec(Common.caseActivityPost)
+      .pause(2)
+      .exec(Common.caseActivityGet)
+
       .pause(MinThinkTime, MaxThinkTime)
 
     }
@@ -180,12 +184,11 @@ object Caseworker_Navigation {
   val LoadCaseList =
 
     group("XUI_Caseworker_100_CaseList") {
-
-      .exec(http("XUI_100_005_Jurisdictions")
-        .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .check(substring("id")))
+        exec(http("XUI_100_005_Jurisdictions")
+          .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/json")
+          .check(substring("id")))
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
 
@@ -208,6 +211,10 @@ object Caseworker_Navigation {
         .body(StringBody("""{"size":25}"""))
         .check(substring("columns")))
     }
+
+    .exec(Common.caseActivityPost)
+
+    .exec(Common.caseActivityGet)
 
     .pause(MinThinkTime, MaxThinkTime)
 

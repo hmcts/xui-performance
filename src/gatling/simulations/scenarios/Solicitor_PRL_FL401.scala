@@ -606,7 +606,7 @@ object Solicitor_PRL_FL401 {
         .check(jsonPath("$.id").is("respondentsDetails")))
 
       .exec(Common.userDetails)
-
+      
       .exec(http("XUI_PRL_FL401_220_020_GetOrgs")
         .get("/api/caseshare/orgs")
         .headers(Headers.commonHeader)
