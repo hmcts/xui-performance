@@ -778,7 +778,6 @@ object Solicitor_Bails {
     ======================================================================================*/
 
     group("XUI_Bails_440_Open_Case") {
-
       exec(http("XUI_Bails_440_005_Open_Case")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
@@ -868,7 +867,6 @@ object Solicitor_Bails {
     ======================================================================================*/
 
     group("XUI_Bails_480_Open_Case") {
-
       exec(http("XUI_Bails_480_005_Open_Case")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.navigationHeader)
@@ -883,7 +881,6 @@ object Solicitor_Bails {
     ======================================================================================*/
 
     .group("XUI_Bails_490_Upload_Bail_Open") {
-
       exec(Common.profile)
 
       .exec(http("XUI_Bails_490_005_Upload_Bail_Open")
@@ -1281,5 +1278,5 @@ object Solicitor_Bails {
     }
 
     .pause(MinThinkTime, MaxThinkTime)
-
+    
 }

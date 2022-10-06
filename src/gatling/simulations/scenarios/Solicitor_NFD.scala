@@ -452,7 +452,6 @@ object Solicitor_NFD {
         .body(ElFileBody("bodies/nfd/NFDJointFinancialOrder.json"))
         .check(substring("applicant2FinancialOrder")))
 
-
       .exec(Common.userDetails)
     }
 
@@ -671,7 +670,6 @@ object Solicitor_NFD {
 
     group("XUI_NFD_325_ViewCase") {
       exec(http("XUI_NFD_325_005_ViewCase")
-        .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
         .check(jsonPath("$.state.id").is("Applicant2Approved")))

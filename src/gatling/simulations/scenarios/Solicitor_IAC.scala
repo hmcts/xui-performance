@@ -43,8 +43,6 @@ object Solicitor_IAC {
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
         .check(substring("IA")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-create%2FIA%2FAsylum%2FstartAppeal"))
     }
     
     .pause(MinThinkTime, MaxThinkTime)
@@ -63,8 +61,6 @@ object Solicitor_IAC {
         .check(substring("Start your appeal")))
 
       .exec(Common.profile)
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-create%2FIA%2FAsylum%2FstartAppeal%2FstartAppealchecklist"))
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
@@ -478,8 +474,6 @@ object Solicitor_IAC {
 
       .exec(Common.isAuthenticated)
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FpayAndSubmitAppeal"))
-
       .exec(http("XUI_IAC_250_035_SaveCaseView")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
@@ -514,8 +508,6 @@ object Solicitor_IAC {
 
       .exec(Common.profile)
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAppeal%2FsubmitAppealdeclaration"))
-
       .exec(Common.caseActivityGet)
       .pause(2)
       .exec(Common.caseActivityPost)
@@ -538,8 +530,6 @@ object Solicitor_IAC {
         .check(substring("paymentAccountList")))
 
       .exec(Common.profile)
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAppeal%2FpayAndSubmitAppealdeclaration"))
 
       .exec(Common.caseActivityGet)
       .pause(2)
@@ -564,8 +554,6 @@ object Solicitor_IAC {
         .check(substring("hasDeclared")))
 
       .exec(Common.profile)
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FspayAndSubmitAppeal%2Fsubmit"))
   }
 
 /*======================================================================================
@@ -590,8 +578,6 @@ object Solicitor_IAC {
         .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"submitAppeal","jurisdiction":"IA","caseTypeId":"Asylum"}}"""))
         .check(status.in(200, 400))
         .check(substring("tasks")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FpayAndSubmitAppeal%2Fconfirm"))
     }
 
     .exec(Common.caseActivityGet)

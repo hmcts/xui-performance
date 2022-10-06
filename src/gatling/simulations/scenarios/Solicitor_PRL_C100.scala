@@ -829,8 +829,9 @@ object Solicitor_PRL_C100 {
         .check(jsonPath("$.state.id").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
       .exec(Common.userDetails)
-
+  
     }
+
     .pause(MinThinkTime, MaxThinkTime)
 
   val MIAM =

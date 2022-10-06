@@ -46,6 +46,10 @@ object Solicitor_FR  {
       .exec(Common.profile)
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+
+      .exec(Common.profile)
+
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
