@@ -37,7 +37,6 @@ object Solicitor_Divorce {
     ======================================================================================*/
 
     .group("XUI_Divorce_030_CreateCase") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-filter"))
 
       .exec(http("XUI_Divorce_030_CreateCase")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
@@ -56,7 +55,6 @@ object Solicitor_Divorce {
     ======================================================================================*/
 
     .group("XUI_Divorce_040_SelectCaseType") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-create%2FDIVORCE%2FDIVORCE%2FsolicitorCreate"))
 
       .exec(http("XUI_Divorce_040_005_StartApplication")
         .get("/data/internal/case-types/DIVORCE/event-triggers/solicitorCreate?ignore-warning=false")
@@ -64,8 +62,6 @@ object Solicitor_Divorce {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("solicitorCreate")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-create%2FDIVORCE%2FDIVORCE%2FsolicitorCreate%2FsolicitorCreateSolAboutTheSolicitor"))
 
       //select respondent solicitor org now, as this call will be retrieved from cache in future
       //requests, where checks aren't performed by Gatling https://gatling.io/docs/gatling/reference/current/http/protocol/#caching
@@ -450,8 +446,6 @@ object Solicitor_Divorce {
         .check(jsonPath("$.id").saveAs("caseId"))
         .check(jsonPath("$.state").is("SOTAgreementPayAndSubmitRequired")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
-
       .exec(http("XUI_Divorce_200_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
@@ -469,7 +463,6 @@ object Solicitor_Divorce {
     ======================================================================================*/
 
     .group("XUI_Divorce_210_CaseSubmission") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorStatementOfTruthPaySubmit"))
 
       .exec(Common.profile)
 
@@ -479,8 +472,6 @@ object Solicitor_Divorce {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .header("x-xsrf-token", "${XSRFToken}"))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorStatementOfTruthPaySubmit%2FsolicitorStatementOfTruthPaySubmitSolStatementOfTruth"))
 
       .exec(Common.userDetails)
       .exec(Common.userDetails)
@@ -501,8 +492,6 @@ object Solicitor_Divorce {
         .body(ElFileBody("bodies/divorce/DivorceStatementOfTruth.json"))
         .check(substring("D8StatementOfTruth")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorStatementOfTruthPaySubmit%2FsolicitorStatementOfTruthPaySubmitSolPayment"))
-
       .exec(Common.userDetails)
       .exec(Common.userDetails)
     }
@@ -521,8 +510,6 @@ object Solicitor_Divorce {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/divorce/DivorcePaymentMethod.json"))
         .check(substring("SolPaymentHowToPay")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorStatementOfTruthPaySubmit%2FsolicitorStatementOfTruthPaySubmitSolPayAccount"))
 
       .exec(Common.userDetails)
       .exec(Common.userDetails)
@@ -543,8 +530,6 @@ object Solicitor_Divorce {
         .body(ElFileBody("bodies/divorce/DivorcePBAAccount.json"))
         .check(substring("PbaNumbers")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorStatementOfTruthPaySubmit%2FsolicitorStatementOfTruthPaySubmitSolPaymentSummary"))
-
       .exec(Common.userDetails)
       .exec(Common.userDetails)
     }
@@ -563,8 +548,6 @@ object Solicitor_Divorce {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/divorce/DivorceOrderSummary.json"))
         .check(substring("solApplicationFeeOrderSummary")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorStatementOfTruthPaySubmit%2FsolicitorStatementOfTruthPaySubmitSolSummary"))
 
       .exec(Common.userDetails)
       .exec(Common.userDetails)
@@ -585,8 +568,6 @@ object Solicitor_Divorce {
         .body(ElFileBody("bodies/divorce/DivorceCaseSubmission.json"))
         .check(substring("""data":{}""")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorStatementOfTruthPaySubmit%2Fsubmit"))
-
       .exec(Common.userDetails)
       .exec(Common.userDetails)
     }
@@ -605,8 +586,6 @@ object Solicitor_Divorce {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/divorce/DivorceSubmitPetition.json"))
         .check(jsonPath("$.state").is("Submitted")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
       .exec(http("XUI_Divorce_270_010_ViewCase")
         .get("/data/internal/cases/${caseId}")

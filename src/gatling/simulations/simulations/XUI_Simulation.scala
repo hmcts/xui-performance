@@ -386,7 +386,7 @@ class XUI_Simulation extends Simulation {
 				.doIf(session => session("numberOfResults").as[Int] > 0) {
 					exec(Caseworker_Navigation.SearchByCaseNumber)
 					.exec(Caseworker_Navigation.ViewCase)
-					.exec(Caseworker_Navigation.NavigateTabs)
+					// .exec(Caseworker_Navigation.NavigateTabs) //Removing as clicking tabs no longer initiates calls
           .exec(Caseworker_Navigation.ViewDocument)
 				}
 				.exec(Caseworker_Navigation.LoadCaseList)

@@ -33,7 +33,6 @@ object Solicitor_NFD {
     ======================================================================================*/
 
     .group("XUI_NFD_030_CreateCase") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-filter"))
 
       .exec(http("XUI_NFD_030_005_CreateCase")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
@@ -51,7 +50,6 @@ object Solicitor_NFD {
     ======================================================================================*/
 
     .group("XUI_NFD_040_SelectCaseType") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-create%2FDIVORCE%2FNFD%2Fsolicitor-create-application"))
 
       .exec(http("XUI_NFD_040_005_StartApplication")
         .get("/data/internal/case-types/NFD/event-triggers/solicitor-create-application?ignore-warning=false")
@@ -59,8 +57,6 @@ object Solicitor_NFD {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("solicitor-create-application")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-create%2FDIVORCE%2FNFD%2Fsolicitor-create-application%2Fsolicitor-create-applicationhowDoYouWantToApplyForDivorce"))
 
       .exec(Common.userDetails)
 
@@ -332,8 +328,6 @@ object Solicitor_NFD {
         .check(jsonPath("$.state").is("Draft"))
         .check(jsonPath("$.id").saveAs("caseId")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
-
       .exec(http("XUI_NFD_170_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
@@ -352,7 +346,6 @@ object Solicitor_NFD {
     ======================================================================================*/
 
     group("XUI_NFD_180_JointInviteApplicant2") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Finvite-applicant2"))
 
       .exec(Common.profile)
 
@@ -362,8 +355,6 @@ object Solicitor_NFD {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("invite-applicant2")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Finvite-applicant2%2Fsubmit"))
 
       .exec(Common.userDetails)
     }
@@ -383,8 +374,6 @@ object Solicitor_NFD {
         .body(ElFileBody("bodies/nfd/NFDJointSaveInviteApplicant2.json"))
         .check(jsonPath("$.state").is("AwaitingApplicant2Response")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
-
       .exec(http("XUI_NFD_190_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
@@ -403,7 +392,6 @@ object Solicitor_NFD {
     ======================================================================================*/
 
     group("XUI_NFD_195_ViewCase") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
       .exec(http("XUI_NFD_195_005_ViewCase")
         .get("/data/internal/cases/${caseId}")
@@ -421,7 +409,6 @@ object Solicitor_NFD {
     ======================================================================================*/
 
     .group("XUI_NFD_200_JointStartSubmitApplication") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-joint-application"))
 
       .exec(Common.profile)
 
@@ -433,8 +420,6 @@ object Solicitor_NFD {
         .check(jsonPath("$.case_fields[?(@.id=='applicant1SolicitorAnswersLink')].value.document_filename").saveAs("app1AnswersFilename"))
         .check(jsonPath("$.case_fields[?(@.id=='applicant1SolicitorAnswersLink')].value.document_url").saveAs("app1AnswersDocumentURL"))
         .check(jsonPath("$.id").is("solicitor-submit-joint-application")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-joint-application%2Fsolicitor-submit-joint-applicationMarriageIrretrievablyBroken"))
 
       .exec(Common.userDetails)
     }
@@ -454,8 +439,6 @@ object Solicitor_NFD {
         .body(ElFileBody("bodies/nfd/NFDJointMarriageBrokenDown.json"))
         .check(substring("applicant2ScreenHasMarriageBroken")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-joint-application%2Fsolicitor-submit-joint-applicationFinancialOrdersForApplicant2"))
-
       .exec(Common.userDetails)
     }
 
@@ -474,8 +457,6 @@ object Solicitor_NFD {
         .body(ElFileBody("bodies/nfd/NFDJointFinancialOrder.json"))
         .check(substring("applicant2FinancialOrder")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-joint-application%2Fsolicitor-submit-joint-applicationHelpWithFeesPageForApplicant2"))
-
       .exec(Common.userDetails)
     }
 
@@ -493,8 +474,6 @@ object Solicitor_NFD {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/nfd/NFDJointHelpWithFees.json"))
         .check(substring("applicant2NeedsHelpWithFees")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-joint-application%2Fsolicitor-submit-joint-applicationcheckTheirAnswers"))
 
       .exec(Common.userDetails)
     }
@@ -516,8 +495,6 @@ object Solicitor_NFD {
         .body(ElFileBody("bodies/nfd/NFDJointAnyCorrections.json"))
         .check(substring("applicant2ConfirmApplicant1Information")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-joint-application%2Fsolicitor-submit-joint-applicationSolStatementOfTruthApplicant2"))
-
       .exec(Common.userDetails)
     }
 
@@ -535,8 +512,6 @@ object Solicitor_NFD {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/nfd/NFDJointApp2SOT.json"))
         .check(substring("applicant2SolSignStatementOfTruth")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-joint-application%2Fsubmit"))
 
       .exec(Common.userDetails)
     }
@@ -557,8 +532,6 @@ object Solicitor_NFD {
         //TODO: Fix the below once NFD resolve this issue. The case state isn't updating in time, so sometimes the case state is stale
         .check(jsonPath("$.state").in("AwaitingApplicant2Response", "Applicant2Approved")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
-
       .exec(http("XUI_NFD_260_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
@@ -578,7 +551,6 @@ object Solicitor_NFD {
     ======================================================================================*/
 
     group("XUI_NFD_270_StartEventSignAndSubmit") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-application"))
 
       .exec(Common.profile)
 
@@ -594,8 +566,6 @@ object Solicitor_NFD {
         .check(jsonPath("$.case_fields[?(@.id=='applicationFeeOrderSummary')].value.Fees[0].value.FeeDescription").saveAs("feeDescription"))
         .check(jsonPath("$.case_fields[?(@.id=='applicationFeeOrderSummary')].value.Fees[0].value.FeeVersion").saveAs("feeVersion"))
         .check(jsonPath("$.case_fields[?(@.id=='applicationFeeOrderSummary')].value.PaymentTotal").saveAs("paymentTotal")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-application%2Fsolicitor-submit-applicationSolStatementOfTruth"))
 
       .exec(Common.userDetails)
     }
@@ -615,8 +585,6 @@ object Solicitor_NFD {
         .body(ElFileBody("bodies/nfd/NFDStatementOfTruth.json"))
         .check(substring("solSignStatementOfTruth")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-application%2Fsolicitor-submit-applicationSolPayment"))
-
       .exec(Common.userDetails)
     }
 
@@ -634,8 +602,6 @@ object Solicitor_NFD {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/nfd/NFDPaymentMethod.json"))
         .check(substring("pbaNumbers")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-application%2Fsolicitor-submit-applicationSolPayAccount"))
 
       .exec(Common.userDetails)
     }
@@ -655,8 +621,6 @@ object Solicitor_NFD {
         .body(ElFileBody("bodies/nfd/NFDPaymentDetails.json"))
         .check(substring("feeAccountReference")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-application%2Fsolicitor-submit-applicationSolPaymentSummary"))
-
       .exec(Common.userDetails)
     }
 
@@ -674,8 +638,6 @@ object Solicitor_NFD {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/nfd/NFDPaymentSummary.json"))
         .check(substring("applicationFeeOrderSummary")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-application%2Fsubmit"))
 
       .exec(Common.userDetails)
     }
@@ -695,8 +657,6 @@ object Solicitor_NFD {
         .body(ElFileBody("bodies/nfd/NFDSignCheckYourAnswers.json"))
         .check(jsonPath("$.state").is("Submitted")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
-
       .exec(http("XUI_NFD_320_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
@@ -715,7 +675,6 @@ object Solicitor_NFD {
     ======================================================================================*/
 
     group("XUI_NFD_325_ViewCase") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
       .exec(http("XUI_NFD_325_005_ViewCase")
         .get("/data/internal/cases/${caseId}")
@@ -733,7 +692,6 @@ object Solicitor_NFD {
     ======================================================================================*/
 
     .group("XUI_NFD_330_JointStartEventSignAndSubmit") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-application"))
 
       .exec(Common.profile)
 
@@ -751,8 +709,6 @@ object Solicitor_NFD {
         .check(jsonPath("$.case_fields[?(@.id=='applicationFeeOrderSummary')].value.Fees[0].value.FeeDescription").saveAs("feeDescription"))
         .check(jsonPath("$.case_fields[?(@.id=='applicationFeeOrderSummary')].value.Fees[0].value.FeeVersion").saveAs("feeVersion"))
         .check(jsonPath("$.case_fields[?(@.id=='applicationFeeOrderSummary')].value.PaymentTotal").saveAs("paymentTotal")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-application%2Fsolicitor-submit-applicationConfirmJointApplication"))
 
       .exec(Common.userDetails)
     }
@@ -772,8 +728,6 @@ object Solicitor_NFD {
         .body(ElFileBody("bodies/nfd/NFDJointReviewApplication.json"))
         .check(substring("applicant2SolicitorAnswersLink")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-application%2Fsolicitor-submit-applicationSolStatementOfTruth"))
-
       .exec(Common.userDetails)
     }
 
@@ -791,8 +745,6 @@ object Solicitor_NFD {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/nfd/NFDJointApp1SOT.json"))
         .check(substring("applicant1StatementOfTruth")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-application%2Fsolicitor-submit-applicationSolPayment"))
 
       .exec(Common.userDetails)
     }
@@ -812,8 +764,6 @@ object Solicitor_NFD {
         .body(ElFileBody("bodies/nfd/NFDJointPaymentMethod.json"))
         .check(substring("pbaNumbers")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-application%2Fsolicitor-submit-applicationSolPayAccount"))
-
       .exec(Common.userDetails)
     }
 
@@ -831,8 +781,6 @@ object Solicitor_NFD {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/nfd/NFDJointPaymentDetails.json"))
         .check(substring("feeAccountReference")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-application%2Fsolicitor-submit-applicationSolPaymentSummary"))
 
       .exec(Common.userDetails)
     }
@@ -852,8 +800,6 @@ object Solicitor_NFD {
         .body(ElFileBody("bodies/nfd/NFDJointPaymentSummary.json"))
         .check(substring("applicationFeeOrderSummary")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsolicitor-submit-application%2Fsubmit"))
-
       .exec(Common.userDetails)
     }
 
@@ -871,8 +817,6 @@ object Solicitor_NFD {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/nfd/NFDJointSignCheckYourAnswers.json"))
         .check(jsonPath("$.state").is("Submitted")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
       .exec(http("XUI_NFD_390_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
@@ -892,7 +836,6 @@ object Solicitor_NFD {
     ======================================================================================*/
 
     group("XUI_NFD_400_ViewCase") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
       .exec(http("XUI_NFD_400_005_ViewCase")
         .get("/data/internal/cases/${caseId}")
@@ -910,8 +853,6 @@ object Solicitor_NFD {
     ======================================================================================*/
 
     .group("XUI_NFD_410_StartDraftAOS") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fdraft-aos"))
-
       .exec(Common.profile)
 
       .exec(http("XUI_NFD_410_005_StartDraftAOS")
@@ -922,8 +863,6 @@ object Solicitor_NFD {
         .check(jsonPath("$.case_fields[?(@.id=='miniApplicationLink')].value.document_url").saveAs("documentURL"))
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("draft-aos")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fdraft-aos%2Fdraft-aosApplicant2SolConfirmContactDetails"))
 
       .exec(Common.userDetails)
 
@@ -945,8 +884,6 @@ object Solicitor_NFD {
         .body(ElFileBody("bodies/nfd/NFDRespSolicitorDetails.json"))
         .check(substring("applicant2SolicitorName")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fdraft-aos%2Fdraft-aosApplicant2SolReviewApplicant1Application"))
-
       .exec(Common.userDetails)
     }
 
@@ -964,8 +901,6 @@ object Solicitor_NFD {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/nfd/NFDRespReviewApplication.json"))
         .check(substring("confirmReadPetition")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fdraft-aos%2Fdraft-aosapplicant2HowToResponseToApplication"))
 
       .exec(Common.userDetails)
     }
@@ -985,8 +920,6 @@ object Solicitor_NFD {
         .body(ElFileBody("bodies/nfd/NFDRespContinueWithoutDisputing.json"))
         .check(substring("howToRespondApplication")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fdraft-aos%2Fdraft-aosApplicant2SolAosJurisdiction"))
-
       .exec(Common.userDetails)
     }
 
@@ -1004,8 +937,6 @@ object Solicitor_NFD {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/nfd/NFDRespJurisdictions.json"))
         .check(substring("jurisdictionAgree")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fdraft-aos%2Fdraft-aosApplicant2SolAosOtherProceedings"))
 
       .exec(Common.userDetails)
     }
@@ -1025,8 +956,6 @@ object Solicitor_NFD {
         .body(ElFileBody("bodies/nfd/NFDRespLegalProceedings.json"))
         .check(substring("applicant2LegalProceedings")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fdraft-aos%2Fsubmit"))
-
       .exec(Common.userDetails)
     }
 
@@ -1045,8 +974,6 @@ object Solicitor_NFD {
         .body(ElFileBody("bodies/nfd/NFDRespSaveAOS.json"))
         .check(jsonPath("$.state").is("AosDrafted")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
-
       .exec(http("XUI_NFD_470_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
@@ -1063,7 +990,6 @@ object Solicitor_NFD {
     ======================================================================================*/
 
     .group("XUI_NFD_480_StartSubmitAOS") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsubmit-aos"))
 
       .exec(Common.profile)
 
@@ -1073,8 +999,6 @@ object Solicitor_NFD {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("submit-aos")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsubmit-aos%2Fsubmit-aosApplicant2SolStatementOfTruth"))
 
       .exec(Common.userDetails)
 
@@ -1097,8 +1021,6 @@ object Solicitor_NFD {
         .body(ElFileBody("bodies/nfd/NFDRespContinueToSOT.json"))
         .check(substring("labelContentMarriageOrCivilPartnership")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsubmit-aos%2Fsubmit-aosSubmitAos"))
-
       .exec(Common.userDetails)
     }
 
@@ -1117,8 +1039,6 @@ object Solicitor_NFD {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/nfd/NFDRespSOT.json"))
         .check(substring("statementOfTruth")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsubmit-aos%2Fsubmit"))
 
       .exec(Common.userDetails)
     }
@@ -1139,8 +1059,6 @@ object Solicitor_NFD {
         .body(ElFileBody("bodies/nfd/NFDRespSubmitAOS.json"))
         .check(jsonPath("$.state").is("Holding")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
-
       .exec(http("XUI_NFD_510_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
@@ -1159,7 +1077,6 @@ object Solicitor_NFD {
     ======================================================================================*/
 
     group("XUI_NFD_520_ViewCase") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
       .exec(http("XUI_NFD_520_005_ViewCase")
         .get("/data/internal/cases/${caseId}")
@@ -1177,8 +1094,6 @@ object Solicitor_NFD {
     ======================================================================================*/
 
     .group("XUI_NFD_530_StartDraftCO") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fdraft-conditional-order"))
-
       .exec(Common.profile)
 
       .exec(http("XUI_NFD_530_005_StartDraftCO")
@@ -1189,8 +1104,6 @@ object Solicitor_NFD {
         .check(jsonPath("$.case_fields[?(@.id=='coRespondentAnswersLink')].value.document_url").saveAs("respondentAnswersURL"))
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("draft-conditional-order")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fdraft-conditional-order%2Fdraft-conditional-orderConditionalOrderReviewAoS"))
 
       .exec(Common.userDetails)
 
@@ -1212,8 +1125,6 @@ object Solicitor_NFD {
         .body(ElFileBody("bodies/nfd/NFDCOContinueWithCO.json"))
         .check(substring("coApplicant1ApplyForConditionalOrder")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fdraft-conditional-order%2Fdraft-conditional-orderConditionalOrderReviewApplicant1"))
-
       .exec(Common.userDetails)
     }
 
@@ -1231,8 +1142,6 @@ object Solicitor_NFD {
           .header("x-xsrf-token", "${XSRFToken}")
           .body(ElFileBody("bodies/nfd/NFDCOConfirmAppInfo.json"))
           .check(substring("coApplicant1ConfirmInformationStillCorrect")))
-
-        .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fdraft-conditional-order%2Fsubmit"))
 
         .exec(Common.userDetails)
       }
@@ -1252,8 +1161,6 @@ object Solicitor_NFD {
         .body(ElFileBody("bodies/nfd/NFDCOSaveCO.json"))
         .check(jsonPath("$.state").is("ConditionalOrderDrafted")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
-
       .exec(http("XUI_NFD_560_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
@@ -1270,8 +1177,6 @@ object Solicitor_NFD {
     ======================================================================================*/
 
     .group("XUI_NFD_570_StartSubmitCO") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsubmit-conditional-order"))
-
       .exec(Common.profile)
 
       .exec(http("XUI_NFD_570_005_StartSubmitCO")
@@ -1280,8 +1185,6 @@ object Solicitor_NFD {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("submit-conditional-order")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsubmit-conditional-order%2Fsubmit-conditional-orderConditionalOrderSoT"))
 
       .exec(Common.userDetails)
 
@@ -1303,8 +1206,6 @@ object Solicitor_NFD {
         .body(ElFileBody("bodies/nfd/NFDCOContinueToSubmitCO.json"))
         .check(substring("coApplicant1StatementOfTruth")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fsubmit-conditional-order%2Fsubmit"))
-
       .exec(Common.userDetails)
     }
 
@@ -1322,8 +1223,6 @@ object Solicitor_NFD {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/nfd/NFDCOSubmitCO.json"))
         .check(jsonPath("$.state").is("AwaitingLegalAdvisorReferral")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
       .exec(http("XUI_NFD_590_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
