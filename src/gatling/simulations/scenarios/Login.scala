@@ -42,7 +42,14 @@ object Login {
 
       .exec(Common.isAuthenticated)
 
-      .exec(Common.healthcheck("%2Fcases"))
+      .exec(Common.monitoringTools)
+
+      //if there is no in-flight case, set the case to 0 for the activity calls
+      .doIf("${caseId.isUndefined()}") {
+        exec(_.set("caseId", "0"))
+      }
+
+      .exec(Common.caseActivityGet)
 
       .exec(http("XUI_020_010_Jurisdictions")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
@@ -53,24 +60,7 @@ object Login {
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
 
       .exec(Common.orgDetails)
-
-      .exec(Common.userDetails)
-
-      .exec(Common.userDetails)
-
-      .exec(Common.userDetails)
-
-      .exec(Common.monitoringTools)
-
-      .exec(Common.userDetails)
-
-      //if there is no in-flight case, set the case to 0 for the activity calls
-      .doIf("${caseId.isUndefined()}") {
-        exec(_.set("caseId", "0"))
-      }
-
-      .exec(Common.caseActivityGet)
-
+      
       .exec(http("XUI_020_015_WorkBasketInputs")
         .get("/data/internal/case-types/${caseType}/work-basket-inputs")
         .headers(Headers.commonHeader)

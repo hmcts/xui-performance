@@ -29,7 +29,7 @@ object Caseworker_Navigation {
         .check(jsonPath("$.results[*].case_id").findRandom.optional.saveAs("caseId")))
     }
 
-      .pause(MinThinkTime, MaxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
   /*====================================================================================
   *Sort By Last Modified Date
@@ -48,7 +48,7 @@ object Caseworker_Navigation {
 
     }
 
-      .pause(MinThinkTime, MaxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
   /*====================================================================================
   *Navigate to Page 2
@@ -69,7 +69,7 @@ object Caseworker_Navigation {
           .check(substring("columns")))
       }
 
-        .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
     }
 
@@ -90,7 +90,7 @@ object Caseworker_Navigation {
         .check(jsonPath("$.total").ofType[Int].is(1)))
     }
 
-      .pause(MinThinkTime, MaxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
   /*====================================================================================
   *View Case
@@ -99,27 +99,28 @@ object Caseworker_Navigation {
   val ViewCase =
 
     group("XUI_Caseworker_070_ViewCase") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-        .exec(http("XUI_Caseworker_070_005_ViewCase")
-          .get("/data/internal/cases/${caseId}")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-          .header("x-xsrf-token", "${XSRFToken}")
-          .header("experimental", "true")
-          .check(jsonPath("$.case_id").is("${caseId}"))
-          .check(jsonPath("$.tabs[?(@.show_condition==null)].label").findAll.saveAs("tabNames"))
-          //find all the document urls and capture only the document identifiers e.g. d513fccc-44e1-4326-880a-38a7627355ef
-          .check(jsonPath("$.tabs[*].fields[*].value[*].value.documentLink.document_url").findAll.transform( x =>
-          {
-            val pattern = "/documents/([0-9a-z-]+)".r
-            x.map(pattern.findAllIn(_).group(1))
-          }).optional.saveAs("documentUrl"))
-        )
+      .exec(http("XUI_Caseworker_070_005_ViewCase")
+        .get("/data/internal/cases/${caseId}")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .header("experimental", "true")
+        .check(jsonPath("$.case_id").is("${caseId}"))
+        .check(jsonPath("$.tabs[?(@.show_condition==null)].label").findAll.saveAs("tabNames"))
+        //find all the document urls and capture only the document identifiers e.g. d513fccc-44e1-4326-880a-38a7627355ef
+        .check(jsonPath("$.tabs[*].fields[*].value[*].value.documentLink.document_url").findAll.transform( x =>
+        {
+          val pattern = "/documents/([0-9a-z-]+)".r
+          x.map(pattern.findAllIn(_).group(1))
+        }).optional.saveAs("documentUrl"))
+      )
 
-        .exec(Common.caseActivityPost)
+      .exec(Common.caseActivityPost)
+      .pause(2)
+      .exec(Common.caseActivityGet)
 
-        .exec(Common.userDetails)
+      .exec(Common.userDetails)
     }
 
       .pause(MinThinkTime, MaxThinkTime)
@@ -135,11 +136,11 @@ object Caseworker_Navigation {
       group("XUI_Caseworker_080_NavigateTabs") {
         exec(ViewCase)
 
-          .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%23${tabName}".replace(" ", "%2520")))
+        .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%23${tabName}".replace(" ", "%2520")))
 
       }
 
-        .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
     }
 
@@ -159,17 +160,21 @@ object Caseworker_Navigation {
           .header("sec-fetch-site", "none")
           .check(substring("HMCTS Manage cases")))
 
-          .exec(http("XUI_Caseworker_090_010_ViewDocument")
-            .get("/documentsv2/${documentLink}/binary")
-            .headers(Headers.commonHeader)
-            .header("Accept", "*/*")
-            .header("content-type", "")
-            .check(responseTimeInMillis.saveAs("responseTime"))
-            .check(bodyBytes.transform(_.length > 2000).is(true)) //200000
-            )
+        .exec(http("XUI_Caseworker_090_010_ViewDocument")
+          .get("/documentsv2/${documentLink}/binary")
+          .headers(Headers.commonHeader)
+          .header("Accept", "*/*")
+          .header("content-type", "")
+          .check(responseTimeInMillis.saveAs("responseTime"))
+          .check(bodyBytes.transform(_.length > 2000).is(true)) //200000
+          )
       }
 
-        .pause(MinThinkTime, MaxThinkTime)
+      .exec(Common.caseActivityPost)
+      .pause(2)
+      .exec(Common.caseActivityGet)
+
+      .pause(MinThinkTime, MaxThinkTime)
 
     }
 
@@ -180,8 +185,6 @@ object Caseworker_Navigation {
   val LoadCaseList =
 
     group("XUI_Caseworker_100_CaseList") {
-      exec(Common.healthcheck("%2Fcases"))
-
         .exec(http("XUI_100_005_Jurisdictions")
           .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
           .headers(Headers.commonHeader)
@@ -210,7 +213,11 @@ object Caseworker_Navigation {
           .check(substring("columns")))
     }
 
-      .pause(MinThinkTime, MaxThinkTime)
+    .exec(Common.caseActivityPost)
+
+    .exec(Common.caseActivityGet)
+
+    .pause(MinThinkTime, MaxThinkTime)
 
 }
 
