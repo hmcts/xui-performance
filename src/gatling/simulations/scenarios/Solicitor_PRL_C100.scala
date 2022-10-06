@@ -50,8 +50,6 @@ object Solicitor_PRL_C100 {
         "C100RespDobMonth" -> Common.getMonth(),
         "C100RespDobYear" -> Common.getDobYear()))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-filter"))
-
       .exec(http("XUI_PRL_C100_030_CreateCase")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
         .headers(Headers.commonHeader)
@@ -68,16 +66,12 @@ object Solicitor_PRL_C100 {
     ======================================================================================*/
 
     .group("XUI_PRL_C100_040_SelectCaseType") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-create%2FPRIVATELAW%2FPRLAPPS%2FsolicitorCreate"))
-
-      .exec(http("XUI_FPL_040_005_StartApplication")
+      exec(http("XUI_FPL_040_005_StartApplication")
         .get("/data/internal/case-types/PRLAPPS/event-triggers/solicitorCreate?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("solicitorCreate")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-create%2FPRIVATELAW%2FPRLAPPS%2FsolicitorCreate%2FsolicitorCreate2"))
 
       .exec(Common.userDetails)
 
@@ -162,8 +156,6 @@ object Solicitor_PRL_C100 {
         .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"solicitorCreate","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
         .check(substring("tasks")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
-
       .exec(http("XUI_PRL_C100_080_015_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
@@ -201,8 +193,6 @@ object Solicitor_PRL_C100 {
       .exec(Common.isAuthenticated)
 
       .exec(Common.monitoringTools)
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FselectApplicationType%2FselectApplicationType1"))
 
       .exec(http("XUI_PRL_C100_090_010_CreateTypeOfApplicationEventLink")
         .get("/data/internal/cases/${caseId}")
@@ -249,8 +239,6 @@ object Solicitor_PRL_C100 {
         .body(ElFileBody("bodies/prl/c100/PRLSelectOrders.json"))
         .check(substring("typeOfChildArrangementsOrder")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FselectApplicationType%2FselectApplicationType2"))
-
       .exec(Common.userDetails)
     }
 
@@ -294,8 +282,6 @@ object Solicitor_PRL_C100 {
         .body(ElFileBody("bodies/prl/c100/PRLConsentOrders.json"))
         .check(substring("consentOrder")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FselectApplicationType%2FselectApplicationType3"))
-
       .exec(Common.userDetails)
     }
 
@@ -315,8 +301,6 @@ object Solicitor_PRL_C100 {
         .body(ElFileBody("bodies/prl/c100/PRLPermissionRequired.json"))
         .check(substring("applicationPermissionRequired")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FselectApplicationType%2FselectApplicationType4"))
-
       .exec(Common.userDetails)
     }
 
@@ -335,8 +319,6 @@ object Solicitor_PRL_C100 {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/prl/c100/PRLProvideBriefDetails.json"))
         .check(substring("applicationDetails")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FselectApplicationType%2Fsubmit"))
 
       .exec(Common.userDetails)
     }
@@ -365,8 +347,6 @@ object Solicitor_PRL_C100 {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"selectApplicationType","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
         .check(substring("tasks")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
       .exec(http("XUI_PRL_C100_150_015_ViewCase")
         .get("/data/internal/cases/${caseId}")
@@ -406,8 +386,6 @@ object Solicitor_PRL_C100 {
       .exec(Common.isAuthenticated)
 
       .exec(Common.monitoringTools)
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FhearingUrgency%2FhearingUrgency1"))
 
       .exec(http("XUI_PRL_C100_160_010_HearingUrgencyViewCase")
         .get("/data/internal/cases/${caseId}")
@@ -459,8 +437,6 @@ object Solicitor_PRL_C100 {
         .body(ElFileBody("bodies/prl/c100/PRLHearingUrgency.json"))
         .check(substring("areRespondentsAwareOfProceedings")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FhearingUrgency%2Fsubmit"))
-
       .exec(Common.userDetails)
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -484,8 +460,6 @@ object Solicitor_PRL_C100 {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"hearingUrgency","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
         .check(substring("tasks")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
       .exec(http("XUI_PRL_C100_180_015_HearingUrgencyViewCase")
         .get("/data/internal/cases/${caseId}")
@@ -525,8 +499,6 @@ object Solicitor_PRL_C100 {
       .exec(Common.isAuthenticated)
 
       .exec(Common.monitoringTools)
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FapplicantsDetails%2FapplicantsDetails1"))
 
       .exec(Common.caseActivityGet)
 
@@ -576,8 +548,6 @@ object Solicitor_PRL_C100 {
         .body(ElFileBody("bodies/prl/c100/PRLApplicantDetails.json"))
         .check(substring("dxNumber")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FapplicantsDetails%2Fsubmit"))
-
       .exec(Common.userDetails)
 
       .exec(Common.caseShareOrgs)
@@ -609,9 +579,6 @@ object Solicitor_PRL_C100 {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"applicantsDetails","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
         .check(substring("tasks")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
-
 
       .exec(http("XUI_PRL_C100_220_015_ApplicantDetailsViewCase")
         .get("/data/internal/cases/${caseId}")
@@ -652,8 +619,6 @@ object Solicitor_PRL_C100 {
 
       .exec(Common.monitoringTools)
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FapplicantsDetails%2FapplicantsDetails1"))
-
       .exec(Common.caseActivityGet)
 
       .exec(http("XUI_PRL_C100_230_010_ChildDetailsCaseView")
@@ -681,6 +646,7 @@ object Solicitor_PRL_C100 {
     .group("XUI_PRL_C100_235_ChildDetailsProfile") {
       exec(Common.profile)
     }
+
     .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
@@ -689,17 +655,15 @@ object Solicitor_PRL_C100 {
 
     .group("XUI_PRL_C100_240_ChildDetailsAddNew") {
       exec(http("XUI_PRL_C100_240_005_ChildDetailsAddNew")
-          .post("/data/case-types/PRLAPPS/validate?pageId=childDetails1")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-          .header("x-xsrf-token", "${XSRFToken}")
-          .body(ElFileBody("bodies/prl/c100/PRLChildDetails.json")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FchildDetails%2FchildDetails2"))
+        .post("/data/case-types/PRLAPPS/validate?pageId=childDetails1")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(ElFileBody("bodies/prl/c100/PRLChildDetails.json")))
 
       .exec(Common.userDetails)
-
     }
+
     .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
@@ -718,11 +682,9 @@ object Solicitor_PRL_C100 {
         .body(ElFileBody("bodies/prl/c100/PRLChildAdditionalDetails.json"))
         .check(substring("childrenKnownToLocalAuthority")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FchildDetails%2Fsubmit"))
-
       .exec(Common.userDetails)
-
     }
+
     .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
@@ -745,8 +707,6 @@ object Solicitor_PRL_C100 {
         .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"childDetails","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
         .check(substring("tasks")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
-
       .exec(http("XUI_PRL_C100_260_010_ChildDetailsAdditionalDetailsViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
@@ -758,6 +718,7 @@ object Solicitor_PRL_C100 {
       .exec(Common.userDetails)
 
     }
+
     .pause(MinThinkTime, MaxThinkTime)
 
   val RespondentDetails =
@@ -788,8 +749,6 @@ object Solicitor_PRL_C100 {
 
       .exec(Common.monitoringTools)
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FrespondentsDetails%2FrespondentsDetails1"))
-
       .exec(Common.caseActivityGet)
 
       .exec(http("XUI_PRL_C100_270_010_RespondentDetailsCaseView")
@@ -807,6 +766,7 @@ object Solicitor_PRL_C100 {
       .exec(Common.userDetails)
 
     }
+
     .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
@@ -835,8 +795,6 @@ object Solicitor_PRL_C100 {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/prl/c100/PRLRespondentDetails.json")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FrespondentsDetails%2Fsubmit"))
-
       .exec(Common.userDetails)
 
     }
@@ -861,8 +819,6 @@ object Solicitor_PRL_C100 {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"respondentsDetails","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
         .check(substring("tasks")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
       .exec(http("XUI_PRL_C100_290_015_RespondentDetailsSubmitViewCase")
         .get("/data/internal/cases/${caseId}")
@@ -902,8 +858,6 @@ object Solicitor_PRL_C100 {
       .exec(Common.isAuthenticated)
 
       .exec(Common.monitoringTools)
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FrespondentsDetails%2Fmiam%2Fmiam1"))
 
       .exec(Common.caseActivityGet)
 
@@ -948,8 +902,6 @@ object Solicitor_PRL_C100 {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/prl/c100/PRLAttendedMIAM.json")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fmiam%2Fmiam7"))
-
       .exec(Common.userDetails)
 
     }
@@ -993,8 +945,6 @@ object Solicitor_PRL_C100 {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/prl/c100/PRLMIAMDetails.json")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2Fmiam%2Fsubmit"))
-
       .exec(Common.userDetails)
 
     }
@@ -1019,8 +969,6 @@ object Solicitor_PRL_C100 {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"miam","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
         .check(substring("tasks")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
       .exec(http("XUI_PRL_C100_330_005_MIAMViewCase")
         .get("/data/internal/cases/${caseId}")
@@ -1060,8 +1008,6 @@ object Solicitor_PRL_C100 {
       .exec(Common.isAuthenticated)
 
       .exec(Common.monitoringTools)
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FallegationsOfHarm%2FallegationsOfHarm1"))
 
       .exec(Common.caseActivityGet)
 
@@ -1106,8 +1052,6 @@ object Solicitor_PRL_C100 {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/prl/c100/PRLAreThereAllegationsOfHarm.json")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FallegationsOfHarm%2Fsubmit"))
-
       .exec(Common.userDetails)
 
     }
@@ -1127,8 +1071,6 @@ object Solicitor_PRL_C100 {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/prl/c100/PRLAllegationsOfHarmDetails.json")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FallegationsOfHarm%2FallegationsOfHarm3"))
 
       .exec(Common.userDetails)
 
@@ -1150,8 +1092,6 @@ object Solicitor_PRL_C100 {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/prl/c100/PRLAllegationsOfHarmBehaviour.json")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FallegationsOfHarm%2FallegationsOfHarm4"))
-
       .exec(Common.userDetails)
 
     }
@@ -1171,8 +1111,6 @@ object Solicitor_PRL_C100 {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/prl/c100/PRLAllegationsOfHarmOther.json")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FallegationsOfHarm%2Fsubmit"))
 
       .exec(Common.userDetails)
 
@@ -1198,8 +1136,6 @@ object Solicitor_PRL_C100 {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"allegationsOfHarm","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
         .check(substring("tasks")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
       .exec(http("XUI_PRL_C100_390_015_AllegationsOfHarmViewCase")
         .get("/data/internal/cases/${caseId}")
@@ -1239,8 +1175,6 @@ object Solicitor_PRL_C100 {
       .exec(Common.isAuthenticated)
 
       .exec(Common.monitoringTools)
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FviewPdfDocument%2FviewPdfDocument1"))
 
       .exec(Common.caseActivityGet)
 
@@ -1289,8 +1223,6 @@ object Solicitor_PRL_C100 {
         .body(ElFileBody("bodies/prl/c100/PRLViewPdfContinue.json"))
         .check(substring("isEngDocGen")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FallegationsOfHarm%2Fsubmit"))
-
       .exec(Common.userDetails)
 
     }
@@ -1315,8 +1247,6 @@ object Solicitor_PRL_C100 {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"viewPdfDocument","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
         .check(substring("tasks")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
       .exec(http("XUI_PRL_C100_420_015_ViewPdfSubmit")
         .get("/data/internal/cases/${caseId}")
@@ -1356,8 +1286,6 @@ object Solicitor_PRL_C100 {
       .exec(Common.isAuthenticated)
 
       .exec(Common.monitoringTools)
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAndPay%2FsubmitAndPay1"))
 
       .exec(Common.caseActivityGet)
 
@@ -1405,8 +1333,6 @@ object Solicitor_PRL_C100 {
         .body(ElFileBody("bodies/prl/c100/PRLSubmitAndPayConfidentialityStatement.json"))
         .check(substring("applicantSolicitorEmailAddress")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAndPay%2FsubmitAndPay2"))
-
       .exec(Common.userDetails)
 
     }
@@ -1425,8 +1351,6 @@ object Solicitor_PRL_C100 {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/prl/c100/PRLSubmitAndPayDeclaration.json"))
         .check(substring("feeAmount")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAndPay%2FsubmitAndPay3"))
 
       .exec(Common.userDetails)
 
@@ -1447,8 +1371,6 @@ object Solicitor_PRL_C100 {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/prl/c100/PRLSubmitAndPayContinue.json"))
         .check(substring("paymentServiceRequestReferenceNumber")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAndPay%2FsubmitAndPay2"))
 
       .exec(Common.userDetails)
 
@@ -1475,8 +1397,6 @@ object Solicitor_PRL_C100 {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"submitAndPay","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
         .check(substring("tasks")))
-
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
       .exec(http("XUI_PRL_C100_460_015_SubmitAndPayNowViewCase")
         .get("/data/internal/cases/${caseId}")

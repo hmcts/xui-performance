@@ -39,7 +39,7 @@ object Solicitor_Divorce {
     .group("XUI_Divorce_030_CreateCase") {
       exec(Common.healthcheck("%2Fcases%2Fcase-filter"))
 
-      .exec(http("XUI_Divorce_030_CreateCase")
+      exec(http("XUI_Divorce_030_CreateCase")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
@@ -58,7 +58,7 @@ object Solicitor_Divorce {
     .group("XUI_Divorce_040_SelectCaseType") {
       exec(Common.healthcheck("%2Fcases%2Fcase-create%2FDIVORCE%2FDIVORCE%2FsolicitorCreate"))
 
-      .exec(http("XUI_Divorce_040_005_StartApplication")
+      exec(http("XUI_Divorce_040_005_StartApplication")
         .get("/data/internal/case-types/DIVORCE/event-triggers/solicitorCreate?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
@@ -471,7 +471,7 @@ object Solicitor_Divorce {
     .group("XUI_Divorce_210_CaseSubmission") {
       exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsolicitorStatementOfTruthPaySubmit"))
 
-      .exec(Common.profile)
+      exec(Common.profile)
 
       .exec(http("XUI_Divorce_210_005_CaseSubmission")
         .get("/data/internal/cases/${caseId}/event-triggers/solicitorStatementOfTruthPaySubmit?ignore-warning=false")
