@@ -48,7 +48,7 @@ object Solicitor_Bails {
 
     .group("XUI_Bails_040_SelectCaseType") {
 
-      .exec(http("XUI_Bails_040_005_SelectCaseType")
+      exec(http("XUI_Bails_040_005_SelectCaseType")
         .get(BaseURL + "/data/internal/case-types/Bail/event-triggers/startApplication?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
