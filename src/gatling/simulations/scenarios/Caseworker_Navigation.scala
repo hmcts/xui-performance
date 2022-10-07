@@ -60,7 +60,7 @@ object Caseworker_Navigation {
 
       group("XUI_Caseworker_050_LoadPage2") {
         exec(http("XUI_Caseworker_050_005_LoadPage2")
-          .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&page=2") //&state=Any
+          .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&state=AwaitingFinalOrder&page=2") //&state=Any
           .headers(Headers.commonHeader)
           .header("accept", "application/json")
           .formParam("x-xsrf-token", "${XSRFToken}")
@@ -80,7 +80,7 @@ object Caseworker_Navigation {
 
     group("XUI_Caseworker_060_SearchByCaseNumber") {
       exec(http("XUI_Caseworker_060_005_SearchByCaseNumber")
-        .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&page=1&case_reference=${caseId}") //&state=Any
+        .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&state=AwaitingFinalOrder&page=1&case_reference=${caseId}") //&state=Any
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
         .formParam("x-xsrf-token", "${XSRFToken}")
