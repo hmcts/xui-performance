@@ -18,7 +18,7 @@ object Caseworker_Navigation {
   val ApplyFilter =
 
     group("XUI_Caseworker_030_ApplyFilter") {
-      exec(http("XUI_Caseworker_030_005_FilterRecordsByDraftState")
+      exec(http("XUI_Caseworker_030_005_ApplyFilter")
         .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&state=AwaitingFinalOrder&page=1") //state is specific to NFD
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
