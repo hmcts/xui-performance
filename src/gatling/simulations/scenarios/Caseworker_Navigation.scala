@@ -19,7 +19,7 @@ object Caseworker_Navigation {
 
     group("XUI_Caseworker_030_ApplyFilter") {
       exec(http("XUI_Caseworker_030_005_FilterRecordsByDraftState")
-        .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&page=1") //&state=Any
+        .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&state=AwaitingFinalOrder&page=1") //state is specific to NFD
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
         .formParam("x-xsrf-token", "${XSRFToken}")
@@ -39,7 +39,7 @@ object Caseworker_Navigation {
 
     group("XUI_Caseworker_040_SortByLastModifiedDate") {
       exec(http("XUI_Caseworker_040_005_SortByLastModifiedDate")
-        .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&page=1") //&state=Any
+        .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&state=AwaitingFinalOrder&page=1") //state is specific to NFD
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
         .formParam("x-xsrf-token", "${XSRFToken}")
