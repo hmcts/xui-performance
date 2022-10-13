@@ -220,19 +220,17 @@ class XUI_Simulation extends Simulation {
 	 ===============================================================================================*/
 	val HearingsScenario = scenario("***** Upload Hearing *****")
 		//	.exitBlockOnFail {
-		.exitBlockOnFail {
+		.repeat(1) { //5, 1st year = 4
 			feed(UserFeederHearing)
 				.exec(_.set("env", s"${env}")
 					.set("caseType", "MoneyClaimCase"))
-				.repeat(1000) { //5, 1st year = 4
+				.repeat(435) { //5, 1st year = 4
 					exec(Homepage.XUIHomePage)
 						.exec(Login.XUILogin)
 						.exec(Solicitor_Hearings.TTLchange)
-							.exec(Logout.XUILogout)
-
-
-					}
+						.exec(Logout.XUILogout)
 				}
+		}
 
 		/*
 
@@ -531,7 +529,7 @@ class XUI_Simulation extends Simulation {
 //		.assertions(assertions(testType))
 //		.maxDuration(60 minutes)
 
-	setUp(HearingsScenario.inject(rampUsers(15).during(200)))
+	setUp(HearingsScenario.inject(rampUsers(20).during(200)))
 	// (RUDH.inject(rampUsers(250).during(3200))))
 	   .protocols(httpProtocol)
 		.maxDuration(20000000)
