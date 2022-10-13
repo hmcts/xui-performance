@@ -220,36 +220,19 @@ class XUI_Simulation extends Simulation {
 	 ===============================================================================================*/
 	val HearingsScenario = scenario("***** Upload Hearing *****")
 		//	.exitBlockOnFail {
-		.repeat(1) {
+		.exitBlockOnFail {
 			feed(UserFeederHearing)
 				.exec(_.set("env", s"${env}")
-					.set("caseType", "Benefit"))
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.repeat(1) { //5, 1st year = 4
-					repeat(1000) { //6
-						//	exec(Solicitor_Hearings.ViewAllHearings)
-						exec(Solicitor_Hearings.UploadResponse)
-							//		.exec(Solicitor_Hearings.RequestHearing)
-							//					.exec(Solicitor_Hearings.GetHearing)
-							//	}
-							//						.exec(Solicitor_Hearings.ViewAllHearings)
-							//							.exec(Solicitor_Hearings.UploadResponse)
-							//					.exec(Solicitor_Hearings.RequestHearing)
-							//		.exec(Solicitor_Hearings.UpdateHearing)
-							//	.repeat(13) {//13, first year = 14
-							//	exec(Solicitor_Hearings.ViewAllHearings)
-							//			.exec(Solicitor_Hearings.GetHearing)
-							//		}
-							//		.exec(Solicitor_Hearings.DeleteHearing)
-							//	}
-
+					.set("caseType", "MoneyClaimCase"))
+				.repeat(1000) { //5, 1st year = 4
+					exec(Homepage.XUIHomePage)
+						.exec(Login.XUILogin)
+						.exec(Solicitor_Hearings.TTLchange)
 							.exec(Logout.XUILogout)
 
 
 					}
 				}
-		}
 
 		/*
 
@@ -474,9 +457,8 @@ class XUI_Simulation extends Simulation {
 					.exec(Caseworker_Navigation.NavigateTabs)
 				}
 				.exec(Caseworker_Navigation.LoadCaseList)
-				.exec(Logout.XUILogout)						exec(Solicitor_Hearings.ViewAllHearings)
+				.exec(Logout.XUILogout)
 				//		exec(Solicitor_Hearings.UploadResponse)
-				.exec(Solicitor_Hearings.RequestHearing)
 		}
 
 
@@ -549,7 +531,7 @@ class XUI_Simulation extends Simulation {
 //		.assertions(assertions(testType))
 //		.maxDuration(60 minutes)
 
-	setUp(HearingsScenario.inject(rampUsers(10).during(200)))
+	setUp(HearingsScenario.inject(rampUsers(15).during(200)))
 	// (RUDH.inject(rampUsers(250).during(3200))))
 	   .protocols(httpProtocol)
 		.maxDuration(20000000)
