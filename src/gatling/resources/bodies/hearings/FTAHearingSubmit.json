@@ -1,9 +1,15 @@
 {
-  "data": {},
+  "data": {
+    "TTL": {
+      "SystemTTL": null,
+      "OverrideTTL": "2022-10-14",
+      "Suspended": "No"
+    }
+  },
   "event": {
-    "description": "",
-    "id": "adminSendToWithDwp",
-    "summary": ""
+    "id": "ManageTTL",
+    "summary": "",
+    "description": ""
   },
   "event_token": "${event_token}",
   "ignore_warning": false
