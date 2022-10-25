@@ -224,7 +224,7 @@ class XUI_Simulation extends Simulation {
 			feed(UserFeederHearing)
 				.exec(_.set("env", s"${env}")
 					.set("caseType", "MoneyClaimCase"))
-				.repeat(435) { //5, 1st year = 4
+				.repeat(350) { //5, 1st year = 4
 					exec(Homepage.XUIHomePage)
 						.exec(Login.XUILogin)
 						.exec(Solicitor_Hearings.TTLchange)
