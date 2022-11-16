@@ -1,0 +1,30 @@
+{
+  "data": {
+    "localCourtAdmin": [
+      {
+        "value": {
+          "email": "Family.medway.countycourt@justice.gov.uk"
+        },
+        "id": "${LocalCourtId}"
+      }
+    ]
+  },
+  "event": {
+    "id": "issueAndSendToLocalCourtCallback",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "localCourtAdmin": [
+      {
+        "value": {
+          "email": "Family.medway.countycourt@justice.gov.uk"
+        },
+        "id": "${LocalCourtId}"
+      }
+    ]
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false,
+  "case_reference": "${caseId}"
+}
