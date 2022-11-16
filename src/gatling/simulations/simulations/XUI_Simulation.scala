@@ -26,6 +26,9 @@ class XUI_Simulation extends Simulation {
 	val UserFeederBails = csv("UserDataBails.csv").circular
 	val UserFeederBailsHO = csv("UserDataBailsHO.csv").circular
 	val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
+	val UserFeederHearing = csv("UserDataHearings.csv").circular
+	val UserFeederHearingCases = csv("UserDataHearingsUploadCases.csv").circular
+
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
@@ -140,7 +143,19 @@ class XUI_Simulation extends Simulation {
 				.exec(Logout.XUILogout)
 		}
 
-
+	val HearingsScenario = scenario("***** Upload Hearing *****")
+		//	.exitBlockOnFail {
+		.repeat(1) { //5, 1st year = 4
+			feed(UserFeederHearing)
+				.exec(_.set("env", s"${env}")
+					.set("caseType", "MoneyClaimCase"))
+				.repeat(260) { //5, 1st year = 4
+					exec(Homepage.XUIHomePage)
+						.exec(Login.XUILogin)
+						.exec(Solicitor_Hearings.TTLchange)
+						.exec(Logout.XUILogout)
+				}
+		}
 
 	/*===============================================================================================
 	* XUI Legal Rep Bails Scenario
@@ -381,7 +396,7 @@ class XUI_Simulation extends Simulation {
 					exec(Caseworker_Navigation.SearchByCaseNumber)
 					.exec(Caseworker_Navigation.ViewCase)
 					// .exec(Caseworker_Navigation.NavigateTabs) //Removing as clicking tabs no longer initiates calls
-          .exec(Caseworker_Navigation.ViewDocument)
+        //  .exec(Caseworker_Navigation.ViewDocument)
 				}
 				.exec(Caseworker_Navigation.LoadCaseList)
 				.exec(Logout.XUILogout)
@@ -438,7 +453,7 @@ class XUI_Simulation extends Simulation {
 		}
 	}
 
-	setUp(
+	/*setUp(
 		 BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		 PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		 ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
@@ -452,6 +467,15 @@ class XUI_Simulation extends Simulation {
 	).protocols(httpProtocol)
 		.assertions(assertions(testType))
 		.maxDuration(75 minutes)
+
+
+	 */
+
+	setUp(HearingsScenario.inject(rampUsers(20).during(200)))
+		// (RUDH.inject(rampUsers(250).during(3200))))
+		.protocols(httpProtocol)
+		.maxDuration(20000000)
+	// .maxDuration(20000)
 
 
 }
