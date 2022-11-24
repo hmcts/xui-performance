@@ -9,16 +9,16 @@
           "dateOfBirth": "${C100AppDobYear}-${C100AppDobMonth}-${C100AppDobDay}",
           "gender": "male",
           "placeOfBirth": "London",
-          "isAddressConfidential": "Yes",
+          "isAddressConfidential": "No",
           "isAtAddressLessThan5Years": "No",
           "canYouProvideEmailAddress": "Yes",
-          "email": "Perftest@gmail.com",
-          "isEmailAddressConfidential": "Yes",
+          "email": "${C100ApplicantEmail}",
+          "isEmailAddressConfidential": "No",
           "phoneNumber": "0123456789",
           "isPhoneNumberConfidential": "Yes",
           "representativeFirstName": "First",
           "representativeLastName": "Last",
-          "solicitorEmail": "solicitor@gmail.com",
+          "solicitorEmail": "${C100RespondentEmail}",
           "solicitorReference": "SolRef246",
           "dxNumber": "1234567890",
           "isDateOfBirthUnknown": null,
@@ -34,6 +34,8 @@
           "sendSignUpLink": null,
           "solicitorTelephone": null,
           "respondentLivedWithApplicant": null,
+          "applicantContactInstructions": null,
+          "currentRespondent": null,
           "address": {
             "AddressLine1": "${addressLines(0)}",
             "AddressLine2": "${addressLines(1)}",
@@ -55,65 +57,8 @@
             "County": "",
             "PostCode": "PR1 1PRF",
             "Country": "United Kingdom"
-          }
-        },
-        "id": null
-      },
-      {
-        "value": {
-          "firstName": "${C100ApplicantFirstName2}",
-          "lastName": "${C100ApplicantLastName2}",
-          "previousName": null,
-          "dateOfBirth": "${C100AppDobYear2}-${C100AppDobMonth2}-${C100AppDobDay2}",
-          "gender": "male",
-          "placeOfBirth": "London",
-          "isAddressConfidential": "Yes",
-          "isAtAddressLessThan5Years": "No",
-          "canYouProvideEmailAddress": "Yes",
-          "email": "Perftest@gmail.com",
-          "isEmailAddressConfidential": "Yes",
-          "phoneNumber": "0123456789",
-          "isPhoneNumberConfidential": "Yes",
-          "representativeFirstName": "First",
-          "representativeLastName": "Last",
-          "solicitorEmail": "solicitor@gmail.com",
-          "solicitorReference": "SolRef2468",
-          "dxNumber": "1234567890",
-          "isDateOfBirthUnknown": null,
-          "isAddressUnknown": null,
-          "landline": null,
-          "relationshipToChildren": null,
-          "isDateOfBirthKnown": null,
-          "isCurrentAddressKnown": null,
-          "canYouProvidePhoneNumber": null,
-          "isPlaceOfBirthKnown": null,
-          "isAtAddressLessThan5YearsWithDontKnow": null,
-          "doTheyHaveLegalRepresentation": null,
-          "sendSignUpLink": null,
-          "solicitorTelephone": null,
-          "respondentLivedWithApplicant": null,
-          "address": {
-            "AddressLine1": "${addressLines(0)}",
-            "AddressLine2": "${addressLines(1)}",
-            "AddressLine3": "",
-            "PostTown": "${addressLines(2)}",
-            "County": "",
-            "PostCode": "${addressLines(3)}",
-            "Country": "United Kingdom"
           },
-          "solicitorOrg": {
-            "OrganisationID": "${orgref}",
-            "OrganisationName": "${orgname}"
-          },
-          "solicitorAddress": {
-            "AddressLine1": "6 Perf Test Street",
-            "AddressLine2": "PerfTest Street",
-            "AddressLine3": "",
-            "PostTown": "PerfTest Town",
-            "County": "",
-            "PostCode": "PR1 1PRF",
-            "Country": "United Kingdom"
-          }
+          "applicantPreferredContact": []
         },
         "id": null
       }
@@ -137,13 +82,13 @@
           "isAddressConfidential": "Yes",
           "isAtAddressLessThan5Years": "No",
           "canYouProvideEmailAddress": "Yes",
-          "email": "Perftest@gmail.com",
-          "isEmailAddressConfidential": "Yes",
+          "email": "${C100ApplicantEmail}",
+          "isEmailAddressConfidential": "No",
           "phoneNumber": "0123456789",
           "isPhoneNumberConfidential": "Yes",
           "representativeFirstName": "First",
           "representativeLastName": "Last",
-          "solicitorEmail": "solicitor@gmail.com",
+          "solicitorEmail": "${C100RespondentEmail}",
           "solicitorReference": "SolRef246",
           "dxNumber": "1234567890",
           "isDateOfBirthUnknown": null,
@@ -159,20 +104,9 @@
           "sendSignUpLink": null,
           "solicitorTelephone": null,
           "respondentLivedWithApplicant": null,
+          "applicantContactInstructions": null,
+          "currentRespondent": null,
           "address": {
-            "AddressLine1": "${addressLines(0)}",
-            "AddressLine2": "${addressLines(1)}",
-            "AddressLine3": "",
-            "PostTown": "${addressLines(2)}",
-            "County": "",
-            "PostCode": "${addressLines(3)}",
-            "Country": "United Kingdom"
-          },
-          "solicitorOrg": {
-            "OrganisationID": "${orgref}",
-            "OrganisationName": "${orgname}"
-          },
-          "solicitorAddress": {
             "AddressLine1": "5 Perf Test Street",
             "AddressLine2": "PerfTest",
             "AddressLine3": "",
@@ -180,65 +114,22 @@
             "County": "",
             "PostCode": "PR1 1PRF",
             "Country": "United Kingdom"
-          }
-        },
-        "id": null
-      },
-      {
-        "value": {
-          "firstName": "${C100ApplicantFirstName2}",
-          "lastName": "${C100ApplicantLastName2}",
-          "previousName": null,
-          "dateOfBirth": "${C100AppDobYear2}-${C100AppDobMonth2}-${C100AppDobDay2}",
-          "gender": "male",
-          "placeOfBirth": "London",
-          "isAddressConfidential": "Yes",
-          "isAtAddressLessThan5Years": "No",
-          "canYouProvideEmailAddress": "Yes",
-          "email": "Perftest@gmail.com",
-          "isEmailAddressConfidential": "Yes",
-          "phoneNumber": "0123456789",
-          "isPhoneNumberConfidential": "Yes",
-          "representativeFirstName": "First",
-          "representativeLastName": "Last",
-          "solicitorEmail": "solicitor@gmail.com",
-          "solicitorReference": "SolRef2468",
-          "dxNumber": "1234567890",
-          "isDateOfBirthUnknown": null,
-          "isAddressUnknown": null,
-          "landline": null,
-          "relationshipToChildren": null,
-          "isDateOfBirthKnown": null,
-          "isCurrentAddressKnown": null,
-          "canYouProvidePhoneNumber": null,
-          "isPlaceOfBirthKnown": null,
-          "isAtAddressLessThan5YearsWithDontKnow": null,
-          "doTheyHaveLegalRepresentation": null,
-          "sendSignUpLink": null,
-          "solicitorTelephone": null,
-          "respondentLivedWithApplicant": null,
-          "address": {
-            "AddressLine1": "${addressLines(0)}",
-            "AddressLine2": "${addressLines(1)}",
-            "AddressLine3": "",
-            "PostTown": "${addressLines(2)}",
-            "County": "",
-            "PostCode": "${addressLines(3)}",
-            "Country": "United Kingdom"
           },
           "solicitorOrg": {
             "OrganisationID": "${orgref}",
             "OrganisationName": "${orgname}"
           },
           "solicitorAddress": {
-            "AddressLine1": "6 Perf Test Street",
-            "AddressLine2": "PerfTest Street",
-            "AddressLine3": "",
-            "PostTown": "PerfTest Town",
-            "County": "",
-            "PostCode": "PR1 1PRF",
-            "Country": "United Kingdom"
-          }
+              "AddressLine1": "6 Perf Test Street",
+              "AddressLine2": "PerfTest Street",
+              "AddressLine3": "",
+              "PostTown": "PerfTest Town",
+              "County": "",
+              "PostCode": "PR1 1PRF",
+              "Country": "United Kingdom"
+
+          },
+          "applicantPreferredContact": []
         },
         "id": null
       }

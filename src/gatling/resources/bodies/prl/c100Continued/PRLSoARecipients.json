@@ -44,19 +44,19 @@
     "pd36qLetter": {
       "document_url": "${DocumentURLPD36Q}",
       "document_binary_url": "${DocumentURLPD36Q}/binary",
-      "document_filename": "3MB.pdf",
+      "document_filename": "UploadTest.pdf",
       "document_hash": "${documentHashPD36Q}"
     },
     "specialArrangementsLetter": {
       "document_url": "${DocumentURLSpecial}",
       "document_binary_url": "${DocumentURLSpecial}/binary",
-      "document_filename": "3MB.pdf",
+      "document_filename": "UploadTest.pdf",
       "document_hash": "${documentHashSpecial}"
     },
     "additionalDocuments": {
       "document_url": "${DocumentURLAdditional}",
       "document_binary_url": "${DocumentURLAdditional}/binary",
-      "document_filename": "3MB.pdf",
+      "document_filename": "UploadTest.pdf",
       "document_hash": "${documentHashAdditional}"
     },
     "confirmRecipients": {

@@ -33,7 +33,7 @@ object Solicitor_PRL_Continued {
         "PRLAppDobDay" -> Common.getDay(),
         "PRLAppDobMonth" -> Common.getMonth(),
         "PRLAppDobYear" -> Common.getDobYear(),
-        "caseId" -> "1669037828569337"))
+        "caseId" -> "1669310137349588"))
 
         .exec(http("XUI_PRL_241_005_PRLCitizenHome")
           .get(prlURL + "/citizen-home")

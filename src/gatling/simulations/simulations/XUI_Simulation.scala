@@ -23,6 +23,7 @@ class XUI_Simulation extends Simulation {
 	val UserFeederNFD = csv("UserDataNFD.csv").circular
 	val UserFeederProbate = csv("UserDataProbate.csv").circular
 	val UserFeederPRL = csv("UserDataPRL.csv").circular
+	val UserFeederPRL2 = csv("UserDataPRL2.csv").circular
 	val UserFeederBails = csv("UserDataBails.csv").circular
 	val UserFeederBailsHO = csv("UserDataBailsHO.csv").circular
 	val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
@@ -111,8 +112,6 @@ class XUI_Simulation extends Simulation {
 				.feed(randomFeeder)
 				.doIfOrElse(session => session("prl-percentage").as[Int] < prlC100Percentage) {
 					//C100 Journey
-				//	exec(Solicitor_PRL_AddAnOrder.AddAnOrder)
-				//	.exec(Solicitor_PRL_Continued.PRL)
 
 					exec(Solicitor_PRL_C100.CreatePrivateLawCase)
 					.exec(Solicitor_PRL_C100.TypeOfApplication)
@@ -124,6 +123,23 @@ class XUI_Simulation extends Simulation {
 					.exec(Solicitor_PRL_C100.AllegationsOfHarm)
 					.exec(Solicitor_PRL_C100.ViewPdfApplication)
 					.exec(Solicitor_PRL_C100.SubmitAndPay)
+
+
+
+
+
+					//exec(Solicitor_PRL_AddAnOrder.AddAnOrder)
+					//exec(Solicitor_PRL_Continued.PRL)
+
+
+
+
+
+
+
+
+
+
 
 				} 
         {
@@ -460,7 +476,7 @@ class XUI_Simulation extends Simulation {
 			  */
 	).protocols(httpProtocol)
 		.assertions(assertions(testType))
-		.maxDuration(75 minutes)
+		.maxDuration(45 minutes)
 
 
 }
