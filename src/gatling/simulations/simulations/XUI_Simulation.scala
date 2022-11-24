@@ -67,7 +67,7 @@ class XUI_Simulation extends Simulation {
 	val caseworkerTargetPerHour: Double = 1000
 
 	//This determines the percentage split of PRL journeys, by C100 or FL401
-	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
+	val prlC100Percentage = 100 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
 
 	val rampUpDurationMins = 5
 	val rampDownDurationMins = 5
@@ -111,6 +111,9 @@ class XUI_Simulation extends Simulation {
 				.feed(randomFeeder)
 				.doIfOrElse(session => session("prl-percentage").as[Int] < prlC100Percentage) {
 					//C100 Journey
+				//	exec(Solicitor_PRL_AddAnOrder.AddAnOrder)
+				//	.exec(Solicitor_PRL_Continued.PRL)
+
 					exec(Solicitor_PRL_C100.CreatePrivateLawCase)
 					.exec(Solicitor_PRL_C100.TypeOfApplication)
 					.exec(Solicitor_PRL_C100.HearingUrgency)
@@ -121,6 +124,7 @@ class XUI_Simulation extends Simulation {
 					.exec(Solicitor_PRL_C100.AllegationsOfHarm)
 					.exec(Solicitor_PRL_C100.ViewPdfApplication)
 					.exec(Solicitor_PRL_C100.SubmitAndPay)
+
 				} 
         {
 					//FL401 Journey
@@ -137,7 +141,9 @@ class XUI_Simulation extends Simulation {
 					.exec(Solicitor_PRL_FL401.ViewPDF)
 					.exec(Solicitor_PRL_FL401.StatementOfTruth)
 				 }
+
 				.exec(Logout.XUILogout)
+
 		}
 
 
@@ -381,7 +387,7 @@ class XUI_Simulation extends Simulation {
 					exec(Caseworker_Navigation.SearchByCaseNumber)
 					.exec(Caseworker_Navigation.ViewCase)
 					// .exec(Caseworker_Navigation.NavigateTabs) //Removing as clicking tabs no longer initiates calls
-          .exec(Caseworker_Navigation.ViewDocument)
+       //   .exec(Caseworker_Navigation.ViewDocument)
 				}
 				.exec(Caseworker_Navigation.LoadCaseList)
 				.exec(Logout.XUILogout)
@@ -439,8 +445,9 @@ class XUI_Simulation extends Simulation {
 	}
 
 	setUp(
-		 BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		 PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		// BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		 PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+			 /*
 		 ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		 ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		 FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
@@ -449,6 +456,8 @@ class XUI_Simulation extends Simulation {
 		 NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		 FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		 CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+
+			  */
 	).protocols(httpProtocol)
 		.assertions(assertions(testType))
 		.maxDuration(75 minutes)
