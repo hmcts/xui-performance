@@ -56,7 +56,7 @@ class XUI_Simulation extends Simulation {
 
 	/* PERFORMANCE TEST CONFIGURATION */
 	val bailsTargetPerHour: Double = 10
-	val prlTargetPerHour: Double = 100
+	val prlTargetPerHour: Double = 150
 	val probateTargetPerHour: Double = 250
 	val iacTargetPerHour: Double = 20
 	val fplTargetPerHour: Double = 10
