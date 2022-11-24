@@ -13,6 +13,8 @@ object Solicitor_PRL_AddAnOrder {
   val BaseURL = Environment.baseURL
   val prlURL = "https://privatelaw.${env}.platform.hmcts.net"
   val IdamUrl = Environment.idamURL
+  val PRLcases = csv("cases.csv").circular
+
 
   val postcodeFeeder = csv("postcodes.csv").circular
 
@@ -34,8 +36,9 @@ object Solicitor_PRL_AddAnOrder {
         "PRLRandomString" -> (Common.randomString(7)),
         "PRLAppDobDay" -> Common.getDay(),
         "PRLAppDobMonth" -> Common.getMonth(),
-        "PRLAppDobYear" -> Common.getDobYear(),
-        "caseId" -> "1669134964711052"))
+        "PRLAppDobYear" -> Common.getDobYear()))
+
+        .feed(PRLcases)
 
         .exec(http("XUI_PRL_030_005_SelectCase")
           .get(BaseURL + "/data/internal/cases/${caseId}")
@@ -352,8 +355,8 @@ object Solicitor_PRL_AddAnOrder {
           .header("content-type", "multipart/form-data")
 
         .header("x-xsrf-token", "${XSRFToken}")
-        .bodyPart(RawFileBodyPart("files", "3MB.pdf")
-          .fileName("3MB.pdf")
+        .bodyPart(RawFileBodyPart("files", "UploadTest.pdf")
+          .fileName("UploadTest.pdf")
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
@@ -381,8 +384,8 @@ object Solicitor_PRL_AddAnOrder {
 
         .header("content-type", "multipart/form-data")
         .header("x-xsrf-token", "${XSRFToken}")
-        .bodyPart(RawFileBodyPart("files", "3MB.pdf")
-          .fileName("3MB.pdf")
+        .bodyPart(RawFileBodyPart("files", "UploadTest.pdf")
+          .fileName("UploadTest.pdf")
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
@@ -410,8 +413,8 @@ object Solicitor_PRL_AddAnOrder {
 
         .header("content-type", "multipart/form-data")
         .header("x-xsrf-token", "${XSRFToken}")
-        .bodyPart(RawFileBodyPart("files", "3MB.pdf")
-          .fileName("3MB.pdf")
+        .bodyPart(RawFileBodyPart("files", "UploadTest.pdf")
+          .fileName("UploadTest.pdf")
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")

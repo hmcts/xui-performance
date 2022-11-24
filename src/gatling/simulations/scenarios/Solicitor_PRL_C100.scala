@@ -32,6 +32,8 @@ object Solicitor_PRL_C100 {
         "C100ApplicantLastName2" -> ("Test" + Common.randomString(5)),
         "C100RespondentFirstName" -> ("Resp" + Common.randomString(5)),
         "C100RespondentLastName" -> ("Test" + Common.randomString(5)),
+        "C100RespondentEmail" -> (Common.randomString(5) + "@gmail.com"),
+        "C100ApplicantEmail" -> (Common.randomString(5) + "@gmail.com"),
         "C100ChildFirstName" -> ("Child" + Common.randomString(5)),
         "C100ChildLastName" -> ("Test" + Common.randomString(5)),
         "C100RepresentativeFirstName" -> ("Rep" + Common.randomString(5)),
