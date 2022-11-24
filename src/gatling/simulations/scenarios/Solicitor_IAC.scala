@@ -43,6 +43,8 @@ object Solicitor_IAC {
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
         .check(substring("IA")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-create%2FIA%2FAsylum%2FstartAppeal"))
     }
     
     .pause(MinThinkTime, MaxThinkTime)
@@ -61,6 +63,8 @@ object Solicitor_IAC {
         .check(substring("Start your appeal")))
 
       .exec(Common.profile)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-create%2FIA%2FAsylum%2FstartAppeal%2FstartAppealchecklist"))
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
@@ -131,48 +135,8 @@ object Solicitor_IAC {
         .formParam("jurisdictionId", "null")
         // .formParam("files", """(binary)""")
         .check(substring("originalDocumentName"))
-        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL1"))
-        .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash1")))
-    }
-
-    .group("XUI_IAC_091_UploadNoticeDecision") {
-      exec(http("XUI_IAC_091_005_UploadNoticeDecision")
-        .post("/documentsv2")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json, text/plain, */*")
-        .header("content-type", "multipart/form-data")
-        .header("x-xsrf-token", "${XSRFToken}")
-        .bodyPart(RawFileBodyPart("files", "3MB.pdf")
-        .fileName("3MB.pdf")
-        .transferEncoding("binary"))
-        .asMultipartForm
-        .formParam("classification", "PUBLIC")
-        .formParam("caseTypeId", "null")
-        .formParam("jurisdictionId", "null")
-        // .formParam("files", """(binary)""")
-        .check(substring("originalDocumentName"))
-        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL2"))
-        .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash2")))
-    }
-
-    .group("XUI_IAC_092_UploadNoticeDecision") {
-      exec(http("XUI_IAC_092_005_UploadNoticeDecision")
-        .post("/documentsv2")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json, text/plain, */*")
-        .header("content-type", "multipart/form-data")
-        .header("x-xsrf-token", "${XSRFToken}")
-        .bodyPart(RawFileBodyPart("files", "3MB.pdf")
-        .fileName("3MB.pdf")
-        .transferEncoding("binary"))
-        .asMultipartForm
-        .formParam("classification", "PUBLIC")
-        .formParam("caseTypeId", "null")
-        .formParam("jurisdictionId", "null")
-        // .formParam("files", """(binary)""")
-        .check(substring("originalDocumentName"))
-        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL3"))
-        .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash3")))
+        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL"))
+        .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash")))
     }
 
     .group("XUI_IAC_090_010_StartUploadNoticeDecision") {
@@ -474,6 +438,8 @@ object Solicitor_IAC {
 
       .exec(Common.isAuthenticated)
 
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FpayAndSubmitAppeal"))
+
       .exec(http("XUI_IAC_250_035_SaveCaseView")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
@@ -508,6 +474,8 @@ object Solicitor_IAC {
 
       .exec(Common.profile)
 
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAppeal%2FsubmitAppealdeclaration"))
+
       .exec(Common.caseActivityGet)
       .pause(2)
       .exec(Common.caseActivityPost)
@@ -530,6 +498,8 @@ object Solicitor_IAC {
         .check(substring("paymentAccountList")))
 
       .exec(Common.profile)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FsubmitAppeal%2FpayAndSubmitAppealdeclaration"))
 
       .exec(Common.caseActivityGet)
       .pause(2)
@@ -554,6 +524,8 @@ object Solicitor_IAC {
         .check(substring("hasDeclared")))
 
       .exec(Common.profile)
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FspayAndSubmitAppeal%2Fsubmit"))
   }
 
 /*======================================================================================
@@ -578,6 +550,8 @@ object Solicitor_IAC {
         .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"submitAppeal","jurisdiction":"IA","caseTypeId":"Asylum"}}"""))
         .check(status.in(200, 400))
         .check(substring("tasks")))
+
+      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FpayAndSubmitAppeal%2Fconfirm"))
     }
 
     .exec(Common.caseActivityGet)
