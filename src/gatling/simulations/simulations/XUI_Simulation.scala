@@ -104,34 +104,36 @@ class XUI_Simulation extends Simulation {
  	===============================================================================================*/
 	val PRLSolicitorScenario = scenario("***** Private Law Create Case *****")
 		.exitBlockOnFail {
-			feed(UserFeederPRL)
+			feed(UserFeederPRL2)
 				.exec(_.set("env", s"${env}")
 							.set("caseType", "PRLAPPS"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.feed(randomFeeder)
 				.doIfOrElse(session => session("prl-percentage").as[Int] < prlC100Percentage) {
+					//		repeat(10) {
 					//C100 Journey
+					/*
+						exec(Solicitor_PRL_C100.CreatePrivateLawCase)
+							.exec(Solicitor_PRL_C100.TypeOfApplication)
+							.exec(Solicitor_PRL_C100.HearingUrgency)
+							.exec(Solicitor_PRL_C100.ApplicantDetails)
+							.exec(Solicitor_PRL_C100.ChildDetails)
+							.exec(Solicitor_PRL_C100.RespondentDetails)
+							.exec(Solicitor_PRL_C100.MIAM)
+							.exec(Solicitor_PRL_C100.AllegationsOfHarm)
+							.exec(Solicitor_PRL_C100.ViewPdfApplication)
+							.exec(Solicitor_PRL_C100.SubmitAndPay)
 
-					exec(Solicitor_PRL_C100.CreatePrivateLawCase)
-					.exec(Solicitor_PRL_C100.TypeOfApplication)
-					.exec(Solicitor_PRL_C100.HearingUrgency)
-					.exec(Solicitor_PRL_C100.ApplicantDetails)
-					.exec(Solicitor_PRL_C100.ChildDetails)
-					.exec(Solicitor_PRL_C100.RespondentDetails)
-					.exec(Solicitor_PRL_C100.MIAM)
-					.exec(Solicitor_PRL_C100.AllegationsOfHarm)
-					.exec(Solicitor_PRL_C100.ViewPdfApplication)
-					.exec(Solicitor_PRL_C100.SubmitAndPay)
+					}
 
-
-
-				//	exec(Solicitor_PRL_AddAnOrder.AddAnOrder)
-				//	.exec(Solicitor_PRL_Continued.PRL)
-
+ */
 
 
 
+
+					exec(Solicitor_PRL_AddAnOrder.AddAnOrder)
+							.exec(Solicitor_PRL_Continued.PRL)
 
 
 

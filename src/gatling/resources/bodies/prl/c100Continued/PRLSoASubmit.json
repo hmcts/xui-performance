@@ -33,7 +33,7 @@
     "specialArrangementsLetter": {
       "document_url": "${DocumentURLSpecial}",
       "document_binary_url": "${DocumentURLSpecial}/binary",
-      "document_filename": "UploadTest.pdf",
+      "document_filename": "UploadTest2.pdf",
       "document_hash": "${documentHashSpecial}"
     },
     "option7": null,
@@ -52,7 +52,7 @@
     "additionalDocuments": {
       "document_url": "${DocumentURLAdditional}",
       "document_binary_url": "${DocumentURLAdditional}/binary",
-      "document_filename": "UploadTest.pdf",
+      "document_filename": "UploadTest3.pdf",
       "document_hash": "${documentHashAdditional}"
     },
     "option3": null,
