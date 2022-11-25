@@ -474,7 +474,7 @@ class XUI_Simulation extends Simulation {
 			  */
 	).protocols(httpProtocol)
 		.assertions(assertions(testType))
-		.maxDuration(20 minutes)
+		.maxDuration(30 minutes)
 
 
 }
