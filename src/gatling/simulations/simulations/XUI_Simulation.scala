@@ -126,10 +126,6 @@ class XUI_Simulation extends Simulation {
 
 
 
-
-
-
-
 				//	exec(Solicitor_PRL_AddAnOrder.AddAnOrder)
 				//	.exec(Solicitor_PRL_Continued.PRL)
 
