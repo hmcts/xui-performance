@@ -32,8 +32,7 @@ object Solicitor_PRL_Continued {
         "PRLRandomString" -> (Common.randomString(7)),
         "PRLAppDobDay" -> Common.getDay(),
         "PRLAppDobMonth" -> Common.getMonth(),
-        "PRLAppDobYear" -> Common.getDobYear(),
-        "caseId" -> "1669310137349588"))
+        "PRLAppDobYear" -> Common.getDobYear()))
 
         .exec(http("XUI_PRL_241_005_PRLCitizenHome")
           .get(prlURL + "/citizen-home")
@@ -60,6 +59,7 @@ object Solicitor_PRL_Continued {
           .formParam("caseCode", "${caseId}")
           .formParam("accessCode", "${accessCode}")
           .formParam("accessCodeCheck", "true")
+          .check(CsrfCheck.save)
           .check(substring("Sign in or create an account")))
       }
       .pause(MinThinkTime, MaxThinkTime)

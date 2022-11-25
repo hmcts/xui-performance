@@ -128,8 +128,10 @@ class XUI_Simulation extends Simulation {
 
 
 
-					//exec(Solicitor_PRL_AddAnOrder.AddAnOrder)
-					//exec(Solicitor_PRL_Continued.PRL)
+
+
+				//	exec(Solicitor_PRL_AddAnOrder.AddAnOrder)
+				//	.exec(Solicitor_PRL_Continued.PRL)
 
 
 
@@ -476,7 +478,7 @@ class XUI_Simulation extends Simulation {
 			  */
 	).protocols(httpProtocol)
 		.assertions(assertions(testType))
-		.maxDuration(45 minutes)
+		.maxDuration(20 minutes)
 
 
 }
