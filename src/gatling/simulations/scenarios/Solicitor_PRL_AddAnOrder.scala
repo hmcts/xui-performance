@@ -3,6 +3,7 @@ package scenarios
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import utils.{Common, CsrfCheck, Environment, Headers}
+import java.io.{BufferedWriter, FileWriter}
 
 /*======================================================================================
 * Create a new Private Law application as a professional user (e.g. solicitor)
@@ -355,8 +356,8 @@ object Solicitor_PRL_AddAnOrder {
           .header("content-type", "multipart/form-data")
 
         .header("x-xsrf-token", "${XSRFToken}")
-        .bodyPart(RawFileBodyPart("files", "UploadTest.pdf")
-          .fileName("UploadTest.pdf")
+        .bodyPart(RawFileBodyPart("files", "TestFile.pdf")
+          .fileName("TestFile.pdf")
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
@@ -384,8 +385,8 @@ object Solicitor_PRL_AddAnOrder {
 
         .header("content-type", "multipart/form-data")
         .header("x-xsrf-token", "${XSRFToken}")
-        .bodyPart(RawFileBodyPart("files", "UploadTest.pdf")
-          .fileName("UploadTest.pdf")
+        .bodyPart(RawFileBodyPart("files", "TestFile2.pdf")
+          .fileName("TestFile2.pdf")
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
@@ -413,8 +414,8 @@ object Solicitor_PRL_AddAnOrder {
 
         .header("content-type", "multipart/form-data")
         .header("x-xsrf-token", "${XSRFToken}")
-        .bodyPart(RawFileBodyPart("files", "UploadTest.pdf")
-          .fileName("UploadTest.pdf")
+        .bodyPart(RawFileBodyPart("files", "TestFile3.pdf")
+          .fileName("TestFile3.pdf")
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
@@ -474,8 +475,16 @@ object Solicitor_PRL_AddAnOrder {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/prl/c100Continued/PRLSoASubmit.json"))
-        .check(regex("""accessCode":"(.+)""").saveAs("accessCode"))
+        .check(regex("""accessCode":"(\w{8})""").saveAs("prlAccessCode"))
     . check(substring("CASE_HEARING")))
+
+        .exec { session =>
+          val fw = new BufferedWriter(new FileWriter("accessCode.csv", true))
+          try {
+            fw.write(session("prlAccessCode").as[String] + "\r\n")
+          } finally fw.close()
+          session
+        }
 }
 
 .pause(MinThinkTime, MaxThinkTime)

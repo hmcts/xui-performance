@@ -13,6 +13,9 @@ object Solicitor_PRL_Continued {
   val BaseURL = Environment.baseURL
   val prlURL = "https://privatelaw.${env}.platform.hmcts.net"
   val IdamUrl = Environment.idamURL
+  val PRLcases = csv("cases.csv").circular
+  val PRLAccessCode = csv("accessCodeList.csv").circular
+  val PRLCitizens = csv("UserDataPRLCitizen.csv").circular
 
   val postcodeFeeder = csv("postcodes.csv").circular
 
@@ -33,6 +36,10 @@ object Solicitor_PRL_Continued {
         "PRLAppDobDay" -> Common.getDay(),
         "PRLAppDobMonth" -> Common.getMonth(),
         "PRLAppDobYear" -> Common.getDobYear()))
+
+        .feed(PRLcases)
+        .feed(PRLAccessCode)
+        .feed(PRLCitizens)
 
         .exec(http("XUI_PRL_241_005_PRLCitizenHome")
           .get(prlURL + "/citizen-home")
@@ -75,8 +82,8 @@ object Solicitor_PRL_Continued {
           .headers(Headers.commonHeader)
           .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
           .header("content-type", "application/x-www-form-urlencoded")
-          .formParam("username", "familyprivatelaw@gmail.com")
-          .formParam("password", "Password12")
+          .formParam("username", "${user}")
+          .formParam("password", "${password}")
           .formParam("save", "Sign in")
           .formParam("selfRegistrationEnabled", "true")
           .formParam("_csrf", "${csrf}")
@@ -791,154 +798,5 @@ object Solicitor_PRL_Continued {
 
     .pause(MinThinkTime, MaxThinkTime)
 
-
-  /*======================================================================================
-* Select 'Upload Document'
-======================================================================================*/
-
-  .group("XUI_PRL_670_UploadDocument") {
-
-    exec(http("XUI_PRL_670_005_UploadDocument")
-      .get(prlURL + "/respondent/upload-document")
-      .headers(Headers.navigationHeader)
-      .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
-      .check(substring("Select the type of document")))
-
-  }
-
-    .pause(MinThinkTime, MaxThinkTime)
-
-
-  /*======================================================================================
-* Select 'Your position statements '
-======================================================================================*/
-
-  .group("XUI_PRL_680_YourPositionStatements") {
-
-    exec(http("XUI_PRL_680_005_YourPositionStatements")
-      .get(prlURL + "/respondent/upload-document")
-      .headers(Headers.navigationHeader)
-      .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
-      .check(CsrfCheck.save)
-      .check(substring("Select the type of document")))
-
-  }
-
-    .pause(MinThinkTime, MaxThinkTime)
-
-
-    /*======================================================================================
-* Has the court asked for this document? - yes
-======================================================================================*/
-
-    .group("XUI_PRL_690_CourtAsked") {
-
-      exec(http("XUI_PRL_690_005_CourtAsked")
-        .post(prlURL + "/respondent/upload-document/start?caption=Witness%20statements%20and%20evidence&document_type=Your%20position%20statements")
-        .headers(Headers.commonHeader)
-        .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
-        .header("content-type", "application/x-www-form-urlencoded")
-        .formParam("_csrf", "${csrf}")
-        .formParam("start", "Yes")
-        .formParam("onlyContinue", "true")
-        .check(substring("How your documents will be shared")))
-
-    }
-
-    .pause(MinThinkTime, MaxThinkTime)
-
-
-    /*======================================================================================
-* How your documents will be shared
-======================================================================================*/
-
-    .group("XUI_PRL_700_DocumentsShared") {
-
-      exec(http("XUI_PRL_700_005_DocumentsShared")
-        .post(prlURL + "/respondent/upload-document/document-sharing-details?caption=Witness%20statements%20and%20evidence&document_type=Your%20position%20statements")
-        .headers(Headers.commonHeader)
-        .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
-        .header("content-type", "application/x-www-form-urlencoded")
-        .formParam("_csrf", "${csrf}")
-        .formParam("onlyContinue", "true")
-        .check(substring("Provide the documents")))
-
-    }
-
-    .pause(MinThinkTime, MaxThinkTime)
-
-
-    /*======================================================================================
-* Give the court more information about the documents you are uploading
-======================================================================================*/
-
-    .group("XUI_PRL_710_SubmitInformation") {
-
-      exec(http("XUI_PRL_710_005_SubmitInformation")
-        .post(prlURL + "/document-manager/generatePdf?_csrf=${csrf}&parentDocumentType=Witness%20statements%20and%20evidence&documentType=Your%20position%20statements&isApplicant=No")
-        .headers(Headers.commonHeader)
-        .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
-        .header("content-type", "application/x-www-form-urlencoded")
-        /*
-        .formParam("_csrf", "${csrf}")
-        .formParam("parentDocumentType", "Witness statements and evidence")
-        .formParam("documentType", "Your position statements")
-        .formParam("isApplicant", "No")
-
-         */
-        .formParam("freeTextAreaForUpload", "${PRLRandomString}")
-        .check(substring("Provide the documents")))
-
-    }
-
-    .pause(MinThinkTime, MaxThinkTime)
-
-
-
-    /*======================================================================================
-* Position Statements Upload
-======================================================================================*/
-
-    .group("XUI_PRL_720_PositionStatementsUpload") {
-      exec(http("XUI_PRL_720_005_PositionStatementsUpload")
-        .post(prlURL + "/document-manager?_csrf=${csrf}&parentDocumentType=Witness%20statements%20and%20evidence&documentType=Your%20position%20statements&isApplicant=No")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json, text/plain, */*")
-        .header("content-type", "multipart/form-data")
-        .bodyPart(RawFileBodyPart("files", "UploadTest.pdf")
-          .fileName("UploadTest.pdf")
-          .transferEncoding("binary"))
-        .asMultipartForm
-      //  .formParam("classification", "PUBLIC")
-      //  .formParam("caseTypeId", "PRLAPPS")
-      //  .formParam("jurisdictionId", "PRIVATELAW")
-        .check(substring("UploadTest")))
-       // .check(jsonPath("$.documents[0].hashToken").saveAs("documentHashAdditional"))
-       // .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURLAdditional")))
-
-    }
-    .pause(MinThinkTime, MaxThinkTime)
-
-
-      /*======================================================================================
-* Docuemnst Upload Submit
-======================================================================================*/
-
-      .group("XUI_PRL_730_PositionUploadSubmit") {
-
-        exec(http("XUI_PRL_730_005_PositionUploadSubmit")
-          .post(prlURL + "/respondent/upload-document/upload-your-documents?caption=Witness%20statements%20and%20evidence&document_type=Your%20position%20statements")
-          .headers(Headers.commonHeader)
-          .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
-          .header("content-type", "application/x-www-form-urlencoded")
-          .formParam("_csrf", "${csrf}")
-          .formParam("declarationCheck", "")
-          .formParam("declarationCheck", "declaration")
-          .formParam("onlyContinue", "true")
-          .check(substring("Your documents have been uploaded")))
-
-      }
-
-      .pause(MinThinkTime, MaxThinkTime)
 
 }
