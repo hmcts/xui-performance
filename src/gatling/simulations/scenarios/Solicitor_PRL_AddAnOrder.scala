@@ -234,23 +234,6 @@ object Solicitor_PRL_AddAnOrder {
 
 
       /*======================================================================================
-* Order Details
-======================================================================================*/
-
-      .group("XUI_PRL_130_OrderDetails") {
-        exec(http("XUI_PRL_130_005_OrderDetails")
-          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders4")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-          .header("x-xsrf-token", "${XSRFToken}")
-          .body(ElFileBody("bodies/prl/c100Continued/PRLOrderDetails.json"))
-          .check(substring("isEngDocGen")))
-      }
-
-      .pause(MinThinkTime, MaxThinkTime)
-
-
-      /*======================================================================================
 * Guardian Name
 ======================================================================================*/
 
