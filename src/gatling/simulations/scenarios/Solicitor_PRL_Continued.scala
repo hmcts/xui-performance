@@ -29,7 +29,7 @@ object Solicitor_PRL_Continued {
 * Citizen Home
 ======================================================================================*/
 
-    group("XUI_PRL_241_PRLCitizenHome") {
+    group("PRL_Citizen_250_PRLHome") {
 
       exec(_.setAll(
         "PRLRandomString" -> (Common.randomString(7)),
@@ -41,7 +41,7 @@ object Solicitor_PRL_Continued {
         .feed(PRLAccessCode)
         .feed(PRLCitizens)
 
-        .exec(http("XUI_PRL_241_005_PRLCitizenHome")
+        .exec(http("PRL_Citizen_250_005_PRLHome")
           .get(prlURL + "/citizen-home")
           .headers(Headers.navigationHeader)
           .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -56,8 +56,8 @@ object Solicitor_PRL_Continued {
 * Enter Your Access Details
 ===============================================================================================*/
 
-      .group("XUI_PRL_242_AccessDetails") {
-        exec(http("XUI_PRL_242_005_AccessDetails")
+      .group("PRL_Citizen_260_AccessDetails") {
+        exec(http("PRL_Citizen_260_005_AccessDetails")
           .post(prlURL + "/citizen-home")
           .headers(Headers.commonHeader)
           .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -76,7 +76,7 @@ object Solicitor_PRL_Continued {
 * Login
 ===============================================================================================*/
 
-      .group("XUI_PRL_243_PRLLogin") {
+      .group("PRL_Citizen_270_Login") {
         exec(http("XUI_PRL_243_005_PRLLogin")
           .post(IdamUrl + "/login?client_id=prl-citizen-frontend&response_type=code&redirect_uri=" + prlURL + "/receiver")
           .headers(Headers.commonHeader)
@@ -96,9 +96,9 @@ object Solicitor_PRL_Continued {
 * Select Case
 ======================================================================================*/
 
-  .group("XUI_PRL_244_PRLSelectCase") {
+  .group("PRL_Citizen_280_SelectCase") {
 
-    exec(http("XUI_PRL_244_005_PRLHomePage")
+    exec(http("PRL_Citizen_280_005_SelectCase")
         .get(prlURL + "/respondent/task-list/${caseId}")
         .headers(Headers.navigationHeader)
         .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -114,9 +114,9 @@ object Solicitor_PRL_Continued {
 * Select 'Check the application(PDF)'
 ======================================================================================*/
 
-  .group("XUI_PRL_480_ApplicationPDFDownload") {
+  .group("PRL_Citizen_290_ApplicationPDFDownload") {
 
-    exec(http("XUI_PRL_480_005_ApplicationPDFDownload")
+    exec(http("PRL_Citizen_290_005_ApplicationPDFDownload")
       .get(prlURL + "/yourdocuments/alldocuments/cadafinaldocumentrequest?updateCase=Yes")
       .headers(Headers.navigationHeader)
       .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"))
@@ -132,9 +132,9 @@ object Solicitor_PRL_Continued {
 * Select 'Respond to the allegations of harm and violence'
 ======================================================================================*/
 
-  .group("XUI_PRL_500_AllegationsOfHarm") {
+  .group("PRL_Citizen_300_AllegationsOfHarm") {
 
-    exec(http("XUI_PRL_500_005_AllegationsOfHarm")
+    exec(http("PRL_Citizen_300_005_AllegationsOfHarm")
       .get(prlURL + "/tasklistresponse/international-factors/start")
       .headers(Headers.navigationHeader)
       .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -150,9 +150,9 @@ object Solicitor_PRL_Continued {
 * Do the children live outside of England or Wales? - No
 ======================================================================================*/
 
-  .group("XUI_PRL_510_OutsideOfEngland") {
+  .group("PRL_Citizen_310_OutsideOfEngland") {
 
-    exec(http("XUI_PRL_510_005_OutsideOfEngland")
+    exec(http("PRL_Citizen_310_005_OutsideOfEngland")
       .post(prlURL + "/tasklistresponse/international-factors/start")
       .headers(Headers.commonHeader)
       .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -172,9 +172,9 @@ object Solicitor_PRL_Continued {
 * Do the children's parents or anyone significant to the children live outside of England or Wales? - No
 ======================================================================================*/
 
-  .group("XUI_PRL_520_ParentsOutsideOfEngland") {
+  .group("PRL_Citizen_320_ParentsOutsideOfEngland") {
 
-    exec(http("XUI_PRL_520_005_ParentsOutsideOfEngland")
+    exec(http("PRL_Citizen_320_005_ParentsOutsideOfEngland")
       .post(prlURL + "/tasklistresponse/international-factors/parents")
       .headers(Headers.commonHeader)
       .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -194,9 +194,9 @@ object Solicitor_PRL_Continued {
 * Could another person in the application apply for a similar order in a country outside England or Wales? - No
 ======================================================================================*/
 
-  .group("XUI_PRL_530_AnotherOutsideOfEngland") {
+  .group("PRL_Citizen_330_PersonOutsideOfEngland") {
 
-    exec(http("XUI_PRL_530_005_AnotherOutsideOfEngland")
+    exec(http("PRL_Citizen_330_005_PersonOutsideOfEngland")
       .post(prlURL + "/tasklistresponse/international-factors/jurisdiction")
       .headers(Headers.commonHeader)
       .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -216,9 +216,9 @@ object Solicitor_PRL_Continued {
 * Has another country asked (or been asked) for information or help for the children?
 ======================================================================================*/
 
-  .group("XUI_PRL_540_AnotherCountryAsked") {
+  .group("PRL_Citizen_340_AnotherCountryAsked") {
 
-    exec(http("XUI_PRL_540_005_AnotherCountryAsked")
+    exec(http("PRL_Citizen_340_005_AnotherCountryAsked")
       .post(prlURL + "/tasklistresponse/international-factors/request")
       .headers(Headers.commonHeader)
       .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -238,9 +238,9 @@ object Solicitor_PRL_Continued {
 * Respond to the allegations of harm and violence Check Your Answers
 ======================================================================================*/
 
-  .group("XUI_PRL_550_RespondToTheAllegationsCheck") {
+  .group("PRL_Citizen_350_RespondToTheAllegationsCheck") {
 
-    exec(http("XUI_PRL_550_005_RespondToThe")
+    exec(http("PRL_Citizen_350_005_RespondToTheAllegationsCheck")
       .post(prlURL + "/tasklistresponse/international-factors/summary")
       .headers(Headers.commonHeader)
       .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -258,9 +258,9 @@ object Solicitor_PRL_Continued {
 * Select 'Respond to the application'
 ======================================================================================*/
 
-  .group("XUI_PRL_550_RespondToApplication") {
+  .group("PRL_Citizen_360_RespondToApplication") {
 
-    exec(http("XUI_PRL_550_005_RespondToApplication")
+    exec(http("PRL_Citizen_360_005_RespondToApplication")
       .get(prlURL + "/tasklistresponse/start")
       .headers(Headers.navigationHeader)
       .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -276,9 +276,9 @@ object Solicitor_PRL_Continued {
 * Select 'Do you have a legal representative?'
 ======================================================================================*/
 
-  .group("XUI_PRL_560_LegalRepresentative") {
+  .group("PRL_Citizen_370_LegalRepresentative") {
 
-    exec(http("XUI_PRL_560_005_LegalRepresentative")
+    exec(http("PRL_Citizen_370_005_LegalRepresentative")
       .get(prlURL + "/tasklistresponse/legalrepresentation/start")
       .headers(Headers.navigationHeader)
       .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -294,9 +294,9 @@ object Solicitor_PRL_Continued {
 * Will you be using a legal representative to respond to the application? - No
 ======================================================================================*/
 
-  .group("XUI_PRL_570_UseLegalRepresentative") {
+  .group("PRL_Citizen_380_UseLegalRepresentative") {
 
-    exec(http("XUI_PRL_570_005_UseLegalRepresentative")
+    exec(http("PRL_Citizen_380_005_UseLegalRepresentative")
       .post(prlURL + "/tasklistresponse/legalrepresentation/start")
       .headers(Headers.commonHeader)
       .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -315,9 +315,9 @@ object Solicitor_PRL_Continued {
 * Transfer your case to your legal representative
 ======================================================================================*/
 
-  .group("XUI_PRL_580_TransferRepresentative") {
+  .group("PRL_Citizen_390_TransferRepresentative") {
 
-    exec(http("XUI_PRL_580_005_TransferRepresentative")
+    exec(http("PRL_Citizen_390_005_TransferRepresentative")
       .post(prlURL + "/redirect/tasklistresponse")
       .headers(Headers.commonHeader)
       .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -334,9 +334,9 @@ object Solicitor_PRL_Continued {
 * Do you consent to the application?
 ======================================================================================*/
 
-  .group("XUI_PRL_590_ConsentToApplication") {
+  .group("PRL_Citizen_400_ConsentToApplication") {
 
-    exec(http("XUI_PRL_590_005_ConsentToApplication")
+    exec(http("PRL_Citizen_400_005_ConsentToApplication")
       .get(prlURL + "/tasklistresponse/consent-to-application/consent/${caseId}")
       .headers(Headers.navigationHeader)
       .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -352,9 +352,9 @@ object Solicitor_PRL_Continued {
 * Your understanding of the application
 ======================================================================================*/
 
-  .group("XUI_PRL_600_UnderstandingOfApplication") {
+  .group("PRL_Citizen_410_UnderstandingOfApplication") {
 
-    exec(http("XUI_PRL_600_005_UnderstandingOfApplication")
+    exec(http("PRL_Citizen_410_005_UnderstandingOfApplication")
       .post(prlURL + "/tasklistresponse/consent-to-application/consent")
       .headers(Headers.commonHeader)
       .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -379,9 +379,9 @@ object Solicitor_PRL_Continued {
 * Your consent to the application submit
 ======================================================================================*/
 
-  .group("XUI_PRL_610_ConsentSubmit") {
+  .group("PRL_Citizen_420_ConsentSubmit") {
 
-    exec(http("XUI_PRL_610_005_ConsentSubmit")
+    exec(http("PRL_Citizen_420_005_ConsentSubmit")
       .post(prlURL + "/tasklistresponse/consent-to-application/summary")
       .headers(Headers.commonHeader)
       .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -398,8 +398,8 @@ object Solicitor_PRL_Continued {
 * Select 'Keep your details private'
 ======================================================================================*/
 
-    .group("XUI_PRL_250_DetailsPrivate") {
-      exec(http("XUI_PRL_250_005_DetailsPrivate")
+    .group("PRL_Citizen_430_DetailsPrivate") {
+      exec(http("PRL_Citizen_430_005_DetailsPrivate")
         .get(prlURL + "/respondent/keep-details-private/details_known/${caseId}")
         .headers(Headers.navigationHeader)
         .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -418,8 +418,8 @@ object Solicitor_PRL_Continued {
 * Do the other people named in this application (the applicants) know any of your contact details? - Yes
 ===============================================================================================*/
 
-    .group("XUI_PRL_251_KnowContactDetails") {
-      exec(http("XUI_PRL_251_005_KnowContactDetails")
+    .group("PRL_Citizen_440_KnowContactDetails") {
+      exec(http("PRL_Citizen_440_005_KnowContactDetails")
         .post(prlURL + "/respondent/keep-details-private/details_known")
         .headers(Headers.commonHeader)
         .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -438,8 +438,8 @@ object Solicitor_PRL_Continued {
 * Do you want to keep your contact details private from the other people named in the application (the applicants)? - Yes
 ===============================================================================================*/
 
-    .group("XUI_PRL_252_ContactDetailsPrivate") {
-      exec(http("XUI_PRL_252_005_ContactDetailsPrivate")
+    .group("PRL_Citizen_450_ContactDetailsPrivate") {
+      exec(http("PRL_Citizen_450_005_ContactDetailsPrivate")
         .post(prlURL + "/respondent/keep-details-private/start_alternative")
         .headers(Headers.commonHeader)
         .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -459,8 +459,8 @@ object Solicitor_PRL_Continued {
 * What the court will do
 ===============================================================================================*/
 
-    .group("XUI_PRL_253_CourtWillDo") {
-      exec(http("XUI_PRL_253_005_CourtWillDo")
+    .group("PRL_Citizen_460_CourtWillDo") {
+      exec(http("PRL_Citizen_460_005_CourtWillDo")
         .post(prlURL + "/respondent/keep-details-private/private_details_confirmed")
         .headers(Headers.commonHeader)
         .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -476,9 +476,9 @@ object Solicitor_PRL_Continued {
 * Select 'Confirm or edit your contact details'
 ======================================================================================*/
 
-  .group("XUI_PRL_260_ContactDetails") {
+  .group("PRL_Citizen_470_ContactDetails") {
 
-    exec(http("XUI_PRL_260_005_ContactDetails")
+    exec(http("PRL_Citizen_470_005_ContactDetails")
       .get(prlURL + "/respondent/confirm-contact-details/checkanswers/{caseId}")
       .headers(Headers.navigationHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -492,9 +492,9 @@ object Solicitor_PRL_Continued {
 * Select 'Name'
 ======================================================================================*/
 
-  .group("XUI_PRL_270_Name") {
+  .group("PRL_Citizen_480_Name") {
 
-    exec(http("XUI_PRL_270_005_Name")
+    exec(http("PRL_Citizen_480_005_Name")
       .get(prlURL + "/respondent/confirm-contact-details/personaldetails")
       .headers(Headers.navigationHeader)
       .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -513,8 +513,8 @@ object Solicitor_PRL_Continued {
   * Enter Name, DoB and Address
   ===============================================================================================*/
 
-    .group("XUI_PRL_280_EnterName") {
-      exec(http("XUI_PRL_280_005_EnterName")
+    .group("PRL_Citizen_490_EnterName") {
+      exec(http("PRL_Citizen_490_005_EnterName")
         .post(prlURL + "/respondent/confirm-contact-details/personaldetails")
         .headers(Headers.commonHeader)
         .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -538,9 +538,9 @@ object Solicitor_PRL_Continued {
 * Select 'Address'
 ======================================================================================*/
 
-  .group("XUI_PRL_290_Address") {
+  .group("PRL_Citizen_500_Address") {
 
-    exec(http("XUI_PRL_290_005_Address")
+    exec(http("PRL_Citizen_500_005_Address")
       .get(prlURL + "/respondent/confirm-contact-details/address/lookup")
       .headers(Headers.navigationHeader)
       .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -559,10 +559,10 @@ object Solicitor_PRL_Continued {
   * Enter PostCode
   ===============================================================================================*/
 
-    .group("XUI_PRL_300_PostCode") {
+    .group("PRL_Citizen_510_PostCode") {
       feed(postcodeFeeder)
 
-        .exec(http("XUI_PRL_300_005_PostCode")
+        .exec(http("PRL_Citizen_510_005_PostCode")
           .post(prlURL + "/respondent/confirm-contact-details/address/lookup")
           .headers(Headers.commonHeader)
           .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -579,9 +579,9 @@ object Solicitor_PRL_Continued {
 * Select Address
 ===============================================================================================*/
 
-    .group("XUI_PRL_310_SelectAddress") {
+    .group("PRL_Citizen_520_SelectAddress") {
 
-      exec(http("XUI_PRL_310_005_SelectAddress")
+      exec(http("PRL_Citizen_520_005_SelectAddress")
         .post(prlURL + "/respondent/confirm-contact-details/address/select")
         .headers(Headers.commonHeader)
         .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -601,9 +601,9 @@ object Solicitor_PRL_Continued {
 * Your Address
 ===============================================================================================*/
 
-    .group("XUI_PRL_320_YourAddress") {
+    .group("PRL_Citizen_530_YourAddress") {
 
-      exec(http("XUI_PRL_320_005_YourAddress")
+      exec(http("PRL_Citizen_530_005_YourAddress")
         .post(prlURL + "/respondent/confirm-contact-details/addressconfirmation")
         .headers(Headers.commonHeader)
         .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -625,9 +625,9 @@ object Solicitor_PRL_Continued {
 * Have you lived at this address for more than 5 years? - Yes
 ===============================================================================================*/
 
-    .group("XUI_PRL_330_LivedAtAddress") {
+    .group("PRL_Citizen_540_LivedAtAddress") {
 
-      exec(http("XUI_PRL_330_005_LivedAtAddress")
+      exec(http("PRL_Citizen_540_005_LivedAtAddress")
         .post(prlURL + "/respondent/confirm-contact-details/addresshistory")
         .headers(Headers.commonHeader)
         .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -645,9 +645,9 @@ object Solicitor_PRL_Continued {
 * Select 'Phone Number'
 ===============================================================================================*/
 
-  .group("XUI_PRL_340_PhoneNumber") {
+  .group("PRL_Citizen_550_PhoneNumber") {
 
-    exec(http("XUI_PRL_340_005_PhoneNumber")
+    exec(http("PRL_Citizen_550_005_PhoneNumber")
       .get(prlURL + "/respondent/confirm-contact-details/contactdetails")
       .headers(Headers.navigationHeader)
       .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -666,9 +666,9 @@ object Solicitor_PRL_Continued {
 * Contact Details
 ===============================================================================================*/
 
-    .group("XUI_PRL_350_ContactDetails") {
+    .group("PRL_Citizen_560_ContactDetails") {
 
-      exec(http("XUI_PRL_350_005_ContactDetails")
+      exec(http("PRL_Citizen_560_005_ContactDetails")
         .post(prlURL + "/respondent/confirm-contact-details/contactdetails")
         .headers(Headers.commonHeader)
         .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -705,9 +705,9 @@ object Solicitor_PRL_Continued {
 * Miam
 ======================================================================================*/
 
-  .group("XUI_PRL_620_Miam") {
+  .group("PRL_Citizen_570_Miam") {
 
-    exec(http("XUI_PRL_620_005_Miam")
+    exec(http("PRL_Citizen_570_005_Miam")
       .get(prlURL + "/tasklistresponse/miam/miam-start/${caseId}")
       .headers(Headers.navigationHeader)
       .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -723,9 +723,9 @@ object Solicitor_PRL_Continued {
 * Have you attended a Mediation Information and Assessment Meeting (MIAM)? - yes
 ======================================================================================*/
 
-  .group("XUI_PRL_630_AttendedMiam") {
+  .group("PRL_Citizen_580_AttendedMiam") {
 
-    exec(http("XUI_PRL_630_005_AttendedMiam")
+    exec(http("PRL_Citizen_580_005_AttendedMiam")
       .post(prlURL + "/tasklistresponse/miam/miam-start")
       .headers(Headers.commonHeader)
       .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -744,9 +744,9 @@ object Solicitor_PRL_Continued {
 * Miam Submit
 ======================================================================================*/
 
-  .group("XUI_PRL_640_MiamSubmit") {
+  .group("PRL_Citizen_590_MiamSubmit") {
 
-    exec(http("XUI_PRL_640_005_MiamSubmit")
+    exec(http("PRL_Citizen_590_005_MiamSubmit")
       .post(prlURL + "/tasklistresponse/miam/summary")
       .headers(Headers.commonHeader)
       .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -764,9 +764,9 @@ object Solicitor_PRL_Continued {
 * Review and Submit
 ======================================================================================*/
 
-  .group("XUI_PRL_650_ReviewAndSubmit") {
+  .group("PRL_Citizen_600_ReviewAndSubmit") {
 
-    exec(http("XUI_PRL_650_005_ReviewAndSubmit")
+    exec(http("PRL_Citizen_600_005_ReviewAndSubmit")
       .get(prlURL + "/tasklistresponse/summary?onlyContinue=true")
       .headers(Headers.navigationHeader)
       .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -782,9 +782,9 @@ object Solicitor_PRL_Continued {
 * Check Your Answers - final submit
 ======================================================================================*/
 
-  .group("XUI_PRL_660_ReviewSubmit") {
+  .group("PRL_Citizen_610_ReviewSubmit") {
 
-    exec(http("XUI_PRL_660_005_ReviewSubmit")
+    exec(http("PRL_Citizen_610_005_ReviewSubmit")
       .post(prlURL + "/tasklistresponse/summary?onlyContinue=true")
       .headers(Headers.commonHeader)
       .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
