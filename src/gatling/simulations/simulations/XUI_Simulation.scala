@@ -43,7 +43,6 @@ class XUI_Simulation extends Simulation {
 	//set the environment based on the test type
 	val environment = testType match {
 		case "perftest" => "perftest"
-		//TODO: UPDATE PIPELINE TO 'aat' ONCE DATA STRATEGY IS IMPLEMENTED. UNTIL THEN, PIPELINE WILL RUN AGAINST PERFTEST
 		case "pipeline" => "perftest"
 		case _ => "**INVALID**"
 	}
@@ -258,7 +257,8 @@ class XUI_Simulation extends Simulation {
 				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
 				.exec(session => session.set("user", session("user1").as[String]).set("password", session("password1").as[String]))
 				.exec(Login.XUILogin)
-				.exec(Solicitor_NFD.ApplyForCO)
+				.exec(Solicitor_NFD.ApplyForCOSole)
+				.exec(Solicitor_NFD.SubmitCO)
 				.exec(Logout.XUILogout)
 				//Legal Advisor - Grant Conditional Order
 				.exec(CCDAPI.CreateEvent("Legal", "DIVORCE", "NFD", "legal-advisor-make-decision", "bodies/nfd/LAMakeDecision.json"))
@@ -276,7 +276,20 @@ class XUI_Simulation extends Simulation {
 					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-amend-case", "bodies/nfd/CWSetFOEligibilityDates.json"),
 					//set case as awaiting final order
 					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-progress-case-awaiting-final-order", "bodies/nfd/CWAwaitingFinalOrder.json"))
-			//TODO: ADD FINAL ORDER HERE ONCE DEVELOPED
+				//Solicitor 1 - Apply for Final Order
+				.exec(Homepage.XUIHomePage)
+				.exec(Login.XUILogin)
+				.exec(Solicitor_NFD.ApplyForFO)
+				.exec(Logout.XUILogout)
+				//Caseworker - Grant Final Order
+				.exec(
+					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-grant-final-order", "bodies/nfd/CWGrantFinalOrder.json"))
+		}
+
+		.exec {
+			session =>
+				println(session)
+				session
 		}
 
 	/*===============================================================================================
@@ -319,8 +332,61 @@ class XUI_Simulation extends Simulation {
 				.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-issue-application", "bodies/nfd/CWIssueApplication.json"))
 				//Caseworker - Mark the Case as Awaiting Conditional Order (to bypass 20-week holding)
 				.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-progress-held-case", "bodies/nfd/CWAwaitingConditionalOrder.json"))
-			//TODO: ADD CONDITIONAL ORDER HERE ONCE DEVELOPED
-			//TODO: ADD FINAL ORDER HERE ONCE DEVELOPED
+				//Solicitor 1 - Apply for Conditional Order
+				.exec(Homepage.XUIHomePage)
+				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
+				.exec(session => session.set("user", session("user1").as[String]).set("password", session("password1").as[String]))
+				.exec(Login.XUILogin)
+				.exec(Solicitor_NFD.ApplyForCOJointApplicant1)
+				.exec(Solicitor_NFD.SubmitCO)
+				.exec(Logout.XUILogout)
+				//Solicitor 2 - Apply for Conditional Order
+				.exec(Homepage.XUIHomePage)
+				//since two records were grabbed, set 'user'/'password' to the second one (applicant2's solicitor) for login
+				.exec(session => session.set("user", session("user2").as[String]).set("password", session("password2").as[String]))
+				.exec(Login.XUILogin)
+				.exec(Solicitor_NFD.ApplyForCOJointApplicant2)
+				.exec(Solicitor_NFD.SubmitCOJoint)
+				.exec(Logout.XUILogout)
+				//Legal Advisor - Grant Conditional Order
+				.exec(CCDAPI.CreateEvent("Legal", "DIVORCE", "NFD", "legal-advisor-make-decision", "bodies/nfd/LAMakeDecision.json"))
+				//Caseworker - Make Eligible for Final Order
+				.exec(
+					//link with bulk case
+					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-link-with-bulk-case", "bodies/nfd/CWLinkWithBulkCase.json"),
+					//set case hearing and decision dates to a date in the past
+					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-update-case-court-hearing", "bodies/nfd/CWUpdateCaseWithCourtHearing.json"),
+					//set judge details, CO granted and issued dates in the past
+					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-amend-case", "bodies/nfd/CWSetCODetails.json"),
+					//pronounce case
+					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-pronounce-case", "bodies/nfd/CWPronounceCase.json"),
+					//set final order eligibility dates
+					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-amend-case", "bodies/nfd/CWSetFOEligibilityDates.json"),
+					//set case as awaiting final order
+					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-progress-case-awaiting-final-order", "bodies/nfd/CWAwaitingFinalOrder.json"))
+				//Solicitor 1 - Apply for Final Order
+				.exec(Homepage.XUIHomePage)
+				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
+				.exec(session => session.set("user", session("user1").as[String]).set("password", session("password1").as[String]))
+				.exec(Login.XUILogin)
+				.exec(Solicitor_NFD.ApplyForFO)
+				.exec(Logout.XUILogout)
+				//Solicitor 2 - Apply for Final Order
+				.exec(Homepage.XUIHomePage)
+				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
+				.exec(session => session.set("user", session("user2").as[String]).set("password", session("password2").as[String]))
+				.exec(Login.XUILogin)
+				.exec(Solicitor_NFD.ApplyForFOJoint)
+				.exec(Logout.XUILogout)
+				//Caseworker - Grant Final Order
+				.exec(
+					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-grant-final-order", "bodies/nfd/CWGrantFinalOrder.json"))
+		}
+
+		.exec {
+			session =>
+				println(session)
+				session
 		}
 
 	/*===============================================================================================
@@ -439,16 +505,16 @@ class XUI_Simulation extends Simulation {
 	}
 
 	setUp(
-		 BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		 PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		 ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		 ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		 FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		 DivorceSolicitorScenario.inject(simulationProfile(testType, divorceTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		 NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		 //BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		 //PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		 //ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		 //ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		 //FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		 //DivorceSolicitorScenario.inject(simulationProfile(testType, divorceTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		 //NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		 NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		 FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		 CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+		 //FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		 //CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 	).protocols(httpProtocol)
 		.assertions(assertions(testType))
 		.maxDuration(75 minutes)
