@@ -1,0 +1,22 @@
+{
+  "data": {
+    "coApplicant2StatementOfTruth": "Yes",
+    "coApplicant2SolicitorName": "RespSolicitor",
+    "coApplicant2SolicitorFirm": "${orgname2}",
+    "coApplicant2SolicitorAdditionalComments": null
+  },
+  "event": {
+    "id": "submit-joint-conditional-order",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "coApplicant2StatementOfTruth": "Yes",
+    "coApplicant2SolicitorName": "RespSolicitor",
+    "coApplicant2SolicitorFirm": "${orgname2}",
+    "coApplicant2SolicitorAdditionalComments": null
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false,
+  "case_reference": "${caseId}"
+}
