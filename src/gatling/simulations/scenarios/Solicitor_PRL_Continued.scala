@@ -14,7 +14,7 @@ object Solicitor_PRL_Continued {
   val prlURL = "https://privatelaw.${env}.platform.hmcts.net"
   val IdamUrl = Environment.idamURL
   val PRLcases = csv("cases.csv").circular
-  val PRLAccessCode = csv("accessCodeList.csv").circular
+  val PRLAccessCode = csv("accessCode.csv").circular
   val PRLCitizens = csv("UserDataPRLCitizen.csv").circular
 
   val postcodeFeeder = csv("postcodes.csv").circular
