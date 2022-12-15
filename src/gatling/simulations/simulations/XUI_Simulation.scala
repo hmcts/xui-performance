@@ -104,7 +104,7 @@ class XUI_Simulation extends Simulation {
  	===============================================================================================*/
 	val PRLSolicitorScenario = scenario("***** Private Law Create Case *****")
 		.exitBlockOnFail {
-			feed(UserFeederPRL)
+			feed(UserFeederPRL2)
 				.exec(_.set("env", s"${env}")
 					.set("caseType", "PRLAPPS"))
 				.exec(Homepage.XUIHomePage)
@@ -113,7 +113,7 @@ class XUI_Simulation extends Simulation {
 				.doIfOrElse(session => session("prl-percentage").as[Int] < prlC100Percentage) {
 				//	repeat(3) {
 						//C100 Journey
-
+/*
 						exec(Solicitor_PRL_C100.CreatePrivateLawCase)
 							.exec(Solicitor_PRL_C100.TypeOfApplication)
 							.exec(Solicitor_PRL_C100.HearingUrgency)
@@ -126,6 +126,7 @@ class XUI_Simulation extends Simulation {
 							.exec(Solicitor_PRL_C100.SubmitAndPay)
 
 
+ */
 
 
 
@@ -133,8 +134,9 @@ class XUI_Simulation extends Simulation {
 
 
 
-						//	exec(Solicitor_PRL_AddAnOrder.AddAnOrder)
-						//			.exec(Solicitor_PRL_Continued.PRL)
+
+							exec(Solicitor_PRL_AddAnOrder.AddAnOrder)
+									.exec(Solicitor_PRL_Continued.PRL)
 
 
 					} {
