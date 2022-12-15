@@ -465,8 +465,8 @@ object Solicitor_PRL_AddAnOrder {
         .exec { session =>
           val fw = new BufferedWriter(new FileWriter("accessCode.csv", true))
           try {
-            fw.write(session("prlAccessCode").as[String] + "\r\n")
-          } finally fw.close()
+            fw.write(session("caseId").as[String] + "," + session("prlAccessCode").as[String] + "\r\n")
+            } finally fw.close()
           session
         }
 }
