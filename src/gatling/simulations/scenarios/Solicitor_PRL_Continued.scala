@@ -37,7 +37,6 @@ object Solicitor_PRL_Continued {
         "PRLAppDobMonth" -> Common.getMonth(),
         "PRLAppDobYear" -> Common.getDobYear()))
 
-        .feed(PRLcases)
         .feed(PRLAccessCode)
         .feed(PRLCitizens)
 
