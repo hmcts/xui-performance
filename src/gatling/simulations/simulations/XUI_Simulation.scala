@@ -112,10 +112,10 @@ class XUI_Simulation extends Simulation {
 				.exec(Login.XUILogin)
 				.feed(randomFeeder)
 				.doIfOrElse(session => session("prl-percentage").as[Int] < prlC100Percentage) {
-				//	.repeat(3) {
+//					.repeat(1) {
 						//C100 Journey
-/*
-						exec(Solicitor_PRL_C100.CreatePrivateLawCase)
+
+				/*		exec(Solicitor_PRL_C100.CreatePrivateLawCase)
 							.exec(Solicitor_PRL_C100.TypeOfApplication)
 							.exec(Solicitor_PRL_C100.HearingUrgency)
 							.exec(Solicitor_PRL_C100.ApplicantDetails)
@@ -126,15 +126,11 @@ class XUI_Simulation extends Simulation {
 							.exec(Solicitor_PRL_C100.ViewPdfApplication)
 							.exec(Solicitor_PRL_C100.SubmitAndPay)
 
- */
-
-
-
-
+				 */
 
 
 						exec(Solicitor_PRL_AddAnOrder.AddAnOrder)
-							.exec(Solicitor_PRL_Continued.PRL)
+			//				.exec(Solicitor_PRL_Continued.PRL)
 
 					} {
 						//FL401 Journey
