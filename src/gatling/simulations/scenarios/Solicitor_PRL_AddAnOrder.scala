@@ -415,7 +415,7 @@ object Solicitor_PRL_AddAnOrder {
 
 
     /*======================================================================================
-* Service of APplication document uploads
+* Service of Application document uploads
 ======================================================================================*/
 
     .group("XUI_PRL_220_DocumentUpload") {
@@ -432,7 +432,7 @@ object Solicitor_PRL_AddAnOrder {
 
 
     /*======================================================================================
-* Service of APplication Confirm recipients
+* Service of Application Confirm recipients
 ======================================================================================*/
 
     .group("XUI_PRL_230_ServiceRecipients") {
