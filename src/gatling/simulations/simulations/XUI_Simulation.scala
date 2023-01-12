@@ -108,8 +108,8 @@ class XUI_Simulation extends Simulation {
 			feed(UserFeederPRL2)
 				.exec(_.set("env", s"${env}")
 					.set("caseType", "PRLAPPS"))
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
+				//.exec(Homepage.XUIHomePage)
+				//.exec(Login.XUILogin)
 				.feed(randomFeeder)
 				.doIfOrElse(session => session("prl-percentage").as[Int] < prlC100Percentage) {
 //					.repeat(1) {
@@ -125,11 +125,10 @@ class XUI_Simulation extends Simulation {
 							.exec(Solicitor_PRL_C100.AllegationsOfHarm)
 							.exec(Solicitor_PRL_C100.ViewPdfApplication)
 							.exec(Solicitor_PRL_C100.SubmitAndPay)
-
 				 */
+                            exec(Solicitor_PRL_C100_ServiceRequestUpdate.PaymentViaAPI)
 
-
-						exec(Solicitor_PRL_AddAnOrder.AddAnOrder)
+			//			exec(Solicitor_PRL_AddAnOrder.AddAnOrder)
 			//				.exec(Solicitor_PRL_Continued.PRL)
 
 					} {
