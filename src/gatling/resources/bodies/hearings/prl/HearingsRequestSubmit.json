@@ -1,0 +1,138 @@
+{
+  "hearingDetails": {
+    "duration": 45,
+    "hearingType": "ABA5-FHR",
+    "hearingLocations": [
+      {
+        "locationType": "court",
+        "locationId": "36791",
+        "locationName": "ROYAL COURTS OF JUSTICE (MAIN BUILDING",
+        "region": "London"
+      }
+    ],
+    "hearingIsLinkedFlag": false,
+    "hearingWindow": null,
+    "privateHearingRequiredFlag": false,
+    "panelRequirements": {
+      "roleType": [
+        "19"
+      ],
+      "panelPreferences": []
+    },
+    "autolistFlag": false,
+    "hearingPriorityType": "Standard",
+    "numberOfPhysicalAttendees": 1,
+    "hearingInWelshFlag": false,
+    "facilitiesRequired": [
+      "1"
+    ],
+    "listingComments": "${PRLRandomString}",
+    "hearingRequester": "",
+    "leadJudgeContractType": "",
+    "amendReasonCodes": null,
+    "hearingChannels": [
+      "INTER"
+    ],
+    "listingAutoChangeReasonCode": "user-added-comments"
+  },
+  "caseDetails": {
+    "hmctsServiceCode": "ABA5",
+    "caseRef": "${caseId}",
+    "requestTimeStamp": null,
+    "hearingID": null,
+    "caseDeepLink": "https://manage-case-hearings-int.demo.platform.hmcts.net/cases/case-details/${caseId}",
+    "hmctsInternalCaseName": "${caseId}_PerfTest2",
+    "publicCaseName": "Re-Minor",
+    "caseAdditionalSecurityFlag": false,
+    "caseInterpreterRequiredFlag": false,
+    "caseCategories": [
+      {
+        "categoryType": "caseType",
+        "categoryValue": "ABA5-PRL",
+        "categoryParent": null
+      },
+      {
+        "categoryType": "caseSubType",
+        "categoryValue": "ABA5-PRL",
+        "categoryParent": "ABA5-PRL"
+      }
+    ],
+    "caseManagementLocationCode": "20262",
+    "caserestrictedFlag": false,
+    "caseSLAStartDate": "2023-${PRLHearingMonth}-${PRLHearingDay}"
+  },
+  "partyDetails": [
+    {
+      "partyID": "${partyIdApp}",
+      "partyType": "IND",
+      "partyRole": "APPL",
+      "partyName": "Perf Test",
+      "individualDetails": {
+        "firstName": "Perf",
+        "lastName": "Test",
+        "preferredHearingChannel": "INTER",
+        "interpreterLanguage": null,
+        "reasonableAdjustments": [],
+        "relatedParties": null,
+        "title": null,
+        "vulnerabilityDetails": null
+      },
+      "unavailabilityDOW": null,
+      "unavailabilityRanges": null
+    },
+    {
+      "partyID": "${partyIdRes}",
+      "partyType": "IND",
+      "partyRole": "RESP",
+      "partyName": "Perf Test",
+      "individualDetails": {
+        "firstName": "Perf",
+        "lastName": "Test",
+        "preferredHearingChannel": "INTER",
+        "interpreterLanguage": null,
+        "reasonableAdjustments": [],
+        "relatedParties": null,
+        "title": null,
+        "vulnerabilityDetails": null
+      },
+      "unavailabilityDOW": null,
+      "unavailabilityRanges": null
+    },
+    {
+      "partyID": "${partyIdApp}",
+      "partyType": "IND",
+      "partyRole": "APPL",
+      "partyName": "Perf Test",
+      "individualDetails": {
+        "firstName": "Perf",
+        "lastName": "Test",
+        "preferredHearingChannel": "INTER",
+        "interpreterLanguage": null,
+        "reasonableAdjustments": [],
+        "relatedParties": null,
+        "title": null,
+        "vulnerabilityDetails": null
+      },
+      "unavailabilityDOW": null,
+      "unavailabilityRanges": null
+    },
+    {
+      "partyID": "${partyIdRes}",
+      "partyType": "IND",
+      "partyRole": "RESP",
+      "partyName": "Perf Test",
+      "individualDetails": {
+        "firstName": "Perf",
+        "lastName": "Test",
+        "preferredHearingChannel": "INTER",
+        "interpreterLanguage": null,
+        "reasonableAdjustments": [],
+        "relatedParties": null,
+        "title": null,
+        "vulnerabilityDetails": null
+      },
+      "unavailabilityDOW": null,
+      "unavailabilityRanges": null
+    }
+  ]
+}
