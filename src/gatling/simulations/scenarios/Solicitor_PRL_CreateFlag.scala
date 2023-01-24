@@ -42,7 +42,7 @@ object Solicitor_PRL_CreateFlag {
         .feed(PRLcases)
 
         .exec(http("XUI_PRL_030_005_SelectCase")
-          .post(BaseURL + "/data/internal/cases/api/role-access/roles/manageLabellingRoleAssignment/${caseId}")
+          .get(BaseURL + "/data/internal/cases/1673359651714036")
           .headers(Headers.navigationHeader)
           .header("accept", "application/json, text/plain, */*"))
         //  .check(substring("PRIVATELAW")))
@@ -61,6 +61,13 @@ object Solicitor_PRL_CreateFlag {
         exec(Common.profile)
 
         .exec(http("XUI_PRL_040_005_SelectIssue")
+          .get(BaseURL + "/workallocation/case/tasks/1673359651714036/event/c100CreateFlags/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
+          .headers(Headers.navigationHeader))
+     //     .check(jsonPath("$.event_token").saveAs("event_token"))
+     //   .check(jsonPath("$.case_fields[0].formatted_value[0].id").saveAs("local_Court_Id"))
+        //  .check(jsonPath("$.id").is("createCaseFlag")))
+
+        .exec(http("XUI_PRL_040_010_SelectIssue")
           .get(BaseURL + "/data/internal/cases/${caseId}/event-triggers/createCaseFlag?ignore-warning=false")
           .headers(Headers.navigationHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -114,10 +121,10 @@ object Solicitor_PRL_CreateFlag {
       /*======================================================================================
       * Review flag details
       ======================================================================================*/
-
+//should be a post
       .group("XUI_PRL_070_ReviewFlagDetails") {
         exec(http("XUI_PRL_070_005_ReviewFlagDetails")
-          .get(BaseURL + "/data/internal/cases/${caseId}")
+          .get(BaseURL + "/data/internal/cases/1673359651714036")
           .headers(Headers.navigationHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
           .check(substring("Case Flag Issue Testing")))
