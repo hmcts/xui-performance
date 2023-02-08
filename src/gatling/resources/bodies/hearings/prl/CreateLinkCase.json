@@ -1,0 +1,27 @@
+{
+  "data": {
+    "caseLinksFlag": null,
+    "caseNameHmctsInternal": "PerfTest C100 Case",
+    "caseLinks": [
+      {
+        "value": {
+          "CaseReference": "1675790718405432"
+        },
+        "id": null
+      },
+      {
+        "value": {
+          "CaseReference": "1675789861216687"
+        },
+        "id": null
+      }
+    ]
+  },
+  "event": {
+    "id": "createCaseLink",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false
+}

@@ -236,7 +236,7 @@ Hearing Venue Details
           .post("/api/hearings/loadServiceLinkedCases?jurisdictionId=PRIVATELAW")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
-          .formParam("jurisdictionId", "SSCS")
+          .formParam("jurisdictionId", "PRIVATELAW")
           .body(ElFileBody("bodies/hearings/prl/HearingsLength.json"))
           .check(status.is(200)))
 
