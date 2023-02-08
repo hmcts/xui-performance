@@ -126,6 +126,8 @@ class XUI_Simulation extends Simulation {
 							.exec(Solicitor_PRL_C100.ViewPdfApplication)
 							.exec(Solicitor_PRL_C100.SubmitAndPay)
 
+							.exec(Logout.XUILogout)
+
 							.exec {
 								session =>
 									println(session)
@@ -154,7 +156,7 @@ class XUI_Simulation extends Simulation {
 							.exec(Solicitor_PRL_FL401.StatementOfTruth)
 					}
 
-						.exec(Logout.XUILogout)
+					//	.exec(Logout.XUILogout)
 
 
 				}
