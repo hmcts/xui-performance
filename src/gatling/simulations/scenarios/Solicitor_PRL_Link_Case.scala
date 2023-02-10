@@ -13,6 +13,7 @@ object Solicitor_PRL_Link_Case {
   val BaseURL = Environment.baseURL
   val IdamUrl = Environment.idamURL
   val PRLcases = csv("cases.csv").circular
+  val PRLcasesLink = csv("linkCases.csv").circular
 
 
   val postcodeFeeder = csv("postcodes.csv").circular
@@ -38,6 +39,7 @@ object Solicitor_PRL_Link_Case {
         "PRLAppDobYear" -> Common.getDobYear()))
 
         .feed(PRLcases)
+        .feed(PRLcasesLink)
 
         .exec(http("XUI_PRL_Hearings_030_005_SelectCase")
           .get(BaseURL + "/data/internal/cases/${caseId}")
