@@ -104,7 +104,7 @@ class XUI_Simulation extends Simulation {
  	===============================================================================================*/
 	val PRLSolicitorScenario = scenario("***** Private Law Create Case *****")
 	//	.exitBlockOnFail {
-			.repeat(20) {
+			.repeat(1) {
 			feed(UserFeederPRL)
 				.exec(_.set("env", s"${env}")
 					.set("caseType", "PRLAPPS"))
@@ -112,8 +112,11 @@ class XUI_Simulation extends Simulation {
 				.exec(Login.XUILogin)
 				.feed(randomFeeder)
 				.doIfOrElse(session => session("prl-percentage").as[Int] < prlC100Percentage) {
+					repeat(100) {
 					exitBlockOnFail {
 						//C100 Journey
+
+					//	               exec(Solicitor_PRL_Link_Case.LinkCase)
 
 						exec(Solicitor_PRL_C100.CreatePrivateLawCase)
 							.exec(Solicitor_PRL_C100.TypeOfApplication)
@@ -126,14 +129,19 @@ class XUI_Simulation extends Simulation {
 							.exec(Solicitor_PRL_C100.ViewPdfApplication)
 							.exec(Solicitor_PRL_C100.SubmitAndPay)
 
-							.exec(Logout.XUILogout)
 
 							.exec {
 								session =>
 									println(session)
 									session
+
+
 							}
+
+
 					}
+					}
+						.exec(Logout.XUILogout)
 
              //               exec(Solicitor_PRL_CreateFlag.CreateAFlag)
 
@@ -475,7 +483,7 @@ class XUI_Simulation extends Simulation {
 			  */
 	).protocols(httpProtocol)
 		.assertions(assertions(testType))
-		.maxDuration(130 minutes)
+		.maxDuration(60 minutes)
 
 
 }

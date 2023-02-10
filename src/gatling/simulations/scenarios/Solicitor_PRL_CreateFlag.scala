@@ -42,7 +42,7 @@ object Solicitor_PRL_CreateFlag {
         .feed(PRLcases)
 
         .exec(http("XUI_PRL_030_005_SelectCase")
-          .get(BaseURL + "/data/internal/cases/1673359651714036")
+          .get(BaseURL + "/data/internal/cases/${caseId}")
           .headers(Headers.navigationHeader)
           .header("accept", "application/json, text/plain, */*"))
         //  .check(substring("PRIVATELAW")))
@@ -61,19 +61,21 @@ object Solicitor_PRL_CreateFlag {
         exec(Common.profile)
 
         .exec(http("XUI_PRL_040_005_SelectIssue")
-          .get(BaseURL + "/workallocation/case/tasks/1673359651714036/event/c100CreateFlags/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
+          .get(BaseURL + "/workallocation/case/tasks/${caseId}/event/c100CreateFlags/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
           .headers(Headers.navigationHeader))
      //     .check(jsonPath("$.event_token").saveAs("event_token"))
      //   .check(jsonPath("$.case_fields[0].formatted_value[0].id").saveAs("local_Court_Id"))
         //  .check(jsonPath("$.id").is("createCaseFlag")))
 
         .exec(http("XUI_PRL_040_010_SelectIssue")
-          .get(BaseURL + "/data/internal/cases/${caseId}/event-triggers/createCaseFlag?ignore-warning=false")
+          .get(BaseURL + "/data/internal/cases/${caseId}/event-triggers/c100CreateFlags?ignore-warning=false")
           .headers(Headers.navigationHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
           .check(jsonPath("$.event_token").saveAs("event_token"))
+          .check(jsonPath("$.case_fields[2].formatted_value[0].id").saveAs("AppId"))
+          .check(jsonPath("$.case_fields[1].formatted_value[0].id").saveAs("RepId")))
           //   .check(jsonPath("$.case_fields[0].formatted_value[0].id").saveAs("local_Court_Id"))
-          .check(jsonPath("$.id").is("createCaseFlag")))
+        //  .check(jsonPath("$.id").is("createCaseFlag")))
 
 
           .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
@@ -124,10 +126,11 @@ object Solicitor_PRL_CreateFlag {
 //should be a post
       .group("XUI_PRL_070_ReviewFlagDetails") {
         exec(http("XUI_PRL_070_005_ReviewFlagDetails")
-          .get(BaseURL + "/data/internal/cases/1673359651714036")
-          .headers(Headers.navigationHeader)
-          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-          .check(substring("Case Flag Issue Testing")))
+          .post(BaseURL + "/data/cases/${caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+          .body(ElFileBody("bodies/hearings/prl/PRLCreateFlagSubmit.json"))
+          .check(substring("case_type")))
 
           .exec(Common.userDetails)
       }

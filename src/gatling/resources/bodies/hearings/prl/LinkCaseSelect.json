@@ -5,13 +5,13 @@
     "caseLinks": [
       {
         "value": {
-          "CaseReference": "1675790718405432"
+          "CaseReference": "${linkCase1}"
         },
         "id": null
       },
       {
         "value": {
-          "CaseReference": "1675789861216687"
+          "CaseReference": "${linkCase2}"
         },
         "id": null
       }
@@ -28,13 +28,13 @@
     "caseLinks": [
       {
         "value": {
-          "CaseReference": "1675790718405432"
+          "CaseReference": "${linkCase1}"
         },
         "id": null
       },
       {
         "value": {
-          "CaseReference": "1675789861216687"
+          "CaseReference": "${linkCase2}"
         },
         "id": null
       }

@@ -14,7 +14,7 @@ object Solicitor_PRL_C100_ServiceRequestUpdate {
   val PaymentViaAPI = scenario(scenarioName = "XXX_ServiceRequestUpdate")
     .group("XXX_ServiceRequestUpdate") {
       exec(http(requestName = "service_request_update")
-        .put("http://prl-cos-demo.service.core-compute-demo.internal/service-request-update")
+        .put("http://prl-cos-perftest.service.core-compute-perftest.internal/service-request-update")
         .headers(Headers.commonHeader)
         .body(ElFileBody("bodies/prl/c100/PRLServiceRequestUpdate.json")).asJson
         .check(status.is(200))
