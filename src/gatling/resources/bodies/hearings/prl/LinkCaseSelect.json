@@ -34,7 +34,7 @@
       },
       {
         "value": {
-          "CaseReference": "${linkCase2}"
+          "CaseReference": "${linkcase2}"
         },
         "id": null
       }

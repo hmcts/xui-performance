@@ -1,124 +1,27 @@
 {
   "data": {
+    "caseLinksFlag": null,
+    "caseNameHmctsInternal": "PerfTest C100 Case",
     "caseLinks": [
       {
-        "id": "1673950629515891",
         "value": {
-          "CaseType": "PRLAPPS",
-          "CaseReference": "1673950629515891",
-          "ReasonForLink": [
-            {
-              "id": "a7b3d533-ae36-4579-98d2-1d35cce351bc",
-              "value": {
-                "Reason": "CLRC003"
-              }
-            }
-          ],
-          "CreatedDateTime": "2023-01-17T13:36:25.598"
-        }
+          "CaseReference": "${linkCase1}"
+        },
+        "id": null
       },
       {
-        "id": "1673973842317473",
         "value": {
-          "CaseReference": "1673973842317473",
-          "CaseType": "PRLAPPS",
-          "CreatedDateTime": "2023-02-03T11:56:53.591",
-          "ReasonForLink": [
-            {
-              "value": {
-                "Reason": "CLRC010"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "id": "1674822403577729",
-        "value": {
-          "CaseReference": "1674822403577729",
-          "CaseType": "PRLAPPS",
-          "CreatedDateTime": "2023-02-03T12:04:16.670",
-          "ReasonForLink": [
-            {
-              "value": {
-                "Reason": "CLRC010"
-              }
-            },
-            {
-              "value": {
-                "Reason": "CLRC006"
-              }
-            }
-          ]
-        }
+          "CaseReference": "${linkCase2}"
+        },
+        "id": null
       }
-    ],
-    "caseLinksFlag": null,
-    "caseNameHmctsInternal": "TestTaskflow"
+    ]
   },
   "event": {
     "id": "createCaseLink",
     "summary": "",
     "description": ""
   },
-  "event_data": {
-    "caseLinks": [
-      {
-        "id": "1673950629515891",
-        "value": {
-          "CaseType": "PRLAPPS",
-          "CaseReference": "1673950629515891",
-          "ReasonForLink": [
-            {
-              "id": "a7b3d533-ae36-4579-98d2-1d35cce351bc",
-              "value": {
-                "Reason": "CLRC003"
-              }
-            }
-          ],
-          "CreatedDateTime": "2023-01-17T13:36:25.598"
-        }
-      },
-      {
-        "id": "1673973842317473",
-        "value": {
-          "CaseReference": "1673973842317473",
-          "CaseType": "PRLAPPS",
-          "CreatedDateTime": "2023-02-03T11:56:53.591",
-          "ReasonForLink": [
-            {
-              "value": {
-                "Reason": "CLRC010"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "id": "1674822403577729",
-        "value": {
-          "CaseReference": "1674822403577729",
-          "CaseType": "PRLAPPS",
-          "CreatedDateTime": "2023-02-03T12:04:16.670",
-          "ReasonForLink": [
-            {
-              "value": {
-                "Reason": "CLRC010"
-              }
-            },
-            {
-              "value": {
-                "Reason": "CLRC006"
-              }
-            }
-          ]
-        }
-      }
-    ],
-    "caseLinksFlag": null,
-    "caseNameHmctsInternal": "TestTaskflow"
-  },
-  "event_token": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxMmNpZGRuNjF1NWd0NXZ2bWo0czdmaXJ2MCIsInN1YiI6ImI2NzY1MWRkLTk0OTgtNDIxZS1iZmQ2LTJkZDQ3ODQxMjYyOSIsImlhdCI6MTY3NTQyNDU3MywiY2FzZS1pZCI6IjIzNDA1NiIsImV2ZW50LWlkIjoiY3JlYXRlQ2FzZUxpbmsiLCJjYXNlLXR5cGUtaWQiOiJQUkxBUFBTIiwianVyaXNkaWN0aW9uLWlkIjoiUFJJVkFURUxBVyIsImNhc2Utc3RhdGUiOiJDQVNFX0lTU1VFIiwiY2FzZS12ZXJzaW9uIjoiMDdhMTFjZmYxNDAxYWJhNTBhY2IyOTU2ZTI3ZWE1YjM5ZmFjYzJkMWY2Y2RlZGE1NjhiNGVkYjUyNjE5MWM2NyIsImVudGl0eS12ZXJzaW9uIjo0NH0.X6sRpMh_W4iIUUgrEPQpFbr2OZGC_GmlusjJY7nGRAE",
-  "ignore_warning": false,
-  "case_reference": "1673956644693001"
+  "event_token": "${event_token}",
+  "ignore_warning": false
 }

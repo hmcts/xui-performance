@@ -70,8 +70,8 @@ object Solicitor_PRL_C100 {
 
     .group("XUI_PRL_C100_040_SelectCaseType") {
       exec(http("XUI_FPL_040_005_StartApplication")
-        .get("/data/internal/case-types/PRLAPPS/event-triggers/solicitorCreate?ignore-warning=false")
-        .headers(Headers.commonHeader)
+        .get(BaseURL + "/data/internal/case-types/PRLAPPS/event-triggers/solicitorCreate?ignore-warning=false")
+        .headers(Headers.navigationHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("solicitorCreate")))
