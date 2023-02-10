@@ -76,25 +76,6 @@ object Solicitor_PRL_Link_Case {
           .check(substring("Create Case Link")))
 
 
-          .exec(http("XUI_PRL_Hearings_040_015_SelectLinkCases")
-            .get(BaseURL + "/aggregated/caseworkers/:uid/jurisdictions?access=read")
-            .headers(Headers.navigationHeader)
-            .header("accept", "application/json")
-            .check(substring("PUBLICLAW")))
-
-          .exec(http("XUI_PRL_Hearings_040_020_SelectLinkCases")
-            .get(BaseURL + "/refdata/commondata/lov/categories/CaseLinkingReasonCode")
-            .headers(Headers.navigationHeader)
-            .header("accept", "application/json, text/plain, */*")
-            .check(substring("CaseLinkingReasonCode")))
-
-
-          .exec(http("XUI_PRL_Hearings_040_025_SelectLinkCases")
-            .post(BaseURL + "/data/internal/searchCases?ctid=PRLAPPS&use_case=WORKBASKET")
-            .headers(Headers.commonHeader)
-            .header("accept", "application/json")
-            .body(ElFileBody("bodies/hearings/prl/SelectLinkCase.json"))
-            .check(substring("results")))
 
 
           .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
