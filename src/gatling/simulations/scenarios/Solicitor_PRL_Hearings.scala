@@ -17,13 +17,8 @@ object Solicitor_PRL_Hearings {
 
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
-  val UserFeederHearingCases = csv("UserDataHearingsCases.csv").circular
-  val UserFeederHearingRequestCases = csv("HearingDetailsRequest.csv").circular
-  val UserFeederHearingUploadCases = csv("UserDataHearingsUploadCases.csv").circular
-  val UserFeederHearingCasesLink = csv("UserDataHearingsCasesLinked.csv").circular
-  val UserFeederHearingId = csv("HearingId.csv").circular
-  val UserFeederHearingIdCancels = csv("HearingIdCancels.csv").circular
-  val UserFeederHearingIdAmend = csv("HearingIdAmend.csv").circular
+  val UserFeederHearingCases = csv("cases.csv").circular
+  val UserFeederHearingId = csv("casesAndId.csv").circular
   val randomFeeder = Iterator.continually(Map("hearings-percentage" -> Random.nextInt(100)))
   val hearingPercentage = 90
 
@@ -64,7 +59,13 @@ object Solicitor_PRL_Hearings {
     ======================================================================================*/
 
 
-    feed(randomFeeder)
+    feed(UserFeederHearingCases)
+
+  .exec(_.setAll(
+    "PRLRandomString" -> ("App" + Common.randomString(7)),
+    "PRLHearingDay" -> Common.getDay(),
+    "PRLHearingMonth" -> Common.getMonth(),
+    "PRLHearingYear" -> Common.getDobYear()))
   /*    .doIfOrElse(session => session("hearings-percentage").as[Int] < hearingPercentage) {
         feed(UserFeederHearingRequestCases)
 
@@ -316,7 +317,7 @@ Will this hearing need to be linked to other hearings?
   * Get a singular case
   ======================================================================================*/
 
-    feed(UserFeederHearingIdAmend)
+    feed(UserFeederHearingId)
 
       .group("XUI_GetHearingPRL_180_GetHearing") {
 
@@ -324,6 +325,9 @@ Will this hearing need to be linked to other hearings?
           .get(BaseURL + "/api/hearings/getHearing?hearingId=${hearingRequest}")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
+          .check(jsonPath("$.partyDetails[0].partyID").saveAs("partyId"))
+          .check(jsonPath("$.partyDetails[1].partyID").saveAs("partyIdApp"))
+          .check(jsonPath("$.partyDetails[2].partyID").saveAs("partyIdResp"))
           .check(jsonPath("$.requestDetails.versionNumber").saveAs("versionNumber")))
 
           .exec(Common.isAuthenticated)
@@ -337,60 +341,58 @@ Will this hearing need to be linked to other hearings?
 
           .exec(http("XUI_GetHearing_180_015_GetHearing")
             .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingChannel&serviceId=ABA5&isChildRequired=N")
-            .headers(Headers.commonHeader)
+            .headers(Headers.navigationHeader)
             .header("accept", "application/json, text/plain, */*")
             .check(substring("HearingChannel")))
 
 
           .exec(http("XUI_GetHearing_180_020_GetHearing")
             .get(BaseURL + "/api/prd/location/getLocationById?epimms_id=20262")
-            .headers(Headers.commonHeader)
+            .headers(Headers.navigationHeader)
             .header("accept", "application/json, text/plain, */*")
-            .check(substring("HearingChannel")))
+            .check(substring("court_address")))
 
       }
       .pause(MinThinkTime, MaxThinkTime)
 
       /*======================================================================================
-      * Change 'How many people will attend the hearing in person?'
+      * Change 'Does the hearing need to take place on a specific date?'
       ======================================================================================*/
 
-      .group("XUI_UpdateHearingPRL_190_Update") {
-
-        exec(http("XUI_UpdateHearingPRL_190_005_UpdateHearing")
-          .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingChannel&serviceId=ABA5&isChildRequired=N")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/json, text/plain, */*")
-          .check(substring("HearingChannel")))
-
-      }
-      .pause(MinThinkTime, MaxThinkTime)
 
 
       /*======================================================================================
-      * Change 'How many people will attend the hearing in person?' to 2
+      * Change 'Does the hearing need to take place on a specific date?' to No
       ======================================================================================*/
 
       .group("XUI_UpdateHearingPRL_200_SubmitUpdate") {
         exec(http("XUI_UpdateHearingPRL_200_005_SubmitUpdate")
           .get(BaseURL + "/api/prd/caseFlag/getCaseFlagRefData?serviceId=ABA5")
-          .headers(Headers.commonHeader)
+          .headers(Headers.navigationHeader)
           .header("accept", "application/json, text/plain, */*")
           .check(substring("FlagDetails")))
 
 
+          .exec(http("XUI_UpdateHearingPRL_200_015_SubmitUpdate")
+            .get(BaseURL + "/api/prd/location/getLocationById?epimms_id=20262")
+            .headers(Headers.navigationHeader)
+            .header("accept", "application/json, text/plain, */*")
+            .check(substring("court_address")))
+
+
         .exec(http("XUI_UpdateHearingPRL_200_010_SubmitUpdate")
           .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingChannel&serviceId=ABA5&isChildRequired=N")
-          .headers(Headers.commonHeader)
+          .headers(Headers.navigationHeader)
           .header("accept", "application/json, text/plain, */*")
           .check(substring("HearingChannel")))
 
 
-        .exec(http("XUI_UpdateHearingPRL_200_015_SubmitUpdate")
-          .get(BaseURL + "/api/prd/location/getLocationById?epimms_id=20262")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/json, text/plain, */*")
-          .check(substring("court_address")))
+          .exec(http("XUI_UpdateHearingPRL_200_020_SubmitUpdate")
+            .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingSubChannel&serviceId=ABA5&isChildRequired=N")
+            .headers(Headers.commonHeader)
+            .header("accept", "application/json, text/plain, */*")
+            .check(substring("HearingSubChannel")))
+
 
           .exec(Common.userDetails)
 
@@ -403,37 +405,9 @@ Will this hearing need to be linked to other hearings?
     * Submit Updated Request
     ======================================================================================*/
 
-      .group("XUI_UpdateHearingPRL_210_SubmitUpdatedRequest") {
-        exec(http("XUI_UpdateHearingPRL_210_005_SubmitUpdatedRequest")
-          .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=ChangeReasons&serviceId=ABA5&isChildRequired=N")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/json, text/plain, */*")
-          .check(substring("ChangeReasons")))
-
 
           .exec(Common.userDetails)
 
-
-      }
-      .pause(MinThinkTime, MaxThinkTime)
-
-
-      /*======================================================================================
-  * Submit Updated Request
-  ======================================================================================*/
-
-      .group("XUI_UpdateHearingPRL_210_SubmitUpdatedRequest") {
-        exec(http("XUI_UpdateHearingPRL_210_005_SubmitUpdatedRequest")
-          .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=ChangeReasons&serviceId=ABA5&isChildRequired=N")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/json, text/plain, */*")
-          .check(substring("ChangeReasons")))
-
-
-          .exec(Common.userDetails)
-
-      }
-      .pause(MinThinkTime, MaxThinkTime)
 
 
       /*======================================================================================
@@ -442,10 +416,11 @@ Will this hearing need to be linked to other hearings?
 
       .group("XUI_UpdateHearingPRL_220_ReasonForChange") {
         exec(http("XUI_UpdateHearingPRL_220_005_ReasonForChange")
-          .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=ChangeReasons&serviceId=ABA5&isChildRequired=N")
+          .put(BaseURL + "/api/hearings/updateHearingRequest?hearingId=${hearingRequest}")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
-          .check(substring("ChangeReasons")))
+          .body(ElFileBody("bodies/hearings/prl/HearingsUpdateSubmit.json"))
+          .check(substring("timeStamp")))
 
 
           .exec(Common.userDetails)
@@ -463,13 +438,13 @@ Will this hearing need to be linked to other hearings?
 
     group("XUI_CancelHearingPRL_230_CancelHearing") {
 
-     // feed(UserFeederHearingIdCancels)
+      feed(UserFeederHearingId)
 
-        exec(Common.isAuthenticated)
+        .exec(Common.isAuthenticated)
 
         .exec(http("XUI_CancelHearingPRL_230_005_CancelHearing")
           .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=CaseManagementCancellationReasons&serviceId=ABA5&isChildRequired=N")
-          .headers(Headers.commonHeader)
+          .headers(Headers.navigationHeader)
           .header("accept", "application/json, text/plain, */*")
           .header("accept-language", "en-GB,en-US;q=0.9,en;q=0.8")
           .check(substring("CaseManagementCancellationReasons")))
@@ -499,7 +474,7 @@ Will this hearing need to be linked to other hearings?
 
           .exec(http("XUI_DeleteHearingPRL_240_010_WhyCancelled")
             .get(BaseURL + "/api/hearings/getHearings?caseId=${caseId}")
-            .headers(Headers.commonHeader)
+            .headers(Headers.navigationHeader)
             .header("accept", "application/json, text/plain, */*")
             .check(substring("caseHearings")))
 
@@ -514,7 +489,7 @@ Will this hearing need to be linked to other hearings?
 
           .exec(http("XUI_DeleteHearingPRL_240_020_WhyCancelled")
             .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingType&serviceId=ABA5&isChildRequired=N")
-            .headers(Headers.commonHeader)
+            .headers(Headers.navigationHeader)
             .header("accept", "application/json, text/plain, */*")
             .check(substring("HearingType")))
 

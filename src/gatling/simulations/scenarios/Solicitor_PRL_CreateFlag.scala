@@ -14,7 +14,7 @@ object Solicitor_PRL_CreateFlag {
   
   val BaseURL = Environment.baseURL
   val IdamUrl = Environment.idamURL
-  val PRLcases = csv("cases.csv").circular
+  val PRLcases = csv("casePrepareForHearing.csv").circular
 
 
   val postcodeFeeder = csv("postcodes.csv").circular
@@ -39,7 +39,7 @@ object Solicitor_PRL_CreateFlag {
         "PRLAppDobMonth" -> Common.getMonth(),
         "PRLAppDobYear" -> Common.getDobYear()))
 
-        .feed(PRLcases)
+     //   .feed(PRLcases)
 
         .exec(http("XUI_PRL_030_005_SelectCase")
           .get(BaseURL + "/data/internal/cases/${caseId}")
