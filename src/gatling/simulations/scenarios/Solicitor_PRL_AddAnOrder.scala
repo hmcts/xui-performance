@@ -53,115 +53,117 @@ object Solicitor_PRL_AddAnOrder {
       .pause(MinThinkTime, MaxThinkTime)
 
 
-      /*======================================================================================
-      * Select 'Issue and send to local court'
-      ======================================================================================*/
+        /*======================================================================================
+        * Select 'Issue and send to local court'
+        ======================================================================================*/
 
-      .group("XUI_PRL_040_SelectIssue") {
-        exec(http("XUI_PRL_040_005_SelectIssue")
-          .get(BaseURL + "/data/internal/cases/${caseId}/event-triggers/issueAndSendToLocalCourtCallback?ignore-warning=false")
-          .headers(Headers.navigationHeader)
-          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-          .check(jsonPath("$.event_token").saveAs("event_token"))
-          //   .check(jsonPath("$.case_fields[0].formatted_value[0].id").saveAs("local_Court_Id"))
-          .check(jsonPath("$.id").is("issueAndSendToLocalCourtCallback")))
+        .group("XUI_PRL_040_SelectIssue") {
+          exec(http("XUI_PRL_040_005_SelectIssue")
+            .get(BaseURL + "/data/internal/cases/${caseId}/event-triggers/issueAndSendToLocalCourtCallback?ignore-warning=false")
+            .headers(Headers.navigationHeader)
+            .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+            .check(jsonPath("$.event_token").saveAs("event_token"))
+            //   .check(jsonPath("$.case_fields[0].formatted_value[0].id").saveAs("local_Court_Id"))
+            .check(jsonPath("$.id").is("issueAndSendToLocalCourtCallback")))
 
-          .exec(Common.userDetails)
+            .exec(Common.userDetails)
 
-          .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
-      }
+            .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+        }
 
-      .pause(MinThinkTime, MaxThinkTime)
+        .pause(MinThinkTime, MaxThinkTime)
 
-      /*======================================================================================
-      *Add local court Admin
-      ======================================================================================*/
+        /*======================================================================================
+        *Add local court Admin
+        ======================================================================================*/
 
-      .group("XUI_PRL_050_LocalCourt") {
-        exec(http("XUI_PRL_050_005_LocalCourt")
-          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=issueAndSendToLocalCourtCallback1")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-          .header("x-xsrf-token", "${XSRFToken}")
-          .body(ElFileBody("bodies/prl/c100Continued/PRLLocalCourt.json"))
-          .check(substring("localCourtAdmin")))
+        .group("XUI_PRL_050_LocalCourt") {
+          exec(http("XUI_PRL_050_005_LocalCourt")
+            .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=issueAndSendToLocalCourtCallback1")
+            .headers(Headers.commonHeader)
+            .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+            .header("x-xsrf-token", "${XSRFToken}")
+            .body(ElFileBody("bodies/prl/c100Continued/PRLLocalCourt.json"))
+            .check(substring("localCourtAdmin")))
 
-          .exec(Common.userDetails)
-      }
+            .exec(Common.userDetails)
+        }
 
-      .pause(MinThinkTime, MaxThinkTime)
+        .pause(MinThinkTime, MaxThinkTime)
 
-      /*======================================================================================
-      * Issue and send to local court submit
-      ======================================================================================*/
+        /*======================================================================================
+        * Issue and send to local court submit
+        ======================================================================================*/
 
-      .group("XUI_PRL_060_LocalCourtSubmit") {
-        exec(http("XUI_PRL_060_005_LocalCourtSubmit")
-          .post(BaseURL + "/data/cases/${caseId}/events")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-          .header("x-xsrf-token", "${XSRFToken}")
-          .body(ElFileBody("bodies/prl/c100Continued/PRLLocalCourtSubmit.json"))
-          .check(substring("CASE_ISSUE")))
+        .group("XUI_PRL_060_LocalCourtSubmit") {
+          exec(http("XUI_PRL_060_005_LocalCourtSubmit")
+            .post(BaseURL + "/data/cases/${caseId}/events")
+            .headers(Headers.commonHeader)
+            .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+            .header("x-xsrf-token", "${XSRFToken}")
+            .body(ElFileBody("bodies/prl/c100Continued/PRLLocalCourtSubmit.json"))
+            .check(substring("CASE_ISSUE")))
 
-          .exec(Common.userDetails)
-      }
+            .exec(Common.userDetails)
+        }
 
-      .pause(MinThinkTime, MaxThinkTime)
-
-
-      /*======================================================================================
-      * Click on 'Send to Gate Keeper'
-      ======================================================================================*/
-
-      .group("XUI_PRL_070_SendToGateKeeper") {
-        exec(http("XUI_PRL_070_005_SendToGateKeeper")
-          .get(BaseURL + "/data/internal/cases/${caseId}/event-triggers/sendToGateKeeper?ignore-warning=false")
-          .headers(Headers.navigationHeader)
-          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-         // .check(jsonPath("$.case_fields[0].formatted_value[0].id").saveAs("gateKeeper_id"))
-          .check(jsonPath("$.event_token").saveAs("event_token"))
-          .check(jsonPath("$.id").is("sendToGateKeeper")))
-
-          .exec(Common.userDetails)
-
-          .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
-      }
-
-      .pause(MinThinkTime, MaxThinkTime)
-
-      /*======================================================================================
-      * Add Gate Keeper
-      ======================================================================================*/
-
-      .group("XUI_PRL_080_AddGateKeeper") {
-        exec(http("XUI_PRL_080_005_AddGateKeeper")
-          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=sendToGateKeeper1")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-          .header("x-xsrf-token", "${XSRFToken}")
-          .body(ElFileBody("bodies/prl/c100Continued/PRLAddGateKeeper.json"))
-          .check(substring("gatekeeper")))
-      }
-
-      .pause(MinThinkTime, MaxThinkTime)
+        .pause(MinThinkTime, MaxThinkTime)
 
 
-      /*======================================================================================
-* Send to Gate Keeper Submit
-======================================================================================*/
+        /*======================================================================================
+        * Click on 'Send to Gate Keeper'
+        ======================================================================================*/
 
-      .group("XUI_PRL_090_GateKeeperSubmit") {
-        exec(http("XUI_PRL_090_005_GateKeeperSubmit")
-          .post(BaseURL + "/data/cases/${caseId}/events")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-          .header("x-xsrf-token", "${XSRFToken}")
-          .body(ElFileBody("bodies/prl/c100Continued/PRLAddGateKeeperSubmit.json"))
-          .check(substring("GATE_KEEPING")))
-      }
+        .group("XUI_PRL_070_SendToGateKeeper") {
+          exec(http("XUI_PRL_070_005_SendToGateKeeper")
+            .get(BaseURL + "/data/internal/cases/${caseId}/event-triggers/sendToGateKeeper?ignore-warning=false")
+            .headers(Headers.navigationHeader)
+            .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+           // .check(jsonPath("$.case_fields[0].formatted_value[0].id").saveAs("gateKeeper_id"))
+            .check(jsonPath("$.event_token").saveAs("event_token"))
+            .check(jsonPath("$.id").is("sendToGateKeeper")))
 
-      .pause(MinThinkTime, MaxThinkTime)
+            .exec(Common.userDetails)
+
+            .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+        }
+
+        .pause(MinThinkTime, MaxThinkTime)
+
+        /*======================================================================================
+        * Add Gate Keeper
+        ======================================================================================*/
+
+        .group("XUI_PRL_080_AddGateKeeper") {
+          exec(http("XUI_PRL_080_005_AddGateKeeper")
+            .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=sendToGateKeeper1")
+            .headers(Headers.commonHeader)
+            .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+            .header("x-xsrf-token", "${XSRFToken}")
+            .body(ElFileBody("bodies/prl/c100Continued/PRLAddGateKeeper.json"))
+            .check(substring("gatekeeper")))
+        }
+
+        .pause(MinThinkTime, MaxThinkTime)
+
+
+        /*======================================================================================
+  * Send to Gate Keeper Submit
+  ======================================================================================*/
+
+        .group("XUI_PRL_090_GateKeeperSubmit") {
+          exec(http("XUI_PRL_090_005_GateKeeperSubmit")
+            .post(BaseURL + "/data/cases/${caseId}/events")
+            .headers(Headers.commonHeader)
+            .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+            .header("x-xsrf-token", "${XSRFToken}")
+            .body(ElFileBody("bodies/prl/c100Continued/PRLAddGateKeeperSubmit.json"))
+            .check(substring("GATE_KEEPING")))
+        }
+
+        .pause(MinThinkTime, MaxThinkTime)
+
+
 
       /*======================================================================================
       * Click on 'Manage Orders'
@@ -459,16 +461,23 @@ object Solicitor_PRL_AddAnOrder {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/prl/c100Continued/PRLSoASubmit.json"))
-        .check(regex("""accessCode":"(\w{8})""").saveAs("prlAccessCode"))
-    . check(substring("CASE_HEARING")))
+        .check(regex("""accessCode":"(\w{8})""").saveAs("prlAccessCode")))
 
-        .exec { session =>
+    /*    .exec { session =>
           val fw = new BufferedWriter(new FileWriter("accessCode.csv", true))
           try {
             fw.write(session("caseId").as[String] + "," + session("prlAccessCode").as[String] + "\r\n")
             } finally fw.close()
           session
         }
+
+     */        .exec { session =>
+        val fw = new BufferedWriter(new FileWriter("casePrepareForHearing.csv", true))
+        try {
+          fw.write(session("caseId").as[String] + "\r\n")
+        } finally fw.close()
+        session
+      }
 }
 
 .pause(MinThinkTime, MaxThinkTime)

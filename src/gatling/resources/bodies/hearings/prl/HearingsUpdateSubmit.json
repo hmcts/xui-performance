@@ -1,0 +1,139 @@
+{
+  "requestDetails": {
+    "status": "HEARING_REQUESTED",
+    "timestamp": "2023-02-15T10:47:45.453595",
+    "versionNumber": 1,
+    "hearingRequestID": "${hearingRequest}"
+  },
+  "hearingDetails": {
+    "hearingType": "ABA5-FOF",
+    "hearingWindow": null,
+    "duration": 195,
+    "hearingPriorityType": "Standard",
+    "numberOfPhysicalAttendees": 1,
+    "hearingInWelshFlag": false,
+    "hearingLocations": [
+      {
+        "locationType": "court",
+        "locationId": "20262"
+      }
+    ],
+    "facilitiesRequired": [
+      "1"
+    ],
+    "privateHearingRequiredFlag": true,
+    "panelRequirements": {
+      "roleType": [
+        "19"
+      ],
+      "authorisationTypes": [],
+      "authorisationSubType": [],
+      "panelPreferences": [],
+      "panelSpecialisms": []
+    },
+    "hearingIsLinkedFlag": false,
+    "hearingChannels": [
+      "INTER"
+    ],
+    "autolistFlag": false,
+    "amendReasonCodes": [
+      "judgereq"
+    ]
+  },
+  "caseDetails": {
+    "hmctsServiceCode": "ABA5",
+    "caseRef": "${caseId}",
+    "caseDeepLink": "https://manage-case-hearings-int.perftest.platform.hmcts.net/cases/case-details/${caseId}",
+    "hmctsInternalCaseName": "${caseId}_PerfTest C100 Case",
+    "publicCaseName": "Re-Minor",
+    "caseAdditionalSecurityFlag": false,
+    "caseInterpreterRequiredFlag": false,
+    "caseCategories": [
+      {
+        "categoryType": "caseType",
+        "categoryValue": "ABA5-PRL"
+      },
+      {
+        "categoryType": "caseSubType",
+        "categoryValue": "ABA5-PRL",
+        "categoryParent": "ABA5-PRL"
+      }
+    ],
+    "caseManagementLocationCode": "20262",
+    "caserestrictedFlag": false,
+    "caseSLAStartDate": "2023-02-14"
+  },
+  "partyDetails": [
+    {
+      "partyID": "${partyId}",
+      "partyType": "IND",
+      "partyRole": "APPL",
+      "individualDetails": {
+        "title": null,
+        "firstName": "AppugKtC",
+        "lastName": "TestfOGyE",
+        "preferredHearingChannel": "INTER",
+        "interpreterLanguage": "",
+        "reasonableAdjustments": [],
+        "vulnerableFlag": null,
+        "vulnerabilityDetails": "",
+        "hearingChannelEmail": [
+          "zOPGP@gmail.com"
+        ],
+        "hearingChannelPhone": [
+          "0123456789"
+        ],
+        "relatedParties": [],
+        "custodyStatus": null,
+        "otherReasonableAdjustmentDetails": null
+      }
+    },
+    {
+      "partyID": "${partyIdApp}",
+      "partyType": "IND",
+      "partyRole": "LGRP",
+      "individualDetails": {
+        "title": null,
+        "firstName": "First",
+        "lastName": "Last",
+        "preferredHearingChannel": "INTER",
+        "interpreterLanguage": null,
+        "reasonableAdjustments": [],
+        "vulnerableFlag": null,
+        "vulnerabilityDetails": null,
+        "hearingChannelEmail": [
+          "solicitor@gmail.com"
+        ],
+        "hearingChannelPhone": [],
+        "relatedParties": [],
+        "custodyStatus": null,
+        "otherReasonableAdjustmentDetails": null
+      }
+    },
+    {
+      "partyID": "${partyIdResp}",
+      "partyType": "IND",
+      "partyRole": "RESP",
+      "individualDetails": {
+        "title": null,
+        "firstName": "RespfZrQx",
+        "lastName": "TestMQLtT",
+        "preferredHearingChannel": "INTER",
+        "interpreterLanguage": "",
+        "reasonableAdjustments": [],
+        "vulnerableFlag": null,
+        "vulnerabilityDetails": "",
+        "hearingChannelEmail": [
+          "prl_court_admin2@test.com"
+        ],
+        "hearingChannelPhone": [
+          "0123456789"
+        ],
+        "relatedParties": [],
+        "custodyStatus": null,
+        "otherReasonableAdjustmentDetails": null
+      }
+    }
+  ],
+  "hearingResponse": {}
+}
