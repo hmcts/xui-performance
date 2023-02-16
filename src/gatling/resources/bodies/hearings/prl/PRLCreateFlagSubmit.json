@@ -1,5 +1,109 @@
 {
   "data": {
+    "respondents": [
+      {
+        "id": "${RepId}",
+        "value": {
+          "user": {},
+          "email": "${repEmail}",
+          "gender": "male",
+          "address": {
+            "County": "",
+            "Country": "United Kingdom",
+            "PostCode": "${repPostCode}",
+            "PostTown": "${repPostTown}",
+            "AddressLine1": "${repAddressLine1}",
+            "AddressLine2": "${repAddressLine2}",
+            "AddressLine3": ""
+          },
+          "partyId": null,
+          "dxNumber": null,
+          "landline": null,
+          "lastName": "${repLastName}",
+          "response": {},
+          "firstName": "${repFirstName}",
+          "dateOfBirth": "${repDateOfBirth}",
+          "otherGender": null,
+          "phoneNumber": "0123456789",
+          "placeOfBirth": "London",
+          "previousName": null,
+          "solicitorOrg": {
+            "OrganisationID": "${repOrganisationID}",
+            "OrganisationName": "${repOrganisationName}"
+          },
+          "partyLevelFlag": {
+            "details": [],
+            "partyName": "${repPartyName}",
+            "roleOnCase": "Respondent"
+          },
+          "sendSignUpLink": null,
+          "solicitorEmail": null,
+          "isAddressUnknown": null,
+          "solicitorAddress": {
+            "County": null,
+            "Country": null,
+            "PostCode": null,
+            "PostTown": null,
+            "AddressLine1": null,
+            "AddressLine2": null,
+            "AddressLine3": null
+          },
+          "solicitorOrgUuid": "${solicitorOrgUuId}",
+          "solicitorPartyId": "${solicitorPartyId}",
+          "currentRespondent": null,
+          "isDateOfBirthKnown": "Yes",
+          "solicitorReference": null,
+          "solicitorTelephone": null,
+          "isPlaceOfBirthKnown": "Yes",
+          "isDateOfBirthUnknown": null,
+          "isAddressConfidential": null,
+          "isCurrentAddressKnown": "Yes",
+          "relationshipToChildren": null,
+          "representativeLastName": null,
+          "representativeFirstName": null,
+          "canYouProvidePhoneNumber": "Yes",
+          "applicantPreferredContact": null,
+          "canYouProvideEmailAddress": "Yes",
+          "isAtAddressLessThan5Years": null,
+          "isPhoneNumberConfidential": null,
+          "isEmailAddressConfidential": null,
+          "applicantContactInstructions": null,
+          "respondentLivedWithApplicant": null,
+          "doTheyHaveLegalRepresentation": "no",
+          "addressLivedLessThan5YearsDetails": "${repAddressLivedLessThan5YearsDetails}",
+          "otherPersonRelationshipToChildren": [],
+          "isAtAddressLessThan5YearsWithDontKnow": "yes"
+        }
+      }
+    ],
+    "caseFlags": {
+      "roleOnCase": null,
+      "partyName": null,
+      "details": [
+        {
+          "value": {
+            "name": "Complex Case",
+            "subTypeValue": null,
+            "subTypeKey": null,
+            "otherDescription": null,
+            "flagComment": "${PRLRandomString}",
+            "dateTimeCreated": "2023-02-16T14:24:35.701Z",
+            "path": [
+              {
+                "id": null,
+                "value": "Case"
+              }
+            ],
+            "hearingRelevant": "Yes",
+            "flagCode": "CF0002",
+            "status": "Active"
+          }
+        }
+      ],
+      "flagType": "CF0002",
+      "otherFlagTypeDescription": "",
+      "flagComments": "${PRLRandomString}"
+    },
     "applicants": [
       {
         "id": "${AppId}",
@@ -9,20 +113,21 @@
             "idamId": null,
             "solicitorRepresented": null
           },
-          "email": "zxTUm@gmail.com",
+          "email": "${appEmail}",
           "gender": "male",
           "address": {
             "County": "",
             "Country": "United Kingdom",
-            "PostCode": "EX18 7LE",
-            "PostTown": "CHULMLEIGH",
-            "AddressLine1": "OLD TOLL COTTAGE",
-            "AddressLine2": "CHENSON",
+            "PostCode": "${appPostCode}",
+            "PostTown": "MANCHESTER",
+            "AddressLine1": "${appAddressLine1}",
+            "AddressLine2": "${appAddressLine2}",
             "AddressLine3": ""
           },
-          "dxNumber": "1234567890",
+          "partyId": null,
+          "dxNumber": "${appDxNumber}",
           "landline": null,
-          "lastName": "Testqsomg",
+          "lastName": "${appLastName}",
           "response": {
             "miam": {},
             "consent": {},
@@ -58,44 +163,46 @@
             "respKeepDetailsPrivateConfidentiality": {},
             "provideDetailsForFactorsAffectingAbilityToParticipate": null
           },
-          "firstName": "AppDySql",
-          "dateOfBirth": "1922-10-12",
+          "firstName": "appFirstName",
+          "dateOfBirth": "${appDateOfBirth}",
           "otherGender": null,
           "phoneNumber": "0123456789",
           "placeOfBirth": "London",
           "previousName": null,
           "solicitorOrg": {
-            "OrganisationID": "U1NS7EH",
-            "OrganisationName": "perf-prl-aALof"
+            "OrganisationID": "${appOrganisationID}",
+            "OrganisationName": "${appOrganisationName}"
           },
           "partyLevelFlag": {
             "details": [],
-            "partyName": "AppDySql Testqsomg",
+            "partyName": "${appPartyName}",
             "roleOnCase": "Applicant"
           },
           "sendSignUpLink": null,
-          "solicitorEmail": "solicitor@gmail.com",
+          "solicitorEmail": "${appsSolicitorEmail}",
           "isAddressUnknown": null,
           "solicitorAddress": {
             "County": "",
             "Country": "United Kingdom",
-            "PostCode": "PR1 1PRF",
-            "PostTown": "PerfTest Town",
-            "AddressLine1": "5 Perf Test Street",
-            "AddressLine2": "PerfTest",
+            "PostCode": "${appsSolicitorPostCode}",
+            "PostTown": "${appsSolicitorPostTown}",
+            "AddressLine1": "${appsSolicitorAddressLine1}",
+            "AddressLine2": "${appsSolicitorAddressLine2}",
             "AddressLine3": ""
           },
+          "solicitorOrgUuid": "${solicitorOrgUuId}",
+          "solicitorPartyId": "${solicitorPartyId}",
           "currentRespondent": null,
           "isDateOfBirthKnown": null,
-          "solicitorReference": "SolRef246",
+          "solicitorReference": "${appSolicitorReference}",
           "solicitorTelephone": null,
           "isPlaceOfBirthKnown": null,
           "isDateOfBirthUnknown": null,
           "isAddressConfidential": "Yes",
           "isCurrentAddressKnown": null,
           "relationshipToChildren": null,
-          "representativeLastName": "Last",
-          "representativeFirstName": "First",
+          "representativeLastName": "${appRepresentativeLastName}",
+          "representativeFirstName": "${appRepresentativeFirstName}",
           "canYouProvidePhoneNumber": null,
           "applicantPreferredContact": null,
           "canYouProvideEmailAddress": "Yes",
@@ -110,108 +217,7 @@
           "isAtAddressLessThan5YearsWithDontKnow": null
         }
       }
-    ],
-    "respondents": [
-      {
-        "id": "${RepId}",
-        "value": {
-          "user": {},
-          "email": "prl_court_admin2@test.com",
-          "gender": "male",
-          "address": {
-            "County": "",
-            "Country": "United Kingdom",
-            "PostCode": "BS36 1AJ",
-            "PostTown": "BRISTOL",
-            "AddressLine1": "AVONMERE CARE HOME",
-            "AddressLine2": "BADMINTON ROAD",
-            "AddressLine3": ""
-          },
-          "dxNumber": null,
-          "landline": null,
-          "lastName": "TestTIISe",
-          "response": {},
-          "firstName": "RespCeYum",
-          "dateOfBirth": "1976-12-27",
-          "otherGender": null,
-          "phoneNumber": "0123456789",
-          "placeOfBirth": "London",
-          "previousName": null,
-          "solicitorOrg": {
-            "OrganisationID": "U1NS7EH",
-            "OrganisationName": "perf-prl-aALof"
-          },
-          "partyLevelFlag": {
-            "details": [],
-            "partyName": "RespCeYum TestTIISe",
-            "roleOnCase": "Respondent"
-          },
-          "sendSignUpLink": null,
-          "solicitorEmail": null,
-          "isAddressUnknown": null,
-          "solicitorAddress": {
-            "County": null,
-            "Country": null,
-            "PostCode": null,
-            "PostTown": null,
-            "AddressLine1": null,
-            "AddressLine2": null,
-            "AddressLine3": null
-          },
-          "currentRespondent": null,
-          "isDateOfBirthKnown": "Yes",
-          "solicitorReference": null,
-          "solicitorTelephone": null,
-          "isPlaceOfBirthKnown": "Yes",
-          "isDateOfBirthUnknown": null,
-          "isAddressConfidential": null,
-          "isCurrentAddressKnown": "Yes",
-          "relationshipToChildren": null,
-          "representativeLastName": null,
-          "representativeFirstName": null,
-          "canYouProvidePhoneNumber": "Yes",
-          "applicantPreferredContact": null,
-          "canYouProvideEmailAddress": "Yes",
-          "isAtAddressLessThan5Years": null,
-          "isPhoneNumberConfidential": null,
-          "isEmailAddressConfidential": null,
-          "applicantContactInstructions": null,
-          "respondentLivedWithApplicant": null,
-          "doTheyHaveLegalRepresentation": "no",
-          "addressLivedLessThan5YearsDetails": "asdfg",
-          "otherPersonRelationshipToChildren": [],
-          "isAtAddressLessThan5YearsWithDontKnow": "yes"
-        }
-      }
-    ],
-    "caseFlags": {
-      "roleOnCase": null,
-      "partyName": null,
-      "details": [
-        {
-          "value": {
-            "name": "Complex Case",
-            "subTypeValue": null,
-            "subTypeKey": null,
-            "otherDescription": null,
-            "flagComment": "l;m, .",
-            "dateTimeCreated": "2023-02-09T14:52:56.708Z",
-            "path": [
-              {
-                "id": null,
-                "value": "Case"
-              }
-            ],
-            "hearingRelevant": "Yes",
-            "flagCode": "CF0002",
-            "status": "Active"
-          }
-        }
-      ],
-      "flagType": "CF0002",
-      "otherFlagTypeDescription": "",
-      "flagComments": "l;m, ."
-    }
+    ]
   },
   "event": {
     "id": "c100CreateFlags",

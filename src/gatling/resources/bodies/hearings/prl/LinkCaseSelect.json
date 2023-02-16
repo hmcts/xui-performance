@@ -14,6 +14,24 @@
           "CaseReference": "${linkCase2}"
         },
         "id": null
+      },
+      {
+        "value": {
+          "CaseReference": "${linkCase3}"
+        },
+        "id": null
+      },
+      {
+        "value": {
+          "CaseReference": "${linkCase4}"
+        },
+        "id": null
+      },
+      {
+        "value": {
+          "CaseReference": "${linkCase5}"
+        },
+        "id": null
       }
     ]
   },
@@ -34,7 +52,25 @@
       },
       {
         "value": {
-          "CaseReference": "${linkcase2}"
+          "CaseReference": "${linkCase2}"
+        },
+        "id": null
+      },
+      {
+        "value": {
+          "CaseReference": "${linkCase3}"
+        },
+        "id": null
+      },
+      {
+        "value": {
+          "CaseReference": "${linkCase4}"
+        },
+        "id": null
+      },
+      {
+        "value": {
+          "CaseReference": "${linkCase5}"
         },
         "id": null
       }

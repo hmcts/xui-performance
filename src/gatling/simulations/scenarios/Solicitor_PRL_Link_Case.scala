@@ -4,6 +4,8 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import utils.{Common, Environment, Headers}
 
+import java.io.{BufferedWriter, FileWriter}
+
 /*======================================================================================
 * PRL link cases
 ======================================================================================*/
@@ -12,7 +14,7 @@ object Solicitor_PRL_Link_Case {
   
   val BaseURL = Environment.baseURL
   val IdamUrl = Environment.idamURL
-  val PRLcases = csv("cases.csv").circular
+  val PRLcases = csv("caseFlagsAdded.csv").circular
   val PRLcasesLink = csv("linkCases.csv").circular
 
 
@@ -114,7 +116,7 @@ object Solicitor_PRL_Link_Case {
         exec(http("XUI_PRL_Hearings_060_005_CreateCaseLink")
           .post(BaseURL + "/data/cases/${caseId}/events")
           .headers(Headers.commonHeader)
-          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
           .body(ElFileBody("bodies/hearings/prl/CreateLinkCase.json"))
           .check(substring("caseLinksFlag")))
 
@@ -122,5 +124,11 @@ object Solicitor_PRL_Link_Case {
 
       .pause(MinThinkTime, MaxThinkTime)
 
-
+      .exec { session =>
+        val fw = new BufferedWriter(new FileWriter("caseReady.csv", true))
+        try {
+          fw.write(session("caseId").as[String] + "\r\n")
+        } finally fw.close()
+        session
+      }
 }
