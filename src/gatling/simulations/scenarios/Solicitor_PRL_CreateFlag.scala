@@ -73,7 +73,40 @@ object Solicitor_PRL_CreateFlag {
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
           .check(jsonPath("$.event_token").saveAs("event_token"))
           .check(jsonPath("$.case_fields[2].formatted_value[0].id").saveAs("AppId"))
-          .check(jsonPath("$.case_fields[1].formatted_value[0].id").saveAs("RepId")))
+          .check(jsonPath("$.case_fields[1].formatted_value[0].id").saveAs("RepId"))
+          .check(jsonPath("$.case_fields[1].formatted_value[0].value.email").saveAs("repEmail"))
+          .check(jsonPath("$.case_fields[1].formatted_value[0].value.address.PostCode").saveAs("repPostCode"))
+          .check(jsonPath("$.case_fields[1].formatted_value[0].value.address.PostTown").saveAs("repPostTown"))
+          .check(jsonPath("$.case_fields[1].formatted_value[0].value.address.AddressLine1").saveAs("repAddressLine1"))
+          .check(jsonPath("$.case_fields[1].formatted_value[0].value.address.AddressLine2").saveAs("repAddressLine2"))
+          .check(jsonPath("$.case_fields[1].formatted_value[0].value.lastName").saveAs("repLastName"))
+          .check(jsonPath("$.case_fields[1].formatted_value[0].value.firstName").saveAs("repFirstName"))
+          .check(jsonPath("$.case_fields[1].formatted_value[0].value.dateOfBirth").saveAs("repDateOfBirth"))
+          .check(jsonPath("$.case_fields[1].formatted_value[0].value.solicitorOrg.OrganisationID").saveAs("repOrganisationID"))
+          .check(jsonPath("$.case_fields[1].formatted_value[0].value.solicitorOrg.OrganisationName").saveAs("repOrganisationName"))
+          .check(jsonPath("$.case_fields[1].formatted_value[0].value.partyLevelFlag.partyName").saveAs("repPartyName"))
+          .check(jsonPath("$.case_fields[1].formatted_value[0].value.addressLivedLessThan5YearsDetails").saveAs("repAddressLivedLessThan5YearsDetails"))
+          .check(jsonPath("$.case_fields[2].formatted_value[0].value.email").saveAs("appEmail"))
+          .check(jsonPath("$.case_fields[2].formatted_value[0].value.address.PostCode").saveAs("appPostCode"))
+          .check(jsonPath("$.case_fields[2].formatted_value[0].value.address.AddressLine1").saveAs("appAddressLine1"))
+          .check(jsonPath("$.case_fields[2].formatted_value[0].value.address.AddressLine2").saveAs("appAddressLine2"))
+          .check(jsonPath("$.case_fields[2].formatted_value[0].value.dxNumber").saveAs("appDxNumber"))
+          .check(jsonPath("$.case_fields[2].formatted_value[0].value.lastName").saveAs("appLastName"))
+          .check(jsonPath("$.case_fields[2].formatted_value[0].value.firstName").saveAs("appFirstName"))
+          .check(jsonPath("$.case_fields[2].formatted_value[0].value.dateOfBirth").saveAs("appDateOfBirth"))
+          .check(jsonPath("$.case_fields[2].formatted_value[0].value.solicitorOrg.OrganisationID").saveAs("appOrganisationID"))
+          .check(jsonPath("$.case_fields[2].formatted_value[0].value.solicitorOrg.OrganisationName").saveAs("appOrganisationName"))
+          .check(jsonPath("$.case_fields[2].formatted_value[0].value.partyLevelFlag.partyName").saveAs("appPartyName"))
+          .check(jsonPath("$.case_fields[2].formatted_value[0].value.solicitorEmail").saveAs("appsSolicitorEmail"))
+          .check(jsonPath("$.case_fields[2].formatted_value[0].value.solicitorAddress.PostCode").saveAs("appsSolicitorPostCode"))
+          .check(jsonPath("$.case_fields[2].formatted_value[0].value.solicitorAddress.AddressLine1").saveAs("appsSolicitorAddressLine1"))
+          .check(jsonPath("$.case_fields[2].formatted_value[0].value.solicitorAddress.AddressLine2").saveAs("appsSolicitorAddressLine2"))
+          .check(jsonPath("$.case_fields[2].formatted_value[0].value.solicitorAddress.PostTown").saveAs("appsSolicitorPostTown"))
+          .check(jsonPath("$.case_fields[2].formatted_value[0].value.solicitorReference").saveAs("appSolicitorReference"))
+          .check(jsonPath("$.case_fields[2].formatted_value[0].value.representativeFirstName").saveAs("appRepresentativeFirstName"))
+          .check(jsonPath("$.case_fields[2].formatted_value[0].value.representativeLastName").saveAs("appRepresentativeLastName"))
+          .check(jsonPath("$.case_fields[2].formatted_value[0].value.solicitorOrgUuid").saveAs("solicitorOrgUuId"))
+          .check(jsonPath("$.case_fields[2].formatted_value[0].value.solicitorPartyId").saveAs("solicitorPartyId")))
           //   .check(jsonPath("$.case_fields[0].formatted_value[0].id").saveAs("local_Court_Id"))
         //  .check(jsonPath("$.id").is("createCaseFlag")))
 
@@ -123,7 +156,7 @@ object Solicitor_PRL_CreateFlag {
       /*======================================================================================
       * Review flag details
       ======================================================================================*/
-//should be a post
+
       .group("XUI_PRL_070_ReviewFlagDetails") {
         exec(http("XUI_PRL_070_005_ReviewFlagDetails")
           .post(BaseURL + "/data/cases/${caseId}/events")
@@ -137,7 +170,13 @@ object Solicitor_PRL_CreateFlag {
 
       .pause(MinThinkTime, MaxThinkTime)
 
-
+      .exec { session =>
+        val fw = new BufferedWriter(new FileWriter("caseFlagsAdded.csv", true))
+        try {
+          fw.write(session("caseId").as[String] + "\r\n")
+        } finally fw.close()
+        session
+      }
 
 
 

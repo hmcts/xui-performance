@@ -1,7 +1,5 @@
 {
   "data": {
-    "caseLinksFlag": null,
-    "caseNameHmctsInternal": "PerfTest C100 Case",
     "caseLinks": [
       {
         "value": {
@@ -14,8 +12,28 @@
           "CaseReference": "${linkCase2}"
         },
         "id": null
+      },
+      {
+        "value": {
+          "CaseReference": "${linkCase3}"
+        },
+        "id": null
+      },
+      {
+        "value": {
+          "CaseReference": "${linkCase4}"
+        },
+        "id": null
+      },
+      {
+        "value": {
+          "CaseReference": "${linkCase5}"
+        },
+        "id": null
       }
-    ]
+    ],
+    "caseLinksFlag": null,
+    "caseNameHmctsInternal": "PerfTest C100 Case"
   },
   "event": {
     "id": "createCaseLink",

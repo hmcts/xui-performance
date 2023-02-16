@@ -28,7 +28,7 @@ class XUI_Simulation extends Simulation {
 	val UserFeederBailsHO = csv("UserDataBailsHO.csv").circular
 	val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
 
-	val PRLcases = csv("casePrepareForHearing.csv").circular
+	//val PRLcases = csv("casePrepareForHearing.csv").circular
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
@@ -117,10 +117,11 @@ class XUI_Simulation extends Simulation {
 					repeat(1) {
 					exitBlockOnFail {
 						//C100 Journey
-						feed(PRLcases)
-				//		exec(Solicitor_PRL_CreateFlag.CreateAFlag)
-						repeat(5) {
-							exec(Solicitor_PRL_AddAnOrder.AddAnOrder)
+				//		feed(PRLcases)
+						repeat(50) {
+												exec(Solicitor_PRL_Link_Case.LinkCase)
+				//					exec(Solicitor_PRL_CreateFlag.CreateAFlag)
+				//			exec(Solicitor_PRL_AddAnOrder.AddAnOrder)
 								//		exec(Solicitor_PRL_C100_ServiceRequestUpdate.PaymentViaAPI)
 								/*exec(Solicitor_PRL_C100.CreatePrivateLawCase)
 							.exec(Solicitor_PRL_C100.TypeOfApplication)
