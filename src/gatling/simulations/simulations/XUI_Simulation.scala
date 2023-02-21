@@ -59,7 +59,7 @@ class XUI_Simulation extends Simulation {
 
 	/* PERFORMANCE TEST CONFIGURATION */
 	val bailsTargetPerHour: Double = 10
-	val prlTargetPerHour: Double = 15
+	val prlTargetPerHour: Double = 20
 	val probateTargetPerHour: Double = 250
 	val iacTargetPerHour: Double = 20
 	val fplTargetPerHour: Double = 10
@@ -528,7 +528,7 @@ class XUI_Simulation extends Simulation {
 			  */
 	).protocols(httpProtocol)
 		.assertions(assertions(testType))
-		.maxDuration(60 minutes)
+		.maxDuration(75 minutes)
 
 
 }
