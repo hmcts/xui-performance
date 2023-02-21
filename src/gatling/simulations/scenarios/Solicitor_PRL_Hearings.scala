@@ -17,8 +17,9 @@ object Solicitor_PRL_Hearings {
 
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
-  val UserFeederHearingCases = csv("cases.csv").circular
-  val UserFeederHearingId = csv("casesAndId.csv").circular
+  val UserFeederHearingCases = csv("caseReady.csv").circular
+  val UserFeederHearingId = csv("hearingRequests.csv").circular
+  val UserFeederHearingIdCancel = csv("hearingRequestsDelete.csv").circular
   val randomFeeder = Iterator.continually(Map("hearings-percentage" -> Random.nextInt(100)))
   val hearingPercentage = 90
 
@@ -311,6 +312,59 @@ Will this hearing need to be linked to other hearings?
     }
     .pause(MinThinkTime, MaxThinkTime)
 
+      .exec { session =>
+        val fw = new BufferedWriter(new FileWriter("hearingRequests.csv", true))
+        try {
+          fw.write(session("hearingRequest").as[String] +","+ fw.write(session("caseId").as[String] + "\r\n"))
+        } finally fw.close()
+        session
+      }
+
+  val GetHearing =
+
+  /*======================================================================================
+  * Get a singular case
+  ======================================================================================*/
+
+    feed(UserFeederHearingId)
+
+      .group("XUI_GetHearingPRL_180_GetHearing") {
+
+        exec(http("XUI_GetHearing_180_005_GetHearing")
+          .get(BaseURL + "/api/hearings/getHearing?hearingId=${hearingRequest}")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/json, text/plain, */*")
+          .check(jsonPath("$.partyDetails[0].partyID").saveAs("partyId"))
+          .check(jsonPath("$.partyDetails[1].partyID").saveAs("partyIdApp"))
+          .check(jsonPath("$.partyDetails[2].partyID").saveAs("partyIdResp"))
+          .check(jsonPath("$.requestDetails.versionNumber").saveAs("versionNumber")))
+
+          .exec(Common.isAuthenticated)
+
+          .exec(http("XUI_GetHearing_180_010_GetHearing")
+            .get(BaseURL + "/api/prd/caseFlag/getCaseFlagRefData?serviceId=ABA5")
+            .headers(Headers.commonHeader)
+            .header("accept", "application/json, text/plain, */*")
+            .check(substring("FlagDetails")))
+
+
+          .exec(http("XUI_GetHearing_180_015_GetHearing")
+            .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingChannel&serviceId=ABA5&isChildRequired=N")
+            .headers(Headers.navigationHeader)
+            .header("accept", "application/json, text/plain, */*")
+            .check(substring("HearingChannel")))
+
+
+          .exec(http("XUI_GetHearing_180_020_GetHearing")
+            .get(BaseURL + "/api/prd/location/getLocationById?epimms_id=20262")
+            .headers(Headers.navigationHeader)
+            .header("accept", "application/json, text/plain, */*")
+            .check(substring("court_address")))
+
+      }
+      .pause(MinThinkTime, MaxThinkTime)
+
+
   val UpdateHearing =
 
   /*======================================================================================
@@ -438,7 +492,7 @@ Will this hearing need to be linked to other hearings?
 
     group("XUI_CancelHearingPRL_230_CancelHearing") {
 
-      feed(UserFeederHearingId)
+      feed(UserFeederHearingIdCancel)
 
         .exec(Common.isAuthenticated)
 
@@ -474,7 +528,7 @@ Will this hearing need to be linked to other hearings?
 
           .exec(http("XUI_DeleteHearingPRL_240_010_WhyCancelled")
             .get(BaseURL + "/api/hearings/getHearings?caseId=${caseId}")
-            .headers(Headers.navigationHeader)
+            .headers(Headers.commonHeader)
             .header("accept", "application/json, text/plain, */*")
             .check(substring("caseHearings")))
 
