@@ -70,7 +70,7 @@ class XUI_Simulation extends Simulation {
 	val caseworkerTargetPerHour: Double = 1000
 
 	//This determines the percentage split of PRL journeys, by C100 or FL401
-	val prlC100Percentage = 100 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
+	val prlC100Percentage = 90 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
 
 	val rampUpDurationMins = 5
 	val rampDownDurationMins = 5
@@ -107,23 +107,37 @@ class XUI_Simulation extends Simulation {
 	val PRLSolicitorScenario = scenario("***** Private Law Create Case *****")
 	//	.exitBlockOnFail {
 			.repeat(1) {
-			feed(UserFeederPRL)
-				.exec(_.set("env", s"${env}")
-					.set("caseType", "PRLAPPS"))
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.feed(randomFeeder)
-				.doIfOrElse(session => session("prl-percentage").as[Int] < prlC100Percentage) {
-					repeat(1) {
-					exitBlockOnFail {
-						//C100 Journey
-				//		feed(PRLcases)
-						repeat(50) {
-												exec(Solicitor_PRL_Link_Case.LinkCase)
-				//					exec(Solicitor_PRL_CreateFlag.CreateAFlag)
-				//			exec(Solicitor_PRL_AddAnOrder.AddAnOrder)
-								//		exec(Solicitor_PRL_C100_ServiceRequestUpdate.PaymentViaAPI)
-								/*exec(Solicitor_PRL_C100.CreatePrivateLawCase)
+				feed(UserFeederPRL)
+					.exec(_.set("env", s"${env}")
+						.set("caseType", "PRLAPPS"))
+					.exec(Homepage.XUIHomePage)
+					.exec(Login.XUILogin)
+					.feed(randomFeeder)
+					.doIfOrElse(session => session("prl-percentage").as[Int] < prlC100Percentage) {
+						repeat(5) {
+							exitBlockOnFail {
+								//C100 Journey
+								//		feed(PRLcases)
+								repeat(1) {
+														exec(Solicitor_PRL_Hearings.ViewAllHearings)
+							.exec(Solicitor_PRL_Hearings.RequestHearing)
+																	.exec(Solicitor_PRL_Hearings.GetHearing)
+							.exec(Solicitor_PRL_Hearings.ViewAllHearings)
+																	.exec(Solicitor_PRL_Hearings.UpdateHearing)
+																	.exec(Solicitor_PRL_Hearings.ViewAllHearings)
+																	.exec(Solicitor_PRL_Hearings.UpdateHearing)
+																	.exec(Solicitor_PRL_Hearings.ViewAllHearings)
+																	.exec(Solicitor_PRL_Hearings.GetHearing)
+																	.exec(Solicitor_PRL_Hearings.ViewAllHearings)
+																	.exec(Solicitor_PRL_Hearings.GetHearing)
+
+
+									//							exec(Solicitor_PRL_Link_Case.LinkCase)
+							//		exec(Solicitor_PRL_Hearings.CancelHearing)
+										//					exec(Solicitor_PRL_CreateFlag.CreateAFlag)
+										//			exec(Solicitor_PRL_AddAnOrder.AddAnOrder)
+										//		exec(Solicitor_PRL_C100_ServiceRequestUpdate.PaymentViaAPI)
+										/*exec(Solicitor_PRL_C100.CreatePrivateLawCase)
 							.exec(Solicitor_PRL_C100.TypeOfApplication)
 							.exec(Solicitor_PRL_C100.HearingUrgency)
 							.exec(Solicitor_PRL_C100.ApplicantDetails)
@@ -135,32 +149,48 @@ class XUI_Simulation extends Simulation {
 							.exec(Solicitor_PRL_C100.SubmitAndPay)
 
 						 */
-								.exec {
-									session =>
-										println(session)
-										session
+										.exec {
+											session =>
+												println(session)
+												session
 
 
+										}
 								}
+
+
+							}
 						}
+						//		.exec(Logout.XUILogout)
 
 
+						//               exec(Solicitor_PRL_CreateFlag.CreateAFlag)
 
-
-
-					}
-					}
-				//		.exec(Logout.XUILogout)
-
-
-
-             //               exec(Solicitor_PRL_CreateFlag.CreateAFlag)
-
-			//			exec(Solicitor_PRL_AddAnOrder.AddAnOrder)
-			//				.exec(Solicitor_PRL_Continued.PRL)
+						//			exec(Solicitor_PRL_AddAnOrder.AddAnOrder)
+						//				.exec(Solicitor_PRL_Continued.PRL)
 
 					} {
 						//FL401 Journey
+						repeat(1) {
+							exitBlockOnFail {
+								//C100 Journey
+								//		feed(PRLcases)
+								repeat(1) {
+									exec(Solicitor_PRL_Hearings.ViewAllHearings)
+										.exec(Solicitor_PRL_Hearings.RequestHearing)
+										.exec(Solicitor_PRL_Hearings.GetHearing)
+										.exec(Solicitor_PRL_Hearings.ViewAllHearings)
+										.exec(Solicitor_PRL_Hearings.UpdateHearing)
+										.exec(Solicitor_PRL_Hearings.ViewAllHearings)
+										.exec(Solicitor_PRL_Hearings.UpdateHearing)
+										.exec(Solicitor_PRL_Hearings.ViewAllHearings)
+										.exec(Solicitor_PRL_Hearings.CancelHearing)
+										.exec(Solicitor_PRL_Hearings.GetHearing)
+										.exec(Solicitor_PRL_Hearings.ViewAllHearings)
+										.exec(Solicitor_PRL_Hearings.GetHearing)
+								}
+
+								/*
 						exec(Solicitor_PRL_FL401.CreatePrivateLawCase)
 							.exec(Solicitor_PRL_FL401.TypeOfApplication)
 							.exec(Solicitor_PRL_FL401.WithoutNoticeOrder)
@@ -173,12 +203,16 @@ class XUI_Simulation extends Simulation {
 							.exec(Solicitor_PRL_FL401.UploadDocuments)
 							.exec(Solicitor_PRL_FL401.ViewPDF)
 							.exec(Solicitor_PRL_FL401.StatementOfTruth)
+
+					 */
+							}
+
+							//	.exec(Logout.XUILogout)
+
+
+						}
 					}
-
-					//	.exec(Logout.XUILogout)
-
-
-				}
+			}
 
 
 
