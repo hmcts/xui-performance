@@ -1,8 +1,8 @@
 {
   "requestDetails": {
     "status": "HEARING_REQUESTED",
-    "timestamp": "2023-02-15T10:47:45.453595",
-    "versionNumber": 1,
+      "timestamp": "${timestamp}",
+    "versionNumber": "${versionNumber}",
     "hearingRequestID": "${hearingRequest}"
   },
   "hearingDetails": {
@@ -70,15 +70,15 @@
       "partyRole": "APPL",
       "individualDetails": {
         "title": null,
-        "firstName": "AppugKtC",
-        "lastName": "TestfOGyE",
+        "firstName": "${partyFirstName}",
+        "lastName": "${partyLastName}",
         "preferredHearingChannel": "INTER",
         "interpreterLanguage": "",
         "reasonableAdjustments": [],
         "vulnerableFlag": null,
         "vulnerabilityDetails": "",
         "hearingChannelEmail": [
-          "zOPGP@gmail.com"
+          "${partyEmail}"
         ],
         "hearingChannelPhone": [
           "0123456789"
@@ -94,15 +94,15 @@
       "partyRole": "LGRP",
       "individualDetails": {
         "title": null,
-        "firstName": "First",
-        "lastName": "Last",
+        "firstName": "${appFirstName}",
+        "lastName": "${appLastName}",
         "preferredHearingChannel": "INTER",
         "interpreterLanguage": null,
         "reasonableAdjustments": [],
         "vulnerableFlag": null,
         "vulnerabilityDetails": null,
         "hearingChannelEmail": [
-          "solicitor@gmail.com"
+          "${appEmail}"
         ],
         "hearingChannelPhone": [],
         "relatedParties": [],
@@ -116,15 +116,15 @@
       "partyRole": "RESP",
       "individualDetails": {
         "title": null,
-        "firstName": "RespfZrQx",
-        "lastName": "TestMQLtT",
+        "firstName": "${respFirstName}",
+        "lastName": "${respLastName}",
         "preferredHearingChannel": "INTER",
         "interpreterLanguage": "",
         "reasonableAdjustments": [],
         "vulnerableFlag": null,
         "vulnerabilityDetails": "",
         "hearingChannelEmail": [
-          "prl_court_admin2@test.com"
+          "${respEmail}"
         ],
         "hearingChannelPhone": [
           "0123456789"
