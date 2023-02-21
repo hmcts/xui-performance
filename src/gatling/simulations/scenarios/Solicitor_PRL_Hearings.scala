@@ -313,7 +313,7 @@ Will this hearing need to be linked to other hearings?
     .pause(MinThinkTime, MaxThinkTime)
 
       .exec { session =>
-        val fw = new BufferedWriter(new FileWriter("hearingRequests.csv", true))
+        val fw = new BufferedWriter(new FileWriter("hearingRequestsNew.csv", true))
         try {
           fw.write(session("hearingRequest").as[String] +","+ fw.write(session("caseId").as[String] + "\r\n"))
         } finally fw.close()
