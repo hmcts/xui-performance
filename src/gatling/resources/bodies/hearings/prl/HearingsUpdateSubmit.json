@@ -77,12 +77,8 @@
         "reasonableAdjustments": [],
         "vulnerableFlag": null,
         "vulnerabilityDetails": "",
-        "hearingChannelEmail": [
-          "${partyEmail}"
-        ],
-        "hearingChannelPhone": [
-          "0123456789"
-        ],
+        "hearingChannelEmail": [],
+        "hearingChannelPhone": [],
         "relatedParties": [],
         "custodyStatus": null,
         "otherReasonableAdjustmentDetails": null
@@ -101,9 +97,7 @@
         "reasonableAdjustments": [],
         "vulnerableFlag": null,
         "vulnerabilityDetails": null,
-        "hearingChannelEmail": [
-          "${appEmail}"
-        ],
+        "hearingChannelEmail": [],
         "hearingChannelPhone": [],
         "relatedParties": [],
         "custodyStatus": null,
@@ -123,12 +117,8 @@
         "reasonableAdjustments": [],
         "vulnerableFlag": null,
         "vulnerabilityDetails": "",
-        "hearingChannelEmail": [
-          "${respEmail}"
-        ],
-        "hearingChannelPhone": [
-          "0123456789"
-        ],
+        "hearingChannelEmail": [],
+        "hearingChannelPhone": [],
         "relatedParties": [],
         "custodyStatus": null,
         "otherReasonableAdjustmentDetails": null

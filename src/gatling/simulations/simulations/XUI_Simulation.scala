@@ -114,7 +114,7 @@ class XUI_Simulation extends Simulation {
 					.exec(Login.XUILogin)
 					.feed(randomFeeder)
 					.doIfOrElse(session => session("prl-percentage").as[Int] < prlC100Percentage) {
-						repeat(5) {
+						repeat(1) {
 							exitBlockOnFail {
 								//C100 Journey
 								//		feed(PRLcases)
