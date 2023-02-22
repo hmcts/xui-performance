@@ -106,7 +106,7 @@ class XUI_Simulation extends Simulation {
  	===============================================================================================*/
 	val PRLSolicitorScenario = scenario("***** Private Law Create Case *****")
 	//	.exitBlockOnFail {
-			.repeat(1) {
+			.repeat(5) {
 				feed(UserFeederPRL)
 					.exec(_.set("env", s"${env}")
 						.set("caseType", "PRLAPPS"))
