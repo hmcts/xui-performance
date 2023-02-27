@@ -138,7 +138,7 @@ object Solicitor_PRL_Hearings {
     What stage is this hearing at? - Breach
     ======================================================================================*/
 
-    .group("XUI_RequestHearingPRL_070_HearingStage") {
+    .group("XUI_RequestHearingPRL_060_HearingStage") {
 
       exec(http("XUI_RequestHearingPRL_070_005_HearingStage")
         .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingChannel&serviceId=ABA5&isChildRequired=N")
@@ -154,7 +154,7 @@ object Solicitor_PRL_Hearings {
     How will each participant attend the hearing? - In Person, 1
     ======================================================================================*/
 
-      .group("XUI_RequestHearingPRL_080_ParticipantAttend") {
+      .group("XUI_RequestHearingPRL_070_ParticipantAttend") {
 
         exec(http("XUI_RequestHearing_110_005_ParticipantAttend")
           .get(BaseURL + "/api/prd/location/getLocationById?epimms_id=36791")
@@ -168,7 +168,7 @@ object Solicitor_PRL_Hearings {
       /*======================================================================================
 Hearing Venue Details
 ======================================================================================*/
-          .group("XUI_RequestHearingPRL_090_HearingVenue") {
+          .group("XUI_RequestHearingPRL_080_HearingVenue") {
 
             exec(http("XUI_RequestHearingPRL_090_005_HearingVenue")
               .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=JudgeType&serviceId=ABA5&isChildRequired=N")
@@ -200,7 +200,7 @@ Hearing Venue Details
     Do you want a specific judge? - no
     ======================================================================================*/
 
-    .group("XUI_HearingPRL_100_Specific_Judge") {
+    .group("XUI_HearingPRL_090_Specific_Judge") {
 
       exec(http("XUI_Hearing_100_005_Specific_Judge")
         .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingPriority&serviceId=ABA5&isChildRequired=N")
@@ -232,7 +232,7 @@ Hearing Venue Details
     Select length, date and priority level of hearing - 45 mins,
     ======================================================================================*/
 
-      .group("XUI_RequestHearingPRL_110_SelectLength") {
+      .group("XUI_RequestHearingPRL_100_SelectLength") {
 
         exec(http("XUI_RequestHearingPRL_110_005_SelectLength")
           .post("/api/hearings/loadServiceLinkedCases?jurisdictionId=PRIVATELAW")
@@ -269,21 +269,21 @@ Will this hearing need to be linked to other hearings?
     Enter any additional instructions for the hearing
     ======================================================================================*/
 
-    .group("XUI_RequestHearingPRL_130_AdditionalInstructions") {
+    .group("XUI_RequestHearingPRL_110_AdditionalInstructions") {
 
-      exec(http("XUI_RequestHearingPRL_130_005_AdditionalInstructions")
+      exec(http("XUI_RequestHearingPRL_110_005_AdditionalInstructions")
         .get(BaseURL + "/api/prd/caseFlag/getCaseFlagRefData?serviceId=ABA5")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .check(substring("CATGRY")))
 
-      .exec(http("XUI_RequestHearingPRL_130_010_AdditionalInstructions")
+      .exec(http("XUI_RequestHearingPRL_110_010_AdditionalInstructions")
         .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingChannel&serviceId=ABA5&isChildRequired=N")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .check(substring("HearingChannel")))
 
-      .exec(http("XUI_RequestHearing_160_015_AdditionalInstructions")
+      .exec(http("XUI_RequestHearing_110_015_AdditionalInstructions")
         .get(BaseURL + "/api/prd/location/getLocationById?epimms_id=36791")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -298,7 +298,7 @@ Will this hearing need to be linked to other hearings?
     Check your answers
     ======================================================================================*/
 
-    .group("XUI_RequestHearing_170_SubmitRequest") {
+    .group("XUI_RequestHearing_120_SubmitRequest") {
 
         exec(http("XUI_RequestHearing_170_005_SubmitRequest")
           .post(BaseURL + "/api/hearings/submitHearingRequest")
@@ -328,9 +328,9 @@ Will this hearing need to be linked to other hearings?
 
     feed(UserFeederHearingId)
 
-      .group("XUI_GetHearingPRL_180_GetHearing") {
+      .group("XUI_GetHearingPRL_130_GetHearing") {
 
-        exec(http("XUI_GetHearing_180_005_GetHearing")
+        exec(http("XUI_GetHearing_130_005_GetHearing")
           .get(BaseURL + "/api/hearings/getHearing?hearingId=${hearingRequest}")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
@@ -341,21 +341,21 @@ Will this hearing need to be linked to other hearings?
 
           .exec(Common.isAuthenticated)
 
-          .exec(http("XUI_GetHearing_180_010_GetHearing")
+          .exec(http("XUI_GetHearing_130_010_GetHearing")
             .get(BaseURL + "/api/prd/caseFlag/getCaseFlagRefData?serviceId=ABA5")
             .headers(Headers.commonHeader)
             .header("accept", "application/json, text/plain, */*")
             .check(substring("FlagDetails")))
 
 
-          .exec(http("XUI_GetHearing_180_015_GetHearing")
+          .exec(http("XUI_GetHearing_130_015_GetHearing")
             .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingChannel&serviceId=ABA5&isChildRequired=N")
             .headers(Headers.navigationHeader)
             .header("accept", "application/json, text/plain, */*")
             .check(substring("HearingChannel")))
 
 
-          .exec(http("XUI_GetHearing_180_020_GetHearing")
+          .exec(http("XUI_GetHearing_130_020_GetHearing")
             .get(BaseURL + "/api/prd/location/getLocationById?epimms_id=20262")
             .headers(Headers.navigationHeader)
             .header("accept", "application/json, text/plain, */*")
@@ -373,9 +373,9 @@ Will this hearing need to be linked to other hearings?
 
     feed(UserFeederHearingId)
 
-      .group("XUI_GetHearingPRL_180_GetHearing") {
+      .group("XUI_GetHearingPRL_140_GetHearing") {
 
-        exec(http("XUI_GetHearing_180_005_GetHearing")
+        exec(http("XUI_GetHearing_140_005_GetHearing")
           .get(BaseURL + "/api/hearings/getHearing?hearingId=${hearingRequest}")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
@@ -397,21 +397,21 @@ Will this hearing need to be linked to other hearings?
 
           .exec(Common.isAuthenticated)
 
-          .exec(http("XUI_GetHearing_180_010_GetHearing")
+          .exec(http("XUI_GetHearing_140_010_GetHearing")
             .get(BaseURL + "/api/prd/caseFlag/getCaseFlagRefData?serviceId=ABA5")
             .headers(Headers.commonHeader)
             .header("accept", "application/json, text/plain, */*")
             .check(substring("FlagDetails")))
 
 
-          .exec(http("XUI_GetHearing_180_015_GetHearing")
+          .exec(http("XUI_GetHearing_140_015_GetHearing")
             .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingChannel&serviceId=ABA5&isChildRequired=N")
             .headers(Headers.navigationHeader)
             .header("accept", "application/json, text/plain, */*")
             .check(substring("HearingChannel")))
 
 
-          .exec(http("XUI_GetHearing_180_020_GetHearing")
+          .exec(http("XUI_GetHearing_140_020_GetHearing")
             .get(BaseURL + "/api/prd/location/getLocationById?epimms_id=20262")
             .headers(Headers.navigationHeader)
             .header("accept", "application/json, text/plain, */*")
@@ -430,29 +430,29 @@ Will this hearing need to be linked to other hearings?
       * Change 'Does the hearing need to take place on a specific date?' to No
       ======================================================================================*/
 
-      .group("XUI_UpdateHearingPRL_200_SubmitUpdate") {
-        exec(http("XUI_UpdateHearingPRL_200_005_SubmitUpdate")
+      .group("XUI_UpdateHearingPRL_150_SubmitUpdate") {
+        exec(http("XUI_UpdateHearingPRL_150_005_SubmitUpdate")
           .get(BaseURL + "/api/prd/caseFlag/getCaseFlagRefData?serviceId=ABA5")
           .headers(Headers.navigationHeader)
           .header("accept", "application/json, text/plain, */*")
           .check(substring("FlagDetails")))
 
 
-          .exec(http("XUI_UpdateHearingPRL_200_015_SubmitUpdate")
+          .exec(http("XUI_UpdateHearingPRL_150_015_SubmitUpdate")
             .get(BaseURL + "/api/prd/location/getLocationById?epimms_id=20262")
             .headers(Headers.navigationHeader)
             .header("accept", "application/json, text/plain, */*")
             .check(substring("court_address")))
 
 
-        .exec(http("XUI_UpdateHearingPRL_200_010_SubmitUpdate")
+        .exec(http("XUI_UpdateHearingPRL_150_010_SubmitUpdate")
           .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingChannel&serviceId=ABA5&isChildRequired=N")
           .headers(Headers.navigationHeader)
           .header("accept", "application/json, text/plain, */*")
           .check(substring("HearingChannel")))
 
 
-          .exec(http("XUI_UpdateHearingPRL_200_020_SubmitUpdate")
+          .exec(http("XUI_UpdateHearingPRL_150_020_SubmitUpdate")
             .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingSubChannel&serviceId=ABA5&isChildRequired=N")
             .headers(Headers.commonHeader)
             .header("accept", "application/json, text/plain, */*")
@@ -479,8 +479,8 @@ Will this hearing need to be linked to other hearings?
 * Provide a reason for changing this hearing - Judge Requested Change
 ======================================================================================*/
 
-      .group("XUI_UpdateHearingPRL_220_ReasonForChange") {
-        exec(http("XUI_UpdateHearingPRL_220_005_ReasonForChange")
+      .group("XUI_UpdateHearingPRL_160_ReasonForChange") {
+        exec(http("XUI_UpdateHearingPRL_160_005_ReasonForChange")
           .put(BaseURL + "/api/hearings/updateHearingRequest?hearingId=${hearingRequest}")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
@@ -501,13 +501,13 @@ Will this hearing need to be linked to other hearings?
   * Click on 'Cancel'
   ======================================================================================*/
 
-    group("XUI_CancelHearingPRL_230_CancelHearing") {
+    group("XUI_CancelHearingPRL_170_CancelHearing") {
 
       feed(UserFeederHearingIdCancel)
 
         .exec(Common.isAuthenticated)
 
-        .exec(http("XUI_CancelHearingPRL_230_005_CancelHearing")
+        .exec(http("XUI_CancelHearingPRL_170_005_CancelHearing")
           .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=CaseManagementCancellationReasons&serviceId=ABA5&isChildRequired=N")
           .headers(Headers.navigationHeader)
           .header("accept", "application/json, text/plain, */*")
@@ -524,9 +524,9 @@ Will this hearing need to be linked to other hearings?
       * Are you sure you want to cancel this hearing? - Withdrawn
       ======================================================================================*/
 
-      .group("XUI_DeleteHearingPRL_240_WhyCancelled") {
+      .group("XUI_DeleteHearingPRL_180_WhyCancelled") {
 
-        exec(http("XUI_DeleteHearingPRL_240_005_WhyCancelled")
+        exec(http("XUI_DeleteHearingPRL_180_005_WhyCancelled")
             .delete(BaseURL + "/api/hearings/cancelHearings?hearingId=${hearingRequest}")
             .headers(Headers.commonHeader)
             .header("accept", "application/json, text/plain, */*")
@@ -537,14 +537,14 @@ Will this hearing need to be linked to other hearings?
 
         .exec(Common.isAuthenticated)
 
-          .exec(http("XUI_DeleteHearingPRL_240_010_WhyCancelled")
+          .exec(http("XUI_DeleteHearingPRL_180_010_WhyCancelled")
             .get(BaseURL + "/api/hearings/getHearings?caseId=${caseId}")
             .headers(Headers.commonHeader)
             .header("accept", "application/json, text/plain, */*")
             .check(substring("caseHearings")))
 
 
-          .exec(http("XUI_DeleteHearingPRL_240_015_WhyCancelled")
+          .exec(http("XUI_DeleteHearingPRL_180_015_WhyCancelled")
             .post(BaseURL + "/api/hearings/loadServiceHearingValues?jurisdictionId=PRIVATELAW")
             .headers(Headers.commonHeader)
             .header("accept", "application/json, text/plain, */*")
@@ -552,7 +552,7 @@ Will this hearing need to be linked to other hearings?
             .check(substring("hearingChannelEmail")))
 
 
-          .exec(http("XUI_DeleteHearingPRL_240_020_WhyCancelled")
+          .exec(http("XUI_DeleteHearingPRL_180_020_WhyCancelled")
             .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingType&serviceId=ABA5&isChildRequired=N")
             .headers(Headers.navigationHeader)
             .header("accept", "application/json, text/plain, */*")
