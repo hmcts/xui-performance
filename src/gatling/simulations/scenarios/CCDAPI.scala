@@ -63,7 +63,6 @@ object CCDAPI {
       .header("Content-Type", "application/json")
       .body(ElFileBody("bodies/nfd/AssignCase.json"))
       .check(jsonPath("$.status_message").is("Case-User-Role assignments created successfully")))
-
     .pause(1)
 
   // allows the event to be used where the userType = "Caseworker" or "Legal"
