@@ -496,7 +496,7 @@ object Solicitor_FPL {
     Email: Text
     Update Notifications: No
     ======================================================================================*/
-/*
+
     .group("XUI_FPL_190_AddLocalAuthorityColleagues") {
       exec(http("XUI_FPL_190_005_AddLocalAuthorityColleagues")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterLocalAuthorityColleagues")
@@ -508,9 +508,9 @@ object Solicitor_FPL {
         .check(substring("localAuthorityColleaguesList")))
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+   // .pause(MinThinkTime , MaxThinkTime )
 
- */
+
 
     /*======================================================================================
      Review details and click Save and Continue
