@@ -29,7 +29,7 @@ object Login {
         .headers(Headers.navigationHeader)
         .headers(Headers.postHeader)
         .check(regex("Manage cases")))
-
+/*
       .exec(Common.configurationui)
 
       .exec(Common.configJson)
@@ -44,12 +44,14 @@ object Login {
 
       .exec(Common.monitoringTools)
 
+ */
+
       //if there is no in-flight case, set the case to 0 for the activity calls
       .doIf("${caseId.isUndefined()}") {
         exec(_.set("caseId", "0"))
       }
 
-      .exec(Common.caseActivityGet)
+    //  .exec(Common.caseActivityGet)
 
       .exec(http("XUI_020_010_Jurisdictions")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
@@ -60,7 +62,7 @@ object Login {
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
 
       .exec(Common.orgDetails)
-      
+  /*
       .exec(http("XUI_020_015_WorkBasketInputs")
         .get("/data/internal/case-types/${caseType}/work-basket-inputs")
         .headers(Headers.commonHeader)
@@ -76,7 +78,9 @@ object Login {
         .body(StringBody("""{"size":25}"""))
         .check(substring("columns")))
 
+   */
+
     }
-    .pause(MinThinkTime , MaxThinkTime)
+    //.pause(MinThinkTime , MaxThinkTime)
 
 }

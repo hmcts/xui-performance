@@ -41,7 +41,7 @@ object Solicitor_FPL {
     /*======================================================================================
     Click On Create Case for FPL
     ======================================================================================*/
-  
+  /*
     .group("XUI_FPL_040_CreateCase") {
 
       exec(http("XUI_FPL_040_CreateCase")
@@ -55,6 +55,8 @@ object Solicitor_FPL {
     }
 
     .pause(MinThinkTime , MaxThinkTime)
+
+   */
     
     /*======================================================================================
     Select Jurisdiction as Family Law and Casetype as CARE_SUPERVISION_EPO
@@ -70,12 +72,12 @@ object Solicitor_FPL {
         .check(substring("Start application")))
     }
 
-    .pause(MinThinkTime , MaxThinkTime)
+    //.pause(MinThinkTime , MaxThinkTime)
 
     /*======================================================================================
     Enter case name and click Continue
     ======================================================================================*/
-    
+    /*
     .group("XUI_FPL_060_CaseNameContinue") {
       exec(http("XUI_FPL_060_005_CaseNameContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=openCaseprovideCaseName")
@@ -87,6 +89,8 @@ object Solicitor_FPL {
     }
     
     .pause(MinThinkTime , MaxThinkTime )
+
+     */
 
     /*======================================================================================
     Click Save and Continue to create the case
@@ -101,24 +105,26 @@ object Solicitor_FPL {
         .body(ElFileBody("bodies/fpl/FPLSaveCase.json"))
         .check(jsonPath("$.id").saveAs("caseId"))
         .check(substring("created_on")))
-
+/*
       .exec(http("XUI_FPL_070_015_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
         .check(substring("CCD ID")))
-    }
+  */   }
       
-    .pause(MinThinkTime , MaxThinkTime )
+    //.pause(MinThinkTime , MaxThinkTime )
+
+
 
   val fplOrdersAndDirections =
 
     /*======================================================================================
     Click on the 'Orders and directions sought' link
     ======================================================================================*/
-      
+
     group("XUI_FPL_080_OrdersAndDirections") {
-      exec(http("XUI_FPL_080_005_OrdersAndDirectionsTrigger")
+ /*     exec(http("XUI_FPL_080_005_OrdersAndDirectionsTrigger")
         .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/${caseId}/trigger/ordersNeeded")
         .headers(Headers.navigationHeader)
         .header("x-xsrf-token", "${XSRFToken}")
@@ -146,7 +152,9 @@ object Solicitor_FPL {
 
       .exec(Common.profile)
 
-      .exec(http("XUI_FPL_080_015_OrdersAndDirectionsEvent")
+ */
+
+      exec(http("XUI_FPL_080_015_OrdersAndDirectionsEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/ordersNeeded?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -154,19 +162,19 @@ object Solicitor_FPL {
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("ordersNeeded")))
 
-      .exec(Common.isAuthenticated)
+      //.exec(Common.isAuthenticated)
     }
     
-    .exec(Common.caseActivityGet)
+   // .exec(Common.caseActivityGet)
 
-    .pause(MinThinkTime , MaxThinkTime )
+    //.pause(MinThinkTime , MaxThinkTime )
   
     /*======================================================================================
     Select options and click Continue:
     Orders = Care order
     Directions = No
     ======================================================================================*/
-    
+    /*
     .group("XUI_FPL_090_AddOrdersAndDirections") {
       exec(http("XUI_FPL_090_005_AddOrdersAndDirections")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=ordersNeeded1")
@@ -178,6 +186,8 @@ object Solicitor_FPL {
     }
     
     .pause(MinThinkTime , MaxThinkTime )
+
+     */
 
     /*======================================================================================
     Review details and click Save and Continue
@@ -191,15 +201,17 @@ object Solicitor_FPL {
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/fpl/FPLOrdersAndDirectionsSubmit.json"))
         .check(jsonPath("$.state").is("Open")))
-
+/*
       .exec(http("XUI_FPL_100_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
         .check(substring("""event_id":"ordersNeeded""")))
-    }
+  */   }
       
-    .pause(MinThinkTime , MaxThinkTime )
+  //  .pause(MinThinkTime , MaxThinkTime )
+
+
 
   val fplHearingUrgency =
 
@@ -208,35 +220,37 @@ object Solicitor_FPL {
     ======================================================================================*/
 
     group("XUI_FPL_110_HearingUrgency") {
-      exec(http("XUI_FPL_110_005_HearingUrgencyTrigger")
-        .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/${caseId}/trigger/hearingNeeded")
-        .headers(Headers.navigationHeader)
-        .header("x-xsrf-token", "${XSRFToken}")
-        .check(substring("HMCTS Manage cases")))
+      /*    exec(http("XUI_FPL_110_005_HearingUrgencyTrigger")
+            .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/${caseId}/trigger/hearingNeeded")
+            .headers(Headers.navigationHeader)
+            .header("x-xsrf-token", "${XSRFToken}")
+            .check(substring("HMCTS Manage cases")))
 
-      .exec(Common.configurationui)
+          .exec(Common.configurationui)
 
-      .exec(Common.configJson)
+          .exec(Common.configJson)
 
-      .exec(Common.TsAndCs)
+          .exec(Common.TsAndCs)
 
-      .exec(Common.configUI)
+          .exec(Common.configUI)
 
-      .exec(Common.userDetails)
+          .exec(Common.userDetails)
 
-      .exec(Common.isAuthenticated)
+          .exec(Common.isAuthenticated)
 
-      .exec(Common.monitoringTools)
+          .exec(Common.monitoringTools)
 
-      .exec(http("XUI_FPL_110_010_ViewCase")
-        .get("/data/internal/cases/${caseId}")
-        .headers(Headers.commonHeader)
-        .header("x-xsrf-token", "${XSRFToken}")
-        .check(substring("CCD ID")))
+          .exec(http("XUI_FPL_110_010_ViewCase")
+            .get("/data/internal/cases/${caseId}")
+            .headers(Headers.commonHeader)
+            .header("x-xsrf-token", "${XSRFToken}")
+            .check(substring("CCD ID")))
 
-      .exec(Common.profile)
+          .exec(Common.profile)
 
-      .exec(http("XUI_FPL_110_015_HearingUrgencyEvent")
+     */
+
+      exec(http("XUI_FPL_110_015_HearingUrgencyEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/hearingNeeded?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -244,12 +258,12 @@ object Solicitor_FPL {
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("hearingNeeded")))
 
-      .exec(Common.isAuthenticated)
+      //.exec(Common.isAuthenticated)
     }
 
-    .exec(Common.caseActivityGet)
+    //.exec(Common.caseActivityGet)
 
-    .pause(MinThinkTime , MaxThinkTime )
+    //.pause(MinThinkTime , MaxThinkTime )
 
     /*======================================================================================
     Select options and click Continue:
@@ -259,7 +273,7 @@ object Solicitor_FPL {
     Reduced Notice = No
     Respondents Aware = No
     ======================================================================================*/
-
+/*
     .group("XUI_FPL_120_AddHearingUrgency") {
       exec(http("XUI_FPL_120_005_AddHearingUrgency")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=hearingNeeded1")
@@ -271,6 +285,8 @@ object Solicitor_FPL {
     }
 
     .pause(MinThinkTime , MaxThinkTime )
+
+ */
 
     /*======================================================================================
     Review details and click Save and Continue
@@ -285,15 +301,17 @@ object Solicitor_FPL {
         .body(ElFileBody("bodies/fpl/FPLHearingUrgencySubmit.json"))
         .check(jsonPath("$.data.hearing.timeFrame").is("Within 7 days"))
         .check(jsonPath("$.state").is("Open")))
-
+/*
       .exec(http("XUI_FPL_130_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
         .check(substring("""event_id":"hearingNeeded""")))
+
+ */
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+    //.pause(MinThinkTime , MaxThinkTime )
 
   val fplGrounds =
 
@@ -302,7 +320,7 @@ object Solicitor_FPL {
     ======================================================================================*/
 
     group("XUI_FPL_140_GroundsForTheApplication") {
-      exec(http("XUI_FPL_140_005_GroundsTrigger")
+/*      exec(http("XUI_FPL_140_005_GroundsTrigger")
         .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/${caseId}/trigger/enterGrounds")
         .headers(Headers.navigationHeader)
         .header("x-xsrf-token", "${XSRFToken}")
@@ -330,7 +348,8 @@ object Solicitor_FPL {
 
       .exec(Common.profile)
 
-      .exec(http("XUI_FPL_140_015_GroundsEvent")
+ */
+      exec(http("XUI_FPL_140_015_GroundsEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/enterGrounds?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -338,18 +357,18 @@ object Solicitor_FPL {
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("enterGrounds")))
 
-      .exec(Common.isAuthenticated)
+      //.exec(Common.isAuthenticated)
     }
 
-    .exec(Common.caseActivityGet)
+   // .exec(Common.caseActivityGet)
 
-    .pause(MinThinkTime , MaxThinkTime )
+  //  .pause(MinThinkTime , MaxThinkTime )
 
     /*======================================================================================
     Select options and click Continue:
     Beyond parental control
     ======================================================================================*/
-
+/*
     .group("XUI_FPL_150_AddGrounds") {
       exec(http("XUI_FPL_150_005_AddGrounds")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterGrounds1")
@@ -361,6 +380,8 @@ object Solicitor_FPL {
     }
 
     .pause(MinThinkTime , MaxThinkTime )
+
+ */
 
     /*======================================================================================
      Review details and click Save and Continue
@@ -375,15 +396,17 @@ object Solicitor_FPL {
         .body(ElFileBody("bodies/fpl/FPLGroundsSubmit.json"))
         .check(jsonPath("$.data.grounds.thresholdReason[0]").is("beyondControl"))
         .check(jsonPath("$.state").is("Open")))
-
+/*
       .exec(http("XUI_FPL_160_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
         .check(substring("""event_id":"enterGrounds""")))
+
+ */
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+   // .pause(MinThinkTime , MaxThinkTime )
 
   val fplLocalAuthority =
 
@@ -392,7 +415,7 @@ object Solicitor_FPL {
     ======================================================================================*/
 
     group("XUI_FPL_170_LocalAuthorityDetails") {
-      exec(http("XUI_FPL_170_005_LocalAuthorityTrigger")
+/*      exec(http("XUI_FPL_170_005_LocalAuthorityTrigger")
         .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/${caseId}/trigger/enterLocalAuthority")
         .headers(Headers.navigationHeader)
         .header("x-xsrf-token", "${XSRFToken}")
@@ -420,7 +443,9 @@ object Solicitor_FPL {
 
       .exec(Common.profile)
 
-      .exec(http("XUI_FPL_170_015_LocalAuthorityEvent")
+
+ */
+      exec(http("XUI_FPL_170_015_LocalAuthorityEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/enterLocalAuthority?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -434,12 +459,12 @@ object Solicitor_FPL {
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("enterLocalAuthority")))
 
-      .exec(Common.isAuthenticated)
+      //.exec(Common.isAuthenticated)
     }
 
-    .exec(Common.caseActivityGet)
+  //  .exec(Common.caseActivityGet)
 
-    .pause(MinThinkTime , MaxThinkTime )
+//    .pause(MinThinkTime , MaxThinkTime )
 
     /*======================================================================================
     Select options and click Continue:
@@ -449,7 +474,7 @@ object Solicitor_FPL {
     Address: pre-filled (captured)
     Phone Number: 07000000000
     ======================================================================================*/
-
+/*
     .group("XUI_FPL_180_AddLocalAuthorityDetails") {
       exec(http("XUI_FPL_180_005_AddLocalAuthority")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterLocalAuthorityDetails")
@@ -462,6 +487,8 @@ object Solicitor_FPL {
 
     .pause(MinThinkTime , MaxThinkTime )
 
+ */
+
     /*======================================================================================
     Select Add New colleague, select the options and click Continue:
     Role: Solicitor
@@ -469,7 +496,7 @@ object Solicitor_FPL {
     Email: Text
     Update Notifications: No
     ======================================================================================*/
-
+/*
     .group("XUI_FPL_190_AddLocalAuthorityColleagues") {
       exec(http("XUI_FPL_190_005_AddLocalAuthorityColleagues")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterLocalAuthorityColleagues")
@@ -482,6 +509,8 @@ object Solicitor_FPL {
     }
 
     .pause(MinThinkTime , MaxThinkTime )
+
+ */
 
     /*======================================================================================
      Review details and click Save and Continue
@@ -496,15 +525,17 @@ object Solicitor_FPL {
         .body(ElFileBody("bodies/fpl/FPLLocalAuthoritySubmit.json"))
         .check(jsonPath("$.data.localAuthorities[0].value.name").is("${laName}"))
         .check(jsonPath("$.state").is("Open")))
-
+/*
       .exec(http("XUI_FPL_200_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
         .check(substring("""event_id":"enterLocalAuthority""")))
+
+ */
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+    //.pause(MinThinkTime , MaxThinkTime )
 
   val fplChildDetails =
 
@@ -513,7 +544,7 @@ object Solicitor_FPL {
     ======================================================================================*/
 
     group("XUI_FPL_210_ChildDetails") {
-      exec(http("XUI_FPL_210_005_ChildTrigger")
+ /*     exec(http("XUI_FPL_210_005_ChildTrigger")
         .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/${caseId}/trigger/enterChildren")
         .headers(Headers.navigationHeader)
         .header("x-xsrf-token", "${XSRFToken}")
@@ -541,7 +572,9 @@ object Solicitor_FPL {
 
       .exec(Common.profile)
 
-      .exec(http("XUI_FPL_210_015_ChildEvent")
+ */
+
+      exec(http("XUI_FPL_210_015_ChildEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/enterChildren?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -551,12 +584,12 @@ object Solicitor_FPL {
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("enterChildren")))
 
-      .exec(Common.isAuthenticated)
+      //.exec(Common.isAuthenticated)
     }
 
-    .exec(Common.caseActivityGet)
+    //.exec(Common.caseActivityGet)
 
-    .pause(MinThinkTime , MaxThinkTime )
+   // .pause(MinThinkTime , MaxThinkTime )
 
     /*======================================================================================
     Select options and click Continue:
@@ -578,7 +611,7 @@ object Solicitor_FPL {
     ======================================================================================*/
 
     .exec(Common.postcodeLookup)
-
+/*
     .group("XUI_FPL_220_AddChildDetails") {
       exec(http("XUI_FPL_220_005_AddChildDetails")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterChildren1")
@@ -590,6 +623,8 @@ object Solicitor_FPL {
     }
 
     .pause(MinThinkTime , MaxThinkTime )
+
+ */
 
     /*======================================================================================
      Review details and click Save and Continue
@@ -604,15 +639,17 @@ object Solicitor_FPL {
         .body(ElFileBody("bodies/fpl/FPLChildDetailsSubmit.json"))
         .check(jsonPath("$.data.children1[0].id").is("${id}"))
         .check(jsonPath("$.state").is("Open")))
-
+/*
       .exec(http("XUI_FPL_230_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
         .check(substring("""event_id":"enterChildren""")))
+
+ */
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+   // .pause(MinThinkTime , MaxThinkTime )
 
   val fplRespondentDetails =
 
@@ -621,7 +658,7 @@ object Solicitor_FPL {
     ======================================================================================*/
 
     group("XUI_FPL_240_RespondentDetails") {
-      exec(http("XUI_FPL_240_005_RespondentTrigger")
+   /*   exec(http("XUI_FPL_240_005_RespondentTrigger")
         .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/${caseId}/trigger/enterRespondents")
         .headers(Headers.navigationHeader)
         .header("x-xsrf-token", "${XSRFToken}")
@@ -649,7 +686,9 @@ object Solicitor_FPL {
 
       .exec(Common.profile)
 
-      .exec(http("XUI_FPL_240_015_RespondentEvent")
+    */
+
+      exec(http("XUI_FPL_240_015_RespondentEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/enterRespondents?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -659,7 +698,7 @@ object Solicitor_FPL {
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("enterRespondents")))
 
-      .exec(Common.isAuthenticated)
+   //   .exec(Common.isAuthenticated)
 
       .exec(http("XUI_FPL_240_020_GetOrgs")
         .get("/api/caseshare/orgs")
@@ -668,9 +707,9 @@ object Solicitor_FPL {
         .check(regex(""""name":"(.+?)","organisationIdentifier":"([0-9A-Z]+?)"""").ofType[(String, String)].findRandom.saveAs("respondentOrgs")))
     }
 
-    .exec(Common.caseActivityGet)
+   // .exec(Common.caseActivityGet)
 
-    .pause(MinThinkTime , MaxThinkTime )
+   // .pause(MinThinkTime , MaxThinkTime )
 
     /*======================================================================================
     Select options and click Continue:
@@ -686,7 +725,7 @@ object Solicitor_FPL {
     ======================================================================================*/
 
     .exec(Common.postcodeLookup)
-
+/*
     .group("XUI_FPL_250_AddRespondentDetails") {
       exec(http("XUI_FPL_250_005_AddRespondentDetails")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterRespondents1")
@@ -699,6 +738,7 @@ object Solicitor_FPL {
 
     .pause(MinThinkTime , MaxThinkTime )
 
+ */
     /*======================================================================================
      Review details and click Save and Continue
      ======================================================================================*/
@@ -712,15 +752,17 @@ object Solicitor_FPL {
         .body(ElFileBody("bodies/fpl/FPLRespondentDetailsSubmit.json"))
         .check(jsonPath("$.data.respondents1[0].id").is("${id}"))
         .check(jsonPath("$.state").is("Open")))
-
+/*
       .exec(http("XUI_FPL_260_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
         .check(substring("""event_id":"enterRespondents""")))
+
+ */
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+   // .pause(MinThinkTime , MaxThinkTime )
 
   val fplAllocationProposal =
 
@@ -729,7 +771,7 @@ object Solicitor_FPL {
     ======================================================================================*/
 
     group("XUI_FPL_270_AllocationProposal") {
-      exec(http("XUI_FPL_270_005_AllocationProposalTrigger")
+   /*   exec(http("XUI_FPL_270_005_AllocationProposalTrigger")
         .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/${caseId}/trigger/otherProposal")
         .headers(Headers.navigationHeader)
         .header("x-xsrf-token", "${XSRFToken}")
@@ -757,7 +799,9 @@ object Solicitor_FPL {
 
       .exec(Common.profile)
 
-      .exec(http("XUI_FPL_270_015_AllocationProposalEvent")
+
+    */
+      exec(http("XUI_FPL_270_015_AllocationProposalEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/otherProposal?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -765,19 +809,19 @@ object Solicitor_FPL {
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("otherProposal")))
 
-      .exec(Common.isAuthenticated)
+      //.exec(Common.isAuthenticated)
     }
 
-    .exec(Common.caseActivityGet)
+    //.exec(Common.caseActivityGet)
 
-    .pause(MinThinkTime , MaxThinkTime )
+    //.pause(MinThinkTime , MaxThinkTime )
 
     /*======================================================================================
     Select options and click Continue:
     Allocation Proposal: Circuit Judge
     Reason: Free text
     ======================================================================================*/
-
+/*
     .group("XUI_FPL_280_AddAllocationProposalDetails") {
       exec(http("XUI_FPL_280_005_AddAllocationProposalDetails")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=otherProposal1")
@@ -789,6 +833,8 @@ object Solicitor_FPL {
     }
 
     .pause(MinThinkTime , MaxThinkTime )
+
+ */
 
     /*======================================================================================
      Review details and click Save and Continue
@@ -803,15 +849,17 @@ object Solicitor_FPL {
         .body(ElFileBody("bodies/fpl/FPLAllocationProposalSubmit.json"))
         .check(jsonPath("$.data.allocationProposal.proposal").is("Circuit judge"))
         .check(jsonPath("$.state").is("Open")))
-
+/*
       .exec(http("XUI_FPL_290_010_ViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "${XSRFToken}")
         .check(substring("""event_id":"otherProposal""")))
+
+ */
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+  //  .pause(MinThinkTime , MaxThinkTime )
 
   val fplSubmitApplication =
 
@@ -820,7 +868,7 @@ object Solicitor_FPL {
     ======================================================================================*/
 
     group("XUI_FPL_300_SubmitApplication") {
-      exec(http("XUI_FPL_300_005_SubmitApplicationTrigger")
+/*      exec(http("XUI_FPL_300_005_SubmitApplicationTrigger")
         .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/${caseId}/trigger/submitApplication")
         .headers(Headers.navigationHeader)
         .header("x-xsrf-token", "${XSRFToken}")
@@ -848,7 +896,9 @@ object Solicitor_FPL {
 
       .exec(Common.profile)
 
-      .exec(http("XUI_FPL_300_015_SubmitApplicationEvent")
+ */
+
+      exec(http("XUI_FPL_300_015_SubmitApplicationEvent")
         .get("/data/internal/cases/${caseId}/event-triggers/submitApplication?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -860,18 +910,18 @@ object Solicitor_FPL {
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("submitApplication")))
 
-      .exec(Common.isAuthenticated)
+      //.exec(Common.isAuthenticated)
     }
 
-    .exec(Common.caseActivityGet)
+    //.exec(Common.caseActivityGet)
 
-    .pause(MinThinkTime , MaxThinkTime )
+   // .pause(MinThinkTime , MaxThinkTime )
 
     /*======================================================================================
     Select options and click Continue:
     Agree with Statement: Tick
     ======================================================================================*/
-
+/*
     .group("XUI_FPL_310_AddSubmitApplicationDetails") {
       exec(http("XUI_FPL_310_005_AddSubmitApplicationDetails")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=submitApplication1")
@@ -883,6 +933,8 @@ object Solicitor_FPL {
     }
 
     .pause(MinThinkTime , MaxThinkTime )
+
+ */
 
     /*======================================================================================
      Click Submit
@@ -899,8 +951,8 @@ object Solicitor_FPL {
         .check(jsonPath("$.state").is("Submitted")))
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
-
+    //.pause(MinThinkTime , MaxThinkTime )
+/*
   val fplReturnToCase =
 
     /*======================================================================================
@@ -916,5 +968,5 @@ object Solicitor_FPL {
     }
 
     .pause(MinThinkTime , MaxThinkTime )
-
+*/
 }

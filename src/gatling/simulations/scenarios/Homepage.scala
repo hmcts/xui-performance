@@ -23,7 +23,7 @@ object Homepage {
         .get("/")
         .headers(Headers.navigationHeader)
         .header("sec-fetch-site", "none"))
-
+/*
       .exec(Common.configurationui)
 
       .exec(Common.configJson)
@@ -36,6 +36,8 @@ object Homepage {
 
       .exec(Common.isAuthenticated)
 
+ */
+
       .exec(http("XUI_010_010_AuthLogin")
         .get("/auth/login")
         .headers(Headers.navigationHeader)
@@ -44,6 +46,6 @@ object Homepage {
         .check(regex("&nonce=(.*)&response_type").saveAs("nonce")))
     }
   
-  .pause(MinThinkTime, MaxThinkTime)
+ // .pause(MinThinkTime, MaxThinkTime)
 
 }

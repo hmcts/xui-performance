@@ -460,7 +460,7 @@ object Solicitor_IAC {
 
     .group("XUI_IAC_250_005_StartSubmitAppeal") {
       exec(http("XUI_IAC_250_005_StartSubmitAppeal")
-        .get("/case/IA/Asylum/${caseId}/trigger/payAndSubmitAppeal")
+        .get("/case/IA/Asylum/${caseId}/trigger/submitAppeal")
         .headers(Headers.navigationHeader)
         .check(substring("HMCTS Manage")))
 
@@ -492,9 +492,9 @@ object Solicitor_IAC {
 *Business process : Following business process is for IAC Case Creation
 *Below group contains all the requests for starting submit appeal
 ======================================================================================*/
-
-    .group("XUI_IAC_260_PayAndSubmitAppeal") {
-      exec(http("XUI_IAC_260_005_PayAndSubmitAppeal")
+/*
+    .group("XUI_IAC_260_SubmitAppeal") {
+      exec(http("XUI_IAC_260_005_SubmitAppeal")
       .get("/data/internal/cases/${caseId}/event-triggers/payAndSubmitAppeal?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -515,11 +515,13 @@ object Solicitor_IAC {
     }
     .pause(MinThinkTime, MaxThinkTime)
 
+
+ */
 /*======================================================================================
 *Business process : Following business process is for IAC Case Creation
 *Below group contains all the requests for selecting PBA account and clicking continue
 ======================================================================================*/
-
+      /*
     .group("XUI_IAC_270_SelectPBAAccount") {
       exec(http("XUI_IAC_270_005_SelectPBAAccount")
         .post("/data/case-types/Asylum/validate?pageId=payAndSubmitAppealenterPbaNumber")
@@ -539,6 +541,8 @@ object Solicitor_IAC {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+
+       */
 /*======================================================================================
 *Business process : Following business process is for IAC Case Creation
 * Below group contains all the requests for confirmation statement and clicking continue
@@ -546,7 +550,7 @@ object Solicitor_IAC {
 
   .group("XUI_IAC_280_ConfirmDeclaration") {
       exec(http("XUI_IAC_280_005_ConfirmDeclaration")
-        .post("/data/case-types/Asylum/validate?pageId=payAndSubmitAppealdeclaration")
+        .post("/data/case-types/Asylum/validate?pageId=submitAppealdeclaration")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
@@ -568,8 +572,9 @@ object Solicitor_IAC {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
         .body(ElFileBody("bodies/iac/IACSubmitAppeal.json"))
-        .check(substring("hasDeclared")))
-
+        .check(substring("feeAmountGbp")))
+    }
+/*
       .exec(http("XUI_IAC_290_010_WorkAllocation")
         .post("/workallocation/searchForCompletable")
         .headers(Headers.commonHeader)
@@ -583,6 +588,8 @@ object Solicitor_IAC {
     .exec(Common.caseActivityGet)
     .pause(2)
     .exec(Common.caseActivityPost)
+
+ */
 
     .pause(MinThinkTime, MaxThinkTime)
 

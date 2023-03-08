@@ -23,6 +23,6 @@ object Logout {
         )
     }
 
-    .pause(MinThinkTime , MaxThinkTime)
+   // .pause(MinThinkTime , MaxThinkTime)
 
 }
