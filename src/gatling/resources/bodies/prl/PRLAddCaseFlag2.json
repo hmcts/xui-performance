@@ -1,0 +1,238 @@
+{
+  "data": {
+     "applicantsFL401": {
+        "firstName": "${appFirstName}",
+        "lastName": "${appLastName}",
+        "previousName": null,
+        "dateOfBirth": "${appDateOfBirth}",
+        "isDateOfBirthUnknown": null,
+        "gender": "${appGender}",
+        "otherGender": null,
+        "placeOfBirth": null,
+        "isAddressUnknown": null,
+        "isAddressConfidential": "Yes",
+        "isAtAddressLessThan5Years": null,
+        "addressLivedLessThan5YearsDetails": null,
+        "canYouProvideEmailAddress": "Yes",
+        "email": "${appEmail}",
+        "isEmailAddressConfidential": "Yes",
+        "landline": null,
+        "phoneNumber": "${appPhoneNumber}",
+        "isPhoneNumberConfidential": "Yes",
+        "relationshipToChildren": null,
+        "isDateOfBirthKnown": null,
+        "isCurrentAddressKnown": null,
+        "canYouProvidePhoneNumber": null,
+        "isPlaceOfBirthKnown": null,
+        "dxNumber": "${appDxNumber}",
+        "solicitorReference": "${appSolicitorReference}",
+        "representativeFirstName": "${appRepresentativeFirstName}",
+        "representativeLastName": "${appRepresentativeLastName}",
+        "isAtAddressLessThan5YearsWithDontKnow": null,
+        "doTheyHaveLegalRepresentation": null,
+        "sendSignUpLink": null,
+        "solicitorEmail": "${appSolicitorEmail}",
+        "solicitorTelephone": "${appSolicitorTelephone}",
+        "respondentLivedWithApplicant": null,
+        "applicantContactInstructions": null,
+        "currentRespondent": null,
+        "partyId": "${appPartyId}",
+        "solicitorPartyId": "${solicitorPartyId}",
+        "solicitorOrgUuid": "${solicitorOrgUuId}",
+        "contactPreferences": null,
+        "partyLevelFlag": {
+          "details": [],
+          "partyName": "${appPartyName}",
+          "roleOnCase": "${appPartyRole}"
+        },
+        "address": {
+          "County": "",
+          "Country": "United Kingdom",
+          "PostCode": "${appPostCode}",
+          "PostTown": "${appPostTown}",
+          "AddressLine1": "${appAddressLine1}",
+          "AddressLine2": "${appAddressLine2}",
+          "AddressLine3": ""
+        },
+        "solicitorOrg": {
+          "OrganisationID": "${appOrganisationID}",
+          "OrganisationName": "${appOrganisationName}"
+        },
+        "solicitorAddress": {
+          "County": "",
+          "Country": "United Kingdom",
+          "PostCode": "${appsSolicitorPostCode}",
+          "PostTown": "${appsSolicitorPostTown}",
+          "AddressLine1": "${appsSolicitorAddressLine1}",
+          "AddressLine2": "${appsSolicitorAddressLine2}",
+          "AddressLine3": ""
+        },
+        "otherPersonRelationshipToChildren": [],
+        "applicantPreferredContact": null,
+        "user": {
+           "email": null,
+           "idamId": null,
+           "solicitorRepresented": null
+        },
+        "response": {
+           "miam": {},
+           "consent": {},
+           "citizenFlags": {},
+           "attendToCourt": {},
+           "citizenDetails": {},
+           "respAohYesOrNo": null,
+           "safetyConcerns": {},
+           "supportYouNeed": {},
+           "activeRespondent": null,
+           "safeToCallOption": null,
+           "keepDetailsPrivate": {},
+           "respChildAbuseInfo": [],
+           "c7ResponseSubmitted": null,
+           "legalRepresentation": null,
+           "c1AResponseSubmitted": null,
+           "respDomesticAbuseInfo": [],
+           "respOtherConcernsInfo": {},
+           "respChildAbductionInfo": {},
+           "respKeepDetailsPrivate": {},
+           "respAllegationsOfHarmInfo": {},
+           "respSolHaveYouAttendedMiam": {},
+           "citizenInternationalElements": {},
+           "currentOrPreviousProceedings": {},
+           "internationalElementChildInfo": {},
+           "respondentExistingProceedings": [],
+           "internationalElementParentInfo": {},
+           "respSolWillingnessToAttendMiam": {},
+           "internationalElementRequestInfo": {},
+           "currentOrPastProceedingsForChildren": null,
+           "factorsAffectingAbilityToParticipate": null,
+           "internationalElementJurisdictionInfo": {},
+           "respKeepDetailsPrivateConfidentiality": {},
+           "provideDetailsForFactorsAffectingAbilityToParticipate": null
+        }
+     },
+     "respondentsFL401": {
+        "firstName": "${repFirstName}",
+        "lastName": "${repLastName}",
+        "previousName": null,
+        "dateOfBirth": "${repDateOfBirth}",
+        "isDateOfBirthUnknown": null,
+        "gender": null,
+        "otherGender": null,
+        "placeOfBirth": null,
+        "isAddressUnknown": null,
+        "isAddressConfidential": null,
+        "isAtAddressLessThan5Years": null,
+        "addressLivedLessThan5YearsDetails": null,
+        "canYouProvideEmailAddress": "Yes",
+        "email": "${repEmail}",
+        "isEmailAddressConfidential": null,
+        "landline": null,
+        "phoneNumber": "${repPhoneNumber}",
+        "isPhoneNumberConfidential": null,
+        "relationshipToChildren": null,
+        "isDateOfBirthKnown": "Yes",
+        "isCurrentAddressKnown": "Yes",
+        "canYouProvidePhoneNumber": "Yes",
+        "isPlaceOfBirthKnown": null,
+        "dxNumber": null,
+        "solicitorReference": null,
+        "representativeFirstName": null,
+        "representativeLastName": null,
+        "isAtAddressLessThan5YearsWithDontKnow": null,
+        "doTheyHaveLegalRepresentation": null,
+        "sendSignUpLink": null,
+        "solicitorEmail": null,
+        "solicitorTelephone": null,
+        "respondentLivedWithApplicant": "Yes",
+        "applicantContactInstructions": null,
+        "currentRespondent": null,
+        "partyId": "${repPartyId}",
+        "solicitorPartyId": null,
+        "solicitorOrgUuid": null,
+        "contactPreferences": null,
+        "partyLevelFlag": {
+          "details": [],
+          "partyName": "${repPartyName}",
+          "roleOnCase": "${repPartyRole}"
+        },
+        "address": {
+          "County": "",
+          "Country": "United Kingdom",
+          "PostCode": "${repPostCode}",
+          "PostTown": "${repPostTown}",
+          "AddressLine1": "${repAddressLine1}",
+          "AddressLine2": "${repAddressLine2}",
+          "AddressLine3": ""
+        },
+        "solicitorOrg": {},
+        "solicitorAddress": {
+           "County": null,
+           "Country": null,
+           "PostCode": null,
+           "PostTown": null,
+           "AddressLine1": null,
+           "AddressLine2": null,
+           "AddressLine3": null
+        },
+        "otherPersonRelationshipToChildren": [],
+        "applicantPreferredContact": null,
+        "user": {},
+        "response": {}
+     },
+     "caseFlags": {
+      "roleOnCase": null,
+      "partyName": null,
+      "details": [
+         {
+            "id": "${id1}",
+            "value": {
+               "name": "Other",
+               "path": [
+                  {
+                     "id": "${id2}",
+                     "value": "Case"
+                  }
+               ],
+               "status": "Active",
+               "flagCode": "OT0001",
+               "subTypeKey": null,
+               "flagComment": "Case flag Perf Test",
+               "subTypeValue": null,
+               "dateTimeCreated": "${currentDate}T12:00:00.975Z",
+               "hearingRelevant": "Yes",
+               "otherDescription": "Perf Test"
+            }
+         },
+         {
+            "value": {
+               "name": "Other",
+               "subTypeValue": null,
+               "subTypeKey": null,
+               "otherDescription": "Case Flag Perf Test 2",
+               "flagComment": "Perf Testing Case Flag 2",
+               "dateTimeCreated": "${currentDate}T12:00:00.456Z",
+               "path": [
+                  {
+                     "id": null,
+                     "value": "Case"
+                  }
+               ],
+               "hearingRelevant": "Yes",
+               "flagCode": "OT0001",
+               "status": "Active"
+            }
+         }
+      ],
+      "flagType": "OT0001",
+      "otherFlagTypeDescription": "Case Flag Perf Test 2",
+      "flagComments": "Perf Testing Case Flag 2"
+   }
+  },
+  "event": {
+     "id": "fl401CreateFlags",
+     "summary": "",
+     "description": ""
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false
+}

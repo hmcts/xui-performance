@@ -21,6 +21,7 @@ object Common {
   val patternMonth = DateTimeFormatter.ofPattern("MM")
   val patternYear = DateTimeFormatter.ofPattern("yyyy")
   val patternReference = DateTimeFormatter.ofPattern("d MMM yyyy")
+  val patternCurrentDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
   def randomString(length: Int) = {
     rnd.alphanumeric.filter(_.isLetter).take(length).mkString
@@ -62,6 +63,11 @@ object Common {
   def getDodYear(): String = {
     now.minusYears(1 + rnd.nextInt(20)).format(patternYear)
   }
+  //CurrentDate
+  def getDate(): String = {
+    now.format(patternCurrentDate)
+  }
+
   //Saves partyId
   def savePartyId: CheckBuilder[JsonPathCheckType, JsonNode, String] = jsonPath("$.case_fields[*].value[*].value.party.partyId").saveAs("partyId")
 

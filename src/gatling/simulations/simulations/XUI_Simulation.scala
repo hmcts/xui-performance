@@ -4,6 +4,7 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import scenarios._
 import utils._
+import com.typesafe.config.{Config, ConfigFactory}
 
 import scala.io.Source
 import io.gatling.core.controller.inject.open.OpenInjectionStep
@@ -14,6 +15,8 @@ import scala.concurrent.duration._
 import scala.util.Random
 
 class XUI_Simulation extends Simulation {
+
+  val config: Config = ConfigFactory.load()
 
 	val CaseworkerUserFeeder = csv("UserDataCaseworkers.csv").circular
 	val UserFeederDivorce = csv("UserDataDivorce.csv").circular
@@ -109,7 +112,7 @@ class XUI_Simulation extends Simulation {
 			.repeat(5) {
 				feed(UserFeederPRL)
 					.exec(_.set("env", s"${env}")
-						.set("caseType", "PRLAPPS"))
+          .set("caseType", "PRLAPPS"))
 					.exec(Homepage.XUIHomePage)
 					.exec(Login.XUILogin)
 					.feed(randomFeeder)
@@ -119,62 +122,52 @@ class XUI_Simulation extends Simulation {
 								//C100 Journey
 								//		feed(PRLcases)
 								repeat(1) {
-														exec(Solicitor_PRL_Hearings.ViewAllHearings)
-							.exec(Solicitor_PRL_Hearings.RequestHearing)
-																	.exec(Solicitor_PRL_Hearings.GetHearing)
-							.exec(Solicitor_PRL_Hearings.ViewAllHearings)
-																	.exec(Solicitor_PRL_Hearings.UpdateHearing)
-																	.exec(Solicitor_PRL_Hearings.ViewAllHearings)
-																	.exec(Solicitor_PRL_Hearings.UpdateHearing)
-																	.exec(Solicitor_PRL_Hearings.ViewAllHearings)
-																	.exec(Solicitor_PRL_Hearings.GetHearing)
-																	.exec(Solicitor_PRL_Hearings.ViewAllHearings)
-																	.exec(Solicitor_PRL_Hearings.GetHearing)
-
-
-									//							exec(Solicitor_PRL_Link_Case.LinkCase)
-							//		exec(Solicitor_PRL_Hearings.CancelHearing)
-										//					exec(Solicitor_PRL_CreateFlag.CreateAFlag)
-										//			exec(Solicitor_PRL_AddAnOrder.AddAnOrder)
-										//		exec(Solicitor_PRL_C100_ServiceRequestUpdate.PaymentViaAPI)
-										/*exec(Solicitor_PRL_C100.CreatePrivateLawCase)
-							.exec(Solicitor_PRL_C100.TypeOfApplication)
-							.exec(Solicitor_PRL_C100.HearingUrgency)
-							.exec(Solicitor_PRL_C100.ApplicantDetails)
-							.exec(Solicitor_PRL_C100.ChildDetails)
-							.exec(Solicitor_PRL_C100.RespondentDetails)
-							.exec(Solicitor_PRL_C100.MIAM)
-							.exec(Solicitor_PRL_C100.AllegationsOfHarm)
-							.exec(Solicitor_PRL_C100.ViewPdfApplication)
-							.exec(Solicitor_PRL_C100.SubmitAndPay)
-
-						 */
-										.exec {
-											session =>
-												println(session)
-												session
-
-
-										}
-								}
-
-
-							}
+                  exec(Solicitor_PRL_Hearings.ViewAllHearings)
+    							.exec(Solicitor_PRL_Hearings.RequestHearing)
+                  .exec(Solicitor_PRL_Hearings.GetHearing)
+							    .exec(Solicitor_PRL_Hearings.ViewAllHearings)
+                  .exec(Solicitor_PRL_Hearings.UpdateHearing)
+                  .exec(Solicitor_PRL_Hearings.ViewAllHearings)
+                  .exec(Solicitor_PRL_Hearings.UpdateHearing)
+                  .exec(Solicitor_PRL_Hearings.ViewAllHearings)
+                  .exec(Solicitor_PRL_Hearings.GetHearing)
+                  .exec(Solicitor_PRL_Hearings.ViewAllHearings)
+                  .exec(Solicitor_PRL_Hearings.GetHearing)
+  							  // exec(Solicitor_PRL_Link_Case.LinkCase)
+									// exec(Solicitor_PRL_Hearings.CancelHearing)
+                  // exec(Solicitor_PRL_CreateFlag.CreateAFlag)
+                  // exec(Solicitor_PRL_AddAnOrder.AddAnOrder)
+                  // exec(Solicitor_PRL_C100_ServiceRequestUpdate.PaymentViaAPI)
+                  /*exec(Solicitor_PRL_C100.CreatePrivateLawCase)
+                  .exec(Solicitor_PRL_C100.TypeOfApplication)
+                  .exec(Solicitor_PRL_C100.HearingUrgency)
+                  .exec(Solicitor_PRL_C100.ApplicantDetails)
+                  .exec(Solicitor_PRL_C100.ChildDetails)
+                  .exec(Solicitor_PRL_C100.RespondentDetails)
+                  .exec(Solicitor_PRL_C100.MIAM)
+                  .exec(Solicitor_PRL_C100.AllegationsOfHarm)
+                  .exec(Solicitor_PRL_C100.ViewPdfApplication)
+                  .exec(Solicitor_PRL_C100.SubmitAndPay)
+						      */
+                  .exec {
+                    session =>
+                      println(session)
+                      session
+                    }
+                }
+              }
 						}
-						//		.exec(Logout.XUILogout)
-
-
-						//               exec(Solicitor_PRL_CreateFlag.CreateAFlag)
-
-						//			exec(Solicitor_PRL_AddAnOrder.AddAnOrder)
-						//				.exec(Solicitor_PRL_Continued.PRL)
+              // .exec(Logout.XUILogout)
+              // .exec(Solicitor_PRL_CreateFlag.CreateAFlag)
+              // .exec(Solicitor_PRL_AddAnOrder.AddAnOrder)
+              // .exec(Solicitor_PRL_Continued.PRL)
 
 					} {
 						//FL401 Journey
 						repeat(2) {
 							exitBlockOnFail {
 								//C100 Journey
-								//		feed(PRLcases)
+                // feed(PRLcases)
 								repeat(1) {
 									exec(Solicitor_PRL_Hearings.ViewAllHearings)
 										.exec(Solicitor_PRL_Hearings.RequestHearing)
@@ -189,32 +182,59 @@ class XUI_Simulation extends Simulation {
 										.exec(Solicitor_PRL_Hearings.ViewAllHearings)
 										.exec(Solicitor_PRL_Hearings.GetHearing)
 								}
-
 								/*
-						exec(Solicitor_PRL_FL401.CreatePrivateLawCase)
-							.exec(Solicitor_PRL_FL401.TypeOfApplication)
-							.exec(Solicitor_PRL_FL401.WithoutNoticeOrder)
-							.exec(Solicitor_PRL_FL401.ApplicantDetails)
-							.exec(Solicitor_PRL_FL401.RespondentDetails)
-							.exec(Solicitor_PRL_FL401.ApplicantsFamily)
-							.exec(Solicitor_PRL_FL401.Relationship)
-							.exec(Solicitor_PRL_FL401.Behaviour)
-							.exec(Solicitor_PRL_FL401.TheHome)
-							.exec(Solicitor_PRL_FL401.UploadDocuments)
-							.exec(Solicitor_PRL_FL401.ViewPDF)
-							.exec(Solicitor_PRL_FL401.StatementOfTruth)
-
-					 */
+                exec(Solicitor_PRL_FL401.CreatePrivateLawCase)
+                .exec(Solicitor_PRL_FL401.TypeOfApplication)
+                .exec(Solicitor_PRL_FL401.WithoutNoticeOrder)
+                .exec(Solicitor_PRL_FL401.ApplicantDetails)
+                .exec(Solicitor_PRL_FL401.RespondentDetails)
+                .exec(Solicitor_PRL_FL401.ApplicantsFamily)
+                .exec(Solicitor_PRL_FL401.Relationship)
+                .exec(Solicitor_PRL_FL401.Behaviour)
+                .exec(Solicitor_PRL_FL401.TheHome)
+                .exec(Solicitor_PRL_FL401.UploadDocuments)
+                .exec(Solicitor_PRL_FL401.ViewPDF)
+                .exec(Solicitor_PRL_FL401.StatementOfTruth)
+					      */
 							}
-
-							//	.exec(Logout.XUILogout)
-
-
+								.exec(Logout.XUILogout)
 						}
 					}
 			}
 
-
+  /*=============================================================================================== 
+	* XUI PRL Case Flags Scenario - Not to be used for main XUI regression testing
+ 	===============================================================================================*/
+  val CreatePRLCaseFlags = scenario("***** Create PRL case and add/remove Case Flags")
+    .exitBlockOnFail {
+      feed(UserFeederPRL)
+      .exec(_.set("env", s"${env}")
+            .set("jurisdiction", "PRIVATELAW")
+            .set("caseType", "PRLAPPS"))
+      .exec(S2S.s2s)
+      .exec(IdamLogin.GetIdamToken)
+      .repeat(1) {
+        exec(CCDAPI.prlCreateCase)
+        .exec(CCDAPI.prlApplicationType)
+        .exec(CCDAPI.prlWithoutNotice)
+        .exec(CCDAPI.prlApplicantDetails)
+        .exec(CCDAPI.prlRespondentDetails)
+        .exec(CCDAPI.prlFamilyDetails)
+        .exec(CCDAPI.prlRelationship)
+        .exec(CCDAPI.prlBehaviour)
+        .exec(CCDAPI.prlHome)
+        .exec(CCDAPI.prlSubmit)
+      }
+      // .pause(7)
+      // .exec(_.set("caseId", "1681225867819036"))
+      .feed(CaseworkerUserFeeder)
+      .exec(Homepage.XUIHomePage)
+      .exec(Login.XUILogin)
+      .exec(Caseworker_Navigation.ViewCase)
+      .exec(Caseworker_Navigation.CaseFlags)
+      .exec(Caseworker_Navigation.RemoveFlag)
+      .exec(Logout.XUILogout)
+    }
 
 	/*===============================================================================================
 	* XUI Legal Rep Bails Scenario
@@ -223,22 +243,22 @@ class XUI_Simulation extends Simulation {
 		.exitBlockOnFail {
 			feed(UserFeederBails)
 				.exec(_.set("env", s"${env}")
-					.set("caseType", "Bail"))
+              .set("caseType", "Bail"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
-					.exec(Solicitor_Bails.CreateBailApplication)
-					.exec(Solicitor_Bails.SubmitBailApplication)
+        .exec(Solicitor_Bails.CreateBailApplication)
+        .exec(Solicitor_Bails.SubmitBailApplication)
 				.exec(Logout.XUILogout)
 				.feed(UserFeederBailsHO)
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
-					.exec(Solicitor_Bails.UploadBailSummary)
+        .exec(Solicitor_Bails.UploadBailSummary)
 				.exec(Logout.XUILogout)
 				.feed(UserFeederBailsJudge)
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
-					.exec(Solicitor_Bails.RecordBailDecision)
-					.exec(Solicitor_Bails.UploadSignedDecision)
+        .exec(Solicitor_Bails.RecordBailDecision)
+        .exec(Solicitor_Bails.UploadSignedDecision)
 				.exec(Logout.XUILogout)
 		}
 
@@ -514,7 +534,7 @@ class XUI_Simulation extends Simulation {
 
 	setUp(
 		// BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		 PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+		//  PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 			 /*
 		 ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		 ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
@@ -523,12 +543,9 @@ class XUI_Simulation extends Simulation {
 		 NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		 NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		 FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		 CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
-
-			  */
+		 CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)*/
+     CreatePRLCaseFlags.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)	  
 	).protocols(httpProtocol)
 		.assertions(assertions(testType))
 		.maxDuration(75 minutes)
-
-
 }

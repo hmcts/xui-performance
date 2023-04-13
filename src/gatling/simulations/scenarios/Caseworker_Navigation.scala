@@ -175,6 +175,211 @@ object Caseworker_Navigation {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+  val CaseFlags = 
+
+    //Add First Case Flag
+
+    exec(http("XUI_080_CaseFlag1_Tasks")
+			.get("/workallocation/case/tasks/${caseId}/event/fl401CreateFlags/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
+			.headers(Headers.navigationHeader)
+      .header("Content-Type", "application/json"))
+
+    .exec(_.set("currentDate", Common.getDate()))
+
+    .exec(http("XUI_080_CaseFlag1_GetEvent")
+			.get("/data/internal/cases/${caseId}/event-triggers/fl401CreateFlags?ignore-warning=false")
+			.headers(Headers.navigationHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+      .check(jsonPath("$.event_token").saveAs("event_token"))
+      .check(jsonPath("$.case_fields[2].value.firstName").saveAs("appFirstName"))
+      .check(jsonPath("$.case_fields[2].value.lastName").saveAs("appLastName"))
+      .check(jsonPath("$.case_fields[2].value.dateOfBirth").saveAs("appDateOfBirth"))
+      .check(jsonPath("$.case_fields[2].value.gender").saveAs("appGender"))
+      .check(jsonPath("$.case_fields[2].value.email").saveAs("appEmail"))
+      .check(jsonPath("$.case_fields[2].value.phoneNumber").saveAs("appPhoneNumber"))
+      .check(jsonPath("$.case_fields[2].value.dxNumber").saveAs("appDxNumber"))
+      .check(jsonPath("$.case_fields[2].value.solicitorReference").saveAs("appSolicitorReference"))
+      .check(jsonPath("$.case_fields[2].value.representativeFirstName").saveAs("appRepresentativeFirstName"))
+      .check(jsonPath("$.case_fields[2].value.representativeLastName").saveAs("appRepresentativeLastName"))
+      .check(jsonPath("$.case_fields[2].value.solicitorEmail").saveAs("appSolicitorEmail"))
+      .check(jsonPath("$.case_fields[2].value.solicitorTelephone").saveAs("appSolicitorTelephone"))
+      .check(jsonPath("$.case_fields[2].value.partyId").saveAs("appPartyId"))
+      .check(jsonPath("$.case_fields[2].value.solicitorPartyId").saveAs("solicitorPartyId"))
+      .check(jsonPath("$.case_fields[2].value.solicitorOrgUuid").saveAs("solicitorOrgUuId"))
+      .check(jsonPath("$.case_fields[2].value.partyLevelFlag.partyName").saveAs("appPartyName"))
+      .check(jsonPath("$.case_fields[2].value.partyLevelFlag.roleOnCase").saveAs("appPartyRole"))
+      .check(jsonPath("$.case_fields[2].value.address.PostCode").saveAs("appPostCode"))
+      .check(jsonPath("$.case_fields[2].value.address.AddressLine1").saveAs("appAddressLine1"))
+      .check(jsonPath("$.case_fields[2].value.address.AddressLine2").saveAs("appAddressLine2"))
+      .check(jsonPath("$.case_fields[2].value.address.PostTown").saveAs("appPostTown"))
+      .check(jsonPath("$.case_fields[2].value.solicitorOrg.OrganisationID").saveAs("appOrganisationID"))
+      .check(jsonPath("$.case_fields[2].value.solicitorOrg.OrganisationName").saveAs("appOrganisationName"))
+      .check(jsonPath("$.case_fields[2].value.solicitorAddress.PostCode").saveAs("appsSolicitorPostCode"))
+      .check(jsonPath("$.case_fields[2].value.solicitorAddress.AddressLine1").saveAs("appsSolicitorAddressLine1"))
+      .check(jsonPath("$.case_fields[2].value.solicitorAddress.AddressLine2").saveAs("appsSolicitorAddressLine2"))
+      .check(jsonPath("$.case_fields[2].value.solicitorAddress.PostTown").saveAs("appsSolicitorPostTown"))
+      .check(jsonPath("$.case_fields[1].value.firstName").saveAs("repFirstName"))
+      .check(jsonPath("$.case_fields[1].value.lastName").saveAs("repLastName"))
+      .check(jsonPath("$.case_fields[1].value.dateOfBirth").saveAs("repDateOfBirth"))
+      .check(jsonPath("$.case_fields[1].value.email").saveAs("repEmail"))
+      .check(jsonPath("$.case_fields[1].value.phoneNumber").saveAs("repPhoneNumber"))
+      .check(jsonPath("$.case_fields[1].value.partyId").saveAs("repPartyId"))
+      .check(jsonPath("$.case_fields[1].value.partyLevelFlag.partyName").saveAs("repPartyName"))
+      .check(jsonPath("$.case_fields[1].value.partyLevelFlag.roleOnCase").saveAs("repPartyRole"))
+      .check(jsonPath("$.case_fields[1].value.address.PostCode").saveAs("repPostCode"))
+      .check(jsonPath("$.case_fields[1].value.address.PostTown").saveAs("repPostTown"))
+      .check(jsonPath("$.case_fields[1].value.address.AddressLine1").saveAs("repAddressLine1"))
+      .check(jsonPath("$.case_fields[1].value.address.AddressLine2").saveAs("repAddressLine2"))
+      )
+
+    .exec(Common.userDetails)
+    .exec(Common.caseShareOrgs)
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    .exec(http("XUI_080_CaseFlag1_GetRefDataLocations")
+			.get("/refdata/location/orgServices?ccdCaseType=PRLAPPS")
+			.headers(Headers.navigationHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .check(substring("service_short_description")))
+
+    .exec(http("XUI_080_CaseFlag1_GetRefDataServiceId")
+			.get("/refdata/commondata/caseflags/service-id=ABA5?flag-type=CASE")
+			.headers(Headers.navigationHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .check(substring("FlagDetails")))
+
+    .exec(Common.userDetails)
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    .exec(http("XUI_090_AddCaseFlag1")
+			.post("/data/cases/${caseId}/events")
+			.headers(Headers.commonHeader)
+      .header("content-type", "application/json")
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+			.body(ElFileBody("bodies/prl/PRLAddCaseFlag.json")))
+
+    .exec(http("XUI_090_GetCase")
+			.get("/data/internal/cases/${caseId}")
+			.headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json"))
+
+    .exec(http("XUI_090_WASupportedJurisdictions")
+			.get("/api/wa-supported-jurisdiction/get")
+			.headers(Headers.commonHeader))
+
+    .exec(Common.userDetails)
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    //Add Second Case Flag
+
+    .exec(http("XUI_100_CaseFlag2_Tasks")
+			.get("/workallocation/case/tasks/${caseId}/event/fl401CreateFlags/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
+			.headers(Headers.navigationHeader)
+      .header("Content-Type", "application/json"))
+
+    .exec(_.set("currentDate", Common.getDate()))
+
+    .exec(http("XUI_100_CaseFlag2_GetEvent")
+			.get("/data/internal/cases/${caseId}/event-triggers/fl401CreateFlags?ignore-warning=false")
+			.headers(Headers.navigationHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+      .check(jsonPath("$.event_token").saveAs("event_token"))
+      .check(jsonPath("$.case_fields[0].value.details[0].id").saveAs("id1"))
+      .check(jsonPath("$.case_fields[0].value.details[0].value.path[0].id").saveAs("id2"))
+      )
+
+    .exec(Common.userDetails)
+    .exec(Common.caseShareOrgs)
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    .exec(http("XUI_100_CaseFlag2_GetRefDataLocations")
+			.get("/refdata/location/orgServices?ccdCaseType=PRLAPPS")
+			.headers(Headers.navigationHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .check(substring("service_short_description")))
+
+    .exec(http("XUI_100_CaseFlag2_GetRefDataIds")
+			.get("/refdata/commondata/caseflags/service-id=ABA5?flag-type=CASE")
+			.headers(Headers.navigationHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .check(substring("FlagDetails")))
+
+    .exec(Common.userDetails)
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    .exec(http("XUI_110_AddCaseFlag2")
+			.post("/data/cases/${caseId}/events")
+			.headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+			.body(ElFileBody("bodies/prl/PRLAddCaseFlag2.json")))
+
+    .exec(http("XUI_110_GetCase")
+			.get("/data/internal/cases/${caseId}")
+			.headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json"))
+
+    .exec(http("XUI_110_WASupportedJurisdictions")
+			.get("/api/wa-supported-jurisdiction/get")
+			.headers(Headers.commonHeader))
+
+    .exec(Common.userDetails)
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+  val RemoveFlag =
+
+    //Disable Case Flag
+
+    exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+    .exec(_.set("currentDate", Common.getDate()))
+
+     .exec(http("XUI_120_RemoveCaseFlag1_Tasks")
+			.get("/workallocation/case/tasks/${caseId}/event/fl401ManageFlags/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
+			.headers(Headers.navigationHeader))
+
+    .exec(http("XUI_120_RemoveCaseFlag1_GetEvent")
+			.get("/data/internal/cases/${caseId}/event-triggers/fl401ManageFlags?ignore-warning=false")
+			.headers(Headers.navigationHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+      .check(jsonPath("$.event_token").saveAs("event_token2"))
+      .check(jsonPath("$.case_fields[2].value.details[0].id").saveAs("caseFlagId1"))
+      .check(jsonPath("$.case_fields[2].value.details[0].value.path[0].id").saveAs("caseFlagPathId1"))
+      .check(jsonPath("$.case_fields[2].value.details[0].value.flagComment").saveAs("caseFlagComment1"))
+      .check(jsonPath("$.case_fields[2].value.details[0].value.dateTimeCreated").saveAs("caseFlagDate1"))
+      .check(jsonPath("$.case_fields[2].value.details[0].value.otherDescription").saveAs("caseFlagDescription1"))
+      .check(jsonPath("$.case_fields[2].value.details[1].id").saveAs("caseFlagId2"))
+      .check(jsonPath("$.case_fields[2].value.details[1].value.path[0].id").saveAs("caseFlagPathId2"))
+      .check(jsonPath("$.case_fields[2].value.details[1].value.flagComment").saveAs("caseFlagComment2"))
+      .check(jsonPath("$.case_fields[2].value.details[1].value.dateTimeCreated").saveAs("caseFlagDate2"))
+      .check(jsonPath("$.case_fields[2].value.details[1].value.otherDescription").saveAs("caseFlagDescription2"))
+    )
+
+    .exec(Common.userDetails)
+    .exec(Common.caseShareOrgs)
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    .exec(http("XUI_120_RemoveFlagSubmit")
+			.post("/data/cases/${caseId}/events")
+			.headers(Headers.commonHeader)
+      .header("x-xsrf-token", "${XSRFToken}")
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+			.body(ElFileBody("bodies/prl/PRLRemoveCaseFlag.json")))
+
+    .exec(http("XUI_120_GetCase")
+			.get("/data/internal/cases/${caseId}")
+			.headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json"))
+
+    .exec(http("XUI_120_WASupportedJurisdictions")
+			.get("/api/wa-supported-jurisdiction/get")
+			.headers(Headers.commonHeader))
+
 }
 
 
