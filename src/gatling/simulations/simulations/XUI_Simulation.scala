@@ -337,10 +337,10 @@ class XUI_Simulation extends Simulation {
 				//Gatekeeper: Manage Hearings
 				.exec(CCDAPI.CreateEvent("PublicLawGK", "PUBLICLAW", "CARE_SUPERVISION_EPO", "manageHearings", "bodies/fpl/courtbundle/GKManageHearings.json"))
 				//Gatekeeper: Add Gatekeeping Order
-				.pause(20)
-				.exec(CCDAPI.CreateEvent("PublicLawGK", "PUBLICLAW", "CARE_SUPERVISION_EPO", "addGatekeepingOrder", "bodies/fpl/courtbundle/GKAddGatekeepingOrder.json"))
+				//.pause(20)
+				//.exec(CCDAPI.CreateEvent("PublicLawGK", "PUBLICLAW", "CARE_SUPERVISION_EPO", "addGatekeepingOrder", "bodies/fpl/courtbundle/GKAddGatekeepingOrder.json"))
 				//Solicitor: Upload Court Bundle
-				.exec(CCDAPI.CreateEvent("PublicLawSol", "PUBLICLAW", "CARE_SUPERVISION_EPO", "manageDocumentsLA", "bodies/fpl/courtbundle/SolUploadCourtBundle.json"))
+				//.exec(CCDAPI.CreateEvent("PublicLawSol", "PUBLICLAW", "CARE_SUPERVISION_EPO", "manageDocumentsLA", "bodies/fpl/courtbundle/SolUploadCourtBundle.json"))
 		}
 
 	/*===============================================================================================
