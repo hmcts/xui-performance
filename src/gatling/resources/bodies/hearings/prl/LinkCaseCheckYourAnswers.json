@@ -1,0 +1,45 @@
+{
+  "data": {
+    "caseLinks": [
+      {
+        "value": {
+          "CaseReference": "${linkCase1}"
+        },
+        "id": null
+      },
+      {
+        "value": {
+          "CaseReference": "${linkCase2}"
+        },
+        "id": null
+      },
+      {
+        "value": {
+          "CaseReference": "${linkCase3}"
+        },
+        "id": null
+      },
+      {
+        "value": {
+          "CaseReference": "${linkCase4}"
+        },
+        "id": null
+      },
+      {
+        "value": {
+          "CaseReference": "${linkCase5}"
+        },
+        "id": null
+      }
+    ],
+    "caseLinksFlag": null,
+    "caseNameHmctsInternal": "PerfTest C100 Case"
+  },
+  "event": {
+    "id": "createCaseLink",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false
+}
