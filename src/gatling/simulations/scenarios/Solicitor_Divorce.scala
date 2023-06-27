@@ -8,7 +8,7 @@ import utils.{Common, Environment, Headers}
 * Create a new Divorce application as a professional user (e.g. solicitor)
 ======================================================================================*/
 
-object Solicitor_Divorce {
+object  Solicitor_Divorce {
 
   val IdamUrl = Environment.idamURL
   val BaseURL = Environment.baseURL

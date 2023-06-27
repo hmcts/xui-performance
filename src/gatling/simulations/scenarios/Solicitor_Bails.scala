@@ -8,7 +8,7 @@ import utils.{Common, Environment, Headers}
 * Create a new Bail application as a professional user (e.g. Legal Rep)
 ======================================================================================*/
 
-object Solicitor_Bails {
+object   Solicitor_Bails {
 
   val BaseURL = Environment.baseURL
 
