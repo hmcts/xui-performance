@@ -59,7 +59,7 @@ object  Solicitor_Divorce {
       exec(http("XUI_Divorce_040_005_StartApplication")
         .get("/data/internal/case-types/DIVORCE/event-triggers/solicitorCreate?ignore-warning=false")
         .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("solicitorCreate")))
 
