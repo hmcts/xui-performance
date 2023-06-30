@@ -29,6 +29,10 @@ object Common {
   def randomNumber(length: Int) = {
     rnd.alphanumeric.filter(_.isDigit).take(length).mkString
   }
+  
+  def getIdempotency (): String = {
+    Random.nextDouble().toString.replace(".", "-")
+  }
 
   def getDay(): String = {
     (1 + rnd.nextInt(28)).toString.format(patternDay).reverse.padTo(2, '0').reverse //pads single-digit dates with a leading zero
