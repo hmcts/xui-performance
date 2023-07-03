@@ -28,6 +28,8 @@ class XUI_Simulation extends Simulation {
 	val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
 	val UserFeederCivilGA = csv("UserDataGeneralApplication.csv").circular
 	val UserFeederCivilGACases = csv("UserDataGACaseIds.csv").circular
+	val UserDefFeederCivilGA = csv("UserDefendentDataGeneralApplication.csv").circular
+	
 	
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
@@ -470,10 +472,17 @@ class XUI_Simulation extends Simulation {
 				.exec(Login.XUILogin)
 				.exec(Solicitor_CivilGeneral.CreateGeneralApplication)
 				.exec(Solicitor_CivilGeneral.PBSPayment)
-			//	.exec(Solicitor_CivilGeneral.DefResponse)
-			//	.exec(Solicitor_CivilGeneral.JudgeResponse)
-				
+				//.exec(Logout.XUILogout)
+			.feed(UserDefFeederCivilGA)
+				.exec(Homepage.XUIHomePage)
+				.exec(Login.XUILogin)
+				.exec(Solicitor_CivilGeneral.defResponseToGA)
 				.exec(Logout.XUILogout)
+				/*.feed(JudgeUserFeederCivilGA)
+				.exec(Homepage.XUIHomePage)
+				.exec(Login.XUILogin)
+			//	.exec(Solicitor_CivilGeneral.JudgeResponse)
+				.exec(Logout.XUILogout)*/
 		}
 	/*===============================================================================================
 	* Simulation Configuration
