@@ -69,6 +69,7 @@ class XUI_Simulation extends Simulation {
 	val nfdJointTargetPerHour: Double = 120
 	val frTargetPerHour: Double = 100
 	val caseworkerTargetPerHour: Double = 1000
+	val CivilGATargetPerHour: Double = 210
 
 	//This determines the percentage split of PRL journeys, by C100 or FL401
 	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
@@ -109,7 +110,7 @@ class XUI_Simulation extends Simulation {
 		.exitBlockOnFail {
 			feed(UserFeederPRL)
 				.exec(_.set("env", s"${env}")
-							.set("caseType", "PRLAPPS"))
+							.set("caseType", "CIVILGA"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.feed(randomFeeder)
@@ -474,11 +475,13 @@ class XUI_Simulation extends Simulation {
 				.exec(Solicitor_CivilGeneral.PBSPayment)
 				//.exec(Logout.XUILogout)
 			.feed(UserDefFeederCivilGA)
+				.exec(_.set("env", s"${env}")
+					.set("caseType", "CIVIL"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.exec(Solicitor_CivilGeneral.defResponseToGA)
 				.exec(Logout.XUILogout)
-				/*.feed(JudgeUserFeederCivilGA)
+			/*	.feed(JudgeUserFeederCivilGA)
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 			//	.exec(Solicitor_CivilGeneral.JudgeResponse)
@@ -537,7 +540,8 @@ class XUI_Simulation extends Simulation {
 	setUp(
 		//CivilGeneralScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 		//CivilGeneralScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
-			CivilGeneralScenario.inject(nothingFor(1),rampUsers(1) during (10))
+			//CivilGeneralScenario.inject(nothingFor(1),rampUsers(2) during (20))
+		CivilGeneralScenario.inject(simulationProfile(testType, CivilGATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 		// BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		// PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		 //ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)		/* ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
