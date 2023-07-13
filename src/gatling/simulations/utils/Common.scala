@@ -92,7 +92,7 @@ object Common {
     exec(http("XUI_Common_000_Healthcheck")
       .get(s"/api/healthCheck?path=${path}")
       .headers(Headers.commonHeader)
-      .header("accept", "application/json, text/plain, */*")
+       .header("accept", "application/json, text/plain, */*")
       .check(substring("""{"healthState":true}""")))
 
   val activity =
