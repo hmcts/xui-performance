@@ -5,7 +5,8 @@ import io.gatling.http.Predef._
 import io.gatling.core.check.CheckBuilder
 import io.gatling.core.check.jsonpath.JsonPathCheckType
 import com.fasterxml.jackson.databind.JsonNode
-import java.time.LocalDate
+
+import java.time.{LocalDate, ZonedDateTime}
 import java.time.format.DateTimeFormatter
 import scala.util.Random
 
@@ -33,7 +34,21 @@ object Common {
   def getIdempotency (): String = {
     Random.nextDouble().toString.replace(".", "-")
   }
-
+  
+  def getDate (): String = {
+    now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+  }
+  
+  def getCurrentDateTime (): String = {
+    ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"))
+  }
+  
+  def getRequestId (): String = {
+    val chars = ('a' to 'z') ++ ('A' to 'Z') ++ ('0' to '9')
+    Random.shuffle(chars).take(5).mkString
+  }
+  
+  
   def getDay(): String = {
     (1 + rnd.nextInt(28)).toString.format(patternDay).reverse.padTo(2, '0').reverse //pads single-digit dates with a leading zero
   }

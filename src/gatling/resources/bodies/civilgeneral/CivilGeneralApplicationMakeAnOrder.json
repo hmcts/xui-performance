@@ -1,0 +1,1 @@
+{"data":{"judicialDecision":{"decision":"MAKE_AN_ORDER"}},"event":{"id":"MAKE_DECISION","summary":"","description":""},"event_data":{"judicialDecision":{"decision":"MAKE_AN_ORDER"}},"event_token":"${event_token_judge}","ignore_warning":false,"case_reference":"${ga_case_id}"}

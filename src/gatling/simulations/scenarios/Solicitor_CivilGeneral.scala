@@ -30,6 +30,9 @@ object Solicitor_CivilGeneral {
       "marriageDay" -> Common.getDay(),
       "marriageMonth" -> Common.getMonth(),
       "Idempotencynumber" -> Common.getIdempotency(),
+      "currentDate" -> Common.getDate(),
+      "currentDateTime" -> Common.getCurrentDateTime(),
+      "requestId" -> Common.getRequestId(),
       "marriageYear" -> Common.getMarriageYear()))
   
       /*======================================================================================
@@ -39,12 +42,12 @@ object Solicitor_CivilGeneral {
       //  val getcasedetailspage=
       .group("XUI_GA_30_CaseDetails") {
         exec(http("XUI_GA_30_005_CaseDetails")
-          .get("/data/internal/cases/${caseId}")
+          .get("/data/internal/cases/#{caseId}")
           .headers(Headers.commonHeader)
           .check(status.in(200, 201, 304))
         )
           .exec(http("XUI_GA_30_010_RoleAssignment")
-            .get("/api/role-access/roles/manageLabellingRoleAssignment/${caseId}")
+            .get("/api/role-access/roles/manageLabellingRoleAssignment/#{caseId}")
             .headers(Headers.commonHeader)
             .check(status.in(200, 201, 304))
           )
@@ -61,20 +64,20 @@ object Solicitor_CivilGeneral {
          ======================================================================================*/
       .group("XUI_GA_040_InitiateGACase") {
         exec(http("XUI_GA_040_005_InitiateGACase")
-          .get("/workallocation/case/tasks/${caseId}/event/INITIATE_GENERAL_APPLICATION/caseType/CIVIL/jurisdiction/CIVIL")
+          .get("/workallocation/case/tasks/#{caseId}/event/INITIATE_GENERAL_APPLICATION/caseType/CIVIL/jurisdiction/CIVIL")
           .headers(Headers.commonHeader)
           .header("accept", "application/json")
           .check(status.in(200,201,304)))
           
           .exec(http("XUI_GA_040_010_CreateGACase")
-            .get("/data/internal/cases/${caseId}/event-triggers/INITIATE_GENERAL_APPLICATION?ignore-warning=false")
+            .get("/data/internal/cases/#{caseId}/event-triggers/INITIATE_GENERAL_APPLICATION?ignore-warning=false")
             .headers(Headers.commonHeader)
             .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
             .check(status.in(200,201,304))
             .check(jsonPath("$.event_token").optional.saveAs("event_token_ga")))
           
           .exec(http("XUI_GA_040_015_GetGACase")
-            .get("/workallocation/case/tasks/${caseId}/event/INITIATE_GENERAL_APPLICATION/caseType/CIVIL/jurisdiction/CIVIL")
+            .get("/workallocation/case/tasks/#{caseId}/event/INITIATE_GENERAL_APPLICATION/caseType/CIVIL/jurisdiction/CIVIL")
             .headers(Headers.commonHeader)
             .header("accept", "application/json")
           .check(status.in(200,201,304)))
@@ -93,7 +96,7 @@ object Solicitor_CivilGeneral {
           .post("/data/case-types/CIVIL/validate?pageId=INITIATE_GENERAL_APPLICATIONGATypePage")
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-          .header("x-xsrf-token", "${XSRFToken}")
+          .header("x-xsrf-token", "#{XSRFToken}")
           .body(ElFileBody("bodies/civilgeneral/CivilGeneralApplicationType.json"))
           .check(status.in(200,201,304))
         )
@@ -112,7 +115,7 @@ object Solicitor_CivilGeneral {
           .post("/data/case-types/CIVIL/validate?pageId=INITIATE_GENERAL_APPLICATIONGAHearingDate")
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-          .header("x-xsrf-token", "${XSRFToken}")
+          .header("x-xsrf-token", "#{XSRFToken}")
           .body(ElFileBody("bodies/civilgeneral/CivilGeneralHearingDate.json"))
           .check(status.in(200,201,304)))
         
@@ -129,7 +132,7 @@ object Solicitor_CivilGeneral {
           .post("/data/case-types/CIVIL/validate?pageId=INITIATE_GENERAL_APPLICATIONGARespondentAgreementPage")
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-          .header("x-xsrf-token", "${XSRFToken}")
+          .header("x-xsrf-token", "#{XSRFToken}")
           .body(ElFileBody("bodies/civilgeneral/CivilGeneralRespondentAgreement.json"))
           .check(status.in(200,201,304)))
         
@@ -146,7 +149,7 @@ object Solicitor_CivilGeneral {
           .post("/data/case-types/CIVIL/validate?pageId=INITIATE_GENERAL_APPLICATIONGAUrgencyRecordPage")
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-          .header("x-xsrf-token", "${XSRFToken}")
+          .header("x-xsrf-token", "#{XSRFToken}")
           .body(ElFileBody("bodies/civilgeneral/GeneralApplicationUrgencyRecord.json"))
           .check(status.in(200,201,304)))
         
@@ -164,7 +167,7 @@ object Solicitor_CivilGeneral {
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
           .header("content-type", "multipart/form-data")
-          .header("x-xsrf-token", "${XSRFToken}")
+          .header("x-xsrf-token", "#{XSRFToken}")
           .bodyPart(RawFileBodyPart("files", "pdf-sample.pdf")
             .fileName("pdf-sample.pdf")
             .transferEncoding("binary"))
@@ -188,7 +191,7 @@ object Solicitor_CivilGeneral {
           .post("/data/case-types/CIVIL/validate?pageId=INITIATE_GENERAL_APPLICATIONStatementOfTruth")
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-          .header("x-xsrf-token", "${XSRFToken}")
+          .header("x-xsrf-token", "#{XSRFToken}")
           .body(ElFileBody("bodies/civilgeneral/CivilGeneralSOT.json"))
           .check(status.in(200,201,304)))
       }
@@ -205,7 +208,7 @@ object Solicitor_CivilGeneral {
           .post("/data/case-types/CIVIL/validate?pageId=INITIATE_GENERAL_APPLICATIONHearingDetails")
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-          .header("x-xsrf-token", "${XSRFToken}")
+          .header("x-xsrf-token", "#{XSRFToken}")
           .body(ElFileBody("bodies/civilgeneral/CivilgeneralHearingDetails.json"))
           .check(status.in(200,201,304)))
         
@@ -224,7 +227,7 @@ object Solicitor_CivilGeneral {
           .post("/data/case-types/CIVIL/validate?pageId=INITIATE_GENERAL_APPLICATIONGAPBADetailsGAspec")
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-          .header("x-xsrf-token", "${XSRFToken}")
+          .header("x-xsrf-token", "#{XSRFToken}")
           .body(ElFileBody("bodies/civilgeneral/CivilgeneralPBADetails.json"))
           .check(status.in(200,201,304)))
         
@@ -239,10 +242,10 @@ object Solicitor_CivilGeneral {
       
       .group("XUI_GA_130_SubmitApplication") {
         exec(http("XUI_GA_130_005_SubmitGA")
-          .post("/data/cases/${caseId}/events")
+          .post("/data/cases/#{caseId}/events")
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-          .header("x-xsrf-token", "${XSRFToken}")
+          .header("x-xsrf-token", "#{XSRFToken}")
           .body(ElFileBody("bodies/civilgeneral/CivilGeneralCheckAnswers.json"))
           .check(status.in(200,201,304)))
       }
@@ -256,24 +259,24 @@ object Solicitor_CivilGeneral {
       
       .group("XUI_GA_140_GACaseDetails") {
         exec(http("XUI_GA_130_005_RoleAssignment")
-          .post("/api/role-access/roles/manageLabellingRoleAssignment/${caseId}")
+          .post("/api/role-access/roles/manageLabellingRoleAssignment/#{caseId}")
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-          .header("x-xsrf-token", "${XSRFToken}")
+          .header("x-xsrf-token", "#{XSRFToken}")
           .check(status.in(200,201,204,304)))
           
           .exec(http("XUI_GA_130_010_WA")
             .get("/api/wa-supported-jurisdiction/get")
             .headers(Headers.commonHeader)
             .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-            .header("x-xsrf-token", "${XSRFToken}")
+            .header("x-xsrf-token", "#{XSRFToken}")
           .check(status.in(200,201,304)))
           
           .exec(http("XUI_GA_130_015_GetGAJurisDetails")
             .get("/api/wa-supported-jurisdiction/get")
             .headers(Headers.commonHeader)
             .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-            .header("x-xsrf-token", "${XSRFToken}")
+            .header("x-xsrf-token", "#{XSRFToken}")
           .check(status.in(200,201,304)))
         
       }
@@ -287,10 +290,10 @@ object Solicitor_CivilGeneral {
     ======================================================================================*/
       .group("XUI_GA_140_RefreshCaseDetails") {
         exec(http("XUI_GA_140_05_GetGADetailsRefresh")
-          .get("/cases/case-details/${caseId}")
+          .get("/cases/case-details/#{caseId}")
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-          .header("x-xsrf-token", "${XSRFToken}")
+          .header("x-xsrf-token", "#{XSRFToken}")
           .check(status.in(200,201,304)))
           
           
@@ -305,10 +308,10 @@ object Solicitor_CivilGeneral {
           .exec(Common.isAuthenticated)
           
           .exec(http("XUI_GA_140_010_GetApplicationDetails")
-            .get("/data/internal/cases/${caseId}")
+            .get("/data/internal/cases/#{caseId}")
             .headers(Headers.commonHeader)
             .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-            .header("x-xsrf-token", "${XSRFToken}")
+            .header("x-xsrf-token", "#{XSRFToken}")
            // .check(jsonPath("$.caseLink.CaseReference").optional.saveAs("ga_case_id"))
             //.check(jsonPath("$.caseLink.CaseReference").findAll.optional.saveAs("gacases"))
             .check(jsonPath("$..value[0].value.caseLink.CaseReference").optional.saveAs("ga_case_id"))
@@ -330,7 +333,7 @@ object Solicitor_CivilGeneral {
   // payment pba fee payment
     group("XUI_GA_150_ServiceRequestForPay") {
         exec(http("CIVIL_CreateGA_150_ServiceRequestToPay")
-          .get("/pay-bulkscan/cases/${ga_case_id}")
+          .get("/pay-bulkscan/cases/#{ga_case_id}")
           .headers(Headers.commonHeader)
           .check(status.in(200, 304))
         )
@@ -343,13 +346,13 @@ object Solicitor_CivilGeneral {
       
       .group("XUI_GA_160_BackToCaseDetails") {
         exec(http("CIVIL_CreateGA_160_005_CaseDetails")
-          .get("/payments/cases/${ga_case_id}/paymentgroups")
+          .get("/payments/cases/#{ga_case_id}/paymentgroups")
           .headers(Headers.commonHeader)
           .check(status.in(200, 201, 304))
         )
           
           .exec(http("GA_Create_Case_160_010_Caselists")
-            .get("/payments/case-payment-orders?case_ids=${ga_case_id}")
+            .get("/payments/case-payment-orders?case_ids=#{ga_case_id}")
             .headers(Headers.commonHeader)
             .check(jsonPath("$.content[0].orderReference").optional.saveAs("serviceRef"))
             .check(status.in(200,201, 304))
@@ -371,7 +374,7 @@ object Solicitor_CivilGeneral {
       
       .group("CIVIL_CreateGA_180_FinalPayment") {
         exec(http("CIVIL_CreateGA_180_005_CaseDetails")
-          .post("/payments/service-request/${serviceRef}/pba-payments")
+          .post("/payments/service-request/#{serviceRef}/pba-payments")
           .headers(Headers.commonHeader)
           .body(ElFileBody("bodies/civilgeneral/CivilGeneralPBAPayment.json"))
           .check(status.in(200, 201, 304))
@@ -391,10 +394,10 @@ object Solicitor_CivilGeneral {
       
       group("XUI_GA_190_RefreshApplicationDetailsn") {
         exec(http("XUI_GA_190_05_GetApplicationDetails")
-          .get("/cases/case-details/${ga_case_id}")
+          .get("/cases/case-details/#{ga_case_id}")
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-          .header("x-xsrf-token", "${XSRFToken}")
+          .header("x-xsrf-token", "#{XSRFToken}")
           .check(status.in(200, 201, 304)))
       
       
@@ -409,10 +412,10 @@ object Solicitor_CivilGeneral {
           .exec(Common.isAuthenticated)
       
           .exec(http("XUI_GA_190_05_GetApplicationDetails")
-            .get("/data/internal/cases/${ga_case_id}")
+            .get("/data/internal/cases/#{ga_case_id}")
             .headers(Headers.commonHeader)
             .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-            .header("x-xsrf-token", "${XSRFToken}")
+            .header("x-xsrf-token", "#{XSRFToken}")
             .check(status.in(200, 201, 304))
           )
       }
@@ -423,20 +426,20 @@ object Solicitor_CivilGeneral {
      
       .group("XUI_GA_200_InitiateResponse") {
         exec(http("XUI_GA_200_005_InitiateResponse")
-          .get("/workallocation/case/tasks/${ga_case_id}/event/RESPOND_TO_APPLICATION/caseType/GENERALAPPLICATION/jurisdiction/CIVIL")
+          .get("/workallocation/case/tasks/#{ga_case_id}/event/RESPOND_TO_APPLICATION/caseType/GENERALAPPLICATION/jurisdiction/CIVIL")
           .headers(Headers.commonHeader)
           .header("accept", "application/json")
           .check(status.in(200, 201, 304)))
       
           .exec(http("XUI_GA_200_010_CreateResponse")
-            .get("/data/internal/cases/${ga_case_id}/event-triggers/RESPOND_TO_APPLICATION?ignore-warning=false")
+            .get("/data/internal/cases/#{ga_case_id}/event-triggers/RESPOND_TO_APPLICATION?ignore-warning=false")
             .headers(Headers.commonHeader)
             .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
             .check(status.in(200, 201, 304))
             .check(jsonPath("$.event_token").optional.saveAs("event_token_ga_defresponse")))
       
           .exec(http("XUI_GA_200_015_CreateResponse")
-            .get("/workallocation/case/tasks/${ga_case_id}/event/RESPOND_TO_APPLICATION/caseType/GENERALAPPLICATION/jurisdiction/CIVIL")
+            .get("/workallocation/case/tasks/#{ga_case_id}/event/RESPOND_TO_APPLICATION/caseType/GENERALAPPLICATION/jurisdiction/CIVIL")
             .headers(Headers.commonHeader)
             .header("accept", "application/json")
             .check(status.in(200, 201, 304)))
@@ -455,7 +458,7 @@ object Solicitor_CivilGeneral {
           .post("/data/case-types/GENERALAPPLICATION/validate?pageId=RESPOND_TO_APPLICATIONGARespondentConsent")
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-          .header("x-xsrf-token", "${XSRFToken}")
+          .header("x-xsrf-token", "#{XSRFToken}")
           .body(ElFileBody("bodies/civilgeneral/GADefResponseConsent.json"))
           .check(status.in(200, 201, 304)))
     
@@ -472,7 +475,7 @@ object Solicitor_CivilGeneral {
           .post("/data/case-types/GENERALAPPLICATION/validate?pageId=RESPOND_TO_APPLICATIONGARespHearingScreen")
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-          .header("x-xsrf-token", "${XSRFToken}")
+          .header("x-xsrf-token", "#{XSRFToken}")
           .body(ElFileBody("bodies/civilgeneral/GAHearingScreen.json"))
           .check(status.in(200, 201, 304)))
     
@@ -487,26 +490,225 @@ object Solicitor_CivilGeneral {
   
       .group("XUI_GA_230_SubmitResponseApplication") {
         exec(http("XUI_GA_230_005_SubmitApplication")
-          .post("/data/cases/${ga_case_id}/events")
+          .post("/data/cases/#{ga_case_id}/events")
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-          .header("x-xsrf-token", "${XSRFToken}")
+          .header("x-xsrf-token", "#{XSRFToken}")
           .body(ElFileBody("bodies/civilgeneral/GASubmitDefResponse.json"))
           .check(status.in(200, 201, 304)))
        
           .exec(http("XUI_GA_230_010_SubmitApplication")
-            .get("/data/internal/cases/${ga_case_id}")
+            .get("/data/internal/cases/#{ga_case_id}")
             .headers(Headers.commonHeader)
             .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-            .header("x-xsrf-token", "${XSRFToken}")
+            .header("x-xsrf-token", "#{XSRFToken}")
           .check(status.in(200, 201, 304)))
     
       }
       .pause(MinThinkTime, MaxThinkTime)
   
-  
+  val judgeIssueOrder=
   /*======================================================================================
            Login as as judge and issue the order
     ======================================================================================*/
+
+  /*======================================================================================
+                   Access case which is required access
+   ======================================================================================*/
+    group("XUI_GA_230_AccessCase") {
+      exec(http("XUI_GA_240_005_AccessCase")
+        .post("/api/role-access/roles/manageLabellingRoleAssignment/${ga_case_id}")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json")
+        .header("Request-Id", "|${requestId}."+Common.getRequestId())
+        .header("Request-Context", "appId=cid-v1:7922b140-fa5f-482d-89b4-e66e9e6d675a")
+        // .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/civilgeneral/CivilGeneralApplicationJudgeCaseAccess.json"))
+        .check(status.in(200, 201,204, 304)))
+      
+        .exec(http("XUI_GA_240_010_AccessCase")
+          .get("/api/user/details?refreshRoleAssignments=undefined")
+          .headers(Headers.commonHeader)
+          .header("Request-Id", "|${requestId}."+Common.getRequestId())
+          .header("Request-Context", "appId=cid-v1:7922b140-fa5f-482d-89b4-e66e9e6d675a")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .check(status.in(200, 201,204, 304)))
+    
+    }
+      .pause(MinThinkTime, MaxThinkTime)
+  
+      
+  /*======================================================================================
+                  Judge- click on Request Access
+  ======================================================================================*/
+        .group("XUI_GA_230_RequestAccessForJudge") {
+          exec(http("XUI_GA_250_005_RequestAccessForJudge")
+            .post("/api/user/details?refreshRoleAssignments=undefined")
+            .headers(Headers.commonHeader)
+            .header("accept", "application/json")
+            .header("Request-Id", "|${requestId}."+Common.getRequestId())
+            .header("Request-Context", "appId=cid-v1:7922b140-fa5f-482d-89b4-e66e9e6d675a")
+           // .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+            .header("x-xsrf-token", "#{XSRFToken}")
+            .check(status.in(200, 201,204, 304)))
+        }
+        .pause(MinThinkTime, MaxThinkTime)
+  
+  /*======================================================================================
+            Judge- Request Access
+      ======================================================================================*/
+  .group("XUI_GA_230_RequestAccessForJudge") {
+    exec(http("XUI_GA_260_005_RequestAccessForJudge")
+      .post("/api/challenged-access-request")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json")
+      .header("Request-Id", "|${requestId}." + Common.getRequestId())
+      .header("Request-Context", "appId=cid-v1:7922b140-fa5f-482d-89b4-e66e9e6d675a")
+      // .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "#{XSRFToken}")
+      .body(ElFileBody("bodies/civilgeneral/CivilGeneralApplicationRequestAccess.json"))
+      .check(status.in(200, 201,204, 304)))
+      
+      .exec(http("XUI_GA_260_010_RequestAccessForJudge")
+        .get("/data/internal/cases/#{ga_case_id}")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
+        .header("Request-Id", "|${requestId}." + Common.getRequestId())
+        .header("Request-Context", "appId=cid-v1:7922b140-fa5f-482d-89b4-e66e9e6d675a")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .check(status.in(200, 201,204,304)))
+    
+  }
+    .pause(MinThinkTime, MaxThinkTime)
+    
+    
+    /*======================================================================================
+                         Judge- ViewFile
+ ======================================================================================*/
+  
+        .group("XUI_GA_230_RequestAccessForJudge") {
+          exec(http("XUI_GA_250_005_RequestAccessForJudge")
+            .post("/api/role-access/roles/manageLabellingRoleAssignment/#{ga_case_id}")
+            .headers(Headers.commonHeader)
+            // .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+            .header("x-xsrf-token", "#{XSRFToken}")
+            .body(ElFileBody("bodies/civilgeneral/CivilGeneralApplicationRequestAccess.json"))
+            .check(status.in(200, 201,204, 304)))
+    
+            .exec(http("XUI_GA_250_010_RequestAccessForJudge")
+              .get("/api/wa-supported-jurisdiction/get")
+              .headers(Headers.commonHeader)
+              // .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
+              .header("x-xsrf-token", "#{XSRFToken}")
+              .check(status.in(200, 201,204,304)))
+        }
+            .pause(MinThinkTime, MaxThinkTime)
+            
+
+        /*======================================================================================
+       * Judge- Make an order from WA
+       ======================================================================================*/
+  
+        .group("XUI_GA_200_InitiateResponse") {
+          exec(http("XUI_GA_200_005_InitiateResponse")
+            .get("/workallocation/case/tasks/#{ga_case_id}/event/MAKE_DECISION/caseType/GENERALAPPLICATION/jurisdiction/CIVIL")
+            .headers(Headers.commonHeader)
+            .header("accept", "application/json")
+            .check(status.in(200, 201, 304)))
+         
+      
+            .exec(http("XUI_GA_200_010_CreateResponse")
+              .get("/data/internal/cases/#{ga_case_id}/event-triggers/MAKE_DECISION?ignore-warning=false")
+              .headers(Headers.commonHeader)
+              .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+              .check(status.in(200, 201, 304))
+              .check(jsonPath("$.event_token").optional.saveAs("event_token_ga_judge")))
+      
+            .exec(http("XUI_GA_200_015_CreateResponse")
+              .get("/workallocation/case/tasks/#{ga_case_id}/event/MAKE_DECISION/caseType/GENERALAPPLICATION/jurisdiction/CIVIL")
+              .headers(Headers.commonHeader)
+              .header("accept", "application/json")
+              .check(status.in(200, 201, 304)))
+  
+            .exec(http("XUI_GA_200_015_CreateResponse")
+              .get("/data/internal/profile")
+              .headers(Headers.commonHeader)
+              .header("accept", "application/json")
+              .check(status.in(200, 201, 304)))
+        }
+  
+        .pause(MinThinkTime, MaxThinkTime)
+  
+  
+  /*======================================================================================
+        * Judge- What is your decision on this application?
+        ======================================================================================*/
+        .group("XUI_GA_230_DecisionOnApplication") {
+          exec(http("XUI_GA_230_005_RequestAccessForJudge")
+            .post("/data/case-types/GENERALAPPLICATION/validate?pageId=MAKE_DECISIONGAJudicialDecision")
+            .headers(Headers.commonHeader)
+             .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+            .header("x-xsrf-token", "#{XSRFToken}")
+            .body(ElFileBody("bodies/civilgeneral/CivilGeneralApplicationMakeAnOrder.json"))
+            .check(status.in(200, 201, 304)))
+        }
+        .pause(MinThinkTime, MaxThinkTime)
+  
+ 
+  
+  /*======================================================================================
+         * Judge- cloak the order
+         ======================================================================================*/
+  
+        .group("XUI_GA_230_MakeADecisionScreen") {
+          exec(http("XUI_GA_230_005_MakeADecisionScreen")
+            .post("/data/case-types/GENERALAPPLICATION/validate?pageId=MAKE_DECISIONGAJudicialMakeADecisionScreen")
+            .headers(Headers.commonHeader)
+            .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+            .header("x-xsrf-token", "#{XSRFToken}")
+            .body(ElFileBody("bodies/civilgeneral/CivilGeneralApplicationDesicionScreen.json"))
+            .check(status.in(200, 201, 304)))
+        }
+        .pause(MinThinkTime, MaxThinkTime)
+  
+  /*======================================================================================
+           * Judge- preview
+           ======================================================================================*/
+        .group("XUI_GA_230_Preview") {
+          exec(http("XUI_GA_230_005_XUI_GA_230_Preview")
+            .post("/data/case-types/GENERALAPPLICATION/validate?pageId=MAKE_DECISIONGAJudicialMakeADecisionDocPreview")
+            .headers(Headers.commonHeader)
+            .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+            .header("x-xsrf-token", "#{XSRFToken}")
+            .body(ElFileBody("bodies/civilgeneral/CivilGeneralApplicationDesicionPreview.json"))
+            .check(status.in(200, 201, 304)))
+        }
+        .pause(MinThinkTime, MaxThinkTime)
+  
+  
+  
+        /*======================================================================================
+      * Submit Judge Issue Order
+      ======================================================================================*/
+  
+        .group("XUI_GA_230_SubmitJudgeDecision") {
+          exec(http("XUI_GA_230_005_SubmitApplication")
+            .post("/data/cases/#{ga_case_id}/events")
+            .headers(Headers.commonHeader)
+            .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+            .header("x-xsrf-token", "#{XSRFToken}")
+            .body(ElFileBody("bodies/civilgeneral/CivilGeneralApplicationSubmitJudgeDecision.json"))
+            .check(status.in(200, 201, 304)))
+      
+            .exec(http("XUI_GA_230_010_SubmitJudgeDecision")
+              .get("/data/internal/cases/#{ga_case_id}")
+              .headers(Headers.commonHeader)
+              .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
+              .header("x-xsrf-token", "#{XSRFToken}")
+              .check(status.in(200, 201, 304)))
+    
+        }
+        .pause(MinThinkTime, MaxThinkTime)
   
 }

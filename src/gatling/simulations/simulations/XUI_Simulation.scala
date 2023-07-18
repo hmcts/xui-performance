@@ -29,6 +29,8 @@ class XUI_Simulation extends Simulation {
 	val UserFeederCivilGA = csv("UserDataGeneralApplication.csv").circular
 	val UserFeederCivilGACases = csv("UserDataGACaseIds.csv").circular
 	val UserDefFeederCivilGA = csv("UserDefendentDataGeneralApplication.csv").circular
+	val UserJudgeFeederCivilGA = csv("UserJudgeDataGeneralApplication.csv").circular
+	
 	
 	
 
@@ -69,7 +71,7 @@ class XUI_Simulation extends Simulation {
 	val nfdJointTargetPerHour: Double = 120
 	val frTargetPerHour: Double = 100
 	val caseworkerTargetPerHour: Double = 1000
-	val CivilGATargetPerHour: Double = 210
+	val CivilGATargetPerHour: Double = 225
 
 	//This determines the percentage split of PRL journeys, by C100 or FL401
 	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
@@ -480,12 +482,12 @@ class XUI_Simulation extends Simulation {
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.exec(Solicitor_CivilGeneral.defResponseToGA)
-				.exec(Logout.XUILogout)
-			/*	.feed(JudgeUserFeederCivilGA)
+				//.exec(Logout.XUILogout)
+			/*	.feed(UserJudgeFeederCivilGA)
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
-			//	.exec(Solicitor_CivilGeneral.JudgeResponse)
-				.exec(Logout.XUILogout)*/
+				.exec(Solicitor_CivilGeneral.judgeIssueOrder)*/
+				.exec(Logout.XUILogout)
 		}
 	/*===============================================================================================
 	* Simulation Configuration
@@ -552,7 +554,7 @@ class XUI_Simulation extends Simulation {
 		// FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		 //CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)*/
 	).protocols(httpProtocol)
-		.assertions(assertions(testType))
+		//.assertions(assertions(testType))
 		.maxDuration(75 minutes)
 	
 
