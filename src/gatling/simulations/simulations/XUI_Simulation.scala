@@ -560,11 +560,10 @@ class XUI_Simulation extends Simulation {
 
 	setUp(
 		//CivilGeneralScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
-		CivilGeneralScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+		//CivilGeneralScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 			//CivilGeneralScenario.inject(nothingFor(1),rampUsers(1) during (10))
 			//	CivilGeneralJudgeScenario.inject(nothingFor(1),rampUsers(1) during (10))
-				
-		//CivilGeneralScenario.inject(simulationProfile(testType, CivilGATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+		CivilGeneralScenario.inject(simulationProfile(testType, CivilGATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 		// BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		// PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		 //ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)		/* ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
