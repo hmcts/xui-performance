@@ -10,14 +10,14 @@
                "finalDecisionReason": null,
                "finalDecisionDate": null,
                "party": {
-                  "firstName": "${childFirstName}",
-                  "lastName": "${childLastName}",
-                  "dateOfBirth": "${dobYearChild}-${dobMonth}-${dobDay}",
+                  "firstName": "#{childFirstName}",
+                  "lastName": "#{childLastName}",
+                  "dateOfBirth": "#{dobYearChild}-#{dobMonth}-#{dobDay}",
                   "gender": "Boy",
                   "genderIdentification": null,
                   "livingSituation": "Living with respondents",
                   "livingSituationDetails": null,
-                  "addressChangeDate": "${livingWithSinceYear}-${livingWithSinceMonth}-${livingWithSinceDay}",
+                  "addressChangeDate": "#{livingWithSinceYear}-#{livingWithSinceMonth}-#{livingWithSinceDay}",
                   "keyDates": null,
                   "careAndContactPlan": null,
                   "adoption": "No",
@@ -33,16 +33,16 @@
                   "detailsHiddenReason": null,
                   "litigationIssues": "NO",
                   "litigationIssuesDetails": null,
-                  "partyId": "${partyId}",
+                  "partyId": "#{partyId}",
                   "partyType": null,
                   "showAddressInConfidentialTab": null,
                   "address": {
-                     "AddressLine1": "${addressLines(0)}",
-                     "AddressLine2": "${addressLines(1)}",
+                     "AddressLine1": "#{addressLines(0)}",
+                     "AddressLine2": "#{addressLines(1)}",
                      "AddressLine3": "",
-                     "PostTown": "${addressLines(2)}",
+                     "PostTown": "#{addressLines(2)}",
                      "County": "",
-                     "PostCode": "${addressLines(3)}",
+                     "PostCode": "#{addressLines(3)}",
                      "Country": "United Kingdom"
                   },
                   "socialWorkerTelephoneNumber": {
@@ -51,7 +51,7 @@
                   }
                }
             },
-            "id": "${id}"
+            "id": "#{id}"
          }
       ]
    },
@@ -71,14 +71,14 @@
                "finalDecisionReason": null,
                "finalDecisionDate": null,
                "party": {
-                  "firstName": "${childFirstName}",
-                  "lastName": "${childLastName}",
-                  "dateOfBirth": "${dobYearChild}-${dobMonth}-${dobDay}",
+                  "firstName": "#{childFirstName}",
+                  "lastName": "#{childLastName}",
+                  "dateOfBirth": "#{dobYearChild}-#{dobMonth}-#{dobDay}",
                   "gender": "Boy",
                   "genderIdentification": null,
                   "livingSituation": "Living with respondents",
                   "livingSituationDetails": null,
-                  "addressChangeDate": "${livingWithSinceYear}-${livingWithSinceMonth}-${livingWithSinceDay}",
+                  "addressChangeDate": "#{livingWithSinceYear}-#{livingWithSinceMonth}-#{livingWithSinceDay}",
                   "keyDates": null,
                   "careAndContactPlan": null,
                   "adoption": "No",
@@ -94,16 +94,16 @@
                   "detailsHiddenReason": null,
                   "litigationIssues": "NO",
                   "litigationIssuesDetails": null,
-                  "partyId": "${partyId}",
+                  "partyId": "#{partyId}",
                   "partyType": null,
                   "showAddressInConfidentialTab": null,
                   "address": {
-                     "AddressLine1": "${addressLines(0)}",
-                     "AddressLine2": "${addressLines(1)}",
+                     "AddressLine1": "#{addressLines(0)}",
+                     "AddressLine2": "#{addressLines(1)}",
                      "AddressLine3": "",
-                     "PostTown": "${addressLines(2)}",
+                     "PostTown": "#{addressLines(2)}",
                      "County": "",
-                     "PostCode": "${addressLines(3)}",
+                     "PostCode": "#{addressLines(3)}",
                      "Country": "United Kingdom"
                   },
                   "socialWorkerTelephoneNumber": {
@@ -112,11 +112,11 @@
                   }
                }
             },
-            "id": "${id}"
+            "id": "#{id}"
          }
       ]
    },
-   "event_token": "${event_token}",
+   "event_token": "#{event_token}",
    "ignore_warning": false,
-   "case_reference": "${caseId}"
+   "case_reference": "#{caseId}"
 }

@@ -1,7 +1,7 @@
 {
   "data": {
      "homeOfficeReferenceNumber": "123456789",
-     "homeOfficeDecisionDate": "${currentDate}"
+     "homeOfficeDecisionDate": "#{currentDate}"
   },
   "event": {
      "id": "startAppeal",
@@ -20,8 +20,8 @@
      },
      "appellantInUk": "Yes",
      "homeOfficeReferenceNumber": "123456789",
-     "homeOfficeDecisionDate": "${currentDate}"
+     "homeOfficeDecisionDate": "#{currentDate}"
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false
 }

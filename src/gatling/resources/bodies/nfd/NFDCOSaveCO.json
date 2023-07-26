@@ -1,15 +1,15 @@
 {
   "data": {
     "coRespondentAnswersLink": {
-      "document_url": "${respondentAnswersURL}",
-      "document_filename": "${respondentAnswers}",
-      "document_binary_url": "${respondentAnswersURL}/binary"
+      "document_url": "#{respondentAnswersURL}",
+      "document_filename": "#{respondentAnswers}",
+      "document_binary_url": "#{respondentAnswersURL}/binary"
     },
     "coApplicant1ApplyForConditionalOrder": "Yes",
     "miniApplicationLink": {
-      "document_url": "${documentURL}",
-      "document_filename": "${filename}",
-      "document_binary_url": "${documentURL}/binary"
+      "document_url": "#{documentURL}",
+      "document_filename": "#{filename}",
+      "document_binary_url": "#{documentURL}/binary"
     },
     "coApplicant1ConfirmInformationStillCorrect": "Yes",
     "coApplicant1ReasonInformationNotCorrect": null
@@ -19,6 +19,6 @@
     "summary": "",
     "description": ""
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false
 }

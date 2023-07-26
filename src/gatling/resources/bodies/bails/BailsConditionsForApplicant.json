@@ -4,8 +4,8 @@
       "bailAppearance",
       "bailActivities"
     ],
-    "conditionsForBailAppearance": "Appearance${BailsRandomString}",
-    "conditionsForBailActivities": "Activities${BailsRandomString}"
+    "conditionsForBailAppearance": "Appearance#{BailsRandomString}",
+    "conditionsForBailActivities": "Activities#{BailsRandomString}"
   },
   "event": {
     "id": "recordTheDecision",
@@ -13,7 +13,7 @@
     "description": ""
   },
   "event_data": {
-    "judgeDetailsName": "Judge${BailsRandomString}",
+    "judgeDetailsName": "Judge#{BailsRandomString}",
     "secretaryOfStateConsentYesOrNo": "No",
     "recordTheDecisionList": null,
     "decisionGrantedOrRefused": "granted",
@@ -22,10 +22,10 @@
       "bailAppearance",
       "bailActivities"
     ],
-    "conditionsForBailAppearance": "Appearance${BailsRandomString}",
-    "conditionsForBailActivities": "Activities${BailsRandomString}"
+    "conditionsForBailAppearance": "Appearance#{BailsRandomString}",
+    "conditionsForBailActivities": "Activities#{BailsRandomString}"
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false,
-  "case_reference": "${caseId}"
+  "case_reference": "#{caseId}"
 }

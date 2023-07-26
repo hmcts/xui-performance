@@ -1,6 +1,6 @@
 {
   "data": {
-     "legalRepCompany": "${orgname}",
+     "legalRepCompany": "#{orgname}",
      "legalRepName": "John",
      "legalRepReferenceNumber": "123",
      "isFeePaymentEnabled": null,
@@ -23,16 +23,16 @@
      },
      "appellantInUk": "Yes",
      "homeOfficeReferenceNumber": "123456789",
-     "homeOfficeDecisionDate": "${currentDate}",
+     "homeOfficeDecisionDate": "#{currentDate}",
      "uploadTheNoticeOfDecisionDocs": [
         {
            "value": {
               "description": "test doc 1",
               "document": {
-                 "document_url": "${DocumentURL1}",
-                 "document_binary_url": "${DocumentURL1}/binary",
+                 "document_url": "#{DocumentURL1}",
+                 "document_binary_url": "#{DocumentURL1}/binary",
                  "document_filename": "3MB.pdf",
-                 "document_hash": "${documentHash1}"
+                 "document_hash": "#{documentHash1}"
               }
            },
            "id": null
@@ -41,10 +41,10 @@
           "value": {
              "description": "test doc 2",
              "document": {
-                "document_url": "${DocumentURL2}",
-                "document_binary_url": "${DocumentURL2}/binary",
+                "document_url": "#{DocumentURL2}",
+                "document_binary_url": "#{DocumentURL2}/binary",
                 "document_filename": "3MB.pdf",
-                "document_hash": "${documentHash2}"
+                "document_hash": "#{documentHash2}"
              }
           },
           "id": null
@@ -53,19 +53,19 @@
          "value": {
             "description": "test doc 3",
             "document": {
-               "document_url": "${DocumentURL3}",
-               "document_binary_url": "${DocumentURL3}/binary",
+               "document_url": "#{DocumentURL3}",
+               "document_binary_url": "#{DocumentURL3}/binary",
                "document_filename": "3MB.pdf",
-               "document_hash": "${documentHash3}"
+               "document_hash": "#{documentHash3}"
             }
          },
          "id": null
       }
      ],
      "appellantTitle": "Mr",
-     "appellantGivenNames": "${firstName}",
-     "appellantFamilyName": "${lastName}",
-     "appellantDateOfBirth": "${dobYear}-${dobMonth}-${dobDay}",
+     "appellantGivenNames": "#{firstName}",
+     "appellantFamilyName": "#{lastName}",
+     "appellantDateOfBirth": "#{dobYear}-#{dobMonth}-#{dobDay}",
      "appellantStateless": "hasNationality",
      "appellantNationalities": [
         {
@@ -77,12 +77,12 @@
      ],
      "appellantHasFixedAddress": "Yes",
      "appellantAddress": {
-        "AddressLine1": "${addressLines(0)}",
-        "AddressLine2": "${addressLines(1)}",
+        "AddressLine1": "#{addressLines(0)}",
+        "AddressLine2": "#{addressLines(1)}",
         "AddressLine3": "",
-        "PostTown": "${addressLines(2)}",
+        "PostTown": "#{addressLines(2)}",
         "County": "",
-        "PostCode": "${addressLines(3)}",
+        "PostCode": "#{addressLines(3)}",
         "Country": "United Kingdom"
      },
      "contactPreference": "wantsEmail",
@@ -102,6 +102,6 @@
      "isFeePaymentEnabled": null,
      "isRemissionsEnabled": null
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false
 }

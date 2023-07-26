@@ -1,6 +1,6 @@
 {
   "data": {
-    "judgeDetailsName": "Judge${BailsRandomString}"
+    "judgeDetailsName": "Judge#{BailsRandomString}"
   },
   "event": {
     "id": "recordTheDecision",
@@ -8,9 +8,9 @@
     "description": ""
   },
   "event_data": {
-    "judgeDetailsName": "Details${BailsRandomString}"
+    "judgeDetailsName": "Details#{BailsRandomString}"
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false,
-  "case_reference": "${caseId}"
+  "case_reference": "#{caseId}"
 }

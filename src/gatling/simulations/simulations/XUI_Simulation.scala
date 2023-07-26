@@ -86,7 +86,7 @@ class XUI_Simulation extends Simulation {
 	}
 
 	val httpProtocol = http
-		.baseUrl(Environment.baseURL.replace("${env}", s"${env}"))
+		.baseUrl(Environment.baseURL.replace("#{env}", s"${env}"))
 		.inferHtmlResources()
 		.silentResources
 		.header("experimental", "true") //used to send through client id, s2s and bearer tokens. Might be temporary

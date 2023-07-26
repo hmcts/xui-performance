@@ -3,7 +3,7 @@
     "applicant1SolicitorName": "AppSolicitor",
     "applicant1SolicitorReference": "ApplicantSolRef",
     "applicant1SolicitorPhone": "07000000000",
-    "applicant1SolicitorEmail": "${user1}",
+    "applicant1SolicitorEmail": "#{user1}",
     "applicant1SolicitorAgreeToReceiveEmailsCheckbox": [
       "Yes"
     ],
@@ -12,8 +12,8 @@
       "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
-        "OrganisationID": "${orgref1}",
-        "OrganisationName": "${orgname1}"
+        "OrganisationID": "#{orgref1}",
+        "OrganisationName": "#{orgname1}"
       }
     }
   },
@@ -23,18 +23,18 @@
     "description": ""
   },
   "event_data": {
-    ${NFDLabelsPopulated}
+    #{NFDLabelsPopulated}
     "isJudicialSeparation": "No",
     "coApplicant1IsDrafted": "No",
     "coApplicant1IsSubmitted": "No",
     "coApplicant2IsDrafted": null,
     "coApplicant2IsSubmitted": null,
     "divorceOrDissolution": "divorce",
-    "applicationType": "${nfdCaseType}Application",
+    "applicationType": "#{nfdCaseType}Application",
     "applicant1SolicitorName": "AppSolicitor",
     "applicant1SolicitorReference": "ApplicantSolRef",
     "applicant1SolicitorPhone": "07000000000",
-    "applicant1SolicitorEmail": "${user1}",
+    "applicant1SolicitorEmail": "#{user1}",
     "applicant1SolicitorAgreeToReceiveEmailsCheckbox": [
       "Yes"
     ],
@@ -43,11 +43,11 @@
       "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
-        "OrganisationID": "${orgref1}",
-        "OrganisationName": "${orgname1}"
+        "OrganisationID": "#{orgref1}",
+        "OrganisationName": "#{orgname1}"
       }
     }
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false
 }

@@ -2,9 +2,9 @@
   "data": {
     "applicant2SolicitorRepresented": "Yes",
     "applicant2SolicitorAnswersLink": {
-      "document_url": "${app2AnswersUrl}",
-      "document_filename": "${app2AnswersFilename}",
-      "document_binary_url": "${app2AnswersUrl}/binary"
+      "document_url": "#{app2AnswersUrl}",
+      "document_filename": "#{app2AnswersFilename}",
+      "document_binary_url": "#{app2AnswersUrl}/binary"
     },
     "applicationType": "jointApplication",
     "divorceOrDissolution": "divorce",
@@ -27,9 +27,9 @@
     "applicant1StatementOfTruth": "Yes",
     "solSignStatementOfTruth": "Yes",
     "solStatementOfReconciliationName": "AppSolicitor",
-    "solStatementOfReconciliationFirm": "${orgname1}",
+    "solStatementOfReconciliationFirm": "#{orgname1}",
     "statementOfReconciliationComments": null,
-    "solApplicationFeeInPounds": "${feeInPounds}",
+    "solApplicationFeeInPounds": "#{feeInPounds}",
     "solPaymentHowToPay": "feePayByAccount",
     "pbaNumbers": {
       "value": {
@@ -50,14 +50,14 @@
     "feeAccountReference": "PerfPayRef",
     "applicationFeeOrderSummary": {
       "PaymentReference": null,
-      "PaymentTotal": "${paymentTotal}",
+      "PaymentTotal": "#{paymentTotal}",
       "Fees": [
         {
           "value": {
-            "FeeCode": "${feeCode}",
-            "FeeAmount": "${feeAmount}",
-            "FeeDescription": "${feeDescription}",
-            "FeeVersion": "${feeVersion}"
+            "FeeCode": "#{feeCode}",
+            "FeeAmount": "#{feeAmount}",
+            "FeeDescription": "#{feeDescription}",
+            "FeeVersion": "#{feeVersion}"
           }
         }
       ]
@@ -68,6 +68,6 @@
     "summary": "",
     "description": ""
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false
 }
