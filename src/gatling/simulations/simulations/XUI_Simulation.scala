@@ -141,8 +141,6 @@ class XUI_Simulation extends Simulation {
 				.exec(Logout.XUILogout)
 		}
 
-
-
 	/*===============================================================================================
 	* XUI Legal Rep Bails Scenario
  	===============================================================================================*/
@@ -454,7 +452,6 @@ class XUI_Simulation extends Simulation {
 				.exec(Caseworker_Navigation.LoadCaseList)
 				.exec(Logout.XUILogout)
 		}
-
 
 	/*===============================================================================================
 	* Simulation Configuration

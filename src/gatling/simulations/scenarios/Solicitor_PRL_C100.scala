@@ -1420,7 +1420,7 @@ object Solicitor_PRL_C100 {
 
     group("XUI_PRL_C100_470_HearingsTab") {
       exec(http("XUI_PRL_C100_470_GetHearings")
-        .get("/api/hearings/getHearings?caseId=${caseId}")
+        .get("/api/hearings/getHearings?caseId=#{caseId}")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*")
         .check(status.in(200, 403)))
@@ -1431,7 +1431,7 @@ object Solicitor_PRL_C100 {
         .header("Content-Type", "application/json; charset=utf-8")
         .header("Accept", "application/json, text/plain, */*")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(StringBody("""{"caseReference":"${caseId}"}"""))
+        .body(StringBody("""{"caseReference":"#{caseId}"}"""))
         .check(substring("hearing-facilities")))
 
       .exec(http("XUI_PRL_C100_470_GetRoleAssignments")
