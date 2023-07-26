@@ -686,7 +686,7 @@
     "fl401StmtOfTruth": {
       "date": "2023-07-26",
       "fullname": "Perf Solicitor",
-      "nameOfFirm": "${orgname}",
+      "nameOfFirm": "#{orgname}",
       "signOnBehalf": "Solicitor",
       "signature": null,
       "applicantConsent": [
