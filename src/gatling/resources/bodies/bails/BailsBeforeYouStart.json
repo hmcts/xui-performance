@@ -10,6 +10,6 @@
     "previousApplicationDoneViaAria": "No",
     "previousApplicationDoneViaCcd": "No"
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false
 }

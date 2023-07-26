@@ -19,9 +19,9 @@
     "applicant1StatementOfTruth": "Yes",
     "solSignStatementOfTruth": "Yes",
     "solStatementOfReconciliationName": "AppSolicitor",
-    "solStatementOfReconciliationFirm": "${orgname1}",
+    "solStatementOfReconciliationFirm": "#{orgname1}",
     "statementOfReconciliationComments": null,
-    "solApplicationFeeInPounds": "${feeInPounds}"
+    "solApplicationFeeInPounds": "#{feeInPounds}"
   },
   "event": {
     "id": "solicitor-submit-application",
@@ -48,11 +48,11 @@
     "applicant1StatementOfTruth": "Yes",
     "solSignStatementOfTruth": "Yes",
     "solStatementOfReconciliationName": "AppSolicitor",
-    "solStatementOfReconciliationFirm": "${orgname1}",
+    "solStatementOfReconciliationFirm": "#{orgname1}",
     "statementOfReconciliationComments": null,
-    "solApplicationFeeInPounds": "${feeInPounds}"
+    "solApplicationFeeInPounds": "#{feeInPounds}"
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false,
-  "case_reference": "${caseId}"
+  "case_reference": "#{caseId}"
 }

@@ -7,9 +7,9 @@
     "applicant2ConfirmApplicant1Information": "No",
     "applicant2FinancialOrdersFor": [],
     "applicant1SolicitorAnswersLink": {
-      "document_url": "${app1AnswersDocumentURL}",
-      "document_binary_url": "${app1AnswersDocumentURL}/binary",
-      "document_filename": "${app1AnswersFilename}"
+      "document_url": "#{app1AnswersDocumentURL}",
+      "document_binary_url": "#{app1AnswersDocumentURL}/binary",
+      "document_filename": "#{app1AnswersFilename}"
     },
     "divorceOrDissolution": "divorce",
     "solStatementOfReconciliationCertify": "Yes",
@@ -27,7 +27,7 @@
     "applicant2StatementOfTruth": "Yes",
     "applicant2SolSignStatementOfTruth": "Yes",
     "applicant2SolStatementOfReconciliationName": "RespSolicitor",
-    "applicant2SolStatementOfReconciliationFirm": "${orgname2}",
+    "applicant2SolStatementOfReconciliationFirm": "#{orgname2}",
     "applicant2StatementOfReconciliationComments": null
   },
   "event": {
@@ -35,6 +35,6 @@
     "summary": "",
     "description": ""
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false
 }

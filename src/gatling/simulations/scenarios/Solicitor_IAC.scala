@@ -77,7 +77,7 @@ object Solicitor_IAC {
         .post("/data/case-types/Asylum/validate?pageId=startAppealchecklist")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/iac/IACStartChecklist.json"))
         .check(substring("isOutOfCountryEnabled")))
     }
@@ -88,7 +88,7 @@ object Solicitor_IAC {
         .post("/data/case-types/Asylum/validate?pageId=startAppealoutOfCountry")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/iac/IACOutOfCountry.json"))
         .check(substring("appellantInUk")))
     }
@@ -104,7 +104,7 @@ object Solicitor_IAC {
       .post("/data/case-types/Asylum/validate?pageId=startAppealhomeOfficeDecision")
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
+      .header("x-xsrf-token", "#{XSRFToken}")
       .body(ElFileBody("bodies/iac/IACHomeOfficeDecision.json"))
       .check(substring("haveHearingAttendeesAndDurationBeenRecorded")))
     }
@@ -121,7 +121,7 @@ object Solicitor_IAC {
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .header("content-type", "multipart/form-data")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .bodyPart(RawFileBodyPart("files", "3MB.pdf")
         .fileName("3MB.pdf")
         .transferEncoding("binary"))
@@ -141,7 +141,7 @@ object Solicitor_IAC {
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .header("content-type", "multipart/form-data")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .bodyPart(RawFileBodyPart("files", "3MB.pdf")
         .fileName("3MB.pdf")
         .transferEncoding("binary"))
@@ -161,7 +161,7 @@ object Solicitor_IAC {
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .header("content-type", "multipart/form-data")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .bodyPart(RawFileBodyPart("files", "3MB.pdf")
         .fileName("3MB.pdf")
         .transferEncoding("binary"))
@@ -180,7 +180,7 @@ object Solicitor_IAC {
       .post("/data/case-types/Asylum/validate?pageId=startAppealuploadTheNoticeOfDecision")
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
+      .header("x-xsrf-token", "#{XSRFToken}")
       .body(ElFileBody("bodies/iac/IACUploadNoticeDecision.json"))
       .check(substring("uploadTheNoticeOfDecisionDocs")))
     }
@@ -197,7 +197,7 @@ object Solicitor_IAC {
         .post("/data/case-types/Asylum/validate?pageId=startAppealappellantBasicDetails")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/iac/IACAppellantBasicDetails.json"))
         .check(substring("appellantGivenNames")))
     }
@@ -214,7 +214,7 @@ object Solicitor_IAC {
         .post("/data/case-types/Asylum/validate?pageId=startAppealappellantNationalities")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/iac/IACAppellantNationalities.json"))
         .check(substring("hasNationality")))
     }
@@ -240,7 +240,7 @@ object Solicitor_IAC {
         .post("/data/case-types/Asylum/validate?pageId=startAppealappellantAddress")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/iac/IACAppellantAddress.json"))
         .check(substring("appellantHasFixedAddress")))
     }
@@ -257,7 +257,7 @@ object Solicitor_IAC {
       .post("/data/case-types/Asylum/validate?pageId=startAppealappellantContactPreference")
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "${XSRFToken}")
+      .header("x-xsrf-token", "#{XSRFToken}")
       .body(ElFileBody("bodies/iac/IACContactPreference.json"))
       .check(substring("contactPreference")))
     }
@@ -274,7 +274,7 @@ object Solicitor_IAC {
         .post("/data/case-types/Asylum/validate?pageId=startAppealappealType")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/iac/IACAppealType.json"))
         .check(substring("appealType")))
     }
@@ -291,7 +291,7 @@ object Solicitor_IAC {
         .post("/data/case-types/Asylum/validate?pageId=startAppealappealGroundsHumanRightsRefusal")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/iac/IACAppealGrounds.json"))
         .check(substring("appealGroundsDecisionHumanRightsRefusal")))
     }
@@ -308,7 +308,7 @@ object Solicitor_IAC {
         .post("/data/case-types/Asylum/validate?pageId=startAppealdeportationOrderPage")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/iac/IACDeportationOrder.json"))
         .check(substring("deportationOrderOptions")))
     }
@@ -325,7 +325,7 @@ object Solicitor_IAC {
         .post("/data/case-types/Asylum/validate?pageId=startAppealnewMatters")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/iac/IACNewMatters.json"))
         .check(substring("hasNewMatters")))
     }
@@ -341,7 +341,7 @@ object Solicitor_IAC {
         .post("/data/case-types/Asylum/validate?pageId=startAppealhasOtherAppeals")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/iac/IACOtherAppeals.json"))
         .check(substring("hasOtherAppeals")))
     }
@@ -357,7 +357,7 @@ object Solicitor_IAC {
         .post("/data/case-types/Asylum/validate?pageId=startAppeallegalRepresentativeDetails")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/iac/IACLegalRepresentative.json"))
         .check(substring("legalRepReferenceNumber")))
 
@@ -377,7 +377,7 @@ object Solicitor_IAC {
         .post("/data/case-types/Asylum/validate?pageId=startAppealhearingFeeDecision")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/iac/IACAppealFeeDecision.json"))
         .check(substring("decisionHearingFeeOption")))
 
@@ -396,7 +396,7 @@ object Solicitor_IAC {
         .post("/data/case-types/Asylum/validate?pageId=startAppealpaymentOptions")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/iac/IACAppealPaymentOption.json"))
         .check(substring("howToPayLabel")))
 
@@ -415,7 +415,7 @@ object Solicitor_IAC {
         .post("/data/case-types/Asylum/validate?pageId=startAppealpaymentOptions")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/iac/IACAppealPaymentOption.json"))
         .check(substring("howToPayLabel"))
         // .check(jsonPath("").saveAs("legalRepName"))
@@ -436,7 +436,7 @@ object Solicitor_IAC {
         .post("/data/case-types/Asylum/cases?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-case.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/iac/IACSaveCase.json"))
         .check(jsonPath("$.id").saveAs("caseId"))
         .check(substring("appealStarted")))
@@ -445,8 +445,8 @@ object Solicitor_IAC {
         .post("/workallocation/searchForCompletable")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
-        .header("x-xsrf-token", "${XSRFToken}")
-        .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"startAppeal","jurisdiction":"IA","caseTypeId":"Asylum"}}"""))
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(StringBody("""{"searchRequest":{"ccdId":"#{caseId}","eventId":"startAppeal","jurisdiction":"IA","caseTypeId":"Asylum"}}"""))
         .check(status.in(200, 400))
         .check(substring("tasks")))
     }
@@ -460,7 +460,7 @@ object Solicitor_IAC {
 
     .group("XUI_IAC_250_005_StartSubmitAppeal") {
       exec(http("XUI_IAC_250_005_StartSubmitAppeal")
-        .get("/case/IA/Asylum/${caseId}/trigger/payAndSubmitAppeal")
+        .get("/case/IA/Asylum/#{caseId}/trigger/payAndSubmitAppeal")
         .headers(Headers.navigationHeader)
         .check(substring("HMCTS Manage")))
 
@@ -475,10 +475,10 @@ object Solicitor_IAC {
       .exec(Common.isAuthenticated)
 
       .exec(http("XUI_IAC_250_035_SaveCaseView")
-        .get("/data/internal/cases/${caseId}")
+        .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .check(substring("Create")))
     }
 
@@ -495,10 +495,10 @@ object Solicitor_IAC {
 
     .group("XUI_IAC_260_PayAndSubmitAppeal") {
       exec(http("XUI_IAC_260_005_PayAndSubmitAppeal")
-      .get("/data/internal/cases/${caseId}/event-triggers/payAndSubmitAppeal?ignore-warning=false")
+      .get("/data/internal/cases/#{caseId}/event-triggers/payAndSubmitAppeal?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .check(jsonPath("$.event_token").saveAs("event_token_submit"))
         .check(substring("Pay and submit")))
 
@@ -525,7 +525,7 @@ object Solicitor_IAC {
         .post("/data/case-types/Asylum/validate?pageId=payAndSubmitAppealenterPbaNumber")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/iac/IACPBAAccountSelect.json"))
         .check(substring("paymentAccountList")))
 
@@ -549,7 +549,7 @@ object Solicitor_IAC {
         .post("/data/case-types/Asylum/validate?pageId=payAndSubmitAppealdeclaration")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/iac/IACAppealDeclaration.json"))
         .check(substring("hasDeclared")))
 
@@ -563,10 +563,10 @@ object Solicitor_IAC {
 
     .group("XUI_IAC_290_005_AppealDeclarationSubmitted") {
       exec(http("XUI_IAC_290_AppealDeclarationSubmitted")
-        .post("/data/cases/${caseId}/events")
+        .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/iac/IACSubmitAppeal.json"))
         .check(substring("hasDeclared")))
 
@@ -574,8 +574,8 @@ object Solicitor_IAC {
         .post("/workallocation/searchForCompletable")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
-        .header("x-xsrf-token", "${XSRFToken}")
-        .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"submitAppeal","jurisdiction":"IA","caseTypeId":"Asylum"}}"""))
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(StringBody("""{"searchRequest":{"ccdId":"#{caseId}","eventId":"submitAppeal","jurisdiction":"IA","caseTypeId":"Asylum"}}"""))
         .check(status.in(200, 400))
         .check(substring("tasks")))
     }
@@ -594,7 +594,7 @@ object Solicitor_IAC {
 
     group("XUI_IAC_300_ShareACase") {
       exec(http("XUI_IAC_300_005_ShareACase")
-        .get("/api/caseshare/cases?case_ids=${caseId}")
+        .get("/api/caseshare/cases?case_ids=#{caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .check(jsonPath("$..email").find(0).saveAs("user0"))

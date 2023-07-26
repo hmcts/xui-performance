@@ -11,9 +11,9 @@
     "hasPreviousBailApplication": "No",
     "previousApplicationDoneViaAria": "No",
     "previousApplicationDoneViaCcd": "No",
-    "applicantGivenNames": "Bails${BailsRandomString}",
-    "applicantFamilyName": "Test${BailsRandomString}",
-    "applicantDateOfBirth": "${BailsDobYear}-${BailsDobMonth}-${BailsDobDay}",
+    "applicantGivenNames": "Bails#{BailsRandomString}",
+    "applicantFamilyName": "Test#{BailsRandomString}",
+    "applicantDateOfBirth": "#{BailsDobYear}-#{BailsDobMonth}-#{BailsDobDay}",
     "applicantGender": "Male",
     "applicantNationality": "HAS_NATIONALITY",
     "applicantNationalities": [
@@ -21,51 +21,51 @@
         "value": {
           "code": "English"
         },
-        "id": "${applicantNationalitiesId}"
+        "id": "#{applicantNationalitiesId}"
       }
     ],
-    "homeOfficeReferenceNumber": "${BailsRandomNumber}",
+    "homeOfficeReferenceNumber": "#{BailsRandomNumber}",
     "applicantDetainedLoc": "prison",
-    "applicantPrisonDetails": "${BailsRandomNumber}",
+    "applicantPrisonDetails": "#{BailsRandomNumber}",
     "prisonName": "Liverpool",
-    "applicantArrivalInUKDate": "${BailsArrivedYear}-${BailsDobMonth}-${BailsDobDay}",
+    "applicantArrivalInUKDate": "#{BailsArrivedYear}-#{BailsDobMonth}-#{BailsDobDay}",
     "applicantHasMobile": "Yes",
-    "applicantMobileNumber1": "${BailsPhoneNumber}",
+    "applicantMobileNumber1": "#{BailsPhoneNumber}",
     "hasAppealHearingPending": "YesWithoutAppealNumber",
     "applicantHasAddress": "Yes",
     "agreesToBoundByFinancialCond": "Yes",
     "financialCondAmount1": "100",
     "applicantAddress": {
-      "AddressLine1": "${addressLines(0)}",
-      "AddressLine2": "${addressLines(1)}",
+      "AddressLine1": "#{addressLines(0)}",
+      "AddressLine2": "#{addressLines(1)}",
       "AddressLine3": "",
-      "PostTown": "${addressLines(2)}",
+      "PostTown": "#{addressLines(2)}",
       "County": "",
-      "PostCode": "${addressLines(3)}",
+      "PostCode": "#{addressLines(3)}",
       "Country": "United Kingdom"
     },
     "hasFinancialCondSupporter": "Yes",
-    "supporterGivenNames": "Suppoter${BailsRandomString}",
-    "supporterFamilyNames": "Sup${BailsRandomString}",
+    "supporterGivenNames": "Suppoter#{BailsRandomString}",
+    "supporterFamilyNames": "Sup#{BailsRandomString}",
     "supporterAddressDetails": {
-      "AddressLine1": "${addressLines(0)}",
-      "AddressLine2": "${addressLines(1)}",
+      "AddressLine1": "#{addressLines(0)}",
+      "AddressLine2": "#{addressLines(1)}",
       "AddressLine3": "",
-      "PostTown": "${addressLines(2)}",
+      "PostTown": "#{addressLines(2)}",
       "County": "",
-      "PostCode": "${addressLines(3)}",
+      "PostCode": "#{addressLines(3)}",
       "Country": "United Kingdom"
     },
     "supporterContactDetails": [
       "mobile",
       "email"
     ],
-    "supporterMobileNumber1": "${BailsPhoneNumber}",
-    "supporterEmailAddress1": "${BailsSupporterEmail}",
-    "supporterDOB": "${BailsDobYear}-${BailsDobMonth}-${BailsDobDay}",
-    "supporterRelation": "${BailsRandomString}",
-    "supporterOccupation": "${BailsRandomString}",
-    "supporterImmigration": "${BailsRandomString}",
+    "supporterMobileNumber1": "#{BailsPhoneNumber}",
+    "supporterEmailAddress1": "#{BailsSupporterEmail}",
+    "supporterDOB": "#{BailsDobYear}-#{BailsDobMonth}-#{BailsDobDay}",
+    "supporterRelation": "#{BailsRandomString}",
+    "supporterOccupation": "#{BailsRandomString}",
+    "supporterImmigration": "#{BailsRandomString}",
     "supporterNationality": [
       {
         "value": {
@@ -75,12 +75,12 @@
       }
     ],
     "supporterHasPassport": "Yes",
-    "supporterPassport": "${BailsRandomNumber}",
+    "supporterPassport": "#{BailsRandomNumber}",
     "financialAmountSupporterUndertakes1": "100",
     "hasFinancialCondSupporter2": "No",
-    "groundsForBailReasons": "${BailsRandomString}",
+    "groundsForBailReasons": "#{BailsRandomString}",
     "groundsForBailProvideEvidenceOption": "Yes"
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false
 }

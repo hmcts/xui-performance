@@ -1,6 +1,6 @@
 {
   "data": {
-     "caseName": "${caseName}"
+     "caseName": "#{caseName}"
   },
   "event": {
      "id": "openCase",
@@ -8,8 +8,8 @@
      "description": ""
   },
   "event_data": {
-     "caseName": "${caseName}"
+     "caseName": "#{caseName}"
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false
 }

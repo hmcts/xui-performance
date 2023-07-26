@@ -1,11 +1,11 @@
 {
   "data": {
     "respondentsFL401": {
-      "firstName": "${RespondentFirstName}",
-      "lastName": "${RespondentLastName}",
+      "firstName": "#{RespondentFirstName}",
+      "lastName": "#{RespondentLastName}",
       "previousName": null,
       "isDateOfBirthKnown": "Yes",
-      "dateOfBirth": "${RespDobYear}-${RespDobMonth}-${RespDobDay}",
+      "dateOfBirth": "#{RespDobYear}-#{RespDobMonth}-#{RespDobDay}",
       "respondentLivedWithApplicant": "Yes",
       "isCurrentAddressKnown": "Yes",
       "canYouProvideEmailAddress": "Yes",
@@ -35,12 +35,12 @@
       "solicitorEmail": null,
       "solicitorTelephone": null,
       "address": {
-        "AddressLine1": "${addressLines(0)}",
-        "AddressLine2": "${addressLines(1)}",
+        "AddressLine1": "#{addressLines(0)}",
+        "AddressLine2": "#{addressLines(1)}",
         "AddressLine3": "",
-        "PostTown": "${addressLines(2)}",
+        "PostTown": "#{addressLines(2)}",
         "County": "",
-        "PostCode": "${addressLines(3)}",
+        "PostCode": "#{addressLines(3)}",
         "Country": "United Kingdom"
       }
     }
@@ -52,11 +52,11 @@
   },
   "event_data": {
     "respondentsFL401": {
-      "firstName": "${RespondentFirstName}",
-      "lastName": "${RespondentLastName}",
+      "firstName": "#{RespondentFirstName}",
+      "lastName": "#{RespondentLastName}",
       "previousName": null,
       "isDateOfBirthKnown": "Yes",
-      "dateOfBirth": "${RespDobYear}-${RespDobMonth}-${RespDobDay}",
+      "dateOfBirth": "#{RespDobYear}-#{RespDobMonth}-#{RespDobDay}",
       "respondentLivedWithApplicant": "Yes",
       "isCurrentAddressKnown": "Yes",
       "canYouProvideEmailAddress": "Yes",
@@ -86,17 +86,17 @@
       "solicitorEmail": null,
       "solicitorTelephone": null,
       "address": {
-        "AddressLine1": "${addressLines(0)}",
-        "AddressLine2": "${addressLines(1)}",
+        "AddressLine1": "#{addressLines(0)}",
+        "AddressLine2": "#{addressLines(1)}",
         "AddressLine3": "",
-        "PostTown": "${addressLines(2)}",
+        "PostTown": "#{addressLines(2)}",
         "County": "",
-        "PostCode": "${addressLines(3)}",
+        "PostCode": "#{addressLines(3)}",
         "Country": "United Kingdom"
       }
     }
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false,
-  "case_reference": "${caseId}"
+  "case_reference": "#{caseId}"
 }

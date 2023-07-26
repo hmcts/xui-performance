@@ -88,7 +88,7 @@ object Solicitor_Divorce {
         .post("/data/case-types/DIVORCE/validate?pageId=solicitorCreateSolAboutTheSolicitor")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/divorce/DivorceAddSolicitorDetails.json"))
         .check(substring("PetitionerSolicitorName")))
 
@@ -107,7 +107,7 @@ object Solicitor_Divorce {
         .post("/data/case-types/DIVORCE/validate?pageId=solicitorCreateSolAboutThePetitioner")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/divorce/DivorceAddPetitionerDetails.json"))
         .check(substring("D8PetitionerFirstName")))
 
@@ -126,7 +126,7 @@ object Solicitor_Divorce {
         .post("/data/case-types/DIVORCE/validate?pageId=solicitorCreateSolAboutTheRespondent")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/divorce/DivorceAddRespondentDetails.json"))
         .check(substring("D8RespondentFirstName")))
 
@@ -152,7 +152,7 @@ object Solicitor_Divorce {
         .post("/data/case-types/DIVORCE/validate?pageId=solicitorCreateRespondentServiceDetails")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/divorce/DivorceAddRespondentSolicitorDetails.json"))
         .check(substring("D8RespondentSolicitorName")))
 
@@ -171,7 +171,7 @@ object Solicitor_Divorce {
         .post("/data/case-types/DIVORCE/validate?pageId=solicitorCreateSolMarriageCertificate")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/divorce/DivorceAddMarriageCertificateDetails.json"))
         .check(substring("D8MarriagePetitionerName")))
 
@@ -191,7 +191,7 @@ object Solicitor_Divorce {
         .post("/data/case-types/DIVORCE/validate?pageId=solicitorCreateSolJurisdiction")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/divorce/DivorceJurisdiction.json"))
         .check(substring("D8JurisdictionConnectionNewPolicy")))
 
@@ -211,7 +211,7 @@ object Solicitor_Divorce {
         .post("/data/case-types/DIVORCE/validate?pageId=solicitorCreateSolReasonForDivorce")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/divorce/DivorceReasonForDivorce.json"))
         .check(substring("D8ReasonForDivorce")))
 
@@ -231,7 +231,7 @@ object Solicitor_Divorce {
         .post("/data/case-types/DIVORCE/validate?pageId=solicitorCreateSolSOCSeparation")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/divorce/DivorceDateOfSeparation.json"))
         .check(substring("D8ReasonForDivorceSeperationDate")))
 
@@ -250,7 +250,7 @@ object Solicitor_Divorce {
         .post("/data/case-types/DIVORCE/validate?pageId=solicitorCreateSolSOCLivedApart")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/divorce/DivorceLivedApart.json"))
         .check(substring("D8LivedApartSinceSeparation")))
 
@@ -269,7 +269,7 @@ object Solicitor_Divorce {
         .post("/data/case-types/DIVORCE/validate?pageId=solicitorCreateSolExistingCourtCases")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/divorce/DivorceOtherLegalProceedings.json"))
         .check(substring("D8LegalProceedings")))
 
@@ -288,7 +288,7 @@ object Solicitor_Divorce {
         .post("/data/case-types/DIVORCE/validate?pageId=solicitorCreateSolDividingMoneyAndProperty")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/divorce/DivorceFinancialOrders.json"))
         .check(substring("D8FinancialOrder")))
 
@@ -307,7 +307,7 @@ object Solicitor_Divorce {
         .post("/data/case-types/DIVORCE/validate?pageId=solicitorCreateSolApplyToClaimCosts")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/divorce/DivorceClaimForCosts.json"))
         .check(substring("D8DivorceCostsClaim")))
 
@@ -327,7 +327,7 @@ object Solicitor_Divorce {
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .header("content-type", "multipart/form-data")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .bodyPart(RawFileBodyPart("files", "3MB.pdf")
           .fileName("3MB.pdf")
           .transferEncoding("binary"))
@@ -349,7 +349,7 @@ object Solicitor_Divorce {
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .header("content-type", "multipart/form-data")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .bodyPart(RawFileBodyPart("files", "3MB.pdf")
           .fileName("3MB.pdf")
           .transferEncoding("binary"))
@@ -371,7 +371,7 @@ object Solicitor_Divorce {
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .header("content-type", "multipart/form-data")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .bodyPart(RawFileBodyPart("files", "120KB.pdf")
           .fileName("120KB.pdf")
           .transferEncoding("binary"))
@@ -398,7 +398,7 @@ object Solicitor_Divorce {
         .post("/data/case-types/DIVORCE/validate?pageId=solicitorCreateSolUploadDocs")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/divorce/DivorceUploadDocuments.json"))
         .check(substring("D8DocumentsUploaded")))
 
@@ -417,7 +417,7 @@ object Solicitor_Divorce {
         .post("/data/case-types/DIVORCE/validate?pageId=solicitorCreatelangPref")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/divorce/DivorceSelectLanguage.json"))
         .check(substring("LanguagePreferenceWelsh")))
 
@@ -441,15 +441,15 @@ object Solicitor_Divorce {
         .post("/data/case-types/DIVORCE/cases?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-case.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/divorce/DivorceCheckYourAnswers.json"))
         .check(jsonPath("$.id").saveAs("caseId"))
         .check(jsonPath("$.state").is("SOTAgreementPayAndSubmitRequired")))
 
       .exec(http("XUI_Divorce_200_010_ViewCase")
-        .get("/data/internal/cases/${caseId}")
+        .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .check(jsonPath("$.state.id").is("SOTAgreementPayAndSubmitRequired")))
 
       .exec(Common.userDetails)
@@ -467,11 +467,11 @@ object Solicitor_Divorce {
       exec(Common.profile)
 
       .exec(http("XUI_Divorce_210_005_CaseSubmission")
-        .get("/data/internal/cases/${caseId}/event-triggers/solicitorStatementOfTruthPaySubmit?ignore-warning=false")
+        .get("/data/internal/cases/#{caseId}/event-triggers/solicitorStatementOfTruthPaySubmit?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
-        .header("x-xsrf-token", "${XSRFToken}"))
+        .header("x-xsrf-token", "#{XSRFToken}"))
 
       .exec(Common.userDetails)
       .exec(Common.userDetails)
@@ -488,7 +488,7 @@ object Solicitor_Divorce {
         .post("/data/case-types/DIVORCE/validate?pageId=solicitorStatementOfTruthPaySubmitSolStatementOfTruth")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/divorce/DivorceStatementOfTruth.json"))
         .check(substring("D8StatementOfTruth")))
 
@@ -507,7 +507,7 @@ object Solicitor_Divorce {
         .post("/data/case-types/DIVORCE/validate?pageId=solicitorStatementOfTruthPaySubmitSolPayment")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/divorce/DivorcePaymentMethod.json"))
         .check(substring("SolPaymentHowToPay")))
 
@@ -526,7 +526,7 @@ object Solicitor_Divorce {
         .post("/data/case-types/DIVORCE/validate?pageId=solicitorStatementOfTruthPaySubmitSolPayAccount")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/divorce/DivorcePBAAccount.json"))
         .check(substring("PbaNumbers")))
 
@@ -545,7 +545,7 @@ object Solicitor_Divorce {
         .post("/data/case-types/DIVORCE/validate?pageId=solicitorStatementOfTruthPaySubmitSolPaymentSummary")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/divorce/DivorceOrderSummary.json"))
         .check(substring("solApplicationFeeOrderSummary")))
 
@@ -564,7 +564,7 @@ object Solicitor_Divorce {
         .post("/data/case-types/DIVORCE/validate?pageId=solicitorStatementOfTruthPaySubmitSolSummary")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/divorce/DivorceCaseSubmission.json"))
         .check(substring("""data":{}""")))
 
@@ -580,17 +580,17 @@ object Solicitor_Divorce {
 
     .group("XUI_Divorce_270_SubmitPetition") {
       exec(http("XUI_Divorce_270_005_SubmitPetition")
-        .post("/data/cases/${caseId}/events")
+        .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/divorce/DivorceSubmitPetition.json"))
         .check(jsonPath("$.state").is("Submitted")))
 
       .exec(http("XUI_Divorce_270_010_ViewCase")
-        .get("/data/internal/cases/${caseId}")
+        .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .check(jsonPath("$.state.id").is("Submitted")))
 
       .exec(Common.userDetails)
