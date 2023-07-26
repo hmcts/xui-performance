@@ -1,7 +1,7 @@
 {
   "data": {
-    "D8MentalSeparationDate": "${separationYear}-${separationMonth}-${separationDay}",
-    "D8PhysicalSeparationDate": "${separationYear}-${separationMonth}-${separationDay}"
+    "D8MentalSeparationDate": "#{separationYear}-#{separationMonth}-#{separationDay}",
+    "D8PhysicalSeparationDate": "#{separationYear}-#{separationMonth}-#{separationDay}"
   },
   "event": {
     "id": "solicitorCreate",
@@ -12,7 +12,7 @@
     "PetitionerSolicitorName": "PerfSolicitor",
     "D8SolicitorReference": "PerfTestDivRef",
     "PetitionerSolicitorPhone": "07000000000",
-    "PetitionerSolicitorEmail": "${user}",
+    "PetitionerSolicitorEmail": "#{user}",
     "SolicitorAgreeToReceiveEmails": "Yes",
     "DerivedPetitionerSolicitorAddr": "1 Solicitor Road\nPerf Test Town\nPR1 1RF",
     "PetitionerOrganisationPolicy": {
@@ -20,12 +20,12 @@
       "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
-        "OrganisationID": "${orgref}",
-        "OrganisationName": "${orgname}"
+        "OrganisationID": "#{orgref}",
+        "OrganisationName": "#{orgname}"
       }
     },
-    "D8PetitionerFirstName": "${petitionerFirstName}",
-    "D8PetitionerLastName": "${petitionerLastName}",
+    "D8PetitionerFirstName": "#{petitionerFirstName}",
+    "D8PetitionerLastName": "#{petitionerLastName}",
     "D8PetitionerNameDifferentToMarriageCert": "No",
     "D8DivorceWho": "wife",
     "D8InferredPetitionerGender": "male",
@@ -34,8 +34,8 @@
     "D8PetitionerPhoneNumber": null,
     "D8PetitionerEmail": null,
     "D8PetitionerContactDetailsConfidential": "share",
-    "D8RespondentFirstName": "${respondentFirstName}",
-    "D8RespondentLastName": "${respondentLastName}",
+    "D8RespondentFirstName": "#{respondentFirstName}",
+    "D8RespondentLastName": "#{respondentLastName}",
     "D8RespondentNameAsOnMarriageCertificate": "No",
     "D8InferredRespondentGender": "female",
     "respondentSolicitorRepresented": "Yes",
@@ -50,21 +50,21 @@
       "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
-        "OrganisationID": "${solicitorRespondentOrgs(1)}",
-        "OrganisationName": "${solicitorRespondentOrgs(0)}"
+        "OrganisationID": "#{solicitorRespondentOrgs(1)}",
+        "OrganisationName": "#{solicitorRespondentOrgs(0)}"
       }
     },
-    "D8MarriageDate": "${marriageYear}-${marriageMonth}-${marriageDay}",
-    "D8MarriagePetitionerName": "${petitionerFirstName} ${petitionerLastName}",
-    "D8MarriageRespondentName": "${respondentFirstName} ${respondentLastName}",
+    "D8MarriageDate": "#{marriageYear}-#{marriageMonth}-#{marriageDay}",
+    "D8MarriagePetitionerName": "#{petitionerFirstName} #{petitionerLastName}",
+    "D8MarriageRespondentName": "#{respondentFirstName} #{respondentLastName}",
     "D8MarriedInUk": "Yes",
     "D8JurisdictionConnectionNewPolicy": [
       "F"
     ],
     "D8ReasonForDivorce": "separation-5-years",
-    "D8MentalSeparationDate": "${separationYear}-${separationMonth}-${separationDay}",
-    "D8PhysicalSeparationDate": "${separationYear}-${separationMonth}-${separationDay}"
+    "D8MentalSeparationDate": "#{separationYear}-#{separationMonth}-#{separationDay}",
+    "D8PhysicalSeparationDate": "#{separationYear}-#{separationMonth}-#{separationDay}"
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false
 }

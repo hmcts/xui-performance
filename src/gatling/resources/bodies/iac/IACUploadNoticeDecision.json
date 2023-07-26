@@ -5,10 +5,10 @@
            "value": {
               "description": "test doc 1",
               "document": {
-                 "document_url": "${DocumentURL1}",
-                 "document_binary_url": "${DocumentURL1}/binary",
+                 "document_url": "#{DocumentURL1}",
+                 "document_binary_url": "#{DocumentURL1}/binary",
                  "document_filename": "3MB.pdf",
-                 "document_hash": "${documentHash1}"
+                 "document_hash": "#{documentHash1}"
               }
            },
            "id": null
@@ -17,10 +17,10 @@
           "value": {
              "description": "test doc 2",
              "document": {
-                "document_url": "${DocumentURL2}",
-                "document_binary_url": "${DocumentURL2}/binary",
+                "document_url": "#{DocumentURL2}",
+                "document_binary_url": "#{DocumentURL2}/binary",
                 "document_filename": "3MB.pdf",
-                "document_hash": "${documentHash2}"
+                "document_hash": "#{documentHash2}"
              }
           },
           "id": null
@@ -29,10 +29,10 @@
          "value": {
             "description": "test doc 3",
             "document": {
-               "document_url": "${DocumentURL3}",
-               "document_binary_url": "${DocumentURL3}/binary",
+               "document_url": "#{DocumentURL3}",
+               "document_binary_url": "#{DocumentURL3}/binary",
                "document_filename": "3MB.pdf",
-               "document_hash": "${documentHash3}"
+               "document_hash": "#{documentHash3}"
             }
          },
          "id": null
@@ -56,16 +56,16 @@
      },
      "appellantInUk": "Yes",
      "homeOfficeReferenceNumber": "123456789",
-     "homeOfficeDecisionDate": "${currentDate}",
+     "homeOfficeDecisionDate": "#{currentDate}",
      "uploadTheNoticeOfDecisionDocs": [
         {
            "value": {
               "description": "test doc 1",
               "document": {
-                 "document_url": "${DocumentURL1}",
-                 "document_binary_url": "${DocumentURL1}/binary",
+                 "document_url": "#{DocumentURL1}",
+                 "document_binary_url": "#{DocumentURL1}/binary",
                  "document_filename": "3MB.pdf",
-                 "document_hash": "${documentHash1}"
+                 "document_hash": "#{documentHash1}"
               }
            },
            "id": null
@@ -74,10 +74,10 @@
           "value": {
              "description": "test doc 2",
              "document": {
-                "document_url": "${DocumentURL2}",
-                "document_binary_url": "${DocumentURL2}/binary",
+                "document_url": "#{DocumentURL2}",
+                "document_binary_url": "#{DocumentURL2}/binary",
                 "document_filename": "3MB.pdf",
-                "document_hash": "${documentHash2}"
+                "document_hash": "#{documentHash2}"
              }
           },
           "id": null
@@ -86,16 +86,16 @@
          "value": {
             "description": "test doc 3",
             "document": {
-               "document_url": "${DocumentURL3}",
-               "document_binary_url": "${DocumentURL3}/binary",
+               "document_url": "#{DocumentURL3}",
+               "document_binary_url": "#{DocumentURL3}/binary",
                "document_filename": "3MB.pdf",
-               "document_hash": "${documentHash3}"
+               "document_hash": "#{documentHash3}"
             }
          },
          "id": null
       }
      ]
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false
 }

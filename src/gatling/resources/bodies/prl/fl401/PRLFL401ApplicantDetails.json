@@ -1,10 +1,10 @@
 {
   "data": {
     "applicantsFL401": {
-      "firstName": "${ApplicantFirstName}",
-      "lastName": "${ApplicantLastName}",
+      "firstName": "#{ApplicantFirstName}",
+      "lastName": "#{ApplicantLastName}",
       "previousName": null,
-      "dateOfBirth": "${AppDobYear}-${AppDobMonth}-${AppDobDay}",
+      "dateOfBirth": "#{AppDobYear}-#{AppDobMonth}-#{AppDobDay}",
       "gender": "male",
       "isAddressConfidential": "Yes",
       "canYouProvideEmailAddress": "Yes",
@@ -34,17 +34,17 @@
       "sendSignUpLink": null,
       "respondentLivedWithApplicant": null,
       "address": {
-        "AddressLine1": "${addressLines(0)}",
-        "AddressLine2": "${addressLines(1)}",
+        "AddressLine1": "#{addressLines(0)}",
+        "AddressLine2": "#{addressLines(1)}",
         "AddressLine3": "",
-        "PostTown": "${addressLines(2)}",
+        "PostTown": "#{addressLines(2)}",
         "County": "",
-        "PostCode": "${addressLines(3)}",
+        "PostCode": "#{addressLines(3)}",
         "Country": "United Kingdom"
       },
       "solicitorOrg": {
-        "OrganisationID": "${orgref}",
-        "OrganisationName": "${orgname}"
+        "OrganisationID": "#{orgref}",
+        "OrganisationName": "#{orgname}"
       },
       "solicitorAddress": {
         "AddressLine1": "1 Perf Test Road",
@@ -64,10 +64,10 @@
   },
   "event_data": {
     "applicantsFL401": {
-      "firstName": "${ApplicantFirstName}",
-      "lastName": "${ApplicantLastName}",
+      "firstName": "#{ApplicantFirstName}",
+      "lastName": "#{ApplicantLastName}",
       "previousName": null,
-      "dateOfBirth": "${AppDobYear}-${AppDobMonth}-${AppDobDay}",
+      "dateOfBirth": "#{AppDobYear}-#{AppDobMonth}-#{AppDobDay}",
       "gender": "male",
       "isAddressConfidential": "Yes",
       "canYouProvideEmailAddress": "Yes",
@@ -97,17 +97,17 @@
       "sendSignUpLink": null,
       "respondentLivedWithApplicant": null,
       "address": {
-        "AddressLine1": "${addressLines(0)}",
-        "AddressLine2": "${addressLines(1)}",
+        "AddressLine1": "#{addressLines(0)}",
+        "AddressLine2": "#{addressLines(1)}",
         "AddressLine3": "",
-        "PostTown": "${addressLines(2)}",
+        "PostTown": "#{addressLines(2)}",
         "County": "",
-        "PostCode": "${addressLines(3)}",
+        "PostCode": "#{addressLines(3)}",
         "Country": "United Kingdom"
       },
       "solicitorOrg": {
-        "OrganisationID": "${orgref}",
-        "OrganisationName": "${orgname}"
+        "OrganisationID": "#{orgref}",
+        "OrganisationName": "#{orgname}"
       },
       "solicitorAddress": {
         "AddressLine1": "1 Perf Test Road",
@@ -120,7 +120,7 @@
       }
     }
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false,
-  "case_reference": "${caseId}"
+  "case_reference": "#{caseId}"
 }

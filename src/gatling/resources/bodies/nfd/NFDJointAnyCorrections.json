@@ -1,9 +1,9 @@
 {
   "data": {
     "applicant1SolicitorAnswersLink": {
-      "document_url": "${app1AnswersDocumentURL}",
-      "document_binary_url": "${app1AnswersDocumentURL}/binary",
-      "document_filename": "${app1AnswersFilename}"
+      "document_url": "#{app1AnswersDocumentURL}",
+      "document_binary_url": "#{app1AnswersDocumentURL}/binary",
+      "document_filename": "#{app1AnswersFilename}"
     },
     "applicant2ConfirmApplicant1Information": "No"
   },
@@ -19,13 +19,13 @@
     "applicant2FinancialOrder": "No",
     "applicant2NeedsHelpWithFees": "No",
     "applicant1SolicitorAnswersLink": {
-      "document_url": "${app1AnswersDocumentURL}",
-      "document_binary_url": "${app1AnswersDocumentURL}/binary",
-      "document_filename": "${app1AnswersFilename}"
+      "document_url": "#{app1AnswersDocumentURL}",
+      "document_binary_url": "#{app1AnswersDocumentURL}/binary",
+      "document_filename": "#{app1AnswersFilename}"
     },
     "applicant2ConfirmApplicant1Information": "No"
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false,
-  "case_reference": "${caseId}"
+  "case_reference": "#{caseId}"
 }
