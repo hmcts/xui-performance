@@ -3,9 +3,9 @@
     "children": [
       {
         "value": {
-          "firstName": "${C100ChildFirstName}",
-          "lastName": "${C100ChildLastName}",
-          "dateOfBirth": "${C100ChildDobYear}-${C100ChildAppDobMonth}-${C100ChildAppDobDay}",
+          "firstName": "#{C100ChildFirstName}",
+          "lastName": "#{C100ChildLastName}",
+          "dateOfBirth": "#{C100ChildDobYear}-#{C100ChildAppDobMonth}-#{C100ChildAppDobDay}",
           "gender": "male",
           "otherGender": null,
           "applicantsRelationshipToChild": "father",
@@ -37,9 +37,9 @@
     "children": [
       {
         "value": {
-          "firstName": "${C100ChildFirstName}",
-          "lastName": "${C100ChildLastName}",
-          "dateOfBirth": "${C100ChildDobYear}-${C100ChildAppDobMonth}-${C100ChildAppDobDay}",
+          "firstName": "#{C100ChildFirstName}",
+          "lastName": "#{C100ChildLastName}",
+          "dateOfBirth": "#{C100ChildDobYear}-#{C100ChildAppDobMonth}-#{C100ChildAppDobDay}",
           "gender": "male",
           "otherGender": null,
           "applicantsRelationshipToChild": "father",
@@ -62,7 +62,7 @@
       }
     ]
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false,
-  "case_reference": "${caseId}"
+  "case_reference": "#{caseId}"
 }

@@ -1,9 +1,9 @@
 {
   "data":{
-    "deceasedForenames":"${deceasedForename}",
-    "deceasedSurname":"${deceasedSurname}",
-    "deceasedDateOfBirth":"${dobYear}-${dobMonth}-${dobDay}",
-    "deceasedDateOfDeath":"${dodYear}-${dodMonth}-${dodDay}"
+    "deceasedForenames":"#{deceasedForename}",
+    "deceasedSurname":"#{deceasedSurname}",
+    "deceasedDateOfBirth":"#{dobYear}-#{dobMonth}-#{dobDay}",
+    "deceasedDateOfDeath":"#{dodYear}-#{dodMonth}-#{dodDay}"
   },
   "event":{
     "id":"solicitorUpdateApplication",
@@ -11,12 +11,12 @@
     "description":""
   },
   "event_data":{
-    "deceasedForenames":"${deceasedForename}",
-    "deceasedSurname":"${deceasedSurname}",
-    "deceasedDateOfBirth":"${dobYear}-${dobMonth}-${dobDay}",
-    "deceasedDateOfDeath":"${dodYear}-${dodMonth}-${dodDay}"
+    "deceasedForenames":"#{deceasedForename}",
+    "deceasedSurname":"#{deceasedSurname}",
+    "deceasedDateOfBirth":"#{dobYear}-#{dobMonth}-#{dobDay}",
+    "deceasedDateOfDeath":"#{dodYear}-#{dodMonth}-#{dodDay}"
   },
-  "event_token":"${event_token_probate}",
+  "event_token":"#{event_token_probate}",
   "ignore_warning":false,
-  "case_reference":"${caseId}"
+  "case_reference":"#{caseId}"
 }

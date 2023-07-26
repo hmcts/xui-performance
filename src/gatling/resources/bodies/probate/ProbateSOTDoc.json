@@ -1,10 +1,10 @@
 {
   "data":{
     "solsLegalStatementUpload":{
-      "document_url":"${SOTDocumentURL}",
-      "document_binary_url":"${SOTDocumentURL}/binary",
+      "document_url":"#{SOTDocumentURL}",
+      "document_binary_url":"#{SOTDocumentURL}/binary",
       "document_filename":"3MB.pdf",
-      "document_hash": "${documentHash}"
+      "document_hash": "#{documentHash}"
     }
   },
   "event":{
@@ -14,19 +14,19 @@
   },
   "event_data":{
     "solsLegalStatementDocument":{
-      "document_url":"${documentURL}",
-      "document_binary_url":"${documentURL}/binary",
+      "document_url":"#{documentURL}",
+      "document_binary_url":"#{documentURL}/binary",
       "document_filename":"legalStatementGrantOfProbate.pdf"
     },
     "solsSOTNeedToUpdate":"No",
     "solsLegalStatementUpload":{
-      "document_url":"${SOTDocumentURL}",
-      "document_binary_url":"${SOTDocumentURL}/binary",
+      "document_url":"#{SOTDocumentURL}",
+      "document_binary_url":"#{SOTDocumentURL}/binary",
       "document_filename":"3MB.pdf",
-      "document_hash": "${documentHash}"
+      "document_hash": "#{documentHash}"
     }
   },
-  "event_token":"${event_token_probate}",
+  "event_token":"#{event_token_probate}",
   "ignore_warning":false,
-  "case_reference":"${caseId}"
+  "case_reference":"#{caseId}"
 }

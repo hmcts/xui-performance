@@ -15,12 +15,12 @@
     "D8StatementOfTruth": "Yes",
     "solSignStatementofTruth": "Yes",
     "SolStatementOfReconciliationName": "PerfSolicitorFirst SolicitorLast",
-    "SolStatementOfReconciliationFirm": "${orgname}",
+    "SolStatementOfReconciliationFirm": "#{orgname}",
     "StatementOfReconciliationComments": null,
     "solApplicationFeeInPounds": "593",
     "SolPaymentHowToPay": "feePayByAccount"
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false,
-  "case_reference": "${caseId}"
+  "case_reference": "#{caseId}"
 }
