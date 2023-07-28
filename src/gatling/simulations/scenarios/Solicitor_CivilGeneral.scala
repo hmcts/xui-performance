@@ -8,7 +8,7 @@ import scala.concurrent.duration._
 
 
 /*======================================================================================
-* Create a new Divorce application as a professional user (e.g. solicitor)
+* Create a new General Application as a professional user (e.g. solicitor)
 ======================================================================================*/
 
 object Solicitor_CivilGeneral {
@@ -339,7 +339,6 @@ object Solicitor_CivilGeneral {
         )
     }
       
-      
       /*======================================================================================
             * Click On pay from Service Page
        ==========================================================================================*/
@@ -478,8 +477,6 @@ object Solicitor_CivilGeneral {
           .header("x-xsrf-token", "#{XSRFToken}")
           .body(ElFileBody("bodies/civilgeneral/GAHearingScreen.json"))
           .check(status.in(200, 201, 304)))
-    
-    
       }
   
       .pause(MinThinkTime, MaxThinkTime)
@@ -516,7 +513,20 @@ object Solicitor_CivilGeneral {
   /*======================================================================================
                    Access case which is required access
    ======================================================================================*/
-    group("XUI_GA_240_AccessCase") {
+    exec(_.setAll(
+      "applicant1FirstName" -> ("App1" + Common.randomString(5)),
+      "applicant1LastName" -> ("Test" + Common.randomString(5)),
+      "applicant2FirstName" -> ("App2" + Common.randomString(5)),
+      "applicant2LastName" -> ("Test" + Common.randomString(5)),
+      "marriageDay" -> Common.getDay(),
+      "marriageMonth" -> Common.getMonth(),
+      "Idempotencynumber" -> Common.getIdempotency(),
+      "currentDate" -> Common.getDate(),
+      "currentDateTime" -> Common.getCurrentDateTime(),
+      "requestId" -> Common.getRequestId(),
+      "marriageYear" -> Common.getMarriageYear()))
+    
+    .group("XUI_GA_240_AccessCase") {
       exec(http("XUI_GA_240_005_AccessCase")
         .post("/api/role-access/roles/manageLabellingRoleAssignment/${ga_case_id}")
         .headers(Headers.commonHeader)
@@ -584,9 +594,7 @@ object Solicitor_CivilGeneral {
   }
     .pause(MinThinkTime, MaxThinkTime)
       .pause(20)
-    
-    
-    /*======================================================================================
+      /*======================================================================================
                          Judge- ViewFile
  ======================================================================================*/
   
