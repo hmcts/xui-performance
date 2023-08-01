@@ -120,6 +120,7 @@ class XUI_Simulation extends Simulation {
 					.exec(Solicitor_PRL_C100.AllegationsOfHarm)
 					.exec(Solicitor_PRL_C100.ViewPdfApplication)
 					.exec(Solicitor_PRL_C100.SubmitAndPay)
+          .exec(Solicitor_PRL_C100.HearingsTab)
 				} 
         {
 					//FL401 Journey
@@ -135,11 +136,10 @@ class XUI_Simulation extends Simulation {
 					.exec(Solicitor_PRL_FL401.UploadDocuments)
 					.exec(Solicitor_PRL_FL401.ViewPDF)
 					.exec(Solicitor_PRL_FL401.StatementOfTruth)
+          .exec(Solicitor_PRL_FL401.HearingsTab)
 				 }
 				.exec(Logout.XUILogout)
 		}
-
-
 
 	/*===============================================================================================
 	* XUI Legal Rep Bails Scenario
@@ -452,7 +452,6 @@ class XUI_Simulation extends Simulation {
 				.exec(Caseworker_Navigation.LoadCaseList)
 				.exec(Logout.XUILogout)
 		}
-
 
 	/*===============================================================================================
 	* Simulation Configuration
