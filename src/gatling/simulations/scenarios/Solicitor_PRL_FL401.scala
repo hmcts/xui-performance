@@ -1554,4 +1554,40 @@ object Solicitor_PRL_FL401 {
 
   .pause(MinThinkTime, MaxThinkTime)
 
+  val HearingsTab = 
+
+    /*======================================================================================
+    * Click on the Hearings tab to view any Hearings
+    ======================================================================================*/
+
+    group("XUI_PRL_FL401_500_HearingsTab") {
+      exec(http("XUI_PRL_FL401_500_GetHearings")
+        .get("/api/hearings/getHearings?caseId=#{caseId}")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(status.in(200, 403)))
+
+      .exec(http("XUI_PRL_FL401_500_GetHearingsJurisdiction")
+        .post("/api/hearings/loadServiceHearingValues?jurisdictionId=PRIVATELAW")
+        .headers(Headers.commonHeader)
+        .header("Content-Type", "application/json; charset=utf-8")
+        .header("Accept", "application/json, text/plain, */*")
+        .header("x-xsrf-token", "${XSRFToken}")
+        .body(StringBody("""{"caseReference":"#{caseId}"}"""))
+        .check(substring("hearing-facilities")))
+
+      .exec(http("XUI_PRL_FL401_500_GetRoleAssignments")
+        .get("/api/user/details?refreshRoleAssignments=undefined")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*"))
+
+      .exec(http("XUI_PRL_FL401_500_GetHearingTypes")
+        .get("/api/prd/lov/getLovRefData?categoryId=HearingType&serviceId=ABA5&isChildRequired=N")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("HearingType")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
 }
