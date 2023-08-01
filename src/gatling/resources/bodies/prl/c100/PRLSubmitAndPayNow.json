@@ -6,7 +6,8 @@
       ]
     },
     "applicantSolicitorEmailAddress": "#{user}",
-    "caseworkerEmailAddress": "prl_caseworker_solicitor@mailinator.com",
+    "caseworkerEmailAddress": "C100applications@justice.gov.uk",
+    "courtName": "Medway County Court and Family Court",
     "solicitorName": "#{C100SolicitorName}",
     "payAgreeStatement": [
       "agree"
@@ -18,7 +19,9 @@
       "document_url": "#{DocumentUrl}",
       "document_binary_url": "#{DocumentUrl}/binary",
       "document_filename": "#{DocumentFileName}",
-      "document_hash": "#{DocumentHash}"
+      "document_hash": "#{DocumentHash}",
+      "category_id": null,
+      "document_creation_date": null
     },
     "isWelshDocGen": null,
     "paymentServiceRequestReferenceNumber": null
