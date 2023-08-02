@@ -1,9 +1,9 @@
 {
   "data": {
     "miniApplicationLink": {
-      "document_url": "${applicationDocumentURL}",
-      "document_filename": "${applicationDocumentName}",
-      "document_binary_url": "${applicationDocumentURL}/binary"
+      "document_url": "#{applicationDocumentURL}",
+      "document_filename": "#{applicationDocumentName}",
+      "document_binary_url": "#{applicationDocumentURL}/binary"
     },
     "coApplicant1ConfirmInformationStillCorrect": "Yes"
   },
@@ -25,13 +25,13 @@
     "coServiceConfirmed": null,
     "coApplicant1ApplyForConditionalOrder": "Yes",
     "miniApplicationLink": {
-      "document_url": "${applicationDocumentURL}",
-      "document_filename": "${applicationDocumentName}",
-      "document_binary_url": "${applicationDocumentURL}/binary"
+      "document_url": "#{applicationDocumentURL}",
+      "document_filename": "#{applicationDocumentName}",
+      "document_binary_url": "#{applicationDocumentURL}/binary"
     },
     "coApplicant1ConfirmInformationStillCorrect": "Yes"
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false,
-  "case_reference": "${caseId}"
+  "case_reference": "#{caseId}"
 }

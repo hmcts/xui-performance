@@ -13,9 +13,9 @@
     "coProofOfServiceUploadDocuments": [],
     "coApplicant1ApplyForConditionalOrder": "Yes",
     "miniApplicationLink": {
-      "document_url": "${applicationDocumentURL}",
-      "document_filename": "${applicationDocumentName}",
-      "document_binary_url": "${applicationDocumentURL}/binary"
+      "document_url": "#{applicationDocumentURL}",
+      "document_filename": "#{applicationDocumentName}",
+      "document_binary_url": "#{applicationDocumentURL}/binary"
     },
     "coApplicant1ConfirmInformationStillCorrect": "Yes",
     "coApplicant1ReasonInformationNotCorrect": null
@@ -25,6 +25,6 @@
     "summary": "",
     "description": ""
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false
 }

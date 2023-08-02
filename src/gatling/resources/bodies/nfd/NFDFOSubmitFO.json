@@ -2,8 +2,8 @@
   "data": {
     "labelContentDivorceOrCivilPartnership": "divorce",
     "labelContentFinaliseDivorceOrEndCivilPartnership": "finalise the divorce",
-    "marriageApplicant1Name": "${app1FullName}",
-    "marriageApplicant2Name": "${app2FullName}",
+    "marriageApplicant1Name": "#{app1FullName}",
+    "marriageApplicant2Name": "#{app2FullName}",
     "doesApplicant1WantToApplyForFinalOrder": "Yes"
   },
   "event": {
@@ -11,6 +11,6 @@
     "summary": "",
     "description": ""
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false
 }
