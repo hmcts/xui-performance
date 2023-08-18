@@ -62,25 +62,32 @@ object CCDAPI {
           .set("jurisdiction", jurisdiction)
           .set("caseType", caseType))
 
-    .exec(http("XUI_000_GetCCDEventToken")
-      .get(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/#{jurisdiction}/case-types/#{caseType}/cases/#{caseId}/event-triggers/#{eventName}/token")
-      .header("Authorization", "Bearer #{bearerToken}")
-      .header("ServiceAuthorization", "#{authToken}")
-      .header("Content-Type", "application/json")
-      .check(jsonPath("$.case_details.case_data.gatekeeperEmails[0].id").optional.saveAs("gatekeeperId")) //Only used for FPL bundles
-      .check(jsonPath("$.case_details.case_data.courtBundleHearingList.list_items[0].code").optional.saveAs("hearingListCode")) //Only used for FPL bundles
-      .check(jsonPath("$.token").saveAs("eventToken")))
+    .doWhile(session => session.contains("conflict") && (session("failCount").as[Int] < 3), "failCount") {
 
-    .pause(1)
+      exec(http("XUI_000_GetCCDEventToken")
+        .get(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/#{jurisdiction}/case-types/#{caseType}/cases/#{caseId}/event-triggers/#{eventName}/token")
+        .header("Authorization", "Bearer #{bearerToken}")
+        .header("ServiceAuthorization", "#{authToken}")
+        .header("Content-Type", "application/json")
+        .check(jsonPath("$.case_details.case_data.gatekeeperEmails[0].id").optional.saveAs("gatekeeperId"))
+        .check(jsonPath("$.token").saveAs("eventToken")))
 
-    .exec(http("XUI_000_CCDEvent-#{eventName}")
-      .post(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/#{jurisdiction}/case-types/#{caseType}/cases/#{caseId}/events")
-      .header("Authorization", "Bearer #{bearerToken}")
-      .header("ServiceAuthorization", "#{authToken}")
-      .header("Content-Type", "application/json")
-      .body(ElFileBody(payloadPath))
-      .check(jsonPath("$.id")))
+      .pause(1)
 
-    .pause(1)
+      .exec(http("XUI_000_CCDEvent-#{eventName}")
+        .post(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/#{jurisdiction}/case-types/#{caseType}/cases/#{caseId}/events")
+        .header("Authorization", "Bearer #{bearerToken}")
+        .header("ServiceAuthorization", "#{authToken}")
+        .header("Content-Type", "application/json")
+        .body(ElFileBody(payloadPath))
+        .check(status.in(201, 409))
+        .checkIf((response: Response, _: Session) => response.status.code == 409) {
+          status.saveAs("conflict")
+        }
+        .check(jsonPath("$.id")))
+
+      .pause(1)
+
+    }
 
 }
