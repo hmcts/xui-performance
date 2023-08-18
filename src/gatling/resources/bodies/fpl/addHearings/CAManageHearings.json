@@ -41,7 +41,7 @@
     ],
     "hearingVenueCustom": null,
     "hearingAttendanceDetails": null,
-    "hearingStartDate": "${hearingDate}T09:00:00.000",
+    "hearingStartDate": "#{hearingDate}T09:00:00.000",
     "hearingDuration": "HOURS_MINS",
     "hearingHours": "1",
     "hearingMinutes": "30",
@@ -51,15 +51,15 @@
     "startDateFlag": null,
     "endDateFlag": null,
     "preHearingAttendanceDetails": "1 hour before the hearing",
-    "hearingEndDate": "${hearingDate}T10:30:00",
+    "hearingEndDate": "#{hearingDate}T10:30:00",
     "judgeAndLegalAdvisor": {
-      "allocatedJudgeLabel": "Case assigned to: ${allocatedJudgeTitle} Perftest${randomString}",
+      "allocatedJudgeLabel": "Case assigned to: #{allocatedJudgeTitle} Perftest#{randomString}",
       "useAllocatedJudge": "No",
-      "judgeTitle": "${judgeTitle}",
+      "judgeTitle": "#{judgeTitle}",
       "otherTitle": null,
-      "judgeLastName": "Perftest${judgeNameSuffix}",
+      "judgeLastName": "Perftest#{judgeNameSuffix}",
       "judgeFullName": null,
-      "judgeEmailAddress": "${judgeEmail}",
+      "judgeEmailAddress": "#{judgeEmail}",
       "legalAdvisorName": null
     },
     "languageRequirement": null,
@@ -72,6 +72,6 @@
     "summary": "",
     "description": ""
   },
-  "event_token": "${eventToken}",
+  "event_token": "#{eventToken}",
   "ignore_warning": false
 }

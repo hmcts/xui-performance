@@ -1,11 +1,11 @@
 {
   "data": {
     "allocatedJudge": {
-      "judgeTitle": "${judgeTitle}",
+      "judgeTitle": "#{judgeTitle}",
       "otherTitle": null,
       "judgeFullName": null,
-      "judgeLastName": "Perftest${randomString}",
-      "judgeEmailAddress": "${judgeEmail}",
+      "judgeLastName": "Perftest#{randomString}",
+      "judgeEmailAddress": "#{judgeEmail}",
       "allocatedJudgeLabel": null,
       "useAllocatedJudge": null,
       "legalAdvisorName": null
@@ -38,7 +38,7 @@
     "preHearingAttendanceDetails": "1 hour before the hearing",
     "hearingEndDate": "2024-12-01T11:00:00",
     "judgeAndLegalAdvisor": {
-      "allocatedJudgeLabel": "Case assigned to: ${allocatedJudgeTitle} Perftest${randomString}",
+      "allocatedJudgeLabel": "Case assigned to: #{allocatedJudgeTitle} Perftest#{randomString}",
       "useAllocatedJudge": "Yes",
       "judgeTitle": null,
       "otherTitle": null,
@@ -53,6 +53,6 @@
     "summary": "",
     "description": ""
   },
-  "event_token": "${eventToken}",
+  "event_token": "#{eventToken}",
   "ignore_warning": false
 }
