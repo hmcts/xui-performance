@@ -5,7 +5,6 @@ import io.gatling.http.Predef._
 import scenarios._
 import utils._
 
-import scala.io.Source
 import io.gatling.core.controller.inject.open.OpenInjectionStep
 import io.gatling.core.pause.PauseType
 
@@ -14,22 +13,29 @@ import scala.util.Random
 
 class XUI_Simulation extends Simulation {
 
-	val CaseworkerUserFeeder = csv("UserDataCaseworkers.csv").circular
-	val UserFeederDivorce = csv("UserDataDivorce.csv").circular
+	final def sample[A](distribution: Map[A, Double]): A = {
+		val rand = Random.nextDouble * distribution.values.sum
+		val counter = distribution.iterator
+		var cumulative = 0.0
+		while (counter.hasNext) {
+			val (item, itemProbability) = counter.next
+			cumulative += itemProbability
+			if (cumulative >= rand)
+				return item
+		}
+		sys.error(f"Error")
+	}
+
+	val totalNumberOfCasesToCreate = 100 //29000
+	val numberOfHearingsDistribution = Map(1 -> 10.1, 2 -> 13.4, 3 -> 16.2, 4 -> 15.8, 5 -> 12.4, 6 -> 9.3, 7 -> 6.6, 8 -> 4.8, 9 -> 3.4, 10 -> 2.3,
+		11 -> 1.6, 12 -> 1.2, 13 -> 0.8, 14 -> 0.6, 15 -> 0.4, 16 -> 0.3, 17 -> 0.1, 18 -> 0.1, 19 -> 0.1, 20 -> 0.1, 25 -> 0.1, 30 -> 0.1, 35 -> 0.1, 40 -> 0.1)
+
+	//create a feeder to calculate the number of hearings to be added to the case, based on the weighted distribution
+	private val hearingsFeeder = Iterator.continually(Map("numberOfHearings" -> sample(numberOfHearingsDistribution)))
+
 	val UserFeederFPL = csv("UserDataFPL.csv").circular
-	val UserFeederFR = csv("UserDataFR.csv").circular
-	val UserFeederIAC = csv("UserDataIAC.csv").circular
-	val UserFeederNFD = csv("UserDataNFD.csv").circular
-	val UserFeederProbate = csv("UserDataProbate.csv").circular
-	val UserFeederPRL = csv("UserDataPRL.csv").circular
 
-	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
-	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
-	val nfdSoleLabelsPopulated = Source.fromResource("bodies/nfd/labels/soleLabelsPopulated.txt").mkString
-	val nfdJointLabelsInitialised = Source.fromResource("bodies/nfd/labels/jointLabelsInitialised.txt").mkString
-	val nfdJointLabelsPopulated = Source.fromResource("bodies/nfd/labels/jointLabelsPopulated.txt").mkString
-
-	val randomFeeder = Iterator.continually(Map("prl-percentage" -> Random.nextInt(100)))
+	val FPLMigrationJudgeFeeder = csv("FPLMigrationJudgeData.csv").random
 
 	/* TEST TYPE DEFINITION */
 	/* pipeline = nightly pipeline against the AAT environment (see the Jenkins_nightly file) */
@@ -39,7 +45,6 @@ class XUI_Simulation extends Simulation {
 	//set the environment based on the test type
 	val environment = testType match{
 		case "perftest" => "perftest"
-		//TODO: UPDATE PIPELINE TO 'aat' ONCE DATA STRATEGY IS IMPLEMENTED. UNTIL THEN, PIPELINE WILL RUN AGAINST PERFTEST
 		case "pipeline" => "perftest"
 		case _ => "**INVALID**"
 	}
@@ -51,19 +56,6 @@ class XUI_Simulation extends Simulation {
 	/* ******************************** */
 
 	/* PERFORMANCE TEST CONFIGURATION */
-	val prlTargetPerHour:Double = 100
-	val probateTargetPerHour:Double = 238
-	val iacTargetPerHour:Double = 20
-	val fplTargetPerHour:Double = 2000
-	val divorceTargetPerHour:Double = 238
-	val nfdSoleTargetPerHour:Double = 119
-	val nfdJointTargetPerHour:Double = 119
-	val frTargetPerHour:Double = 98
-	val caseworkerTargetPerHour:Double = 900
-
-	//This determines the percentage split of PRL journeys, by C100 or FL401
-	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
-
 
 	val rampUpDurationMins = 5
 	val rampDownDurationMins = 5
@@ -94,218 +86,6 @@ class XUI_Simulation extends Simulation {
 		println(s"Debug Mode: ${debugMode}")
 	}
 
-	/*===============================================================================================
-	* XUI Solicitor Private Law Scenario
- 	===============================================================================================*/
-	val PRLSolicitorScenario = scenario("***** Private Law Create Case *****")
-		.exitBlockOnFail {
-			feed(UserFeederPRL)
-				.exec(_.set("env", s"${env}")
-					.set("caseType", "PRLAPPS"))
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.feed(randomFeeder)
-				.doIfOrElse(session => session("prl-percentage").as[Int] < prlC100Percentage) {
-					//C100 Journey
-					exec(Solicitor_PRL_C100.CreatePrivateLawCase)
-					.exec(Solicitor_PRL_C100.TypeOfApplication)
-					.exec(Solicitor_PRL_C100.HearingUrgency)
-					.exec(Solicitor_PRL_C100.ApplicantDetails)
-					.exec(Solicitor_PRL_C100.ChildDetails)
-					.exec(Solicitor_PRL_C100.RespondentDetails)
-					.exec(Solicitor_PRL_C100.MIAM)
-					.exec(Solicitor_PRL_C100.AllegationsOfHarm)
-					.exec(Solicitor_PRL_C100.ViewPdfApplication)
-					.exec(Solicitor_PRL_C100.SubmitAndPay)
-
-				} {
-					//FL401 Journey
-					exec(Solicitor_PRL_FL401.CreatePrivateLawCase)
-					.exec(Solicitor_PRL_FL401.TypeOfApplication)
-					.exec(Solicitor_PRL_FL401.WithoutNoticeOrder)
-					.exec(Solicitor_PRL_FL401.ApplicantDetails)
-					.exec(Solicitor_PRL_FL401.RespondentDetails)
-					.exec(Solicitor_PRL_FL401.ApplicantsFamily)
-					.exec(Solicitor_PRL_FL401.Relationship)
-					.exec(Solicitor_PRL_FL401.Behaviour)
-					.exec(Solicitor_PRL_FL401.TheHome)
-					.exec(Solicitor_PRL_FL401.UploadDocuments)
-					.exec(Solicitor_PRL_FL401.ViewPDF)
-					.exec(Solicitor_PRL_FL401.StatementOfTruth)
-				}
-				.exec(Logout.XUILogout)
-		}
-
-	/*===============================================================================================
-	* XUI Solicitor Probate Scenario
-	 ===============================================================================================*/
-  val ProbateSolicitorScenario = scenario("***** Probate Create Case *****")
-		.exitBlockOnFail {
-			feed(UserFeederProbate)
-				.exec(_.set("env", s"${env}")
-							.set("caseType", "GrantOfRepresentation"))
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.repeat(2) {
-					exec(Solicitor_Probate.CreateProbateCase)
-					.exec(Solicitor_Probate.AddDeceasedDetails)
-					.exec(Solicitor_Probate.AddApplicationDetails)
-					.exec(Solicitor_Probate.ReviewAndSubmitApplication)
-				}
-				.exec(Logout.XUILogout)
-		}
-
-	/*===============================================================================================
-	* XUI Solicitor IAC Scenario
-	 ===============================================================================================*/
-	val ImmigrationAndAsylumSolicitorScenario = scenario("***** IAC Create Case *****")
-		.exitBlockOnFail {
-			feed(UserFeederIAC)
-				.exec(_.set("env", s"${env}")
-							.set("caseType", "Asylum"))
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.repeat(2) {
-					exec(Solicitor_IAC.CreateIACCase)
-					.exec(Solicitor_IAC.shareacase)
-				}
-				.exec(Logout.XUILogout)
-		}
-
-	/*===============================================================================================
-	* XUI Solicitor Divorce Scenario
-	 ===============================================================================================*/
-	val DivorceSolicitorScenario = scenario("***** Divorce Create Case *****")
-		.exitBlockOnFail {
-			feed(UserFeederDivorce)
-				.exec(_.set("env", s"${env}")
-							.set("caseType", "DIVORCE"))
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.repeat(2) {
-					exec(Solicitor_Divorce.CreateDivorceCase)
-				}
-				.exec(Logout.XUILogout)
-		}
-
-	/*===============================================================================================
-	* XUI Solicitor NFD Scenario (Sole Application)
-	 ===============================================================================================*/
-	val NoFaultDivorceSolicitorSoleScenario = scenario("***** NFD Create Case (Sole) *****")
-		.exitBlockOnFail {
-			//feed two rows of data - applicant1's solicitor and applicant2's solicitor
-			feed(UserFeederNFD, 2)
-				.exec(_.set("env", s"${env}")
-							.set("caseType", "NFD")
-							.set("nfdCaseType", "sole")
-							.set("NFDLabelsInitialised", nfdSoleLabelsInitialised) //sets the initialised labels for JSON bodies
-							.set("NFDLabelsPopulated", nfdSoleLabelsPopulated)) //sets the populated labels for JSON bodies
-				//Solicitor 1 - Divorce Application
-				.exec(Homepage.XUIHomePage)
-				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
-				.exec(session => session.set("user", session("user1").as[String]).set("password", session("password1").as[String]))
-				.exec(Login.XUILogin)
-				.exec(Solicitor_NFD.CreateNFDCase)
-				.exec(Solicitor_NFD.SignAndSubmitSole)
-				.exec(Logout.XUILogout)
-				//Caseworker - Issue Application
-				.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-issue-application", "bodies/nfd/CWIssueApplication.json"))
-				//set 'user'/'password' to the second one (applicant2's solicitor) for assigning the case and login
-				.exec(session => session.set("user", session("user2").as[String]).set("password", session("password2").as[String]))
-				//Update the case in CCD to assign it to the second solicitor
-				.exec(CCDAPI.AssignCase)
-				//Solicitor 2 - Respond to Divorce Application
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.exec(Solicitor_NFD.RespondToNFDCase)
-				.exec(Logout.XUILogout)
-				//Caseworker - Mark the Case as Awaiting Conditional Order (to bypass 20-week holding)
-				.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-progress-held-case", "bodies/nfd/CWAwaitingConditionalOrder.json"))
-				//Solicitor 1 - Apply for Conditional Order
-				.exec(Homepage.XUIHomePage)
-				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
-				.exec(session => session.set("user", session("user1").as[String]).set("password", session("password1").as[String]))
-				.exec(Login.XUILogin)
-				.exec(Solicitor_NFD.ApplyForCO)
-				.exec(Logout.XUILogout)
-				//Legal Advisor - Grant Conditional Order
-				.exec(CCDAPI.CreateEvent("Legal", "DIVORCE", "NFD", "legal-advisor-make-decision", "bodies/nfd/LAMakeDecision.json"))
-				//Caseworker - Make Eligible for Final Order
-				.exec(
-					//link with bulk case
-					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-link-with-bulk-case", "bodies/nfd/CWLinkWithBulkCase.json"),
-					//set case hearing and decision dates to a date in the past
-					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-update-case-court-hearing", "bodies/nfd/CWUpdateCaseWithCourtHearing.json"),
-					//set judge details, CO granted and issued dates in the past
-					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-amend-case", "bodies/nfd/CWSetCODetails.json"),
-					//pronounce case
-					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-pronounce-case", "bodies/nfd/CWPronounceCase.json"),
-					//set final order eligibility dates
-					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-amend-case", "bodies/nfd/CWSetFOEligibilityDates.json"),
-					//set case as awaiting final order
-					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-progress-case-awaiting-final-order", "bodies/nfd/CWAwaitingFinalOrder.json"))
-			//TODO: ADD FINAL ORDER HERE ONCE DEVELOPED
-		}
-
-	/*===============================================================================================
-	* XUI Solicitor NFD Scenario (Joint Application)
-	 ===============================================================================================*/
-	val NoFaultDivorceSolicitorJointScenario = scenario("***** NFD Create Case (Joint) *****")
-		.exitBlockOnFail {
-			//feed two rows of data - applicant1's solicitor and applicant2's solicitor
-			feed(UserFeederNFD, 2)
-				.exec(_.set("env", s"${env}")
-							.set("caseType", "NFD")
-							.set("nfdCaseType", "joint")
-							.set("NFDLabelsInitialised", nfdJointLabelsInitialised) //sets the initialised labels for JSON bodies
-							.set("NFDLabelsPopulated", nfdJointLabelsPopulated)) //sets the populated labels for JSON bodies
-				//Solicitor 1 - Divorce Application
-				.exec(Homepage.XUIHomePage)
-				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
-				.exec(session => session.set("user", session("user1").as[String]).set("password", session("password1").as[String]))
-				.exec(Login.XUILogin)
-				.exec(Solicitor_NFD.CreateNFDCase)
-				.exec(Solicitor_NFD.JointInviteApplicant2)
-				.exec(Logout.XUILogout)
-				//set 'user'/'password' to the second one (applicant2's solicitor) for assigning the case and login
-				.exec(session => session.set("user", session("user2").as[String]).set("password", session("password2").as[String]))
-				//Update the case in CCD to assign it to the second solicitor
-				.exec(CCDAPI.AssignCase)
-				//Solicitor 2 - Confirm Divorce Application
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.exec(Solicitor_NFD.SubmitJointApplication)
-				.exec(Logout.XUILogout)
-				//Solicitor 1 - Submit Application
-				.exec(Homepage.XUIHomePage)
-				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
-				.exec(session => session.set("user", session("user1").as[String]).set("password", session("password1").as[String]))
-				.exec(Login.XUILogin)
-				.exec(Solicitor_NFD.SignAndSubmitJoint)
-				.exec(Logout.XUILogout)
-				//Caseworker - Issue Application
-				.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-issue-application", "bodies/nfd/CWIssueApplication.json"))
-				//Caseworker - Mark the Case as Awaiting Conditional Order (to bypass 20-week holding)
-				.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-progress-held-case", "bodies/nfd/CWAwaitingConditionalOrder.json"))
-			//TODO: ADD CONDITIONAL ORDER HERE ONCE DEVELOPED
-			//TODO: ADD FINAL ORDER HERE ONCE DEVELOPED
-		}
-
-	/*===============================================================================================
-	* XUI Solicitor Financial Remedy (FR) Scenario
-	 ===============================================================================================*/
-	val FinancialRemedySolicitorScenario = scenario("***** FR Create Case *****")
-		.exitBlockOnFail {
-			feed(UserFeederFR)
-				.exec(_.set("env", s"${env}")
-							.set("caseType", "FinancialRemedyMVP2"))
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.repeat(2) {
-					exec(Solicitor_FR.CreateFRCase)
-				}
-				.exec(Logout.XUILogout)
-		}
 
 	/*===============================================================================================
 	* XUI Solicitor Family Public Law (FPL) Scenario
@@ -327,44 +107,48 @@ class XUI_Simulation extends Simulation {
 				.exec(Solicitor_FPL.fplAllocationProposal)
 				.exec(Solicitor_FPL.fplSubmitApplication)
 				.exec(Logout.XUILogout)
-				//REDACTED BUNDLES - TESTING THE MIGRATION OF COURT BUNDLES
+				.pause(10)
+				//WA MIGRATION
 				//Court Admin: Add FamilyMan Case Number
-				.exec(CCDAPI.CreateEvent("PublicLawCA", "PUBLICLAW", "CARE_SUPERVISION_EPO", "addFamilyManCaseNumber", "bodies/fpl/courtbundle/CAAddCaseNumber.json"))
+				.exec(CCDAPI.CreateEvent("PublicLawCA", "PUBLICLAW", "CARE_SUPERVISION_EPO", "addFamilyManCaseNumber", "bodies/fpl/addHearings/CAAddCaseNumber.json"))
 				//Court Admin: Send to GateKeeper
-				.exec(CCDAPI.CreateEvent("PublicLawCA", "PUBLICLAW", "CARE_SUPERVISION_EPO", "sendToGatekeeper", "bodies/fpl/courtbundle/CASendToGateKeeper.json"))
-				//Gatekeeper: Allocate Judge
-				.exec(CCDAPI.CreateEvent("PublicLawGK", "PUBLICLAW", "CARE_SUPERVISION_EPO", "allocatedJudge", "bodies/fpl/courtbundle/GKAllocateJudge.json"))
-				//Gatekeeper: Manage Hearings
-				.exec(CCDAPI.CreateEvent("PublicLawGK", "PUBLICLAW", "CARE_SUPERVISION_EPO", "manageHearings", "bodies/fpl/courtbundle/GKManageHearings.json"))
-				//Gatekeeper: Add Gatekeeping Order
-				//.pause(20)
-				//.exec(CCDAPI.CreateEvent("PublicLawGK", "PUBLICLAW", "CARE_SUPERVISION_EPO", "addGatekeepingOrder", "bodies/fpl/courtbundle/GKAddGatekeepingOrder.json"))
-				//Solicitor: Upload Court Bundle
-				//.exec(CCDAPI.CreateEvent("PublicLawSol", "PUBLICLAW", "CARE_SUPERVISION_EPO", "manageDocumentsLA", "bodies/fpl/courtbundle/SolUploadCourtBundle.json"))
-		}
+				.exec(CCDAPI.CreateEvent("PublicLawCA", "PUBLICLAW", "CARE_SUPERVISION_EPO", "sendToGatekeeper", "bodies/fpl/addHearings/CASendToGateKeeper.json"))
+				//Court Admin: Judicial Gatekeeping
+				.exec(CCDAPI.CreateEvent("PublicLawCA", "PUBLICLAW", "CARE_SUPERVISION_EPO", "addGatekeepingOrder", "bodies/fpl/addHearings/CAAddGatekeepingOrder.json"))
 
-	/*===============================================================================================
-	* XUI Caseworker - Search & View Case Scenario
-	 ===============================================================================================*/
-	val CaseworkerScenario = scenario("***** Caseworker Journey ******")
-		.exitBlockOnFail {
-			feed(CaseworkerUserFeeder)
-				//TODO: UPDATE caseType with something more dynamic
-				.exec(_.set("env", s"${env}")
-					.set("caseType", "NFD"))
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.exec(Caseworker_Navigation.ApplyFilter)
-				.exec(Caseworker_Navigation.SortByLastModifiedDate)
-				.exec(Caseworker_Navigation.LoadPage2)
-				//Only continue with the case activities if results were returned
-				.doIf(session => session("numberOfResults").as[Int] > 0) {
-					exec(Caseworker_Navigation.SearchByCaseNumber)
-					.exec(Caseworker_Navigation.ViewCase)
-					.exec(Caseworker_Navigation.NavigateTabs)
+				//determine how many hearings to add to the case
+				.feed(hearingsFeeder)
+
+			  //Choose a judge/legal advisor
+				.feed(FPLMigrationJudgeFeeder)
+
+				.exec(session => session("judgeTitle").as[String] match {
+					case "HIS_HONOUR_JUDGE" => session.set("allocatedJudgeTitle", "His Honour Judge")
+					case "HER_HONOUR_JUDGE" => session.set("allocatedJudgeTitle", "Her Honour Judge")
+					case "LEGAL_ADVISOR" => session.set("allocatedJudgeTitle", "Legal Advisor")
+				})
+				//Court Admin: List Gatekeeping Hearing
+				.exec(CCDAPI.CreateEvent("PublicLawCA", "PUBLICLAW", "CARE_SUPERVISION_EPO", "listGatekeepingHearing", "bodies/fpl/addHearings/CAListGatekeepingHearing.json"))
+
+				.pause(10)
+
+				.repeat(session => session("numberOfHearings").as[Int] - 1, "count") {
+
+					//Choose a judge/legal advisor
+					feed(FPLMigrationJudgeFeeder)
+					//Set the hearing date incrementally
+					.exec(session => session.set("hearingDate", Common.getNextHearingDate(session("count").as[Int] + 1))
+																	.set("judgeNameSuffix", Common.randomString(5)))
+					//Court Admin: Manage Hearings (Add a hearing)
+					.exec(CCDAPI.CreateEvent("PublicLawCA", "PUBLICLAW", "CARE_SUPERVISION_EPO", "manageHearings", "bodies/fpl/addHearings/CAManageHearings.json"))
 				}
-				.exec(Caseworker_Navigation.LoadCaseList)
-				.exec(Logout.XUILogout)
+
+				.exec{
+					session =>
+						println(session)
+					session
+				}
+
 		}
 
 
@@ -394,15 +178,7 @@ class XUI_Simulation extends Simulation {
 	}
 
 	setUp(
-		//PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
-		//DivorceSolicitorScenario.inject(simulationProfile(testType, divorceTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+		FamilyPublicLawSolicitorScenario.inject(rampUsers(totalNumberOfCasesToCreate) during rampUpDurationMins.minutes).pauses(pauseOption)
 	).protocols(httpProtocol)
 		.assertions(forAll.successfulRequests.percent.gte(80))
 

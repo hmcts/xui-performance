@@ -1,0 +1,50 @@
+{
+  "data": {
+    "allocationProposal": {
+      "proposal": "Circuit judge",
+      "proposalReason": "Reason text"
+    },
+    "urgentDirectionsRouter": null,
+    "allocationDecision": {
+      "judgeLevelRadio": "Yes",
+      "proposal": null,
+      "proposalReason": null,
+      "allocationProposalPresent": "Yes"
+    },
+    "gatekeepingOrderRouter": "UPLOAD",
+    "preparedSDO": {
+      "document_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/d52776cb-a336-46a1-96f6-9b026628a197",
+      "document_binary_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/d52776cb-a336-46a1-96f6-9b026628a197/binary",
+      "document_filename": "GKorder.docx"
+    },
+    "gatekeepingOrderIssuingJudge": {
+      "allocatedJudgeLabel": null,
+      "useAllocatedJudge": null,
+      "judgeTitle": "HER_HONOUR_JUDGE",
+      "otherTitle": null,
+      "judgeLastName": "Perftest",
+      "judgeFullName": null,
+      "judgeEmailAddress": "judge@perftest12345.com",
+      "legalAdvisorName": null
+    },
+    "gatekeepingOrderListOrSendToAdmin": "YES",
+    "gatekeepingOrderListOrSendToAdminReason": null,
+    "gatekeepingOrderSealDecision": {
+      "draftDocument": {
+        "document_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/d52776cb-a336-46a1-96f6-9b026628a197",
+        "document_filename": "GKorder.docx",
+        "document_binary_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/d52776cb-a336-46a1-96f6-9b026628a197/binary"
+      },
+      "orderStatus": null,
+      "dateOfIssue": null,
+      "nextSteps": null
+    }
+  },
+  "event": {
+    "id": "addGatekeepingOrder",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${eventToken}",
+  "ignore_warning": false
+}

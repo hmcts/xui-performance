@@ -1,0 +1,77 @@
+{
+  "data": {
+    "hasFutureHearings": "Yes",
+    "hasOthers": null,
+    "toReListHearingsLabel": null,
+    "hasPastHearings": null,
+    "hasExistingHearings": "Yes",
+    "hasHearingsToAdjourn": null,
+    "hasHearingsToReList": null,
+    "firstHearingFlag": "No",
+    "hasPreviousHearingVenue": "Yes",
+    "hasHearingsToVacate": "Yes",
+    "hearingOption": "NEW_HEARING",
+    "futureHearingDateList": null,
+    "pastHearingDateList": null,
+    "pastAndTodayHearingDateList": null,
+    "toReListHearingDateList": null,
+    "vacateHearingDateList": null,
+    "vacatedHearingDate": null,
+    "hasSession": null,
+    "hearingType": "CASE_MANAGEMENT",
+    "hearingTypeDetails": null,
+    "hearingTypeReason": null,
+    "previousHearingVenue": {
+      "previousVenue": "Nottingham Magistrates' Court, Carrington Street, Nottingham Justice Centre, Nottingham, NG2 1EE",
+      "usePreviousVenue": "Yes",
+      "newVenue": null,
+      "newVenueCustomAddress": {
+        "AddressLine1": null,
+        "AddressLine2": null,
+        "AddressLine3": null,
+        "PostTown": null,
+        "County": null,
+        "PostCode": null,
+        "Country": null
+      }
+    },
+    "hearingVenue": null,
+    "hearingAttendance": [
+      "IN_PERSON"
+    ],
+    "hearingVenueCustom": null,
+    "hearingAttendanceDetails": null,
+    "hearingStartDate": "${hearingDate}T09:00:00.000",
+    "hearingDuration": "HOURS_MINS",
+    "hearingHours": "1",
+    "hearingMinutes": "30",
+    "hearingDays": null,
+    "hearingEndDateTime": null,
+    "showConfirmPastHearingDatesPage": "No",
+    "startDateFlag": null,
+    "endDateFlag": null,
+    "preHearingAttendanceDetails": "1 hour before the hearing",
+    "hearingEndDate": "${hearingDate}T10:30:00",
+    "judgeAndLegalAdvisor": {
+      "allocatedJudgeLabel": "Case assigned to: ${allocatedJudgeTitle} Perftest${randomString}",
+      "useAllocatedJudge": "No",
+      "judgeTitle": "${judgeTitle}",
+      "otherTitle": null,
+      "judgeLastName": "Perftest${judgeNameSuffix}",
+      "judgeFullName": null,
+      "judgeEmailAddress": "${judgeEmail}",
+      "legalAdvisorName": null
+    },
+    "languageRequirement": null,
+    "sendNoticeOfHearing": "No",
+    "noticeOfHearingNotes": null,
+    "sendNoticeOfHearingTranslationRequirements": null
+  },
+  "event": {
+    "id": "manageHearings",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${eventToken}",
+  "ignore_warning": false
+}
