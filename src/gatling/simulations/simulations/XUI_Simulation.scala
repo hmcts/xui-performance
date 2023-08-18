@@ -122,9 +122,12 @@ class XUI_Simulation extends Simulation {
 				//Court Admin: Add FamilyMan Case Number
 				.exec(CCDAPI.CreateEvent("PublicLawCA", "PUBLICLAW", "CARE_SUPERVISION_EPO", "addFamilyManCaseNumber", "bodies/fpl/addHearings/CAAddCaseNumber.json"))
 				//Court Admin: Send to GateKeeper
+				.pause(5)
 				.exec(CCDAPI.CreateEvent("PublicLawCA", "PUBLICLAW", "CARE_SUPERVISION_EPO", "sendToGatekeeper", "bodies/fpl/addHearings/CASendToGateKeeper.json"))
 				//Court Admin: Judicial Gatekeeping
+				.pause(5)
 				.exec(CCDAPI.CreateEvent("PublicLawCA", "PUBLICLAW", "CARE_SUPERVISION_EPO", "addGatekeepingOrder", "bodies/fpl/addHearings/CAAddGatekeepingOrder.json"))
+				.pause(5)
 
 				//determine how many hearings to add to the case
 				.feed(hearingsFeeder)
@@ -153,11 +156,6 @@ class XUI_Simulation extends Simulation {
 					.exec(CCDAPI.CreateEvent("PublicLawCA", "PUBLICLAW", "CARE_SUPERVISION_EPO", "manageHearings", "bodies/fpl/addHearings/CAManageHearings.json"))
 					.pause(30)
 				}
-
-				.exec(session => {
-						println(session)
-					session}
-				)
 
 		}
 
