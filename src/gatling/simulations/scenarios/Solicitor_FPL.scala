@@ -35,6 +35,7 @@ object Solicitor_FPL {
                     "livingWithSinceYear" -> now.minusYears(1).format(patternYear),
                     "respondentFirstName" -> ("Resp" + Common.randomString(5)),
                     "respondentLastName" -> ("Test" + Common.randomString(5)),
+                    "randomString"  -> Common.randomString(5),
                     "dobYearResp" -> Common.getDobYear(),
                     "currentDate" -> now.format(patternDate)))
  

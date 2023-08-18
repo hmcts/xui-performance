@@ -1,0 +1,58 @@
+{
+  "data": {
+    "allocatedJudge": {
+      "judgeTitle": "${judgeTitle}",
+      "otherTitle": null,
+      "judgeFullName": null,
+      "judgeLastName": "Perftest${randomString}",
+      "judgeEmailAddress": "${judgeEmail}",
+      "allocatedJudgeLabel": null,
+      "useAllocatedJudge": null,
+      "legalAdvisorName": null
+    },
+    "urgentDirectionsRouter": null,
+    "gatekeepingOrderRouter": "UPLOAD",
+    "firstHearingFlag": "Yes",
+    "hasSession": null,
+    "hasPreviousHearingVenue": "No",
+    "sendNoticeOfHearing": "Yes",
+    "hearingType": "CASE_MANAGEMENT",
+    "hearingTypeReason": null,
+    "hearingTypeDetails": null,
+    "hearingVenue": "330",
+    "hearingVenueCustom": null,
+    "previousHearingVenue": null,
+    "hearingAttendance": [
+      "IN_PERSON"
+    ],
+    "hearingAttendanceDetails": null,
+    "hearingStartDate": "2024-12-01T09:30:00.000",
+    "hearingDuration": "HOURS_MINS",
+    "hearingHours": "1",
+    "hearingMinutes": "30",
+    "hearingDays": null,
+    "hearingEndDateTime": null,
+    "showConfirmPastHearingDatesPage": "No",
+    "startDateFlag": null,
+    "endDateFlag": null,
+    "preHearingAttendanceDetails": "1 hour before the hearing",
+    "hearingEndDate": "2024-12-01T11:00:00",
+    "judgeAndLegalAdvisor": {
+      "allocatedJudgeLabel": "Case assigned to: ${allocatedJudgeTitle} Perftest${randomString}",
+      "useAllocatedJudge": "Yes",
+      "judgeTitle": null,
+      "otherTitle": null,
+      "judgeLastName": null,
+      "judgeFullName": null,
+      "judgeEmailAddress": null,
+      "legalAdvisorName": null
+    }
+  },
+  "event": {
+    "id": "listGatekeepingHearing",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${eventToken}",
+  "ignore_warning": false
+}

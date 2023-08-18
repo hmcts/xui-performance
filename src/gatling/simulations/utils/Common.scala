@@ -21,9 +21,15 @@ object Common {
   val patternMonth = DateTimeFormatter.ofPattern("MM")
   val patternYear = DateTimeFormatter.ofPattern("yyyy")
   val patternReference = DateTimeFormatter.ofPattern("d MMM yyyy")
+  val hearingDatePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+  val firstHearingDate = LocalDate.parse("2024-12-01")
 
   def randomString(length: Int) = {
     rnd.alphanumeric.filter(_.isLetter).take(length).mkString
+  }
+
+  def getNextHearingDate(incrementDays: Int): String = {
+    firstHearingDate.plusDays(incrementDays).format(hearingDatePattern)
   }
 
   def getDay(): String = {
