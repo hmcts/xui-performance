@@ -4,7 +4,6 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import scenarios._
 import utils._
-
 import io.gatling.core.controller.inject.open.OpenInjectionStep
 import io.gatling.core.pause.PauseType
 
@@ -14,11 +13,11 @@ import scala.util.Random
 class XUI_Simulation extends Simulation {
 
 	final def sample[A](distribution: Map[A, Double]): A = {
-		val rand = Random.nextDouble * distribution.values.sum
+		val rand = Random.nextDouble() * distribution.values.sum
 		val counter = distribution.iterator
 		var cumulative = 0.0
 		while (counter.hasNext) {
-			val (item, itemProbability) = counter.next
+			val (item, itemProbability) = counter.next()
 			cumulative += itemProbability
 			if (cumulative >= rand)
 				return item
@@ -26,7 +25,7 @@ class XUI_Simulation extends Simulation {
 		sys.error(f"Error")
 	}
 
-	val totalNumberOfCasesToCreate = 100 //29000
+	val totalNumberOfCasesToCreate = 2 //29000
 	val numberOfHearingsDistribution = Map(1 -> 10.1, 2 -> 13.4, 3 -> 16.2, 4 -> 15.8, 5 -> 12.4, 6 -> 9.3, 7 -> 6.6, 8 -> 4.8, 9 -> 3.4, 10 -> 2.3,
 		11 -> 1.6, 12 -> 1.2, 13 -> 0.8, 14 -> 0.6, 15 -> 0.4, 16 -> 0.3, 17 -> 0.1, 18 -> 0.1, 19 -> 0.1, 20 -> 0.1, 25 -> 0.1, 30 -> 0.1, 35 -> 0.1, 40 -> 0.1)
 
@@ -36,6 +35,10 @@ class XUI_Simulation extends Simulation {
 	val UserFeederFPL = csv("UserDataFPL.csv").circular
 
 	val FPLMigrationJudgeFeeder = csv("FPLMigrationJudgeData.csv").random
+
+	var authToken = ""
+	var bearerToken = ""
+	var idamId = ""
 
 	/* TEST TYPE DEFINITION */
 	/* pipeline = nightly pipeline against the AAT environment (see the Jenkins_nightly file) */
@@ -56,13 +59,7 @@ class XUI_Simulation extends Simulation {
 	/* ******************************** */
 
 	/* PERFORMANCE TEST CONFIGURATION */
-
-	val rampUpDurationMins = 5
-	val rampDownDurationMins = 5
 	val testDurationMins = 60
-
-	val numberOfPipelineUsers = 5
-	val pipelinePausesMillis:Long = 3000 //3 seconds
 
 	//Determine the pause pattern to use:
 	//Performance test = use the pauses defined in the scripts
@@ -70,12 +67,11 @@ class XUI_Simulation extends Simulation {
 	//Debug mode = disable all pauses
 	val pauseOption:PauseType = debugMode match{
 		case "off" if testType == "perftest" => constantPauses
-		case "off" if testType == "pipeline" => customPauses(pipelinePausesMillis)
 		case _ => constantPauses //disabledPauses
 	}
 
   val httpProtocol = http
-		.baseUrl(Environment.baseURL.replace("${env}", s"${env}"))
+		.baseUrl(Environment.baseURL.replace("#{env}", s"${env}"))
 		.inferHtmlResources()
 		.silentResources
 		.header("experimental", "true") //used to send through client id, s2s and bearer tokens. Might be temporary
@@ -86,15 +82,29 @@ class XUI_Simulation extends Simulation {
 		println(s"Debug Mode: ${debugMode}")
 	}
 
+	val Authorisation = scenario("1. Generate Authorisation Tokens")
+		.exec(_.set("env", s"${env}"))
+		//Use a single set of tokens for all subsequent calls
+		.exec(CCDAPI.Auth("PublicLawCA"))
+
+		.exec(session => {
+			authToken = session("authToken").as[String]
+			bearerToken = session("bearerToken").as[String]
+			idamId = session("idamId").as[String]
+			session}
+		)
 
 	/*===============================================================================================
 	* XUI Solicitor Family Public Law (FPL) Scenario
 	 ===============================================================================================*/
-	val FamilyPublicLawSolicitorScenario = scenario("***** FPL Create Case *****")
+	val FamilyPublicLawSolicitorScenario = scenario("2. Create FPL Cases")
 		.exitBlockOnFail {
 			feed(UserFeederFPL)
 				.exec(_.set("env", s"${env}")
-							.set("caseType", "CARE_SUPERVISION_EPO"))
+							.set("caseType", "CARE_SUPERVISION_EPO")
+							.set("authToken", authToken)
+							.set("bearerToken", bearerToken)
+							.set("idamId", idamId))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.exec(Solicitor_FPL.CreateFPLCase)
@@ -141,14 +151,13 @@ class XUI_Simulation extends Simulation {
 																	.set("judgeNameSuffix", Common.randomString(5)))
 					//Court Admin: Manage Hearings (Add a hearing)
 					.exec(CCDAPI.CreateEvent("PublicLawCA", "PUBLICLAW", "CARE_SUPERVISION_EPO", "manageHearings", "bodies/fpl/addHearings/CAManageHearings.json"))
-					.pause(10)
+					.pause(30)
 				}
 
-				.exec{
-					session =>
+				.exec(session => {
 						println(session)
-					session
-				}
+					session}
+				)
 
 		}
 
@@ -157,29 +166,27 @@ class XUI_Simulation extends Simulation {
 	* Simulation Configuration
 	 ===============================================================================================*/
 
-	def simulationProfile(simulationType: String, userPerHourRate: Double, numberOfPipelineUsers: Double): Seq[OpenInjectionStep] = {
-		val userPerSecRate = userPerHourRate / 3600
+	def simulationProfile(simulationType: String, target: Int): Seq[OpenInjectionStep] = {
 		simulationType match {
 			case "perftest" =>
 				if (debugMode == "off") {
 					Seq(
-						rampUsersPerSec(0.00) to (userPerSecRate) during (rampUpDurationMins minutes),
-						constantUsersPerSec(userPerSecRate) during (testDurationMins minutes),
-						rampUsersPerSec(userPerSecRate) to (0.00) during (rampDownDurationMins minutes)
+						rampUsers(target) during (testDurationMins.minutes)
 					)
 				}
 				else{
 					Seq(atOnceUsers(1))
 				}
-			case "pipeline" =>
-				Seq(rampUsers(numberOfPipelineUsers.toInt) during (2 minutes))
 			case _ =>
 				Seq(nothingFor(0))
 		}
 	}
 
 	setUp(
-		FamilyPublicLawSolicitorScenario.inject(rampUsers(totalNumberOfCasesToCreate) during rampUpDurationMins.minutes).pauses(pauseOption)
+		Authorisation.inject(atOnceUsers(1))
+		.andThen(
+			FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, totalNumberOfCasesToCreate)).pauses(pauseOption)
+		)
 	).protocols(httpProtocol)
 		.assertions(forAll.successfulRequests.percent.gte(80))
 

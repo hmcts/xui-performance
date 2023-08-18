@@ -30,7 +30,7 @@ object CCDAPI {
 
     .exec(http("XUI_000_Auth")
       .post(RpeAPIURL + "/testing-support/lease")
-      .body(StringBody("""{"microservice":"${microservice}"}""")).asJson
+      .body(StringBody("""{"microservice":"#{microservice}"}""")).asJson
       .check(regex("(.+)").saveAs("authToken")))
 
     .pause(1)
@@ -38,8 +38,8 @@ object CCDAPI {
     .exec(http("XUI_000_GetBearerToken")
       .post(IdamAPIURL + "/o/token")
       .formParam("grant_type", "password")
-      .formParam("username", "${emailAddressCCD}")
-      .formParam("password", "${passwordCCD}")
+      .formParam("username", "#{emailAddressCCD}")
+      .formParam("password", "#{passwordCCD}")
       .formParam("client_id", "ccd_gateway")
       .formParam("client_secret", clientSecret)
       .formParam("scope", "openid profile roles openid roles profile")
@@ -50,22 +50,8 @@ object CCDAPI {
 
     .exec(http("XUI_000_GetIdamID")
       .get(IdamAPIURL + "/details")
-      .header("Authorization", "Bearer ${bearerToken}")
+      .header("Authorization", "Bearer #{bearerToken}")
       .check(jsonPath("$.id").saveAs("idamId")))
-
-    .pause(1)
-
-  val AssignCase =
-
-    exec(Auth("Solicitor"))
-
-    .exec(http("XUI_000_AssignCase")
-      .post(CcdAPIURL + "/case-users")
-      .header("Authorization", "Bearer ${bearerToken}")
-      .header("ServiceAuthorization", "${authToken}")
-      .header("Content-Type", "application/json")
-      .body(ElFileBody("bodies/nfd/AssignCase.json"))
-      .check(jsonPath("$.status_message").is("Case-User-Role assignments created successfully")))
 
     .pause(1)
 
@@ -76,12 +62,10 @@ object CCDAPI {
           .set("jurisdiction", jurisdiction)
           .set("caseType", caseType))
 
-    .exec(Auth(userType))
-
     .exec(http("XUI_000_GetCCDEventToken")
-      .get(CcdAPIURL + "/caseworkers/${idamId}/jurisdictions/${jurisdiction}/case-types/${caseType}/cases/${caseId}/event-triggers/${eventName}/token")
-      .header("Authorization", "Bearer ${bearerToken}")
-      .header("ServiceAuthorization", "${authToken}")
+      .get(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/#{jurisdiction}/case-types/#{caseType}/cases/#{caseId}/event-triggers/#{eventName}/token")
+      .header("Authorization", "Bearer #{bearerToken}")
+      .header("ServiceAuthorization", "#{authToken}")
       .header("Content-Type", "application/json")
       .check(jsonPath("$.case_details.case_data.gatekeeperEmails[0].id").optional.saveAs("gatekeeperId")) //Only used for FPL bundles
       .check(jsonPath("$.case_details.case_data.courtBundleHearingList.list_items[0].code").optional.saveAs("hearingListCode")) //Only used for FPL bundles
@@ -89,10 +73,10 @@ object CCDAPI {
 
     .pause(1)
 
-    .exec(http("XUI_000_CCDEvent-${eventName}")
-      .post(CcdAPIURL + "/caseworkers/${idamId}/jurisdictions/${jurisdiction}/case-types/${caseType}/cases/${caseId}/events")
-      .header("Authorization", "Bearer ${bearerToken}")
-      .header("ServiceAuthorization", "${authToken}")
+    .exec(http("XUI_000_CCDEvent-#{eventName}")
+      .post(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/#{jurisdiction}/case-types/#{caseType}/cases/#{caseId}/events")
+      .header("Authorization", "Bearer #{bearerToken}")
+      .header("ServiceAuthorization", "#{authToken}")
       .header("Content-Type", "application/json")
       .body(ElFileBody(payloadPath))
       .check(jsonPath("$.id")))
