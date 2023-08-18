@@ -107,7 +107,7 @@ class XUI_Simulation extends Simulation {
 				.exec(Solicitor_FPL.fplAllocationProposal)
 				.exec(Solicitor_FPL.fplSubmitApplication)
 				.exec(Logout.XUILogout)
-				.pause(10)
+				.pause(30)
 				//WA MIGRATION
 				//Court Admin: Add FamilyMan Case Number
 				.exec(CCDAPI.CreateEvent("PublicLawCA", "PUBLICLAW", "CARE_SUPERVISION_EPO", "addFamilyManCaseNumber", "bodies/fpl/addHearings/CAAddCaseNumber.json"))
@@ -130,7 +130,7 @@ class XUI_Simulation extends Simulation {
 				//Court Admin: List Gatekeeping Hearing
 				.exec(CCDAPI.CreateEvent("PublicLawCA", "PUBLICLAW", "CARE_SUPERVISION_EPO", "listGatekeepingHearing", "bodies/fpl/addHearings/CAListGatekeepingHearing.json"))
 
-				.pause(10)
+				.pause(30)
 
 				.repeat(session => session("numberOfHearings").as[Int] - 1, "count") {
 
@@ -141,6 +141,7 @@ class XUI_Simulation extends Simulation {
 																	.set("judgeNameSuffix", Common.randomString(5)))
 					//Court Admin: Manage Hearings (Add a hearing)
 					.exec(CCDAPI.CreateEvent("PublicLawCA", "PUBLICLAW", "CARE_SUPERVISION_EPO", "manageHearings", "bodies/fpl/addHearings/CAManageHearings.json"))
+					.pause(10)
 				}
 
 				.exec{
