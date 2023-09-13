@@ -32,8 +32,6 @@ class XUI_Simulation extends Simulation {
 	val UserJudgeFeederCivilGA = csv("UserJudgeDataGeneralApplication.csv").circular
 	
 	
-	
-
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
 	val nfdSoleLabelsPopulated = Source.fromResource("bodies/nfd/labels/soleLabelsPopulated.txt").mkString
@@ -71,7 +69,7 @@ class XUI_Simulation extends Simulation {
 	val nfdJointTargetPerHour: Double = 120
 	val frTargetPerHour: Double = 100
 	val caseworkerTargetPerHour: Double = 1000
-	val CivilGATargetPerHour: Double = 210
+	val CivilGATargetPerHour: Double =1// 210
 
 	//This determines the percentage split of PRL journeys, by C100 or FL401
 	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
@@ -561,9 +559,9 @@ class XUI_Simulation extends Simulation {
 	setUp(
 		//CivilGeneralScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 		//CivilGeneralScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
-			//CivilGeneralScenario.inject(nothingFor(1),rampUsers(1) during (10))
+			CivilGeneralScenario.inject(nothingFor(1),rampUsers(1) during (10))
 			//	CivilGeneralJudgeScenario.inject(nothingFor(1),rampUsers(1) during (10))
-		CivilGeneralScenario.inject(simulationProfile(testType, CivilGATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+		//CivilGeneralScenario.inject(simulationProfile(testType, CivilGATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 		// BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		// PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		 //ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)		/* ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
