@@ -39,6 +39,10 @@ object Common {
     now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
   }
   
+  def getFutureDate (): String = {
+    now.plusDays(5).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+  }
+  
   def getCurrentDateTime (): String = {
     ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"))
   }

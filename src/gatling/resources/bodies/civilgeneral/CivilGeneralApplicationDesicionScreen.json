@@ -1,1 +1,53 @@
-{"data":{"makeAppVisibleToRespondents":{"makeAppAvailableCheck":["CONSENT_AGREEMENT_CHECKBOX"]},"judicialDecisionMakeOrder":{"judgeRecitalText":"Judge: Simpson Homer\n\nThe Judge considered the without notice application of Claimant dated 18 July 2023\n\nAnd the Judge considered the information provided by the Claimant","makeAnOrder":"GIVE_DIRECTIONS_WITHOUT_HEARING","directionsText":"asasasasasasa","directionsResponseByDate":"2023-08-01","judicialByCourtsInitiative":"OPTION_3","reasonForDecisionText":"asasasasasasasa","displayjudgeApproveEditOptionDate":"No","displayjudgeApproveEditOptionDoc":"Yes","isOrderProcessedByStayScheduler":"No","isOrderProcessedByUnlessScheduler":"No","displayjudgeApproveEditOptionDateForUnlessOrder":"No"}},"event":{"id":"MAKE_DECISION","summary":"","description":""},"event_data":{"judicialDecision":{"decision":"MAKE_AN_ORDER"},"makeAppVisibleToRespondents":{"makeAppAvailableCheck":["CONSENT_AGREEMENT_CHECKBOX"]},"judicialDecisionMakeOrder":{"judgeRecitalText":"Judge: Simpson Homer\n\nThe Judge considered the without notice application of Claimant dated 18 July 2023\n\nAnd the Judge considered the information provided by the Claimant","makeAnOrder":"GIVE_DIRECTIONS_WITHOUT_HEARING","directionsText":"asasasasasasa","directionsResponseByDate":"2023-08-01","judicialByCourtsInitiative":"OPTION_3","reasonForDecisionText":"asasasasasasasa","displayjudgeApproveEditOptionDate":"No","displayjudgeApproveEditOptionDoc":"Yes","isOrderProcessedByStayScheduler":"No","isOrderProcessedByUnlessScheduler":"No","displayjudgeApproveEditOptionDateForUnlessOrder":"No"}},"event_token":"${event_token_judge}","ignore_warning":false,"case_reference":"${ga_case_id}"}
+{
+  "data": {
+    "makeAppVisibleToRespondents": {
+      "makeAppAvailableCheck": [
+        "CONSENT_AGREEMENT_CHECKBOX"
+      ]
+    },
+    "judicialDecisionMakeOrder": {
+      "judgeRecitalText": "Judge: Simpson Homer\n\nThe Judge considered the without notice application of Claimant dated 18 July 2023\n\nAnd the Judge considered the information provided by the Claimant",
+      "makeAnOrder": "GIVE_DIRECTIONS_WITHOUT_HEARING",
+      "directionsText": "asasasasasasa",
+      "directionsResponseByDate": "#{futureDate}",
+      "judicialByCourtsInitiative": "OPTION_3",
+      "reasonForDecisionText": "asasasasasasasa",
+      "displayjudgeApproveEditOptionDate": "No",
+      "displayjudgeApproveEditOptionDoc": "Yes",
+      "isOrderProcessedByStayScheduler": "No",
+      "isOrderProcessedByUnlessScheduler": "No",
+      "displayjudgeApproveEditOptionDateForUnlessOrder": "No"
+    }
+  },
+  "event": {
+    "id": "MAKE_DECISION",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "judicialDecision": {
+      "decision": "MAKE_AN_ORDER"
+    },
+    "makeAppVisibleToRespondents": {
+      "makeAppAvailableCheck": [
+        "CONSENT_AGREEMENT_CHECKBOX"
+      ]
+    },
+    "judicialDecisionMakeOrder": {
+      "judgeRecitalText": "Judge: Simpson Homer\n\nThe Judge considered the without notice application of Claimant dated 18 July 2023\n\nAnd the Judge considered the information provided by the Claimant",
+      "makeAnOrder": "GIVE_DIRECTIONS_WITHOUT_HEARING",
+      "directionsText": "asasasasasasa",
+      "directionsResponseByDate": "#{futureDate}",
+      "judicialByCourtsInitiative": "OPTION_3",
+      "reasonForDecisionText": "asasasasasasasa",
+      "displayjudgeApproveEditOptionDate": "No",
+      "displayjudgeApproveEditOptionDoc": "Yes",
+      "isOrderProcessedByStayScheduler": "No",
+      "isOrderProcessedByUnlessScheduler": "No",
+      "displayjudgeApproveEditOptionDateForUnlessOrder": "No"
+    }
+  },
+  "event_token": "#{event_token_judge}",
+  "ignore_warning": false,
+  "case_reference": "#{ga_case_id}"
+}
