@@ -1,8 +1,9 @@
 {
   "data": {
-    "generalAppHearingDate": {
-      "hearingScheduledPreferenceYesNo": "No"
-    }
+    "generalAppInformOtherParty": {
+      "isWithNotice": "Yes"
+    },
+    "generalAppVaryJudgementType": "No"
   },
   "event": {
     "id": "INITIATE_GENERAL_APPLICATION",
@@ -19,11 +20,22 @@
     },
     "generalAppHearingDate": {
       "hearingScheduledPreferenceYesNo": "No"
-    }
+    },
+    "generalAppRespondentAgreement": {
+      "hasAgreed": "No"
+    },
+    "generalAppUrgencyRequirement": {
+      "generalAppUrgency": "No"
+    },
+    "generalAppInformOtherParty": {
+      "isWithNotice": "Yes"
+    },
+    "generalAppVaryJudgementType": "No"
   },
   "event_token": "#{event_token_ga}",
   "ignore_warning": false,
   "case_reference": "#{caseId}"
 }
+
 
 

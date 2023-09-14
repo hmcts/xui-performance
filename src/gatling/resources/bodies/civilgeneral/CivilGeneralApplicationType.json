@@ -1,11 +1,30 @@
 {
-  "data":{
-    "generalAppType":{"types":["EXTEND_TIME","RELIEF_FROM_SANCTIONS","SET_ASIDE_JUDGEMENT"]}
-  },"event":{
-  "id":"INITIATE_GENERAL_APPLICATION","summary":"","description":""
-},
-  "event_data":{"generalAppType":{"types":["EXTEND_TIME","RELIEF_FROM_SANCTIONS","SET_ASIDE_JUDGEMENT"]}},
-  "event_token":"${event_token_ga}",
-  "ignore_warning":false,"case_reference":"${caseId}"
+  "data": {
+    "generalAppType": {
+      "types": [
+        "EXTEND_TIME",
+        "RELIEF_FROM_SANCTIONS",
+        "SET_ASIDE_JUDGEMENT"
+      ]
+    }
+  },
+  "event": {
+    "id": "INITIATE_GENERAL_APPLICATION",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "generalAppType": {
+      "types": [
+        "EXTEND_TIME",
+        "RELIEF_FROM_SANCTIONS",
+        "SET_ASIDE_JUDGEMENT"
+      ]
+    }
+  },
+  "event_token": "#{event_token_ga}",
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
 }
+
 

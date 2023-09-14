@@ -69,14 +69,14 @@ class XUI_Simulation extends Simulation {
 	val nfdJointTargetPerHour: Double = 120
 	val frTargetPerHour: Double = 100
 	val caseworkerTargetPerHour: Double = 1000
-	val CivilGATargetPerHour: Double =1// 210
+	val CivilGATargetPerHour: Double = 1// 210
 
 	//This determines the percentage split of PRL journeys, by C100 or FL401
 	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
 
-	val rampUpDurationMins = 5
-	val rampDownDurationMins = 5
-	val testDurationMins = 60
+	val rampUpDurationMins = 2
+	val rampDownDurationMins = 2
+	val testDurationMins = 5
 
 	val numberOfPipelineUsers = 5
 	val pipelinePausesMillis: Long = 3000 //3 seconds
@@ -93,7 +93,7 @@ class XUI_Simulation extends Simulation {
 
 	val httpProtocol = http
 		.baseUrl(Environment.baseURL.replace("${env}", s"${env}"))
-		.inferHtmlResources()
+		//.inferHtmlResources()
 		.silentResources
 		.header("experimental", "true") //used to send through client id, s2s and bearer tokens. Might be temporary
 
@@ -481,7 +481,7 @@ class XUI_Simulation extends Simulation {
 				.exec(Login.XUILogin)
 				.exec(Solicitor_CivilGeneral.defResponseToGA)
 				//.exec(Logout.XUILogout)
-				/*.feed(UserJudgeFeederCivilGA)
+			/*	.feed(UserJudgeFeederCivilGA)
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.exec(Solicitor_CivilGeneral.judgeIssueOrder)*/
@@ -559,7 +559,7 @@ class XUI_Simulation extends Simulation {
 	setUp(
 		//CivilGeneralScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 		//CivilGeneralScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
-			CivilGeneralScenario.inject(nothingFor(1),rampUsers(1) during (10))
+			CivilGeneralScenario.inject(nothingFor(20),rampUsers(230) during (3600))
 			//	CivilGeneralJudgeScenario.inject(nothingFor(1),rampUsers(1) during (10))
 		//CivilGeneralScenario.inject(simulationProfile(testType, CivilGATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 		// BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),

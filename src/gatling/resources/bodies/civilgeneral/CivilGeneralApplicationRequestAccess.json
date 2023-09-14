@@ -1,1 +1,33 @@
-{"roleRequest":{"assignerId":"1622e49b-f274-4629-9953-dd9da8a67b98","process":"challenged-access","reference":"${ga_case_id}/challenged-access-judiciary/1622e49b-f274-4629-9953-dd9da8a67b98","replaceExisting":true},"requestedRoles":[{"actorIdType":"IDAM","actorId":"1622e49b-f274-4629-9953-dd9da8a67b98","roleType":"CASE","roleName":"challenged-access-judiciary","classification":"PUBLIC","roleCategory":"JUDICIAL","grantType":"CHALLENGED","beginTime":"${currentDateTime}","endTime":"${currentDate}T23:59:59.999Z","attributes":{"caseId":"${ga_case_id}","isNew":true,"accessReason":"{\"reason\":3,\"caseReference\":null,\"otherReason\":\"asasasasasasasasa\"}"},"notes":[{"userId":"1622e49b-f274-4629-9953-dd9da8a67b98","time":"${currentDateTime}","comment":"{\"reason\":3,\"caseReference\":null,\"otherReason\":\"asasasasasasasasa\"}"}]}]}
+{
+  "roleRequest": {
+    "assignerId": "#{judiciaryuserid}",
+    "process": "challenged-access",
+    "reference": "#{ga_case_id}/challenged-access-judiciary/#{judiciaryuserid}",
+    "replaceExisting": true
+  },
+  "requestedRoles": [
+    {
+      "actorIdType": "IDAM",
+      "actorId": "#{judiciaryuserid}",
+      "roleType": "CASE",
+      "roleName": "challenged-access-judiciary",
+      "classification": "PUBLIC",
+      "roleCategory": "JUDICIAL",
+      "grantType": "CHALLENGED",
+      "beginTime": "#{currentDateTime}",
+      "endTime": "#{currentDate}T23:59:59.999Z",
+      "attributes": {
+        "caseId": "#{ga_case_id}",
+        "isNew": true,
+        "accessReason": "{\"reason\":3,\"caseReference\":null,\"otherReason\":\"asasasasasasasasa\"}"
+      },
+      "notes": [
+        {
+          "userId": "#{judiciaryuserid}",
+          "time": "#{currentDateTime}",
+          "comment": "{\"reason\":3,\"caseReference\":null,\"otherReason\":\"asasasasasasasasa\"}"
+        }
+      ]
+    }
+  ]
+}
