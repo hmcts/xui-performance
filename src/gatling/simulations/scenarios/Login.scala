@@ -49,13 +49,13 @@ object Login {
         exec(_.set("caseId", "0"))
       }
 
-      .exec(Common.caseActivityGet)
+      // .exec(Common.caseActivityGet)
 
-      .exec(http("XUI_020_010_Jurisdictions")
-        .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .check(substring("id")))
+      // .exec(http("XUI_020_010_Jurisdictions")
+      //   .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
+      //   .headers(Headers.commonHeader)
+      //   .header("accept", "application/json")
+      //   .check(substring("id")))
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
 

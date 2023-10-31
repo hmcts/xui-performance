@@ -810,13 +810,14 @@ object Solicitor_Bails {
 
       .exec(Common.profile)
 
-      .exec(http("XUI_Bails_450_005_Open_Sumbit_Application")
+      .exec(http("XUI_Bails_450_005_Open_Submit_Application")
         .get("/data/internal/cases/#{caseId}/event-triggers/submitApplication?ignore-warning=false")
         .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
+        // .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.case_id").is("#{caseId}"))
-        .check(substring("access_granted")))
+        .check(substring("Submit the application")))
 
       .exec(Common.isAuthenticated)
 
