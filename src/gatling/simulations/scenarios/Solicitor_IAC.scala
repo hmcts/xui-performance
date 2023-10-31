@@ -495,12 +495,12 @@ object Solicitor_IAC {
 
     .group("XUI_IAC_260_PayAndSubmitAppeal") {
       exec(http("XUI_IAC_260_005_PayAndSubmitAppeal")
-      .get("/data/internal/cases/#{caseId}/event-triggers/payAndSubmitAppeal?ignore-warning=false")
+      .get("/data/internal/cases/#{caseId}/event-triggers/submitAppeal?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
         .check(jsonPath("$.event_token").saveAs("event_token_submit"))
-        .check(substring("Pay and submit")))
+        .check(substring("Submit your appeal")))
 
       .exec(Common.isAuthenticated)
 
@@ -520,7 +520,7 @@ object Solicitor_IAC {
 *Below group contains all the requests for selecting PBA account and clicking continue
 ======================================================================================*/
 
-    .group("XUI_IAC_270_SelectPBAAccount") {
+    /*.group("XUI_IAC_270_SelectPBAAccount") {
       exec(http("XUI_IAC_270_005_SelectPBAAccount")
         .post("/data/case-types/Asylum/validate?pageId=payAndSubmitAppealenterPbaNumber")
         .headers(Headers.commonHeader)
@@ -537,7 +537,7 @@ object Solicitor_IAC {
       
     }
 
-    .pause(MinThinkTime, MaxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)*/
 
 /*======================================================================================
 *Business process : Following business process is for IAC Case Creation
@@ -560,6 +560,8 @@ object Solicitor_IAC {
 *Business process : Following business process is for IAC Case Creation
 * Below group contains all the requests for starting submit appeal declaration submitted
 ======================================================================================*/
+
+    .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
 
     .group("XUI_IAC_290_005_AppealDeclarationSubmitted") {
       exec(http("XUI_IAC_290_AppealDeclarationSubmitted")
