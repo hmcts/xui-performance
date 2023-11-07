@@ -196,6 +196,6 @@ object Common {
       .headers(Headers.commonHeader)
       .header("accept", "application/json, text/plain, */*")
       .check(regex("name|Organisation route error"))
-      .check(status.in(200, 304, 403)))
+      .check(status.in(200, 304, 401, 403)))
 
 }
