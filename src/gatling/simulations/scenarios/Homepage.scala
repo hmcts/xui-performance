@@ -36,12 +36,14 @@ object Homepage {
 
       .exec(Common.isAuthenticated)
 
-      .exec(http("XUI_010_010_AuthLogin")
-        .get("/auth/login")
-        .headers(Headers.navigationHeader)
-        .check(CsrfCheck.save)
-        .check(regex("/oauth2/callback&amp;state=(.*)&amp;nonce=").saveAs("state"))
-        .check(regex("&nonce=(.*)&response_type").saveAs("nonce")))
+      .tryMax(2) {
+        exec(http("XUI_010_010_AuthLogin")
+          .get("/auth/login")
+          .headers(Headers.navigationHeader)
+          .check(CsrfCheck.save)
+          .check(regex("/oauth2/callback&amp;state=(.*)&amp;nonce=").saveAs("state"))
+          .check(regex("&nonce=(.*)&response_type").saveAs("nonce")))
+      }
     }
   
   .pause(MinThinkTime, MaxThinkTime)
