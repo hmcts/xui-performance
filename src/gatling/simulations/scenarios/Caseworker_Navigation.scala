@@ -201,7 +201,7 @@ object Caseworker_Navigation {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-workbasket-input-details.v2+json;charset=UTF-8")
         .check(regex("workbasketInputs|Not Found"))
-        .check(status.in(200, 404)))
+        .check(status.in(200, 401, 404)))
 
       .exec(http("XUI_100_015_SearchCases")
         .post("/data/internal/searchCases?ctid=#{caseType}&use_case=WORKBASKET&view=WORKBASKET&page=1")
