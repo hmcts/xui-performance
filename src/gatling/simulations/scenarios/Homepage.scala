@@ -41,8 +41,13 @@ object Homepage {
         .headers(Headers.navigationHeader)
         .check(CsrfCheck.save)
         .check(regex("/oauth2/callback&amp;state=(.*)&amp;nonce=").saveAs("state"))
-        .check(regex("nonce=(.*)&scope").saveAs("nonce")))
+        .check(regex("nonce=(.*)&").saveAs("nonce")))
     }
+
+    // .exec(session => {
+    //   println(s"Response body: #{BODY}")
+    //   session
+    // })
   
   .pause(MinThinkTime, MaxThinkTime)
 
