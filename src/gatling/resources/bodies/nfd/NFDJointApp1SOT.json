@@ -18,7 +18,7 @@
     "applicant1StatementOfTruth": "Yes",
     "solSignStatementOfTruth": "Yes",
     "solStatementOfReconciliationName": "AppSolicitor",
-    "solStatementOfReconciliationFirm": "#{orgname1}",
+    "solStatementOfReconciliationFirm": "#{orgnames(0)}",
     "statementOfReconciliationComments": null,
     "solApplicationFeeInPounds": "#{feeInPounds}"
   },
@@ -52,7 +52,7 @@
     "applicant1StatementOfTruth": "Yes",
     "solSignStatementOfTruth": "Yes",
     "solStatementOfReconciliationName": "AppSolicitor",
-    "solStatementOfReconciliationFirm": "#{orgname1}",
+    "solStatementOfReconciliationFirm": "#{orgnames(0)}",
     "statementOfReconciliationComments": null,
     "solApplicationFeeInPounds": "#{feeInPounds}"
   },

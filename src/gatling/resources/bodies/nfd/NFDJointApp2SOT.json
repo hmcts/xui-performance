@@ -15,7 +15,7 @@
     "applicant2StatementOfTruth": "Yes",
     "applicant2SolSignStatementOfTruth": "Yes",
     "applicant2SolStatementOfReconciliationName": "RespSolicitor",
-    "applicant2SolStatementOfReconciliationFirm": "#{orgname2}",
+    "applicant2SolStatementOfReconciliationFirm": "#{orgnames(1)}",
     "applicant2StatementOfReconciliationComments": null
   },
   "event": {
@@ -44,7 +44,7 @@
     "applicant2StatementOfTruth": "Yes",
     "applicant2SolSignStatementOfTruth": "Yes",
     "applicant2SolStatementOfReconciliationName": "RespSolicitor",
-    "applicant2SolStatementOfReconciliationFirm": "#{orgname2}",
+    "applicant2SolStatementOfReconciliationFirm": "#{orgnames(1)}",
     "applicant2StatementOfReconciliationComments": null
   },
   "event_token": "#{event_token}",
