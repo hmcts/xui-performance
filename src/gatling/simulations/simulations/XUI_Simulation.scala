@@ -226,15 +226,31 @@ class XUI_Simulation extends Simulation {
 		.exitBlockOnFail {
 			//feed two rows of data - applicant1's solicitor and applicant2's solicitor
 			feed(UserFeederNFD, 2)
-				.exec(_.set("env", s"${env}")
-							.set("caseType", "NFD")
-							.set("nfdCaseType", "sole")
-							.set("NFDLabelsInitialised", nfdSoleLabelsInitialised) //sets the initialised labels for JSON bodies
-							.set("NFDLabelsPopulated", nfdSoleLabelsPopulated)) //sets the populated labels for JSON bodies
+
+				/*the below code (first 4 lines) is required since Gatling 3.8, as the multi-line feeder above no longer
+				generates individual session variables, but now produces arrays - see https://github.com/gatling/gatling/issues/4226
+				Once set in the session as sequences, the session variables can be referenced:
+				e.g. #{users(0)}, #{users(1)}, etc using the Gatling DSL
+				or session("users").as[Seq[String]].apply(0) without the DSL
+				 */
+				.exec { session =>
+					session.set("users", session("user").as[Array[AnyRef]].toSeq)
+						.set("passwords", session("password").as[Array[AnyRef]].toSeq)
+						.set("orgnames", session("orgname").as[Array[AnyRef]].toSeq)
+						.set("orgrefs", session("orgref").as[Array[AnyRef]].toSeq)
+
+						.set("env", s"${env}")
+						.set("caseType", "NFD")
+						.set("nfdCaseType", "sole")
+						.set("NFDLabelsInitialised", nfdSoleLabelsInitialised) //sets the initialised labels for JSON bodies
+						.set("NFDLabelsPopulated", nfdSoleLabelsPopulated) //sets the populated labels for JSON bodies
+				}
+
 				//Solicitor 1 - Divorce Application
 				.exec(Homepage.XUIHomePage)
 				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
-				.exec(session => session.set("user", session("user1").as[String]).set("password", session("password1").as[String]))
+				.exec(session => session.set("user", session("users").as[Seq[String]].apply(0))
+					.set("password", session("passwords").as[Seq[String]].apply(0)))
 				.exec(Login.XUILogin)
 				.exec(Solicitor_NFD.CreateNFDCase)
 				.exec(Solicitor_NFD.SignAndSubmitSole)
@@ -242,7 +258,8 @@ class XUI_Simulation extends Simulation {
 				//Caseworker - Issue Application
 				.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-issue-application", "bodies/nfd/CWIssueApplication.json"))
 				//set 'user'/'password' to the second one (applicant2's solicitor) for assigning the case and login
-				.exec(session => session.set("user", session("user2").as[String]).set("password", session("password2").as[String]))
+				.exec(session => session.set("user", session("users").as[Seq[String]].apply(1))
+					.set("password", session("passwords").as[Seq[String]].apply(1)))
 				//Update the case in CCD to assign it to the second solicitor
 				.exec(CCDAPI.AssignCase)
 				//Solicitor 2 - Respond to Divorce Application
@@ -255,7 +272,8 @@ class XUI_Simulation extends Simulation {
 				//Solicitor 1 - Apply for Conditional Order
 				.exec(Homepage.XUIHomePage)
 				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
-				.exec(session => session.set("user", session("user1").as[String]).set("password", session("password1").as[String]))
+				.exec(session => session.set("user", session("users").as[Seq[String]].apply(0))
+					.set("password", session("passwords").as[Seq[String]].apply(0)))
 				.exec(Login.XUILogin)
 				.exec(Solicitor_NFD.ApplyForCOSole)
 				.exec(Solicitor_NFD.SubmitCO)
@@ -512,10 +530,9 @@ class XUI_Simulation extends Simulation {
     FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 
-		// NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), //404 error on XUI_NFD_400_005_ViewCase
+		 //NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), //404 error on XUI_NFD_400_005_ViewCase
 		// NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), //401 error on XUI_NFD_325_005_ViewCase
     // PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), //504 error on XUI_PRL_FL401_250_020_CreateRespondentDetailsEvent, 422 error on XUI_PRL_C100_430_015_SubmitAndPayRedirectEvent
-    
 	).protocols(httpProtocol)
 		.assertions(assertions(testType))
 		.maxDuration(75 minutes)
