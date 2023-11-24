@@ -152,7 +152,7 @@ object Common {
 
   val userDetails =
     exec(http("XUI_Common_000_UserDetails")
-      .get("/api/user/details")
+      .get("/api/user/details?refreshRoleAssignments=undefined")
       .headers(Headers.commonHeader)
       .header("accept", "application/json, text/plain, */*"))
 
