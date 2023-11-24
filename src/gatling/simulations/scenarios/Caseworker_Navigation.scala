@@ -159,6 +159,13 @@ object Caseworker_Navigation {
           .header("sec-fetch-site", "none")
           .check(substring("HMCTS Manage cases")))
 
+        //re-injecting the valid xui-webapp cookie, as for an unknown reason, XUI or Gatling changes the cookie value between
+        //these two steps (media viewer and binary download), so it was trying to use an invalid cookie to retrieve
+        //the doc, and throwing an http 401. This is the same as the 401 issue at login. Cause is unknown.
+        .exec(addCookie(Cookie("xui-webapp", "#{xuiWebAppCookie}")
+          .withMaxAge(28800)
+          .withSecure(true)))
+
         .exec(http("XUI_Caseworker_090_010_ViewDocument")
           .get("/documentsv2/#{documentLink}/binary")
           .headers(Headers.commonHeader)
