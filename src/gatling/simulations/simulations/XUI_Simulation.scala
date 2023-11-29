@@ -305,11 +305,11 @@ class XUI_Simulation extends Simulation {
 					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-grant-final-order", "bodies/nfd/CWGrantFinalOrder.json"))
 		}
 
-		.exec {
+		/*.exec {
 			session =>
 				println(session)
 				session
-		}
+		}*/
 
 	/*===============================================================================================
 	* XUI Solicitor NFD Scenario (Joint Application)
@@ -425,11 +425,11 @@ class XUI_Simulation extends Simulation {
 					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-grant-final-order", "bodies/nfd/CWGrantFinalOrder.json"))
 		}
 
-		.exec {
+		/*.exec {
 			session =>
 				println(session)
 				session
-		}
+		}*/
 
 	/*===============================================================================================
 	* XUI Solicitor Financial Remedy (FR) Scenario
