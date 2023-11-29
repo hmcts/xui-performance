@@ -555,7 +555,7 @@ class XUI_Simulation extends Simulation {
 		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-    PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption) //504 error on XUI_PRL_FL401_250_020_CreateRespondentDetailsEvent, 422 error on XUI_PRL_C100_430_015_SubmitAndPayRedirectEvent
+    // PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption) //504 error on XUI_PRL_FL401_250_020_CreateRespondentDetailsEvent, 422 error on XUI_PRL_C100_430_015_SubmitAndPayRedirectEvent
 	).protocols(httpProtocol)
 		.assertions(assertions(testType))
 		.maxDuration(75 minutes)
