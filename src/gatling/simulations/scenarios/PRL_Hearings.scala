@@ -11,13 +11,13 @@ import scala.util.Random
 * Manage Civil Hearings
 ======================================================================================*/
 
-object Civil_Hearings {
+object PRL_Hearings {
 
   val BaseURL = Environment.baseURL
 
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
-  val UserFeederCivilHearingCases = csv("UserDataCivilHearingsCases.csv").circular
+  val UserFeederPRLHearingCases = csv("UserDataPRLHearingsCases.csv").circular
   val UserFeederCivilHearingRequestCases = csv("CivilHearingDetailsRequest.csv").circular
   val UserFeederHearingUploadCases = csv("UserDataHearingsUploadCases.csv").circular
   val UserFeederHearingCasesLink = csv("UserDataHearingsCasesLinked.csv").circular
@@ -30,7 +30,7 @@ object Civil_Hearings {
   val ViewAllHearings =
 
 
-  feed(UserFeederCivilHearingCases)
+  feed(UserFeederPRLHearingCases)
 
     /*======================================================================================
     * Select the Case you want to view all hearings
@@ -55,27 +55,27 @@ object Civil_Hearings {
   val RequestHearing =
 
     /*======================================================================================
-    * Request a hearing - Civil
+    * Request a hearing - PRL
     ======================================================================================*/
 
 
          feed(UserFeederCivilHearingRequestCases)
 
-    .group("Civil_RequestHearing_070_ClickRequestHearing") {
+    .group("PRL_RequestHearing_070_ClickRequestHearing") {
 
       exec(Common.isAuthenticated)
       
-      .exec(http("Civil_RequestHearing_070_005_ClickRequestHearing")
-        .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingType&serviceId=AAA7&isChildRequired=N")
+      .exec(http("PRL_RequestHearing_070_005_ClickRequestHearing")
+        .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=caseType&serviceId=ABA5&isChildRequired=Y")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
-        .check(substring("Application Hearings")))
+        .check(substring("PRIVATE LAW")))
 
-      .exec(http("Civil_RequestHearing_070_010_ClickRequestHearing")
-        .get(BaseURL + "/api/prd/location/getLocationById?epimms_id=739514")
+      .exec(http("PRL_RequestHearing_070_010_ClickRequestHearing")
+        .get(BaseURL + "/prd/location/getLocationById?epimms_id=29656")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
-        .check(substring("court_address")))
+        .check(substring("court_name")))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -85,24 +85,24 @@ object Civil_Hearings {
     * Hearing Requirements - Continue
     ======================================================================================*/
 
-    .group("Civil_RequestHearing_080_Requirements") {
+    .group("PRL_RequestHearing_080_Requirements") {
 
-      exec(http("Civil_RequestHearing_080_005_Requirements")
-        .post(BaseURL + "/api/hearings/loadServiceHearingValues?jurisdictionId=CIVIL")
+      exec(http("PRL_RequestHearing_080_005_Requirements")
+        .post(BaseURL + "/api/hearings/loadServiceHearingValues?jurisdictionId=PRIVATELAW")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
-        .body(ElFileBody("bodies/hearings/civil/HearingsRequirements.json"))
+        .body(ElFileBody("bodies/hearings/prl/HearingsRequirements.json"))
         .check(substring("hearingLocations")))
 
-      .exec(http("Civil_RequestHearing_080_010_Requirements")
-        .get(BaseURL + "/api/prd/caseFlag/getCaseFlagRefData?serviceId=AAA7")
+      .exec(http("PRL_RequestHearing_080_010_Requirements")
+        .get(BaseURL + "/api/prd/caseFlag/getCaseFlagRefData?serviceId=ABA5")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
       //  .body(ElFileBody("bodies/hearings/HearingsRequirements.json"))
         .check(substring("childFlags")))
   
-        .exec(http("Civil_RequestHearing_080_010_Requirements")
-          .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=Facilities&serviceId=AAA7&isChildRequired=N")
+        .exec(http("PRL_RequestHearing_080_010_Requirements")
+          .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=Facilities&serviceId=ABA5&isChildRequired=N")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
           //  .body(ElFileBody("bodies/hearings/HearingsRequirements.json"))
@@ -120,10 +120,10 @@ object Civil_Hearings {
     What stage is this hearing at? - Substantive
     ======================================================================================*/
 
-    .group("Civil_RequestHearing_100_HearingStage") {
+    .group("PRL_RequestHearing_100_HearingStage") {
 
-      exec(http("Civil_RequestHearing_100_005_HearingStage")
-        .get("/api/prd/lov/getLovRefData?categoryId=HearingChannel&serviceId=AAA7&isChildRequired=N")
+      exec(http("PRL_RequestHearing_100_005_HearingStage")
+        .get("/api/prd/lov/getLovRefData?categoryId=HearingChannel&serviceId=ABA5&isChildRequired=N")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .check(substring("HearingChannel")))
@@ -136,10 +136,10 @@ object Civil_Hearings {
     How will each participant attend the hearing? - In Person, 1
     ======================================================================================*/
 
-      .group("Civil_RequestHearing_110_ParticipantAttend") {
+      .group("PRL_RequestHearing_110_ParticipantAttend") {
 
-        exec(http("Civil_RequestHearing_110_005_ParticipantAttend")
-          .get("/api/prd/location/getLocationById?epimms_id=739514")
+        exec(http("PRL_RequestHearing_110_005_ParticipantAttend")
+          .get("/api/prd/location/getLocationById?epimms_id=29656")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
           .check(substring("site_name")))
@@ -150,10 +150,10 @@ object Civil_Hearings {
       /*======================================================================================
 Hearing Venue Details
 ======================================================================================*/
-           .group("Civil_RequestHearing_110_ParticipantAttend") {
+           .group("PRL_RequestHearing_110_ParticipantAttend") {
     
-             exec(http("Civil_RequestHearing_110_005_ParticipantAttend")
-               .get("/api/prd/lov/getLovRefData?categoryId=JudgeType&serviceId=AAA7&isChildRequired=N")
+             exec(http("PRL_RequestHearing_110_005_ParticipantAttend")
+               .get("/api/prd/lov/getLovRefData?categoryId=JudgeType&serviceId=ABA5&isChildRequired=N")
                .headers(Headers.commonHeader)
                .header("accept", "application/json, text/plain, */*")
                .check(substring("category_key")))
@@ -187,13 +187,13 @@ Hearing Venue Details
     ======================================================================================*/
 
   
-      group("Civil_RequestHearing_150_HearingTime") {
+      group("PRL_RequestHearing_150_HearingTime") {
 
-        exec(http("Civil_RequestHearing_150_005_HearingTime")
-          .get("/api/prd/lov/getLovRefData?categoryId=HearingSubChannel&serviceId=AAA7&isChildRequired=N")
+        exec(http("PRL_RequestHearing_150_005_HearingTime")
+          .get("/api/prd/lov/getLovRefData?categoryId=HearingPriority&serviceId=ABA5&isChildRequired=N")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
-          .formParam("jurisdictionId", "CIVIL")
+        //  .formParam("jurisdictionId", "CIVIL")
           .check(status.is(200)))
 
       }
@@ -203,22 +203,22 @@ Hearing Venue Details
     Enter any additional instructions for the hearing
     ======================================================================================*/
 
-    .group("Civil_RequestHearing_160_AdditionalInstructions") {
+    .group("PRL_RequestHearing_160_AdditionalInstructions") {
 
-      exec(http("Civil_RequestHearing_160_005_AdditionalInstructions")
-        .get("/api/prd/caseFlag/getCaseFlagRefData?serviceId=AAA7")
+      exec(http("PRL_RequestHearing_160_005_AdditionalInstructions")
+        .get("/api/prd/caseFlag/getCaseFlagRefData?serviceId=ABA5")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .check(substring("hearingRelevant")))
 
-      .exec(http("Civil_RequestHearing_160_010_AdditionalInstructions")
-        .get("/api/prd/lov/getLovRefData?categoryId=HearingChannel&serviceId=AAA7&isChildRequired=N")
+      .exec(http("PRL_RequestHearing_160_010_AdditionalInstructions")
+        .get("/api/prd/lov/getLovRefData?categoryId=HearingChannel&serviceId=ABA5&isChildRequired=N")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .check(substring("HearingChannel")))
 
-      .exec(http("Civil_RequestHearing_160_015_AdditionalInstructions")
-        .get("/api/prd/location/getLocationById?epimms_id=739514")
+      .exec(http("PRL_RequestHearing_160_015_AdditionalInstructions")
+        .get("/api/prd/location/getLocationById?epimms_id=29656")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .check(substring("court_address")))
@@ -230,20 +230,20 @@ Hearing Venue Details
     Check your answers
     ======================================================================================*/
 
-    .group("Civil_RequestHearing_170_SubmitRequest") {
+    .group("PRL_RequestHearing_170_SubmitRequest") {
       
-        exec(http("Civil_RequestHearing_170_005_SubmitRequest")
+        exec(http("PRL_RequestHearing_170_005_SubmitRequest")
           .post("/api/hearings/submitHearingRequest")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
-          .body(ElFileBody("bodies/hearings/civil/CivilHearingsRequestSubmit.json"))
+          .body(ElFileBody("bodies/hearings/prl/PRLHearingsRequestSubmit.json"))
           .check(jsonPath("$.hearingRequestID").saveAs("hearingRequest"))
         )
       }
 
 
       .exec { session =>
-        val fw = new BufferedWriter(new FileWriter("CivilHearingId.csv", true))
+        val fw = new BufferedWriter(new FileWriter("PRLHearingId.csv", true))
         try {
           fw.write(session("caseId").as[String] + "," + session("hearingRequest").as[String] + "\r\n")
         } finally fw.close()
@@ -262,9 +262,9 @@ Hearing Venue Details
 
     feed(UserFeederCivilHearingId)
 
-    .group("Civil_GetHearing_180_GetHearing") {
+    .group("PRL_GetHearing_180_GetHearing") {
 
-      exec(http("Civil_GetHearing_180_005_GetHearing")
+      exec(http("PRL_GetHearing_180_005_GetHearing")
         .get("/api/hearings/getHearing?hearingId=${hearingRequest}")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -286,9 +286,9 @@ Hearing Venue Details
 
     feed(UserFeederCivilHearingIdAmend)
 
-      .group("Civil_GetHearing_180_GetHearing") {
+      .group("PRL_RequestHearing_180_GetHearing") {
 
-        exec(http("Civil_GetHearing_180_005_GetHearing")
+        exec(http("PRL_RequestHearing_180_005_GetHearing")
           .get("/api/hearings/getHearing?hearingId=${hearingRequest}")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
@@ -306,9 +306,9 @@ Hearing Venue Details
     * Change 'How many people will attend the hearing in person?'
     ======================================================================================*/
 
-    .group("XUI_UpdateHearing_190_Update") {
+    .group("PRL_UpdateHearing_190_Update") {
 
-      exec(http("XUI_UpdateHearing_190_005_UpdateHearing")
+      exec(http("PRL_UpdateHearing_190_005_UpdateHearing")
         .get("/api/prd/lov/getLovRefData?category=HearingChannel&service=BBA3&isChildRequired=N")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -323,7 +323,7 @@ Hearing Venue Details
     ======================================================================================*/
 
     .group("XUI_UpdateHearing_200_SubmitUpdate") {
-      exec(http("XUI_UpdateHearing_200_005_SubmitUpdate")
+      exec(http("PRL_UpdateHearing_200_005_SubmitUpdate")
         .put("/api/hearings/updateHearingRequest?hearingId=${hearingRequest}")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -340,7 +340,7 @@ Hearing Venue Details
     * Click on 'Cancel'
     ======================================================================================*/
 
-    group("Civil_CancelHearing_210_CancelHearing") {
+    group("PRL_CancelHearing_210_CancelHearing") {
 
       feed(UserFeederCivilHearingIdCancels)
 
@@ -354,13 +354,13 @@ Hearing Venue Details
     * Click on 'Withdrawn' and then submmit
     ======================================================================================*/
 
-    .group("XUI_CancelHearing_220_CancelSubmit") {
+    .group("PRL_CancelHearing_220_CancelSubmit") {
 
       exec(Common.isAuthenticated)
 
       .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${hearingRequest}%2Fhearings"))
 
-      .exec(http("XUI_CancelHearing_220_005_SubmitCancel")
+      .exec(http("PRL_CancelHearing_220_005_SubmitCancel")
         .delete("/api/hearings/cancelHearings?hearingId=${hearingRequest}")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -368,7 +368,6 @@ Hearing Venue Details
         .formParam("jurisdictionId", "SSCS")
         .body(ElFileBody("bodies/hearings/civil/CivilHearingsCancel.json"))
         .check(substring("CANCELLATION_REQUESTED")))
-
     }
     .pause(MinThinkTime, MaxThinkTime)
 }
