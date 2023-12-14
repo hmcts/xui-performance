@@ -26,10 +26,12 @@ class XUI_Simulation extends Simulation {
 	val UserFeederBails = csv("UserDataBails.csv").circular
 	val UserFeederBailsHO = csv("UserDataBailsHO.csv").circular
 	val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
+	val UserFeederCivilHearing = csv("UserDataCivilHearings.csv").circular
 	val UserFeederHearing = csv("UserDataHearings.csv").circular
-	val UserFeederHearingCases = csv("UserDataHearingsCases.csv").circular
+	val UserFeederCivilHearingCases = csv("UserDataCivilHearingsCases.csv").circular
+	val UserFeederPRLHearing = csv("UserDataPRLHearings.csv").circular
+	val UserFeederPRLHearingCases = csv("UserDataPRLHearingsCases.csv").circular
 	//	val UserFeederHearingDetails = csv("HearingDetails.csv").circular
-
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
 	val nfdSoleLabelsPopulated = Source.fromResource("bodies/nfd/labels/soleLabelsPopulated.txt").mkString
@@ -301,13 +303,13 @@ class XUI_Simulation extends Simulation {
 	val CivilHearingsScenario = scenario("***** Civil Hearing Management *****")
 		//	.exitBlockOnFail {
 		.repeat(1) {
-			feed(UserFeederHearing)
+			feed(UserFeederCivilHearing)
 				.exec(_.set("env", s"${env}")
 					.set("caseType", "Benefit"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.repeat(1) {
-					feed(UserFeederHearingCases)
+					feed(UserFeederCivilHearingCases)
 						.exec(Civil_Hearings.ViewAllHearings)
 								.exec(Civil_Hearings.RequestHearing)
 							.exec(Civil_Hearings.UpdateHearing)
@@ -317,7 +319,28 @@ class XUI_Simulation extends Simulation {
 		}
 	
 	
+	/*===============================================================================================
+* XUI PRL Hearing Management Scenario
+ ===============================================================================================*/
+	// in the below scenario we may need conditional statements as per the requisite
 	
+	val PRLHearingsScenario = scenario("***** PRL Hearing Management *****")
+		//	.exitBlockOnFail {
+		.repeat(1) {
+			feed(UserFeederPRLHearing)
+				.exec(_.set("env", s"${env}")
+					.set("caseType", "Benefit"))
+				.exec(Homepage.XUIHomePage)
+				.exec(Login.XUILogin)
+				.repeat(1) {
+					feed(UserFeederPRLHearingCases)
+						.exec(PRL_Hearings.ViewAllHearings)
+						.exec(PRL_Hearings.RequestHearing)
+						.exec(PRL_Hearings.UpdateHearing)
+						.exec(PRL_Hearings.CancelHearing)
+				}
+				.exec(Logout.XUILogout)
+		}
 	
 	/*===============================================================================================
 	* XUI Solicitor Divorce Scenario
