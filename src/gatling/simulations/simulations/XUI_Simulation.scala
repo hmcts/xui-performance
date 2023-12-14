@@ -292,9 +292,33 @@ class XUI_Simulation extends Simulation {
 		}
 
 		 */
-
-
-
+	
+	/*===============================================================================================
+  * XUI Civil Hearing Management Scenario
+   ===============================================================================================*/
+	// in the below scenario we may need conditional statements as per the requisite
+	
+	val CivilHearingsScenario = scenario("***** Civil Hearing Management *****")
+		//	.exitBlockOnFail {
+		.repeat(1) {
+			feed(UserFeederHearing)
+				.exec(_.set("env", s"${env}")
+					.set("caseType", "Benefit"))
+				.exec(Homepage.XUIHomePage)
+				.exec(Login.XUILogin)
+				.repeat(1) {
+					feed(UserFeederHearingCases)
+						.exec(Civil_Hearings.ViewAllHearings)
+								.exec(Civil_Hearings.RequestHearing)
+							.exec(Civil_Hearings.UpdateHearing)
+						.exec(Civil_Hearings.CancelHearing)
+				}
+				.exec(Logout.XUILogout)
+		}
+	
+	
+	
+	
 	/*===============================================================================================
 	* XUI Solicitor Divorce Scenario
 	 ===============================================================================================*/

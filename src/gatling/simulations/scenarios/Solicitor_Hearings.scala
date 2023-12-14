@@ -20,9 +20,9 @@ object Solicitor_Hearings {
   val UserFeederHearingRequestCases = csv("HearingDetailsRequest.csv").circular
   val UserFeederHearingUploadCases = csv("UserDataHearingsUploadCases.csv").circular
   val UserFeederHearingCasesLink = csv("UserDataHearingsCasesLinked.csv").circular
-  val UserFeederHearingId = csv("HearingId.csv").circular
+  val UserFeederHearingId = csv("CivilHearingId.csv").circular
   val UserFeederHearingIdCancels = csv("HearingIdCancels.csv").circular
-  val UserFeederHearingIdAmend = csv("HearingIdAmend.csv").circular
+  val UserFeederHearingIdAmend = csv("CivilHearingIdAmend.csv").circular
   val randomFeeder = Iterator.continually(Map("hearings-percentage" -> Random.nextInt(100)))
   val hearingPercentage = 90
 
@@ -570,7 +570,7 @@ Hearing Venue Details
 
 
       .exec { session =>
-        val fw = new BufferedWriter(new FileWriter("HearingId.csv", true))
+        val fw = new BufferedWriter(new FileWriter("CivilHearingId.csv", true))
         try {
           fw.write(session("caseId").as[String] + "," + session("hearingRequest").as[String] + "\r\n")
         } finally fw.close()
