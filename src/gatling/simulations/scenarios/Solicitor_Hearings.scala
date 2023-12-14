@@ -556,7 +556,7 @@ Hearing Venue Details
           .post("/api/hearings/submitHearingRequest")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
-          .body(ElFileBody("bodies/hearings/HearingsRequestSubmit.json"))
+          .body(ElFileBody("bodies/hearings/PRLHearingsRequestSubmit.json"))
           .check(jsonPath("$.hearingRequestID").saveAs("hearingRequest")))
 
       }{
