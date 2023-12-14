@@ -18,12 +18,12 @@ object PRL_Hearings {
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
   val UserFeederPRLHearingCases = csv("UserDataPRLHearingsCases.csv").circular
-  val UserFeederCivilHearingRequestCases = csv("CivilHearingDetailsRequest.csv").circular
+  val UserFeederPRLHearingRequestCases = csv("CivilHearingDetailsRequest.csv").circular
   val UserFeederHearingUploadCases = csv("UserDataHearingsUploadCases.csv").circular
   val UserFeederHearingCasesLink = csv("UserDataHearingsCasesLinked.csv").circular
-  val UserFeederCivilHearingId = csv("CivilHearingId.csv").circular
-  val UserFeederCivilHearingIdCancels = csv("CivilHearingIdCancels.csv").circular
-  val UserFeederCivilHearingIdAmend = csv("CivilHearingIdAmend.csv").circular
+  val UserFeederPRLHearingId = csv("CivilHearingId.csv").circular
+  val UserFeederPRLHearingIdCancels = csv("CivilHearingIdCancels.csv").circular
+  val UserFeederPRLHearingIdAmend = csv("CivilHearingIdAmend.csv").circular
   val randomFeeder = Iterator.continually(Map("hearings-percentage" -> Random.nextInt(100)))
   val hearingPercentage = 90
 
@@ -59,9 +59,9 @@ object PRL_Hearings {
     ======================================================================================*/
 
 
-         feed(UserFeederCivilHearingRequestCases)
+    
 
-    .group("PRL_RequestHearing_070_ClickRequestHearing") {
+    group("PRL_RequestHearing_070_ClickRequestHearing") {
 
       exec(Common.isAuthenticated)
       
@@ -260,7 +260,7 @@ Hearing Venue Details
     * Get a singular case
     ======================================================================================*/
 
-    feed(UserFeederCivilHearingId)
+    feed(UserFeederPRLHearingId)
 
     .group("PRL_GetHearing_180_GetHearing") {
 
@@ -284,7 +284,7 @@ Hearing Venue Details
     * Get a singular case
     ======================================================================================*/
 
-    feed(UserFeederCivilHearingIdAmend)
+    feed(UserFeederPRLHearingIdAmend)
 
       .group("PRL_RequestHearing_180_GetHearing") {
 
@@ -342,7 +342,7 @@ Hearing Venue Details
 
     group("PRL_CancelHearing_210_CancelHearing") {
 
-      feed(UserFeederCivilHearingIdCancels)
+      feed(UserFeederPRLHearingIdCancels)
 
       .exec(Common.isAuthenticated)
       
