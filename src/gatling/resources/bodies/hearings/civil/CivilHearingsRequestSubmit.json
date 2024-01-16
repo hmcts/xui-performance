@@ -1,7 +1,7 @@
 {
   "hearingDetails": {
     "duration": 45,
-    "hearingType": "AAA7-DIS",
+    "hearingType": "AAA7-APP",
     "hearingLocations": [
       {
         "locationType": "court",
@@ -16,16 +16,17 @@
     "panelRequirements": {
       "roleType": [
         "24",
-        "45"
+        "30",
+        "90001"
       ],
       "panelPreferences": []
     },
     "autolistFlag": false,
     "hearingPriorityType": "Standard",
-    "numberOfPhysicalAttendees": 6,
+    "numberOfPhysicalAttendees": 2,
     "hearingInWelshFlag": false,
     "facilitiesRequired": [],
-    "listingComments": "asasasasasas",
+    "listingComments": "ggfgfgfgfgfgfgfgfgfgfgfgfgfgf",
     "hearingRequester": "",
     "leadJudgeContractType": "",
     "amendReasonCodes": null,
@@ -36,12 +37,12 @@
   },
   "caseDetails": {
     "hmctsServiceCode": "AAA7",
-    "caseRef": "1702301297006521",
+    "caseRef": "1705054346261327",
     "requestTimeStamp": null,
     "hearingID": null,
-    "caseDeepLink": "https://manage-case.perftest.platform.hmcts.net/cases/case-details/1702301297006521",
-    "hmctsInternalCaseName": "dVqSj companyName v dVqSj DefcompanyName",
-    "publicCaseName": "'dVqSj companyName' v 'dVqSj DefcompanyName'",
+    "caseDeepLink": "https://manage-case.perftest.platform.hmcts.net/cases/case-details/1705054346261327",
+    "hmctsInternalCaseName": "zInUJ companyName v zInUJ DefcompanyName",
+    "publicCaseName": "'zInUJ companyName' v 'zInUJ DefcompanyName'",
     "caseAdditionalSecurityFlag": false,
     "caseInterpreterRequiredFlag": false,
     "caseCategories": [
@@ -57,17 +58,17 @@
     ],
     "caseManagementLocationCode": "739514",
     "caserestrictedFlag": false,
-    "caseSLAStartDate": "2023-12-11",
+    "caseSLAStartDate": "2024-01-12",
     "externalCaseReference": null
   },
   "partyDetails": [
     {
-      "partyID": "bcb96f3d-3942-4e",
+      "partyID": "82d91379-7486-45",
       "partyType": "ORG",
-      "partyName": "dVqSj companyName",
+      "partyName": "zInUJ companyName",
       "partyRole": "CLAI",
       "organisationDetails": {
-        "name": "dVqSj companyName",
+        "name": "zInUJ companyName",
         "organisationType": "ORG",
         "cftOrganisationID": null
       },
@@ -78,10 +79,10 @@
     {
       "partyID": "TACAJW6",
       "partyType": "ORG",
-      "partyName": "",
+      "partyName": "Civil Damages Claims - Organisation 1",
       "partyRole": "LGRP",
       "organisationDetails": {
-        "name": "",
+        "name": "Civil Damages Claims - Organisation 1",
         "organisationType": "ORG",
         "cftOrganisationID": "TACAJW6"
       },
@@ -90,12 +91,12 @@
       "hearingSubChannel": null
     },
     {
-      "partyID": "82fc42df-5dff-40",
+      "partyID": "691b7154-ea38-43",
       "partyType": "ORG",
-      "partyName": "dVqSj DefcompanyName",
+      "partyName": "fRkTj DefcompanyName",
       "partyRole": "DEFE",
       "organisationDetails": {
-        "name": "dVqSj DefcompanyName",
+        "name": "fRkTj DefcompanyName",
         "organisationType": "ORG",
         "cftOrganisationID": null
       },
