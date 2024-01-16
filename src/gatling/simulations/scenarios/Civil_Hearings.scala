@@ -30,21 +30,21 @@ object Civil_Hearings {
   val ViewAllHearings =
 
 
-  feed(UserFeederCivilHearingCases)
+ // feed(UserFeederCivilHearingCases)
 
     /*======================================================================================
     * Select the Case you want to view all hearings
     ======================================================================================*/
 
-    .group("XUI_GetAllHearings_030_ViewAllHearings") {
+    group("XUI_GetAllHearings_030_ViewAllHearings") {
   
-      exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
+     // exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
 
-      .exec(http("XUI_GetAllHearings_030_005_ViewAllHearings")
-        .get("/api/hearings/getHearings?caseId=${caseId}")
+      exec(http("XUI_GetAllHearings_030_005_ViewAllHearings")
+        .get("/api/hearings/getHearings?caseId=#{caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
-        .header("accept-language", "en-GB,en-US;q=0.9,en;q=0.8")
+       // .header("X-Xsrf-Token", "#{XSRFToken}")
         .check(jsonPath("$.caseRef").is("${caseId}"))
         .check(substring("caseHearings")))
     }
@@ -59,22 +59,29 @@ object Civil_Hearings {
     ======================================================================================*/
 
 
-         feed(UserFeederCivilHearingRequestCases)
+     //    feed(UserFeederCivilHearingRequestCases)
 
-    .group("Civil_RequestHearing_070_ClickRequestHearing") {
+    group("Civil_RequestHearing_070_ClickRequestHearing") {
 
       exec(Common.isAuthenticated)
       
       .exec(http("Civil_RequestHearing_070_005_ClickRequestHearing")
-        .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingType&serviceId=AAA7&isChildRequired=N")
+        .get("/api/prd/lov/getLovRefData?categoryId=HearingType&serviceId=AAA7&isChildRequired=N")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
-        .check(substring("Application Hearings")))
+        .header("authority", "manage-case.perftest.platform.hmcts.net")
+        .header("path", "/api/prd/lov/getLovRefData?categoryId=caseType&serviceId=AAA7&isChildRequired=Y")
+       // .header("X-Xsrf-Token", "#{XSRFToken}")
+        .header("accept", "application/json, text/plain, */*")
+        
+        .check(substring("category_key")))
 
       .exec(http("Civil_RequestHearing_070_010_ClickRequestHearing")
         .get(BaseURL + "/api/prd/location/getLocationById?epimms_id=739514")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
+        .header("authority", "manage-case.perftest.platform.hmcts.net")
+        .header("path", "/api/prd/location/getLocationById?epimms_id=739514")
         .check(substring("court_address")))
 
     }
@@ -82,7 +89,7 @@ object Civil_Hearings {
 
 
     /*======================================================================================
-    * Hearing Requirements - Continue
+    * Hearing Requirements - Request Hearing -Continue
     ======================================================================================*/
 
     .group("Civil_RequestHearing_080_Requirements") {
@@ -117,7 +124,7 @@ object Civil_Hearings {
     ======================================================================================*/
 
     /*======================================================================================
-    What stage is this hearing at? - Substantive
+    What stage is this hearing at? - Application Hearings
     ======================================================================================*/
 
     .group("Civil_RequestHearing_100_HearingStage") {
@@ -133,7 +140,7 @@ object Civil_Hearings {
 
 
     /*======================================================================================
-    How will each participant attend the hearing? - In Person, 1
+    How will each participant attend the hearing? - Prticipant attendance
     ======================================================================================*/
 
       .group("Civil_RequestHearing_110_ParticipantAttend") {
@@ -148,11 +155,11 @@ object Civil_Hearings {
       .pause(MinThinkTime, MaxThinkTime)
 
       /*======================================================================================
-Hearing Venue Details
+what are the hearing venue details
 ======================================================================================*/
-           .group("Civil_RequestHearing_110_ParticipantAttend") {
+           .group("Civil_RequestHearing_110_HearingVenueDetails") {
     
-             exec(http("Civil_RequestHearing_110_005_ParticipantAttend")
+             exec(http("Civil_RequestHearing_110_005_HearingVenueDetails")
                .get("/api/prd/lov/getLovRefData?categoryId=JudgeType&serviceId=AAA7&isChildRequired=N")
                .headers(Headers.commonHeader)
                .header("accept", "application/json, text/plain, */*")

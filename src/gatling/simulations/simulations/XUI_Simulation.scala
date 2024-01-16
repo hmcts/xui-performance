@@ -14,7 +14,7 @@ import scala.concurrent.duration._
 import scala.util.Random
 
 class XUI_Simulation extends Simulation {
-
+	val loginFeeder = csv("login.csv").circular
 	val CaseworkerUserFeeder = csv("UserDataCaseworkers.csv").circular
 	val UserFeederDivorce = csv("UserDataDivorce.csv").circular
 	val UserFeederFPL = csv("UserDataFPL.csv").circular
@@ -26,13 +26,11 @@ class XUI_Simulation extends Simulation {
 	val UserFeederBails = csv("UserDataBails.csv").circular
 	val UserFeederBailsHO = csv("UserDataBailsHO.csv").circular
 	val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
-	val UserFeederCivilHearing = csv("UserDataCivilHearings.csv").circular
+	val UserFeederCivilHearing = csv("UserDataCivilHearingsCases.csv").circular
 	val UserFeederHearing = csv("UserDataHearings.csv").circular
 	val UserFeederCivilHearingCases = csv("UserDataCivilHearingsCases.csv").circular
 	val UserFeederPRLHearing = csv("UserDataPRLHearings.csv").circular
 	val UserFeederPRLHearingCases = csv("UserDataPRLHearingsCases.csv").circular
-	//	val UserFeederHearingDetails = csv("HearingDetails.csv").circular
-	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
 	val nfdSoleLabelsPopulated = Source.fromResource("bodies/nfd/labels/soleLabelsPopulated.txt").mkString
 	val nfdJointLabelsInitialised = Source.fromResource("bodies/nfd/labels/jointLabelsInitialised.txt").mkString
@@ -301,22 +299,24 @@ class XUI_Simulation extends Simulation {
 	// in the below scenario we may need conditional statements as per the requisite
 	
 	val CivilHearingsScenario = scenario("***** Civil Hearing Management *****")
-		//	.exitBlockOnFail {
-		.repeat(1) {
-			feed(UserFeederCivilHearing)
-				.exec(_.set("env", s"${env}")
-					.set("caseType", "Benefit"))
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.repeat(1) {
-					feed(UserFeederCivilHearingCases)
-						.exec(Civil_Hearings.ViewAllHearings)
+			.exitBlockOnFail {
+				
+				repeat(1) {
+					exec(_.set("env", s"${env}")
+						.set("caseType", "Civil hearings"))
+						.feed(loginFeeder)
+						.exec(Homepage.XUIHomePage)
+						.exec(Login.LoginAsJudge)
+						.repeat(1) {
+							feed(UserFeederCivilHearingCases)
+								//	.exec(Civil_Hearings.ViewAllHearings)
 								.exec(Civil_Hearings.RequestHearing)
-							.exec(Civil_Hearings.UpdateHearing)
-						.exec(Civil_Hearings.CancelHearing)
+							/*	.exec(Civil_Hearings.UpdateHearing)
+						.exec(Civil_Hearings.CancelHearing)*/
+						}
+					//	.exec(Logout.XUILogout)
 				}
-				.exec(Logout.XUILogout)
-		}
+			}
 	
 	
 	/*===============================================================================================
@@ -596,7 +596,7 @@ class XUI_Simulation extends Simulation {
 //		.assertions(assertions(testType))
 //		.maxDuration(60 minutes)
 
-	setUp(HearingsScenario.inject(rampUsers(10).during(200)))
+	setUp(CivilHearingsScenario.inject(rampUsers(1).during(2)))
 	// (RUDH.inject(rampUsers(250).during(3200))))
 	   .protocols(httpProtocol)
 		.maxDuration(20000000)
