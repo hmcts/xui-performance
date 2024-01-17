@@ -21,10 +21,19 @@ object Common {
   val patternMonth = DateTimeFormatter.ofPattern("MM")
   val patternYear = DateTimeFormatter.ofPattern("yyyy")
   val patternReference = DateTimeFormatter.ofPattern("d MMM yyyy")
+  val timestampformatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
 
   def randomString(length: Int) = {
     rnd.alphanumeric.filter(_.isLetter).take(length).mkString
   }
+  
+  /*
+  added by Vijay for time stamp
+   */
+  def CivilHearingUpdateTimestamp () = {
+    timestampformatter.format(now)
+  }
+  
 
   def randomNumber(length: Int) = {
     rnd.alphanumeric.filter(_.isDigit).take(length).mkString

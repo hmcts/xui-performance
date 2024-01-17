@@ -299,20 +299,23 @@ class XUI_Simulation extends Simulation {
 	// in the below scenario we may need conditional statements as per the requisite
 	
 	val CivilHearingsScenario = scenario("***** Civil Hearing Management *****")
+	
+	
 			.exitBlockOnFail {
 				
 				repeat(1) {
 					exec(_.set("env", s"${env}")
-						.set("caseType", "Civil hearings"))
+						.set("caseType", "Civil hearings")
+					)
 						.feed(loginFeeder)
 						.exec(Homepage.XUIHomePage)
 						.exec(Login.LoginAsJudge)
 						.repeat(1) {
 							feed(UserFeederCivilHearingCases)
 								//	.exec(Civil_Hearings.ViewAllHearings)
-								.exec(Civil_Hearings.RequestHearing)
-							/*	.exec(Civil_Hearings.UpdateHearing)
-						.exec(Civil_Hearings.CancelHearing)*/
+							//	.exec(Civil_Hearings.RequestHearing)
+								.exec(Civil_Hearings.UpdateHearing)
+					//	.exec(Civil_Hearings.CancelHearing)
 						}
 					//	.exec(Logout.XUILogout)
 				}
