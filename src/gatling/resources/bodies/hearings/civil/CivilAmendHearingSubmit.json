@@ -1,28 +1,32 @@
 {
   "requestDetails": {
     "status": "AWAITING_LISTING",
-    "timestamp": "2022-08-01T13:08:53.179974",
-    "versionNumber": "${versionNumber}",
-    "hearingRequestID": "${hearingRequest}"
+    "timestamp": "2024-01-17T12:18:00.750181",
+    "versionNumber": 1,
+    "hearingRequestID": "#{updateHearingRequestId}"
   },
   "hearingDetails": {
-    "hearingType": "BBA3-SUB",
-    "hearingWindow": {
-      "dateRangeStart": "2022-10-18"
-    },
-    "duration": 15,
+    "listingAutoChangeReasonCode": "user-added-comments",
+    "hearingType": "AAA7-APP",
+    "hearingWindow": null,
+    "duration": 45,
     "hearingPriorityType": "Standard",
-    "numberOfPhysicalAttendees": 1,
+    "numberOfPhysicalAttendees": 3,
     "hearingInWelshFlag": false,
     "hearingLocations": [
       {
         "locationType": "court",
-        "locationId": "372653"
+        "locationId": "739514"
       }
     ],
+    "listingComments": "ggfgfgfgfgfgfgfgfgfgfgfgfgfgf",
     "privateHearingRequiredFlag": false,
     "panelRequirements": {
-      "roleType": [],
+      "roleType": [
+        "24",
+        "30",
+        "90001"
+      ],
       "authorisationTypes": [],
       "authorisationSubType": [],
       "panelPreferences": [],
@@ -32,53 +36,94 @@
     "hearingChannels": [
       "INTER"
     ],
-    "autolistFlag": true,
+    "autolistFlag": false,
     "amendReasonCodes": [
-      "partyreq"
+      "adminreq"
     ]
   },
   "caseDetails": {
-    "hmctsServiceCode": "BBA3",
-    "caseRef": "${caseId}",
-    "caseDeepLink": "https://manage-case.demo.platform.hmcts.net/cases/case-details/${caseId}",
-    "hmctsInternalCaseName": "HMCPerformance Tester",
-    "publicCaseName": "HMCPerformance Tester",
+    "hmctsServiceCode": "AAA7",
+    "caseRef": "#{caseId}",
+    "caseDeepLink": "#{caseDeepLink}",
+    "hmctsInternalCaseName": "#{internalCaseName}",
+    "publicCaseName": "#{publicCaseName}",
     "caseAdditionalSecurityFlag": false,
     "caseInterpreterRequiredFlag": false,
     "caseCategories": [
       {
         "categoryType": "caseType",
-        "categoryValue": "BBA3-002"
+        "categoryValue": "AAA7-FAST_CLAIM"
       },
       {
         "categoryType": "caseSubType",
-        "categoryValue": "BBA3-002ML",
-        "categoryParent": "BBA3-002"
+        "categoryValue": "AAA7-FAST_CLAIM",
+        "categoryParent": "AAA7-FAST_CLAIM"
       }
     ],
-    "caseManagementLocationCode": "372653",
+    "caseManagementLocationCode": "#{locationCode}",
     "caserestrictedFlag": false,
-    "caseSLAStartDate": "2022-08-01"
+    "caseSLAStartDate": "#{SLAStartDate}"
   },
   "partyDetails": [
     {
-      "partyID": "1",
-      "partyType": "IND",
-      "partyRole": "APEL",
-      "partyName": null,
-      "individualDetails": {
-        "firstName": "HMCPerformance",
-        "lastName": "Tester",
-        "preferredHearingChannel": "INTER",
-        "interpreterLanguage": null,
-        "reasonableAdjustments": [],
-        "relatedParties": [],
-        "title": null,
-        "vulnerabilityDetails": null
+      "partyID": "#{claimantPartyId}",
+      "partyType": "#{claimantPartyType}",
+      "partyName": "#{claimantPartyName}",
+      "partyRole": "#{claimantPartyRole}",
+      "organisationDetails": {
+        "name": "#{claimantOrgName}",
+        "organisationType": "#{claimantOrgType}",
+        "cftOrganisationID": null
       },
       "unavailabilityDOW": null,
-      "unavailabilityRanges": null
+      "unavailabilityRanges": null,
+      "hearingSubChannel": null
+    },
+    {
+      "partyID": "#{claimantLRPartyId}",
+      "partyType": "#{claimantLRPartyType}",
+      "partyName": "#{claimantLRPartyName}",
+      "partyRole": "#{claimantLRPartyRole}",
+      "organisationDetails": {
+        "name": "#{claimantLROrgName}",
+        "organisationType": "#{claimantLROrgType}",
+        "cftOrganisationID": "TACAJW6"
+      },
+      "unavailabilityDOW": null,
+      "unavailabilityRanges": null,
+      "hearingSubChannel": null
+    },
+    {
+      "partyID": "#{defPartyId}",
+      "partyType": "#{defPartyType}",
+      "partyName": "#{defPartyName}",
+      "partyRole": "#{defPartyRole}",
+      "organisationDetails": {
+        "name": "#{defOrgName}",
+        "organisationType": "#{defOrgType}",
+        "cftOrganisationID": null
+      },
+      "unavailabilityDOW": null,
+      "unavailabilityRanges": null,
+      "hearingSubChannel": null
+    },
+    {
+      "partyID": "#{defLRPartyId}",
+      "partyType": "#{defLRPartyType}",
+      "partyName": "#{defLRPartyName}",
+      "partyRole": "#{defLRPartyRole}",
+      "organisationDetails": {
+        "name": "#{defLROrgName}",
+        "organisationType": "#{defLROrgType}",
+        "cftOrganisationID": "HDGOWOD"
+      },
+      "unavailabilityDOW": null,
+      "unavailabilityRanges": null,
+      "hearingSubChannel": null
     }
   ],
+
+
+
   "hearingResponse": {}
 }
