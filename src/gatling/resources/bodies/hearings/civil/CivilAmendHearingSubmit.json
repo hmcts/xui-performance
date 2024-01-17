@@ -68,7 +68,6 @@
     {
       "partyID": "#{claimantPartyId}",
       "partyType": "#{claimantPartyType}",
-      "partyName": "#{claimantPartyName}",
       "partyRole": "#{claimantPartyRole}",
       "organisationDetails": {
         "name": "#{claimantOrgName}",
@@ -82,7 +81,6 @@
     {
       "partyID": "#{claimantLRPartyId}",
       "partyType": "#{claimantLRPartyType}",
-      "partyName": "#{claimantLRPartyName}",
       "partyRole": "#{claimantLRPartyRole}",
       "organisationDetails": {
         "name": "#{claimantLROrgName}",
@@ -96,7 +94,6 @@
     {
       "partyID": "#{defPartyId}",
       "partyType": "#{defPartyType}",
-      "partyName": "#{defPartyName}",
       "partyRole": "#{defPartyRole}",
       "organisationDetails": {
         "name": "#{defOrgName}",
@@ -110,7 +107,6 @@
     {
       "partyID": "#{defLRPartyId}",
       "partyType": "#{defLRPartyType}",
-      "partyName": "#{defLRPartyName}",
       "partyRole": "#{defLRPartyRole}",
       "organisationDetails": {
         "name": "#{defLROrgName}",
