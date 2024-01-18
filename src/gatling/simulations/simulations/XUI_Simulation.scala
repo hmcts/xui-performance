@@ -339,8 +339,8 @@ class XUI_Simulation extends Simulation {
 							feed(UserFeederPRLHearingCases)
 							//	.exec(PRL_Hearings.ViewAllHearings)
 							//	.exec(PRL_Hearings.RequestHearing)
-								.exec(PRL_Hearings.UpdateHearing)
-							//	.exec(PRL_Hearings.CancelHearing)
+							//	.exec(PRL_Hearings.UpdateHearing)
+								.exec(PRL_Hearings.CancelHearing)
 						}
 						.exec(Logout.XUILogout)
 				}
