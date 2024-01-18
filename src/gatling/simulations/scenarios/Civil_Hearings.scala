@@ -319,14 +319,14 @@ what are the hearing venue details
   val UpdateHearing =
   
   /*======================================================================================
-  * Get a singular case
+  * Update Hearing for a single hearing Id
   ======================================================================================*/
    
       feed(UserFeederCivilHearingIdAmend)
       
-      .group("Civil_GetHearing_180_GetHearing") {
+      .group("Civil_GetHearing_180_ClickUpdateHearing") {
         
-        exec(http("Civil_GetHearing_180_005_GetHearing")
+        exec(http("Civil_GetHearing_180_005_ClickUpdateHearing")
            .get("/api/hearings/getHearing?hearingId=${updateHearingRequestId}")
          
           .headers(Headers.commonHeader)

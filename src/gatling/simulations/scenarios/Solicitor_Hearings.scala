@@ -654,7 +654,7 @@ Hearing Venue Details
         .put("/api/hearings/updateHearingRequest?hearingId=${hearingRequest}")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
-        .body(ElFileBody("bodies/hearings/AmendHearingSubmit.json"))
+        .body(ElFileBody("bodies/hearings/PRLAmendHearingSubmit.json"))
         .check(substring("UPDATE_REQUESTED")))
 
     }
@@ -695,7 +695,7 @@ Hearing Venue Details
         .header("accept", "application/json, text/plain, */*")
         .header("accept-language", "en-GB,en-US;q=0.9,en;q=0.8")
         .formParam("jurisdictionId", "SSCS")
-        .body(ElFileBody("bodies/hearings/HearingsCancel.json"))
+        .body(ElFileBody("bodies/hearings/PRLHearingsCancel.json"))
         .check(substring("CANCELLATION_REQUESTED")))
 
     }
