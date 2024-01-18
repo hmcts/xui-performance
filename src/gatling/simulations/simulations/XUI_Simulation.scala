@@ -313,9 +313,9 @@ class XUI_Simulation extends Simulation {
 						.repeat(1) {
 							feed(UserFeederCivilHearingCases)
 								//	.exec(Civil_Hearings.ViewAllHearings)
-								exec(Civil_Hearings.RequestHearing)
-						//		.exec(Civil_Hearings.UpdateHearing)
-					//	.exec(Civil_Hearings.CancelHearing)
+							//	.exec(Civil_Hearings.RequestHearing)
+							//	.exec(Civil_Hearings.UpdateHearing)
+						.exec(Civil_Hearings.CancelHearing)
 						}
 					//	.exec(Logout.XUILogout)
 				}
@@ -328,23 +328,23 @@ class XUI_Simulation extends Simulation {
 	// in the below scenario we may need conditional statements as per the requisite
 	
 	val PRLHearingsScenario = scenario("***** PRL Hearing Management *****")
-		//	.exitBlockOnFail {
-		.repeat(1) {
-			feed(UserFeederPRLHearing)
-				.exec(_.set("env", s"${env}")
-					.set("caseType", "Benefit"))
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.repeat(1) {
-					feed(UserFeederPRLHearingCases)
-						.exec(PRL_Hearings.ViewAllHearings)
-						.exec(PRL_Hearings.RequestHearing)
-						.exec(PRL_Hearings.UpdateHearing)
-						.exec(PRL_Hearings.CancelHearing)
+			.exitBlockOnFail {
+				repeat(1) {
+					feed(UserFeederPRLHearing)
+						.exec(_.set("env", s"${env}")
+							.set("caseType", "Benefit"))
+						.exec(Homepage.XUIHomePage)
+						.exec(Login.XUILogin)
+						.repeat(1) {
+							feed(UserFeederPRLHearingCases)
+							//	.exec(PRL_Hearings.ViewAllHearings)
+							//	.exec(PRL_Hearings.RequestHearing)
+								.exec(PRL_Hearings.UpdateHearing)
+							//	.exec(PRL_Hearings.CancelHearing)
+						}
+						.exec(Logout.XUILogout)
 				}
-				.exec(Logout.XUILogout)
-		}
-	
+			}
 	/*===============================================================================================
 	* XUI Solicitor Divorce Scenario
 	 ===============================================================================================*/
@@ -599,7 +599,10 @@ class XUI_Simulation extends Simulation {
 //		.assertions(assertions(testType))
 //		.maxDuration(60 minutes)
 
-	setUp(CivilHearingsScenario.inject(rampUsers(1).during(2)))
+	setUp(
+	//	CivilHearingsScenario.inject(rampUsers(1).during(2)))
+		PRLHearingsScenario.inject(rampUsers(1).during(2)))
+	
 	// (RUDH.inject(rampUsers(250).during(3200))))
 	   .protocols(httpProtocol)
 		.maxDuration(20000000)

@@ -55,10 +55,10 @@ object PRL_Hearings {
     * Request a hearing - PRL
     ======================================================================================*/
 
-    feed(FeederPRLHearingCases)
+  //  feed(FeederPRLHearingCases)
 
 
-    .group("PRL_RequestHearing_070_ClickRequestHearing") {
+    group("PRL_RequestHearing_070_ClickRequestHearing") {
 
       exec(_.setAll(
         "PRLRandomString" -> (Common.randomString(7))))
@@ -367,6 +367,7 @@ Hearing Venue Details
       .pause(MinThinkTime, MaxThinkTime)
 
   val UpdateHearing =
+  
 
   /*======================================================================================
     * Get a singular case
@@ -377,7 +378,7 @@ Hearing Venue Details
       .group("PRL_RequestHearing_180_GetHearing") {
 
         exec(http("PRL_RequestHearing_180_005_GetHearing")
-          .get("/api/hearings/getHearing?hearingId=#{hearingRequest}")
+          .get("/api/hearings/getHearing?hearingId=#{updateHearingRequestId}")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
           .check(jsonPath("$.requestDetails.versionNumber").saveAs("versionNumber"))
@@ -485,10 +486,10 @@ Hearing Venue Details
 
       .group("XUI_UpdateHearing_220_SubmitUpdate") {
         exec(http("PRL_UpdateHearing_220_005_SubmitUpdate")
-          .put("/api/hearings/updateHearingRequest?hearingId=#{hearingRequest}")
+          .put("/api/hearings/updateHearingRequest?hearingId=#{updateHearingRequestId}")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
-          .body(ElFileBody("bodies/hearings/civil/CivilAmendHearingSubmit.json"))
+          .body(ElFileBody("bodies/hearings/prl/PRLAmendHearingSubmit.json"))
           .check(substring("UPDATE_REQUESTED")))
 
       }
@@ -539,12 +540,12 @@ Hearing Venue Details
 
 
           .exec(http("PRL_CancelHearing_220_005_SubmitCancel")
-            .delete("/api/hearings/cancelHearings?hearingId=#{hearingRequest}")
+            .delete("/api/hearings/cancelHearings?hearingId=#{cancelHearingRequestId}")
             .headers(Headers.commonHeader)
             .header("accept", "application/json, text/plain, */*")
             .header("accept-language", "en-GB,en-US;q=0.9,en;q=0.8")
-            .formParam("jurisdictionId", "SSCS")
-            .body(ElFileBody("bodies/hearings/civil/CivilHearingsCancel.json"))
+           // .formParam("jurisdictionId", "SSCS")
+            .body(ElFileBody("bodies/hearings/prl/PRLHearingsCancel.json"))
             .check(substring("CANCELLATION_REQUESTED")))
       }
       .pause(MinThinkTime, MaxThinkTime)
