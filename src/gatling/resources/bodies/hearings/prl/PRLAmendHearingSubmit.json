@@ -3,7 +3,7 @@
     "status": "AWAITING_LISTING",
     "timestamp": "2024-01-18T10:45:45.967041",
     "versionNumber": 1,
-    "hearingRequestID": "#{hearingRequest}"
+    "hearingRequestID": "#{updateHearingRequestId}"
   },
   "hearingDetails": {
     "listingAutoChangeReasonCode": "user-added-comments",

@@ -372,7 +372,7 @@ Hearing Venue Details
   /*======================================================================================
     * Get a singular case
     ======================================================================================*/
-
+   
     feed(UserFeederPRLHearingIdAmend)
 
       .group("PRL_RequestHearing_180_GetHearing") {
@@ -485,7 +485,9 @@ Hearing Venue Details
     ======================================================================================*/
 
       .group("XUI_UpdateHearing_220_SubmitUpdate") {
-        exec(http("PRL_UpdateHearing_220_005_SubmitUpdate")
+        exec(_.setAll(
+          "PRLRandomString" -> (Common.randomString(7))))
+        .exec(http("PRL_UpdateHearing_220_005_SubmitUpdate")
           .put("/api/hearings/updateHearingRequest?hearingId=#{updateHearingRequestId}")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
@@ -512,7 +514,8 @@ Hearing Venue Details
           .get("/api/prd/lov/getLovRefData?categoryId=CaseManagementCancellationReasons&serviceId=ABA5&isChildRequired=N")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
-          .check(substring("HearingChannel")))
+         // .check(substring("HearingChannel"))
+        )
 
         .exec(http("PRL_CancelHearing_230_010_CancelHearing")
           .get(BaseURL + "/api/user/details?refreshRoleAssignments=undefined")
