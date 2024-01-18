@@ -1,0 +1,206 @@
+{
+  "requestDetails": {
+    "status": "AWAITING_LISTING",
+    "timestamp": "2024-01-18T10:45:45.967041",
+    "versionNumber": 1,
+    "hearingRequestID": "#{hearingRequest}"
+  },
+  "hearingDetails": {
+    "listingAutoChangeReasonCode": "user-added-comments",
+    "hearingType": "ABA5-FHR",
+    "hearingWindow": null,
+    "duration": 5,
+    "hearingPriorityType": "Standard",
+    "numberOfPhysicalAttendees": 6,
+    "hearingInWelshFlag": false,
+    "hearingLocations": [
+      {
+        "locationType": "court",
+        "locationId": "36791"
+      }
+    ],
+    "listingComments": "#{PRLRandomString}",
+    "privateHearingRequiredFlag": true,
+    "panelRequirements": {
+      "roleType": [
+        "45"
+      ],
+      "authorisationTypes": [],
+      "authorisationSubType": [],
+      "panelPreferences": [],
+      "panelSpecialisms": []
+    },
+    "hearingIsLinkedFlag": false,
+    "hearingChannels": [
+      "INTER"
+    ],
+    "autolistFlag": false,
+    "amendReasonCodes": [
+      "judgereq"
+    ]
+  },
+  "caseDetails": {
+    "hmctsServiceCode": "ABA5",
+    "caseRef": "#{caseId}",
+    "caseDeepLink": "https://manage-case.perftest.platform.hmcts.net/cases/case-details/#{caseId}#Case File View",
+    "hmctsInternalCaseName": "#{caseId}_John Doe Vs Mary Richards v2",
+    "publicCaseName": "Re-Minor",
+    "caseAdditionalSecurityFlag": false,
+    "caseInterpreterRequiredFlag": false,
+    "caseCategories": [
+      {
+        "categoryType": "caseType",
+        "categoryValue": "ABA5-PRL"
+      },
+      {
+        "categoryType": "caseSubType",
+        "categoryValue": "ABA5-PRL",
+        "categoryParent": "ABA5-PRL"
+      }
+    ],
+    "caseManagementLocationCode": "827534",
+    "caserestrictedFlag": false,
+    "caseSLAStartDate": "2024-01-10"
+  },
+  "partyDetails": [
+    {
+      "partyID": "a907fbd8-385c-4716-8ece-3d0fd0d69b16",
+      "partyType": "IND",
+      "partyRole": "APPL",
+      "partyName": "xBqEXKF First xBqEXKF Last",
+      "individualDetails": {
+        "firstName": "xBqEXKF First",
+        "lastName": "xBqEXKF Last",
+        "preferredHearingChannel": "INTER",
+        "interpreterLanguage": "",
+        "reasonableAdjustments": [],
+        "relatedParties": [],
+        "title": null,
+        "vulnerableFlag": false,
+        "vulnerabilityDetails": "",
+        "hearingChannelEmail": [
+          "xBqEXKF@gmail.com"
+        ],
+        "hearingChannelPhone": [
+          "0123456789"
+        ],
+        "custodyStatus": null,
+        "otherReasonableAdjustmentDetails": null
+      },
+      "unavailabilityDOW": null,
+      "unavailabilityRanges": null
+    },
+    {
+      "partyID": "f0bfaa55-e591-4085-b408-f3d2519a305c",
+      "partyType": "IND",
+      "partyRole": "LGRP",
+      "partyName": "xBqEXKF Rep xBqEXKF Name",
+      "individualDetails": {
+        "firstName": "xBqEXKF Rep",
+        "lastName": "xBqEXKF Name",
+        "preferredHearingChannel": "INTER",
+        "interpreterLanguage": null,
+        "reasonableAdjustments": [],
+        "relatedParties": [],
+        "title": null,
+        "vulnerableFlag": null,
+        "vulnerabilityDetails": null,
+        "hearingChannelEmail": [
+          "xBqEXKFemail@gmail.com"
+        ],
+        "hearingChannelPhone": [],
+        "custodyStatus": null,
+        "otherReasonableAdjustmentDetails": null
+      },
+      "unavailabilityDOW": null,
+      "unavailabilityRanges": null
+    },
+    {
+      "partyID": "e406bcc3-3c91-45db-9dcc-3a5c14930851",
+      "partyType": "IND",
+      "partyRole": "RESP",
+      "partyName": "Mary Richards",
+      "individualDetails": {
+        "firstName": "Mary",
+        "lastName": "Richards",
+        "preferredHearingChannel": "INTER",
+        "interpreterLanguage": "",
+        "reasonableAdjustments": [],
+        "relatedParties": [],
+        "title": null,
+        "vulnerableFlag": false,
+        "vulnerabilityDetails": "",
+        "hearingChannelEmail": [
+          "repondent1@example.net"
+        ],
+        "hearingChannelPhone": [],
+        "custodyStatus": null,
+        "otherReasonableAdjustmentDetails": null
+      },
+      "unavailabilityDOW": null,
+      "unavailabilityRanges": null
+    },
+    {
+      "partyID": "8d5140d5-18eb-4278-b41c-2a6fabdf4491",
+      "partyType": "IND",
+      "partyRole": "RESP",
+      "partyName": "Elise Lynn",
+      "individualDetails": {
+        "firstName": "Elise",
+        "lastName": "Lynn",
+        "preferredHearingChannel": "INTER",
+        "interpreterLanguage": "",
+        "reasonableAdjustments": [],
+        "relatedParties": [],
+        "title": null,
+        "vulnerableFlag": false,
+        "vulnerabilityDetails": "",
+        "hearingChannelEmail": [
+          "respondent2@example.net"
+        ],
+        "hearingChannelPhone": [],
+        "custodyStatus": null,
+        "otherReasonableAdjustmentDetails": null
+      },
+      "unavailabilityDOW": null,
+      "unavailabilityRanges": null
+    },
+    {
+      "partyID": "62614c4a-4faf-48c0-abfd-c579ef700fd4",
+      "partyType": "IND",
+      "partyRole": "RESP",
+      "partyName": "David Carman",
+      "individualDetails": {
+        "firstName": "David",
+        "lastName": "Carman",
+        "preferredHearingChannel": "INTER",
+        "interpreterLanguage": "",
+        "reasonableAdjustments": [],
+        "relatedParties": [],
+        "title": null,
+        "vulnerableFlag": false,
+        "vulnerabilityDetails": "",
+        "hearingChannelEmail": [
+          "respondent3@example.net"
+        ],
+        "hearingChannelPhone": [],
+        "custodyStatus": null,
+        "otherReasonableAdjustmentDetails": null
+      },
+      "unavailabilityDOW": null,
+      "unavailabilityRanges": null
+    },
+    {
+      "partyID": "d4fd325e-6c11-4c60-a746-a7607bd6c7e9",
+      "partyType": "ORG",
+      "partyName": "perf-prl-aALof",
+      "partyRole": "LGRP",
+      "organisationDetails": {
+        "name": "perf-prl-aALof",
+        "organisationType": "ORG",
+        "cftOrganisationID": "U1NS7EH"
+      }
+    }
+  ],
+  "hearingResponse": {}
+}

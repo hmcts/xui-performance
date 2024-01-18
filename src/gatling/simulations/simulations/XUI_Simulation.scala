@@ -313,8 +313,8 @@ class XUI_Simulation extends Simulation {
 						.repeat(1) {
 							feed(UserFeederCivilHearingCases)
 								//	.exec(Civil_Hearings.ViewAllHearings)
-							//	.exec(Civil_Hearings.RequestHearing)
-								.exec(Civil_Hearings.UpdateHearing)
+								exec(Civil_Hearings.RequestHearing)
+						//		.exec(Civil_Hearings.UpdateHearing)
 					//	.exec(Civil_Hearings.CancelHearing)
 						}
 					//	.exec(Logout.XUILogout)
