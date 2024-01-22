@@ -2,8 +2,8 @@
   "requestDetails": {
     "status": "AWAITING_LISTING",
     "timestamp": "2024-01-17T12:18:00.750181",
-    "versionNumber": 1,
-    "hearingRequestID": "#{updateHearingRequestId}"
+    "versionNumber": "#{versionNumber}",
+    "hearingRequestID": "#{updateCivilHearingRequestId}"
   },
   "hearingDetails": {
     "listingAutoChangeReasonCode": "user-added-comments",

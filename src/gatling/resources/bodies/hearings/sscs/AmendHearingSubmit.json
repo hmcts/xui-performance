@@ -3,7 +3,7 @@
     "status": "AWAITING_LISTING",
     "timestamp": "2022-08-01T13:08:53.179974",
     "versionNumber": "${versionNumber}",
-    "hearingRequestID": "${hearingRequest}"
+    "hearingRequestID": "${updateSSCSHearingRequestId}"
   },
   "hearingDetails": {
     "hearingType": "BBA3-SUB",
