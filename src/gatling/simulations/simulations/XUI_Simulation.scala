@@ -14,7 +14,7 @@ import scala.concurrent.duration._
 import scala.util.Random
 
 class XUI_Simulation extends Simulation {
-	val loginFeeder = csv("login.csv").circular
+	val CivilLoginFeeder = csv("CivilLogin.csv").circular
 	val CaseworkerUserFeeder = csv("UserDataCaseworkers.csv").circular
 	val UserFeederDivorce = csv("UserDataDivorce.csv").circular
 	val UserFeederFPL = csv("UserDataFPL.csv").circular
@@ -26,23 +26,23 @@ class XUI_Simulation extends Simulation {
 	val UserFeederBails = csv("UserDataBails.csv").circular
 	val UserFeederBailsHO = csv("UserDataBailsHO.csv").circular
 	val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
-	val UserFeederCivilHearing = csv("UserDataCivilHearingsCases.csv").circular
-	val UserFeederHearing = csv("UserDataHearings.csv").circular
-	val UserFeederCivilHearingCases = csv("UserDataCivilHearingsCases.csv").circular
+	val UserFeederCivilHearing = csv("CivilHearingsCasesForAllHearings.csv").circular
+	val SSCSHearingUserFeeder = csv("SSCSHearingsUserData.csv").circular
+	val UserFeederCivilHearingCases = csv("CivilHearingsCasesForAllHearings.csv").circular
 	val UserFeederPRLHearing = csv("UserDataPRLHearings.csv").circular
 	val UserFeederPRLHearingCases = csv("UserDataPRLHearingsCases.csv").circular
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
 	val nfdSoleLabelsPopulated = Source.fromResource("bodies/nfd/labels/soleLabelsPopulated.txt").mkString
 	val nfdJointLabelsInitialised = Source.fromResource("bodies/nfd/labels/jointLabelsInitialised.txt").mkString
 	val nfdJointLabelsPopulated = Source.fromResource("bodies/nfd/labels/jointLabelsPopulated.txt").mkString
-
+	
 	val randomFeeder = Iterator.continually(Map("prl-percentage" -> Random.nextInt(100)))
-
+	
 	/* TEST TYPE DEFINITION */
 	/* pipeline = nightly pipeline against the AAT environment (see the Jenkins_nightly file) */
 	/* perftest (default) = performance test against the perftest environment */
 	val testType = scala.util.Properties.envOrElse("TEST_TYPE", "perftest")
-
+	
 	//set the environment based on the test type
 	val environment = testType match {
 		case "perftest" => "perftest"
@@ -50,16 +50,16 @@ class XUI_Simulation extends Simulation {
 		case "pipeline" => "perftest"
 		case _ => "**INVALID**"
 	}
-
+	
 	/* ******************************** */
 	/* ADDITIONAL COMMAND LINE ARGUMENT OPTIONS */
 	val debugMode = System.getProperty("debug", "off") //runs a single user e.g. ./gradle gatlingRun -Ddebug=on (default: off)
 	val env = System.getProperty("env", environment) //manually override the environment aat|perftest e.g. ./gradle gatlingRun -Denv=aat
 	/* ******************************** */
-
+	
 	/* PERFORMANCE TEST CONFIGURATION */
 	val hearingsTargetPerHour: Double = 1
-
+	
 	val bailsTargetPerHour: Double = 100
 	val prlTargetPerHour: Double = 100
 	val probateTargetPerHour: Double = 238
@@ -70,17 +70,17 @@ class XUI_Simulation extends Simulation {
 	val nfdJointTargetPerHour: Double = 119
 	val frTargetPerHour: Double = 98
 	val caseworkerTargetPerHour: Double = 900
-
+	
 	//This determines the percentage split of PRL journeys, by C100 or FL401
 	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
-
+	
 	val rampUpDurationMins = 5
 	val rampDownDurationMins = 5
 	val testDurationMins = 60
-
+	
 	val numberOfPipelineUsers = 5
 	val pipelinePausesMillis: Long = 3000 //3 seconds
-
+	
 	//Determine the pause pattern to use:
 	//Performance test = use the pauses defined in the scripts
 	//Pipeline = override pauses in the script with a fixed value (pipelinePauseMillis)
@@ -90,19 +90,18 @@ class XUI_Simulation extends Simulation {
 		case "off" if testType == "pipeline" => customPauses(pipelinePausesMillis)
 		case _ => disabledPauses
 	}
-
+	
 	val httpProtocol = http
 		.baseUrl(Environment.baseURL.replace("${env}", s"${env}"))
 		.inferHtmlResources()
 		.silentResources
 		.header("experimental", "true") //used to send through client id, s2s and bearer tokens. Might be temporary
-
 	before {
 		println(s"Test Type: ${testType}")
 		println(s"Test Environment: ${env}")
 		println(s"Debug Mode: ${debugMode}")
 	}
-
+	
 	/*===============================================================================================
 	* XUI Solicitor Private Law Scenario
  	===============================================================================================*/
@@ -126,7 +125,7 @@ class XUI_Simulation extends Simulation {
 						.exec(Solicitor_PRL_C100.AllegationsOfHarm)
 						.exec(Solicitor_PRL_C100.ViewPdfApplication)
 						.exec(Solicitor_PRL_C100.SubmitAndPay)
-
+					
 				} {
 					//FL401 Journey
 					exec(Solicitor_PRL_FL401.CreatePrivateLawCase)
@@ -144,8 +143,8 @@ class XUI_Simulation extends Simulation {
 				}
 				.exec(Logout.XUILogout)
 		}
-
-
+	
+	
 	/*===============================================================================================
 	* XUI Legal Rep Bails Scenario
  	===============================================================================================*/
@@ -170,14 +169,14 @@ class XUI_Simulation extends Simulation {
 				.exec(Solicitor_Bails.RecordBailDecision)
 				.exec(Solicitor_Bails.UploadSignedDecision)
 				.exec(Logout.XUILogout)
-
+				
 				.exec {
 					session =>
 						println(session)
 						session
 				}
 		}
-
+	
 	/*===============================================================================================
 	* XUI Solicitor Probate Scenario
 	 ===============================================================================================*/
@@ -196,11 +195,11 @@ class XUI_Simulation extends Simulation {
 				}
 				.exec(Logout.XUILogout)
 		}
-
+	
 	/*===============================================================================================
 	* XUI Solicitor IAC Scenario
 	 ===============================================================================================*/
-	val ImmigrationAndAsylumSolicitorScenario = scenario("***** IAC Create Case *****")
+	val ImmigrationAndAsylumSolicitorScenario = scenario("***** Civil Hearing Management *****")
 		.exitBlockOnFail {
 			feed(UserFeederIAC)
 				.exec(_.set("env", s"${env}")
@@ -213,85 +212,40 @@ class XUI_Simulation extends Simulation {
 				}
 				.exec(Logout.XUILogout)
 		}
-
-
+	
+	
+	
+	
+	
 	/*===============================================================================================
-	* XUI Solicitor IAC Scenario
-	 ===============================================================================================*/
-	val HearingsScenario = scenario("***** Upload Hearing *****")
-		//	.exitBlockOnFail {
-		.repeat(1) {
-			feed(UserFeederHearing)
-				.exec(_.set("env", s"${env}")
-					.set("caseType", "Benefit"))
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.repeat(1) { //5, 1st year = 4
-					repeat(1000) { //6
-						//	exec(Solicitor_Hearings.ViewAllHearings)
-						exec(Solicitor_Hearings.UploadResponse)
-							//		.exec(Solicitor_Hearings.RequestHearing)
-							//					.exec(Solicitor_Hearings.GetHearing)
-							//	}
-							//						.exec(Solicitor_Hearings.ViewAllHearings)
-							//							.exec(Solicitor_Hearings.UploadResponse)
-							//					.exec(Solicitor_Hearings.RequestHearing)
-							//		.exec(Solicitor_Hearings.UpdateHearing)
-							//	.repeat(13) {//13, first year = 14
-							//	exec(Solicitor_Hearings.ViewAllHearings)
-							//			.exec(Solicitor_Hearings.GetHearing)
-							//		}
-							//		.exec(Solicitor_Hearings.DeleteHearing)
-							//	}
-
-							.exec(Logout.XUILogout)
-
-
+* XUI Civil Hearing Management Scenario
+ ===============================================================================================*/
+	// in the below scenario we may need conditional statements as per the requisite
+	
+	val SSCSHearingsScenario = scenario("***** SSCS Hearing Management *****")
+		
+		.feed(SSCSHearingUserFeeder)
+		.exitBlockOnFail {
+			
+			repeat(1) {
+				exec(_.set("env", s"${env}")
+					.set("caseType", "Civil hearings")
+				)
+					
+					.exec(Homepage.XUIHomePage)
+					.exec(Login.XUILogin)
+					.repeat(1) {
+						//feed(UserFeederCivilHearingCases)
+						//	.exec(Civil_Hearings.ViewAllHearings)
+						exec(SSCS_Hearings.RequestHearing)
+						/*	exec(SSCS_Hearings.UpdateHearing)
+							.pause(20)
+							.exec(SSCS_Hearings.cancelHearing)*/
 					}
-				}
+					.exec(Logout.XUILogout)
+			}
 		}
-
-		/*
-
-		.exec(Solicitor_Hearings.ViewAllHearings)
-		.exec(Solicitor_Hearings.RequestHearing)
-		.exec(Solicitor_Hearings.ViewId)
-		.exec(Solicitor_Hearings.AmendHearing)
-		.exec(Solicitor_Hearings.ViewAllHearings)
-		.exec(Solicitor_Hearings.RequestHearing)
-		.exec(Solicitor_Hearings.ViewId)
-		.exec(Solicitor_Hearings.CancelHearing)
-	Repeat 5
-		.exec(Solicitor_Hearings.ViewAllHearings)
-		.exec(Solicitor_Hearings.RequestHearing)
-		.exec(Solicitor_Hearings.ViewId)
-		Repeat 13
-		.exec(Solicitor_Hearings.ViewAllHearings)
-		.exec(Solicitor_Hearings.ViewId)
-
-
-	val HearingsScenario = scenario("***** Upload Hearing *****")
-		//	.exitBlockOnFail {
-		.repeat(1) {
-			feed(UserFeederHearing)
-				.exec(_.set("env", s"${env}")
-					.set("caseType", "Benefit"))
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.repeat(1) {
-					feed(UserFeederHearingCases)
-						.exec(Solicitor_Hearings.ViewAllHearings)
-						//		.exec(Solicitor_Hearings.LinkCase)
-						//			.exec(Solicitor_Hearings.UploadResponse)
-						//		.exec(Solicitor_Hearings.RequestHearing)
-						//		.exec(Solicitor_Hearings.ViewId)
-						//		.exec(Solicitor_Hearings.AmendHearing)
-						.exec(Solicitor_Hearings.CancelHearing)
-				}
-				.exec(Logout.XUILogout)
-		}
-
-		 */
+	
 	
 	/*===============================================================================================
   * XUI Civil Hearing Management Scenario
@@ -299,25 +253,26 @@ class XUI_Simulation extends Simulation {
 	// in the below scenario we may need conditional statements as per the requisite
 	
 	val CivilHearingsScenario = scenario("***** Civil Hearing Management *****")
-	
-	
+		
+		.feed(CivilLoginFeeder)
 			.exitBlockOnFail {
 				
 				repeat(1) {
 					exec(_.set("env", s"${env}")
 						.set("caseType", "Civil hearings")
 					)
-						.feed(loginFeeder)
+						
 						.exec(Homepage.XUIHomePage)
-						.exec(Login.LoginAsJudge)
+						.exec(Login.XUILogin)
 						.repeat(1) {
-							feed(UserFeederCivilHearingCases)
+							//feed(UserFeederCivilHearingCases)
 								//	.exec(Civil_Hearings.ViewAllHearings)
-							//	.exec(Civil_Hearings.RequestHearing)
-							//	.exec(Civil_Hearings.UpdateHearing)
-						.exec(Civil_Hearings.CancelHearing)
+								exec(Civil_Hearings.RequestHearing)
+							/*	exec(Civil_Hearings.UpdateHearing)
+								.pause(20)
+						.exec(Civil_Hearings.CancelHearing)*/
 						}
-					//	.exec(Logout.XUILogout)
+						.exec(Logout.XUILogout)
 				}
 			}
 	
@@ -328,23 +283,25 @@ class XUI_Simulation extends Simulation {
 	// in the below scenario we may need conditional statements as per the requisite
 	
 	val PRLHearingsScenario = scenario("***** PRL Hearing Management *****")
+	.feed(UserFeederPRLHearing)
 			.exitBlockOnFail {
 				repeat(1) {
-					feed(UserFeederPRLHearing)
-						.exec(_.set("env", s"${env}")
-							.set("caseType", "Benefit"))
+					
+					exec(_.set("env", s"${env}")
+						.set("caseType", "Benefit"))
 						.exec(Homepage.XUIHomePage)
 						.exec(Login.XUILogin)
 						.repeat(1) {
-							feed(UserFeederPRLHearingCases)
-							//	.exec(PRL_Hearings.ViewAllHearings)
-							//	.exec(PRL_Hearings.RequestHearing)
-							//	.exec(PRL_Hearings.UpdateHearing)
-								.exec(PRL_Hearings.CancelHearing)
+							//.exec(PRL_Hearings.ViewAllHearings)
+							exec(PRL_Hearings.RequestHearing)
+							/*	exec(PRL_Hearings.UpdateHearing)
+								.pause(20)
+								.exec(PRL_Hearings.CancelHearing)*/
 						}
-						.exec(Logout.XUILogout)
+								.exec(Logout.XUILogout)
+						}
 				}
-			}
+			
 	/*===============================================================================================
 	* XUI Solicitor Divorce Scenario
 	 ===============================================================================================*/
@@ -524,9 +481,9 @@ class XUI_Simulation extends Simulation {
 					.exec(Caseworker_Navigation.NavigateTabs)
 				}
 				.exec(Caseworker_Navigation.LoadCaseList)
-				.exec(Logout.XUILogout)						exec(Solicitor_Hearings.ViewAllHearings)
+				.exec(Logout.XUILogout)						exec(SSCS_Hearings.ViewAllHearings)
 				//		exec(Solicitor_Hearings.UploadResponse)
-				.exec(Solicitor_Hearings.RequestHearing)
+				.exec(SSCS_Hearings.RequestHearing)
 		}
 
 
@@ -600,13 +557,31 @@ class XUI_Simulation extends Simulation {
 //		.maxDuration(60 minutes)
 
 	setUp(
-	//	CivilHearingsScenario.inject(rampUsers(1).during(2)))
-		PRLHearingsScenario.inject(rampUsers(1).during(2)))
+	(SSCSHearingsScenario.inject(nothingFor(1),rampUsers(1).during(20))),
+		(PRLHearingsScenario.inject(nothingFor(30),rampUsers(1).during(40))),
+		(CivilHearingsScenario.inject(nothingFor(60),rampUsers(1).during(60)))
+	)
+		.protocols(httpProtocol)
+	.maxDuration(20000000)
+	/*setUp(
+		SSCSHearingsScenario.inject(
+			nothingFor(1),
+			rampUsers(1).during(20)
+		).protocols(httpProtocol),
+		
+		PRLHearingsScenario.inject(
+			nothingFor(30),
+			rampUsers(1).during(40)
+		).protocols(httpProtocol),
+		
+		CivilHearingsScenario.inject(
+			nothingFor(60),
+			rampUsers(1).during(60)
+		).protocols(httpProtocol)
+	)
+	*/
 	
-	// (RUDH.inject(rampUsers(250).during(3200))))
-	   .protocols(httpProtocol)
-		.maxDuration(20000000)
-	  // .maxDuration(20000)
-
+	
+	
 
 }

@@ -1,0 +1,94 @@
+{
+  "hearingDetails": {
+    "duration": 5,
+    "hearingType": "BBA3-SUB",
+    "hearingLocations": [
+      {
+        "locationType": "court",
+        "locationId": "372653",
+        "locationName": "Cardiff Social Security And Child Support Tribunal",
+        "regionId": "7"
+      }
+    ],
+    "hearingIsLinkedFlag": false,
+    "hearingWindow": null,
+    "privateHearingRequiredFlag": false,
+    "panelRequirements": {
+      "authorisationTypes": [],
+      "panelPreferences": [],
+      "panelSpecialisms": [],
+      "roleType": [
+        "90000"
+      ],
+      "authorisationSubType": []
+    },
+    "autolistFlag": false,
+    "hearingPriorityType": "Standard",
+    "numberOfPhysicalAttendees": 2,
+    "hearingInWelshFlag": false,
+    "facilitiesRequired": [],
+    "listingComments": "Appellant - Mr Joe Bloggs:\nYes, this...",
+    "hearingRequester": null,
+    "leadJudgeContractType": null,
+    "amendReasonCodes": null,
+    "hearingChannels": [
+      "INTER"
+    ],
+    "listingAutoChangeReasonCode": "user-added-comments"
+  },
+  "caseDetails": {
+    "hmctsServiceCode": "BBA3",
+    "caseRef": "#{caseId}",
+    "requestTimeStamp": null,
+    "hearingID": null,
+    "caseDeepLink": "https://manage-case.perftest.platform.hmcts.net/cases/case-details/1704721864050487",
+    "hmctsInternalCaseName": "Joe Bloggs",
+    "publicCaseName": "Joe Bloggs",
+    "caseAdditionalSecurityFlag": false,
+    "caseInterpreterRequiredFlag": true,
+    "caseCategories": [
+      {
+        "categoryType": "caseType",
+        "categoryValue": "BBA3-037"
+      },
+      {
+        "categoryType": "caseSubType",
+        "categoryValue": "BBA3-037DD",
+        "categoryParent": "BBA3-037"
+      }
+    ],
+    "caseManagementLocationCode": "372653",
+    "caserestrictedFlag": false,
+    "caseSLAStartDate": "2024-01-08",
+    "externalCaseReference": null
+  },
+  "partyDetails": [
+    {
+      "partyID": "1b2a0572-156b-4",
+      "partyType": "IND",
+      "partyRole": "APEL",
+      "partyName": "Joe Bloggs",
+      "individualDetails": {
+        "firstName": "Joe",
+        "lastName": "Bloggs",
+        "preferredHearingChannel": "INTER",
+        "interpreterLanguage": "dan",
+        "reasonableAdjustments": [],
+        "relatedParties": [],
+        "title": null,
+        "vulnerableFlag": false,
+        "vulnerabilityDetails": null,
+        "hearingChannelEmail": [
+          "sscs_citizen_1@mailinator.com"
+        ],
+        "hearingChannelPhone": [
+          "07398785050"
+        ],
+        "custodyStatus": null,
+        "otherReasonableAdjustmentDetails": null
+      },
+      "unavailabilityDOW": [],
+      "unavailabilityRanges": []
+    }
+  ]
+}
