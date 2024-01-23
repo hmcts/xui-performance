@@ -93,7 +93,7 @@ class XUI_Simulation extends Simulation {
 	
 	val httpProtocol = http
 		.baseUrl(Environment.baseURL.replace("${env}", s"${env}"))
-		.inferHtmlResources()
+	//	.inferHtmlResources()
 		.silentResources
 		.header("experimental", "true") //used to send through client id, s2s and bearer tokens. Might be temporary
 	before {
@@ -231,16 +231,29 @@ class XUI_Simulation extends Simulation {
 				exec(_.set("env", s"${env}")
 					.set("caseType", "Civil hearings")
 				)
-					
 					.exec(Homepage.XUIHomePage)
 					.exec(Login.XUILogin)
+					.pause(10)
 					.repeat(1) {
-						//feed(UserFeederCivilHearingCases)
-						//	.exec(Civil_Hearings.ViewAllHearings)
-						exec(SSCS_Hearings.RequestHearing)
-						/*	exec(SSCS_Hearings.UpdateHearing)
-							.pause(20)
-							.exec(SSCS_Hearings.cancelHearing)*/
+							exec(SSCS_Hearings.ViewAllHearings)
+						.exec(SSCS_Hearings.RequestHearing)
+								.exec(SSCS_Hearings.GetHearing)
+							.exec(SSCS_Hearings.UpdateHearing)
+							.pause(10)
+								.exec(SSCS_Hearings.GetHearing)
+							.exec(SSCS_Hearings.cancelHearing)
+								.repeat(6)
+						{
+							exec(SSCS_Hearings.ViewAllHearings)
+								.exec(SSCS_Hearings.RequestHearing)
+								.exec(SSCS_Hearings.GetHearing)
+							
+								.repeat(11)
+							{
+								exec(SSCS_Hearings.ViewAllHearings)
+									.exec(SSCS_Hearings.GetHearing)
+							}
+						}
 					}
 					.exec(Logout.XUILogout)
 			}
@@ -264,14 +277,32 @@ class XUI_Simulation extends Simulation {
 						
 						.exec(Homepage.XUIHomePage)
 						.exec(Login.XUILogin)
+						.pause(10)
 						.repeat(1) {
-							//feed(UserFeederCivilHearingCases)
-								//	.exec(Civil_Hearings.ViewAllHearings)
-								exec(Civil_Hearings.RequestHearing)
-							/*	exec(Civil_Hearings.UpdateHearing)
+								exec(Civil_Hearings.ViewAllHearings)
+								.exec(Civil_Hearings.RequestHearing)
+									.exec(Civil_Hearings.GetHearing)
+								.exec(Civil_Hearings.UpdateHearing)
+								.exec(Civil_Hearings.GetHearing)
 								.pause(20)
-						.exec(Civil_Hearings.CancelHearing)*/
+								.exec(Civil_Hearings.CancelHearing)
+									.exec(Civil_Hearings.GetHearing)
+									.repeat(times=6)
+							{
+								exec(Civil_Hearings.ViewAllHearings)
+									.exec(Civil_Hearings.RequestHearing)
+									.exec(Civil_Hearings.GetHearing)
+							}
+									.repeat(times = 19) {
+										exec(Civil_Hearings.ViewAllHearings)
+											.exec(Civil_Hearings.GetHearing)
+									}
+							
 						}
+						
+						
+						
+						
 						.exec(Logout.XUILogout)
 				}
 			}
@@ -291,12 +322,29 @@ class XUI_Simulation extends Simulation {
 						.set("caseType", "Benefit"))
 						.exec(Homepage.XUIHomePage)
 						.exec(Login.XUILogin)
+						.pause(10)
 						.repeat(1) {
-							//.exec(PRL_Hearings.ViewAllHearings)
-							exec(PRL_Hearings.RequestHearing)
-							/*	exec(PRL_Hearings.UpdateHearing)
+							exec(PRL_Hearings.ViewAllHearings)
+							.exec(PRL_Hearings.RequestHearing)
+								.exec(PRL_Hearings.GetHearing)
+								.exec(PRL_Hearings.UpdateHearing)
+								.exec(PRL_Hearings.GetHearing)
 								.pause(20)
-								.exec(PRL_Hearings.CancelHearing)*/
+								.exec(PRL_Hearings.CancelHearing)
+								.exec(PRL_Hearings.GetHearing)
+								.repeat(18)
+							{
+								exec(PRL_Hearings.UpdateHearing)
+								.exec(PRL_Hearings.ViewAllHearings)
+									.exec(PRL_Hearings.RequestHearing)
+									.exec(PRL_Hearings.GetHearing)
+									.repeat(2)
+								{
+									exec(PRL_Hearings.ViewAllHearings)
+										.exec(PRL_Hearings.GetHearing)
+										.exec(PRL_Hearings.GetHearing)
+								}
+							}
 						}
 								.exec(Logout.XUILogout)
 						}
@@ -557,29 +605,13 @@ class XUI_Simulation extends Simulation {
 //		.maxDuration(60 minutes)
 
 	setUp(
-	(SSCSHearingsScenario.inject(nothingFor(1),rampUsers(1).during(20))),
-		(PRLHearingsScenario.inject(nothingFor(30),rampUsers(1).during(40))),
-		(CivilHearingsScenario.inject(nothingFor(60),rampUsers(1).during(60)))
+	(SSCSHearingsScenario.inject(nothingFor(1),rampUsers(50).during(3600))),
+		(PRLHearingsScenario.inject(nothingFor(30),rampUsers(2).during(3600))),
+		(CivilHearingsScenario.inject(nothingFor(60),rampUsers(14).during(3600)))
 	)
 		.protocols(httpProtocol)
 	.maxDuration(20000000)
-	/*setUp(
-		SSCSHearingsScenario.inject(
-			nothingFor(1),
-			rampUsers(1).during(20)
-		).protocols(httpProtocol),
-		
-		PRLHearingsScenario.inject(
-			nothingFor(30),
-			rampUsers(1).during(40)
-		).protocols(httpProtocol),
-		
-		CivilHearingsScenario.inject(
-			nothingFor(60),
-			rampUsers(1).during(60)
-		).protocols(httpProtocol)
-	)
-	*/
+
 	
 	
 	

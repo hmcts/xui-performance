@@ -53,14 +53,10 @@ object PRL_Hearings {
     ======================================================================================*/
 
     feed(FeederPRLHearingCases)
-
-
     .group("PRL_RequestHearing_040_ClickRequestHearing") {
-
       exec(_.setAll(
         "PRLRandomString" -> (Common.randomString(7))))
       //  "caseId" -> "1704898151394750"))
-
         .exec(Common.isAuthenticated)
 
         .exec(http("PRL_RequestHearing_040_005_ClickRequestHearing")

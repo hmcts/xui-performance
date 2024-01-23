@@ -66,9 +66,9 @@ object Login {
      // .exec(Common.userDetails)
 
       //if there is no in-flight case, set the case to 0 for the activity calls
-      .doIf("${caseId.isUndefined()}") {
+    /*  .doIf("${caseId.isUndefined()}") {
         exec(_.set("caseId", "0"))
-      }
+      }*/
 
       //.exec(Common.caseActivityGet)
 
