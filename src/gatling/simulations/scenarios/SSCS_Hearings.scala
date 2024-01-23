@@ -18,7 +18,7 @@ object SSCS_Hearings {
   val MaxThinkTime = Environment.maxThinkTime
   val SSCSUserFeederHearingRequestCases = csv("SSCSUserDataHearingsCasesViewHearings.csv").circular
   val UserFeederHearingId = csv("SSCSHearingIds.csv").circular
-  val UserFeederHearingIdCancels = csv("HearingIdCancels.csv").circular
+  val UserFeederHearingIdCancels = csv("SSCSHearingIdCancels.csv").circular
   val SSCSUserFeederHearingIdAmend = csv("SSCSHearingIdAmend.csv").circular
   val randomFeeder = Iterator.continually(Map("hearings-percentage" -> Random.nextInt(100)))
   val hearingPercentage = 90
@@ -226,7 +226,7 @@ Enter any additional instructions for the hearing
       .group("SSCS_GetHearing_110_GetHearing") {
         
         exec(http("SSCS_GetHearing_110_005_GetHearing")
-          .get("/api/hearings/getHearing?hearingId=${hearingRequestId}")
+          .get("/api/hearings/getHearing?hearingId=#{hearingRequestId}")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
           .check(jsonPath("$.requestDetails.versionNumber").saveAs("versionNumber"))

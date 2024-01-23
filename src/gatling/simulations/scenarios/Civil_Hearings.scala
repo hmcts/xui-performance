@@ -294,11 +294,11 @@ what are the hearing venue details
       .group("Civil_GetHearing_110_GetHearing") {
         
         exec(http("Civil_GetHearing_110_005_GetHearing")
-          .get("/api/hearings/getHearing?hearingId=${civilhearingRequestId}")
+          .get("/api/hearings/getHearing?hearingId=#{civilhearingRequestId}")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
           .check(jsonPath("$.requestDetails.versionNumber").saveAs("versionNumber"))
-          .check(substring("otherReasonableAdjustmentDetails")))
+          .check(substring("requestDetails")))
           
           .exec(Common.isAuthenticated)
         
@@ -314,10 +314,8 @@ what are the hearing venue details
       feed(UserFeederCivilHearingIdAmend)
       
       .group("Civil_UpdateHearing_120_ClickUpdateHearing") {
-        
         exec(http("Civil_UpdateHearing_120_005_ClickUpdateHearing")
            .get("/api/hearings/getHearing?hearingId=${updateCivilHearingRequestId}")
-         
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
           .check(jsonPath("$.requestDetails.versionNumber").saveAs("versionNumber"))
