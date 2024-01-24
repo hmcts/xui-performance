@@ -539,7 +539,7 @@ Hearing Venue Details
             .header("accept", "application/json, text/plain, */*")
             .header("accept-language", "en-GB,en-US;q=0.9,en;q=0.8")
            // .formParam("jurisdictionId", "SSCS")
-            .body(ElFileBody("bodies/hearings/prl/PRLHearingsCancel.json"))
+            .body(ElFileBody("bodies/hearings/prl/PrlHearingsCancel.json"))
             .check(substring("CANCELLATION_REQUESTED")))
       }
       .pause(MinThinkTime, MaxThinkTime)
