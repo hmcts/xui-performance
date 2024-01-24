@@ -281,7 +281,7 @@ class XUI_Simulation extends Simulation {
 						.repeat(1) {
 								exec(Civil_Hearings.ViewAllHearings)
 								.exec(Civil_Hearings.RequestHearing)
-									.exec(Civil_Hearings.GetHearing)
+								.exec(Civil_Hearings.GetHearing)
 								.exec(Civil_Hearings.UpdateHearing)
 								.exec(Civil_Hearings.GetHearing)
 								.pause(20)
@@ -324,26 +324,19 @@ class XUI_Simulation extends Simulation {
 						.exec(Login.XUILogin)
 						.pause(10)
 						.repeat(1) {
-							exec(PRL_Hearings.ViewAllHearings)
-							.exec(PRL_Hearings.RequestHearing)
+                                exec(PRL_Hearings.ViewAllHearings)
+							    .exec(PRL_Hearings.RequestHearing)
 								.exec(PRL_Hearings.GetHearing)
 								.exec(PRL_Hearings.UpdateHearing)
 								.exec(PRL_Hearings.GetHearing)
 								.pause(20)
 								.exec(PRL_Hearings.CancelHearing)
 								.exec(PRL_Hearings.GetHearing)
-								.repeat(18)
+								.repeat(2)
 							{
-								exec(PRL_Hearings.UpdateHearing)
-								.exec(PRL_Hearings.ViewAllHearings)
+								exec(PRL_Hearings.ViewAllHearings)
 									.exec(PRL_Hearings.RequestHearing)
 									.exec(PRL_Hearings.GetHearing)
-									.repeat(2)
-								{
-									exec(PRL_Hearings.ViewAllHearings)
-										.exec(PRL_Hearings.GetHearing)
-										.exec(PRL_Hearings.GetHearing)
-								}
 							}
 						}
 								.exec(Logout.XUILogout)
@@ -606,7 +599,7 @@ class XUI_Simulation extends Simulation {
 
 	setUp(
 	(SSCSHearingsScenario.inject(nothingFor(1),rampUsers(50).during(3600))),
-		(PRLHearingsScenario.inject(nothingFor(30),rampUsers(2).during(3600))),
+		(PRLHearingsScenario.inject(nothingFor(30),rampUsers(40).during(3600))),
 		(CivilHearingsScenario.inject(nothingFor(60),rampUsers(14).during(3600)))
 	)
 		.protocols(httpProtocol)
