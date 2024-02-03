@@ -598,9 +598,9 @@ class XUI_Simulation extends Simulation {
 //		.maxDuration(60 minutes)
 
 	setUp(
-	(SSCSHearingsScenario.inject(nothingFor(1),rampUsers(50).during(3600))),
-		(PRLHearingsScenario.inject(nothingFor(30),rampUsers(40).during(3600))),
-		(CivilHearingsScenario.inject(nothingFor(60),rampUsers(14).during(3600)))
+	(SSCSHearingsScenario.inject(nothingFor(1),rampUsers(50).during(3400))),
+		(PRLHearingsScenario.inject(nothingFor(30),rampUsers(40).during(3400))),
+		(CivilHearingsScenario.inject(nothingFor(60),rampUsers(14).during(3400)))
 	)
 		.protocols(httpProtocol)
 	.maxDuration(20000000)
