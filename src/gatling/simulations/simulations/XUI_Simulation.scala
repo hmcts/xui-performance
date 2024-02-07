@@ -527,6 +527,87 @@ class XUI_Simulation extends Simulation {
 				.exec(SSCS_Hearings.RequestHearing)
 		}
 
+		/*===============================================================================================
+          * XUI Civil Hearing Management DATA PREP SCENARIO for Request Hearing
+           ===============================================================================================*/
+        	// in the below scenario we may need conditional statements as per the requisite
+
+        	val CivilHearingsDataPrep = scenario("***** Civil Hearing Data Prep *****")
+
+        		.feed(CivilLoginFeeder)
+        			.exitBlockOnFail {
+
+        				repeat(1) {
+        					exec(_.set("env", s"${env}")
+        						.set("caseType", "Civil hearings")
+        					)
+
+        						.exec(Homepage.XUIHomePage)
+        						.exec(Login.XUILogin)
+        						.pause(10)
+        						.repeat(1) {
+        						//		exec(Civil_Hearings.ViewAllHearings)
+        								exec(Civil_Hearings.RequestHearing)
+        						//		.exec(Civil_Hearings.GetHearing)
+        						//		.exec(Civil_Hearings.UpdateHearing)
+        						//		.exec(Civil_Hearings.GetHearing)
+        								.pause(1)
+        						//		.exec(Civil_Hearings.CancelHearing)
+        					//				.exec(Civil_Hearings.GetHearing)
+        									.repeat(times=6)
+        							{
+        					//			exec(Civil_Hearings.ViewAllHearings)
+        									exec(Civil_Hearings.RequestHearing)
+        					//				.exec(Civil_Hearings.GetHearing)
+        							}
+        					//				.repeat(times = 19) {
+        					//					exec(Civil_Hearings.ViewAllHearings)
+        					//						.exec(Civil_Hearings.GetHearing)
+        					//				}
+
+        						}
+
+
+
+
+        						.exec(Logout.XUILogout)
+        				}
+        			}
+
+	/*===============================================================================================
+* XUI PRL Hearing Data Prep for Request hearing
+ ===============================================================================================*/
+	// in the below scenario we may need conditional statements as per the requisite
+
+	val PRLHearingDataPrep = scenario("***** PRL Hearing Data Prep for Request Hearing *****")
+	.feed(UserFeederPRLHearing)
+			.exitBlockOnFail {
+				repeat(1) {
+
+					exec(_.set("env", s"${env}")
+						.set("caseType", "Benefit"))
+						.exec(Homepage.XUIHomePage)
+						.exec(Login.XUILogin)
+						.pause(10)
+						.repeat(1) {
+                  //              exec(PRL_Hearings.ViewAllHearings)
+							    exec(PRL_Hearings.RequestHearing)
+					//			.exec(PRL_Hearings.GetHearing)
+					//			.exec(PRL_Hearings.UpdateHearing)
+					//			.exec(PRL_Hearings.GetHearing)
+					//			.pause(20)
+					//			.exec(PRL_Hearings.CancelHearing)
+					//			.exec(PRL_Hearings.GetHearing)
+								.repeat(2)
+							{
+					//			exec(PRL_Hearings.ViewAllHearings)
+									exec(PRL_Hearings.RequestHearing)
+					//				.exec(PRL_Hearings.GetHearing)
+							}
+						}
+								.exec(Logout.XUILogout)
+						}
+				}
 
 	/*===============================================================================================
 	* Simulation Configuration
@@ -603,9 +684,14 @@ class XUI_Simulation extends Simulation {
 		(CivilHearingsScenario.inject(nothingFor(60),rampUsers(14).during(3400)))
 	)
 		.protocols(httpProtocol)
-	.maxDuration(20000000)
+	.maxDuration(4000)
 
-	
+		//setUp(
+    	//	(PRLHearingDataPrep.inject(nothingFor(5),rampUsers(40).during(300))),
+    	//	(CivilHearingsDataPrep.inject(nothingFor(1),rampUsers(14).during(300)))
+    //	)
+    //		.protocols(httpProtocol)
+    //	.maxDuration(20000000)
 	
 	
 
