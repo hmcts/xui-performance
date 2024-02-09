@@ -2,10 +2,10 @@
   "data": {
     "isEngDocGen": "Yes",
     "draftOrderDoc": {
-      "document_url": "${DocumentURL}",
-      "document_binary_url": "${DocumentURL}/binary",
-      "document_filename": "${DocumentFilename}",
-      "document_hash": "${DocumentHash}"
+      "document_url": "#{DocumentURL}",
+      "document_binary_url": "#{DocumentURL}/binary",
+      "document_filename": "#{DocumentFilename}",
+      "document_hash": "#{DocumentHash}"
     },
     "isWelshDocGen": null,
     "draftOrderDocWelsh": null
@@ -15,6 +15,6 @@
     "summary": "",
     "description": ""
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false
 }

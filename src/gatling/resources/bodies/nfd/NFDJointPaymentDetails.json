@@ -26,9 +26,9 @@
   "event_data": {
     "applicant2SolicitorRepresented": "Yes",
     "applicant2SolicitorAnswersLink": {
-      "document_url": "${app2AnswersUrl}",
-      "document_filename": "${app2AnswersFilename}",
-      "document_binary_url": "${app2AnswersUrl}/binary"
+      "document_url": "#{app2AnswersUrl}",
+      "document_filename": "#{app2AnswersFilename}",
+      "document_binary_url": "#{app2AnswersUrl}/binary"
     },
     "applicationType": "jointApplication",
     "divorceOrDissolution": "divorce",
@@ -48,9 +48,9 @@
     "applicant1StatementOfTruth": "Yes",
     "solSignStatementOfTruth": "Yes",
     "solStatementOfReconciliationName": "AppSolicitor",
-    "solStatementOfReconciliationFirm": "${orgname1}",
+    "solStatementOfReconciliationFirm": "#{orgnames(0)}",
     "statementOfReconciliationComments": null,
-    "solApplicationFeeInPounds": "${feeInPounds}",
+    "solApplicationFeeInPounds": "#{feeInPounds}",
     "solPaymentHowToPay": "feePayByAccount",
     "pbaNumbers": {
       "value": {
@@ -70,7 +70,7 @@
     },
     "feeAccountReference": "PerfPayRef"
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false,
-  "case_reference": "${caseId}"
+  "case_reference": "#{caseId}"
 }

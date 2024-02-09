@@ -1,13 +1,13 @@
 {
   "data": {
-    ${NFDLabelsInitialised}
+    #{NFDLabelsInitialised}
     "isJudicialSeparation": null,
     "coApplicant1IsDrafted": null,
     "coApplicant1IsSubmitted": null,
     "coApplicant2IsDrafted": null,
     "coApplicant2IsSubmitted": null,
     "divorceOrDissolution": "divorce",
-    "applicationType": "${nfdCaseType}Application"
+    "applicationType": "#{nfdCaseType}Application"
   },
   "event": {
     "id": "solicitor-create-application",
@@ -15,15 +15,15 @@
     "description": ""
   },
   "event_data": {
-    ${NFDLabelsInitialised}
+    #{NFDLabelsInitialised}
     "isJudicialSeparation": null,
     "coApplicant1IsDrafted": null,
     "coApplicant1IsSubmitted": null,
     "coApplicant2IsDrafted": null,
     "coApplicant2IsSubmitted": null,
     "divorceOrDissolution": "divorce",
-    "applicationType": "${nfdCaseType}Application"
+    "applicationType": "#{nfdCaseType}Application"
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false
 }
