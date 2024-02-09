@@ -22,9 +22,7 @@ object Solicitor_FR  {
   val CreateFRCase =
 
     group("XUI_FR_030_CreateCase") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-filter"))
-
-      .exec(http("XUI_FR_030_CreateCase")
+      exec(http("XUI_FR_030_CreateCase")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
@@ -38,20 +36,20 @@ object Solicitor_FR  {
      ======================================================================================*/
 
     .group("XUI_FR_040_SelectCaseType") {
-      exec(Common.healthcheck("%2Fcases%2Fcase-create%2FDIVORCE%2FFinancialRemedyMVP2%2FFR_solicitorCreate"))
+      exec(http("XUI_FR_040_005_StartApplication")
+        .get("/data/internal/case-types/FinancialRemedyMVP2/event-triggers/FR_solicitorCreate?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("FR_solicitorCreate")))
 
-        .exec(http("XUI_FR_040_005_StartApplication")
-          .get("/data/internal/case-types/FinancialRemedyMVP2/event-triggers/FR_solicitorCreate?ignore-warning=false")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
-          .check(jsonPath("$.event_token").saveAs("event_token"))
-          .check(jsonPath("$.id").is("FR_solicitorCreate")))
+      .exec(Common.profile)
 
-        .exec(Common.healthcheck("%2Fcases%2Fcase-create%2FDIVORCE%2FFinancialRemedyMVP2%2FFR_solicitorCreate%2FFR_solicitorCreate1"))
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
 
-        .exec(Common.profile)
+      .exec(Common.profile)
 
-        .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -65,7 +63,7 @@ object Solicitor_FR  {
         .post("/data/case-types/FinancialRemedyMVP2/validate?pageId=FR_solicitorCreate1")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/fr/FRContinueToApplication.json"))
         .check(jsonPath("$.data.solicitorFirm").saveAs("firmName"))
         .check(jsonPath("$.data.solicitorReference").saveAs("firmRef"))
@@ -84,7 +82,6 @@ object Solicitor_FR  {
         .header("accept", "application/json, text/plain, */*")
         .check(regex(""""name":"(.+?)","organisationIdentifier":"([0-9A-Z]+?)"""").ofType[(String, String)].findRandom.saveAs("applicantOrgs"))
         .check(regex(""""name":"(.+?)","organisationIdentifier":"([0-9A-Z]+?)"""").ofType[(String, String)].findRandom.saveAs("respondentOrgs")))
-
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -98,7 +95,7 @@ object Solicitor_FR  {
         .post("/data/case-types/FinancialRemedyMVP2/validate?pageId=FR_solicitorCreate2")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/fr/FRAddSolicitorDetails.json"))
         .check(substring("solicitorAgreeToReceiveEmails")))
     }
@@ -114,7 +111,7 @@ object Solicitor_FR  {
         .post("/data/case-types/FinancialRemedyMVP2/validate?pageId=FR_solicitorCreate3")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/fr/FRAddDivorceCaseDetails.json"))
         .check(jsonPath("$.data.divorceStageReached").is("Petition Issued")))
     }
@@ -130,7 +127,7 @@ object Solicitor_FR  {
         .post("/data/case-types/FinancialRemedyMVP2/validate?pageId=FR_solicitorCreate4")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/fr/FRAddApplicantDetails.json"))
         .check(jsonPath("$.data.applicantFMName").is("ApplicantPerf")))
 
@@ -159,7 +156,7 @@ object Solicitor_FR  {
         .post("/data/case-types/FinancialRemedyMVP2/validate?pageId=FR_solicitorCreate5")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/fr/FRAddRespondentDetails.json"))
         .check(jsonPath("$.data.RespondentOrganisationPolicy.OrgPolicyCaseAssignedRole").is("[RESPSOLICITOR]")))
     }
@@ -175,7 +172,7 @@ object Solicitor_FR  {
         .post("/data/case-types/FinancialRemedyMVP2/validate?pageId=FR_solicitorCreate6")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/fr/AddNatureOfApplication.json"))
         .check(jsonPath("$.data.natureOfApplication2[0]").is("Lump Sum Order")))
     }
@@ -192,7 +189,7 @@ object Solicitor_FR  {
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .header("content-type", "multipart/form-data")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .bodyPart(RawFileBodyPart("files", "3MB.pdf")
           .fileName("3MB.pdf")
           .transferEncoding("binary"))
@@ -216,9 +213,9 @@ object Solicitor_FR  {
         .post("/data/case-types/FinancialRemedyMVP2/validate?pageId=FR_solicitorCreate8")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/fr/FRSubmitConsentOrderDocument.json"))
-        .check(jsonPath("$.data.consentOrder.document_hash").is("${ConsentOrderDocumentHash}")))
+        .check(jsonPath("$.data.consentOrder.document_hash").is("#{ConsentOrderDocumentHash}")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -233,7 +230,7 @@ object Solicitor_FR  {
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .header("content-type", "multipart/form-data")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .bodyPart(RawFileBodyPart("files", "3MB.pdf")
           .fileName("3MB.pdf")
           .transferEncoding("binary"))
@@ -257,9 +254,9 @@ object Solicitor_FR  {
         .post("/data/case-types/FinancialRemedyMVP2/validate?pageId=FR_solicitorCreate9")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/fr/FRSubmitD81Document.json"))
-        .check(jsonPath("$.data.d81Joint.document_hash").is("${D81DocumentHash}")))
+        .check(jsonPath("$.data.d81Joint.document_hash").is("#{D81DocumentHash}")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -273,7 +270,7 @@ object Solicitor_FR  {
         .post("/data/case-types/FinancialRemedyMVP2/validate?pageId=FR_solicitorCreate11")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/fr/FROtherDocuments.json"))
         .check(substring("otherCollection")))
     }
@@ -289,7 +286,7 @@ object Solicitor_FR  {
         .post("/data/case-types/FinancialRemedyMVP2/validate?pageId=FR_solicitorCreate12")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/fr/FRContinueToCheckYourAnswers.json"))
         .check(substring(""""data":{}""")))
 
@@ -310,15 +307,13 @@ object Solicitor_FR  {
         .post("/data/case-types/FinancialRemedyMVP2/cases?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-case.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/fr/FRSubmitApplication.json"))
         .check(jsonPath("$.state").is("caseAdded"))
         .check(jsonPath("$.id").saveAs("caseId")))
 
-      .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
-
       .exec(http("XUI_FR_170_010_ViewCase")
-        .get("/data/internal/cases/${caseId}")
+        .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .check(jsonPath("$.state.id").is("caseAdded")))

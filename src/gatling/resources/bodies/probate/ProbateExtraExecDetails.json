@@ -11,12 +11,12 @@
           "additionalExecNameOnWill":"No",
           "additionalApplying":"Yes",
           "additionalExecAddress":{
-            "AddressLine1":"${addressLines(0)}",
-            "AddressLine2":"${addressLines(1)}",
+            "AddressLine1":"#{addressLines(0)}",
+            "AddressLine2":"#{addressLines(1)}",
             "AddressLine3":"",
-            "PostTown":"${addressLines(2)}",
+            "PostTown":"#{addressLines(2)}",
             "County":"",
-            "PostCode":"${addressLines(3)}",
+            "PostCode":"#{addressLines(3)}",
             "Country":"United Kingdom"
           }
         },
@@ -32,14 +32,14 @@
   "event_data":{
     "solsSolicitorIsApplying":"Yes",
     "willAccessOriginal":"Yes",
-    "originalWillSignedDate":"${willYear}-${dodMonth}-${dodDay}",
+    "originalWillSignedDate":"#{willYear}-#{dodMonth}-#{dodDay}",
     "willHasCodicils":"Yes",
     "codicilAddedDateList":[
       {
         "value":{
-          "dateCodicilAdded":"${codicilYear}-${dodMonth}-${dodDay}"
+          "dateCodicilAdded":"#{codicilYear}-#{dodMonth}-#{dodDay}"
         },
-        "id":"${newCodicilId}"
+        "id":"#{newCodicilId}"
       }
     ],
     "dispenseWithNotice":"No",
@@ -47,12 +47,12 @@
     "nameOfFirmNamedInWill":"FirmName",
     "nameOfSucceededFirm":"SucceededFirm",
     "addressOfSucceededFirm":{
-      "AddressLine1":"${addressLines(0)}",
-      "AddressLine2":"${addressLines(1)}",
+      "AddressLine1":"#{addressLines(0)}",
+      "AddressLine2":"#{addressLines(1)}",
       "AddressLine3":"",
-      "PostTown":"${addressLines(2)}",
+      "PostTown":"#{addressLines(2)}",
       "County":"",
-      "PostCode":"${addressLines(3)}",
+      "PostCode":"#{addressLines(3)}",
       "Country":"United Kingdom"
     },
     "solsSolicitorIsExec":"Yes",
@@ -65,16 +65,16 @@
           "additionalExecForenames":"Additional",
           "additionalExecLastname":"Executor",
           "additionalExecAddress":{
-            "AddressLine1":"${addressLines(0)}",
-            "AddressLine2":"${addressLines(1)}",
+            "AddressLine1":"#{addressLines(0)}",
+            "AddressLine2":"#{addressLines(1)}",
             "AddressLine3":"",
-            "PostTown":"${addressLines(2)}",
+            "PostTown":"#{addressLines(2)}",
             "County":"",
-            "PostCode":"${addressLines(3)}",
+            "PostCode":"#{addressLines(3)}",
             "Country":"United Kingdom"
           }
         },
-        "id":"${newSolExecId}"
+        "id":"#{newSolExecId}"
       }
     ],
     "morePartnersHoldingPowerReserved":"No",
@@ -92,12 +92,12 @@
           "additionalExecNameOnWill":"No",
           "additionalApplying":"Yes",
           "additionalExecAddress":{
-            "AddressLine1":"${addressLines(0)}",
-            "AddressLine2":"${addressLines(1)}",
+            "AddressLine1":"#{addressLines(0)}",
+            "AddressLine2":"#{addressLines(1)}",
             "AddressLine3":"",
-            "PostTown":"${addressLines(2)}",
+            "PostTown":"#{addressLines(2)}",
             "County":"",
-            "PostCode":"${addressLines(3)}",
+            "PostCode":"#{addressLines(3)}",
             "Country":"United Kingdom"
           }
         },
@@ -105,7 +105,7 @@
       }
     ]
   },
-  "event_token":"${event_token_probate}",
+  "event_token":"#{event_token_probate}",
   "ignore_warning":false,
-  "case_reference":"${caseId}"
+  "case_reference":"#{caseId}"
 }

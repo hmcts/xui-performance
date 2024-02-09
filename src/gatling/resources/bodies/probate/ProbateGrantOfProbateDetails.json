@@ -2,12 +2,12 @@
   "data":{
     "solsSolicitorIsApplying":"Yes",
     "willAccessOriginal":"Yes",
-    "originalWillSignedDate":"${willYear}-${dodMonth}-${dodDay}",
+    "originalWillSignedDate":"#{willYear}-#{dodMonth}-#{dodDay}",
     "willHasCodicils":"Yes",
     "codicilAddedDateList":[
       {
         "value":{
-          "dateCodicilAdded":"${codicilYear}-${dodMonth}-${dodDay}"
+          "dateCodicilAdded":"#{codicilYear}-#{dodMonth}-#{dodDay}"
         },
         "id":null
       }
@@ -21,18 +21,18 @@
   "event_data":{
     "solsSolicitorIsApplying":"Yes",
     "willAccessOriginal":"Yes",
-    "originalWillSignedDate":"${willYear}-${dodMonth}-${dodDay}",
+    "originalWillSignedDate":"#{willYear}-#{dodMonth}-#{dodDay}",
     "willHasCodicils":"Yes",
     "codicilAddedDateList":[
       {
         "value":{
-          "dateCodicilAdded":"${codicilYear}-${dodMonth}-${dodDay}"
+          "dateCodicilAdded":"#{codicilYear}-#{dodMonth}-#{dodDay}"
         },
         "id":null
       }
     ]
   },
-  "event_token":"${event_token_probate}",
+  "event_token":"#{event_token_probate}",
   "ignore_warning":false,
-  "case_reference":"${caseId}"
+  "case_reference":"#{caseId}"
 }

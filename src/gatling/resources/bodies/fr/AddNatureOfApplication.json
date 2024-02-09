@@ -11,29 +11,29 @@
   },
   "event_data": {
     "isAdmin": "No",
-    "solicitorName": "${firmName}",
+    "solicitorName": "#{firmName}",
     "ApplicantOrganisationPolicy": {
       "OrgPolicyCaseAssignedRole": "[APPSOLICITOR]",
       "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
-        "OrganisationID": "${applicantOrgs(1)}",
-        "OrganisationName": "${applicantOrgs(0)}"
+        "OrganisationID": "#{applicantOrgs(1)}",
+        "OrganisationName": "#{applicantOrgs(0)}"
       }
     },
-    "solicitorFirm": "${firmName}",
-    "solicitorReference": "${firmRef}",
+    "solicitorFirm": "#{firmName}",
+    "solicitorReference": "#{firmRef}",
     "solicitorAddress": {
-      "AddressLine1": "${addressLines(0)}",
-      "AddressLine2": "${addressLines(1)}",
+      "AddressLine1": "#{addressLines(0)}",
+      "AddressLine2": "#{addressLines(1)}",
       "AddressLine3": "",
-      "PostTown": "${addressLines(2)}",
+      "PostTown": "#{addressLines(2)}",
       "County": "",
-      "PostCode": "${addressLines(3)}",
+      "PostCode": "#{addressLines(3)}",
       "Country": "UK"
     },
     "solicitorPhone": null,
-    "solicitorEmail": "${firmName}@test.com",
+    "solicitorEmail": "#{firmName}@test.com",
     "solicitorDXnumber": null,
     "solicitorAgreeToReceiveEmails": "No",
     "divorceCaseNumber": "EZ12D91234",
@@ -46,25 +46,25 @@
     "appRespondentFMName": "RespondentPerf",
     "appRespondentLName": "RespondentTest",
     "appRespondentRep": "Yes",
-    "rSolicitorName": "${respondentOrgs(0)}",
+    "rSolicitorName": "#{respondentOrgs(0)}",
     "RespondentOrganisationPolicy": {
       "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
       "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
-        "OrganisationID": "${respondentOrgs(1)}",
-        "OrganisationName": "${respondentOrgs(0)}"
+        "OrganisationID": "#{respondentOrgs(1)}",
+        "OrganisationName": "#{respondentOrgs(0)}"
       }
     },
-    "rSolicitorFirm": "${respondentOrgs(0)}",
+    "rSolicitorFirm": "#{respondentOrgs(0)}",
     "rSolicitorReference": null,
     "rSolicitorAddress": {
-      "AddressLine1": "${addressLines(0)}",
-      "AddressLine2": "${addressLines(1)}",
+      "AddressLine1": "#{addressLines(0)}",
+      "AddressLine2": "#{addressLines(1)}",
       "AddressLine3": "",
-      "PostTown": "${addressLines(2)}",
+      "PostTown": "#{addressLines(2)}",
       "County": "",
-      "PostCode": "${addressLines(3)}",
+      "PostCode": "#{addressLines(3)}",
       "Country": "United Kingdom"
     },
     "rSolicitorPhone": null,
@@ -74,6 +74,6 @@
       "Lump Sum Order"
     ]
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false
 }

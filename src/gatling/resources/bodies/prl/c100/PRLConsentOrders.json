@@ -2,9 +2,10 @@
   "data": {
     "consentOrder": "Yes",
     "draftConsentOrderFile": {
-      "document_url": "${DocumentURL}",
-      "document_binary_url": "${DocumentURL}/binary",
-      "document_filename": "3MB.pdf"
+      "document_url": "#{DocumentURL}",
+      "document_binary_url": "#{DocumentURL}/binary",
+      "document_filename": "3MB.pdf",
+      "document_hash": "#{documentHash}"
     }
   },
   "event": {
@@ -20,12 +21,13 @@
     "natureOfOrder": "Random Text",
     "consentOrder": "Yes",
     "draftConsentOrderFile": {
-      "document_url": "${DocumentURL}",
-      "document_binary_url": "${DocumentURL}/binary",
-      "document_filename": "3MB.pdf"
+      "document_url": "#{DocumentURL}",
+      "document_binary_url": "#{DocumentURL}/binary",
+      "document_filename": "3MB.pdf",
+      "document_hash": "#{documentHash}"
     }
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false,
-  "case_reference": "${caseId}"
+  "case_reference": "#{caseId}"
 }

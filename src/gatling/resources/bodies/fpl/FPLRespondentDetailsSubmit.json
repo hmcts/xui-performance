@@ -7,9 +7,9 @@
                "leadRespondentIndicator": null,
                "legalRepresentation": "No",
                "party": {
-                  "firstName": "${respondentFirstName}",
-                  "lastName": "${respondentLastName}",
-                  "dateOfBirth": "${dobYearResp}-${dobMonth}-${dobDay}",
+                  "firstName": "#{respondentFirstName}",
+                  "lastName": "#{respondentLastName}",
+                  "dateOfBirth": "#{dobYearResp}-#{dobMonth}-#{dobDay}",
                   "gender": "Male",
                   "genderIdentification": null,
                   "relationshipToChild": "Guardian",
@@ -17,16 +17,16 @@
                   "contactDetailsHiddenReason": null,
                   "litigationIssues": "NO",
                   "litigationIssuesDetails": null,
-                  "partyId": "${partyId}",
+                  "partyId": "#{partyId}",
                   "partyType": null,
                   "placeOfBirth": null,
                   "address": {
-                     "AddressLine1": "${addressLines(0)}",
-                     "AddressLine2": "${addressLines(1)}",
+                     "AddressLine1": "#{addressLines(0)}",
+                     "AddressLine2": "#{addressLines(1)}",
                      "AddressLine3": "",
-                     "PostTown": "${addressLines(2)}",
+                     "PostTown": "#{addressLines(2)}",
                      "County": "",
-                     "PostCode": "${addressLines(3)}",
+                     "PostCode": "#{addressLines(3)}",
                      "Country": "United Kingdom"
                   },
                   "telephoneNumber": {
@@ -67,7 +67,7 @@
                },
                "legalCounsellors": []
             },
-            "id": "${id}"
+            "id": "#{id}"
          }
       ]
    },
@@ -76,6 +76,6 @@
       "summary": "",
       "description": ""
    },
-   "event_token": "${event_token}",
+   "event_token": "#{event_token}",
    "ignore_warning": false
 }
