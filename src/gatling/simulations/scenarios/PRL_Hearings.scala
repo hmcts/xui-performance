@@ -36,11 +36,11 @@ object PRL_Hearings {
 
       .group("PRL_GetAllHearings_030_ViewAllHearings") {
           exec(http("PRL_GetAllHearings_030_005_ViewAllHearings")
-            .get("/api/hearings/getHearings?caseId=${caseId}")
+            .get("/api/hearings/getHearings?caseId=#{caseId}")
             .headers(Headers.commonHeader)
             .header("accept", "application/json, text/plain, */*")
             .header("accept-language", "en-GB,en-US;q=0.9,en;q=0.8")
-            .check(jsonPath("$.caseRef").is("${caseId}"))
+            .check(jsonPath("$.caseRef").is("#{caseId}"))
             .check(substring("caseHearings")))
       }
       .pause(MinThinkTime, MaxThinkTime)
@@ -346,7 +346,7 @@ Hearing Venue Details
           "PRLRandomString" -> (Common.randomString(7))))
 
           .exec(http("PRL_GetHearing_140_005_GetHearing")
-            .get("/api/hearings/getHearing?hearingId=${prlHearingRequestId}")
+            .get("/api/hearings/getHearing?hearingId=#{prlHearingRequestId}")
             .headers(Headers.commonHeader)
             .header("accept", "application/json, text/plain, */*")
             .check(jsonPath("$.requestDetails.versionNumber").saveAs("versionNumber"))
