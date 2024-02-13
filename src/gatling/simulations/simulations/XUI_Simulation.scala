@@ -560,6 +560,7 @@ class XUI_Simulation extends Simulation {
 		//CivilGeneralScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 		//CivilGeneralScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 			CivilGeneralScenario.inject(nothingFor(20),rampUsers(230) during (3600))
+			//	CivilGeneralScenario.inject(nothingFor(2),rampUsers(1) during (3))
 			//	CivilGeneralJudgeScenario.inject(nothingFor(1),rampUsers(1) during (10))
 		//CivilGeneralScenario.inject(simulationProfile(testType, CivilGATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 		// BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
