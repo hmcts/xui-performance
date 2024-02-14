@@ -344,11 +344,11 @@ object Solicitor_CivilGeneral {
   
             .check(status.in(200,201,304))
           )
-          .exec { session =>
+         /* .exec { session =>
            
             println(s"First Occurrence: "+session("ga_case_id").toString)
             session
-          }
+          }*/
       }
   
   
