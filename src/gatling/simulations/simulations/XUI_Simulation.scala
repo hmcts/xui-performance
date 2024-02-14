@@ -480,7 +480,7 @@ class XUI_Simulation extends Simulation {
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.exec(Solicitor_CivilGeneral.defResponseToGA)
-				//.exec(Logout.XUILogout)
+				.exec(Logout.XUILogout)
 			/*	.feed(UserJudgeFeederCivilGA)
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
