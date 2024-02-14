@@ -13,9 +13,9 @@
   },
   "event_data": {
     "fl401StmtOfTruth": {
-      "date": "2022-01-01",
+      "date": "2023-07-26",
       "fullname": "Perf Solicitor",
-      "nameOfFirm": "${orgname}",
+      "nameOfFirm": "#{orgname}",
       "signOnBehalf": "Solicitor",
       "applicantConsent": [
         "fl401Consent"
@@ -27,7 +27,7 @@
       ]
     }
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false,
-  "case_reference": "${caseId}"
+  "case_reference": "#{caseId}"
 }

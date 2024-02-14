@@ -12,12 +12,12 @@
       "doesApplicantHaveHomeRights": "No",
       "furtherInformation": null,
       "address": {
-        "AddressLine1": "${addressLines(0)}",
-        "AddressLine2": "${addressLines(1)}",
+        "AddressLine1": "#{addressLines(0)}",
+        "AddressLine2": "#{addressLines(1)}",
         "AddressLine3": "",
-        "PostTown": "${addressLines(2)}",
+        "PostTown": "#{addressLines(2)}",
         "County": "",
-        "PostCode": "${addressLines(3)}",
+        "PostCode": "#{addressLines(3)}",
         "Country": "United Kingdom"
       },
       "peopleLivingAtThisAddress": [
@@ -86,6 +86,6 @@
     "summary": "",
     "description": ""
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false
 }

@@ -10,3 +10,4 @@ build/*
 bin/*
 .classpath
 .settings/*
+.vscode

@@ -36,14 +36,11 @@ object Civil_Hearings {
   ======================================================================================*/
     
     .group("XUI_GetAllHearings_030_ViewAllHearings") {
-      
-      // exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}"))
-      
       exec(http("XUI_GetAllHearings_030_005_ViewAllHearings")
         .get("/api/hearings/getHearings?caseId=#{caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
-        .check(jsonPath("$.caseRef").is("${caseId}"))
+        .check(jsonPath("$.caseRef").is("#{caseId}"))
         .check(substring("caseHearings")))
     }
       .pause(MinThinkTime, MaxThinkTime)
@@ -315,7 +312,7 @@ what are the hearing venue details
       
       .group("Civil_UpdateHearing_120_ClickUpdateHearing") {
         exec(http("Civil_UpdateHearing_120_005_ClickUpdateHearing")
-           .get("/api/hearings/getHearing?hearingId=${updateCivilHearingRequestId}")
+           .get("/api/hearings/getHearing?hearingId=#{updateCivilHearingRequestId}")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
           .check(jsonPath("$.requestDetails.versionNumber").saveAs("versionNumber"))
@@ -380,7 +377,7 @@ what are the hearing venue details
       
       .group("XUI_UpdateHearing_140_SubmitUpdate") {
         exec(http("XUI_UpdateHearing_140_005_SubmitUpdate")
-           .put("/api/hearings/updateHearingRequest?hearingId=${updateCivilHearingRequestId}")
+           .put("/api/hearings/updateHearingRequest?hearingId=#{updateCivilHearingRequestId}")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
           .header("Content-Type", "application/json")
@@ -416,7 +413,7 @@ what are the hearing venue details
         
         exec(Common.isAuthenticated)
           .exec(http("XUI_CancelHearing_160_005_SubmitCancel")
-            .delete("/api/hearings/cancelHearings?hearingId=${cancelCivilHearingRequestId}")
+            .delete("/api/hearings/cancelHearings?hearingId=#{cancelCivilHearingRequestId}")
             .headers(Headers.commonHeader)
             .header("accept", "application/json, text/plain, */*")
             .header("Content-Type", "application/json")

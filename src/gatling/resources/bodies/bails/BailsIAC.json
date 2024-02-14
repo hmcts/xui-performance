@@ -11,9 +11,9 @@
     "hasPreviousBailApplication": "No",
     "previousApplicationDoneViaAria": "No",
     "previousApplicationDoneViaCcd": "No",
-    "applicantGivenNames": "${BailsApplicantFirstName}",
-    "applicantFamilyName": "${BailsApplicantLastName}",
-    "applicantDateOfBirth": "${BailsAppDobYear}-${BailsAppDobMonth}-${BailsAppDobDay}",
+    "applicantGivenNames": "Bails#{BailsRandomString}",
+    "applicantFamilyName": "Test#{BailsRandomString}",
+    "applicantDateOfBirth": "#{BailsDobYear}-#{BailsDobMonth}-#{BailsDobDay}",
     "applicantGender": "Male",
     "applicantNationality": "HAS_NATIONALITY",
     "applicantNationalities": [
@@ -21,18 +21,18 @@
         "value": {
           "code": "English"
         },
-        "id": "${applicantNationalitiesId}"
+        "id": "#{applicantNationalitiesId}"
       }
     ],
-    "homeOfficeReferenceNumber": "${BailsHomeOfficeRefNum}",
+    "homeOfficeReferenceNumber": "#{BailsRandomNumber}",
     "applicantDetainedLoc": "prison",
-    "applicantPrisonDetails": "${BailsNomsNumber}",
+    "applicantPrisonDetails": "#{BailsRandomNumber}",
     "prisonName": "Liverpool",
-    "applicantArrivalInUKDate": "${BailsArrivedYear}-${BailsAppDobMonth}-${BailsAppDobDay}",
+    "applicantArrivalInUKDate": "#{BailsArrivedYear}-#{BailsDobMonth}-#{BailsDobDay}",
     "applicantHasMobile": "Yes",
-    "applicantMobileNumber1": "${BailsAppPhoneNumber}",
+    "applicantMobileNumber1": "#{BailsPhoneNumber}",
     "hasAppealHearingPending": "YesWithoutAppealNumber"
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false
 }

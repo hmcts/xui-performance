@@ -7,17 +7,17 @@
     "solsSolicitorIsApplying":"Yes",
     "solsSolicitorFirmName":"solfirmperftest",
     "solsSolicitorAddress":{
-      "AddressLine1":"${addressLines(0)}",
-      "AddressLine2":"${addressLines(1)}",
+      "AddressLine1":"#{addressLines(0)}",
+      "AddressLine2":"#{addressLines(1)}",
       "AddressLine3":"",
-      "PostTown":"${addressLines(2)}",
+      "PostTown":"#{addressLines(2)}",
       "County":"",
-      "PostCode":"${addressLines(3)}",
+      "PostCode":"#{addressLines(3)}",
       "Country":"United Kingdom"
     },
-    "solsSolicitorEmail":"${caseEmail}",
+    "solsSolicitorEmail":"#{caseEmail}",
     "solsSolicitorPhoneNumber":null,
-    "solsSolicitorAppReference":"${appRef}"
+    "solsSolicitorAppReference":"#{appRef}"
   },
   "event":{
     "id":"solicitorCreateApplication",
@@ -32,18 +32,18 @@
     "solsSolicitorIsApplying":"Yes",
     "solsSolicitorFirmName":"solfirmperftest",
     "solsSolicitorAddress":{
-      "AddressLine1":"${addressLines(0)}",
-      "AddressLine2":"${addressLines(1)}",
+      "AddressLine1":"#{addressLines(0)}",
+      "AddressLine2":"#{addressLines(1)}",
       "AddressLine3":"",
-      "PostTown":"${addressLines(2)}",
+      "PostTown":"#{addressLines(2)}",
       "County":"",
-      "PostCode":"${addressLines(3)}",
+      "PostCode":"#{addressLines(3)}",
       "Country":"United Kingdom"
     },
-    "solsSolicitorEmail":"${caseEmail}",
+    "solsSolicitorEmail":"#{caseEmail}",
     "solsSolicitorPhoneNumber":null,
-    "solsSolicitorAppReference":"${appRef}"
+    "solsSolicitorAppReference":"#{appRef}"
   },
-  "event_token":"${event_token_probate}",
+  "event_token":"#{event_token_probate}",
   "ignore_warning":false
 }

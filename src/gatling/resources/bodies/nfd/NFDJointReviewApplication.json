@@ -2,9 +2,9 @@
   "data": {
     "applicant2SolicitorRepresented": "Yes",
     "applicant2SolicitorAnswersLink": {
-      "document_url": "${app2AnswersUrl}",
-      "document_filename": "${app2AnswersFilename}",
-      "document_binary_url": "${app2AnswersUrl}/binary"
+      "document_url": "#{app2AnswersUrl}",
+      "document_filename": "#{app2AnswersFilename}",
+      "document_binary_url": "#{app2AnswersUrl}/binary"
     }
   },
   "event": {
@@ -15,12 +15,12 @@
   "event_data": {
     "applicant2SolicitorRepresented": "Yes",
     "applicant2SolicitorAnswersLink": {
-      "document_url": "${app2AnswersUrl}",
-      "document_filename": "${app2AnswersFilename}",
-      "document_binary_url": "${app2AnswersUrl}/binary"
+      "document_url": "#{app2AnswersUrl}",
+      "document_filename": "#{app2AnswersFilename}",
+      "document_binary_url": "#{app2AnswersUrl}/binary"
     }
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false,
-  "case_reference": "${caseId}"
+  "case_reference": "#{caseId}"
 }

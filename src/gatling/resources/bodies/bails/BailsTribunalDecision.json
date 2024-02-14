@@ -8,12 +8,12 @@
     "description": ""
   },
   "event_data": {
-    "judgeDetailsName": "${BailsJudgeName}",
+    "judgeDetailsName": "Judge#{BailsRandomString}",
     "secretaryOfStateConsentYesOrNo": "No",
     "recordTheDecisionList": null,
     "decisionGrantedOrRefused": "granted"
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false,
-  "case_reference": "${caseId}"
+  "case_reference": "#{caseId}"
 }

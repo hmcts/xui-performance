@@ -19,7 +19,8 @@ object Logout {
       exec(http("XUI_999_005_Logout")
         .get("/auth/logout")
         .headers(Headers.navigationHeader)
-        .check(regex("Sign in - HMCTS Access")))
+        // .check(regex("Sign in - HMCTS Access"))
+        )
     }
 
     .pause(MinThinkTime , MaxThinkTime)

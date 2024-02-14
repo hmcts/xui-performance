@@ -1,7 +1,7 @@
 {
   "data": {
-    "D8RespondentFirstName": "${respondentFirstName}",
-    "D8RespondentLastName": "${respondentLastName}",
+    "D8RespondentFirstName": "#{respondentFirstName}",
+    "D8RespondentLastName": "#{respondentLastName}",
     "D8RespondentNameAsOnMarriageCertificate": "No",
     "D8InferredRespondentGender": "female"
   },
@@ -14,7 +14,7 @@
     "PetitionerSolicitorName": "PerfSolicitor",
     "D8SolicitorReference": "PerfTestDivRef",
     "PetitionerSolicitorPhone": "07000000000",
-    "PetitionerSolicitorEmail": "${user}",
+    "PetitionerSolicitorEmail": "#{user}",
     "SolicitorAgreeToReceiveEmails": "Yes",
     "DerivedPetitionerSolicitorAddr": "1 Solicitor Road\nPerf Test Town\nPR1 1RF",
     "PetitionerOrganisationPolicy": {
@@ -22,12 +22,12 @@
       "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
-        "OrganisationID": "${orgref}",
-        "OrganisationName": "${orgname}"
+        "OrganisationID": "#{orgref}",
+        "OrganisationName": "#{orgname}"
       }
     },
-    "D8PetitionerFirstName": "${petitionerFirstName}",
-    "D8PetitionerLastName": "${petitionerLastName}",
+    "D8PetitionerFirstName": "#{petitionerFirstName}",
+    "D8PetitionerLastName": "#{petitionerLastName}",
     "D8PetitionerNameDifferentToMarriageCert": "No",
     "D8DivorceWho": "wife",
     "D8InferredPetitionerGender": "male",
@@ -36,11 +36,11 @@
     "D8PetitionerPhoneNumber": null,
     "D8PetitionerEmail": null,
     "D8PetitionerContactDetailsConfidential": "share",
-    "D8RespondentFirstName": "${respondentFirstName}",
-    "D8RespondentLastName": "${respondentLastName}",
+    "D8RespondentFirstName": "#{respondentFirstName}",
+    "D8RespondentLastName": "#{respondentLastName}",
     "D8RespondentNameAsOnMarriageCertificate": "No",
     "D8InferredRespondentGender": "female"
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false
 }
