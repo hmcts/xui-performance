@@ -38,11 +38,11 @@ object SSCS_Hearings {
       .group("SSCS_GetAllHearings_030_ViewAllHearings") {
         
           exec(http("SSCS_GetAllHearings_030_005_ViewAllHearings")
-            .get("/api/hearings/getHearings?caseId=${caseId}")
+            .get("/api/hearings/getHearings?caseId=#{caseId}")
             .headers(Headers.commonHeader)
             .header("accept", "application/json, text/plain, */*")
             .header("accept-language", "en-GB,en-US;q=0.9,en;q=0.8")
-            .check(jsonPath("$.caseRef").is("${caseId}"))
+            .check(jsonPath("$.caseRef").is("#{caseId}"))
             .check(substring("caseHearings")))
       }
       .pause(MinThinkTime, MaxThinkTime)
@@ -247,7 +247,7 @@ Enter any additional instructions for the hearing
       .group("SSCS_UpdateHearing_120_GetHearing") {
         
         exec(http("SSCS_UpdateHearing_120_005_GetHearing")
-          .get("/api/hearings/getHearing?hearingId=${updateSSCSHearingRequestId}")
+          .get("/api/hearings/getHearing?hearingId=#{updateSSCSHearingRequestId}")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
           .check(jsonPath("$.requestDetails.versionNumber").saveAs("versionNumber"))
@@ -279,7 +279,7 @@ Enter any additional instructions for the hearing
       
       .group("SSCS_UpdateHearing_140_SubmitUpdateHearing") {
         exec(http("SSCS_UpdateHearing_140_005_SubmitUpdate")
-          .put("/api/hearings/updateHearingRequest?hearingId=${updateSSCSHearingRequestId}")
+          .put("/api/hearings/updateHearingRequest?hearingId=#{updateSSCSHearingRequestId}")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
           .body(ElFileBody("bodies/hearings/sscs/AmendHearingSubmit.json"))
@@ -314,7 +314,7 @@ Enter any additional instructions for the hearing
         exec(Common.isAuthenticated)
           
           .exec(http("SSCS_DeleteHearing_160_005_SubmitDeleteHearing")
-            .delete("/api/hearings/cancelHearings?hearingId=${cancelSSCSHearingRequestId}")
+            .delete("/api/hearings/cancelHearings?hearingId=#{cancelSSCSHearingRequestId}")
             .headers(Headers.commonHeader)
             .header("accept", "application/json, text/plain, */*")
             .header("accept-language", "en-GB,en-US;q=0.9,en;q=0.8")

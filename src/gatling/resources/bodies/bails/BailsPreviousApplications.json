@@ -14,6 +14,6 @@
     "previousApplicationDoneViaAria": null,
     "previousApplicationDoneViaCcd": null
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false
 }

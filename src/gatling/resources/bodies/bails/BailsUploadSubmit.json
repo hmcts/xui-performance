@@ -3,12 +3,12 @@
     "uploadBailSummaryDocs": [
       {
         "value": {
-          "description": "${BailsEvidenceDescription}",
+          "description": "#{BailsRandomString}",
           "document": {
-            "document_url": "${DocumentURL}",
-            "document_binary_url": "${DocumentURL}/binary",
+            "document_url": "#{DocumentURL}",
+            "document_binary_url": "#{DocumentURL}/binary",
             "document_filename": "120KB.pdf",
-            "document_hash": "${DocumentHash}"
+            "document_hash": "#{DocumentHash}"
           }
         },
         "id": null
@@ -20,6 +20,6 @@
     "summary": "",
     "description": ""
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false
 }

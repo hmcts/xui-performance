@@ -3,7 +3,7 @@
     "PetitionerSolicitorName": "PerfSolicitor",
     "D8SolicitorReference": "PerfTestDivRef",
     "PetitionerSolicitorPhone": "07000000000",
-    "PetitionerSolicitorEmail": "${user}",
+    "PetitionerSolicitorEmail": "#{user}",
     "SolicitorAgreeToReceiveEmails": "Yes",
     "DerivedPetitionerSolicitorAddr": "1 Solicitor Road\nPerf Test Town\nPR1 1RF",
     "PetitionerOrganisationPolicy": {
@@ -11,8 +11,8 @@
       "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
-        "OrganisationID": "${orgref}",
-        "OrganisationName": "${orgname}"
+        "OrganisationID": "#{orgref}",
+        "OrganisationName": "#{orgname}"
       }
     }
   },
@@ -25,7 +25,7 @@
     "PetitionerSolicitorName": "PerfSolicitor",
     "D8SolicitorReference": "PerfTestDivRef",
     "PetitionerSolicitorPhone": "07000000000",
-    "PetitionerSolicitorEmail": "${user}",
+    "PetitionerSolicitorEmail": "#{user}",
     "SolicitorAgreeToReceiveEmails": "Yes",
     "DerivedPetitionerSolicitorAddr": "1 Solicitor Road\nPerf Test Town\nPR1 1RF",
     "PetitionerOrganisationPolicy": {
@@ -33,11 +33,11 @@
       "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
-        "OrganisationID": "${orgref}",
-        "OrganisationName": "${orgname}"
+        "OrganisationID": "#{orgref}",
+        "OrganisationName": "#{orgname}"
       }
     }
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false
 }

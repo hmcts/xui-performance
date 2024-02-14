@@ -4,9 +4,10 @@
       {
         "id": null,
         "value": {
-          "document_url": "${DocumentURL}",
-          "document_binary_url": "${DocumentURL}/binary",
-          "document_filename": "3MB.pdf"
+          "document_url": "#{DocumentURL}",
+          "document_binary_url": "#{DocumentURL}/binary",
+          "document_filename": "3MB.pdf",
+          "document_hash": "#{documentHash}"
         }
       }
     ],
@@ -22,15 +23,16 @@
       {
         "id": null,
         "value": {
-          "document_url": "${DocumentURL}",
-          "document_binary_url": "${DocumentURL}/binary",
-          "document_filename": "3MB.pdf"
+          "document_url": "#{DocumentURL}",
+          "document_binary_url": "#{DocumentURL}/binary",
+          "document_filename": "3MB.pdf",
+          "document_hash": "#{documentHash}"
         }
       }
     ],
     "fl401UploadSupportDocuments": []
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false,
-  "case_reference": "${caseId}"
+  "case_reference": "#{caseId}"
 }

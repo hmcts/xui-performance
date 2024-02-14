@@ -8,20 +8,20 @@
     "description": ""
   },
   "event_data": {
-    "judgeDetailsName": "${BailsJudgeName}",
+    "judgeDetailsName": "Judge#{BailsRandomString}",
     "secretaryOfStateConsentYesOrNo": "No",
     "recordTheDecisionList": null,
     "decisionGrantedOrRefused": "granted",
     "releaseStatusYesOrNo": "Yes",
-    "conditionsForBailAppearance": "${BailsConditionsAppearance}",
-    "conditionsForBailActivities": "${BailsConditionsActivities}",
+    "conditionsForBailAppearance": "Appearance#{BailsRandomString}",
+    "conditionsForBailActivities": "Activities#{BailsRandomString}",
     "recordFinancialConditionYesOrNo": "Yes",
     "conditionsForBail": [
       "bailAppearance",
       "bailActivities"
     ]
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false,
-  "case_reference": "${caseId}"
+  "case_reference": "#{caseId}"
 }

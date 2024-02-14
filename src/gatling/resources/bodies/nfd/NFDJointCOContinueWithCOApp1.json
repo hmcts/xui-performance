@@ -1,0 +1,36 @@
+{
+  "data": {
+    "applicationType": "jointApplication",
+    "labelContentUnionType": "divorce",
+    "labelContentDivorceOrCivilPartnershipApplication": "divorce application",
+    "dateAosSubmitted": null,
+    "coLastApprovedServiceApplicationIsBailiffApplication": null,
+    "coSuccessfulServedByBailiff": null,
+    "coCertificateOfServiceDate": null,
+    "coLastAlternativeServiceDocumentLink": null,
+    "coRespondentAnswersLink": null,
+    "coServiceConfirmed": null,
+    "coApplicant1ApplyForConditionalOrder": "Yes"
+  },
+  "event": {
+    "id": "draft-conditional-order",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "applicationType": "jointApplication",
+    "labelContentUnionType": "divorce",
+    "labelContentDivorceOrCivilPartnershipApplication": "divorce application",
+    "dateAosSubmitted": null,
+    "coLastApprovedServiceApplicationIsBailiffApplication": null,
+    "coSuccessfulServedByBailiff": null,
+    "coCertificateOfServiceDate": null,
+    "coLastAlternativeServiceDocumentLink": null,
+    "coRespondentAnswersLink": null,
+    "coServiceConfirmed": null,
+    "coApplicant1ApplyForConditionalOrder": "Yes"
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
+}

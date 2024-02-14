@@ -2,7 +2,7 @@
   "data": {
     "statementOfTruth": "Yes",
     "solicitorName": "RespSolicitor",
-    "solicitorFirm": "${orgname2}",
+    "solicitorFirm": "#{orgnames(1)}",
     "additionalComments": null
   },
   "event": {
@@ -20,10 +20,10 @@
     "applicant2LegalProceedingsDetails": null,
     "statementOfTruth": "Yes",
     "solicitorName": "RespSolicitor",
-    "solicitorFirm": "${orgname2}",
+    "solicitorFirm": "#{orgnames(1)}",
     "additionalComments": null
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false,
-  "case_reference": "${caseId}"
+  "case_reference": "#{caseId}"
 }

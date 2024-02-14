@@ -11,9 +11,9 @@
     "hasPreviousBailApplication": "No",
     "previousApplicationDoneViaAria": "No",
     "previousApplicationDoneViaCcd": "No",
-    "applicantGivenNames": "${BailsApplicantFirstName}",
-    "applicantFamilyName": "${BailsApplicantLastName}",
-    "applicantDateOfBirth": "${BailsAppDobYear}-${BailsAppDobMonth}-${BailsAppDobDay}",
+    "applicantGivenNames": "Bails#{BailsRandomString}",
+    "applicantFamilyName": "Test#{BailsRandomString}",
+    "applicantDateOfBirth": "#{BailsDobYear}-#{BailsDobMonth}-#{BailsDobDay}",
     "applicantGender": "Male",
     "applicantNationality": "HAS_NATIONALITY",
     "applicantNationalities": [
@@ -21,31 +21,31 @@
         "value": {
           "code": "English"
         },
-        "id": "${applicantNationalitiesId}"
+        "id": "#{applicantNationalitiesId}"
       }
     ],
-    "homeOfficeReferenceNumber": "${BailsHomeOfficeRefNum}",
+    "homeOfficeReferenceNumber": "#{BailsRandomNumber}",
     "applicantDetainedLoc": "prison",
-    "applicantPrisonDetails": "${BailsNomsNumber}",
+    "applicantPrisonDetails": "#{BailsRandomNumber}",
     "prisonName": "Liverpool",
-    "applicantArrivalInUKDate": "${BailsArrivedYear}-${BailsAppDobMonth}-${BailsAppDobDay}",
+    "applicantArrivalInUKDate": "#{BailsArrivedYear}-#{BailsDobMonth}-#{BailsDobDay}",
     "applicantHasMobile": "Yes",
-    "applicantMobileNumber1": "${BailsAppPhoneNumber}",
+    "applicantMobileNumber1": "#{BailsPhoneNumber}",
     "hasAppealHearingPending": "YesWithoutAppealNumber",
     "applicantHasAddress": "Yes",
     "agreesToBoundByFinancialCond": "Yes",
     "financialCondAmount1": "100",
     "applicantAddress": {
-      "AddressLine1": "${addressLines(0)}",
-      "AddressLine2": "${addressLines(1)}",
+      "AddressLine1": "#{addressLines(0)}",
+      "AddressLine2": "#{addressLines(1)}",
       "AddressLine3": "",
-      "PostTown": "${addressLines(2)}",
+      "PostTown": "#{addressLines(2)}",
       "County": "",
-      "PostCode": "${addressLines(3)}",
+      "PostCode": "#{addressLines(3)}",
       "Country": "United Kingdom"
     },
     "hasFinancialCondSupporter": "Yes"
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false
 }

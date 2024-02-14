@@ -43,9 +43,9 @@
     "applicant1StatementOfTruth": "Yes",
     "solSignStatementOfTruth": "Yes",
     "solStatementOfReconciliationName": "AppSolicitor",
-    "solStatementOfReconciliationFirm": "${orgname1}",
+    "solStatementOfReconciliationFirm": "#{orgnames(0)}",
     "statementOfReconciliationComments": null,
-    "solApplicationFeeInPounds": "${feeInPounds}",
+    "solApplicationFeeInPounds": "#{feeInPounds}",
     "solPaymentHowToPay": "feePayByAccount",
     "pbaNumbers": {
       "value": {
@@ -65,7 +65,7 @@
     },
     "feeAccountReference": "PerfPayRef"
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false,
-  "case_reference": "${caseId}"
+  "case_reference": "#{caseId}"
 }

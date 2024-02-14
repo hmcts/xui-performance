@@ -678,6 +678,9 @@ class XUI_Simulation extends Simulation {
 //		.assertions(assertions(testType))
 //		.maxDuration(60 minutes)
 
+	/*
+	Below setup is for running the Hearing Scenario
+	 */
 	setUp(
 	(SSCSHearingsScenario.inject(nothingFor(1),rampUsers(50).during(3400))),
 		(PRLHearingsScenario.inject(nothingFor(30),rampUsers(40).during(3400))),

@@ -13,29 +13,29 @@
   },
   "event_data": {
     "isAdmin": "No",
-    "solicitorName": "${firmName}",
+    "solicitorName": "#{firmName}",
     "ApplicantOrganisationPolicy": {
       "OrgPolicyCaseAssignedRole": "[APPSOLICITOR]",
       "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
-        "OrganisationID": "${applicantOrgs(1)}",
-        "OrganisationName": "${applicantOrgs(0)}"
+        "OrganisationID": "#{applicantOrgs(1)}",
+        "OrganisationName": "#{applicantOrgs(0)}"
       }
     },
-    "solicitorFirm": "${firmName}",
-    "solicitorReference": "${firmRef}",
+    "solicitorFirm": "#{firmName}",
+    "solicitorReference": "#{firmRef}",
     "solicitorAddress": {
-      "AddressLine1": "${firmAddress1}",
-      "AddressLine2": "${firmAddress2}",
-      "AddressLine3": "${firmAddress3}",
-      "PostTown": "${firmPostTown}",
-      "County": "${firmCounty}",
-      "PostCode": "${firmPostcode}",
+      "AddressLine1": "#{firmAddress1}",
+      "AddressLine2": "#{firmAddress2}",
+      "AddressLine3": "#{firmAddress3}",
+      "PostTown": "#{firmPostTown}",
+      "County": "#{firmCounty}",
+      "PostCode": "#{firmPostcode}",
       "Country": "UK"
     },
     "solicitorPhone": null,
-    "solicitorEmail": "${firmName}@test.com",
+    "solicitorEmail": "#{firmName}@test.com",
     "solicitorDXnumber": null,
     "solicitorAgreeToReceiveEmails": "No",
     "divorceCaseNumber": "EZ12D91234",
@@ -46,6 +46,6 @@
     "londonFRCList": "london",
     "londonCourtList": "FR_londonList_10"
   },
-  "event_token": "${event_token}",
+  "event_token": "#{event_token}",
   "ignore_warning": false
 }
