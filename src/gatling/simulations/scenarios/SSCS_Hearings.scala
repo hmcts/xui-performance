@@ -13,6 +13,7 @@ import scala.util.Random
 object SSCS_Hearings {
   
   val BaseURL = Environment.baseURL
+  val baseDomain=Environment.baseDomain
   
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime

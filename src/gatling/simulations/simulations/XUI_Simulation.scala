@@ -397,7 +397,7 @@ class XUI_Simulation extends Simulation {
 				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
 				.exec(session => session.set("user", session("user1").as[String]).set("password", session("password1").as[String]))
 				.exec(Login.XUILogin)
-				.exec(Solicitor_NFD.ApplyForCO)
+				.exec(Solicitor_NFD.ApplyForFO)
 				.exec(Logout.XUILogout)
 				//Legal Advisor - Grant Conditional Order
 				.exec(CCDAPI.CreateEvent("Legal", "DIVORCE", "NFD", "legal-advisor-make-decision", "bodies/nfd/LAMakeDecision.json"))
@@ -689,12 +689,12 @@ class XUI_Simulation extends Simulation {
 		.protocols(httpProtocol)
 	.maxDuration(4000)
 
-		//setUp(
-    	//	(PRLHearingDataPrep.inject(nothingFor(5),rampUsers(40).during(300))),
-    	//	(CivilHearingsDataPrep.inject(nothingFor(1),rampUsers(14).during(300)))
-    //	)
-    //		.protocols(httpProtocol)
-    //	.maxDuration(20000000)
+		/*setUp(
+    		(PRLHearingDataPrep.inject(nothingFor(5),rampUsers(1).during(1))),
+    		(CivilHearingsDataPrep.inject(nothingFor(1),rampUsers(1).during(1)))
+    	)
+    		.protocols(httpProtocol)
+			.maxDuration(20000000)*/
 	
 	
 
