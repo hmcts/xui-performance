@@ -2,7 +2,6 @@ package scenarios
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import scenarios.Login.baseDomain
 import utils.{Common, Environment, Headers}
 
 import java.io.{BufferedWriter, FileWriter}
@@ -15,6 +14,7 @@ import scala.util.Random
 object Civil_Hearings {
   
   val BaseURL = Environment.baseURL
+  val baseDomain=Environment.baseDomain
   
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
