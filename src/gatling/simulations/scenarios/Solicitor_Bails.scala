@@ -861,6 +861,10 @@ object Solicitor_Bails {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+  val ConfirmLocation = 
+
+    
+
   val UploadBailSummary =
 
     /*======================================================================================
