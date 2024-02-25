@@ -1,0 +1,229 @@
+{
+  "data": {
+    "respondents": [
+      {
+        "id": "${RepId}",
+        "value": {
+          "user": {},
+          "email": "${repEmail}",
+          "gender": "male",
+          "address": {
+            "County": "",
+            "Country": "United Kingdom",
+            "PostCode": "${repPostCode}",
+            "PostTown": "${repPostTown}",
+            "AddressLine1": "${repAddressLine1}",
+            "AddressLine2": "${repAddressLine2}",
+            "AddressLine3": ""
+          },
+          "partyId": null,
+          "dxNumber": null,
+          "landline": null,
+          "lastName": "${repLastName}",
+          "response": {},
+          "firstName": "${repFirstName}",
+          "dateOfBirth": "${repDateOfBirth}",
+          "otherGender": null,
+          "phoneNumber": "0123456789",
+          "placeOfBirth": "London",
+          "previousName": null,
+          "solicitorOrg": {
+            "OrganisationID": "${repOrganisationID}",
+            "OrganisationName": "${repOrganisationName}"
+          },
+          "partyLevelFlag": {
+            "details": [],
+            "partyName": "${repPartyName}",
+            "roleOnCase": "Respondent"
+          },
+          "sendSignUpLink": null,
+          "solicitorEmail": null,
+          "isAddressUnknown": null,
+          "solicitorAddress": {
+            "County": null,
+            "Country": null,
+            "PostCode": null,
+            "PostTown": null,
+            "AddressLine1": null,
+            "AddressLine2": null,
+            "AddressLine3": null
+          },
+          "solicitorOrgUuid": "${solicitorOrgUuId}",
+          "solicitorPartyId": "${solicitorPartyId}",
+          "currentRespondent": null,
+          "isDateOfBirthKnown": "Yes",
+          "solicitorReference": null,
+          "solicitorTelephone": null,
+          "isPlaceOfBirthKnown": "Yes",
+          "isDateOfBirthUnknown": null,
+          "isAddressConfidential": null,
+          "isCurrentAddressKnown": "Yes",
+          "relationshipToChildren": null,
+          "representativeLastName": null,
+          "representativeFirstName": null,
+          "canYouProvidePhoneNumber": "Yes",
+          "applicantPreferredContact": null,
+          "canYouProvideEmailAddress": "Yes",
+          "isAtAddressLessThan5Years": null,
+          "isPhoneNumberConfidential": null,
+          "isEmailAddressConfidential": null,
+          "applicantContactInstructions": null,
+          "respondentLivedWithApplicant": null,
+          "doTheyHaveLegalRepresentation": "no",
+          "addressLivedLessThan5YearsDetails": "${repAddressLivedLessThan5YearsDetails}",
+          "otherPersonRelationshipToChildren": [],
+          "isAtAddressLessThan5YearsWithDontKnow": "yes"
+        }
+      }
+    ],
+    "caseFlags": {
+      "roleOnCase": null,
+      "partyName": null,
+      "details": [
+        {
+          "value": {
+            "name": "Complex Case",
+            "subTypeValue": null,
+            "subTypeKey": null,
+            "otherDescription": null,
+            "flagComment": "${PRLRandomString}",
+            "dateTimeCreated": "2023-02-16T14:24:35.701Z",
+            "path": [
+              {
+                "id": null,
+                "value": "Case"
+              }
+            ],
+            "hearingRelevant": "Yes",
+            "flagCode": "CF0002",
+            "status": "Active"
+          }
+        }
+      ],
+      "flagType": "CF0002",
+      "otherFlagTypeDescription": "",
+      "flagComments": "${PRLRandomString}"
+    },
+    "applicants": [
+      {
+        "id": "${AppId}",
+        "value": {
+          "user": {
+            "email": null,
+            "idamId": null,
+            "solicitorRepresented": null
+          },
+          "email": "${appEmail}",
+          "gender": "male",
+          "address": {
+            "County": "",
+            "Country": "United Kingdom",
+            "PostCode": "${appPostCode}",
+            "PostTown": "MANCHESTER",
+            "AddressLine1": "${appAddressLine1}",
+            "AddressLine2": "${appAddressLine2}",
+            "AddressLine3": ""
+          },
+          "partyId": null,
+          "dxNumber": "${appDxNumber}",
+          "landline": null,
+          "lastName": "${appLastName}",
+          "response": {
+            "miam": {},
+            "consent": {},
+            "citizenFlags": {},
+            "attendToCourt": {},
+            "citizenDetails": {},
+            "respAohYesOrNo": null,
+            "safetyConcerns": {},
+            "supportYouNeed": {},
+            "activeRespondent": null,
+            "safeToCallOption": null,
+            "keepDetailsPrivate": {},
+            "respChildAbuseInfo": [],
+            "c7ResponseSubmitted": null,
+            "legalRepresentation": null,
+            "c1AResponseSubmitted": null,
+            "respDomesticAbuseInfo": [],
+            "respOtherConcernsInfo": {},
+            "respChildAbductionInfo": {},
+            "respKeepDetailsPrivate": {},
+            "respAllegationsOfHarmInfo": {},
+            "respSolHaveYouAttendedMiam": {},
+            "citizenInternationalElements": {},
+            "currentOrPreviousProceedings": {},
+            "internationalElementChildInfo": {},
+            "respondentExistingProceedings": [],
+            "internationalElementParentInfo": {},
+            "respSolWillingnessToAttendMiam": {},
+            "internationalElementRequestInfo": {},
+            "currentOrPastProceedingsForChildren": null,
+            "factorsAffectingAbilityToParticipate": null,
+            "internationalElementJurisdictionInfo": {},
+            "respKeepDetailsPrivateConfidentiality": {},
+            "provideDetailsForFactorsAffectingAbilityToParticipate": null
+          },
+          "firstName": "appFirstName",
+          "dateOfBirth": "${appDateOfBirth}",
+          "otherGender": null,
+          "phoneNumber": "0123456789",
+          "placeOfBirth": "London",
+          "previousName": null,
+          "solicitorOrg": {
+            "OrganisationID": "${appOrganisationID}",
+            "OrganisationName": "${appOrganisationName}"
+          },
+          "partyLevelFlag": {
+            "details": [],
+            "partyName": "${appPartyName}",
+            "roleOnCase": "Applicant"
+          },
+          "sendSignUpLink": null,
+          "solicitorEmail": "${appsSolicitorEmail}",
+          "isAddressUnknown": null,
+          "solicitorAddress": {
+            "County": "",
+            "Country": "United Kingdom",
+            "PostCode": "${appsSolicitorPostCode}",
+            "PostTown": "${appsSolicitorPostTown}",
+            "AddressLine1": "${appsSolicitorAddressLine1}",
+            "AddressLine2": "${appsSolicitorAddressLine2}",
+            "AddressLine3": ""
+          },
+          "solicitorOrgUuid": "${solicitorOrgUuId}",
+          "solicitorPartyId": "${solicitorPartyId}",
+          "currentRespondent": null,
+          "isDateOfBirthKnown": null,
+          "solicitorReference": "${appSolicitorReference}",
+          "solicitorTelephone": null,
+          "isPlaceOfBirthKnown": null,
+          "isDateOfBirthUnknown": null,
+          "isAddressConfidential": "Yes",
+          "isCurrentAddressKnown": null,
+          "relationshipToChildren": null,
+          "representativeLastName": "${appRepresentativeLastName}",
+          "representativeFirstName": "${appRepresentativeFirstName}",
+          "canYouProvidePhoneNumber": null,
+          "applicantPreferredContact": null,
+          "canYouProvideEmailAddress": "Yes",
+          "isAtAddressLessThan5Years": "No",
+          "isPhoneNumberConfidential": "Yes",
+          "isEmailAddressConfidential": "Yes",
+          "applicantContactInstructions": null,
+          "respondentLivedWithApplicant": null,
+          "doTheyHaveLegalRepresentation": null,
+          "addressLivedLessThan5YearsDetails": null,
+          "otherPersonRelationshipToChildren": [],
+          "isAtAddressLessThan5YearsWithDontKnow": null
+        }
+      }
+    ]
+  },
+  "event": {
+    "id": "c100CreateFlags",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false
+}

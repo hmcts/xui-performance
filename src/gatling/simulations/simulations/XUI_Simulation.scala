@@ -690,8 +690,8 @@ class XUI_Simulation extends Simulation {
 	.maxDuration(4000)
 
 		/*setUp(
-    		(PRLHearingDataPrep.inject(nothingFor(5),rampUsers(1).during(1))),
-    		(CivilHearingsDataPrep.inject(nothingFor(1),rampUsers(1).during(1)))
+    		(PRLHearingsScenario.inject(nothingFor(5),rampUsers(1).during(1)))
+    		//(CivilHearingsDataPrep.inject(nothingFor(1),rampUsers(1).during(1)))
     	)
     		.protocols(httpProtocol)
 			.maxDuration(20000000)*/

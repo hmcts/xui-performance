@@ -1,0 +1,13 @@
+{
+  "service_request_reference": "string",
+  "ccd_case_number": "${caseId}",
+  "service_request_amount": "string",
+  "service_request_status": "Paid",
+  "payment": {
+    "payment_amount": "string",
+    "payment_reference": "string",
+    "payment_method": "string",
+    "case_reference": "string",
+    "account_number": "string"
+  }
+}
