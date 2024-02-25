@@ -1,0 +1,10 @@
+{
+  "query": {
+    "terms": {
+      "reference": [
+        "${caseId}"
+      ]
+    }
+  },
+  "size": 25
+}
