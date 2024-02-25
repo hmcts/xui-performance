@@ -324,8 +324,8 @@ class XUI_Simulation extends Simulation {
 						.exec(Login.XUILogin)
 						.pause(10)
 						.repeat(1) {
-                                exec(PRL_Hearings.ViewAllHearings)
-							    .exec(PRL_Hearings.RequestHearing)
+							exec(PRL_Hearings.ViewAllHearings)
+								.exec(PRL_Hearings.RequestHearing)
 								.exec(PRL_Hearings.GetHearing)
 								.exec(PRL_Hearings.UpdateHearing)
 								.exec(PRL_Hearings.GetHearing)
@@ -684,7 +684,7 @@ class XUI_Simulation extends Simulation {
 	setUp(
 	(SSCSHearingsScenario.inject(nothingFor(1),rampUsers(50).during(3400))),
 		(PRLHearingsScenario.inject(nothingFor(30),rampUsers(40).during(3400))),
-		(CivilHearingsScenario.inject(nothingFor(60),rampUsers(14).during(3400)))
+		(CivilHearingsScenario.inject(nothingFor(60),rampUsers(14).during(1200))) //14, 3400
 	)
 		.protocols(httpProtocol)
 	.maxDuration(4000)
