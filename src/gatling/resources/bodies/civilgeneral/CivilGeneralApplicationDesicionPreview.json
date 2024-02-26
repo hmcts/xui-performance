@@ -1,0 +1,47 @@
+{
+  "data": {
+    "judicialMakeOrderDocPreview": {
+      "document_url": "#{previewDocURL}",
+      "document_binary_url": "#{previewDocBinaryURL}",
+      "document_filename": "#{previewFilename}",
+      "document_hash": "#{previewDocHash}"
+    }
+  },
+  "event": {
+    "id": "MAKE_DECISION",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "judicialDecision": {
+      "decision": "MAKE_AN_ORDER"
+    },
+    "makeAppVisibleToRespondents": {
+      "makeAppAvailableCheck": [
+        "CONSENT_AGREEMENT_CHECKBOX"
+      ]
+    },
+    "judicialDecisionMakeOrder": {
+      "judgeRecitalText": "Judge: Simpson Homer\n\nThe Judge considered the without notice application of Claimant dated 13 July 2023\n\nAnd the Judge considered the information provided by the Claimant",
+      "makeAnOrder": "GIVE_DIRECTIONS_WITHOUT_HEARING",
+      "directionsText": "asasasasasasa",
+      "directionsResponseByDate": "#{futureDate}",
+      "judicialByCourtsInitiative": "OPTION_3",
+      "reasonForDecisionText": "asasasasasasasa",
+      "displayjudgeApproveEditOptionDate": "No",
+      "displayjudgeApproveEditOptionDoc": "No",
+      "isOrderProcessedByStayScheduler": "No",
+      "isOrderProcessedByUnlessScheduler": "No",
+      "displayjudgeApproveEditOptionDateForUnlessOrder": "No"
+    },
+    "judicialMakeOrderDocPreview": {
+      "document_url": "#{previewDocURL}",
+      "document_binary_url": "#{previewDocBinaryURL}",
+      "document_filename": "#{previewFilename}",
+      "document_hash": "#{previewDocHash}"
+    }
+  },
+  "event_token": "#{event_token_judge}",
+  "ignore_warning": false,
+  "case_reference": "#{ga_case_id}"
+}

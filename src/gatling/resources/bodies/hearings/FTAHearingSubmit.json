@@ -1,0 +1,10 @@
+{
+  "data": {},
+  "event": {
+    "description": "",
+    "id": "adminSendToWithDwp",
+    "summary": ""
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false
+}
