@@ -297,9 +297,8 @@ class XUI_Simulation extends Simulation {
 										exec(Civil_Hearings.ViewAllHearings)
 											.exec(Civil_Hearings.GetHearing)
 									}
-							
 						}
-						
+
 						
 						
 						
@@ -682,9 +681,9 @@ class XUI_Simulation extends Simulation {
 	Below setup is for running the Hearing Scenario
 	 */
 	setUp(
-	(SSCSHearingsScenario.inject(nothingFor(1),rampUsers(50).during(3400))),
+	(SSCSHearingsScenario.inject(nothingFor(10),rampUsers(50).during(3400))),
 		(PRLHearingsScenario.inject(nothingFor(30),rampUsers(40).during(3400))),
-		(CivilHearingsScenario.inject(nothingFor(60),rampUsers(14).during(1200))) //14, 3400
+		(CivilHearingsScenario.inject(nothingFor(60),rampUsers(14).during(3400))) //14, 3400
 	)
 		.protocols(httpProtocol)
 	.maxDuration(4000)
