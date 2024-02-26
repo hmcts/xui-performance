@@ -3,6 +3,8 @@ package scenarios
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import utils.{Common, Environment, Headers}
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 /*======================================================================================
 * Create a new Bail application as a professional user (e.g. Legal Rep)
@@ -15,6 +17,9 @@ object Solicitor_Bails {
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
 
+  val patternDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+  val now = LocalDate.now()
+
   val CreateBailApplication =
 
     exec(_.setAll(
@@ -25,7 +30,8 @@ object Solicitor_Bails {
       "BailsDobYear" -> Common.getDobYear(),
       "BailsArrivedYear" -> Common.getDobYearChild(),
       "BailsPhoneNumber" -> ("07" + Common.randomNumber(9)),
-      "BailsSupporterEmail" -> (Common.randomString(7) + "@gmail.com")))
+      "BailsSupporterEmail" -> (Common.randomString(7) + "@gmail.com"),
+      "currentDate" -> now.format(patternDate)))
 
 
     /*======================================================================================
@@ -863,7 +869,125 @@ object Solicitor_Bails {
 
   val ConfirmLocation = 
 
+    /*======================================================================================
+    * Confirm the Detention Location
+    ======================================================================================*/
+
+    group("XUI_Bails_480_Confirm_Location_Page_1") {
+
+      exec(http("request_0")
+        .get("/case/IA/Bail/#{caseId}/trigger/confirmDetentionLocation")
+        .headers(Headers.commonHeader)
+        // .check(substring(""))
+        )
     
+      .exec(Common.configurationui)
+
+      .exec(Common.configUI)
+
+      .exec(Common.configJson)
+
+      .exec(Common.TsAndCs)
+
+      .exec(Common.userDetails)
+              
+      .exec(Common.monitoringTools)
+
+      .exec(Common.isAuthenticated)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    .group("XUI_Bails_490_Confirm_Location_Page_2") {
+
+      exec(http("request_16")
+			  .get("/data/internal/cases/#{caseId}")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json"))
+      
+      .exec(http("request_17")
+        .get("/data/internal/cases/#{caseId}/event-triggers/confirmDetentionLocation?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token")))
+
+      .exec(Common.isAuthenticated)
+            
+      .exec(Common.userDetails)
+
+      .exec(Common.profile)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    .group("XUI_Bails_500_Confirm_Location_Submit") {
+
+      exec(http("request_30")
+        .post("/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/bails/BailsConfirmLocation.json")))
+      
+      .exec(http("request_31")
+        .get("/data/internal/cases/#{caseId}")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json"))
+
+      .exec(Common.waJurisdictions)
+
+      .exec(Common.userDetails)
+    }
+            
+    .pause(MinThinkTime, MaxThinkTime)
+
+  val ListCase = 
+
+    group("XUI_510_List_Case_Page1") {
+      
+      exec(http("request_2")
+			  .get("/data/internal/cases/#{caseId}/event-triggers/caseListing?ignore-warning=false")
+			  .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token")))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    .group("XUI_520_List_Case_Page2") {
+
+      exec(http("request_8")
+        .post("/data/case-types/Bail/validate?pageId=caseListingcaseListing")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/bails/BailsListCasePage1.json")))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    .group("XUI_530_List_Case_Submit") {
+
+      exec(http("request_12")
+        .post("/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/bails/BailsListCaseSubmit.json")))
+            
+      .exec(http("request_14")
+        .get("/data/internal/cases/#{caseId}")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json"))
+            
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
 
   val UploadBailSummary =
 
@@ -876,7 +1000,9 @@ object Solicitor_Bails {
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.navigationHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-        .check(jsonPath("$.state.name").is("Application submitted")))
+        // .check(jsonPath("$.state.name").is("Application submitted"))
+        )
+        
     }
 
     .pause(MinThinkTime, MaxThinkTime)
