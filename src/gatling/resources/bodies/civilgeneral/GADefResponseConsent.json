@@ -1,0 +1,16 @@
+{
+  "data": {
+    "gaRespondentConsent": "Yes"
+  },
+  "event": {
+    "id": "RESPOND_TO_APPLICATION",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "gaRespondentConsent": "Yes"
+  },
+  "event_token": "#{event_token_ga_defresponse}",
+  "ignore_warning": false,
+  "case_reference": "#{ga_case_id}"
+}

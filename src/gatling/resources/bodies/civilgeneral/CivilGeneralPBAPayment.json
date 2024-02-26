@@ -1,0 +1,8 @@
+{
+  "account_number": "PBA0066906",
+  "amount": 108,
+  "currency": "GBP",
+  "customer_reference": "asasas",
+  "organisation_name": "pforgdiv-031u9",
+  "idempotency_key": "idam-key-#{Idempotencynumber}"
+}

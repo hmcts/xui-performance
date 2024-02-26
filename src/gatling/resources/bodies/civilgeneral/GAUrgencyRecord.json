@@ -1,0 +1,5 @@
+{
+  "data":{"generalAppUrgencyRequirement":{"generalAppUrgency":"No"}},"event":{"id":"INITIATE_GENERAL_APPLICATION","summary":"","description":""},"event_data":{"generalAppType":{"types":["EXTEND_TIME","RELIEF_FROM_SANCTIONS","SET_ASIDE_JUDGEMENT"]},"generalAppHearingDate":{"hearingScheduledPreferenceYesNo":"No"},"generalAppRespondentAgreement":{"hasAgreed":"Yes"},"generalAppUrgencyRequirement":{"generalAppUrgency":"No"}},
+  "event_token":"#{event_token_ga}",
+  "ignore_warning":false,"case_reference":"#{caseId}"
+}
