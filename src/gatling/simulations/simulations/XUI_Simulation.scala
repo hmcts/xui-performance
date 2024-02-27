@@ -225,14 +225,16 @@ class XUI_Simulation extends Simulation {
 	val SSCSHearingsScenario = scenario("***** SSCS Hearing Management *****")
 		
 		.feed(SSCSHearingUserFeeder)
-		.exitBlockOnFail {
+		//.exitBlockOnFail {
 			
-			repeat(1) {
+			.repeat(1) {
 				exec(_.set("env", s"${env}")
 					.set("caseType", "Civil hearings")
 				)
-					.exec(Homepage.XUIHomePage)
-					.exec(Login.XUILogin)
+					.exitBlockOnFail{
+						.exec(Homepage.XUIHomePage)
+						.exec(Login.XUILogin)
+					}
 					.pause(10)
 					.repeat(1) {
 							exec(SSCS_Hearings.ViewAllHearings)
@@ -257,7 +259,7 @@ class XUI_Simulation extends Simulation {
 					}
 					.exec(Logout.XUILogout)
 			}
-		}
+	//	}
 	
 	
 	/*===============================================================================================
@@ -268,15 +270,16 @@ class XUI_Simulation extends Simulation {
 	val CivilHearingsScenario = scenario("***** Civil Hearing Management *****")
 		
 		.feed(CivilLoginFeeder)
-			.exitBlockOnFail {
+			//.exitBlockOnFail {
 				
-				repeat(1) {
+				.repeat(1) {
 					exec(_.set("env", s"${env}")
 						.set("caseType", "Civil hearings")
 					)
-						
+						.exitBlockOnFail{
 						.exec(Homepage.XUIHomePage)
 						.exec(Login.XUILogin)
+						}
 						.pause(10)
 						.repeat(1) {
 								exec(Civil_Hearings.ViewAllHearings)
@@ -304,7 +307,7 @@ class XUI_Simulation extends Simulation {
 						
 						.exec(Logout.XUILogout)
 				}
-			}
+		//	}
 	
 	
 	/*===============================================================================================
@@ -314,13 +317,15 @@ class XUI_Simulation extends Simulation {
 	
 	val PRLHearingsScenario = scenario("***** PRL Hearing Management *****")
 	.feed(UserFeederPRLHearing)
-			.exitBlockOnFail {
-				repeat(1) {
-					
+		//	.exitBlockOnFail {
+				.repeat(1) {
+
 					exec(_.set("env", s"${env}")
 						.set("caseType", "Benefit"))
+						.exitBlockOnFail{
 						.exec(Homepage.XUIHomePage)
 						.exec(Login.XUILogin)
+						}
 						.pause(10)
 						.repeat(1) {
 							exec(PRL_Hearings.ViewAllHearings)
@@ -340,7 +345,7 @@ class XUI_Simulation extends Simulation {
 						}
 								.exec(Logout.XUILogout)
 						}
-				}
+		//		}
 			
 	/*===============================================================================================
 	* XUI Solicitor Divorce Scenario
@@ -681,9 +686,9 @@ class XUI_Simulation extends Simulation {
 	Below setup is for running the Hearing Scenario
 	 */
 	setUp(
-	(SSCSHearingsScenario.inject(nothingFor(10),rampUsers(50).during(3400))),
-		(PRLHearingsScenario.inject(nothingFor(30),rampUsers(40).during(3400))),
-		(CivilHearingsScenario.inject(nothingFor(60),rampUsers(14).during(3400))) //14, 3400
+	(SSCSHearingsScenario.inject(nothingFor(10),rampUsers(1).during(1))),//50, 3400
+		(PRLHearingsScenario.inject(nothingFor(30),rampUsers(1).during(1))),//40,2400
+		(CivilHearingsScenario.inject(nothingFor(60),rampUsers(1).during(1))) //14, 3400
 	)
 		.protocols(httpProtocol)
 	.maxDuration(4000)
