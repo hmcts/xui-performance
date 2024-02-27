@@ -232,7 +232,7 @@ class XUI_Simulation extends Simulation {
 					.set("caseType", "Civil hearings")
 				)
 					.exitBlockOnFail{
-						.exec(Homepage.XUIHomePage)
+						exec(Homepage.XUIHomePage)
 						.exec(Login.XUILogin)
 					}
 					.pause(10)
@@ -277,7 +277,7 @@ class XUI_Simulation extends Simulation {
 						.set("caseType", "Civil hearings")
 					)
 						.exitBlockOnFail{
-						.exec(Homepage.XUIHomePage)
+						exec(Homepage.XUIHomePage)
 						.exec(Login.XUILogin)
 						}
 						.pause(10)
@@ -323,7 +323,7 @@ class XUI_Simulation extends Simulation {
 					exec(_.set("env", s"${env}")
 						.set("caseType", "Benefit"))
 						.exitBlockOnFail{
-						.exec(Homepage.XUIHomePage)
+						exec(Homepage.XUIHomePage)
 						.exec(Login.XUILogin)
 						}
 						.pause(10)
@@ -686,9 +686,9 @@ class XUI_Simulation extends Simulation {
 	Below setup is for running the Hearing Scenario
 	 */
 	setUp(
-	(SSCSHearingsScenario.inject(nothingFor(10),rampUsers(1).during(1))),//50, 3400
-		(PRLHearingsScenario.inject(nothingFor(30),rampUsers(1).during(1))),//40,2400
-		(CivilHearingsScenario.inject(nothingFor(60),rampUsers(1).during(1))) //14, 3400
+	(SSCSHearingsScenario.inject(nothingFor(10),rampUsers(50).during(3400))),//50, 3400
+		(PRLHearingsScenario.inject(nothingFor(30),rampUsers(40).during(3400))),//40,2400
+		(CivilHearingsScenario.inject(nothingFor(60),rampUsers(14).during(3400))) //14, 3400
 	)
 		.protocols(httpProtocol)
 	.maxDuration(4000)
