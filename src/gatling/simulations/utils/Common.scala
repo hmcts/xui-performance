@@ -21,7 +21,6 @@ object Common {
   val patternMonth = DateTimeFormatter.ofPattern("MM")
   val patternYear = DateTimeFormatter.ofPattern("yyyy")
   val patternReference = DateTimeFormatter.ofPattern("d MMM yyyy")
-  val patternDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
   def randomString(length: Int) = {
     rnd.alphanumeric.filter(_.isLetter).take(length).mkString
@@ -202,6 +201,7 @@ object Common {
   val waJurisdictions = 
     exec(http("XUI_Common_000_WAJurisdictionsGet")
       .get("/api/wa-supported-jurisdiction/get")
-			.headers(Headers.commonHeader))
+			.headers(Headers.commonHeader)
+      .check(substring("[")))
 
 }

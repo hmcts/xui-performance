@@ -897,7 +897,8 @@ object Solicitor_Bails {
       .exec(http("XUI_Bails_480_010_Confirm_Location_Page_1")
 			  .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json"))
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
+        .check(jsonPath("$.state.id").is("applicationSubmitted")))
       
       .exec(http("XUI_Bails_480_015_Confirm_Location_Page_1")
         .get("/data/internal/cases/#{caseId}/event-triggers/confirmDetentionLocation?ignore-warning=false")
@@ -940,7 +941,8 @@ object Solicitor_Bails {
       .exec(http("XUI_Bails_500_010_Confirm_Location_Submit")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json"))
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
+        .check(substring("Case listing")))
 
       .exec(Common.waJurisdictions)
 
@@ -993,7 +995,8 @@ object Solicitor_Bails {
       .exec(http("XUI_Bails_530_010_List_Case_Submit")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json"))
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
+        .check(jsonPath("$.state.name").is("Bail summary")))
             
       .exec(Common.userDetails)
     }
