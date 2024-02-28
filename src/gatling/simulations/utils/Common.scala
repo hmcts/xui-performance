@@ -21,6 +21,7 @@ object Common {
   val patternMonth = DateTimeFormatter.ofPattern("MM")
   val patternYear = DateTimeFormatter.ofPattern("yyyy")
   val patternReference = DateTimeFormatter.ofPattern("d MMM yyyy")
+  val patternDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
   def randomString(length: Int) = {
     rnd.alphanumeric.filter(_.isLetter).take(length).mkString
@@ -197,5 +198,10 @@ object Common {
       .header("accept", "application/json, text/plain, */*")
       .check(regex("name|Organisation route error"))
       .check(status.in(200, 304, 401, 403)))
+
+  val waJurisdictions = 
+    exec(http("XUI_Common_000_WAJurisdictionsGet")
+      .get("/api/wa-supported-jurisdiction/get")
+			.headers(Headers.commonHeader))
 
 }
