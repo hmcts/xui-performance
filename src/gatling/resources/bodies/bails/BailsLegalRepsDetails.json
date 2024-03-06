@@ -3,6 +3,7 @@
     "isLegalRep": "Yes",
     "legalRepCompany": "#{orgname}",
     "legalRepName": "Legal#{BailsRandomString}",
+    "legalRepFamilyName": "family#{BailsRandomString}",
     "legalRepEmail": "#{user}",
     "legalRepPhone": "#{BailsPhoneNumber}",
     "legalRepReference": "#{BailsRandomString}"
@@ -16,6 +17,8 @@
     "hasPreviousBailApplication": "No",
     "previousApplicationDoneViaAria": "No",
     "previousApplicationDoneViaCcd": "No",
+    "isAdmin": "Yes",
+    "sentByChecklist": "Applicant",
     "applicantGivenNames": "Bails#{BailsRandomString}",
     "applicantFamilyName": "Test#{BailsRandomString}",
     "applicantDateOfBirth": "#{BailsDobYear}-#{BailsDobMonth}-#{BailsDobDay}",
@@ -32,14 +35,12 @@
     "homeOfficeReferenceNumber": "#{BailsRandomNumber}",
     "applicantDetainedLoc": "prison",
     "applicantPrisonDetails": "#{BailsRandomNumber}",
-    "prisonName": "Liverpool",
+    "prisonName": "Birmingham",
     "applicantArrivalInUKDate": "#{BailsArrivedYear}-#{BailsDobMonth}-#{BailsDobDay}",
     "applicantHasMobile": "Yes",
     "applicantMobileNumber1": "#{BailsPhoneNumber}",
     "hasAppealHearingPending": "YesWithoutAppealNumber",
     "applicantHasAddress": "Yes",
-    "agreesToBoundByFinancialCond": "Yes",
-    "financialCondAmount1": "100",
     "applicantAddress": {
       "AddressLine1": "#{addressLines(0)}",
       "AddressLine2": "#{addressLines(1)}",
@@ -49,6 +50,8 @@
       "PostCode": "#{addressLines(3)}",
       "Country": "United Kingdom"
     },
+    "agreesToBoundByFinancialCond": "Yes",
+    "financialCondAmount1": "100",
     "hasFinancialCondSupporter": "Yes",
     "supporterGivenNames": "Suppoter#{BailsRandomString}",
     "supporterFamilyNames": "Sup#{BailsRandomString}",
@@ -84,28 +87,18 @@
     "financialAmountSupporterUndertakes1": "100",
     "hasFinancialCondSupporter2": "No",
     "groundsForBailReasons": "#{BailsRandomString}",
-    "groundsForBailProvideEvidenceOption": "Yes",
-    "uploadTheBailEvidenceDocs": [
-      {
-        "value": {
-          "description": "#{BailsRandomString}",
-          "document": {
-            "document_url": "#{DocumentURL}",
-            "document_binary_url": "#{DocumentURL}/binary",
-            "document_filename": "120KB.pdf",
-            "document_hash": "#{DocumentHash}"
-          }
-        },
-        "id": null
-      }
-    ],
+    "groundsForBailProvideEvidenceOption": "No",
     "transferBailManagementYesOrNo": "Yes",
     "interpreterYesNo": "No",
+    "fcsInterpreterYesNo": "No",
     "applicantDisability1": "No",
     "videoHearing1": "Yes",
+    "isHomeOffice": "No",
+    "hasLegalRep": "Yes",
     "isLegalRep": "Yes",
     "legalRepCompany": "#{orgname}",
     "legalRepName": "Legal#{BailsRandomString}",
+    "legalRepFamilyName": "family#{BailsRandomString}",
     "legalRepEmail": "#{user}",
     "legalRepPhone": "#{BailsPhoneNumber}",
     "legalRepReference": "#{BailsRandomString}"

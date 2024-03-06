@@ -12,6 +12,8 @@
     "hasPreviousBailApplication": "No",
     "previousApplicationDoneViaAria": "No",
     "previousApplicationDoneViaCcd": "No",
+    "isAdmin": "Yes",
+    "sentByChecklist": "Applicant",
     "applicantGivenNames": "Bails#{BailsRandomString}",
     "applicantFamilyName": "Test#{BailsRandomString}"
   },

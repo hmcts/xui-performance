@@ -1,6 +1,19 @@
 {
   "data": {
-    "hasFinancialCondSupporter2": "No"
+    "uploadB1FormDocs": [
+      {
+        "value": {
+          "description": "description#{BailsRandomString}",
+          "document": {
+            "document_url": "#{DocumentURL}",
+            "document_binary_url": "#{DocumentURL}/binary",
+            "document_filename": "120KB.pdf",
+            "document_hash": "#{DocumentHash}"
+          }
+        },
+        "id": null
+      }
+    ]
   },
   "event": {
     "id": "startApplication",
@@ -78,9 +91,40 @@
     ],
     "supporterHasPassport": "Yes",
     "supporterPassport": "#{BailsRandomNumber}",
-    "financialAmountSupporterUndertakes1": "100",
-    "hasFinancialCondSupporter2": "No"
+    "financialAmountSupporterUndertakes1": "1",
+    "hasFinancialCondSupporter2": "No",
+    "groundsForBailReasons": "#{BailsRandomString}",
+    "groundsForBailProvideEvidenceOption": "No",
+    "transferBailManagementYesOrNo": "Yes",
+    "interpreterYesNo": "No",
+    "fcsInterpreterYesNo": "No",
+    "applicantDisability1": "No",
+    "videoHearing1": "Yes",
+    "hasLegalRep": "Yes",
+    "isHomeOffice": "No",
+    "isLegalRep": "No",
+    "legalRepCompany": "#{orgname}",
+    "legalRepName": "Legal#{BailsRandomString}",
+    "legalRepFamilyName": "family#{BailsRandomString}",
+    "legalRepEmail": "#{user}",
+    "legalRepPhone": "#{BailsPhoneNumber}",
+    "legalRepReference": "#{BailsRandomString}",
+    "uploadB1FormDocs": [
+      {
+        "value": {
+          "description": "description#{BailsRandomString}",
+          "document": {
+            "document_url": "#{DocumentURL}",
+            "document_binary_url": "#{DocumentURL}/binary",
+            "document_filename": "120KB.pdf",
+            "document_hash": "#{DocumentHash}"
+          }
+        },
+        "id": null
+      }
+    ]
   },
   "event_token": "#{event_token}",
   "ignore_warning": false
 }
+

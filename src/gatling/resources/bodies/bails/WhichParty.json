@@ -1,6 +1,7 @@
 {
   "data": {
-    "applicantDateOfBirth": "#{BailsDobYear}-#{BailsDobMonth}-#{BailsDobDay}"
+    "isAdmin": "Yes",
+    "sentByChecklist": "Applicant"
   },
   "event": {
     "id": "startApplication",
@@ -12,10 +13,7 @@
     "previousApplicationDoneViaAria": "No",
     "previousApplicationDoneViaCcd": "No",
     "isAdmin": "Yes",
-    "sentByChecklist": "Applicant",
-    "applicantGivenNames": "Bails#{BailsRandomString}",
-    "applicantFamilyName": "Test#{BailsRandomString}",
-    "applicantDateOfBirth": "#{BailsDobYear}-#{BailsDobMonth}-#{BailsDobDay}"
+    "sentByChecklist": "Applicant"
   },
   "event_token": "#{event_token}",
   "ignore_warning": false

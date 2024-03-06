@@ -40,7 +40,7 @@
     "homeOfficeReferenceNumber": "#{BailsRandomNumber}",
     "applicantDetainedLoc": "prison",
     "applicantPrisonDetails": "#{BailsRandomNumber}",
-    "prisonName": "Liverpool",
+    "prisonName": "Birmingham",
     "applicantArrivalInUKDate": "#{BailsArrivedYear}-#{BailsDobMonth}-#{BailsDobDay}",
     "applicantHasMobile": "Yes",
     "applicantMobileNumber1": "#{BailsPhoneNumber}",
