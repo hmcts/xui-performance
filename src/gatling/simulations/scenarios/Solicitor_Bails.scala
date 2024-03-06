@@ -6,6 +6,8 @@ import utils.{Common, Environment, Headers}
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+import java.io.{BufferedWriter, FileWriter}
+
 /*======================================================================================
 * Create a new Bail application as a professional user (e.g. Legal Rep)
 ======================================================================================*/
@@ -113,6 +115,23 @@ object Solicitor_Bails {
 
     }
     .pause(MinThinkTime, MaxThinkTime)
+
+
+      /*======================================================================================
+* Which party sent the application to the Tribunal?
+======================================================================================*/
+
+      .group("XUI_Bails_075_Which_Party") {
+        exec(http("XUI_Bails_075_005_Which_Party")
+          .post(BaseURL + "/data/case-types/Bail/validate?pageId=startApplicationadminSentByPage")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(ElFileBody("bodies/bails/WhichParty.json"))
+          .check(substring("isAdmin")))
+
+      }
+      .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * What is the applicant’s name?
@@ -222,7 +241,7 @@ object Solicitor_Bails {
 
     .group("XUI_Bails_140_Which_Prison") {
       exec(http("XUI_Bails_140_005_Which_Prison")
-        .post(BaseURL + "/data/case-types/Bail/validate?pageId=startApplicationhomeOfficeReferenceNumber")
+        .post(BaseURL + "/data/case-types/Bail/validate?pageId=startApplicationapplicantPrisonDetails")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -629,44 +648,44 @@ object Solicitor_Bails {
     * Upload evidence
     ========================================================================================*/
 
-    .group("XUI_Bails_370_Upload_Evidence") {
+   // .group("XUI_Bails_370_Upload_Evidence") {
 
-      exec(http("XUI_Bails_370_005_Upload_Evidence")
-        .post("/documentsv2")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json, text/plain, */*")
-        .header("content-type", "multipart/form-data")
-        .header("X-XSRF-TOKEN", "#{XSRFToken}")
-        .formParam("classification", "PUBLIC")
-        .formParam("caseTypeId", "null")
-        .formParam("jurisdictionId", "null")
-        .bodyPart(RawFileBodyPart("files", "120KB.pdf")
-          .fileName("120KB.pdf")
-          .transferEncoding("binary"))
-        .asMultipartForm
-        .check(jsonPath("$.documents[0].hashToken").saveAs("DocumentHash"))
-        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL")))
+//      exec(http("XUI_Bails_370_005_Upload_Evidence")
+  //      .post("/documentsv2")
+  //      .headers(Headers.commonHeader)
+  //      .header("accept", "application/json, text/plain, */*")
+  //      .header("content-type", "multipart/form-data")
+  //      .header("X-XSRF-TOKEN", "#{XSRFToken}")
+  //      .formParam("classification", "PUBLIC")
+  //      .formParam("caseTypeId", "null")
+  //      .formParam("jurisdictionId", "null")
+  //      .bodyPart(RawFileBodyPart("files", "120KB.pdf")
+  //        .fileName("120KB.pdf")
+  //        .transferEncoding("binary"))
+  //      .asMultipartForm
+  //      .check(jsonPath("$.documents[0].hashToken").saveAs("DocumentHash"))
+  //      .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL")))
 
-    }
-      .pause(MinThinkTime, MaxThinkTime)
+  //  }
+  //    .pause(MinThinkTime, MaxThinkTime)
 
 
       /*=======================================================================================
       * Submit evidence
       ========================================================================================*/
 
-      .group("XUI_Bails_375_Submit_Evidence") {
+   //   .group("XUI_Bails_375_Submit_Evidence") {
 
-    exec(http("XUI_Bails_375_005_Upload_Evidence")
-      .post("/data/case-types/Bail/validate?pageId=startApplicationgroundsForBailEvidenceDocumentUpload")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "#{XSRFToken}")
-      .body(ElFileBody("bodies/bails/BailsUploadEvidence.json"))
-      .check(substring("document_url")))
+//    exec(http("XUI_Bails_375_005_Upload_Evidence")
+ //     .post("/data/case-types/Bail/validate?pageId=startApplicationgroundsForBailEvidenceDocumentUpload")
+ //     .headers(Headers.commonHeader)
+  //    .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+ //     .header("x-xsrf-token", "#{XSRFToken}")
+ //     .body(ElFileBody("bodies/bails/BailsUploadEvidence.json"))
+ //     .check(substring("document_url")))
 
-    }
-    .pause(MinThinkTime, MaxThinkTime)
+ //   }
+ //   .pause(MinThinkTime, MaxThinkTime)
 
 
     /*=====================================================================================================
@@ -758,6 +777,54 @@ object Solicitor_Bails {
     .pause(MinThinkTime, MaxThinkTime)
 
 
+
+      /*=======================================================================================
+* Upload B1 form
+========================================================================================*/
+
+       .group("XUI_Bails_421_Upload_B1") {
+
+            exec(http("XUI_Bails_421_005_Upload_B1")
+            .post("/documentsv2")
+            .headers(Headers.commonHeader)
+            .header("accept", "application/json, text/plain, */*")
+            .header("content-type", "multipart/form-data")
+            .header("X-XSRF-TOKEN", "#{XSRFToken}")
+            .formParam("classification", "PUBLIC")
+            .formParam("caseTypeId", "Bail")
+            .formParam("jurisdictionId", "IA")
+            .bodyPart(RawFileBodyPart("files", "120KB.pdf")
+              .fileName("120KB.pdf")
+              .transferEncoding("binary"))
+            .asMultipartForm
+            .check(jsonPath("$.documents[0].hashToken").saveAs("DocumentHash"))
+            .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL")))
+
+        }
+          .pause(MinThinkTime, MaxThinkTime)
+
+
+
+      /*==================================================================================================
+* Submit B1 form
+====================================================================================================*/
+
+      .group("XUI_Bails_422_Submit_B1_Form") {
+
+        exec(http("XUI_Bails_422_005_Submit_B1_Form")
+          .post("/data/case-types/Bail/validate?pageId=startApplicationuploadB1Form")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(ElFileBody("bodies/bails/SubmitB1Form.json"))
+          .check(substring("uploadB1FormDocs")))
+
+          .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+
+      }
+      .pause(MinThinkTime, MaxThinkTime)
+
+
     /*==================================================================================================
     * Check your answers
     ====================================================================================================*/
@@ -772,6 +839,14 @@ object Solicitor_Bails {
         .body(ElFileBody("bodies/bails/BailsCheckYourAnswers.json"))
         .check(jsonPath("$.id").saveAs("caseId"))
         .check(jsonPath("$.callback_response_status").is("CALLBACK_COMPLETED")))
+
+        .exec { session =>
+          val fw = new BufferedWriter(new FileWriter("cases.csv", true))
+          try {
+            fw.write(session("caseId").as[String] + "\r\n")
+          } finally fw.close()
+          session
+        }
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -867,7 +942,8 @@ object Solicitor_Bails {
 
     .pause(MinThinkTime, MaxThinkTime)
 
-  val ConfirmLocation = 
+  val ConfirmLocation =
+
 
     /*======================================================================================
     * Confirm the Detention Location
@@ -875,7 +951,10 @@ object Solicitor_Bails {
 
     group("XUI_Bails_480_Confirm_Location_Page_1") {
 
-      exec(http("XUI_Bails_480_005_Confirm_Location_Page_1")
+      exec(_.setAll(
+        "caseId" -> ("1709643385680953")))
+
+      .exec(http("XUI_Bails_480_005_Confirm_Location_Page_1")
         .get("/case/IA/Bail/#{caseId}/trigger/confirmDetentionLocation")
         .headers(Headers.commonHeader)
         .check(substring("HMCTS Manage cases")))

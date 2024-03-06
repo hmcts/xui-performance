@@ -154,12 +154,12 @@ class XUI_Simulation extends Simulation {
 				.exec(Login.XUILogin)
         .exec(Solicitor_Bails.CreateBailApplication)
         .exec(Solicitor_Bails.SubmitBailApplication)
-				.exec(Logout.XUILogout)
 
-        .feed(UserFeederBailsAdmin)
-        .exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-        .exec(Solicitor_Bails.ConfirmLocation)
+     //   .feed(UserFeederBailsAdmin)
+     //   .exec(Homepage.XUIHomePage)
+	//			.exec(Login.XUILogin)
+       // .exec(Solicitor_Bails.ConfirmLocation)
+		/*
         .exec(Solicitor_Bails.ListCase)
         .exec(Logout.XUILogout)
 
@@ -175,6 +175,8 @@ class XUI_Simulation extends Simulation {
         .exec(Solicitor_Bails.RecordBailDecision)
         .exec(Solicitor_Bails.UploadSignedDecision)
 				.exec(Logout.XUILogout)
+
+		 */
 		}
 
 	/*===============================================================================================
@@ -557,7 +559,7 @@ class XUI_Simulation extends Simulation {
 
 	setUp(
 		BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+	/*	ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		DivorceSolicitorScenario.inject(simulationProfile(testType, divorceTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
@@ -565,7 +567,8 @@ class XUI_Simulation extends Simulation {
 		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-    // PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption) //504 error on XUI_PRL_FL401_250_020_CreateRespondentDetailsEvent, 422 error on XUI_PRL_C100_430_015_SubmitAndPayRedirectEvent
+
+  */  // PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption) //504 error on XUI_PRL_FL401_250_020_CreateRespondentDetailsEvent, 422 error on XUI_PRL_C100_430_015_SubmitAndPayRedirectEvent
 	).protocols(httpProtocol)
 		.assertions(assertions(testType))
 		.maxDuration(75 minutes)

@@ -12,6 +12,8 @@
     "hasPreviousBailApplication": "No",
     "previousApplicationDoneViaAria": "No",
     "previousApplicationDoneViaCcd": "No",
+    "isAdmin": "Yes",
+    "sentByChecklist": "Applicant",
     "applicantGivenNames": "Bails#{BailsRandomString}",
     "applicantFamilyName": "Test#{BailsRandomString}",
     "applicantDateOfBirth": "#{BailsDobYear}-#{BailsDobMonth}-#{BailsDobDay}",
@@ -28,7 +30,7 @@
     "homeOfficeReferenceNumber": "#{BailsRandomNumber}",
     "applicantDetainedLoc": "prison",
     "applicantPrisonDetails": "#{BailsRandomNumber}",
-    "prisonName": "Liverpool",
+    "prisonName": "Birmingham",
     "applicantArrivalInUKDate": "#{BailsArrivedYear}-#{BailsDobMonth}-#{BailsDobDay}",
     "applicantHasMobile": "Yes",
     "applicantMobileNumber1": "#{BailsPhoneNumber}"
