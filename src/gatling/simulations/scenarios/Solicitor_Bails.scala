@@ -19,6 +19,8 @@ object Solicitor_Bails {
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
 
+  val SubmittedCasesFeeder = csv("submittedCases.csv").circular
+
   val patternDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
   val now = LocalDate.now()
 
@@ -67,6 +69,7 @@ object Solicitor_Bails {
 
     }
     .pause(MinThinkTime, MaxThinkTime)
+      /*
 
     /*======================================================================================
     * Previous applications? - No
@@ -255,7 +258,7 @@ object Solicitor_Bails {
     /*======================================================================================
     * What date did the applicant arrive in the UK?
     ======================================================================================*/
-
+*/
     .group("XUI_Bails_150_Date_Arrived_In_UK?") {
       exec(http("XUI_Bails_150_005_Date_Arrived_In_UK")
         .post(BaseURL + "/data/case-types/Bail/validate?pageId=startApplicationapplicantArrivalInUK")
@@ -269,7 +272,7 @@ object Solicitor_Bails {
     }
     .pause(MinThinkTime, MaxThinkTime)
 
-
+/*
     /*======================================================================================
     * Does the applicant have access to a mobile phone? - yes
     ======================================================================================*/
@@ -319,7 +322,7 @@ object Solicitor_Bails {
 
     }
     .pause(MinThinkTime, MaxThinkTime)
-
+*/
 
     /*=======================================================================================
     * At what address will the applicant live if this bail application is granted?
@@ -340,7 +343,7 @@ object Solicitor_Bails {
     }
     .pause(MinThinkTime, MaxThinkTime)
 
-
+/*
     /*=======================================================================================
     * Does the applicant agree to be bound by a financial condition? - yes
     ========================================================================================*/
@@ -653,7 +656,7 @@ object Solicitor_Bails {
 //      exec(http("XUI_Bails_370_005_Upload_Evidence")
   //      .post("/documentsv2")
   //      .headers(Headers.commonHeader)
-  //      .header("accept", "application/json, text/plain, */*")
+  //      .header("accept", "application/json, text/plain, */
   //      .header("content-type", "multipart/form-data")
   //      .header("X-XSRF-TOKEN", "#{XSRFToken}")
   //      .formParam("classification", "PUBLIC")
@@ -691,6 +694,8 @@ object Solicitor_Bails {
     /*=====================================================================================================
     * Does the applicant consent to future management of bail being transferred to the Home Office? - yes
     ======================================================================================================*/
+
+    /*
 
     .group("XUI_Bails_380_Transfer_Bail_Management") {
 
@@ -787,7 +792,7 @@ object Solicitor_Bails {
             exec(http("XUI_Bails_421_005_Upload_B1")
             .post("/documentsv2")
             .headers(Headers.commonHeader)
-            .header("accept", "application/json, text/plain, */*")
+         //   .header("accept", "application/json, text/plain,
             .header("content-type", "multipart/form-data")
             .header("X-XSRF-TOKEN", "#{XSRFToken}")
             .formParam("classification", "PUBLIC")
@@ -828,6 +833,7 @@ object Solicitor_Bails {
     /*==================================================================================================
     * Check your answers
     ====================================================================================================*/
+    */
 
     .group("XUI_Bails_430_Check_Your_Answers") {
 
@@ -840,13 +846,7 @@ object Solicitor_Bails {
         .check(jsonPath("$.id").saveAs("caseId"))
         .check(jsonPath("$.callback_response_status").is("CALLBACK_COMPLETED")))
 
-        .exec { session =>
-          val fw = new BufferedWriter(new FileWriter("cases.csv", true))
-          try {
-            fw.write(session("caseId").as[String] + "\r\n")
-          } finally fw.close()
-          session
-        }
+
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -938,6 +938,14 @@ object Solicitor_Bails {
         .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/bails/BailsSubmitTheApplication.json"))
         .check(jsonPath("$.state").is("applicationSubmitted")))
+
+        .exec { session =>
+          val fw = new BufferedWriter(new FileWriter("cases.csv", true))
+          try {
+            fw.write(session("caseId").as[String] + "\r\n")
+          } finally fw.close()
+          session
+        }
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -951,8 +959,7 @@ object Solicitor_Bails {
 
     group("XUI_Bails_480_Confirm_Location_Page_1") {
 
-      exec(_.setAll(
-        "caseId" -> ("1709643385680953")))
+      feed(SubmittedCasesFeeder)
 
       .exec(http("XUI_Bails_480_005_Confirm_Location_Page_1")
         .get("/case/IA/Bail/#{caseId}/trigger/confirmDetentionLocation")
@@ -1026,6 +1033,14 @@ object Solicitor_Bails {
       .exec(Common.waJurisdictions)
 
       .exec(Common.userDetails)
+
+        .exec { session =>
+          val fw = new BufferedWriter(new FileWriter("hearingReady.csv", true))
+          try {
+            fw.write(session("caseId").as[String] + "\r\n")
+          } finally fw.close()
+          session
+        }
     }
             
     .pause(MinThinkTime, MaxThinkTime)

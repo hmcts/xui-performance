@@ -6,12 +6,17 @@ import utils.{Common, Environment, Headers}
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+
+import java.io.{BufferedWriter, FileWriter}
+
 object Solicitor_BailsHearings {
 
   val BaseURL = Environment.baseURL
 
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
+
+  val SubmittedCasesFeeder = csv("submittedCases.csv").circular
 
   val RequestHearing =
 
@@ -23,19 +28,18 @@ object Solicitor_BailsHearings {
       "BailsDobYear" -> Common.getDobYear(),
       "BailsArrivedYear" -> Common.getDobYearChild(),
       "BailsPhoneNumber" -> ("07" + Common.randomNumber(9)),
+   //   "caseId" -> ("1709740504284418"),
       "BailsSupporterEmail" -> (Common.randomString(7) + "@gmail.com")))
-
 
   /*======================================================================================
   * Select Case
   ======================================================================================*/
 
-  group("XUI_Bails_030_SelectCase") {
+  .group("XUI_Bails_030_SelectCase") {
     exec(http("XUI_Bails_030_005_SelectCase")
       .get("/data/internal/cases/#{caseId}")
       .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-      .check(jsonPath("$.state.name").is("Application started")))
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json"))
 
   }
     .pause(MinThinkTime, MaxThinkTime)
@@ -251,10 +255,54 @@ object Solicitor_BailsHearings {
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .body(ElFileBody("bodies/bailHearings/CheckAnswersHearing.json"))
+        .check(jsonPath("$.hearingRequestID").saveAs("hearingId"))
         .check(substring("HEARING_REQUESTED")))
+
+        .exec { session =>
+          val fw = new BufferedWriter(new FileWriter("BailsHearingData.csv", true))
+          try {
+            fw.write(session("caseId").as[String] + "," + session("hearingId").as[String] + "\r\n")
+          } finally fw.close()
+          session
+        }
 
     }
     .pause(MinThinkTime, MaxThinkTime)
+
+
+  val ViewAllHearings =
+
+  /*======================================================================================
+    * View Hearing
+    ======================================================================================*/
+
+  feed(SubmittedCasesFeeder)
+
+    .group("XUI_Bails_025_ViewAllHearings") {
+      exec(http("XUI_Bails_025_005_ViewAllHearings")
+        .get(BaseURL + "/api/hearings/getHearings?caseId=#{caseId}")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json, text/plain, */*")
+        .check(substring("caseRef")))
+
+        .exec(http("XUI_Bails_025_010_ViewAllHearings")
+          .post(BaseURL + "/api/hearings/loadServiceHearingValues?jurisdictionId=IA")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/bailHearings/ViewAllHearings.json"))
+          .check(substring("hearingWindow")))
+
+        .exec(http("XUI_Bails_025_015_ViewAllHearings")
+          .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingType&serviceId=BFA1&isChildRequired=N")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/json, text/plain, */*")
+          .check(substring("HearingType")))
+
+        .exec(Common.userDetails)
+
+    }
+
+      .pause(MinThinkTime, MaxThinkTime)
 
 
   val ViewHearing =
@@ -263,50 +311,64 @@ object Solicitor_BailsHearings {
     * View Hearing
     ======================================================================================*/
 
-    group("XUI_Bails_150_ViewHearing") {
-      exec(http("XUI_Bails_150_005_ViewHearing")
-        .get("/api/hearings/getHearing?hearingId=#{hearingId}}")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json, text/plain, */*")
-        .check(substring("caseDetails")))
 
-        .exec(Common.isAuthenticated)
+    exec(_.setAll(
+      "BailsRandomString" -> (Common.randomString(7)),
+      "BailsRandomNumber" -> (Common.randomNumber(7)),
+      "BailsDobDay" -> Common.getDay(),
+      "BailsDobMonth" -> Common.getMonth(),
+      "BailsDobYear" -> Common.getDobYear(),
+      "BailsArrivedYear" -> Common.getDobYearChild(),
+      "BailsPhoneNumber" -> ("07" + Common.randomNumber(9)),
+  //    "hearingId" -> ("2900107377"),
+   //  "caseId" -> ("1709740504284418"),
+      "BailsSupporterEmail" -> (Common.randomString(7) + "@gmail.com")))
 
-        .exec(http("XUI_Bails_150_010_ViewHearing")
-          .get(BaseURL + "/api/prd/caseFlag/getCaseFlagRefData?serviceId=BFA1")
+      .group("XUI_Bails_150_ViewHearing") {
+        exec(http("XUI_Bails_150_005_ViewHearing")
+          .get(BaseURL + "/api/hearings/getHearing?hearingId=#{hearingId}")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
-          .check(substring("flags")))
+          .check(jsonPath("$.requestDetails.timestamp").saveAs("timestamp"))
+          .check(substring("caseDetails")))
 
-        .exec(http("XUI_Bails_150_015_ViewHearing")
-          .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingChannel&serviceId=BFA1&isChildRequired=N")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/json, text/plain, */*")
-          .check(substring("HearingChannel")))
+          .exec(Common.isAuthenticated)
 
-        .exec(http("XUI_Bails_150_020_ViewHearing")
-          .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingSubChannel&serviceId=BFA1&isChildRequired=N")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/json, text/plain, */*")
-          .check(substring("HearingChannel")))
+          .exec(http("XUI_Bails_150_010_ViewHearing")
+            .get(BaseURL + "/api/prd/caseFlag/getCaseFlagRefData?serviceId=BFA1")
+            .headers(Headers.commonHeader)
+            .header("accept", "application/json, text/plain, */*")
+            .check(substring("flags")))
 
-        .exec(http("XUI_Bails_150_025_ViewHearing")
-          .get(BaseURL + "/api/prd/location/getLocationById?epimms_id=231596")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/json, text/plain, */*")
-          .check(substring("Birmingham")))
+          .exec(http("XUI_Bails_150_015_ViewHearing")
+            .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingChannel&serviceId=BFA1&isChildRequired=N")
+            .headers(Headers.commonHeader)
+            .header("accept", "application/json, text/plain, */*")
+            .check(substring("HearingChannel")))
 
-        .exec(http("XUI_Bails_150_030_ViewHearing")
-          .get(BaseURL + "/api/prd/location/getLocationById?epimms_id=231596")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/json, text/plain, */*")
-          .check(substring("Birmingham")))
+          .exec(http("XUI_Bails_150_020_ViewHearing")
+            .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingSubChannel&serviceId=BFA1&isChildRequired=N")
+            .headers(Headers.commonHeader)
+            .header("accept", "application/json, text/plain, */*")
+            .check(substring("HearingChannel")))
 
-        .exec(Common.userDetails)
+          .exec(http("XUI_Bails_150_025_ViewHearing")
+            .get(BaseURL + "/api/prd/location/getLocationById?epimms_id=231596")
+            .headers(Headers.commonHeader)
+            .header("accept", "application/json, text/plain, */*")
+            .check(substring("Birmingham")))
 
-        .exec(Common.userDetails)
+          .exec(http("XUI_Bails_150_030_ViewHearing")
+            .get(BaseURL + "/api/prd/location/getLocationById?epimms_id=231596")
+            .headers(Headers.commonHeader)
+            .header("accept", "application/json, text/plain, */*")
+            .check(substring("Birmingham")))
 
-    }
+          .exec(Common.userDetails)
+
+          .exec(Common.userDetails)
+
+      }
 
       .pause(MinThinkTime, MaxThinkTime)
 
@@ -316,6 +378,7 @@ object Solicitor_BailsHearings {
   /*======================================================================================
   * Select 'How many people will attend the hearing in person?'
   ======================================================================================*/
+
 
     group("XUI_Bails_160_HowManyPeopleAmend") {
       exec(http("XUI_Bails_160_005_HowManyPeopleAmend")
@@ -402,11 +465,11 @@ object Solicitor_BailsHearings {
 
       .group("XUI_Bails_190_ReasonForChanging") {
         exec(http("XUI_Bails_190_005_ReasonForChanging")
-          .post(BaseURL + "/api/hearings/updateHearingRequest?hearingId=#{hearingId}}")
+          .put(BaseURL + "/api/hearings/updateHearingRequest?hearingId=#{hearingId}")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
           .body(ElFileBody("bodies/bailHearings/ReasonForChanging.json"))
-          .check(substring("HEARING_REQUESTED")))
+          .check(substring("UPDATE_REQUESTED")))
 
           .exec(Common.userDetails)
 
@@ -414,7 +477,53 @@ object Solicitor_BailsHearings {
 
       .pause(MinThinkTime, MaxThinkTime)
 
+  val CancelHearing =
 
+  /*======================================================================================
+  * Select 'Cancel'
+  ======================================================================================*/
+
+
+    group("XUI_Bails_200_CancelHearing") {
+
+      exec(Common.isAuthenticated)
+
+      .exec(http("XUI_Bails_200_005_CancelHearing")
+        .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=CaseManagementCancellationReasons&serviceId=BFA1&isChildRequired=N")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json, text/plain, */*")
+        .check(substring("CaseManagementCancellationReasons")))
+
+        .exec(Common.userDetails)
+
+        .exec(Common.userDetails)
+
+    }
+      .pause(MinThinkTime, MaxThinkTime)
+
+
+  /*======================================================================================
+* Why is this hearing being cancelled? - Appeal abandoned
+======================================================================================*/
+
+
+  .group("XUI_Bails_210_WhyBeingCancelled?") {
+
+      exec(http("XUI_Bails_210_005_WhyBeingCancelled")
+        .delete(BaseURL + "/api/hearings/cancelHearings?hearingId=#{hearingId}")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json, text/plain, */*")
+        .body(ElFileBody("bodies/bailHearings/WhyBeingCancelled.json"))
+        .check(substring("CANCELLATION_REQUESTED")))
+
+    .exec(Common.isAuthenticated)
+
+      .exec(Common.userDetails)
+
+      .exec(Common.userDetails)
+
+  }
+    .pause(MinThinkTime, MaxThinkTime)
 
 
 }

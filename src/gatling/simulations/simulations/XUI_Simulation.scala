@@ -55,7 +55,7 @@ class XUI_Simulation extends Simulation {
 	/* ******************************** */
 
 	/* PERFORMANCE TEST CONFIGURATION */
-	val bailsTargetPerHour: Double = 10
+	val bailsTargetPerHour: Double = 6
 	val prlTargetPerHour: Double = 100
 	val probateTargetPerHour: Double = 250
 	val iacTargetPerHour: Double = 20
@@ -152,13 +152,18 @@ class XUI_Simulation extends Simulation {
         .set("caseType", "Bail"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
-        .exec(Solicitor_Bails.CreateBailApplication)
-        .exec(Solicitor_Bails.SubmitBailApplication)
+     //   .exec(Solicitor_Bails.CreateBailApplication)
+     //   .exec(Solicitor_Bails.SubmitBailApplication)
 
      //   .feed(UserFeederBailsAdmin)
      //   .exec(Homepage.XUIHomePage)
 	//			.exec(Login.XUILogin)
-       // .exec(Solicitor_Bails.ConfirmLocation)
+   //     .exec(Solicitor_Bails.ConfirmLocation)
+				.exec(Solicitor_BailsHearings.RequestHearing)
+
+	//			.exec(Solicitor_BailsHearings.ViewHearing)
+	//			.exec(Solicitor_BailsHearings.AmendHearing)
+		//		.exec(Solicitor_BailsHearings.CancelHearing)
 		/*
         .exec(Solicitor_Bails.ListCase)
         .exec(Logout.XUILogout)
@@ -177,6 +182,44 @@ class XUI_Simulation extends Simulation {
 				.exec(Logout.XUILogout)
 
 		 */
+		}
+
+
+	/*===============================================================================================
+* XUI Hearing Bails Scenario
+ ===============================================================================================*/
+	val BailsHearingsScenario = scenario("***** Bails Hearing *****")
+		.exitBlockOnFail {
+			feed(UserFeederBails)
+				.repeat(1) {
+					exec(_.set("env", s"${env}")
+						.set("caseType", "Bail")
+					)
+						.exec(Homepage.XUIHomePage)
+						.exec(Login.XUILogin)
+						}
+						.pause(10)
+						.repeat(1) {
+							exec(Solicitor_BailsHearings.ViewAllHearings)
+								.exec(Solicitor_BailsHearings.RequestHearing)
+								.exec(Solicitor_BailsHearings.ViewHearing)
+								.exec(Solicitor_BailsHearings.AmendHearing)
+								.pause(10)
+								.exec(Solicitor_BailsHearings.ViewHearing)
+								.exec(Solicitor_BailsHearings.CancelHearing)
+								.repeat(6) {
+									exec(Solicitor_BailsHearings.ViewAllHearings)
+										.exec(Solicitor_BailsHearings.RequestHearing)
+										.exec(Solicitor_BailsHearings.ViewHearing)
+
+										.repeat(10) {
+											pause(10)
+											.exec(Solicitor_BailsHearings.ViewAllHearings)
+												.exec(Solicitor_BailsHearings.ViewHearing)
+										}
+								}
+						}
+						.exec(Logout.XUILogout)
 		}
 
 	/*===============================================================================================
@@ -558,7 +601,7 @@ class XUI_Simulation extends Simulation {
 	}
 
 	setUp(
-		BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		BailsHearingsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 	/*	ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),

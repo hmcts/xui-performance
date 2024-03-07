@@ -1,17 +1,28 @@
 {
+  "requestDetails": {
+    "status": "AWAITING_LISTING",
+    "timestamp": "#{timestamp}",
+    "versionNumber": 1,
+    "hearingRequestID": "#{hearingId}"
+  },
   "hearingDetails": {
-    "duration": 60,
+    "listingAutoChangeReasonCode": "user-added-comments",
     "hearingType": "BFA1-BAI",
+    "hearingWindow": null,
+    "duration": 60,
+    "hearingPriorityType": "Standard",
+    "numberOfPhysicalAttendees": 2,
+    "hearingInWelshFlag": false,
     "hearingLocations": [
       {
         "locationType": "court",
-        "locationId": "231596",
-        "locationName": "Birmingham Civil And Family Justice Centre",
-        "regionId": "2"
+        "locationId": "231596"
       }
     ],
-    "hearingIsLinkedFlag": false,
-    "hearingWindow": null,
+    "facilitiesRequired": [
+      "14"
+    ],
+    "listingComments": "#{BailsRandomString}",
     "privateHearingRequiredFlag": false,
     "panelRequirements": {
       "roleType": [
@@ -22,28 +33,20 @@
       "panelPreferences": [],
       "panelSpecialisms": []
     },
-    "autolistFlag": false,
-    "hearingPriorityType": "Standard",
-    "numberOfPhysicalAttendees": 1,
-    "hearingInWelshFlag": false,
-    "facilitiesRequired": [
-      "14"
-    ],
-    "listingComments": "#{BailsRandomString}",
-    "hearingRequester": "",
-    "leadJudgeContractType": "",
-    "amendReasonCodes": null,
+    "hearingIsLinkedFlag": false,
     "hearingChannels": [
       "INTER",
       "VID"
     ],
-    "listingAutoChangeReasonCode": "user-added-comments"
+    "autolistFlag": false,
+    "amendReasonCodes": [
+      "postponement-granted"
+    ]
   },
   "caseDetails": {
     "hmctsServiceCode": "BFA1",
     "caseRef": "#{caseId}",
-    "requestTimeStamp": null,
-    "hearingID": null,
+    "externalCaseReference": "hbnjmk",
     "caseDeepLink": "https://manage-case.demo.platform.hmcts.net/cases/case-details/#{caseId}#Overview",
     "hmctsInternalCaseName": "fyguhij fyvgbuhnj",
     "publicCaseName": "fyguhij fyvgbuhnj",
@@ -63,33 +66,9 @@
     ],
     "caseManagementLocationCode": "231596",
     "caserestrictedFlag": false,
-    "caseSLAStartDate": "2024-02-16",
-    "externalCaseReference": "hbnjmk"
+    "caseSLAStartDate": "2024-02-16"
   },
   "partyDetails": [
-    {
-      "partyID": "fd486723-cfde-4c77-8376-c888ab422c15",
-      "partyType": "IND",
-      "partyRole": "APPL",
-      "partyName": "fyguhij fyvgbuhnj",
-      "individualDetails": {
-        "firstName": "fyguhij",
-        "lastName": "fyvgbuhnj",
-        "preferredHearingChannel": "VID",
-        "interpreterLanguage": null,
-        "reasonableAdjustments": [],
-        "relatedParties": null,
-        "title": null,
-        "vulnerableFlag": false,
-        "vulnerabilityDetails": null,
-        "hearingChannelEmail": null,
-        "hearingChannelPhone": [],
-        "custodyStatus": "D",
-        "otherReasonableAdjustmentDetails": ""
-      },
-      "unavailabilityDOW": null,
-      "unavailabilityRanges": null
-    },
     {
       "partyID": "6b08abce-a473-4e4d-af95-7a7c09c7b229",
       "partyType": "IND",
@@ -101,7 +80,7 @@
         "preferredHearingChannel": "VID",
         "interpreterLanguage": null,
         "reasonableAdjustments": [],
-        "relatedParties": null,
+        "relatedParties": [],
         "title": null,
         "vulnerableFlag": null,
         "vulnerabilityDetails": null,
@@ -118,7 +97,30 @@
       "unavailabilityRanges": null
     },
     {
-      "partyID": "hbnjmk",
+      "partyID": "fd486723-cfde-4c77-8376-c888ab422c15",
+      "partyType": "IND",
+      "partyRole": "APPL",
+      "partyName": "fyguhij fyvgbuhnj",
+      "individualDetails": {
+        "firstName": "fyguhij",
+        "lastName": "fyvgbuhnj",
+        "preferredHearingChannel": "VID",
+        "interpreterLanguage": null,
+        "reasonableAdjustments": [],
+        "relatedParties": [],
+        "title": null,
+        "vulnerableFlag": false,
+        "vulnerabilityDetails": null,
+        "hearingChannelEmail": [],
+        "hearingChannelPhone": [],
+        "custodyStatus": "D",
+        "otherReasonableAdjustmentDetails": ""
+      },
+      "unavailabilityDOW": null,
+      "unavailabilityRanges": null
+    },
+    {
+      "partyID": "8536811",
       "partyType": "ORG",
       "partyRole": "RESP",
       "organisationDetails": {
@@ -127,14 +129,15 @@
       }
     },
     {
-      "partyID": "4eb3ed22-20b0-4aa7-96cc-0a9578c4ed78",
+      "partyID": "3e05b220-f22b-4e37-bcae-2e847bfde406",
       "partyType": "ORG",
       "partyRole": "LGRP",
       "organisationDetails": {
-        "name": "dcfvgybuhnj",
+        "name": "perf-prl-aALof",
         "organisationType": "ORG",
         "cftOrganisationID": ""
       }
     }
-  ]
+  ],
+  "hearingResponse": {}
 }
