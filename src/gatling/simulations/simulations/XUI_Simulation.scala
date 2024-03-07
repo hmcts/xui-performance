@@ -24,6 +24,7 @@ class XUI_Simulation extends Simulation {
 	val UserFeederProbate = csv("UserDataProbate.csv").circular
 	val UserFeederPRL = csv("UserDataPRL.csv").circular
 	val UserFeederBails = csv("UserDataBails.csv").circular
+	val UserFeederBailsHearings = csv("UserDataBailsHearings.csv").circular
 	val UserFeederBailsHO = csv("UserDataBailsHO.csv").circular
 	val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
 	val UserFeederCivilHearing = csv("CivilHearingsCasesForAllHearings.csv").circular
@@ -340,6 +341,44 @@ class XUI_Simulation extends Simulation {
 				.exec(Logout.XUILogout)
 		}
 	//		}
+
+
+	/*===============================================================================================
+* XUI Hearing Bails Scenario
+ ===============================================================================================*/
+	val BailsHearingsScenario = scenario("***** Bails Hearing *****")
+		.exitBlockOnFail {
+			feed(UserFeederBails)
+				.repeat(1) {
+					exec(_.set("env", s"${env}")
+						.set("caseType", "Bail")
+					)
+						.exec(Homepage.XUIHomePage)
+						.exec(Login.XUILogin)
+				}
+				.pause(10)
+				.repeat(1) {
+					exec(Solicitor_BailsHearings.ViewAllHearings)
+						.exec(Solicitor_BailsHearings.RequestHearing)
+						.exec(Solicitor_BailsHearings.ViewHearing)
+						.exec(Solicitor_BailsHearings.AmendHearing)
+						.pause(10)
+						.exec(Solicitor_BailsHearings.ViewHearing)
+						.exec(Solicitor_BailsHearings.CancelHearing)
+						.repeat(6) {
+							exec(Solicitor_BailsHearings.ViewAllHearings)
+								.exec(Solicitor_BailsHearings.RequestHearing)
+								.exec(Solicitor_BailsHearings.ViewHearing)
+
+								.repeat(10) {
+									pause(10)
+										.exec(Solicitor_BailsHearings.ViewAllHearings)
+										.exec(Solicitor_BailsHearings.ViewHearing)
+								}
+						}
+				}
+				.exec(Logout.XUILogout)
+		}
 
 	/*===============================================================================================
 	* XUI Solicitor Divorce Scenario
