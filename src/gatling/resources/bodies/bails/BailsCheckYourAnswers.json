@@ -3,8 +3,6 @@
     "hasPreviousBailApplication": "No",
     "previousApplicationDoneViaAria": "No",
     "previousApplicationDoneViaCcd": "No",
-    "isAdmin": "Yes",
-    "sentByChecklist": "Applicant",
     "applicantGivenNames": "Bails#{BailsRandomString}",
     "applicantFamilyName": "Test#{BailsRandomString}",
     "applicantDateOfBirth": "#{BailsDobYear}-#{BailsDobMonth}-#{BailsDobDay}",
@@ -79,29 +77,13 @@
     "fcsInterpreterYesNo": "No",
     "applicantDisability1": "No",
     "videoHearing1": "Yes",
-    "hasLegalRep": "Yes",
-    "isHomeOffice": "No",
-    "isLegalRep": "No",
+    "isLegalRep": "Yes",
     "legalRepCompany": "#{orgname}",
     "legalRepName": "Legal#{BailsRandomString}",
     "legalRepFamilyName": "family#{BailsRandomString}",
     "legalRepEmail": "#{user}",
     "legalRepPhone": "#{BailsPhoneNumber}",
-    "legalRepReference": "#{BailsRandomString}",
-    "uploadB1FormDocs": [
-      {
-        "value": {
-          "description": "description#{BailsRandomString}",
-          "document": {
-            "document_url": "#{DocumentURL}",
-            "document_binary_url": "#{DocumentURL}/binary",
-            "document_filename": "120KB.pdf",
-            "document_hash": "#{DocumentHash}"
-          }
-        },
-        "id": null
-      }
-    ]
+    "legalRepReference": "#{BailsRandomString}"
   },
   "event": {
     "id": "startApplication",
