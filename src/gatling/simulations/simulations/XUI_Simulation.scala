@@ -704,7 +704,8 @@ class XUI_Simulation extends Simulation {
 	setUp(
 	(SSCSHearingsScenario.inject(nothingFor(10),rampUsers(50).during(2800))),//50, 2800
 		(PRLHearingsScenario.inject(nothingFor(30),rampUsers(40).during(2800))),//40,2800
-		(CivilHearingsScenario.inject(nothingFor(60),rampUsers(14).during(2800))) //14, 2800
+		(CivilHearingsScenario.inject(nothingFor(60),rampUsers(14).during(2800))),//14, 2800
+			(BailsHearingsScenario.inject(nothingFor(90),rampUsers(60).during(2800)))
 	)
 		.protocols(httpProtocol)
 	.maxDuration(4000)
