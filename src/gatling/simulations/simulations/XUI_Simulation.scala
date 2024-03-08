@@ -357,26 +357,13 @@ class XUI_Simulation extends Simulation {
 						.exec(Login.XUILogin)
 				}
 				.pause(10)
-				.repeat(1) {
-					exec(Solicitor_BailsHearings.ViewAllHearings)
+					.exec(Solicitor_BailsHearings.ViewAllHearings)
 						.exec(Solicitor_BailsHearings.RequestHearing)
 						.exec(Solicitor_BailsHearings.ViewHearing)
 						.exec(Solicitor_BailsHearings.AmendHearing)
-						.pause(10)
 						.exec(Solicitor_BailsHearings.ViewHearing)
 						.exec(Solicitor_BailsHearings.CancelHearing)
-						.repeat(6) {
-							exec(Solicitor_BailsHearings.ViewAllHearings)
-								.exec(Solicitor_BailsHearings.RequestHearing)
-								.exec(Solicitor_BailsHearings.ViewHearing)
-
-								.repeat(10) {
-									pause(10)
-										.exec(Solicitor_BailsHearings.ViewAllHearings)
-										.exec(Solicitor_BailsHearings.ViewHearing)
-								}
-						}
-				}
+							.exec(Solicitor_BailsHearings.ViewAllHearings)
 				.exec(Logout.XUILogout)
 		}
 
