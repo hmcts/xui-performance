@@ -212,4 +212,5 @@ object Common {
       .body(StringBody("{}"))
       .check(status.is(204))) 
       //No response body is returned, therefore no substring check is possible
+
 }
