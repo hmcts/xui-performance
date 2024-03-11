@@ -348,7 +348,7 @@ class XUI_Simulation extends Simulation {
  ===============================================================================================*/
 	val BailsHearingsScenario = scenario("***** Bails Hearing *****")
 		.exitBlockOnFail {
-			feed(UserFeederBails)
+			feed(UserFeederBailsHearings)
 				.repeat(1) {
 					exec(_.set("env", s"${env}")
 						.set("caseType", "Bail")
@@ -702,10 +702,10 @@ class XUI_Simulation extends Simulation {
 	//Below setup is for running the Hearing Scenario
 
 	setUp(
-	(SSCSHearingsScenario.inject(nothingFor(10),rampUsers(50).during(2800))),//50, 2800
+	/*(SSCSHearingsScenario.inject(nothingFor(10),rampUsers(50).during(2800))),//50, 2800
 		(PRLHearingsScenario.inject(nothingFor(30),rampUsers(40).during(2800))),//40,2800
-		(CivilHearingsScenario.inject(nothingFor(60),rampUsers(14).during(2800))),//14, 2800
-			(BailsHearingsScenario.inject(nothingFor(90),rampUsers(60).during(2800)))
+		(CivilHearingsScenario.inject(nothingFor(60),rampUsers(14).during(2800))),//14, 2800*/
+			(BailsHearingsScenario.inject(nothingFor(1),rampUsers(60).during(600))) //90, 60. 2800
 	)
 		.protocols(httpProtocol)
 	.maxDuration(4000)
