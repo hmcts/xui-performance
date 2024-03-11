@@ -25,6 +25,7 @@ class XUI_Simulation extends Simulation {
 	val UserFeederPRL = csv("UserDataPRL.csv").circular
 	val UserFeederBails = csv("UserDataBails.csv").circular
 	val UserFeederBailsHO = csv("UserDataBailsHO.csv").circular
+  val UserFeederBailsAdmin = csv("UserDataBailsAdmin.csv").circular
 	val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
@@ -151,22 +152,31 @@ class XUI_Simulation extends Simulation {
 		.exitBlockOnFail {
 			feed(UserFeederBails)
 				.exec(_.set("env", s"${env}")
-					.set("caseType", "Bail"))
+        .set("caseType", "Bail"))
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
-					.exec(Solicitor_Bails.CreateBailApplication)
-					.exec(Solicitor_Bails.SubmitBailApplication)
+        .exec(Solicitor_Bails.CreateBailApplication)
+        .exec(Solicitor_Bails.SubmitBailApplication)
 				.exec(Logout.XUILogout)
+
+        .feed(UserFeederBailsAdmin)
+        .exec(Homepage.XUIHomePage)
+				.exec(Login.XUILogin)
+        .exec(Solicitor_Bails.ConfirmLocation)
+        .exec(Solicitor_Bails.ListCase)
+        .exec(Logout.XUILogout)
+
 				.feed(UserFeederBailsHO)
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
-					.exec(Solicitor_Bails.UploadBailSummary)
+        .exec(Solicitor_Bails.UploadBailSummary)
 				.exec(Logout.XUILogout)
+
 				.feed(UserFeederBailsJudge)
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
-					.exec(Solicitor_Bails.RecordBailDecision)
-					.exec(Solicitor_Bails.UploadSignedDecision)
+        .exec(Solicitor_Bails.RecordBailDecision)
+        .exec(Solicitor_Bails.UploadSignedDecision)
 				.exec(Logout.XUILogout)
 		}
 
