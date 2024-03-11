@@ -1,0 +1,140 @@
+{
+  "hearingDetails": {
+    "duration": 60,
+    "hearingType": "BFA1-BAI",
+    "hearingLocations": [
+      {
+        "locationType": "court",
+        "locationId": "231596",
+        "locationName": "Birmingham Civil And Family Justice Centre",
+        "regionId": "2"
+      }
+    ],
+    "hearingIsLinkedFlag": false,
+    "hearingWindow": null,
+    "privateHearingRequiredFlag": false,
+    "panelRequirements": {
+      "roleType": [
+        "84"
+      ],
+      "authorisationTypes": [],
+      "authorisationSubType": [],
+      "panelPreferences": [],
+      "panelSpecialisms": []
+    },
+    "autolistFlag": false,
+    "hearingPriorityType": "Standard",
+    "numberOfPhysicalAttendees": 1,
+    "hearingInWelshFlag": false,
+    "facilitiesRequired": [
+      "14"
+    ],
+    "listingComments": "#{BailsRandomString}",
+    "hearingRequester": "",
+    "leadJudgeContractType": "",
+    "amendReasonCodes": null,
+    "hearingChannels": [
+      "INTER",
+      "VID"
+    ],
+    "listingAutoChangeReasonCode": "user-added-comments"
+  },
+  "caseDetails": {
+    "hmctsServiceCode": "BFA1",
+    "caseRef": "#{caseId}",
+    "requestTimeStamp": null,
+    "hearingID": null,
+    "caseDeepLink": "https://manage-case.demo.platform.hmcts.net/cases/case-details/#{caseId}#Overview",
+    "hmctsInternalCaseName": "fyguhij fyvgbuhnj",
+    "publicCaseName": "fyguhij fyvgbuhnj",
+    "caseAdditionalSecurityFlag": false,
+    "caseInterpreterRequiredFlag": false,
+    "caseCategories": [
+      {
+        "categoryType": "caseType",
+        "categoryValue": "BFA1-BLS",
+        "categoryParent": ""
+      },
+      {
+        "categoryType": "caseSubType",
+        "categoryValue": "BFA1-BLS",
+        "categoryParent": "BFA1-BLS"
+      }
+    ],
+    "caseManagementLocationCode": "231596",
+    "caserestrictedFlag": false,
+    "caseSLAStartDate": "2024-02-16",
+    "externalCaseReference": "hbnjmk"
+  },
+  "partyDetails": [
+    {
+      "partyID": "fd486723-cfde-4c77-8376-c888ab422c15",
+      "partyType": "IND",
+      "partyRole": "APPL",
+      "partyName": "fyguhij fyvgbuhnj",
+      "individualDetails": {
+        "firstName": "fyguhij",
+        "lastName": "fyvgbuhnj",
+        "preferredHearingChannel": "VID",
+        "interpreterLanguage": null,
+        "reasonableAdjustments": [],
+        "relatedParties": null,
+        "title": null,
+        "vulnerableFlag": false,
+        "vulnerabilityDetails": null,
+        "hearingChannelEmail": null,
+        "hearingChannelPhone": [],
+        "custodyStatus": "D",
+        "otherReasonableAdjustmentDetails": ""
+      },
+      "unavailabilityDOW": null,
+      "unavailabilityRanges": null
+    },
+    {
+      "partyID": "6b08abce-a473-4e4d-af95-7a7c09c7b229",
+      "partyType": "IND",
+      "partyRole": "LGRP",
+      "partyName": "fvgbhjknm cgvfh bgjnk",
+      "individualDetails": {
+        "firstName": "fvgbhjknm",
+        "lastName": "cgvfh bgjnk",
+        "preferredHearingChannel": "VID",
+        "interpreterLanguage": null,
+        "reasonableAdjustments": [],
+        "relatedParties": null,
+        "title": null,
+        "vulnerableFlag": null,
+        "vulnerabilityDetails": null,
+        "hearingChannelEmail": [
+          "fgvhbjkn@gmail.com"
+        ],
+        "hearingChannelPhone": [
+          "01234567890"
+        ],
+        "custodyStatus": null,
+        "otherReasonableAdjustmentDetails": null
+      },
+      "unavailabilityDOW": null,
+      "unavailabilityRanges": null
+    },
+    {
+      "partyID": "hbnjmk",
+      "partyType": "ORG",
+      "partyRole": "RESP",
+      "organisationDetails": {
+        "name": "Home Office Presenting Officer",
+        "organisationType": "ORG"
+      }
+    },
+    {
+      "partyID": "4eb3ed22-20b0-4aa7-96cc-0a9578c4ed78",
+      "partyType": "ORG",
+      "partyRole": "LGRP",
+      "organisationDetails": {
+        "name": "dcfvgybuhnj",
+        "organisationType": "ORG",
+        "cftOrganisationID": ""
+      }
+    }
+  ]
+}
