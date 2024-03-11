@@ -198,4 +198,18 @@ object Common {
       .check(regex("name|Organisation route error"))
       .check(status.in(200, 304, 401, 403)))
 
+  val waJurisdictions = 
+    exec(http("XUI_Common_000_WAJurisdictionsGet")
+      .get("/api/wa-supported-jurisdiction/get")
+			.headers(Headers.commonHeader)
+      .check(substring("[")))
+
+  val manageLabellingRoleAssignment =
+    exec(http("XUI_Common_000_ManageLabellingRoleAssignments")
+      .post("/api/role-access/roles/manageLabellingRoleAssignment/#{caseId}")
+      .headers(Headers.commonHeader)
+      .header("x-xsrf-token", "#{XSRFToken}")
+      .body(StringBody("{}"))
+      .check(status.is(204))) 
+      //No response body is returned, therefore no substring check is possible
 }
