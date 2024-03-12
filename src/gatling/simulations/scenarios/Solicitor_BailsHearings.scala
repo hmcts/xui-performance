@@ -278,57 +278,56 @@ object Solicitor_BailsHearings {
 
     feed(SubmittedCasesFeeder)
 
-   //   .group("XUI_Bails_025_ViewAllHearings") {
-    //    exec(http("XUI_Bails_025_005_ViewAllHearings")
-     //     .get(BaseURL + "/api/hearings/getHearings?caseId=#{caseId}")
-     //     .headers(Headers.commonHeader)
-         // .header("accept", "application/json, text/plain, */*")
-     //     .check(substring("caseRef")))
+      .group("XUI_Bails_025_ViewAllHearings") {
+        exec(http("XUI_Bails_025_005_ViewAllHearings")
+          .get(BaseURL + "/api/hearings/getHearings?caseId=#{caseId}")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/json, text/plain, */*")
+          .check(substring("caseRef")))
 
-       //   .exec(http("XUI_Bails_025_010_ViewAllHearings")
-       //     .post(BaseURL + "/api/hearings/loadServiceHearingValues?jurisdictionId=IA")
-        //    .headers(Headers.commonHeader)
-       //     .header("accept", "application/json, text/plain, */*")
-       //     .body(ElFileBody("bodies/bailHearings/ViewAllHearings.json"))
-       //     .check(substring("hearingWindow")))
-
-      //    .exec(http("XUI_Bails_025_015_ViewAllHearings")
-      //      .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingType&serviceId=BFA1&isChildRequired=N")
-      //      .headers(Headers.commonHeader)
-      //      .header("accept", "application/json, text/plain, */*")
-      //      .check(substring("HearingType")))
-
-       //   .exec(Common.userDetails)
-
-//      }
-
-  //    .pause(MinThinkTime, MaxThinkTime)
-
-  .group("XUI_Bails_025_ViewAllHearings") {
-    exec(http("XUI_Common_000_UserDetails")
-      .get("/api/user/details?refreshRoleAssignments=undefined")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/json, text/plain, */*")
-      .resources(
-        http("XUI_Bails_025_ViewAllHearings")
-               .get(BaseURL + "/api/hearings/getHearings?caseId=#{caseId}")
-               .headers(Headers.commonHeader)
+         .exec(http("XUI_Bails_025_010_ViewAllHearings")
+            .post(BaseURL + "/api/hearings/loadServiceHearingValues?jurisdictionId=IA")
+            .headers(Headers.commonHeader)
            .header("accept", "application/json, text/plain, */*")
-               .check(substring("caseRef")),
-        http("XUI_Bails_025_010_ViewAllHearings")
-               .post(BaseURL + "/api/hearings/loadServiceHearingValues?jurisdictionId=IA")
-              .headers(Headers.commonHeader)
-               .header("accept", "application/json, text/plain, */*")
-               .body(ElFileBody("bodies/bailHearings/ViewAllHearings.json"))
-               .check(substring("hearingWindow")),
-        http("XUI_Bails_025_015_ViewAllHearings")
-                .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingType&serviceId=BFA1&isChildRequired=N")
-                .headers(Headers.commonHeader)
-                .header("accept", "application/json, text/plain, */*")
-                .check(substring("HearingType"))
-      )
-    )
-  }
+            .body(ElFileBody("bodies/bailHearings/ViewAllHearings.json"))
+            .check(substring("hearingWindow")))
+
+          .exec(http("XUI_Bails_025_015_ViewAllHearings")
+            .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingType&serviceId=BFA1&isChildRequired=N")
+            .headers(Headers.commonHeader)
+            .header("accept", "application/json, text/plain, */*")
+            .check(substring("HearingType")))
+
+          .exec(Common.userDetails)
+
+      }
+      .pause(MinThinkTime, MaxThinkTime)
+
+ // .group("XUI_Bails_025_ViewAllHearings") {
+  //  exec(http("XUI_Common_000_UserDetails")
+  //    .get("/api/user/details?refreshRoleAssignments=undefined")
+  //    .headers(Headers.commonHeader)
+  //    .header("accept", "application/json, text/plain, */*")
+  //    .resources(
+  //      http("XUI_Bails_025_ViewAllHearings")
+  //             .get(BaseURL + "/api/hearings/getHearings?caseId=#{caseId}")
+  //             .headers(Headers.commonHeader)
+  //         .header("accept", "application/json, text/plain, */*")
+  //             .check(substring("caseRef")),
+  //      http("XUI_Bails_025_010_ViewAllHearings")
+  //             .post(BaseURL + "/api/hearings/loadServiceHearingValues?jurisdictionId=IA")
+   //           .headers(Headers.commonHeader)
+   //            .header("accept", "application/json, text/plain, */*")
+   //            .body(ElFileBody("bodies/bailHearings/ViewAllHearings.json"))
+   //            .check(substring("hearingWindow")),
+   //     http("XUI_Bails_025_015_ViewAllHearings")
+   //             .get(BaseURL + "/api/prd/lov/getLovRefData?categoryId=HearingType&serviceId=BFA1&isChildRequired=N")
+   //             .headers(Headers.commonHeader)
+   //             .header("accept", "application/json, text/plain, */*")
+   //             .check(substring("HearingType"))
+    //  )
+   // )
+ // }
 
   val ViewHearing =
 
