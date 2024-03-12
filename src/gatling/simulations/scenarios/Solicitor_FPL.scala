@@ -3,7 +3,6 @@ package scenarios
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import utils.{Environment, Common, Headers}
-
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -19,7 +18,6 @@ object Solicitor_FPL {
   val patternYear = DateTimeFormatter.ofPattern("yyyy")
   val now = LocalDate.now()
 
- 
   val CreateFPLCase =
 
     //set session variables

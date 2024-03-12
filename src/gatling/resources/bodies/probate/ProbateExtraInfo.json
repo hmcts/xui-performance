@@ -34,7 +34,7 @@
       "Country":"United Kingdom"
     },
     "solsSolicitorIsExec":"Yes",
-    "solsIdentifiedApplyingExecsCcdCopy":"PractitionerFirst PractitionerLast, Additional Executor, ExecFirstname ExecSurname",
+    "solsIdentifiedApplyingExecsCcdCopy":"SolPerf SolTest, Additional Executor, ExecFirstname ExecSurname",
     "solsIdentifiedNotApplyingExecsCcdCopy":"None",
     "anyOtherApplyingPartners":"Yes",
     "otherPartnersApplyingAsExecutors":[
@@ -59,7 +59,7 @@
     "whoSharesInCompanyProfits":[
       "director"
     ],
-    "solsIdentifiedApplyingExecs":"PractitionerFirst PractitionerLast, Additional Executor, ExecFirstname ExecSurname",
+    "solsIdentifiedApplyingExecs":"SolPerf SolTest, Additional Executor, ExecFirstname ExecSurname",
     "solsIdentifiedNotApplyingExecs":"None",
     "otherExecutorExists":"Yes",
     "solsAdditionalExecutorList":[
