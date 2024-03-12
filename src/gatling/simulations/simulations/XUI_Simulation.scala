@@ -104,42 +104,45 @@ class XUI_Simulation extends Simulation {
 	val PRLSolicitorScenario = scenario("***** Private Law Create Case *****")
 		.exitBlockOnFail {
 			feed(UserFeederPRL)
-				.exec(_.set("env", s"${env}")
-							.set("caseType", "PRLAPPS"))
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.feed(randomFeeder)
-				.doIfOrElse(session => session("prl-percentage").as[Int] < prlC100Percentage) {
-					//C100 Journey
-					exec(Solicitor_PRL_C100.CreatePrivateLawCase)
-					.exec(Solicitor_PRL_C100.TypeOfApplication)
-					.exec(Solicitor_PRL_C100.HearingUrgency)
-					.exec(Solicitor_PRL_C100.ApplicantDetails)
-					.exec(Solicitor_PRL_C100.ChildDetails)
-					.exec(Solicitor_PRL_C100.RespondentDetails)
-					.exec(Solicitor_PRL_C100.MIAM)
-					.exec(Solicitor_PRL_C100.AllegationsOfHarm)
-					.exec(Solicitor_PRL_C100.ViewPdfApplication)
-					.exec(Solicitor_PRL_C100.SubmitAndPay)
-          .exec(Solicitor_PRL_C100.HearingsTab)
-				} 
-        {
-					//FL401 Journey
-					exec(Solicitor_PRL_FL401.CreatePrivateLawCase)
-					.exec(Solicitor_PRL_FL401.TypeOfApplication)
-					.exec(Solicitor_PRL_FL401.WithoutNoticeOrder)
-					.exec(Solicitor_PRL_FL401.ApplicantDetails)
-					.exec(Solicitor_PRL_FL401.RespondentDetails)
-					.exec(Solicitor_PRL_FL401.ApplicantsFamily)
-					.exec(Solicitor_PRL_FL401.Relationship)
-					.exec(Solicitor_PRL_FL401.Behaviour)
-					.exec(Solicitor_PRL_FL401.TheHome)
-					.exec(Solicitor_PRL_FL401.UploadDocuments)
-					.exec(Solicitor_PRL_FL401.ViewPDF)
-					.exec(Solicitor_PRL_FL401.StatementOfTruth)
-          .exec(Solicitor_PRL_FL401.HearingsTab)
-				 }
-				.exec(Logout.XUILogout)
+      .exec(_.set("env", s"${env}")
+            .set("caseType", "PRLAPPS"))
+      .exec(Homepage.XUIHomePage)
+      .exec(Login.XUILogin)
+      .feed(randomFeeder)
+      .doIfOrElse(session => session("prl-percentage").as[Int] < prlC100Percentage) {
+        //C100 Journey
+        exec(Solicitor_PRL_C100.CreatePrivateLawCase)
+        .exec(Solicitor_PRL_C100.TypeOfApplication)
+        .exec(Solicitor_PRL_C100.HearingUrgency)
+        .exec(Solicitor_PRL_C100.ApplicantDetails)
+        .exec(Solicitor_PRL_C100.ChildDetails)
+        .exec(Solicitor_PRL_C100.RespondentDetails)
+        .exec(Solicitor_PRL_C100.MIAM)
+        .exec(Solicitor_PRL_C100.AllegationsOfHarm)
+        .exec(Solicitor_PRL_C100.OtherChildrenNotInCase)
+        .exec(Solicitor_PRL_C100.ChildrenAndApplicants)
+        .exec(Solicitor_PRL_C100.ChildrenAndRespondents)
+        .exec(Solicitor_PRL_C100.ViewPdfApplication)
+        .exec(Solicitor_PRL_C100.SubmitAndPay)
+        .exec(Solicitor_PRL_C100.HearingsTab)
+      } 
+      {
+      // 	//FL401 Journey
+        exec(Solicitor_PRL_FL401.CreatePrivateLawCase)
+        .exec(Solicitor_PRL_FL401.TypeOfApplication)
+        .exec(Solicitor_PRL_FL401.WithoutNoticeOrder)
+        .exec(Solicitor_PRL_FL401.ApplicantDetails)
+        .exec(Solicitor_PRL_FL401.RespondentDetails)
+        .exec(Solicitor_PRL_FL401.ApplicantsFamily)
+        .exec(Solicitor_PRL_FL401.Relationship)
+        .exec(Solicitor_PRL_FL401.Behaviour)
+        .exec(Solicitor_PRL_FL401.TheHome)
+        .exec(Solicitor_PRL_FL401.UploadDocuments)
+        .exec(Solicitor_PRL_FL401.ViewPDF)
+        .exec(Solicitor_PRL_FL401.StatementOfTruth)
+        .exec(Solicitor_PRL_FL401.HearingsTab)
+        }
+      .exec(Logout.XUILogout)
 		}
 
 	/*===============================================================================================
@@ -565,7 +568,7 @@ class XUI_Simulation extends Simulation {
 		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-    // PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption) //504 error on XUI_PRL_FL401_250_020_CreateRespondentDetailsEvent, 422 error on XUI_PRL_C100_430_015_SubmitAndPayRedirectEvent
+    PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 	).protocols(httpProtocol)
 		.assertions(assertions(testType))
 		.maxDuration(75 minutes)
