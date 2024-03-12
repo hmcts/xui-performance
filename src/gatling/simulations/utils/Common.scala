@@ -204,4 +204,13 @@ object Common {
 			.headers(Headers.commonHeader)
       .check(substring("[")))
 
+  val manageLabellingRoleAssignment =
+    exec(http("XUI_Common_000_ManageLabellingRoleAssignments")
+      .post("/api/role-access/roles/manageLabellingRoleAssignment/#{caseId}")
+      .headers(Headers.commonHeader)
+      .header("x-xsrf-token", "#{XSRFToken}")
+      .body(StringBody("{}"))
+      .check(status.is(204))) 
+      //No response body is returned, therefore no substring check is possible
+
 }

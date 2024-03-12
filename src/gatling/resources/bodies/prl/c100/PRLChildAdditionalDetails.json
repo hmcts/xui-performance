@@ -1,6 +1,6 @@
 {
   "data": {
-    "children": [
+    "newChildDetails": [
       {
         "value": {
           "firstName": "#{C100ChildFirstName}",
@@ -8,31 +8,26 @@
           "dateOfBirth": "#{C100ChildDobYear}-#{C100ChildAppDobMonth}-#{C100ChildAppDobDay}",
           "gender": "male",
           "otherGender": null,
-          "applicantsRelationshipToChild": "father",
-          "otherApplicantsRelationshipToChild": null,
-          "respondentsRelationshipToChild": "mother",
-          "otherRespondentsRelationshipToChild": null,
-          "parentalResponsibilityDetails": "Child's mother",
+          "parentalResponsibilityDetails": "Child's father",
           "isDateOfBirthUnknown": null,
-          "relationshipToApplicant": null,
-          "relationshipToRespondent": null,
+          "cafcassOfficerName": null,
+          "cafcassOfficerPosition": null,
+          "cafcassOfficerOtherPosition": null,
+          "cafcassOfficerEmailAddress": null,
+          "cafcassOfficerPhoneNo": null,
+          "isFinalOrderIssued": null,
           "orderAppliedFor": [
             "childArrangementsOrder"
-          ],
-          "childLiveWith": [
-            "applicant"
-          ],
-          "personWhoLivesWithChild": []
+          ]
         },
         "id": null
       }
     ],
     "childrenKnownToLocalAuthority": "no",
-    "childrenKnownToLocalAuthorityTextArea": null,
     "childrenSubjectOfChildProtectionPlan": "no"
   },
   "event": {
-    "id": "childDetails",
+    "id": "childDetailsRevised",
     "summary": "",
     "description": ""
   },
