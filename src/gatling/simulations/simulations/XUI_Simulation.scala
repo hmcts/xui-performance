@@ -95,7 +95,7 @@ class XUI_Simulation extends Simulation {
 	val httpProtocol = http
 		.baseUrl(Environment.baseURL.replace("${env}", s"${env}"))
 		//	.inferHtmlResources()
-	//	.silentResources
+		.silentResources
 		.header("experimental", "true") //used to send through client id, s2s and bearer tokens. Might be temporary
 	before {
 		println(s"Test Type: ${testType}")
@@ -358,13 +358,13 @@ class XUI_Simulation extends Simulation {
 				}
 				.pause(10)
 					.exec(Solicitor_BailsHearings.ViewAllHearings)
-				//		.exec(Solicitor_BailsHearings.RequestHearing)
-					//	.exec(Solicitor_BailsHearings.ViewHearing)
-				//		.exec(Solicitor_BailsHearings.AmendHearing)
-				//		.exec(Solicitor_BailsHearings.ViewHearing)
-				//		.exec(Solicitor_BailsHearings.CancelHearing)
-				//			.exec(Solicitor_BailsHearings.ViewAllHearings)
-			//	.exec(Logout.XUILogout)
+						.exec(Solicitor_BailsHearings.RequestHearing)
+						.exec(Solicitor_BailsHearings.ViewHearing)
+						.exec(Solicitor_BailsHearings.AmendHearing)
+						.exec(Solicitor_BailsHearings.ViewHearing)
+						.exec(Solicitor_BailsHearings.CancelHearing)
+							.exec(Solicitor_BailsHearings.ViewAllHearings)
+				.exec(Logout.XUILogout)
 		}
 
 	/*===============================================================================================
