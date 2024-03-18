@@ -94,7 +94,7 @@ class XUI_Simulation extends Simulation {
 
 	val httpProtocol = http
 		.baseUrl(Environment.baseURL.replace("${env}", s"${env}"))
-		//	.inferHtmlResources()
+		.inferHtmlResources()
 		.silentResources
 		.header("experimental", "true") //used to send through client id, s2s and bearer tokens. Might be temporary
 	before {
@@ -704,19 +704,19 @@ class XUI_Simulation extends Simulation {
 	setUp(
 	(SSCSHearingsScenario.inject(nothingFor(10),rampUsers(50).during(2800))),//50, 2800
 		(PRLHearingsScenario.inject(nothingFor(30),rampUsers(40).during(2800))),//40,2800
-		(CivilHearingsScenario.inject(nothingFor(60),rampUsers(14).during(2800))),//14, 2800*/
-			(BailsHearingsScenario.inject(nothingFor(90),rampUsers(60).during(2800))) //90, 60. 2800
+		(CivilHearingsScenario.inject(nothingFor(60),rampUsers(14).during(2800))),//14, 2800
+			(BailsHearingsScenario.inject(nothingFor(90),rampUsers(200).during(2800))) //90, 60. 2800
 	)
 		.protocols(httpProtocol)
 	.maxDuration(4000)
 
-	//	setUp(
+	/*	setUp(
     	//	(PRLHearingsScenario.inject(nothingFor(5),rampUsers(1).during(1)))
-    	//	(CivilHearingsDataPrep.inject(nothingFor(1),rampUsers(2000).during(5000)))
-    //	)
-    //		.protocols(httpProtocol)
-		//	.maxDuration(20000000)
-	
+    		(CivilHearingsDataPrep.inject(nothingFor(1),rampUsers(2000).during(5000)))
+    	)
+    		.protocols(httpProtocol)
+			.maxDuration(20000000)
+	*/
 	
 
 }
