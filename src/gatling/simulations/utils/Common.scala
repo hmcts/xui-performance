@@ -62,6 +62,18 @@ object Common {
   def getDodYear(): String = {
     now.minusYears(1 + rnd.nextInt(20)).format(patternYear)
   }
+
+  def getCurrentYear(): String = {
+    now.format(patternYear)
+  }
+
+  def getCurrentMonth(): String = {
+    now.format(patternMonth)
+  }
+
+  def getCurrentDay(): String = {
+    now.format(patternDay)
+  }
   //Saves partyId
   def savePartyId: CheckBuilder[JsonPathCheckType, JsonNode] = jsonPath("$.case_fields[*].value[*].value.party.partyId").saveAs("partyId")
 

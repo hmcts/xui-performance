@@ -36,7 +36,7 @@ object Login {
         .withMaxAge(28800)
         .withSecure(true)))
 
-      .exec(Common.configurationui)
+    /*  .exec(Common.configurationui)
 
       .exec(Common.configJson)
 
@@ -63,9 +63,11 @@ object Login {
        .header("accept", "application/json")
        .check(substring("id")))
 
+     */
+
     .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
 
-    .exec(Common.orgDetails)
+  /*  .exec(Common.orgDetails)
 
     .exec(http("XUI_020_015_WorkBasketInputs")
       .get("/data/internal/case-types/#{caseType}/work-basket-inputs")
@@ -81,6 +83,8 @@ object Login {
       .formParam("x-xsrf-token", "#{XSRFToken}")
       .body(StringBody("""{"size":25}"""))
       .check(substring("columns")))
+
+   */
 
     }
     .pause(MinThinkTime , MaxThinkTime)
