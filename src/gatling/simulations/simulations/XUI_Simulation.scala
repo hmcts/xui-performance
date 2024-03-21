@@ -28,6 +28,9 @@ class XUI_Simulation extends Simulation {
   val UserFeederBailsAdmin = csv("UserDataBailsAdmin.csv").circular
 	val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
 
+	val UserFeederETCase = csv("caseWorkerUsers.csv").circular
+	val UserFeederEtRespondent = csv("respondentUsers.csv").circular
+
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
 	val nfdSoleLabelsPopulated = Source.fromResource("bodies/nfd/labels/soleLabelsPopulated.txt").mkString
@@ -508,6 +511,26 @@ class XUI_Simulation extends Simulation {
 				.exec(Logout.XUILogout)
 		}
 
+	val ETCaseWorker = scenario( "ETCaseWorker")
+		.exitBlockOnFail {
+			exec(_.set("env", s"${env}")
+				.set("caseType", "ET_EnglandWales")
+			)
+			//	.feed(UserFeederETCase)
+				.feed(UserFeederEtRespondent)
+				.exec(Homepage.XUIHomePage)
+				.exec(Login.XUILogin)
+		//		.exec(ET_CaseWorker.MakeAClaim)
+
+				.exec(ET_CaseWorker.MakeAClaim)
+		}
+
+		.exec {
+			session =>
+				println(session)
+				session
+		}
+
 	/*===============================================================================================
 	* Simulation Configuration
 	 ===============================================================================================*/
@@ -559,6 +582,8 @@ class XUI_Simulation extends Simulation {
 	}
 
 	setUp(
+		ETCaseWorker.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+			/*
 		BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
@@ -569,6 +594,8 @@ class XUI_Simulation extends Simulation {
 		NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
     PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+
+			 */
 	).protocols(httpProtocol)
 		.assertions(assertions(testType))
 		.maxDuration(75 minutes)

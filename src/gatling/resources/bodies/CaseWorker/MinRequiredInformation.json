@@ -1,0 +1,23 @@
+{
+  "data": {
+    "et1VettingClaimantDetailsMarkUp": "#{et1VettingClaimantDetailsMarkUp}",
+    "et1VettingRespondentDetailsMarkUp": "#{et1VettingRespondentDetailsMarkUp}",
+    "et1VettingCanServeClaimYesOrNo": "Yes",
+    "et1VettingCanServeClaimGeneralNote": "#{ETRespondRandomString} General Note"
+  },
+  "event": {
+    "id": "et1Vetting",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "et1VettingBeforeYouStart": "#{et1VettingBeforeYouStart}",
+    "et1VettingClaimantDetailsMarkUp": "#{et1VettingClaimantDetailsMarkUp}",
+    "et1VettingRespondentDetailsMarkUp": "#{et1VettingRespondentDetailsMarkUp}",
+    "et1VettingCanServeClaimYesOrNo": "Yes",
+    "et1VettingCanServeClaimGeneralNote": "#{ETRespondRandomString} General Note"
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
+}

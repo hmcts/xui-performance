@@ -1,0 +1,17 @@
+{
+  "case_id": "#{caseId}",
+  "answers": [
+    {
+      "question_id": "respondentName",
+      "value": "#{respondentName}"
+    },
+    {
+      "question_id": "claimantFirstName",
+      "value": "Citizen"
+    },
+    {
+      "question_id": "claimantLastName",
+      "value": "One"
+    }
+  ]
+}

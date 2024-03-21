@@ -1,0 +1,23 @@
+{
+  "data": {
+    "resTseCopyToOtherPartyYesOrNo": "No"
+  },
+  "event": {
+    "id": "respondentTSE",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "resTseSelectApplication": "Amend response",
+    "resTseDocument1": {
+      "document_url": "#{DocumentURLPD36Q}",
+      "document_binary_url": "#{DocumentURLPD36Q}/binary",
+      "document_filename": "TestFile.pdf"
+    },
+    "resTseTextBox1": "#{ETRespondRandomString}resTseTextBox1",
+    "resTseCopyToOtherPartyYesOrNo": "No"
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
+}
