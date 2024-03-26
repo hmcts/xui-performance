@@ -1,0 +1,32 @@
+{
+  "data": {
+    "et3ResponseClaimantName": "#{et3ResponseClaimantName}",
+    "et3ResponseIsClaimantNameCorrect": "Yes"
+  },
+  "event": {
+    "id": "et3Response",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "submitEt3Respondent": {
+      "value": {
+        "code": "#{submitEt3RespondentCode}",
+        "label": "#{submitEt3RespondentLabel}"
+      },
+      "selectedCode": "#{submitEt3RespondentCode}",
+      "selectedLabel": "#{submitEt3RespondentLabel}",
+      "list_items": [
+        {
+          "code": "#{submitEt3RespondentCode}",
+          "label": "#{submitEt3RespondentLabel}"
+        }
+      ]
+    },
+    "et3ResponseClaimantName": "#{et3ResponseClaimantName}",
+    "et3ResponseIsClaimantNameCorrect": "Yes"
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
+}

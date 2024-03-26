@@ -1,0 +1,56 @@
+{
+  "data": {
+    "et3ResponseDXAddress": null,
+    "et3RespondentAddress": {
+      "AddressLine1": "#{addressLines(0)}",
+      "AddressLine2": "#{addressLines(1)}",
+      "AddressLine3": "",
+      "PostTown": "#{addressLines(2)}",
+      "County": "",
+      "PostCode": "#{addressLines(3)}",
+      "Country": "United Kingdom"
+    }
+  },
+  "event": {
+    "id": "et3Response",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "submitEt3Respondent": {
+      "value": {
+        "code": "#{submitEt3RespondentCode}",
+        "label": "#{submitEt3RespondentLabel}"
+      },
+      "selectedCode": "#{submitEt3RespondentCode}",
+      "selectedLabel": "#{submitEt3RespondentLabel}",
+      "list_items": [
+        {
+          "code": "#{submitEt3RespondentCode}",
+          "label": "#{submitEt3RespondentLabel}"
+        }
+      ]
+    },
+    "et3ResponseClaimantName": "#{et3ResponseClaimantName}",
+    "et3ResponseIsClaimantNameCorrect": "Yes",
+    "et3ResponseRespondentLegalName": "John Smith",
+    "et3ResponseRespondentCompanyNumber": "#{ETRespondRandomString} et3ResponseRespondentCompanyNumber",
+    "et3ResponseRespondentEmployerType": "Individual",
+    "et3ResponseRespondentPreferredTitle": "#{ETRespondRandomString} et3ResponseRespondentPreferredTitle",
+    "et3ResponseRespondentContactName": "#{ETRespondRandomString} et3ResponseRespondentContactName",
+    "et3ResponseNameShowInset": "Yes",
+    "et3ResponseDXAddress": null,
+    "et3RespondentAddress": {
+      "AddressLine1": "#{addressLines(0)}",
+      "AddressLine2": "#{addressLines(1)}",
+      "AddressLine3": "",
+      "PostTown": "#{addressLines(2)}",
+      "County": "",
+      "PostCode": "#{addressLines(3)}",
+      "Country": "United Kingdom"
+    }
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
+}

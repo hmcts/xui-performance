@@ -531,6 +531,24 @@ class XUI_Simulation extends Simulation {
 				session
 		}
 
+	val ETRespondent = scenario("ETRespondent")
+		.exitBlockOnFail {
+			exec(_.set("env", s"${env}")
+				.set("caseType", "ET_EnglandWales")
+			)
+				//	.feed(UserFeederETCase)
+				.feed(UserFeederEtRespondent)
+				.exec(Homepage.XUIHomePage)
+				.exec(Login.XUILogin)
+				.exec(ET_Respondent.ETRespondent)
+		}
+
+		.exec {
+			session =>
+				println(session)
+				session
+		}
+
 	/*===============================================================================================
 	* Simulation Configuration
 	 ===============================================================================================*/
@@ -582,7 +600,7 @@ class XUI_Simulation extends Simulation {
 	}
 
 	setUp(
-		ETCaseWorker.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+		ETRespondent.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 			/*
 		BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
@@ -599,6 +617,4 @@ class XUI_Simulation extends Simulation {
 	).protocols(httpProtocol)
 		.assertions(assertions(testType))
 		.maxDuration(75 minutes)
-
-
 }
