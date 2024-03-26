@@ -17,7 +17,7 @@
     "et3ResponseClaimantName": "#{et3ResponseClaimantName}",
     "et3ResponseIsClaimantNameCorrect": "Yes",
     "et3ResponseClaimantNameCorrection": null,
-    "et3ResponseRespondentLegalName": "John Smith",
+    "et3ResponseRespondentLegalName": "#{et3ResponseRespondentLegalName}",
     "et3ResponseRespondentCompanyNumber": "#{ETRespondRandomString} et3ResponseRespondentCompanyNumber",
     "et3ResponseRespondentEmployerType": null,
     "et3ResponseRespondentPreferredTitle": "#{ETRespondRandomString} et3ResponseRespondentPreferredTitle",
@@ -33,7 +33,7 @@
       "Country": "United Kingdom"
     },
     "et3ResponseDXAddress": "ff",
-    "et3ResponsePhone": "01234567890",
+    "et3ResponsePhone": "#{ETRandomPhone}",
     "et3ResponseReference": null,
     "et3ResponseContactPreference": "Email",
     "et3ResponseContactReason": null,

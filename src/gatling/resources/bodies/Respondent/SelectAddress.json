@@ -33,7 +33,7 @@
     },
     "et3ResponseClaimantName": "#{et3ResponseClaimantName}",
     "et3ResponseIsClaimantNameCorrect": "Yes",
-    "et3ResponseRespondentLegalName": "John Smith",
+    "et3ResponseRespondentLegalName": "#{et3ResponseRespondentLegalName}",
     "et3ResponseRespondentCompanyNumber": "#{ETRespondRandomString} et3ResponseRespondentCompanyNumber",
     "et3ResponseRespondentEmployerType": "Individual",
     "et3ResponseRespondentPreferredTitle": "#{ETRespondRandomString} et3ResponseRespondentPreferredTitle",
