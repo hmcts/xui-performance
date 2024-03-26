@@ -111,7 +111,7 @@ object ET_Respondent {
 
 
 
-    /*======================================================================================
+/*======================================================================================
 * ET3 - Respondent Details
 ======================================================================================*/
 
@@ -492,7 +492,7 @@ object ET_Respondent {
 
 
 
-    /*======================================================================================
+/*======================================================================================
 * View Application Submit
 ======================================================================================*/
 
@@ -508,6 +508,249 @@ object ET_Respondent {
     }
     .pause(MinThinkTime, MaxThinkTime)
 
+  val ETRespondent =
 
+    exec(_.setAll(
+      "ETRespondRandomString" -> (Common.randomString(7)),
+      "respondentName" -> ("#{ETRandomString}" + "Respondent"),
+      "caseId" -> ("1692974573081186"),
+      "CaseAcceptDay" -> (Common.getDay()),
+      "CaseAcceptMonth" -> (Common.getCurrentMonth()),
+      "CaseAcceptYear" -> (Common.getCurrentYear()),
+      "ETRandomPhone" -> (Common.randomNumber(11))
+    ))
+
+/*======================================================================================
+* Find Case
+======================================================================================*/
+
+
+  .group("ET_CW_500_FindCase") {
+      exec(http("ET_CW_500_005_Find_Case")
+        .get(BaseURL + "/data/internal/cases/#{caseId}")
+        .headers(Headers.commonHeader)
+        .check(substring("Submitted")))
+
+        .exec(Common.userDetails)
+
+  }
+
+  .pause(MinThinkTime, MaxThinkTime)
+
+/*======================================================================================
+* Click on 'ET3 Case Vetting'
+======================================================================================*/
+
+    .group("ET_CW_510_ET3_Respondent_Details") {
+      exec(http("ET_CW_510_005_ET3_Respondent_Details")
+        .get(BaseURL + "/workallocation/case/tasks/#{caseId}/event/et3Response/caseType/ET_EnglandWales/jurisdiction/EMPLOYMENT")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json")
+        .check(substring("task_required_for_event")))
+
+        .exec(Common.profile)
+
+        .exec(http("ET_CW_510_010_ET3_Respondent_Details")
+          .get(BaseURL + "/data/internal/cases/#{caseId}/event-triggers/et3Response?ignore-warning=false")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+          .check(jsonPath("$.event_token").saveAs("event_token"))
+          .check(jsonPath("$.case_fields[4].formatted_value.list_items[0].code").saveAs("submitEt3RespondentCode"))
+          .check(jsonPath("$.case_fields[4].formatted_value.list_items[0].label").saveAs("submitEt3RespondentLabel"))
+          .check(jsonPath("$.case_fields[5].formatted_value").saveAs("et3ResponseClaimantName"))
+          /*.check(jsonPath("$.case_fields[11].formatted_value").saveAs("et1VettingRespondentAcasDetails1"))
+          .check(jsonPath("$.case_fields[48].formatted_value").saveAs("existingJurisdictionCodes"))
+           */
+          .check(substring("ET3 - Respondent Details")))
+
+        .exec(Common.userDetails)
+
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+/*======================================================================================
+* ET3 - Response to Employment tribunal claim (ET1)
+======================================================================================*/
+
+    .group("ET_CW_520_How_To_Fill_This_Form") {
+      exec(http("ET_CW_520_005_How_To_Fill_This_Form")
+        .post(BaseURL + "/data/case-types/ET_EnglandWales/validate?pageId=et3Response1")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/Respondent/HowToFillThisForm.json"))
+        .check(substring("et3Response1")))
+
+        .exec(Common.userDetails)
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+/*======================================================================================
+* Select which respondent this ET3 is for
+======================================================================================*/
+
+    .group("ET_CW_520_Confirm_Respondent") {
+      exec(http("ET_CW_520_005_Confirm_Respondent")
+        .post(BaseURL + "/data/case-types/ET_EnglandWales/validate?pageId=et3Response2")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/Respondent/ConfirmRespondent.json"))
+        .check(substring("respondentCollection")))
+
+        .exec(Common.userDetails)
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+/*======================================================================================
+* Is this the correct claimant for the claim you're responding to?
+======================================================================================*/
+
+    .group("ET_CW_520_Confirm_Claimant") {
+      exec(http("ET_CW_520_005__Confirm_Claimant")
+        .post(BaseURL + "/data/case-types/ET_EnglandWales/validate?pageId=et3Response3")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/Respondent/ConfirmClaimant.json"))
+        .check(substring("et3ResponseClaimantName")))
+
+        .exec(Common.userDetails)
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+/*======================================================================================
+* What is the respondent's name?
+======================================================================================*/
+
+    .group("ET_CW_520_Respondent_Name") {
+      exec(http("ET_CW_520_005_Respondent_Name")
+        .post(BaseURL + "/data/case-types/ET_EnglandWales/validate?pageId=et3Response4")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/Respondent/RespondentName.json"))
+        .check(substring("et3ResponseRespondentContactName")))
+
+        .exec(Common.userDetails)
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+/*======================================================================================
+* Respondent postcode
+======================================================================================*/
+
+    .group("ET_CW_520_Respondent_Address") {
+        exec(Common.postcodeLookup)
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+/*======================================================================================
+* Select address
+======================================================================================*/
+
+    .group("ET_CW_520_Select_Address") {
+      exec(http("ET_CW_520_005_Select_Address")
+        .post(BaseURL + "/data/case-types/ET_EnglandWales/validate?pageId=et3Response5")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/Respondent/SelectAddress.json"))
+        .check(substring("et3RespondentAddress")))
+
+        .exec(Common.userDetails)
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+/*======================================================================================
+* What is your contact phone number?
+======================================================================================*/
+
+    .group("ET_CW_520_Phone") {
+      exec(http("ET_CW_520_005_Phone")
+        .post(BaseURL + "/data/case-types/ET_EnglandWales/validate?pageId=et3Response6")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/Respondent/Phone.json"))
+        .check(substring("et3ResponsePhone")))
+
+        .exec(Common.userDetails)
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+/*======================================================================================
+* What is your reference number?
+======================================================================================*/
+
+    .group("ET_CW_520_Reference_Number") {
+      exec(http("ET_CW_520_005_Reference_Number")
+        .post(BaseURL + "/data/case-types/ET_EnglandWales/validate?pageId=et3Response7")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/Respondent/ReferenceNumber.json"))
+        .check(substring("et3ResponseReference")))
+
+        .exec(Common.userDetails)
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+/*======================================================================================
+* How would you prefer to be contacted?
+======================================================================================*/
+
+    .group("ET_CW_520_Contact_Preferences") {
+      exec(http("ET_CW_520_005_Contact_Preferences")
+        .post(BaseURL + "/data/case-types/ET_EnglandWales/validate?pageId=et3Response8")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/Respondent/ContactPreferences.json"))
+        .check(substring("et3ResponseContactPreference")))
+
+        .exec(Common.userDetails)
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+/*======================================================================================
+* Hearing format
+======================================================================================*/
+
+    .group("ET_CW_520_Hearing_Format") {
+      exec(http("ET_CW_520_005_Hearing_Format")
+        .post(BaseURL + "/data/case-types/ET_EnglandWales/validate?pageId=et3Response9")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/Respondent/HearingFormat.json"))
+        .check(substring("et3ResponseHearingRepresentative")))
+
+        .exec(Common.userDetails)
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+/*======================================================================================
+* Respondent party conditions
+======================================================================================*/
+
+    .group("ET_CW_520_Respondent_Party_Conditions") {
+      exec(http("ET_CW_520_005_Respondent_Party_Conditions")
+        .post(BaseURL + "/data/case-types/ET_EnglandWales/validate?pageId=et3Response10")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/Respondent/RespondentPartyConditions.json"))
+        .check(substring("et3ResponseRespondentSupportNeeded")))
+
+        .exec(Common.userDetails)
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+/*======================================================================================
+* ET3 - Respondent Details
+======================================================================================*/
+
+    .group("ET_CW_520_Save_Details") {
+      exec(http("ET_CW_520_005_Save_Details")
+        .post(BaseURL + "/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/Respondent/SaveDetails.json"))
+        .check(substring("respondentCollection")))
+
+        .exec(Common.userDetails)
+    }
+    .pause(MinThinkTime, MaxThinkTime)
 
 }
