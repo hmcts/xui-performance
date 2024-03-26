@@ -22,19 +22,14 @@ object ET_Respondent {
       "ETRespondRandomString" -> (Common.randomString(7)),
       "respondentName" -> ("#{ETRandomString}" + "Respondent"),
       "caseId" -> ("1674733823532865"),
-"CaseAcceptDay" -> (Common.getDay()),
+      "CaseAcceptDay" -> (Common.getDay()),
       "CaseAcceptMonth" -> (Common.getCurrentMonth()),
       "CaseAcceptYear" -> (Common.getCurrentYear())
     ))
 
-  exec(_.setAll(
-    "ETRespondRandomString" -> (Common.randomString(7))))
-
-    /*======================================================================================
-    * Notice Of Change
-    ======================================================================================*/
-
-
+/*======================================================================================
+* Notice Of Change
+======================================================================================*/
 
     .group("ET_Respond_680_NoC") {
 
@@ -48,9 +43,9 @@ object ET_Respondent {
 
 
 
-    /*======================================================================================
-    * Notice Of Change Case Select
-    ======================================================================================*/
+/*======================================================================================
+* Notice Of Change Case Select
+======================================================================================*/
 
     .group("ET_Respond_685_NoC_Case") {
       exec(http("ET_Respond_685_005_NoC_Case")
@@ -64,9 +59,9 @@ object ET_Respondent {
     .pause(MinThinkTime, MaxThinkTime)
 
 
-    /*======================================================================================
-    * NoC - Enter details
-    ======================================================================================*/
+/*======================================================================================
+* NoC - Enter details
+======================================================================================*/
 
     .group("ET_Respond_690_NoC_Enter_Details") {
       exec(http("ET_Respond_690_005_NoC_Enter_Details")
@@ -80,9 +75,9 @@ object ET_Respondent {
     .pause(MinThinkTime, MaxThinkTime)
 
 
-    /*======================================================================================
- * NoC - Submit
- ======================================================================================*/
+/*======================================================================================
+* NoC - Submit
+======================================================================================*/
 
     .group("ET_Respond_700_NoC_Submit") {
       exec(http("ET_Respond_700_005_NoC_Submit")
@@ -96,7 +91,7 @@ object ET_Respondent {
     .pause(MinThinkTime, MaxThinkTime)
 
 
-    /*======================================================================================
+/*======================================================================================
 * View This Case
 ======================================================================================*/
 
@@ -108,8 +103,6 @@ object ET_Respondent {
 
     }
     .pause(MinThinkTime, MaxThinkTime)
-
-
 
 /*======================================================================================
 * ET3 - Respondent Details
@@ -512,12 +505,13 @@ object ET_Respondent {
 
     exec(_.setAll(
       "ETRespondRandomString" -> (Common.randomString(7)),
-      "respondentName" -> ("#{ETRandomString}" + "Respondent"),
+      //"respondentName" -> ("#{ETRandomString}" + "Respondent"),
+      "respondentName" -> (Common.randomString(7) + "Respondent"),
       "caseId" -> ("1692974573081186"),
       "CaseAcceptDay" -> (Common.getDay()),
       "CaseAcceptMonth" -> (Common.getCurrentMonth()),
       "CaseAcceptYear" -> (Common.getCurrentYear()),
-      "ETRandomPhone" -> (Common.randomNumber(11))
+      "ETRandomPhone" -> ("0" + Common.randomNumber(10))
     ))
 
 /*======================================================================================
@@ -594,6 +588,7 @@ object ET_Respondent {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .body(ElFileBody("bodies/Respondent/ConfirmRespondent.json"))
+        .check(jsonPath("$.data.et3ResponseRespondentLegalName").saveAs("et3ResponseRespondentLegalName"))
         .check(substring("respondentCollection")))
 
         .exec(Common.userDetails)
@@ -605,11 +600,12 @@ object ET_Respondent {
 ======================================================================================*/
 
     .group("ET_CW_520_Confirm_Claimant") {
-      exec(http("ET_CW_520_005__Confirm_Claimant")
+      exec(http("ET_CW_520_005_Confirm_Claimant")
         .post(BaseURL + "/data/case-types/ET_EnglandWales/validate?pageId=et3Response3")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .body(ElFileBody("bodies/Respondent/ConfirmClaimant.json"))
+        //
         .check(substring("et3ResponseClaimantName")))
 
         .exec(Common.userDetails)
