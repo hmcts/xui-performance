@@ -975,7 +975,7 @@ object Solicitor_Bails {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/bails/BailsListCasePage1.json"))
-        .check(substring("listingHearingLength")))
+        .check(substring("listingHearingDuration")))
 
       .exec(Common.userDetails)
     }

@@ -2,7 +2,7 @@
   "data": {
      "listingEvent": "initialListing",
      "listingLocation": "manchester",
-     "listingHearingLength": "30",
+     "listingHearingDuration": "30",
      "listingHearingDate": "#{currentDate}T12:00:00.000",
      "sendDirectionDescription": null,
      "sendDirectionList": null,
