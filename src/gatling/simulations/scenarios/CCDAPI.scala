@@ -11,32 +11,22 @@ object CCDAPI {
   val IdamAPIURL = Environment.idamAPIURL
   val CcdAPIURL = Environment.ccdAPIURL
 
-  val MinThinkTime = Environment.minThinkTime
-  val MaxThinkTime = Environment.maxThinkTime
-
   val clientSecret = ConfigFactory.load.getString("auth.clientSecret")
 
-  //userType must be "Caseworker", "Legal" or "Citizen"
-  def Auth(userType: String) =
+  val Auth =
 
-    exec(session => userType match {
-      case "Caseworker" => session.set("emailAddressCCD", "ccdloadtest-cw@gmail.com").set("passwordCCD", "Password12").set("microservice", "ccd_data")
-      case "Legal" => session.set("emailAddressCCD", "ccdloadtest-la@gmail.com").set("passwordCCD", "Password12").set("microservice", "ccd_data")
-      case "Solicitor" => session.set("emailAddressCCD", session("user").as[String]).set("passwordCCD", session("password").as[String]).set("microservice", "nfdiv_case_api")
-    })
-
-    .exec(http("XUI_000_Auth")
+    exec(http("ET_000_Auth")
       .post(RpeAPIURL + "/testing-support/lease")
-      .body(StringBody("""{"microservice":"#{microservice}"}""")).asJson
+      .body(StringBody("""{"microservice":"ccd_data"}""")).asJson
       .check(regex("(.+)").saveAs("authToken")))
 
     .pause(1)
 
-    .exec(http("XUI_000_GetBearerToken")
+    .exec(http("ET_000_GetBearerToken")
       .post(IdamAPIURL + "/o/token")
       .formParam("grant_type", "password")
-      .formParam("username", "#{emailAddressCCD}")
-      .formParam("password", "#{passwordCCD}")
+      .formParam("username", "#{username}")
+      .formParam("password", "#{password}")
       .formParam("client_id", "ccd_gateway")
       .formParam("client_secret", clientSecret)
       .formParam("scope", "openid profile roles openid roles profile")
@@ -45,38 +35,19 @@ object CCDAPI {
 
     .pause(1)
 
-    .exec(http("XUI_000_GetIdamID")
+    .exec(http("ET_000_GetIdamID")
       .get(IdamAPIURL + "/details")
       .header("Authorization", "Bearer #{bearerToken}")
       .check(jsonPath("$.id").saveAs("idamId")))
 
     .pause(1)
 
-  val AssignCase =
+  def CreateCase(eventName: String, payloadPath: String) =
 
-    exec(Auth("Solicitor"))
+    exec(_.set("eventName", eventName))
 
-    .exec(http("XUI_000_AssignCase")
-      .post(CcdAPIURL + "/case-users")
-      .header("Authorization", "Bearer #{bearerToken}")
-      .header("ServiceAuthorization", "#{authToken}")
-      .header("Content-Type", "application/json")
-      .body(ElFileBody("bodies/nfd/AssignCase.json"))
-      .check(jsonPath("$.status_message").is("Case-User-Role assignments created successfully")))
-
-    .pause(1)
-
-  // allows the event to be used where the userType = "Caseworker" or "Legal"
-  def CreateEvent(userType: String, jurisdiction: String, caseType: String, eventName: String, payloadPath: String) =
-
-    exec(_.set("eventName", eventName)
-          .set("jurisdiction", jurisdiction)
-          .set("caseType", caseType))
-
-    .exec(Auth(userType))
-
-    .exec(http("XUI_000_GetCCDEventToken")
-      .get(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/#{jurisdiction}/case-types/#{caseType}/cases/#{caseId}/event-triggers/#{eventName}/token")
+    .exec(http("ET_000_GetCCDEventToken")
+      .get(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/Employment/case-types/ET_EnglandWales/event-triggers/#{eventName}/token")
       .header("Authorization", "Bearer #{bearerToken}")
       .header("ServiceAuthorization", "#{authToken}")
       .header("Content-Type", "application/json")
@@ -84,8 +55,31 @@ object CCDAPI {
 
     .pause(1)
 
-    .exec(http("XUI_000_CCDEvent-#{eventName}")
-      .post(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/#{jurisdiction}/case-types/#{caseType}/cases/#{caseId}/events")
+    .exec(http("ET_000_CCDEvent-#{eventName}")
+      .post(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/Employment/case-types/ET_EnglandWales/cases")
+      .header("Authorization", "Bearer #{bearerToken}")
+      .header("ServiceAuthorization", "#{authToken}")
+      .header("Content-Type", "application/json")
+      .body(ElFileBody(payloadPath))
+      .check(jsonPath("$.id").saveAs("caseId")))
+
+    .pause(1)
+
+  def CreateEvent(eventName: String, payloadPath: String) =
+
+    exec(_.set("eventName", eventName))
+
+    .exec(http("ET_000_GetCCDEventToken")
+      .get(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/Employment/case-types/ET_EnglandWales/cases/#{caseId}/event-triggers/#{eventName}/token")
+      .header("Authorization", "Bearer #{bearerToken}")
+      .header("ServiceAuthorization", "#{authToken}")
+      .header("Content-Type", "application/json")
+      .check(jsonPath("$.token").saveAs("eventToken")))
+
+    .pause(1)
+
+    .exec(http("ET_000_CCDEvent-#{eventName}")
+      .post(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/Employment/case-types/ET_EnglandWales/cases/#{caseId}/events")
       .header("Authorization", "Bearer #{bearerToken}")
       .header("ServiceAuthorization", "#{authToken}")
       .header("Content-Type", "application/json")
