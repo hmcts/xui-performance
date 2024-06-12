@@ -117,7 +117,7 @@ object Solicitor_IAC {
 
     .group("XUI_IAC_090_UploadNoticeDecision") {
       exec(http("XUI_IAC_090_005_UploadNoticeDecision")
-        .post("/documentsv2")
+        .post("/documents")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .header("content-type", "multipart/form-data")
@@ -127,53 +127,50 @@ object Solicitor_IAC {
         .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
-        .formParam("caseTypeId", "null")
-        .formParam("jurisdictionId", "null")
+        // .formParam("caseTypeId", "null")
+        // .formParam("jurisdictionId", "null")
         // .formParam("files", """(binary)""")
         .check(substring("originalDocumentName"))
-        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL1"))
-        .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash1")))
+        .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL1")))
     }
 
-    .group("XUI_IAC_091_UploadNoticeDecision") {
-      exec(http("XUI_IAC_091_005_UploadNoticeDecision")
-        .post("/documentsv2")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json, text/plain, */*")
-        .header("content-type", "multipart/form-data")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .bodyPart(RawFileBodyPart("files", "3MB.pdf")
-        .fileName("3MB.pdf")
-        .transferEncoding("binary"))
-        .asMultipartForm
-        .formParam("classification", "PUBLIC")
-        .formParam("caseTypeId", "null")
-        .formParam("jurisdictionId", "null")
-        // .formParam("files", """(binary)""")
-        .check(substring("originalDocumentName"))
-        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL2"))
-        .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash2")))
-    }
+    // .group("XUI_IAC_091_UploadNoticeDecision") {
+    //   exec(http("XUI_IAC_091_005_UploadNoticeDecision")
+    //     .post("/documents")
+    //     .headers(Headers.commonHeader)
+    //     .header("accept", "application/json, text/plain, */*")
+    //     .header("content-type", "multipart/form-data")
+    //     .header("x-xsrf-token", "#{XSRFToken}")
+    //     .bodyPart(RawFileBodyPart("files", "3MB.pdf")
+    //     .fileName("3MB.pdf")
+    //     .transferEncoding("binary"))
+    //     .asMultipartForm
+    //     .formParam("classification", "PUBLIC")
+    //     // .formParam("caseTypeId", "null")
+    //     // .formParam("jurisdictionId", "null")
+    //     // .formParam("files", """(binary)""")
+    //     .check(substring("originalDocumentName"))
+    //     .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL2")))
+    // }
 
-    .group("XUI_IAC_092_UploadNoticeDecision") {
-      exec(http("XUI_IAC_092_005_UploadNoticeDecision")
-        .post("/documentsv2")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json, text/plain, */*")
-        .header("content-type", "multipart/form-data")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .bodyPart(RawFileBodyPart("files", "3MB.pdf")
-        .fileName("3MB.pdf")
-        .transferEncoding("binary"))
-        .asMultipartForm
-        .formParam("classification", "PUBLIC")
-        .formParam("caseTypeId", "null")
-        .formParam("jurisdictionId", "null")
-        // .formParam("files", """(binary)""")
-        .check(substring("originalDocumentName"))
-        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL3"))
-        .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash3")))
-    }
+    // .group("XUI_IAC_092_UploadNoticeDecision") {
+    //   exec(http("XUI_IAC_092_005_UploadNoticeDecision")
+    //     .post("/documents")
+    //     .headers(Headers.commonHeader)
+    //     .header("accept", "application/json, text/plain, */*")
+    //     .header("content-type", "multipart/form-data")
+    //     .header("x-xsrf-token", "#{XSRFToken}")
+    //     .bodyPart(RawFileBodyPart("files", "3MB.pdf")
+    //     .fileName("3MB.pdf")
+    //     .transferEncoding("binary"))
+    //     .asMultipartForm
+    //     .formParam("classification", "PUBLIC")
+    //     // .formParam("caseTypeId", "null")
+    //     // .formParam("jurisdictionId", "null")
+    //     // .formParam("files", """(binary)""")
+    //     .check(substring("originalDocumentName"))
+    //     .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL3")))
+    // }
 
     .group("XUI_IAC_090_010_StartUploadNoticeDecision") {
       exec(http("XUI_IAC_090_010_StartUploadNoticeDecision")
@@ -366,7 +363,6 @@ object Solicitor_IAC {
 
     .pause(MinThinkTime, MaxThinkTime)
 
-
 /*======================================================================================
 *Business process : Following business process is for IAC  Case Creation
 *Below group contains all the requests for selecting appeal type and fee
@@ -460,7 +456,7 @@ object Solicitor_IAC {
 
     .group("XUI_IAC_250_005_StartSubmitAppeal") {
       exec(http("XUI_IAC_250_005_StartSubmitAppeal")
-        .get("/case/IA/Asylum/#{caseId}/trigger/payAndSubmitAppeal")
+        .get("/case/IA/Asylum/#{caseId}/trigger/submitAppeal")
         .headers(Headers.navigationHeader)
         .check(substring("HMCTS Manage")))
 
