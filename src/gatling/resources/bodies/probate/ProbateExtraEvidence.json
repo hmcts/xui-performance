@@ -20,10 +20,17 @@
         "id":"#{newCodicilId}"
       }
     ],
+    "solsSolicitorIsExec": "Yes",
     "dispenseWithNotice":"No",
     "titleAndClearingType":"TCTPartSuccPowerRes",
     "nameOfFirmNamedInWill":"FirmName",
     "nameOfSucceededFirm":"SucceededFirm",
+    "solsIdentifiedApplyingExecsCcdCopy": "SolPerf SolTest, Additional Executor, ExecFirstname ExecSurname",
+    "solsIdentifiedNotApplyingExecsCcdCopy": "None",
+    "anyOtherApplyingPartners": "Yes",
+    "solsIdentifiedApplyingExecs": "SolPerf SolTest, Additional Executor, ExecFirstname ExecSurname",
+    "solsIdentifiedNotApplyingExecs": "None",
+    "otherExecutorExists": "Yes",
     "addressOfSucceededFirm":{
       "AddressLine1":"#{addressLines(0)}",
       "AddressLine2":"#{addressLines(1)}",
@@ -33,10 +40,6 @@
       "PostCode":"#{addressLines(3)}",
       "Country":"United Kingdom"
     },
-    "solsSolicitorIsExec":"Yes",
-    "solsIdentifiedApplyingExecsCcdCopy":"PractitionerFirst PractitionerLast, Additional Executor, ExecFirstname ExecSurname",
-    "solsIdentifiedNotApplyingExecsCcdCopy":"None",
-    "anyOtherApplyingPartners":"Yes",
     "otherPartnersApplyingAsExecutors":[
       {
         "value":{
@@ -59,9 +62,6 @@
     "whoSharesInCompanyProfits":[
       "director"
     ],
-    "solsIdentifiedApplyingExecs":"PractitionerFirst PractitionerLast, Additional Executor, ExecFirstname ExecSurname",
-    "solsIdentifiedNotApplyingExecs":"None",
-    "otherExecutorExists":"Yes",
     "solsAdditionalExecutorList":[
       {
         "value":{

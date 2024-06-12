@@ -3,15 +3,8 @@
     "solsSolicitorIsApplying":"Yes",
     "willAccessOriginal":"Yes",
     "originalWillSignedDate":"#{willYear}-#{dodMonth}-#{dodDay}",
-    "willHasCodicils":"Yes",
-    "codicilAddedDateList":[
-      {
-        "value":{
-          "dateCodicilAdded":"#{codicilYear}-#{dodMonth}-#{dodDay}"
-        },
-        "id":"#{newCodicilId}"
-      }
-    ],
+    "willHasCodicils":"No",
+    "solsSolicitorIsExec": "Yes",
     "dispenseWithNotice":"No",
     "titleAndClearingType":"TCTPartSuccPowerRes",
     "nameOfFirmNamedInWill":"FirmName",
@@ -25,8 +18,7 @@
       "PostCode":"#{addressLines(3)}",
       "Country":"United Kingdom"
     },
-    "solsSolicitorIsExec":"Yes",
-    "solsIdentifiedApplyingExecsCcdCopy":"PractitionerFirst PractitionerLast, Additional Executor, ExecFirstname ExecSurname",
+    "solsIdentifiedApplyingExecsCcdCopy":"PractitionerFirst PractitionerLast, Additional Executor",
     "solsIdentifiedNotApplyingExecsCcdCopy":"None",
     "anyOtherApplyingPartners":"Yes",
     "otherPartnersApplyingAsExecutors":[
@@ -51,29 +43,15 @@
     "whoSharesInCompanyProfits":[
       "director"
     ],
-    "solsIdentifiedApplyingExecs":"PractitionerFirst PractitionerLast, Additional Executor, ExecFirstname ExecSurname",
+    "solsIdentifiedApplyingExecs":"PractitionerFirst PractitionerLast, Additional Executor",
     "solsIdentifiedNotApplyingExecs":"None",
-    "otherExecutorExists":"Yes",
-    "solsAdditionalExecutorList":[
-      {
-        "value":{
-          "additionalExecForenames":"ExecFirstname",
-          "additionalExecLastname":"ExecSurname",
-          "additionalExecNameOnWill":"No",
-          "additionalApplying":"Yes",
-          "additionalExecAddress":{
-            "AddressLine1":"#{addressLines(0)}",
-            "AddressLine2":"#{addressLines(1)}",
-            "AddressLine3":"",
-            "PostTown":"#{addressLines(2)}",
-            "County":"",
-            "PostCode":"#{addressLines(3)}",
-            "Country":"United Kingdom"
-          }
-        },
-        "id":"#{newExecId}"
-      }
-    ],
+    "primaryApplicantForenames": null,
+    "primaryApplicantSurname": null,
+    "primaryApplicantHasAlias": "No",
+    "solsExecutorAliasNames": null,
+    "primaryApplicantIsApplying": null,
+    "primaryApplicantAddress": null,
+    "otherExecutorExists": "No",
     "furtherEvidenceForApplication":null,
     "solsAdditionalInfo":null
   },
