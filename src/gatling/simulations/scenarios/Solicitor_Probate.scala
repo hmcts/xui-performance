@@ -594,7 +594,7 @@ object Solicitor_Probate {
 
       .group("XUI_Probate_270_UploadStatementOfTruth") {
         exec(http("XUI_Probate_270_005_UploadStatementOfTruth")
-          .post("/documentsv2")
+          .post("/documents")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
           .header("content-type", "multipart/form-data")
@@ -604,11 +604,8 @@ object Solicitor_Probate {
             .transferEncoding("binary"))
           .asMultipartForm
           .formParam("classification", "PUBLIC")
-          .formParam("caseTypeId", "GrantOfRepresentation")
-          .formParam("jurisdictionId", "PROBATE")
           .check(substring("originalDocumentName"))
-          .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash"))
-          .check(jsonPath("$.documents[0]._links.self.href").saveAs("SOTDocumentURL")))
+          .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("SOTDocumentURL")))
       }
 
     .pause(MinThinkTime, MaxThinkTime)
