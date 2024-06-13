@@ -3,7 +3,15 @@
     "solsSolicitorIsApplying":"Yes",
     "willAccessOriginal":"Yes",
     "originalWillSignedDate":"#{willYear}-#{dodMonth}-#{dodDay}",
-    "willHasCodicils":"No",
+    "willHasCodicils":"Yes",
+    "codicilAddedDateList":[
+      {
+        "value":{
+          "dateCodicilAdded":"#{codicilYear}-#{dodMonth}-#{dodDay}"
+        },
+        "id":"#{newCodicilId}"
+      }
+    ],
     "solsSolicitorIsExec": "Yes",
     "dispenseWithNotice":"No",
     "titleAndClearingType":"TCTPartSuccPowerRes",
@@ -18,7 +26,7 @@
       "PostCode":"#{addressLines(3)}",
       "Country":"United Kingdom"
     },
-    "solsIdentifiedApplyingExecsCcdCopy":"PractitionerFirst PractitionerLast, Additional Executor",
+    "solsIdentifiedApplyingExecsCcdCopy":"SolPerf SolTest, Additional Executor, ExecFirstname ExecSurname",
     "solsIdentifiedNotApplyingExecsCcdCopy":"None",
     "anyOtherApplyingPartners":"Yes",
     "otherPartnersApplyingAsExecutors":[
@@ -43,15 +51,37 @@
     "whoSharesInCompanyProfits":[
       "director"
     ],
-    "solsIdentifiedApplyingExecs":"PractitionerFirst PractitionerLast, Additional Executor",
+    "solsIdentifiedApplyingExecs":"SolPerf SolTest, Additional Executor, ExecFirstname ExecSurname",
     "solsIdentifiedNotApplyingExecs":"None",
+    "otherExecutorExists":"Yes",
     "primaryApplicantForenames": null,
     "primaryApplicantSurname": null,
     "primaryApplicantHasAlias": "No",
     "solsExecutorAliasNames": null,
     "primaryApplicantIsApplying": null,
     "primaryApplicantAddress": null,
-    "otherExecutorExists": "No",
+    "solsAdditionalExecutorList":[
+      {
+        "value":{
+          "additionalExecForenames":"ExecFirstname",
+          "additionalExecLastname":"ExecSurname",
+          "additionalExecNameOnWill":"No",
+          "additionalApplying":"Yes",
+          "additionalExecAliasNameOnWill": null,
+          "additionalExecReasonNotApplying": null,
+          "additionalExecAddress":{
+            "AddressLine1":"#{addressLines(0)}",
+            "AddressLine2":"#{addressLines(1)}",
+            "AddressLine3":"",
+            "PostTown":"#{addressLines(2)}",
+            "County":"",
+            "PostCode":"#{addressLines(3)}",
+            "Country":"United Kingdom"
+          }
+        },
+        "id":"#{newExecId}"
+      }
+    ],
     "furtherEvidenceForApplication":null,
     "solsAdditionalInfo":null
   },

@@ -24,7 +24,7 @@
       "Country":"United Kingdom"
     },
     "deceasedAnyOtherNames":"No",
-    "ihtFormEstate": "IHT400"
+    "ihtFormId": "IHT400"
   },
   "event_token":"#{event_token_probate}",
   "ignore_warning":false,
