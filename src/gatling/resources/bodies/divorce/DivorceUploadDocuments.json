@@ -129,8 +129,7 @@
           "DocumentLink": {
             "document_url": "#{DocumentURL1}",
             "document_binary_url": "#{DocumentURL1}/binary",
-            "document_filename": "3MB.pdf",
-            "document_hash": "#{documentHash1}"
+            "document_filename": "3MB.pdf"
           }
         },
         "id": null
@@ -145,8 +144,7 @@
           "DocumentLink": {
             "document_url": "#{DocumentURL2}",
             "document_binary_url": "#{DocumentURL2}/binary",
-            "document_filename": "3MB.pdf",
-            "document_hash": "#{documentHash2}"
+            "document_filename": "3MB.pdf"
           }
         },
         "id": null
