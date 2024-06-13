@@ -1331,9 +1331,9 @@ object Solicitor_PRL_FL401 {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
-        .check(jsonPath("$.case_fields[?(@.id=='draftOrderDoc')].value.document_url").saveAs("DocumentURL"))
-        .check(jsonPath("$.case_fields[?(@.id=='draftOrderDoc')].value.document_filename").saveAs("DocumentFilename"))
-        .check(jsonPath("$.case_fields[?(@.id=='draftOrderDoc')].value.document_hash").saveAs("DocumentHash"))
+        .check(jsonPath("$.case_fields[?(@.id=='submitAndPayDownloadApplicationLink')].value.document_url").saveAs("DocumentURL"))
+        .check(jsonPath("$.case_fields[?(@.id=='submitAndPayDownloadApplicationLink')].value.document_filename").saveAs("DocumentFilename"))
+        .check(jsonPath("$.case_fields[?(@.id=='submitAndPayDownloadApplicationLink')].value.document_hash").saveAs("DocumentHash"))
         .check(jsonPath("$.id").is("viewPdfDocument")))
 
       .exec(Common.userDetails)
