@@ -102,8 +102,7 @@
           "documentLink": {
             "document_url": "#{DocumentURL}",
             "document_binary_url": "#{DocumentURL}/binary",
-            "document_filename": "3MB.pdf",
-            "document_hash": "#{documentHash}"
+            "document_filename": "3MB.pdf"
           }
         },
         "id": null
