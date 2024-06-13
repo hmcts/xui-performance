@@ -4,7 +4,6 @@
       "document_url":"#{SOTDocumentURL}",
       "document_binary_url":"#{SOTDocumentURL}/binary",
       "document_filename":"3MB.pdf",
-      "document_hash": "#{documentHash}"
     }
   },
   "event":{
@@ -16,14 +15,14 @@
     "solsLegalStatementDocument":{
       "document_url":"#{documentURL}",
       "document_binary_url":"#{documentURL}/binary",
-      "document_filename":"legalStatementGrantOfProbate.pdf"
+      "document_filename":"legalStatementGrantOfProbate.pdf",
+      "document_hash":null
     },
     "solsSOTNeedToUpdate":"No",
     "solsLegalStatementUpload":{
       "document_url":"#{SOTDocumentURL}",
       "document_binary_url":"#{SOTDocumentURL}/binary",
-      "document_filename":"3MB.pdf",
-      "document_hash": "#{documentHash}"
+      "document_filename":"3MB.pdf"
     }
   },
   "event_token":"#{event_token_probate}",
