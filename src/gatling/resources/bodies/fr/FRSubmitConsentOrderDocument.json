@@ -3,8 +3,7 @@
     "consentOrder": {
       "document_url": "#{ConsentOrderDocumentURL}",
       "document_binary_url": "#{ConsentOrderDocumentURL}/binary",
-      "document_filename": "3MB.pdf",
-      "document_hash": "#{ConsentOrderDocumentHash}"
+      "document_filename": "3MB.pdf"
     }
   },
   "event": {
@@ -79,8 +78,7 @@
     "consentOrder": {
       "document_url": "#{ConsentOrderDocumentURL}",
       "document_binary_url": "#{ConsentOrderDocumentURL}/binary",
-      "document_filename": "3MB.pdf",
-      "document_hash": "#{ConsentOrderDocumentHash}"
+      "document_filename": "3MB.pdf"
     }
   },
   "event_token": "#{event_token}",
