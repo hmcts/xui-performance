@@ -1669,7 +1669,7 @@ object Solicitor_PRL_C100 {
         .headers(Headers.commonHeader)
         .header("Content-Type", "application/json; charset=utf-8")
         .header("Accept", "application/json, text/plain, */*")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(StringBody("""{"caseReference":"#{caseId}"}"""))
         .check(substring("hearing-facilities")))
 
