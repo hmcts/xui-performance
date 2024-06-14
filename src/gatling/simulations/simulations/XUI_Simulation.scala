@@ -194,7 +194,7 @@ class XUI_Simulation extends Simulation {
 					exec(Solicitor_Probate.CreateProbateCase)
 					.exec(Solicitor_Probate.AddDeceasedDetails)
 					.exec(Solicitor_Probate.AddApplicationDetails)
-					// .exec(Solicitor_Probate.ReviewAndSubmitApplication) //Temporarily disabled due to intermittently failing on step 280
+					.exec(Solicitor_Probate.ReviewAndSubmitApplication) 
 				}
 				.exec(Logout.XUILogout)
 		}
