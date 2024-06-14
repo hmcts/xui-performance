@@ -23,26 +23,7 @@
     ],
     "extraCopiesOfGrant": "1",
     "outsideUKGrantCopies": "0",
-    "solsPaymentMethods": "fee account",
-    "solsOrgHasPBAs": null,
-    "solsPBANumber": {
-      "value": {
-        "code": "PBA0077597",
-        "label": "PBA0077597"
-      },
-      "list_items": [
-        {
-          "code": "PBA0077597",
-          "label": "PBA0077597"
-        },
-        {
-          "code": "PBAVRQSJEP",
-          "label": "PBAVRQSJEP"
-        }
-      ]
-    },
-    "solsPBAPaymentReference": "PBAPayment",
-    "solsNeedsPBAPayment": null
+    "solsPBAPaymentReference": "PBAPayment"
   },
   "event": {
     "id": "solicitorReviewAndConfirm",

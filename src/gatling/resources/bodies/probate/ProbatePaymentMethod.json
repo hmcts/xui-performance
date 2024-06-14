@@ -1,23 +1,5 @@
 {
   "data": {
-    "solsPaymentMethods": "fee account",
-    "solsOrgHasPBAs": "Yes",
-    "solsPBANumber": {
-      "value": {
-        "code": "PBA0077597",
-        "label": "PBA0077597"
-      },
-      "list_items": [
-        {
-          "code": "PBA0077597",
-          "label": "PBA0077597"
-        },
-        {
-          "code": "PBAVRQSJEP",
-          "label": "PBAVRQSJEP"
-        }
-      ]
-    },
     "solsPBAPaymentReference": "PBAPayment"
   },
   "event": {
@@ -49,24 +31,6 @@
     ],
     "extraCopiesOfGrant": "1",
     "outsideUKGrantCopies": "0",
-    "solsPaymentMethods": "fee account",
-    "solsOrgHasPBAs": "Yes",
-    "solsPBANumber": {
-      "value": {
-        "code": "PBA0077597",
-        "label": "PBA0077597"
-      },
-      "list_items": [
-        {
-          "code": "PBA0077597",
-          "label": "PBA0077597"
-        },
-        {
-          "code": "PBAVRQSJEP",
-          "label": "PBAVRQSJEP"
-        }
-      ]
-    },
     "solsPBAPaymentReference": "PBAPayment"
   },
   "event_token": "#{event_token_probate}",
