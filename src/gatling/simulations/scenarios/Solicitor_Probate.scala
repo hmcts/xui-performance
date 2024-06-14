@@ -31,7 +31,7 @@ object Solicitor_Probate {
                     "dobYear" -> Common.getDobYear(),
                     "dodDay" -> Common.getDay(),
                     "dodMonth" -> Common.getMonth(),
-                    "dodYear" -> Common.getDodYear(),
+                    "dodYear" -> "2023", // hardcoding to 2023. If DOD is < 2022, then field names differ (e.g. ihtFormEstate for new cases, ihtFormId for old cases)
                     "caseId" -> "0")) // initialise the caseId to 0 for the activity calls
 
     .group("XUI_Probate_030_CreateCase") {
@@ -528,7 +528,7 @@ object Solicitor_Probate {
 
     group("XUI_Probate_250_CompleteAppliction") {
       exec(http("XUI_Probate_250_005_CompleteApplication")
-        .get("/cases/case-details/1623056630472980/trigger/solicitorReviewAndConfirm/solicitorReviewAndConfirmsolicitorReviewLegalStatementPage1")
+        .get("/cases/case-details/#{caseId}/trigger/solicitorReviewAndConfirm/solicitorReviewAndConfirmsolicitorReviewLegalStatementPage1")
         .headers(Headers.navigationHeader)
         .check(substring("HMCTS Manage cases")))
 
@@ -669,7 +669,7 @@ object Solicitor_Probate {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/probate/ProbatePaymentMethod.json"))
-        .check(substring("solsPaymentMethods")))
+        .check(substring("solsPBAPaymentReference")))
 
       .exec(Common.profile)
     }

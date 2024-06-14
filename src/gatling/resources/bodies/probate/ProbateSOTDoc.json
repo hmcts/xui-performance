@@ -3,7 +3,7 @@
     "solsLegalStatementUpload":{
       "document_url":"#{SOTDocumentURL}",
       "document_binary_url":"#{SOTDocumentURL}/binary",
-      "document_filename":"3MB.pdf",
+      "document_filename":"3MB.pdf"
     }
   },
   "event":{
