@@ -237,10 +237,7 @@ object Solicitor_FR  {
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
-        // .formParam("caseTypeId", "null")
-        // .formParam("jurisdictionId", "null")
         .check(substring("originalDocumentName"))
-        // .check(jsonPath("$.documents[0].hashToken").saveAs("D81DocumentHash"))
         .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("D81DocumentURL")))
     }
 
