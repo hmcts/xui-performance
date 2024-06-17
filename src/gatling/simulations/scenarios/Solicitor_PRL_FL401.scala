@@ -133,15 +133,7 @@ object Solicitor_PRL_FL401 {
         .check(jsonPath("$.id").saveAs("caseId"))
         .check(jsonPath("$.state").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
-      .exec(http("XUI_PRL_FL401_080_010_WorkAllocation")
-        .post("/workallocation/searchForCompletable")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody("""{"searchRequest":{"ccdId":"#{caseId}","eventId":"solicitorCreate","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
-        .check(substring("tasks")))
-
-      .exec(http("XUI_PRL_FL401_080_015_ViewCase")
+      .exec(http("XUI_PRL_FL401_080_010_ViewCase")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -254,15 +246,7 @@ object Solicitor_PRL_FL401 {
         .check(substring("typeOfApplicationLinkToCA"))
         .check(jsonPath("$.state").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
-      .exec(http("XUI_PRL_FL401_120_010_WorkAllocation")
-        .post("/workallocation/searchForCompletable")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody("""{"searchRequest":{"ccdId":"#{caseId}","eventId":"fl401TypeOfApplication","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
-        .check(substring("tasks")))
-
-      .exec(http("XUI_PRL_FL401_120_015_ViewCase")
+      .exec(http("XUI_PRL_FL401_120_010_ViewCase")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -420,15 +404,7 @@ object Solicitor_PRL_FL401 {
         .check(substring("anyOtherDtailsForWithoutNoticeOrder"))
         .check(jsonPath("$.state").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
-      .exec(http("XUI_PRL_FL401_180_010_WorkAllocation")
-        .post("/workallocation/searchForCompletable")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody("""{"searchRequest":{"ccdId":"#{caseId}","eventId":"withoutNoticeOrderDetails","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
-        .check(substring("tasks")))
-
-      .exec(http("XUI_PRL_FL401_180_015_ViewCase")
+      .exec(http("XUI_PRL_FL401_180_010_ViewCase")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -543,15 +519,7 @@ object Solicitor_PRL_FL401 {
         .check(substring("doTheyHaveLegalRepresentation"))
         .check(jsonPath("$.state").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
-      .exec(http("XUI_PRL_FL401_210_010_WorkAllocation")
-        .post("/workallocation/searchForCompletable")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody("""{"searchRequest":{"ccdId":"#{caseId}","eventId":"applicantsDetails","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
-        .check(substring("tasks")))
-
-      .exec(http("XUI_PRL_FL401_210_015_ViewCase")
+      .exec(http("XUI_PRL_FL401_210_010_ViewCase")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -663,15 +631,7 @@ object Solicitor_PRL_FL401 {
         .check(substring("respondentsFL401"))
         .check(jsonPath("$.state").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
-      .exec(http("XUI_PRL_FL401_240_010_WorkAllocation")
-        .post("/workallocation/searchForCompletable")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody("""{"searchRequest":{"ccdId":"#{caseId}","eventId":"respondentsDetails","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
-        .check(substring("tasks")))
-
-      .exec(http("XUI_PRL_FL401_240_015_ViewCase")
+      .exec(http("XUI_PRL_FL401_240_010_ViewCase")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -782,15 +742,7 @@ object Solicitor_PRL_FL401 {
         .check(substring("applicantFamilyDetails"))
         .check(jsonPath("$.state").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
-      .exec(http("XUI_PRL_FL401_270_010_WorkAllocation")
-        .post("/workallocation/searchForCompletable")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody("""{"searchRequest":{"ccdId":"#{caseId}","eventId":"fl401ApplicantFamilyDetails","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
-        .check(substring("tasks")))
-
-      .exec(http("XUI_PRL_FL401_270_015_ViewCase")
+      .exec(http("XUI_PRL_FL401_270_010_ViewCase")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -911,15 +863,7 @@ object Solicitor_PRL_FL401 {
         .check(substring("respondentRelationObject"))
         .check(jsonPath("$.state").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
-      .exec(http("XUI_PRL_FL401_310_010_WorkAllocation")
-        .post("/workallocation/searchForCompletable")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody("""{"searchRequest":{"ccdId":"#{caseId}","eventId":"respondentRelationship","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
-        .check(substring("tasks")))
-
-      .exec(http("XUI_PRL_FL401_310_015_ViewCase")
+      .exec(http("XUI_PRL_FL401_310_010_ViewCase")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -1022,15 +966,7 @@ object Solicitor_PRL_FL401 {
         .check(substring("respondentBehaviourData"))
         .check(jsonPath("$.state").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
-      .exec(http("XUI_PRL_FL401_340_010_WorkAllocation")
-        .post("/workallocation/searchForCompletable")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody("""{"searchRequest":{"ccdId":"#{caseId}","eventId":"respondentBehaviour","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
-        .check(substring("tasks")))
-
-      .exec(http("XUI_PRL_FL401_340_015_ViewCase")
+      .exec(http("XUI_PRL_FL401_340_010_ViewCase")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -1135,15 +1071,7 @@ object Solicitor_PRL_FL401 {
         .check(substring("doesApplicantHaveHomeRights"))
         .check(jsonPath("$.state").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
-      .exec(http("XUI_PRL_FL401_370_010_WorkAllocation")
-        .post("/workallocation/searchForCompletable")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody("""{"searchRequest":{"ccdId":"#{caseId}","eventId":"fl401Home","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
-        .check(substring("tasks")))
-
-      .exec(http("XUI_PRL_FL401_370_015_ViewCase")
+      .exec(http("XUI_PRL_FL401_370_010_ViewCase")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -1271,15 +1199,7 @@ object Solicitor_PRL_FL401 {
         .check(substring("fl401UploadWitnessDocuments"))
         .check(jsonPath("$.state").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
-      .exec(http("XUI_PRL_FL401_410_010_WorkAllocation")
-        .post("/workallocation/searchForCompletable")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody("""{"searchRequest":{"ccdId":"#{caseId}","eventId":"fl401UploadDocuments","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
-        .check(substring("tasks")))
-
-      .exec(http("XUI_PRL_FL401_410_015_ViewCase")
+      .exec(http("XUI_PRL_FL401_410_010_ViewCase")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -1385,15 +1305,7 @@ object Solicitor_PRL_FL401 {
         .check(substring("draftOrderDoc"))
         .check(jsonPath("$.state").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
-      .exec(http("XUI_PRL_FL401_440_010_WorkAllocation")
-        .post("/workallocation/searchForCompletable")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody("""{"searchRequest":{"ccdId":"#{caseId}","eventId":"viewPdfDocument","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
-        .check(substring("tasks")))
-
-      .exec(http("XUI_PRL_FL401_440_015_ViewCase")
+      .exec(http("XUI_PRL_FL401_440_010_ViewCase")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -1404,7 +1316,6 @@ object Solicitor_PRL_FL401 {
     }
 
     .pause(MinThinkTime, MaxThinkTime)
-
 
   val StatementOfTruth =
 
@@ -1534,15 +1445,7 @@ object Solicitor_PRL_FL401 {
         .check(substring("fl401StmtOfTruth"))
         .check(jsonPath("$.state").is("SUBMITTED_PAID")))
 
-      .exec(http("XUI_PRL_FL401_490_010_WorkAllocation")
-        .post("/workallocation/searchForCompletable")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody("""{"searchRequest":{"ccdId":"#{caseId}","eventId":"fl401StatementOfTruthAndSubmit","jurisdiction":"PRIVATELAW","caseTypeId":"PRLAPPS"}}"""))
-        .check(substring("tasks")))
-
-      .exec(http("XUI_PRL_FL401_490_015_ViewCase")
+      .exec(http("XUI_PRL_FL401_490_010_ViewCase")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
