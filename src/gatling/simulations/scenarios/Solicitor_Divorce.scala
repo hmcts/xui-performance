@@ -322,7 +322,7 @@ object Solicitor_Divorce {
     ======================================================================================*/
 
     .group("XUI_Divorce_170_UploadMarriageCertificate") {
-      exec(http("XUI_Divorce_170_010_UploadMarriageCertificate")
+      exec(http("XUI_Divorce_170_UploadMarriageCertificate")
         .post("/documents")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -343,7 +343,7 @@ object Solicitor_Divorce {
     .pause(MinThinkTime, MaxThinkTime)
 
     .group("XUI_Divorce_175_UploadMarriageCertificate") {
-      exec(http("XUI_Divorce_175_015_UploadMarriageCertificate")
+      exec(http("XUI_Divorce_175_UploadMarriageCertificate")
         .post("/documents")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -364,7 +364,7 @@ object Solicitor_Divorce {
     .pause(MinThinkTime, MaxThinkTime)
 
     .group("XUI_Divorce_176_UploadMarriageCertificate") {
-      exec(http("XUI_Divorce_176_020_UploadMarriageCertificate")
+      exec(http("XUI_Divorce_176_UploadMarriageCertificate")
         .post("/documents")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
