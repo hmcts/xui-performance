@@ -127,50 +127,9 @@ object Solicitor_IAC {
         .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
-        // .formParam("caseTypeId", "null")
-        // .formParam("jurisdictionId", "null")
-        // .formParam("files", """(binary)""")
         .check(substring("originalDocumentName"))
         .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL1")))
     }
-
-    // .group("XUI_IAC_091_UploadNoticeDecision") {
-    //   exec(http("XUI_IAC_091_005_UploadNoticeDecision")
-    //     .post("/documents")
-    //     .headers(Headers.commonHeader)
-    //     .header("accept", "application/json, text/plain, */*")
-    //     .header("content-type", "multipart/form-data")
-    //     .header("x-xsrf-token", "#{XSRFToken}")
-    //     .bodyPart(RawFileBodyPart("files", "3MB.pdf")
-    //     .fileName("3MB.pdf")
-    //     .transferEncoding("binary"))
-    //     .asMultipartForm
-    //     .formParam("classification", "PUBLIC")
-    //     // .formParam("caseTypeId", "null")
-    //     // .formParam("jurisdictionId", "null")
-    //     // .formParam("files", """(binary)""")
-    //     .check(substring("originalDocumentName"))
-    //     .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL2")))
-    // }
-
-    // .group("XUI_IAC_092_UploadNoticeDecision") {
-    //   exec(http("XUI_IAC_092_005_UploadNoticeDecision")
-    //     .post("/documents")
-    //     .headers(Headers.commonHeader)
-    //     .header("accept", "application/json, text/plain, */*")
-    //     .header("content-type", "multipart/form-data")
-    //     .header("x-xsrf-token", "#{XSRFToken}")
-    //     .bodyPart(RawFileBodyPart("files", "3MB.pdf")
-    //     .fileName("3MB.pdf")
-    //     .transferEncoding("binary"))
-    //     .asMultipartForm
-    //     .formParam("classification", "PUBLIC")
-    //     // .formParam("caseTypeId", "null")
-    //     // .formParam("jurisdictionId", "null")
-    //     // .formParam("files", """(binary)""")
-    //     .check(substring("originalDocumentName"))
-    //     .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL3")))
-    // }
 
     .group("XUI_IAC_090_010_StartUploadNoticeDecision") {
       exec(http("XUI_IAC_090_010_StartUploadNoticeDecision")
