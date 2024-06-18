@@ -20,10 +20,14 @@
         "id":"#{newCodicilId}"
       }
     ],
+    "solsSolicitorIsExec": "Yes",
     "dispenseWithNotice":"No",
     "titleAndClearingType":"TCTPartSuccPowerRes",
     "nameOfFirmNamedInWill":"FirmName",
     "nameOfSucceededFirm":"SucceededFirm",
+    "solsIdentifiedApplyingExecsCcdCopy":"SolPerf SolTest, Additional Executor, ExecFirstname ExecSurname",
+    "solsIdentifiedNotApplyingExecsCcdCopy":"None",
+    "anyOtherApplyingPartners":"Yes",
     "addressOfSucceededFirm":{
       "AddressLine1":"#{addressLines(0)}",
       "AddressLine2":"#{addressLines(1)}",
@@ -33,10 +37,6 @@
       "PostCode":"#{addressLines(3)}",
       "Country":"United Kingdom"
     },
-    "solsSolicitorIsExec":"Yes",
-    "solsIdentifiedApplyingExecsCcdCopy":"SolPerf SolTest, Additional Executor, ExecFirstname ExecSurname",
-    "solsIdentifiedNotApplyingExecsCcdCopy":"None",
-    "anyOtherApplyingPartners":"Yes",
     "otherPartnersApplyingAsExecutors":[
       {
         "value":{

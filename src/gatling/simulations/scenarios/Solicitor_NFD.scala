@@ -270,7 +270,7 @@ object Solicitor_NFD {
 
     .group("XUI_NFD_150_UploadDocument") {
       exec(http("XUI_NFD_150_005_UploadDocument")
-        .post("/documentsv2")
+        .post("/documents")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .header("content-type", "multipart/form-data")
@@ -280,11 +280,8 @@ object Solicitor_NFD {
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
-        .formParam("caseTypeId", "NFD")
-        .formParam("jurisdictionId", "DIVORCE")
         .check(substring("originalDocumentName"))
-        .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash"))
-        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL")))
+        .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)

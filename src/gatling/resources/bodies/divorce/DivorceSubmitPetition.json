@@ -16,8 +16,8 @@
     "SolPaymentHowToPay": "feePayByAccount",
     "PbaNumbers": {
       "value": {
-        "code": "PBA0066906",
-        "label": "PBA0066906"
+        "code": "PBA0077597",
+        "label": "PBA0077597"
       },
       "list_items": [
         {
@@ -25,8 +25,8 @@
           "label": "PBA0066906"
         },
         {
-          "code": "PBAVRQSJEP",
-          "label": "PBAVRQSJEP"
+          "code": "PBA0077597",
+          "label": "PBA0077597"
         }
       ]
     },

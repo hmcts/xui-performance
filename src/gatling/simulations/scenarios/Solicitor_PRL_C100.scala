@@ -1443,9 +1443,9 @@ object Solicitor_PRL_C100 {
         .get("/data/internal/cases/#{caseId}/event-triggers/viewPdfDocument?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-        .check(jsonPath("$.case_fields[?(@.id=='draftOrderDoc')].value.document_url").saveAs("DocumentUrl"))
-        .check(jsonPath("$.case_fields[?(@.id=='draftOrderDoc')].value.document_filename").saveAs("DocumentFileName"))
-        .check(jsonPath("$.case_fields[?(@.id=='draftOrderDoc')].value.document_hash").saveAs("DocumentHash"))
+        .check(jsonPath("$.case_fields[?(@.id=='submitAndPayDownloadApplicationLink')].value.document_url").saveAs("DocumentUrl"))
+        .check(jsonPath("$.case_fields[?(@.id=='submitAndPayDownloadApplicationLink')].value.document_filename").saveAs("DocumentFileName"))
+        .check(jsonPath("$.case_fields[?(@.id=='submitAndPayDownloadApplicationLink')].value.document_hash").saveAs("DocumentHash"))
         .check(jsonPath("$.event_token").saveAs("event_token")))
 
       .exec(Common.userDetails)
@@ -1669,7 +1669,7 @@ object Solicitor_PRL_C100 {
         .headers(Headers.commonHeader)
         .header("Content-Type", "application/json; charset=utf-8")
         .header("Accept", "application/json, text/plain, */*")
-        .header("x-xsrf-token", "${XSRFToken}")
+        .header("x-xsrf-token", "#{XSRFToken}")
         .body(StringBody("""{"caseReference":"#{caseId}"}"""))
         .check(substring("hearing-facilities")))
 

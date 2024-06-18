@@ -1,0 +1,41 @@
+{
+  "data": {
+     "iht400Switch": "Yes",
+     "ihtNetValueSwitch": "No",
+     "ihtGrossValue": "1000000",
+     "ihtFormNetValue": "900000"
+  },
+  "event": {
+     "id": "solicitorUpdateApplication",
+     "summary": "",
+     "description": ""
+  },
+  "event_data": {
+      "dateOfDeathAfterEstateSwitch": "No",  
+      "deceasedForenames":"#{deceasedForename}",
+      "deceasedSurname":"#{deceasedSurname}",
+      "deceasedDateOfBirth":"#{dobYear}-#{dobMonth}-#{dobDay}",
+      "deceasedDateOfDeath":"#{dodYear}-#{dodMonth}-#{dodDay}",
+      "deceasedDomicileInEngWales":"Yes",
+      "deceasedAddress":{
+        "AddressLine1":"#{addressLines(0)}",
+        "AddressLine2":"#{addressLines(1)}",
+        "AddressLine3":"",
+        "PostTown":"#{addressLines(2)}",
+        "County":"",
+        "PostCode":"#{addressLines(3)}",
+        "Country":"United Kingdom"
+     },
+     "deceasedAnyOtherNames": "No",
+     "ihtFormEstate": "IHT400",
+     "hmrcLetterId": "Yes",
+     "uniqueProbateCodeId": "CTS04052311043tpps8e9",
+     "iht400Switch": "Yes",
+     "ihtNetValueSwitch": "No",
+     "ihtGrossValue": "1000000",
+     "ihtFormNetValue": "900000"
+  },
+  "event_token": "#{event_token_probate}",
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
+}

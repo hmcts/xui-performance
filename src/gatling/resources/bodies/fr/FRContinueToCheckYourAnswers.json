@@ -72,15 +72,13 @@
     "consentOrder": {
       "document_url": "#{ConsentOrderDocumentURL}",
       "document_binary_url": "#{ConsentOrderDocumentURL}/binary",
-      "document_filename": "3MB.pdf",
-      "document_hash": "#{ConsentOrderDocumentHash}"
+      "document_filename": "3MB.pdf"
     },
     "d81Question": "Yes",
     "d81Joint": {
       "document_url": "#{D81DocumentURL}",
       "document_binary_url": "#{D81DocumentURL}/binary",
-      "document_filename": "3MB.pdf",
-      "document_hash": "#{D81DocumentHash}"
+      "document_filename": "3MB.pdf"
     },
     "otherCollection": []
   },

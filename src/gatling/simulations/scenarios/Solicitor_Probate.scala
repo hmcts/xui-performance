@@ -31,7 +31,7 @@ object Solicitor_Probate {
                     "dobYear" -> Common.getDobYear(),
                     "dodDay" -> Common.getDay(),
                     "dodMonth" -> Common.getMonth(),
-                    "dodYear" -> Common.getDodYear(),
+                    "dodYear" -> "2023", // hardcoding to 2023. If DOD is < 2022, then field names differ (e.g. ihtFormEstate for new cases, ihtFormId for old cases)
                     "caseId" -> "0")) // initialise the caseId to 0 for the activity calls
 
     .group("XUI_Probate_030_CreateCase") {
@@ -202,6 +202,9 @@ object Solicitor_Probate {
     * Submit Deceased Details - Name, DOD, DOB
     ======================================================================================*/
 
+    //Postcode looking moved as the address search has moved to the deceased details screen
+    .exec(Common.postcodeLookup)
+
     .group("XUI_Probate_100_SubmitNameDodDob") {
       exec(http("XUI_Probate_100_005_SubmitNameDodDob")
         .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorUpdateApplicationsolicitorUpdateApplicationPage1")
@@ -211,14 +214,6 @@ object Solicitor_Probate {
         .body(ElFileBody("bodies/probate/ProbateDeceasedNameDodDob.json"))
         .check(substring("deceasedDateOfDeath")))
     }
-
-    .pause(MinThinkTime, MaxThinkTime)
-
-    /*======================================================================================
-    * Postcode Lookup
-    ======================================================================================*/
-
-    .exec(Common.postcodeLookup)
 
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -238,33 +233,87 @@ object Solicitor_Probate {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+    // /*======================================================================================
+    // * Submit Type of Application
+    // ======================================================================================*/
+
+    //   .group("XUI_Probate_120_SubmitTypeOfApplication") {
+    //     exec(http("XUI_Probate_120_005_SubmitTypeOfApplication")
+    //       .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorUpdateApplicationsolicitorUpdateApplicationPage3")
+    //       .headers(Headers.commonHeader)
+    //       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+    //       .header("x-xsrf-token", "#{XSRFToken}")
+    //       .body(ElFileBody("bodies/probate/ProbateTypeOfApplication.json"))
+    //       .check(substring("solsWillType")))
+    //   }
+
+    //   .pause(MinThinkTime, MaxThinkTime)
+
     /*======================================================================================
-    * Submit Type of Application
+    * HMRC Letter ID
     ======================================================================================*/
 
-      .group("XUI_Probate_120_SubmitTypeOfApplication") {
-        exec(http("XUI_Probate_120_005_SubmitTypeOfApplication")
-          .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorUpdateApplicationsolicitorUpdateApplicationPage3")
-          .headers(Headers.commonHeader)
-          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-          .header("x-xsrf-token", "#{XSRFToken}")
-          .body(ElFileBody("bodies/probate/ProbateTypeOfApplication.json"))
-          .check(substring("solsWillType")))
-      }
-
-      .pause(MinThinkTime, MaxThinkTime)
-
-    /*======================================================================================
-    * Estate in England or Wales
-    ======================================================================================*/
-
-    .group("XUI_Probate_130_SubmitEnglandOrWales") {
-      exec(http("XUI_Probate_130_005_SubmitEnglandOrWales")
+    .group("XUI_Probate_130_SubmitHMRCCode") {
+      exec(http("XUI_Probate_130_005_SubmitHMRCCode")
         .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorUpdateApplicationsolicitorUpdateApplicationPage4")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/probate/ProbateEnglandOrWales.json"))
+        .check(substring("uniqueProbateCodeId")))
+
+      .exec(Common.profile)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Enter IHT Values
+    ======================================================================================*/
+
+    .group("XUI_Probate_140_SubmitIHTValues") {
+      exec(http("XUI_Probate_140_005_SubmitIHTValues")
+        .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorUpdateApplicationsolicitorUpdateApplicationPage6")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/probate/ProbateIHTValues.json"))
+        .check(substring("ihtFormNetValue")))
+
+      .exec(Common.profile)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Has a will been left?
+    ======================================================================================*/
+
+    .group("XUI_Probate_150_SubmitWillLeft") {
+      exec(http("XUI_Probate_150_005_SubmitWillLeft")
+        .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorUpdateApplicationsolicitorUpdateApplicationPage7")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/probate/ProbateWillLeft.json"))
+        .check(substring("solsWillType")))
+
+      .exec(Common.profile)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Confirm will & executor yes/no
+    ======================================================================================*/
+
+    .group("XUI_Probate_160_SubmitAppointExecutor") {
+      exec(http("XUI_Probate_160_005_SubmitAppointExecutor")
+        .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorUpdateApplicationsolicitorUpdateApplicationPage8")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/probate/ProbateWillAndExecutor.json"))
         .check(substring("appointExec")))
 
       .exec(Common.profile)
@@ -276,8 +325,8 @@ object Solicitor_Probate {
     * Confirm deceased details - check your answers
     ======================================================================================*/
 
-    .group("XUI_Probate_140_ConfirmDeceasedDetails") {
-      exec(http("XUI_Probate_140_005_ConfirmDeceasedDetails")
+    .group("XUI_Probate_170_ConfirmDeceasedDetails") {
+      exec(http("XUI_Probate_170_005_ConfirmDeceasedDetails")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -287,15 +336,7 @@ object Solicitor_Probate {
 
       .exec(Common.activity)
 
-      .exec(http("XUI_Probate_140_010_WorkAllocation")
-        .post("/workallocation/searchForCompletable")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody("""{"searchRequest":{"ccdId":"#{caseId}","eventId":"solicitorUpdateApplication","jurisdiction":"PROBATE","caseTypeId":"GrantOfRepresentation"}}"""))
-        .check(status.in(200, 400)))
-
-      .exec(http("XUI_Probate_140_015_ViewCase")
+      .exec(http("XUI_Probate_170_015_ViewCase")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
@@ -310,8 +351,8 @@ object Solicitor_Probate {
 
   val AddApplicationDetails =
 
-    group("XUI_Probate_150_GrantOfProbateDetails") {
-      exec(http("XUI_Probate_150_005_GrantOfProbateDetails")
+    group("XUI_Probate_180_GrantOfProbateDetails") {
+      exec(http("XUI_Probate_180_005_GrantOfProbateDetails")
         .get("/cases/case-details/#{caseId}/trigger/solicitorUpdateProbate/solicitorUpdateProbatesolicitorUpdateProbatePage1")
         .headers(Headers.navigationHeader)
         .check(substring("HMCTS Manage cases")))
@@ -328,13 +369,13 @@ object Solicitor_Probate {
 
       .exec(Common.isAuthenticated)
 
-      .exec(http("XUI_Probate_150_010_ViewCase")
+      .exec(http("XUI_Probate_180_010_ViewCase")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .check(jsonPath("$.state.name").is("Grant of probate created")))
 
-      .exec(http("XUI_Probate_150_015_GrantOfProbateDetails")
+      .exec(http("XUI_Probate_180_015_GrantOfProbateDetails")
         .get("/data/internal/cases/#{caseId}/event-triggers/solicitorUpdateProbate?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -359,8 +400,8 @@ object Solicitor_Probate {
         .set("codicilYear", session("dodYear").as[Int] - 8)
     }
 
-    .group("XUI_Probate_160_SubmitGrantOfProbateDetails") {
-      exec(http("XUI_Probate_160_005_SubmitGrantOfProbateDetails")
+    .group("XUI_Probate_190_SubmitGrantOfProbateDetails") {
+      exec(http("XUI_Probate_190_005_SubmitGrantOfProbateDetails")
         .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorUpdateProbatesolicitorUpdateProbatePage1")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -384,8 +425,8 @@ object Solicitor_Probate {
     * Submit Executor Details
     ======================================================================================*/
 
-    .group("XUI_Probate_170_SubmitExecutorDetails") {
-      exec(http("XUI_Probate_170_005_SubmitExecutorDetails")
+    .group("XUI_Probate_200_SubmitExecutorDetails") {
+      exec(http("XUI_Probate_200_005_SubmitExecutorDetails")
         .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorUpdateProbatesolicitorUpdateProbatePage2")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -409,8 +450,8 @@ object Solicitor_Probate {
     * Submit Extra Executor Details
     ======================================================================================*/
 
-    .group("XUI_Probate_180_SubmitExtraExecDetails") {
-      exec(http("XUI_Probate_180_005_SubmitExtraExecDetails")
+    .group("XUI_Probate_210_SubmitExtraExecDetails") {
+      exec(http("XUI_Probate_210_005_SubmitExtraExecDetails")
         .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorUpdateProbatesolicitorUpdateProbatePage4")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -425,8 +466,8 @@ object Solicitor_Probate {
     * Submit Extra Executor Comments
     ======================================================================================*/
 
-    .group("XUI_Probate_190_SubmitExtraEvidence") {
-      exec(http("XUI_Probate_190_005_SubmitExtraEvidence")
+    .group("XUI_Probate_220_SubmitExtraEvidence") {
+      exec(http("XUI_Probate_220_005_SubmitExtraEvidence")
         .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorUpdateProbatesolicitorUpdateProbatePage5")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -441,8 +482,8 @@ object Solicitor_Probate {
     * Submit Extra Information
     ======================================================================================*/
 
-    .group("XUI_Probate_200_SubmitExtraInfo") {
-      exec(http("XUI_Probate_200_005_SubmitExtraInfo")
+    .group("XUI_Probate_230_SubmitExtraInfo") {
+      exec(http("XUI_Probate_230_005_SubmitExtraInfo")
         .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorUpdateProbatesolicitorUpdateProbatePage6")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -459,8 +500,8 @@ object Solicitor_Probate {
     * Confirm grant of probate details - check your answers
     ======================================================================================*/
 
-    .group("XUI_Probate_210_ConfirmGrantOfProbateDetails") {
-      exec(http("XUI_Probate_210_005_ConfirmGrantOfProbateDetails")
+    .group("XUI_Probate_240_ConfirmGrantOfProbateDetails") {
+      exec(http("XUI_Probate_240_005_ConfirmGrantOfProbateDetails")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -468,15 +509,7 @@ object Solicitor_Probate {
         .body(ElFileBody("bodies/probate/ProbateConfirmGrantOfProbateDetails.json"))
         .check(jsonPath("$.state").is("SolAppUpdated")))
 
-      .exec(http("XUI_Probate_210_010_WorkAllocation")
-        .post("/workallocation/searchForCompletable")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody("""{"searchRequest":{"ccdId":"#{caseId}","eventId":"solicitorUpdateProbate","jurisdiction":"PROBATE","caseTypeId":"GrantOfRepresentation"}}"""))
-        .check(status.in(200, 400)))
-
-      .exec(http("XUI_Probate_210_015_ViewCase")
+      .exec(http("XUI_Probate_240_015_ViewCase")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
@@ -493,9 +526,9 @@ object Solicitor_Probate {
 
   val ReviewAndSubmitApplication =
 
-    group("XUI_Probate_220_CompleteAppliction") {
-      exec(http("XUI_Probate_220_005_CompleteApplication")
-        .get("/cases/case-details/1623056630472980/trigger/solicitorReviewAndConfirm/solicitorReviewAndConfirmsolicitorReviewLegalStatementPage1")
+    group("XUI_Probate_250_CompleteAppliction") {
+      exec(http("XUI_Probate_250_005_CompleteApplication")
+        .get("/cases/case-details/#{caseId}/trigger/solicitorReviewAndConfirm/solicitorReviewAndConfirmsolicitorReviewLegalStatementPage1")
         .headers(Headers.navigationHeader)
         .check(substring("HMCTS Manage cases")))
 
@@ -520,13 +553,13 @@ object Solicitor_Probate {
 
       .exec(Common.isAuthenticated)
 
-      .exec(http("XUI_Probate_220_010_ViewCase")
+      .exec(http("XUI_Probate_250_010_ViewCase")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .check(jsonPath("$.state.name").is("Application updated")))
 
-      .exec(http("XUI_Probate_220_015_ReviewAndConfirm")
+      .exec(http("XUI_Probate_250_015_ReviewAndConfirm")
         .get("/data/internal/cases/#{caseId}/event-triggers/solicitorReviewAndConfirm?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -543,8 +576,8 @@ object Solicitor_Probate {
     * Submit Legal Statement
     ======================================================================================*/
 
-    .group("XUI_Probate_230_SubmitLegalStatement") {
-      exec(http("XUI_Probate_230_005_SubmitLegalStatement")
+    .group("XUI_Probate_260_SubmitLegalStatement") {
+      exec(http("XUI_Probate_260_005_SubmitLegalStatement")
         .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorReviewAndConfirmsolicitorReviewLegalStatementPage1")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -559,9 +592,9 @@ object Solicitor_Probate {
     * Upload Document
     ======================================================================================*/
 
-      .group("XUI_Probate_240_UploadStatementOfTruth") {
-        exec(http("XUI_Probate_240_005_UploadStatementOfTruth")
-          .post("/documentsv2")
+      .group("XUI_Probate_270_UploadStatementOfTruth") {
+        exec(http("XUI_Probate_270_005_UploadStatementOfTruth")
+          .post("/documents")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
           .header("content-type", "multipart/form-data")
@@ -571,11 +604,8 @@ object Solicitor_Probate {
             .transferEncoding("binary"))
           .asMultipartForm
           .formParam("classification", "PUBLIC")
-          .formParam("caseTypeId", "GrantOfRepresentation")
-          .formParam("jurisdictionId", "PROBATE")
           .check(substring("originalDocumentName"))
-          .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash"))
-          .check(jsonPath("$.documents[0]._links.self.href").saveAs("SOTDocumentURL")))
+          .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("SOTDocumentURL")))
       }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -584,8 +614,8 @@ object Solicitor_Probate {
      * Submit Legal Statement
      ======================================================================================*/
 
-    .group("XUI_Probate_250_SubmitSOTDoc") {
-      exec(http("XUI_Probate_250_005_SubmitSOTDoc")
+    .group("XUI_Probate_280_SubmitSOTDoc") {
+      exec(http("XUI_Probate_280_005_SubmitSOTDoc")
         .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorReviewAndConfirmsolicitorReviewLegalStatementPage3")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -600,8 +630,8 @@ object Solicitor_Probate {
     * Submit Statement of Truth (SOT)
     ======================================================================================*/
 
-    .group("XUI_Probate_260_SubmitStatementOfTruth") {
-      exec(http("XUI_Probate_260_005_SubmitStatementOfTruth")
+    .group("XUI_Probate_290_SubmitStatementOfTruth") {
+      exec(http("XUI_Probate_290_005_SubmitStatementOfTruth")
         .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorReviewAndConfirmsolicitorReviewLegalStatementPage4")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -616,8 +646,8 @@ object Solicitor_Probate {
     * Submit Extra Copies
     ======================================================================================*/
 
-    .group("XUI_Probate_270_SubmitExtraCopies") {
-      exec(http("XUI_Probate_270_005_SubmitExtraCopies")
+    .group("XUI_Probate_300_SubmitExtraCopies") {
+      exec(http("XUI_Probate_300_005_SubmitExtraCopies")
         .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorReviewAndConfirmsolicitorConfirmPage2")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -632,14 +662,14 @@ object Solicitor_Probate {
     * Submit Payment Method
     ======================================================================================*/
 
-    .group("XUI_Probate_280_SubmitPaymentMethod") {
-      exec(http("XUI_Probate_280_005_SubmitPaymentMethod")
+    .group("XUI_Probate_310_SubmitPaymentMethod") {
+      exec(http("XUI_Probate_310_005_SubmitPaymentMethod")
         .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorReviewAndConfirmsolicitorConfirmPage3")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/probate/ProbatePaymentMethod.json"))
-        .check(substring("solsPaymentMethods")))
+        .check(substring("solsPBAPaymentReference")))
 
       .exec(Common.profile)
     }
@@ -650,8 +680,8 @@ object Solicitor_Probate {
     * Submit Application
     ======================================================================================*/
 
-    .group("XUI_Probate_290_SubmitApplication") {
-      exec(http("XUI_Probate_290_005_SubmitApplication")
+    .group("XUI_Probate_320_SubmitApplication") {
+      exec(http("XUI_Probate_320_005_SubmitApplication")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -659,14 +689,6 @@ object Solicitor_Probate {
         .body(ElFileBody("bodies/probate/ProbateSubmitApplication.json"))
         .check(jsonPath("$.state").is("CaseCreated"))
         .check(substring("This probate application has now been submitted")))
-
-      .exec(http("XUI_Probate_290_010_WorkAllocation")
-        .post("/workallocation/searchForCompletable")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody("""{"searchRequest":{"ccdId":"#{caseId}","eventId":"solicitorReviewAndConfirm","jurisdiction":"PROBATE","caseTypeId":"GrantOfRepresentation"}}"""))
-        .check(status.in(200, 401)))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -675,8 +697,8 @@ object Solicitor_Probate {
     * Return to Case
     ======================================================================================*/
 
-    .group("XUI_Probate_300_ViewCase") {
-      exec(http("XUI_Probate_300_005_ViewCase")
+    .group("XUI_Probate_330_ViewCase") {
+      exec(http("XUI_Probate_330_005_ViewCase")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
