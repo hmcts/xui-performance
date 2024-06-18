@@ -342,7 +342,7 @@ object Solicitor_Divorce {
 
     .pause(MinThinkTime, MaxThinkTime)
 
-    .group("XUI_Divorce_175_UploadMarriageCertificate") {
+    .group("XUI_Divorce_175_UploadMarriageCertificate") { //This step may fail when run in debug mode, due to upload rate limiting introduced by XUI
       exec(http("XUI_Divorce_175_UploadMarriageCertificate")
         .post("/documents")
         .headers(Headers.commonHeader)
