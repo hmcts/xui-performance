@@ -11,7 +11,8 @@
         },
         "id":null
       }
-    ]
+    ],
+    "solsSolicitorIsExec": "Yes"
   },
   "event":{
     "id":"solicitorUpdateProbate",
@@ -30,7 +31,8 @@
         },
         "id":null
       }
-    ]
+    ],
+    "solsSolicitorIsExec": "Yes"
   },
   "event_token":"#{event_token_probate}",
   "ignore_warning":false,

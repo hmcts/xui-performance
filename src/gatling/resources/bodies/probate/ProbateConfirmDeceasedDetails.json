@@ -1,5 +1,6 @@
 {
   "data":{
+    "dateOfDeathAfterEstateSwitch": "No",
     "deceasedForenames":"#{deceasedForename}",
     "deceasedSurname":"#{deceasedSurname}",
     "deceasedDateOfBirth":"#{dobYear}-#{dobMonth}-#{dobDay}",
@@ -15,14 +16,17 @@
       "Country":"United Kingdom"
     },
     "deceasedAnyOtherNames":"No",
-    "ihtFormId":"IHT205",
-    "ihtGrossValue":"1000000",
-    "ihtNetValue":"1000000",
-    "iht217":"No",
-    "solsWillType":"WillLeft",
-    "willDispose":"Yes",
-    "englishWill":"Yes",
-    "appointExec":"Yes"
+    "ihtFormEstate": "IHT400",
+    "hmrcLetterId": "Yes",
+    "solsWillType": "WillLeft",
+    "uniqueProbateCodeId": "CTS04052311043tpps8e9",
+    "iht400Switch": "Yes",
+    "ihtNetValueSwitch": "No",
+    "ihtGrossValue": "1000000",
+    "ihtFormNetValue": "900000",
+    "willDispose": "Yes",
+    "englishWill": "Yes",
+    "appointExec": "Yes"
   },
   "event":{
     "id":"solicitorUpdateApplication",

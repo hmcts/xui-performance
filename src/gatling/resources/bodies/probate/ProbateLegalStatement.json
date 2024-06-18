@@ -3,7 +3,8 @@
     "solsLegalStatementDocument":{
       "document_url":"#{documentURL}",
       "document_binary_url":"#{documentURL}/binary",
-      "document_filename":"legalStatementGrantOfProbate.pdf"
+      "document_filename":"legalStatementGrantOfProbate.pdf",
+      "document_hash":null
     },
     "solsSOTNeedToUpdate":"No"
   },
@@ -16,7 +17,8 @@
     "solsLegalStatementDocument":{
       "document_url":"#{documentURL}",
       "document_binary_url":"#{documentURL}/binary",
-      "document_filename":"legalStatementGrantOfProbate.pdf"
+      "document_filename":"legalStatementGrantOfProbate.pdf",
+      "document_hash":null
     },
     "solsSOTNeedToUpdate":"No"
   },

@@ -1,9 +1,21 @@
 {
   "data":{
+    "dateOfDeathAfterEstateSwitch": null,
     "deceasedForenames":"#{deceasedForename}",
     "deceasedSurname":"#{deceasedSurname}",
     "deceasedDateOfBirth":"#{dobYear}-#{dobMonth}-#{dobDay}",
-    "deceasedDateOfDeath":"#{dodYear}-#{dodMonth}-#{dodDay}"
+    "deceasedDateOfDeath":"#{dodYear}-#{dodMonth}-#{dodDay}",
+    "deceasedDomicileInEngWales": "Yes",
+      "deceasedAddress": {
+         "AddressLine1": "#{addressLines(0)}",
+         "AddressLine2": "#{addressLines(1)}",
+         "AddressLine3": "",
+         "PostTown": "#{addressLines(2)}",
+         "County": "",
+         "PostCode": "#{addressLines(3)}",
+         "Country": "United Kingdom"
+      },
+      "deceasedAnyOtherNames": "No"
   },
   "event":{
     "id":"solicitorUpdateApplication",
@@ -11,10 +23,22 @@
     "description":""
   },
   "event_data":{
+    "dateOfDeathAfterEstateSwitch": null,
     "deceasedForenames":"#{deceasedForename}",
     "deceasedSurname":"#{deceasedSurname}",
     "deceasedDateOfBirth":"#{dobYear}-#{dobMonth}-#{dobDay}",
-    "deceasedDateOfDeath":"#{dodYear}-#{dodMonth}-#{dodDay}"
+    "deceasedDateOfDeath":"#{dodYear}-#{dodMonth}-#{dodDay}",
+    "deceasedDomicileInEngWales": "Yes",
+      "deceasedAddress": {
+         "AddressLine1": "#{addressLines(0)}",
+         "AddressLine2": "#{addressLines(1)}",
+         "AddressLine3": "",
+         "PostTown": "#{addressLines(2)}",
+         "County": "",
+         "PostCode": "#{addressLines(3)}",
+         "Country": "United Kingdom"
+      },
+      "deceasedAnyOtherNames": "No"
   },
   "event_token":"#{event_token_probate}",
   "ignore_warning":false,
