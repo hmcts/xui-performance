@@ -195,10 +195,7 @@ object Solicitor_FR  {
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
-        // .formParam("caseTypeId", "null")
-        // .formParam("jurisdictionId", "null")
         .check(substring("originalDocumentName"))
-        // .check(jsonPath("$.documents[0].hashToken").saveAs("ConsentOrderDocumentHash"))
         .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("ConsentOrderDocumentURL")))
     }
 
@@ -214,9 +211,7 @@ object Solicitor_FR  {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/fr/FRSubmitConsentOrderDocument.json"))
-        // .check(jsonPath("$.data.consentOrder.document_hash").is("#{ConsentOrderDocumentHash}"))
-        )
+        .body(ElFileBody("bodies/fr/FRSubmitConsentOrderDocument.json")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -253,9 +248,7 @@ object Solicitor_FR  {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/fr/FRSubmitD81Document.json"))
-        // .check(jsonPath("$.data.d81Joint.document_hash").is("#{D81DocumentHash}"))
-        )
+        .body(ElFileBody("bodies/fr/FRSubmitD81Document.json")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
