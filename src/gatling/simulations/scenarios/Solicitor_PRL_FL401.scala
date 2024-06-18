@@ -11,7 +11,6 @@ import utils.{Common, Environment, Headers}
 object Solicitor_PRL_FL401 {
 
   val BaseURL = Environment.baseURL
-
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
 
@@ -230,7 +229,7 @@ object Solicitor_PRL_FL401 {
         .exec(Common.userDetails)
     }
 
-      .pause(MinThinkTime, MaxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     * Check Your Answers
@@ -257,7 +256,6 @@ object Solicitor_PRL_FL401 {
     }
 
     .pause(MinThinkTime, MaxThinkTime)
-
 
   val WithoutNoticeOrder =
 
@@ -481,7 +479,6 @@ object Solicitor_PRL_FL401 {
     }
 
     .pause(MinThinkTime, MaxThinkTime)
-
 
     /*======================================================================================
     * Applicant Details
@@ -1411,7 +1408,6 @@ object Solicitor_PRL_FL401 {
     }
 
     .pause(MinThinkTime, MaxThinkTime)
-
 
     /*======================================================================================
     * Select the family court
