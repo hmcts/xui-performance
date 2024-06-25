@@ -12,7 +12,7 @@
     "c100ConfidentialityStatementDisclaimer": [
       "confidentialityStatementUnderstood"
     ],
-    "applicantCaseName": "PerfTest C100 Case"
+    "applicantCaseName": "#{C100ApplicantFirstName1} #{C100ApplicantFirstName2} PerfTest C100 Case"
   },
   "event_token": "#{event_token}",
   "ignore_warning": false
