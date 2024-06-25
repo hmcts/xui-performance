@@ -1,6 +1,6 @@
 {
   "data": {
-    "applicantCaseName": "PerfTest C100 Case"
+    "applicantCaseName": "#{C100ApplicantFirstName1} #{C100ApplicantLastName1} PerfTest C100 Case"
   },
   "event": {
     "id": "solicitorCreate",
