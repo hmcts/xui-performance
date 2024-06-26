@@ -4,7 +4,7 @@
     "confidentialityStatementDisclaimer": [
       "confidentialityStatementUnderstood"
     ],
-    "applicantOrRespondentCaseName": "PerfTest FL401 Case"
+    "applicantOrRespondentCaseName": "#{ApplicantFirstName} #{ApplicantLastName} PerfTest FL401 Case"
   },
   "event": {
     "id": "solicitorCreate",
