@@ -125,6 +125,7 @@ class XUI_Simulation extends Simulation {
         .exec(Solicitor_PRL_C100.ViewPdfApplication)
         .exec(Solicitor_PRL_C100.SubmitAndPay)
         .exec(Solicitor_PRL_C100.HearingsTab)
+		.exec(Solicitor_PRL_C100.DummyPayment)
       } 
       {
       // 	//FL401 Journey

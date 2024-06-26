@@ -1687,4 +1687,32 @@ object Solicitor_PRL_C100 {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+
+     val DummyPayment =  
+
+    /*======================================================================================
+    * Select Dummy Payment Confirmation from Next Step & Make Payment *Temp*
+    ======================================================================================*/
+
+    group("XUI_PRL_C100_580_MakeDummyPayment") {
+      exec(http("XUI_PRL_C100_580_005_MakePaymentEventTrigger")
+        .get("/data/internal/cases/#{caseId}/event-triggers/testingSupportPaymentSuccessCallback?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("testingSupportPaymentSuccessCallback")))
+        .check(status.in(200, 403)))
+
+      .exec(http("XUI_PRL_C100_580_010_MakePaymentEvent")
+        .post("/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("Content-Type", "application/json; charset=utf-8")
+        .header("Accept", "application/json, text/plain, */*")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("\bodies/prl/c100/PRLDummyPaymentEvent.json"))
+        .check(jsonPath("$.state").is("SUBMITTED_NOT_PAID")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
 }
