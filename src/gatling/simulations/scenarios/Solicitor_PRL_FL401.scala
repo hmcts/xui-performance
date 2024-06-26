@@ -18,10 +18,11 @@ object Solicitor_PRL_FL401 {
 
     //set session variables
     exec(_.setAll(
-      "ApplicantFirstName" -> ("App" + Common.randomString(5)),
-      "ApplicantLastName" -> ("Test" + Common.randomString(5)),
-      "RespondentFirstName" -> ("Resp" + Common.randomString(5)),
-      "RespondentLastName" -> ("Test" + Common.randomString(5)),
+      "ApplicantFirstName" -> (Common.randomString(5)+ "APP"),
+    
+      "ApplicantLastName" -> (Common.randomString(5) + "TEST"),
+      "RespondentFirstName" -> (Common.randomString(5)+ "RESP"),
+      "RespondentLastName" -> (Common.randomString(5) + "TEST"),
       "AppDobDay" -> Common.getDay(),
       "AppDobMonth" -> Common.getMonth(),
       "AppDobYear" -> Common.getDobYear(),
