@@ -1701,7 +1701,7 @@ object Solicitor_PRL_C100 {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("testingSupportPaymentSuccessCallback")))
-        .check(status.in(200, 403)))
+        .check(status.in(200, 403))
 
       .exec(http("XUI_PRL_C100_580_010_MakePaymentEvent")
         .post("/data/cases/#{caseId}/events")
