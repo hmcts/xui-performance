@@ -1,6 +1,6 @@
 {
   "data": {
-    "applicantOrRespondentCaseName": "PerfTest FL401 Case"
+    "applicantOrRespondentCaseName": "#{ApplicantFirstName} #{ApplicantLastName} PerfTest FL401 Case"
   },
   "event": {
     "id": "solicitorCreate",
@@ -12,7 +12,7 @@
     "confidentialityStatementDisclaimer": [
       "confidentialityStatementUnderstood"
     ],
-    "applicantOrRespondentCaseName": "PerfTest FL401 Case"
+    "applicantOrRespondentCaseName": "#{ApplicantFirstName} #{ApplicantLastName} PerfTest FL401 Case"
   },
   "event_token": "#{event_token}",
   "ignore_warning": false

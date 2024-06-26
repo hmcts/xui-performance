@@ -19,7 +19,6 @@ object Solicitor_PRL_FL401 {
     //set session variables
     exec(_.setAll(
       "ApplicantFirstName" -> (Common.randomString(5)+ "APP"),
-    
       "ApplicantLastName" -> (Common.randomString(5) + "TEST"),
       "RespondentFirstName" -> (Common.randomString(5)+ "RESP"),
       "RespondentLastName" -> (Common.randomString(5) + "TEST"),
