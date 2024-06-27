@@ -17,7 +17,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
   val MaxThinkTime = Environment.maxThinkTime
 
 
-  val C100CaseCreationSolicitor =
+  val CaseCreationSolicitor =
 
   /*======================================================================================
   * Click the Create Case link
@@ -71,7 +71,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
         .check(jsonPath("$.id").is("solicitorCreate")))
 
       .exec(Common.userDetails)
-      
+
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
 
     .pause(MinThinkTime, MaxThinkTime)
