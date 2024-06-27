@@ -63,8 +63,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Jurisdiction = Family Private Law; Case Type = C100 & FL401 Applications; Event = Solicitor Application
     ======================================================================================*/
 
-    .group("XUI_PRL_C100_XXX_SelectCaseType") {
-      exec(http("XUI_FPL_XXX_XXX_StartApplication")
+      .exec(http("XUI_FPL_XXX_XXX_StartApplication")
         .get("/data/internal/case-types/PRLAPPS/event-triggers/solicitorCreate?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
@@ -72,9 +71,8 @@ object CourtAdmin_PRL_C100_AddOrderServe {
         .check(jsonPath("$.id").is("solicitorCreate")))
 
       .exec(Common.userDetails)
-
+      
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
-    }
 
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -119,7 +117,6 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     }
 
     .pause(MinThinkTime, MaxThinkTime)
-
 
     /*======================================================================================
     * Check Your Answers
