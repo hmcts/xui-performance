@@ -17,12 +17,13 @@ object CourtAdmin_PRL_C100_AddOrderServe {
   val MaxThinkTime = Environment.maxThinkTime
 
 
+  /*======================================================================================
+  * Fast & dirty event trigger and event requests to create C100 cases as a Solicitor to submitted state
+  =======================================================================================*/
+
   val CaseCreationSolicitor =
 
-  /*======================================================================================
-  * Click the Create Case link
-   ======================================================================================*/
-
+      // Set Vars
       exec(_.setAll(
         "C100ApplicantFirstName1" -> (Common.randomString(5) + "APP"),
         "C100ApplicantLastName1" -> (Common.randomString(5) + "TEST"),
@@ -49,13 +50,15 @@ object CourtAdmin_PRL_C100_AddOrderServe {
         "C100RespDobMonth" -> Common.getMonth(),
         "C100RespDobYear" -> Common.getDobYear()))
 
+  /*======================================================================================
+  * Click the Create Case link
+   ======================================================================================*/
+
       .exec(http("XUI_PRL_C100_XXX_CreateCase")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
         .check(substring("PRIVATELAW")))
-
-      .exec(Common.userDetails)
 
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -63,53 +66,14 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Jurisdiction = Family Private Law; Case Type = C100 & FL401 Applications; Event = Solicitor Application
     ======================================================================================*/
 
-      .exec(http("XUI_FPL_XXX_XXX_StartApplication")
+      .exec(http("XUI_FPL_XXX_001_StartApplication")
         .get("/data/internal/case-types/PRLAPPS/event-triggers/solicitorCreate?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("solicitorCreate")))
 
-      .exec(Common.userDetails)
-
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
-
-    .pause(MinThinkTime, MaxThinkTime)
-
-  /*======================================================================================
-  * Click on 'Type of Application' link
-  ======================================================================================*/
-
-   //   .exec(http("XUI_PRL_C100_XXX_XXX_CreateTypeOfApplicationViewCase")
-   //     .get("/cases/case-details/#{caseId}/trigger/selectApplicationType/selectApplicationType1")
-   //     .headers(Headers.navigationHeader)
-   //     .header("x-xsrf-token", "#{XSRFToken}")
-   //     .check(substring("HMCTS Manage cases")))
-
-      .exec(Common.configurationui)
-
-      .exec(Common.configJson)
-
-      .exec(Common.TsAndCs)
-
-      .exec(Common.configUI)
-
-      .exec(Common.userDetails)
-
-      .exec(Common.isAuthenticated)
-
-      .exec(Common.monitoringTools)
-
-      .exec(Common.caseActivityGet)
-
-      .exec(http("XUI_PRL_C100_XXX_015_CreateTypeOfApplicationEvent")
-        .get("/data/internal/cases/#{caseId}/event-triggers/selectApplicationType?ignore-warning=false")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-        .check(jsonPath("$.event_token").saveAs("event_token"))
-        .check(jsonPath("$.id").is("selectApplicationType")))
-
-      .exec(Common.userDetails)
+     // .exec(Common.userDetails)
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
 
@@ -119,7 +83,60 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Check Your Answers
     ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_XXX_CheckYourAnswers")
+      .exec(http("XUI_PRL_C100_XXX_002_CheckYourAnswers")
+        .post("/data/case-types/PRLAPPS/cases?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-case.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/prl/c100/PRLCheckYourAnswers.json"))
+        .check(jsonPath("$.id").saveAs("caseId"))
+        .check(jsonPath("$.state").is("AWAITING_SUBMISSION_TO_HMCTS")))
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+  * Click on 'Type of Application' link
+  ======================================================================================*/
+
+      .exec(http("XUI_PRL_C100_XXX_003_CreateTypeOfApplicationEvent")
+        .get("/data/internal/cases/#{caseId}/event-triggers/selectApplicationType?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("selectApplicationType")))
+
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Draft Consent Order Upload
+    ======================================================================================*/
+
+      .exec(http("XUI_PRL_C100_XXX_004_ConsentOrderUpload")
+        .post("/documentsv2")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json, text/plain, */*")
+        .header("content-type", "multipart/form-data")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .bodyPart(RawFileBodyPart("files", "3MB.pdf")
+          .fileName("3MB.pdf")
+          .transferEncoding("binary"))
+        .asMultipartForm
+        .formParam("classification", "PUBLIC")
+        .formParam("caseTypeId", "PRLAPPS")
+        .formParam("jurisdictionId", "PRIVATELAW")
+        .check(substring("originalDocumentName"))
+        .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash"))
+        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL")))
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Check Your Answers
+    ======================================================================================*/
+
+      .exec(http("XUI_PRL_C100_XXX_005_CheckYourAnswers")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -134,7 +151,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Click on 'Hearing Urgency'
     ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_XXX_HearingUrgencyEvent")
+      .exec(http("XUI_PRL_C100_XXX_006_HearingUrgencyEvent")
         .get("/data/internal/cases/#{caseId}/event-triggers/hearingUrgency?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -147,7 +164,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Hearing Urgency Check Your Answers
     ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_XXX_HearingUrgencyCheckYourAnswers")
+      .exec(http("XUI_PRL_C100_XXX_007_HearingUrgencyCheckYourAnswers")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -161,7 +178,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Click on 'Applicant Details'
     ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_XXX_ApplicantDetailsEvent")
+      .exec(http("XUI_PRL_C100_XXX_008_ApplicantDetailsEvent")
         .get("/data/internal/cases/#{caseId}/event-triggers/applicantsDetails?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -174,9 +191,9 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Applicant Details Check Your Answers
     ======================================================================================*/
 
-      exec(Common.postcodeLookup)
+      .exec(Common.postcodeLookup)
 
-      .exec(http("XUI_PRL_C100_XXX_XXX_ApplicantDetailsCheckYourAnswers")
+      .exec(http("XUI_PRL_C100_XXX_009_ApplicantDetailsCheckYourAnswers")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -191,7 +208,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Click on 'Child Details'
     ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_XXX_ChildDetailsEvent")
+      .exec(http("XUI_PRL_C100_XXX_010_ChildDetailsEvent")
         .get("/data/internal/cases/#{caseId}/event-triggers/childDetailsRevised?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -204,7 +221,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Child Details Answer Submit
     ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_XXX_ChildDetailsAdditionalDetails")
+      .exec(http("XUI_PRL_C100_XXX_011_ChildDetailsAdditionalDetails")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -218,7 +235,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Click on 'Respondent Details'
     ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_XXX_RespondentDetailsCaseEvent")
+      .exec(http("XUI_PRL_C100_XXX_012_RespondentDetailsCaseEvent")
         .get("/data/internal/cases/#{caseId}/event-triggers/respondentsDetails?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -231,7 +248,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Respondent Details Submit
     ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_XXX_RespondentDetailsSubmit")
+      .exec(http("XUI_PRL_C100_XXX_013_RespondentDetailsSubmit")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -245,7 +262,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Click on 'Miam'
     ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_XXX_MIAMCaseEvent")
+      .exec(http("XUI_PRL_C100_XXX_014_MIAMCaseEvent")
         .get("/data/internal/cases/#{caseId}/event-triggers/respondentsDetails?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -258,7 +275,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * MIAM Submit
     ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_XXX_MIAMSubmit")
+      .exec(http("XUI_PRL_C100_XXX_015_MIAMSubmit")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -272,7 +289,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Click on 'Allegations Of Harm'
     ======================================================================================*/
      
-      .exec(http("XUI_PRL_C100_XXX_XXX_AllegationsOfHarmEvent")
+      .exec(http("XUI_PRL_C100_XXX_016_AllegationsOfHarmEvent")
         .get("/data/internal/cases/#{caseId}/event-triggers/allegationsOfHarmRevised?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -284,7 +301,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Allegations of Harm Submit
     ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_XXX_AllegationsOfHarmSubmit")
+      .exec(http("XUI_PRL_C100_XXX_017_AllegationsOfHarmSubmit")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -297,7 +314,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Click on 'Other children not in the case'
     ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_XXX_OtherChildrenNotInCase")
+      .exec(http("XUI_PRL_C100_XXX_018_OtherChildrenNotInCase")
         .get("/data/internal/cases/#{caseId}/event-triggers/otherChildNotInTheCase?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -310,7 +327,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Submit Other Children Not In Case event
     ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_XXX_OtherChildrenNotInCaseSubmit")
+      .exec(http("XUI_PRL_C100_XXX_019_OtherChildrenNotInCaseSubmit")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -324,7 +341,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Click on 'Children and applicants'
     ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_XXX_ChildrenAndApplicants")
+      .exec(http("XUI_PRL_C100_XXX_020_ChildrenAndApplicants")
         .get("/data/internal/cases/#{caseId}/event-triggers/childrenAndApplicants?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -342,7 +359,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Submit the case event
     ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_XXX_ChildrenAndApplicantsSubmit")
+      .exec(http("XUI_PRL_C100_XXX_021_ChildrenAndApplicantsSubmit")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -356,7 +373,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Click on 'Children and respondents'
     ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_XXX_ChildrenAndRespondents")
+      .exec(http("XUI_PRL_C100_XXX_022_ChildrenAndRespondents")
         .get("/data/internal/cases/#{caseId}/event-triggers/childrenAndRespondents?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -374,7 +391,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Confirm details and Submit
     ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_XXX_ChildrenAndRespondentsSubmit")
+      .exec(http("XUI_PRL_C100_XXX_023_ChildrenAndRespondentsSubmit")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -389,7 +406,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Click on 'View PDF Application'
     ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_XXX_ViewPdfApplicationRedirectEvent")
+      .exec(http("XUI_PRL_C100_XXX_024_ViewPdfApplicationRedirectEvent")
         .get("/data/internal/cases/#{caseId}/event-triggers/viewPdfDocument?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -404,7 +421,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * View PDF Submit
     ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_XXX_ViewPdfSubmitViewCase")
+      .exec(http("XUI_PRL_C100_XXX_025_ViewPdfSubmitViewCase")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -417,7 +434,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Click on 'SubmitAndPay'
     ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_XXX_SubmitAndPayRedirectEvent")
+      .exec(http("XUI_PRL_C100_XXX_026_SubmitAndPayRedirectEvent")
         .get("/data/internal/cases/#{caseId}/event-triggers/submitAndPay?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -430,7 +447,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Submit and Pay Now
     ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_XXX_SubmitAndPayNow")
+      .exec(http("XUI_PRL_C100_XXX_027_SubmitAndPayNow")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -445,8 +462,8 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Select Dummy Payment Confirmation from Next Step & Make Payment *Temp*
     ======================================================================================*/
 
-    group("XUI_PRL_C100_XXX_MakeDummyPayment") {
-      exec(http("XUI_PRL_C100_XXX_XX_MakePaymentEventTrigger")
+    .group("XUI_PRL_C100_XXX_MakeDummyPayment") {
+      exec(http("XUI_PRL_C100_XXX_028_MakePaymentEventTrigger")
         .get("/data/internal/cases/#{caseId}/event-triggers/testingSupportPaymentSuccessCallback?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*")
@@ -454,7 +471,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
         .check(jsonPath("$.id").is("testingSupportPaymentSuccessCallback"))
         .check(status.in(200, 403)))
 
-      .exec(http("XUI_PRL_C100_XXX_XXX_MakePaymentEvent")
+      .exec(http("XUI_PRL_C100_XXX_029_MakePaymentEvent")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("Content-Type", "application/json; charset=utf-8")
