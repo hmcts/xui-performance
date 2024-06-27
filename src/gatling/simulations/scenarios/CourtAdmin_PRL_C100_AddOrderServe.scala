@@ -80,9 +80,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
   * Click on 'Type of Application' link
   ======================================================================================*/
 
-    group("XUI_PRL_C100_XXX_CreateTypeOfApplicationEvent") {
-
-      exec(http("XUI_PRL_C100_XXX_XXX_CreateTypeOfApplicationViewCase")
+      .exec(http("XUI_PRL_C100_XXX_XXX_CreateTypeOfApplicationViewCase")
         .get("/cases/case-details/#{caseId}/trigger/selectApplicationType/selectApplicationType1")
         .headers(Headers.navigationHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -114,7 +112,6 @@ object CourtAdmin_PRL_C100_AddOrderServe {
       .exec(Common.userDetails)
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
-    }
 
     .pause(MinThinkTime, MaxThinkTime)
 
