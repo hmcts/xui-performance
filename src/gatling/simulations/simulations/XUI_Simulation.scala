@@ -158,7 +158,7 @@ class XUI_Simulation extends Simulation {
       .exec(Homepage.XUIHomePage)
       .exec(Login.XUILogin)
       //.feed(randomFeeder)
-      .exec(CourtAdmin_PRL_C100_AddOrderServe.C100CaseCreationSolicitor)
+      .exec(CourtAdmin_PRL_C100_AddOrderServe.CaseCreationSolicitor)
 	  .exec(Logout.XUILogout)
 	}
 
