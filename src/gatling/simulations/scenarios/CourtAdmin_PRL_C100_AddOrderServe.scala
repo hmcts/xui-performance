@@ -16,7 +16,6 @@ object CourtAdmin_PRL_C100_AddOrderServe {
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
 
-
   /*======================================================================================
   * Fast & dirty event trigger and event requests to create C100 cases as a Solicitor to submitted state
   =======================================================================================*/
@@ -72,8 +71,6 @@ object CourtAdmin_PRL_C100_AddOrderServe {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("solicitorCreate")))
-
-     // .exec(Common.userDetails)
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
 
@@ -401,7 +398,6 @@ object CourtAdmin_PRL_C100_AddOrderServe {
 
     .pause(MinThinkTime, MaxThinkTime)
 
-  
     /*======================================================================================
     * Click on 'View PDF Application'
     ======================================================================================*/
@@ -456,7 +452,6 @@ object CourtAdmin_PRL_C100_AddOrderServe {
         .check(substring("created_on")))
 
     .pause(MinThinkTime, MaxThinkTime)
-
 
     /*======================================================================================
     * Select Dummy Payment Confirmation from Next Step & Make Payment *Temp*
