@@ -25,7 +25,7 @@ class XUI_Simulation extends Simulation {
 	val UserFeederPRL = csv("UserDataPRL.csv").circular
 	val UserFeederBails = csv("UserDataBails.csv").circular
 	val UserFeederBailsHO = csv("UserDataBailsHO.csv").circular
-  val UserFeederBailsAdmin = csv("UserDataBailsAdmin.csv").circular
+    val UserFeederBailsAdmin = csv("UserDataBailsAdmin.csv").circular
 	val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
@@ -145,6 +145,48 @@ class XUI_Simulation extends Simulation {
         }
       .exec(Logout.XUILogout)
 		}
+
+
+	/*===============================================================================================
+	* XUI Court Admin Private Law Scenario
+ 	===============================================================================================*/
+	val PRLCourtAdminScenario = scenario("***** Private Law Court Admin *****")
+		.exitBlockOnFail {
+			feed(UserFeederPRL)
+      .exec(_.set("env", s"${env}")
+            .set("caseType", "PRLAPPS"))
+      .exec(Homepage.XUIHomePage)
+      .exec(Login.XUILogin)
+      //.feed(randomFeeder)
+      .exec(CourtAdmin_PRL_C100_AddOrderServe.C100CaseCreationSolicitor)
+	  .exec(Logout.XUILogout)
+	}
+
+//DC: UPDATE ONCE quick scenario is working
+
+    /*  .doIfOrElse(session => session("prl-percentage").as[Int] < prlC100Percentage) {
+        //C100 Quick & Dirty Journey
+        exec(CourtAdmin_PRL_C100_AddOrderServe.C100CaseCreationSolicitor)
+      } 
+      {
+      // 	//FL401 Journey
+        exec(Solicitor_PRL_FL401.CreatePrivateLawCase)
+        .exec(Solicitor_PRL_FL401.TypeOfApplication)
+        .exec(Solicitor_PRL_FL401.WithoutNoticeOrder)
+        .exec(Solicitor_PRL_FL401.ApplicantDetails)
+        .exec(Solicitor_PRL_FL401.RespondentDetails)
+        .exec(Solicitor_PRL_FL401.ApplicantsFamily)
+        .exec(Solicitor_PRL_FL401.Relationship)
+        .exec(Solicitor_PRL_FL401.Behaviour)
+        .exec(Solicitor_PRL_FL401.TheHome)
+        .exec(Solicitor_PRL_FL401.UploadDocuments)
+        .exec(Solicitor_PRL_FL401.ViewPDF)
+        .exec(Solicitor_PRL_FL401.StatementOfTruth)
+        .exec(Solicitor_PRL_FL401.HearingsTab)
+        }
+      .exec(Logout.XUILogout)
+		}
+		*/
 
 	/*===============================================================================================
 	* XUI Legal Rep Bails Scenario
@@ -569,7 +611,8 @@ class XUI_Simulation extends Simulation {
 		//CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		//NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		//NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-    PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+    //PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+	PRLCourtAdminScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 	).protocols(httpProtocol)
 		.assertions(assertions(testType))
 		.maxDuration(75 minutes)
