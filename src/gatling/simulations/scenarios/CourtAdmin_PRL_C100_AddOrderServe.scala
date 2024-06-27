@@ -80,11 +80,11 @@ object CourtAdmin_PRL_C100_AddOrderServe {
   * Click on 'Type of Application' link
   ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_XXX_CreateTypeOfApplicationViewCase")
-        .get("/cases/case-details/#{caseId}/trigger/selectApplicationType/selectApplicationType1")
-        .headers(Headers.navigationHeader)
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .check(substring("HMCTS Manage cases")))
+   //   .exec(http("XUI_PRL_C100_XXX_XXX_CreateTypeOfApplicationViewCase")
+   //     .get("/cases/case-details/#{caseId}/trigger/selectApplicationType/selectApplicationType1")
+   //     .headers(Headers.navigationHeader)
+   //     .header("x-xsrf-token", "#{XSRFToken}")
+   //     .check(substring("HMCTS Manage cases")))
 
       .exec(Common.configurationui)
 
@@ -102,7 +102,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
 
       .exec(Common.caseActivityGet)
 
-      .exec(http("XUI_PRL_C100_090_015_CreateTypeOfApplicationEvent")
+      .exec(http("XUI_PRL_C100_XXX_015_CreateTypeOfApplicationEvent")
         .get("/data/internal/cases/#{caseId}/event-triggers/selectApplicationType?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
