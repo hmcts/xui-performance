@@ -617,7 +617,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
       .exec(Common.profile)
 
       exec(http("XUI_PRL_040_030_IssueAndSendToLocalCourt")  //*** SAVE THE Courtlist response here for use in later post requests **
-        .get("/data/internal/cases/#{caseId}/event-triggers/issueAndSendToLocalCourtCallback?ignore-warning=false")
+        .get(BaseURL + "/data/internal/cases/#{caseId}/event-triggers/issueAndSendToLocalCourtCallback?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*")
         .check(jsonPath("$.event_token").saveAs("event_token"))
