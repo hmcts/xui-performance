@@ -1,0 +1,28 @@
+{
+  "data": {
+    "typeOfAmendment": [
+      "Amend multiple name",
+      "Add cases to multiple"
+    ],
+    "multipleName": "ET Multiple (#{singlesCountInMultiple})",
+    "leadCase": "#{leadCaseHTML}",
+    "newLeadCase": null,
+    "caseIdCollection": [
+      {% for record in recordsToProcess %}
+      {
+        "value": {
+          "ethos_CaseReference": "{{record.ethosId}}"
+        },
+        "id": null
+      }{% if loop.last %}{% else %},{% endif %}
+      {% endfor %}
+    ]
+  },
+  "event": {
+    "id": "amendMultipleDetails",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "#{eventToken}",
+  "ignore_warning": false
+}

@@ -1,17 +1,16 @@
 package simulations
 
 import io.gatling.core.Predef._
+import io.gatling.core.pause.PauseType
 import io.gatling.http.Predef._
 import scenarios._
 
-import io.gatling.core.pause.PauseType
+import java.io.FileWriter
 
-import scala.concurrent.duration._
-import scala.util.Random
-
-class ETMultiples_Simulation extends Simulation {
+class ETCreateSingles_Simulation extends Simulation {
 
 	val UserFeederET = csv("UserDataET.csv").random
+	val outputFilenameSingles = "casesCreatedSingles.csv"
 
 	/* ******************************** */
 	/* ADDITIONAL COMMAND LINE ARGUMENT OPTIONS */
@@ -19,8 +18,8 @@ class ETMultiples_Simulation extends Simulation {
 	/* ******************************** */
 
 	/* PERFORMANCE TEST CONFIGURATION */
-	val numberOfCasesToCreate: Double = 1
-	val multipleCaseReference = 1234567890
+	val numberOfSinglesToCreatePerUser: Int = 4
+	val numberOfUsers: Int = 3
 
 	//Determine the pause pattern to use:
 	//Debug mode = disable all pauses
@@ -29,30 +28,30 @@ class ETMultiples_Simulation extends Simulation {
 		case _ => disabledPauses
 	}
 
-	val httpProtocol = http
-
 	before {
 		println(s"Debug Mode: ${debugMode}")
 	}
 
 	/*===============================================================================================
-	* ET Case Creation
+	* ET Create Singles Cases
  	===============================================================================================*/
-	val ETCaseCreation = scenario("ET Case Creation")
+	val ETCreateSinglesScenario = scenario("ET Create Singles")
 		.exitBlockOnFail {
-			feed(UserFeederET)
-			.exec(
-				CCDAPI.Auth,
-				CCDAPI.CreateCase("initiateCase", "bodies/et/initiateCase.json"),
-				CCDAPI.CreateEvent("et1Vetting", "bodies/et/et1Vetting.json"),
-				CCDAPI.CreateEvent("preAcceptanceCase", "bodies/et/preAcceptanceCase.json")
-			)
-		}
-
-		.exec {
-			session =>
-				println(session)
-				session
+			repeat(numberOfSinglesToCreatePerUser) {
+				feed(UserFeederET)
+				.exec(
+					Authenticate.Auth,
+					ETCreateSingles.CreateSingle,
+					ETCreateSingles.CreateEvent("et1Vetting", "bodies/et/et1Vetting.json"),
+					ETCreateSingles.CreateEvent("preAcceptanceCase", "bodies/et/preAcceptanceCase.json")
+				)
+				.exec(session => {
+					val fw = new FileWriter(outputFilenameSingles, true)
+						fw.write(session("ethosCaseRef").as[String] + "\n")
+						fw.close()
+					session
+				})
+			}
 		}
 
 	/*===============================================================================================
@@ -60,8 +59,8 @@ class ETMultiples_Simulation extends Simulation {
 	 ===============================================================================================*/
 
 	setUp(
-    ETCaseCreation.inject(atOnceUsers(1)).pauses(pauseOption)
-	).protocols(httpProtocol)
+		ETCreateSinglesScenario.inject(atOnceUsers(numberOfUsers)).pauses(pauseOption)
+	).protocols(http)
 
 
 }

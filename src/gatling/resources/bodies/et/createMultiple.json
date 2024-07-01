@@ -1,0 +1,16 @@
+{
+  "data": {
+    "multipleName": "Multiple With Lead Case",
+    "managingOffice": "Leeds",
+    "leadCase": "#{ethosCaseRef}",
+    "caseIdCollection": []
+  },
+  "event": {
+    "id": "createMultiple",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "#{eventToken}",
+  "ignore_warning": false,
+  "draft_id": null
+}
