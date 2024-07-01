@@ -49,9 +49,9 @@ object CourtAdmin_PRL_C100_AddOrderServe {
         "C100RespDobMonth" -> Common.getMonth(),
         "C100RespDobYear" -> Common.getDobYear()))
 
-  /*======================================================================================
-  * Click the Create Case link
-   ======================================================================================*/
+    /*======================================================================================
+    * Click the Create Case link
+     ======================================================================================*/
 
       .exec(http("XUI_PRL_C100_XXX_CreateCase")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
@@ -91,9 +91,9 @@ object CourtAdmin_PRL_C100_AddOrderServe {
 
     .pause(MinThinkTime, MaxThinkTime)
 
-  /*======================================================================================
-  * Click on 'Type of Application' link
-  ======================================================================================*/
+    /*======================================================================================
+    * Click on 'Type of Application' link
+    ======================================================================================*/
 
       .exec(http("XUI_PRL_C100_XXX_003_CreateTypeOfApplicationEvent")
         .get("/data/internal/cases/#{caseId}/event-triggers/selectApplicationType?ignore-warning=false")
@@ -478,6 +478,180 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     }
   
     .pause(MinThinkTime, MaxThinkTime)
+
+  val ProgressCaseCourtAdmin =
+
+   /*=====================================================================================
+   * Select case
+   ======================================================================================*/
+
+    group("XUI_PRL_010_SelectCase") {
+        exec(http("XUI_PRL_010_005_SelectCase")
+          .get(BaseURL + "/data/internal/cases/${caseId}")
+          .headers(Headers.navigationHeader)
+          .header("accept", "application/json")
+          .check(substring("PRIVATELAW")))
+
+        .exec(Common.manageLabellingRoleAssignment)
+        .exec(Common.userDetails)
+        .exec(Common.waJurisdictions)
+        .exec(Common.activity)
+        .exec(Common.userDetails)
+        .exec(Common.caseActivityOptionGetPost)
+
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+   /*=====================================================================================
+   * Select Tasks Tab
+   ======================================================================================*/
+
+    .group("XUI_PRL_020_SelectTasksTab") {
+        exec(http("XUI_PRL_020_005_SelectTasksTab")
+          .post(BaseURL + "/data/internal/cases/task/${caseId}")
+          .headers(Headers.commonHeader)
+          .header("Accept", "application/json, text/plain, */*")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(StringBody("""{"refined":"true"}"""))
+          .check(substring("hearing-facilities"))
+          .check(jsonPath("$.type").is("checkApplicationC100")) 
+          .check(jsonPath("$.case_id").is("${caseId}"))) 
+
+        .exec(Common.manageLabellingRoleAssignment)
+        .exec(Common.caseActivityPost)
+        .exec(Common.waUsersByServiceName)
+        .exec(Common.caseActivityPost)
+
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+  /*=====================================================================================
+   * Select Assign to me
+   ======================================================================================*/
+
+  .group("XUI_PRL_030_SelectAssignToMe") {
+
+    exec(Common.caseActivityPost)
+      //.check(jsonPath("$.type").saveAs("userId"))
+
+    .exec(http("XUI_PRL_030_005_SelectAssignToMe")
+      .post(BaseURL + "/workallocation/case/task/${caseId}")
+      .headers(Headers.commonHeader)
+      .header("Accept", "application/json, text/plain, */*")
+      .header("x-xsrf-token", "#{XSRFToken}")
+      .body(StringBody("""{"refined":"true"}"""))
+      .check(substring("hearing-facilities"))
+      .check(jsonPath("$.type").is("checkApplicationC100")) 
+      .check(jsonPath("$.case_id").is("${caseId}"))
+      .check(jsonPath("$.id").is("${taskId}"))
+      .check(jsonPath("$jurisdiction").saveAs("jurisdiction")))
+
+    .exec(http("XUI_PRL_030_010_SelectTasksTab")
+      .post(BaseURL + "/api/role-access/roles/getJudicialUsers")
+      .headers(Headers.commonHeader)
+      .header("Accept", "application/json, text/plain, */*")
+      .header("x-xsrf-token", "#{XSRFToken}")
+      .body(StringBody("""{"userIds":["${userId}"],"services":["${jurisdiction}"]}"""))
+      .check(substring("[")))
+    
+    .exec(Common.caseActivityPost)
+
+  }
+
+  .pause(MinThinkTime, MaxThinkTime)
+
+  /*=====================================================================================
+   * Select Issue and send to local Court
+   ======================================================================================*/
+
+  .group("XUI_PRL_040_IssueAndSendToLocalCourt") {
+      exec(http("XUI_PRL_040_005_IssueAndSendToLocalCourt")
+        .get(BaseURL + "cases/case-details/${caseId}/trigger/issueAndSendToLocalCourtCallback/issueAndSendToLocalCourtCallback1?tid=${taskId}")
+        .headers(Headers.navigationHeader)
+        .header("accept", "application/json")
+        .check(substring("PRIVATELAW")))
+
+      .exec(Common.configurationui)
+      .exec(Common.configUI)
+      .exec(Common.configJson)
+      .exec(Common.TsAndCs)
+      .exec(Common.userDetails)
+      .exec(Common.isAuthenticated)
+      .exec(Common.monitoringTools)
+
+      .exec(http("XUI_PRL_040_010_IssueAndSendToLocalCourt")
+        .get(BaseURL + "/workallocation/case/tasks/{$caseId}/event/issueAndSendToLocalCourtCallback/caseType/PRLAPPS/jurisdiction/${jurisdiction}")
+        .headers(Headers.navigationHeader)
+        .header("accept", "application/json")
+        .check(substring("PRIVATELAW")))
+
+      .exec(Common.isAuthenticated)
+      .exec(Common.activity)
+
+      .exec(http("XUI_PRL_040_015_IssueAndSendToLocalCourt")
+        .get(BaseURL + "/data/internal/cases/{$caseId}")
+        .headers(Headers.navigationHeader)
+        .header("accept", "application/json")
+        .check(substring("PRIVATELAW")))
+
+      .exec(Common.activity)
+      .exec(Common.caseActivityOnlyGet)
+
+      .exec(http("XUI_PRL_040_020_IssueAndSendToLocalCourt")
+        .get(BaseURL + "/workallocation/case/tasks/{$caseId}/event/issueAndSendToLocalCourtCallback/caseType/PRLAPPS/jurisdiction/${jurisdiction}")
+        .headers(Headers.navigationHeader)
+        .header("accept", "application/json")
+        .check(substring("PRIVATELAW")))
+
+      .exec(Common.userDetails)
+      .exec(Common.userDetails)    //Duplicate 
+
+      .exec(http("XUI_PRL_040_025_IssueAndSendToLocalCourt")  // Duplicate
+        .get(BaseURL + "/workallocation/case/tasks/{$caseId}/event/issueAndSendToLocalCourtCallback/caseType/PRLAPPS/jurisdiction/${jurisdiction}")
+        .headers(Headers.navigationHeader)
+        .header("accept", "application/json")
+        .check(substring("PRIVATELAW")))
+
+      .exec(Common.profile)
+
+      exec(http("XUI_PRL_040_030_IssueAndSendToLocalCourt")  //*** SAVE THE Courtlist response here for use in later post requests **
+        .get("/data/internal/cases/#{caseId}/event-triggers/issueAndSendToLocalCourtCallback?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("issueAndSendToLocalCourtCallback"))
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.case_fields[1].value.list_items").saveAs("courtListItems"))
+        .check(status.in(200, 403)))
+
+      .exec(http("XUI_PRL_040_035_IssueAndSendToLocalCourt")  // Duplicate
+        .get(BaseURL + "/workallocation/case/tasks/{$caseId}/event/issueAndSendToLocalCourtCallback/caseType/PRLAPPS/jurisdiction/${jurisdiction}")
+        .headers(Headers.navigationHeader)
+        .header("accept", "application/json")
+        .check(substring("PRIVATELAW")))
+
+      .exec(Common.activity)
+      .exec(Common.userDetails)
+      .exec(Common.caseActivityPost)
+      .exec(Common.caseActivityOnlyGet)
+
+  }
+
+  /*=====================================================================================
+   * Select Court from dropdown and submit
+   ======================================================================================*/
+
+    .exec(http("XUI_PRL_040_005_SelectCourtSubmit")
+      .post(BaseURL + "data/case-types/PRLAPPS/validate?pageId=issueAndSendToLocalCourtCallback1")
+      .headers(Headers.commonHeader)
+      .header("Accept", "application/json, text/plain, */*")
+      .header("x-xsrf-token", "#{XSRFToken}")
+      .body(StringBody("""{"userIds":["${userId}"],"services":["${jurisdiction}"]}"""))
+      .check(substring("[")))
+
+
 
 }
 

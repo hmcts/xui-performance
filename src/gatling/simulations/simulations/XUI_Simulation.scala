@@ -23,6 +23,7 @@ class XUI_Simulation extends Simulation {
 	val UserFeederNFD = csv("UserDataNFD.csv").circular
 	val UserFeederProbate = csv("UserDataProbate.csv").circular
 	val UserFeederPRL = csv("UserDataPRL.csv").circular
+	val UserFeederPRLCourtAdmin = csv("UserDataPRLCourtAdmin.csv").circular
 	val UserFeederBails = csv("UserDataBails.csv").circular
 	val UserFeederBailsHO = csv("UserDataBailsHO.csv").circular
     val UserFeederBailsAdmin = csv("UserDataBailsAdmin.csv").circular
@@ -152,14 +153,21 @@ class XUI_Simulation extends Simulation {
  	===============================================================================================*/
 	val PRLCourtAdminScenario = scenario("***** Private Law Court Admin *****")
 		.exitBlockOnFail {
+		
+	// Solicitor C100 Creation & Logout
 			feed(UserFeederPRL)
       .exec(_.set("env", s"${env}")
             .set("caseType", "PRLAPPS"))
       .exec(Homepage.XUIHomePage)
       .exec(Login.XUILogin)
-      //.feed(randomFeeder)
       .exec(CourtAdmin_PRL_C100_AddOrderServe.CaseCreationSolicitor)
 	  .exec(Logout.XUILogout)
+	// Court Admin Progress Case
+	  		feed(UserFeederPRLCourtAdmin)
+	  .exec(Homepage.XUIHomePage)
+      .exec(Login.XUILogin)
+	  .exec(CourtAdmin_PRL_C100_AddOrderServe.ProgressCaseCourtAdmin)
+
 	}
 
 //DC: UPDATE ONCE quick scenario is working

@@ -114,9 +114,42 @@ object Common {
       .header("sec-fetch-site", "same-site")
       .check(status.in(200, 304, 403)))
 
+  val caseActivityOnlyGet =
+
+    .exec(http("XUI_Common_000_ActivityGet")
+    .get("/activity/cases/#{caseId}/activity")
+    .headers(Headers.commonHeader)
+    .header("accept", "application/json, text/plain, */*")
+    .header("sec-fetch-site", "same-site")
+    .check(status.in(200, 304, 403)))
+
   val caseActivityPost =
     exec(http("XUI_Common_000_ActivityOptions")
       .options("/activity/cases/#{caseId}/activity")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .header("sec-fetch-site", "same-site")
+      .check(status.in(200, 304, 403)))
+
+    .exec(http("XUI_Common_000_ActivityPost")
+      .post("/activity/cases/#{caseId}/activity")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .header("sec-fetch-site", "same-site")
+      .body(StringBody("{\n  \"activity\": \"view\"\n}"))
+      .check(status.in(200, 201, 304, 403)))
+
+  val caseActivityOptionGetPost =
+
+    exec(http("XUI_Common_000_ActivityOptions")
+      .options("/activity/cases/#{caseId}/activity")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .header("sec-fetch-site", "same-site")
+      .check(status.in(200, 304, 403)))
+
+    .exec(http("XUI_Common_000_ActivityGet")
+      .get("/activity/cases/#{caseId}/activity")
       .headers(Headers.commonHeader)
       .header("accept", "application/json, text/plain, */*")
       .header("sec-fetch-site", "same-site")
@@ -202,6 +235,17 @@ object Common {
     exec(http("XUI_Common_000_WAJurisdictionsGet")
       .get("/api/wa-supported-jurisdiction/get")
 			.headers(Headers.commonHeader)
+      .check(substring("[")))
+
+
+// CHECK BODY ON THIS REQUEST ********************
+  val waUsersByServiceName = 
+    exec(http("XUI_Common_000_WAUsersByServiceName")
+      .post("/workallocation/caseworker/getUsersByServiceName")
+			.headers(Headers.commonHeader)
+      .header("Content-Type", "application/json; charset=utf-8")
+      .header("Accept", "application/json, text/plain, */*")
+      .header("x-xsrf-token", "#{XSRFToken}")
       .check(substring("[")))
 
   val manageLabellingRoleAssignment =
