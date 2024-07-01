@@ -162,8 +162,11 @@ class XUI_Simulation extends Simulation {
       .exec(Login.XUILogin)
       .exec(CourtAdmin_PRL_C100_AddOrderServe.CaseCreationSolicitor)
 	  .exec(Logout.XUILogout)
+
 	// Court Admin Progress Case
 	  		feed(UserFeederPRLCourtAdmin)
+	  .exec(_.set("env", s"${env}")
+            .set("caseType", "PRLAPPS"))
 	  .exec(Homepage.XUIHomePage)
       .exec(Login.XUILogin)
 	  .exec(CourtAdmin_PRL_C100_AddOrderServe.ProgressCaseCourtAdmin)
