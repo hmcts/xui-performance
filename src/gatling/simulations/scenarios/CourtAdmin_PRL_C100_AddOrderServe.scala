@@ -479,6 +479,9 @@ object CourtAdmin_PRL_C100_AddOrderServe {
   
     .pause(MinThinkTime, MaxThinkTime)
 
+    //Save caseId as scala var tom be used in subsequent steps
+    //var passCaseId = "${caseId}"
+
   val ProgressCaseCourtAdmin =
 
    /*=====================================================================================
@@ -487,14 +490,14 @@ object CourtAdmin_PRL_C100_AddOrderServe {
 
     group("XUI_PRL_010_SelectCase") {
         exec(http("XUI_PRL_010_005_SelectCase")
-          .get(BaseURL + "/data/internal/cases/${caseId}")
-          .headers(Headers.navigationHeader)
-          .header("accept", "application/json")
+          .get(BaseURL + "/data/internal/cases/#{caseId}")
+          .headers(Headers.commonHeader)
+          .header("x-xsrf-token", "#{XSRFToken}")
           .check(substring("PRIVATELAW")))
 
         .exec(Common.manageLabellingRoleAssignment)
         .exec(Common.userDetails)
-        .exec(Common.waJurisdictions)
+        .exec(Common.waJurisdictions) 
         .exec(Common.activity)
         .exec(Common.userDetails)
         .exec(Common.caseActivityOptionGetPost)
@@ -509,7 +512,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
 
     .group("XUI_PRL_020_SelectTasksTab") {
         exec(http("XUI_PRL_020_005_SelectTasksTab")
-          .post(BaseURL + "/data/internal/cases/task/${caseId}")
+          .post(BaseURL + "/data/internal/cases/task/#{caseId}")
           .headers(Headers.commonHeader)
           .header("Accept", "application/json, text/plain, */*")
           .header("x-xsrf-token", "#{XSRFToken}")
@@ -537,7 +540,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
       //.check(jsonPath("$.type").saveAs("userId"))
 
     .exec(http("XUI_PRL_030_005_SelectAssignToMe")
-      .post(BaseURL + "/workallocation/case/task/${caseId}")
+      .post(BaseURL + "/workallocation/case/task/#{caseId}")
       .headers(Headers.commonHeader)
       .header("Accept", "application/json, text/plain, */*")
       .header("x-xsrf-token", "#{XSRFToken}")
@@ -546,7 +549,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
       .check(jsonPath("$.type").is("checkApplicationC100")) 
       .check(jsonPath("$.case_id").is("${caseId}"))
       .check(jsonPath("$.id").is("${taskId}"))
-      .check(jsonPath("$jurisdiction").saveAs("jurisdiction")))
+      .check(jsonPath("$.jurisdiction").saveAs("jurisdiction")))
 
     .exec(http("XUI_PRL_030_010_SelectTasksTab")
       .post(BaseURL + "/api/role-access/roles/getJudicialUsers")
