@@ -116,7 +116,7 @@ object Common {
 
   val caseActivityOnlyGet =
 
-    .exec(http("XUI_Common_000_ActivityGet")
+    exec(http("XUI_Common_000_ActivityGet")
     .get("/activity/cases/#{caseId}/activity")
     .headers(Headers.commonHeader)
     .header("accept", "application/json, text/plain, */*")
