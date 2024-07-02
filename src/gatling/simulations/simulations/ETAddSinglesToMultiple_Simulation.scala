@@ -31,7 +31,7 @@ class ETAddSinglesToMultiple_Simulation extends Simulation {
 
 	setUp(
 		ETAddSinglesToMultipleScenario.inject(atOnceUsers(1))
-	).protocols(http)
+	).protocols(http).assertions(global.successfulRequests.percent.is(100))
 
 
 }

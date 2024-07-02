@@ -30,24 +30,20 @@ Createe ET singles cases, progress them to an 'Accepted' state
 Adds singles to a provided multiple case in batches of a given size using their Ethos Ids
 - Update build.gradle to run the ETAddSinglesToMultipleScenario simulation
 - Inputs: User credentials defined in 'UserDataETMultiples.csv'; 'singlesEthodIdsToAddToMultiple.csv' containing a list of 
-singles Ethos Ids to add to the multiple; 'multipleCaseId.csv' containing the multiple CCD Case ID; 
-batchSize defining the number of singles to add to the multiple case per API call to CCD
+singles Ethos Ids to add to the multiple; 'multipleCaseId.csv' containing the multiple CCD Case ID;
+desiredBatchSize (in the 'ETAddSinglesToMultiple' scenario) defining the number of singles to add to the multiple case per API call to CCD
 - Outputs: Multiple case will be updated with the new singles and a new Case Name to reflect the total 
 number of singles assigned e.g. 'ET Multiple (10)'
 - Note 1: all singles cases in 'singlesEthodIdsToAddToMultiple.csv' will be added to the multiple. There is no functionality 
 at present to add a subset
 - Note 2: if a multiple case with 10 singles are required, only add 9 singles when using this simulation, as the lead single 
 is created as part of the multiple case creation
-- Note 3: the JSON body to be sent with the request has been carefully split into 3 parts - see the comments in the scenario for details
 
 **How to Run**
 
-To run locally:
-- Performance test against the perftest environment: `./gradlew gatlingRun`
+To run:
+- Run against the perftest environment: `./gradlew gatlingRun`
 
-Flags:
-- Debug (single-user mode): `-Ddebug=on e.g. ./gradlew gatlingRun -Ddebug=on`
-
-Before running locally, update the client secret in src/gatling/resources/application.conf then run `git update-index --assume-unchanged src/gatling/resources/application.conf` to ensure the changes aren't pushed to github.
+Before running, update the client secret in src/gatling/resources/application.conf then run `git update-index --assume-unchanged src/gatling/resources/application.conf` to ensure the changes aren't pushed to github.
 
 To make other configuration changes to the file, first run `git update-index --no-assume-unchanged src/gatling/resources/application.conf`, ensuring to remove the client secret before pushing to origin
