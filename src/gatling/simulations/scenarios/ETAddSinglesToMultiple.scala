@@ -4,68 +4,79 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import utils.Environment
 
+import scala.collection.immutable.ArraySeq
+
 object ETAddSinglesToMultiple {
 
   val CcdAPIURL = Environment.ccdAPIURL
 
-  val records: Seq[Map[String, Any]] = csv("singlesEthosIdsToAddToMultiple.csv").readRecords
-  val recordsCount = csv("singlesEthosIdsToAddToMultiple.csv").recordsCount
-  val recordsFeeder = Iterator.continually(Map("allRecords" -> records))
+  val caseFeeder = csv("singlesEthosIdsToAddToMultiple.csv")
+  val totalCasesToProcess = csv("singlesEthosIdsToAddToMultiple.csv").recordsCount
 
   val multipleCaseIdFeeder = csv("multipleCaseId.csv")
 
-  val batchSize: Int = 5 //the number of singles cases to add to the multiple case per API request
-  val batchSizeRemainder: Int = recordsCount % batchSize
-  val numberOfBatchesToProcess: Int = recordsCount / batchSize + (if (batchSizeRemainder == 0) 0 else 1)
+  val batchSizeLimit: Int = 50 // SAFEGUARD - DON'T INCREASE THIS VALUE UNLESS YOU HAVE TESTED IT FIRST
+  val desiredBatchSize: Int = 2 // The number of cases to process per API request
+  // Enforce the batch size limit and ensure there are sufficient records in the feeder
+  val batchSize: Int = if (desiredBatchSize <= totalCasesToProcess) if (desiredBatchSize <= batchSizeLimit) desiredBatchSize else batchSizeLimit else totalCasesToProcess
+
+  val batchSizeRemainder: Int = totalCasesToProcess % batchSize
+  val numberOfBatchesToProcess: Int = totalCasesToProcess / batchSize + (if (batchSizeRemainder == 0) 0 else 1)
+
 
   val AddSinglesToMultiple = {
 
-    feed(multipleCaseIdFeeder) //fetch the multiple Case ID to update
+    feed(multipleCaseIdFeeder) // Fetch the multiple Case ID to update
 
-    .feed(recordsFeeder) //fetch the Ethos IDs of the singles cases to add to the multiple case
-
-    .repeat(numberOfBatchesToProcess, "counter") {
+    // Process each batch by getting a token and submitting a post request to CCD to update the multiple case
+    .repeat(numberOfBatchesToProcess, "batchCounter") {
 
       exec(http("ET_000_GetCCDEventToken")
-          .get(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/Employment/case-types/ET_EnglandWales_Multiple/cases/#{caseId}/event-triggers/amendMultipleDetails/token")
-          .header("Authorization", "Bearer #{bearerToken}")
-          .header("ServiceAuthorization", "#{authToken}")
-          .header("Content-Type", "application/json")
-          .check(jsonPath("$.token").saveAs("eventToken"))
-          .check(jsonPath("$.case_details.case_data.caseCounter").saveAs("caseCounterBeforeUpdate"))
-          .check(jsonPath("$.case_details.case_data.leadCase").saveAs("leadCaseHTML")))
-
-      .exec {
-        session =>
-          val iteration: Int = session("counter").as[Int]
-          val sliceStartIndex: Int = iteration * batchSize
-          //if processing the final batch, set the correct final batch size
-          val currentBatchSize: Int = if ((iteration + 1 == numberOfBatchesToProcess) && (batchSizeRemainder != 0)) batchSizeRemainder else batchSize
-          val mapsSlice = session("allRecords").as[Seq[Map[String, Any]]].slice(sliceStartIndex, sliceStartIndex + currentBatchSize)
-
-          println("Iteration " + (iteration + 1).toString + " of " + numberOfBatchesToProcess)
-          println("Processing " + currentBatchSize.toString + " records")
-          println("Total records processed: " + (iteration * batchSize + currentBatchSize).toString)
-
-          session.setAll("recordsToProcess" -> mapsSlice,
-                         "singlesCountInMultiple" -> (session("caseCounterBeforeUpdate").as[Int] + currentBatchSize))
-      }
+        .get(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/Employment/case-types/ET_EnglandWales_Multiple/cases/#{caseId}/event-triggers/amendMultipleDetails/token")
+        .header("Authorization", "Bearer #{bearerToken}")
+        .header("ServiceAuthorization", "#{authToken}")
+        .header("Content-Type", "application/json")
+        .check(jsonPath("$.token").saveAs("eventToken"))
+        .check(jsonPath("$.case_details.case_data.caseCounter").saveAs("caseCounterBeforeUpdate"))
+        .check(jsonPath("$.case_details.case_data.leadCase").transform(str => str.replace(""""""","""\"""")).saveAs("leadCaseHTML")))
 
       .pause(1)
 
-      // The JSON body of the following request needs to contain both Gatling session variables and Pebble logic.
-      // There doesn't appear to be a way to process Gatling EL (i.e. session variables) in a Pebble template, so you can either evaluate the Pebble logic
-      // using a PebbleFileBody OR Gatling EL using a ElFileBody, but not both together. Therefore the simplest way to overcome this is to evaluate the
-      // Pebble logic first and then manually substitute the session variables with the values from the session
-
+      // Calculate the current batch size and initialise the payload string
       .exec {
         session =>
-          val pebbleBody = PebbleFileBody("bodies/et/amendMultipleDetails.json").apply(session).toOption.get
-          val jsonPayload = pebbleBody
-                              .replace("#{singlesCountInMultiple}", session("singlesCountInMultiple").as[String])
-                              .replace("#{leadCaseHTML}", session("leadCaseHTML").as[String])
-                              .replace("#{eventToken}", session("eventToken").as[String])
-          session.set("jsonPayload", jsonPayload)
+          val batchIteration: Int = session("batchCounter").as[Int]
+          val currentBatchSize: Int = if ((batchIteration + 1 == numberOfBatchesToProcess) && (batchSizeRemainder != 0)) batchSizeRemainder else batchSize
+          session.setAll( "collectionPayload" -> "",
+                          "currentBatchSize" -> currentBatchSize,
+                          "singlesCountInMultiple" -> (session("caseCounterBeforeUpdate").as[Int] + currentBatchSize))
+      }
+
+      // Feed the number of cases required for the current batch - NOTE: for this to work properly, Gatling 3.10 or higher is required due to this change:
+      // https://docs.gatling.io/release-notes/upgrading/3.9-to-3.10/#feeding-multiple-records-at-once
+      .feed(caseFeeder, "#{currentBatchSize}")
+
+      // If there is only one case being fed, Gatling will create it as a string rather than a SeqArray in the session, resulting in the
+      // foreach loop below failing (as it expects an object containing multiple items. To get around this, if there is one case fed,
+      // replace it with a SeqArray containing the single value
+      .doIf(session => session("currentBatchSize").as[Int].equals(1)) {
+          exec(session => session.set("ethosId", ArraySeq(session("ethosId").as[String])))
+      }
+
+      // Build up a string of JSON elements in the collection (one element per case in the batch)
+      .foreach("#{ethosId}", "id", "caseCounter") {
+        exec {
+          session =>
+            val element =
+              """{
+                |   "value": {
+                |     "ethos_CaseReference": """".stripMargin + session("id").as[String] + "\"" +
+                """},
+                  |   "id": null
+                  |}""".stripMargin
+
+            session.set("collectionPayload", session("collectionPayload").as[String] + element + (if (session("caseCounter").as[Int] + 1 == session("currentBatchSize").as[Int]) "" else ","))
+        }
       }
 
       .exec(http("ET_000_CCDEvent-amendMultipleDetails")
@@ -73,24 +84,35 @@ object ETAddSinglesToMultiple {
         .header("Authorization", "Bearer #{bearerToken}")
         .header("ServiceAuthorization", "#{authToken}")
         .header("Content-Type", "application/json")
-        .body(StringBody("#{jsonPayload}"))
+        .body(ElFileBody("bodies/et/amendMultipleDetails.json")).asJson
         .check(jsonPath("$.case_data.caseCounter").saveAs("caseCounterAfterUpdate")))
 
       .exec {
         session =>
-          val iteration: Int = session("counter").as[Int]
-          val currentBatchSize: Int = if ((iteration + 1 == numberOfBatchesToProcess) && (batchSizeRemainder != 0)) batchSizeRemainder else batchSize
-          if(session("caseCounterBeforeUpdate").as[Int] + currentBatchSize != session("caseCounterAfterUpdate").as[Int]){
+          val batchIteration: Int = session("batchCounter").as[Int]
+          val casesProcessedThisBatch: Int = session("currentBatchSize").as[Int]
+
+          // Output a summary of the current batch to the console
+          println("Summary:\n========")
+          println("Batch " + (batchIteration + 1).toString + " of " + numberOfBatchesToProcess)
+          println("Processed " + casesProcessedThisBatch.toString + " records")
+          println("Total records processed: " + (batchIteration * batchSize + casesProcessedThisBatch).toString)
+
+          // If something went wrong (before + cases != after) then output some useful information
+          if (session("caseCounterBeforeUpdate").as[Int] + casesProcessedThisBatch != session("caseCounterAfterUpdate").as[Int]) {
             println("ERROR: Issue updating cases:")
             println("Number of singles before iteration: " + session("caseCounterBeforeUpdate").as[Int])
-            println("Number of singles attempted to add: " + currentBatchSize)
+            println("Number of singles attempted to add: " + casesProcessedThisBatch)
             println("Number of singles after iteration: " + session("caseCounterAfterUpdate").as[Int])
           }
+
           println(session)
           session
       }
 
-    } //end repeat loop
+      .pause(1)
+
+    } // End repeat loop
 
   }
 

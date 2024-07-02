@@ -12,25 +12,9 @@ class ETCreateSingles_Simulation extends Simulation {
 	val UserFeederET = csv("UserDataET.csv").random
 	val outputFilenameSingles = "casesCreatedSingles.csv"
 
-	/* ******************************** */
-	/* ADDITIONAL COMMAND LINE ARGUMENT OPTIONS */
-	val debugMode = System.getProperty("debug", "off") //runs a single user e.g. ./gradle gatlingRun -Ddebug=on (default: off)
-	/* ******************************** */
-
 	/* PERFORMANCE TEST CONFIGURATION */
-	val numberOfSinglesToCreatePerUser: Int = 4
-	val numberOfUsers: Int = 3
-
-	//Determine the pause pattern to use:
-	//Debug mode = disable all pauses
-	val pauseOption: PauseType = debugMode match {
-		case "off" => constantPauses
-		case _ => disabledPauses
-	}
-
-	before {
-		println(s"Debug Mode: ${debugMode}")
-	}
+	val numberOfSinglesToCreatePerUser: Int = 1
+	val numberOfUsers: Int = 5
 
 	/*===============================================================================================
 	* ET Create Singles Cases
@@ -59,8 +43,8 @@ class ETCreateSingles_Simulation extends Simulation {
 	 ===============================================================================================*/
 
 	setUp(
-		ETCreateSinglesScenario.inject(atOnceUsers(numberOfUsers)).pauses(pauseOption)
-	).protocols(http)
+		ETCreateSinglesScenario.inject(atOnceUsers(numberOfUsers))
+	).protocols(http).assertions(global.successfulRequests.percent.is(100))
 
 
 }

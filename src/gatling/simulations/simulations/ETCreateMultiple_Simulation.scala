@@ -51,7 +51,7 @@ class ETCreateMultiple_Simulation extends Simulation {
 
 	setUp(
 		ETCreateMultipleScenario.inject(atOnceUsers(1))
-	).protocols(http)
+	).protocols(http).assertions(global.successfulRequests.percent.is(100))
 
 
 }
