@@ -28,7 +28,7 @@ Createe ET singles cases, progress them to an 'Accepted' state
 **ETAddSinglesToMultiple_Simulation**
 
 Adds singles to a provided multiple case in batches of a given size using their Ethos Ids
-- Update build.gradle to run the ETAddSinglesToMultipleScenario simulation
+- Update build.gradle to run the ETAddSinglesToMultiple_Simulation simulation
 - Inputs: User credentials defined in 'UserDataETMultiples.csv'; 'singlesEthodIdsToAddToMultiple.csv' containing a list of 
 singles Ethos Ids to add to the multiple; 'multipleCaseId.csv' containing the multiple CCD Case ID;
 desiredBatchSize (in the 'ETAddSinglesToMultiple' scenario) defining the number of singles to add to the multiple case per API call to CCD
