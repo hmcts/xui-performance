@@ -14,7 +14,7 @@ class ETCreateSingles_Simulation extends Simulation {
 
 	/* PERFORMANCE TEST CONFIGURATION */
 	val numberOfSinglesToCreatePerUser: Int = 1
-	val numberOfUsers: Int = 4
+	val numberOfUsers: Int = 10
 
 	/*===============================================================================================
 	* ET Create Singles Cases
