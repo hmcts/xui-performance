@@ -9,6 +9,13 @@
           "gender": "male",
           "otherGender": null,
           "parentalResponsibilityDetails": "Child's father",
+          "whoDoesTheChildLiveWith": {
+            "value": {
+               "code": "#{liveWithListItemsCode(0)}",
+               "label": "#{liveWithListItemsLabel(0)}"
+            },
+            "list_items": #{liveWithListItems.jsonStringify()}
+            },
           "isDateOfBirthUnknown": null,
           "cafcassOfficerName": null,
           "cafcassOfficerPosition": null,
@@ -20,7 +27,7 @@
             "childArrangementsOrder"
           ]
         },
-        "id": null
+        "id": "#{childDetailsID}"
       }
     ],
     "childrenKnownToLocalAuthority": "no",
