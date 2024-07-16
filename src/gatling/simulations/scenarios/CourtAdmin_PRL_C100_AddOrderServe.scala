@@ -489,10 +489,6 @@ object CourtAdmin_PRL_C100_AddOrderServe {
 
   val ProgressCaseCourtAdmin =
 
-    val PRLcases = csv("cases.csv").circular
-
-    .feed(PRLcases)
-
    /*=====================================================================================
    * Select case
    ======================================================================================*/
@@ -514,7 +510,6 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     }
 
     .pause(MinThinkTime, MaxThinkTime)
-    .pause(3, 4)
 
    /*=====================================================================================
    * Select Tasks Tab
