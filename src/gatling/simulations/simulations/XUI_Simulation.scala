@@ -28,6 +28,8 @@ class XUI_Simulation extends Simulation {
 	val UserFeederBailsHO = csv("UserDataBailsHO.csv").circular
     val UserFeederBailsAdmin = csv("UserDataBailsAdmin.csv").circular
 	val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
+	// TEMP FEED SUBMITTED CASES TO COURT ADMIN SCENARIO
+	val PRLcases = csv("cases.csv").circular
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
@@ -154,11 +156,11 @@ class XUI_Simulation extends Simulation {
 	val PRLCourtAdminScenario = scenario("***** Private Law Court Admin *****")
 		.exitBlockOnFail {
 	// Solicitor C100 Creation & Logout
-		  feed(UserFeederPRL)
-      			.exec(_.set("env", s"${env}")
-           		.set("caseType", "PRLAPPS"))
-      			.exec(Homepage.XUIHomePage)
-      			.exec(Login.XUILogin)
+		  //feed(UserFeederPRL)
+      			//.exec(_.set("env", s"${env}")
+           		//.set("caseType", "PRLAPPS"))
+      			//.exec(Homepage.XUIHomePage)
+      			//.exec(Login.XUILogin)
       		
 			// commented out as come c100 steps not working 16/07/24
 			//.exec(CourtAdmin_PRL_C100_AddOrderServe.CaseCreationSolicitor)
@@ -166,11 +168,12 @@ class XUI_Simulation extends Simulation {
 
 	// Feed cases into this scenario currently (to be changed)		
 	// Court Admin Progress Case
-	  		.feed(UserFeederPRLCourtAdmin)
+	  		feed(UserFeederPRLCourtAdmin)
 	  			.exec(_.set("env", s"${env}")
             	.set("caseType", "PRLAPPS"))
 	  			.exec(Homepage.XUIHomePage)
       			.exec(Login.XUILogin)
+			.feed(PRLcases)
 	  		.exec(CourtAdmin_PRL_C100_AddOrderServe.ProgressCaseCourtAdmin)
 
 	}
