@@ -603,6 +603,10 @@ object Solicitor_PRL_C100 {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.case_fields[1].value[0].value.whoDoesTheChildLiveWith.list_items[0].code").findAll.saveAs("liveWithListItemsCode"))
+        .check(jsonPath("$.case_fields[1].value[0].value.whoDoesTheChildLiveWith.list_items[0].label").findAll.saveAs("liveWithListItemsLabel"))
+        .check(jsonPath("$.case_fields[1].value[0].value.whoDoesTheChildLiveWith.list_items").findAll.saveAs("liveWithListItems"))
+        .check(jsonPath("$.case_fields[1].value[0].id").saveAs("childDetailsID"))
         .check(jsonPath("$.id").is("childDetailsRevised")))
 
       .exec(Common.userDetails)
