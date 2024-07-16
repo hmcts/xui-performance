@@ -16,7 +16,7 @@ object ETAddSinglesToMultiple {
   val multipleCaseIdFeeder = csv("multipleCaseId.csv")
 
   val batchSizeLimit: Int = 50 // SAFEGUARD - DON'T INCREASE THIS VALUE UNLESS YOU HAVE TESTED IT FIRST
-  val desiredBatchSize: Int = 4 // The number of cases to process per API request
+  val desiredBatchSize: Int = 1 // The number of cases to process per API request
   // Enforce the batch size limit and ensure there are sufficient records in the feeder
   val batchSize: Int = if (desiredBatchSize <= totalCasesToProcess) if (desiredBatchSize <= batchSizeLimit) desiredBatchSize else batchSizeLimit else totalCasesToProcess
 
