@@ -13,7 +13,7 @@ class ETCreateSingles_Simulation extends Simulation {
 	val outputFilenameSingles = "casesCreatedSingles.csv"
 
 	/* PERFORMANCE TEST CONFIGURATION */
-	val numberOfSinglesToCreatePerUser: Int = 1
+	val numberOfSinglesToCreatePerUser: Int = 21
 	val numberOfUsers: Int = 10
 
 	/*===============================================================================================

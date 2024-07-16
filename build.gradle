@@ -24,7 +24,7 @@ gatling {
     scalaVersion '2.13.10'
     jvmArgs = ['-Xms2048m', '-Xmx4096m']
     simulations = {
-        include "simulations/ETCreateSingles_Simulation.scala"
+        include "simulations/ETAddSinglesToMultiple_Simulation.scala"
     }
 }
 
