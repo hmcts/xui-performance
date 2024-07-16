@@ -260,122 +260,9 @@ object CourtAdmin_PRL_C100_AddOrderServe {
 
     .pause(MinThinkTime, MaxThinkTime)
 
-/*======================================================================================
-    * Click on 'Miam'
-    ======================================================================================*/
-
-      .exec(http("XUI_PRL_C100_300_015_MIAMCaseEvent")
-        .get("/data/internal/cases/#{caseId}/event-triggers/respondentsDetails?ignore-warning=false")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-        .check(jsonPath("$.event_token").saveAs("event_token"))
-        .check(substring("submissionRequiredFieldsInfo1")))
-
-      .exec(Common.userDetails)
-
-    .pause(MinThinkTime, MaxThinkTime)
-
-
-    /*======================================================================================
-    * Has the applicant attended a Mediation information & Assessment Meeting (MIAM)?
-    ======================================================================================*/
-
-      exec(Common.caseShareOrgs)
-
-      .exec(http("XUI_PRL_C100_310_005_AttendedMIAM")
-        .post("/data/case-types/PRLAPPS/validate?pageId=miam1")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100/PRLAttendedMIAM.json"))
-        .check(substring("welshLanguageRequirementsTable")))
-
-      .exec(Common.userDetails)
-
-    .pause(MinThinkTime, MaxThinkTime)
-
-    /*======================================================================================
-    *MIAM certificate Upload
-    ======================================================================================*/
-
-      exec(http("XUI_PRL_C100_320_005_MIAMUpload")
-        .post("/documentsv2")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json, text/plain, */*")
-        .header("content-type", "multipart/form-data")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .bodyPart(RawFileBodyPart("files", "3MB.pdf")
-          .fileName("3MB.pdf")
-          .transferEncoding("binary"))
-        .asMultipartForm
-        .formParam("classification", "PUBLIC")
-        .formParam("caseTypeId", "PRLAPPS")
-        .formParam("jurisdictionId", "PRIVATELAW")
-        .check(substring("originalDocumentName"))
-        .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash"))
-        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL")))
-
-    .pause(MinThinkTime, MaxThinkTime)
-
-    /*======================================================================================
-    * MIAM Details
-    ======================================================================================*/
-
-      exec(http("XUI_PRL_C100_320_005_MIAMdetails")
-        .post("/data/case-types/PRLAPPS/validate?pageId=miam1")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100/PRLMIAMDetails.json")))
-
-      .exec(Common.userDetails)
-
-    .pause(MinThinkTime, MaxThinkTime)
-
-    /*======================================================================================
-    * MIAM Submit
-    ======================================================================================*/
-      exec(http("XUI_PRL_C100_330_005_MIAMSubmit")
-        .post("/data/cases/#{caseId}/events")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100/PRLMIAMDetailsSubmit.json"))
-        .check(substring("trigger/miam")))
-
-      .exec(http("XUI_PRL_C100_330_010_MIAMViewCase")
-        .get("/data/internal/cases/#{caseId}")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .check(jsonPath("$.events[?(@.event_id=='miam')]"))
-        .check(jsonPath("$.state.id").is("AWAITING_SUBMISSION_TO_HMCTS")))
-
-      .exec(Common.userDetails)
-
-    .pause(MinThinkTime, MaxThinkTime)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /*======================================================================================
     * Click on 'Miam'
     ======================================================================================*/
-
 
       .exec(http("XUI_PRL_C100_XXX_140_MIAMCaseEvent")
         .post("/data/case-types/PRLAPPS/validate?pageId=miam1")
@@ -601,6 +488,10 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     //var passCaseId = "${caseId}"
 
   val ProgressCaseCourtAdmin =
+
+    val PRLcases = csv("cases.csv").circular
+
+    .feed(PRLcases)
 
    /*=====================================================================================
    * Select case

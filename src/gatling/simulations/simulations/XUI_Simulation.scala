@@ -159,8 +159,12 @@ class XUI_Simulation extends Simulation {
            		.set("caseType", "PRLAPPS"))
       			.exec(Homepage.XUIHomePage)
       			.exec(Login.XUILogin)
-      		.exec(CourtAdmin_PRL_C100_AddOrderServe.CaseCreationSolicitor)
-	  			.exec(Logout.XUILogout)
+      		
+			// commented out as come c100 steps not working 16/07/24
+			//.exec(CourtAdmin_PRL_C100_AddOrderServe.CaseCreationSolicitor)
+	  		//	.exec(Logout.XUILogout)
+
+	// Feed cases into this scenario currently (to be changed)		
 	// Court Admin Progress Case
 	  		.feed(UserFeederPRLCourtAdmin)
 	  			.exec(_.set("env", s"${env}")
