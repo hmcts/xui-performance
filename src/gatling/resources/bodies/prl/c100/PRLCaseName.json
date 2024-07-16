@@ -1,6 +1,6 @@
 {
   "data": {
-    "applicantCaseName": "#{C100ApplicantFirstName1} #{C100ApplicantLastName1} DEBUGDC1 PerfTest C100 Case"
+    "applicantCaseName": "#{C100ApplicantFirstName1} #{C100ApplicantLastName1} DEBUGDC2 PerfTest C100 Case"
   },
   "event": {
     "id": "solicitorCreate",
@@ -12,7 +12,7 @@
     "c100ConfidentialityStatementDisclaimer": [
       "confidentialityStatementUnderstood"
     ],
-    "applicantCaseName": "#{C100ApplicantFirstName1} #{C100ApplicantLastName1} DEBUGDC1 PerfTest C100 Case"
+    "applicantCaseName": "#{C100ApplicantFirstName1} #{C100ApplicantLastName1} DEBUGDC2 PerfTest C100 Case"
   },
   "event_token": "#{event_token}",
   "ignore_warning": false
