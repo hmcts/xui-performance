@@ -14,9 +14,21 @@
                "code": "#{liveWithListItemsCode(0)}",
                "label": "#{liveWithListItemsLabel(0)}"
             },
-            "list_items": [#{liveWithListItems.jsonStringify()}
-          ]
-            },
+            "list_items": [
+              {
+                 "code": "#{liveWithListItemsCode(0)}",
+                 "label": "#{liveWithListItemsLabel(0)}"
+              },
+              {
+                 "code": "#{liveWithListItemsCode(1)}",
+                 "label": "#{liveWithListItemsLabel(1)}"
+              },
+              {
+                 "code": "#{liveWithListItemsCode(2)}",
+                 "label": "#{liveWithListItemsLabel(2)}"
+              }
+           ]
+        },
           "isDateOfBirthUnknown": null,
           "cafcassOfficerName": null,
           "cafcassOfficerPosition": null,
