@@ -491,18 +491,83 @@ object CourtAdmin_PRL_C100_AddOrderServe {
       
     }
   
-    .pause(MinThinkTime, MaxThinkTime)
+  .pause(MinThinkTime, MaxThinkTime)
 
   val ProgressCaseCourtAdmin =
+
+   /*=====================================================================================
+   * Select Case
+   ======================================================================================*/
+
+    exec(http("XUI_PRL_C100_XXX_290_SelectCase")
+      .get(BaseURL + "/data/internal/cases/#{caseId}")
+      .headers(Headers.commonHeader)
+      .check(jsonPath("$.case_id").is("#{caseId}")))
+
+      .exec(Common.waJurisdictions)
+      .exec(Common.activity)
+      .exec(Common.refreshRoleAssignments)
+      .exec(Common.caseActivityGet)
+
+  .pause(MinThinkTime, MaxThinkTime)
+
+   /*=====================================================================================
+   * Select task tab 
+   ======================================================================================*/
+
+    .exec(http("XUI_PRL_C100_XXX_300_SelectCaseTask")
+      .post(BaseURL + "/workallocation/case/task/#{caseId}")
+      .headers(Headers.commonHeader)
+      .header("Accept", "application/json, text/plain, */*")
+      .header("x-xsrf-token", "#{XSRFToken}")
+      .check(jsonPath("$.type").is("checkApplicationC100"))
+      .check(jsonPath("$.id").saveAs("taskId")))
+  
+      .exec(Common.refreshRoleAssignments)
+      .exec(Common.waUsersByServiceName)
+      .exec(Common.caseActivityGet)
+
+.pause(MinThinkTime, MaxThinkTime)
+
+  /*=====================================================================================
+   * Select Assign to me
+   ======================================================================================*/
+
+    .exec(http("XUI_PRL_C100_XXX_310_AssignToMeClaim")
+      .post(BaseURL + "/workallocation/task/#{taskId}/claim")
+      .headers(Headers.commonHeader)
+      .header("Accept", "application/json, text/plain, */*")
+      .header("x-xsrf-token", "#{XSRFToken}")
+      .check(jsonPath("$.type").is("checkApplicationC100"))
+      .check(jsonPath("$.id").saveAs("taskId")))
+
+    .exec(http("XUI_PRL_C100_XXX_320_AssignToMe")
+      .post(BaseURL + "/workallocation/case/task/#{caseId}")
+      .headers(Headers.commonHeader)
+      .header("Accept", "application/json, text/plain, */*")
+      .header("x-xsrf-token", "#{XSRFToken}")
+      .check(jsonPath("$.type").is("checkApplicationC100"))
+      .check(jsonPath("$.task_state").is("assigned")))
+
+    .exec(http("XUI_PRL_C100_XXX_330_GetJudicalUsers")
+      .post(BaseURL + "/api/role-access/roles/getJudicalUsers")
+      .headers(Headers.commonHeader)
+      .header("Accept", "application/json, text/plain, */*")
+      .header("x-xsrf-token", "#{XSRFToken}")
+      .body(StringBody({"userIds":["0f715905-3d71-4240-8fd7-091a2b44b8cf"],"services":["PRIVATELAW"]}))
+      .check(jsonPath("$.type").is("checkApplicationC100"))
+      .check(jsonPath("$.task_state").is("assigned")))
+
+      
 
    /*=====================================================================================
    * Request case details - task for created case. 
    ======================================================================================*/
 
-        exec(http("XUI_PRL_C100_XXX_290_SelectCaseTasks")
-          .get(BaseURL + "/case/case-details/#{caseId}/tasks")
-          .headers(Headers.commonHeader)
-          .check(substring("HMCTS Manage cases")))
+    exec(http("XUI_PRL_C100_XXX_290_SelectCaseTasks")
+      .get(BaseURL + "/case/case-details/#{caseId}/tasks")
+      .headers(Headers.commonHeader)
+      .check(substring("HMCTS Manage cases")))
 
     .pause(MinThinkTime, MaxThinkTime)
 
@@ -524,35 +589,101 @@ object CourtAdmin_PRL_C100_AddOrderServe {
    ======================================================================================*/
 
     .exec(http("XUI_PRL_C100_XXX_310_IssueAndSendToLocalCourt")
-        .get(BaseURL + "/workallocation/case/tasks/{$caseId}/event/issueAndSendToLocalCourtCallback/caseType/PRLAPPS/jurisdiction/${jurisdiction}")
+        .get(BaseURL + "/workallocation/case/tasks/#{caseId}/event/issueAndSendToLocalCourtCallback/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
         .headers(Headers.navigationHeader)
         .header("accept", "application/json")
-        .check(substring("PRIVATELAW")))
+        .check(jsonPath("$.task_required_for_event").is("false")))
 
       .exec(Common.activity)
       .exec(Common.profile)
 
-      exec(http("XUI_PRL_C100_XXX_320_IssueAndSendToLocalCourtEventTrigger")  //*** SAVE THE Courtlist response here for use in later post requests **
+      .exec(http("XUI_PRL_C100_XXX_320_IssueAndSendToLocalCourtEventTrigger")  //*** SAVE THE Courtlist response here for use in later post requests **
         .get(BaseURL + "/data/internal/cases/#{caseId}/event-triggers/issueAndSendToLocalCourtCallback?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*")
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("issueAndSendToLocalCourtCallback"))
-        .check(jsonPath("$.event_token").saveAs("event_token"))
         //.check(jsonPath("$.case_fields[1].value.list_items").saveAs("courtListItems"))
         .check(status.in(200, 403)))
 
-      .exec(http("XUI_PRL_040_020_IssueAndSendToLocalCourtEvent")
-        .get(BaseURL + "/workallocation/case/tasks/{$caseId}/event/issueAndSendToLocalCourtCallback/caseType/PRLAPPS/jurisdiction/${jurisdiction}")
+      .exec(http("XUI_PRL_C100_XXX_330_IssueAndSendToLocalCourtEvent")
+        .get(BaseURL + "/workallocation/case/tasks/#{caseId}/event/issueAndSendToLocalCourtCallback/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
         .headers(Headers.navigationHeader)
-        .header("accept", "application/json")
+        .header("accept", "application/json"))
         //.check(substring("PRIVATELAW")))
       
       .exec(Common.caseActivityPost)
       .exec(Common.userDetails)
       .exec(Common.caseActivityOnlyGet)
 
+    .pause(MinThinkTime, MaxThinkTime)
 
+  /*=====================================================================================
+   * Select Court from dropdown and submit
+   ======================================================================================*/
+
+    .exec(http("XUI_PRL_C100_XXX_340_SelectCourt")
+      .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=issueAndSendToLocalCourtCallback1")
+      .headers(Headers.commonHeader)
+      .header("Accept", "application/json, text/plain, */*")
+      .header("x-xsrf-token", "#{XSRFToken}")
+      .body(ElFileBody("bodies/prl/courtAdmin/PRLLocalCourt.json"))
+      .check(jsonPath("$.data.courtList.value.code").is("234946:")))
+
+  .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+  * Click on 'Send to Gate Keeper'
+  ======================================================================================*/
+
+    .group("XUI_PRL_070_SendToGateKeeper") {
+      exec(http("XUI_PRL_070_005_SendToGateKeeper")
+        .get(BaseURL + "/data/internal/cases/#{caseId}/event-triggers/sendToGateKeeper?ignore-warning=false")
+        .headers(Headers.navigationHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        //.check(jsonPath("$.case_fields[0].formatted_value[0].id").saveAs("gateKeeper_id"))
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("sendToGateKeeper")))
+
+        .exec(Common.userDetails)
+        .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+
+        }
+  .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+  * Add Gate Keeper
+  ======================================================================================*/
+
+    .group("XUI_PRL_080_AddGateKeeper") {
+      exec(http("XUI_PRL_080_005_AddGateKeeper")
+        .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=sendToGateKeeper1")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/prl/c100Continued/PRLAddGateKeeper.json"))
+        .check(substring("gatekeeper")))
+        }
+
+  .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+  * Send to Gate Keeper Submit
+  ======================================================================================*/
+
+    .group("XUI_PRL_090_GateKeeperSubmit") {
+      exec(http("XUI_PRL_090_005_GateKeeperSubmit")
+        .post(BaseURL + "/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/prl/c100Continued/PRLAddGateKeeperSubmit.json"))
+        .check(substring("GATE_KEEPING")))
+    }
+
+  .pause(MinThinkTime, MaxThinkTime)
+
+      .exec(Common.waJurisdictions)
       .exec(Common.configurationui)
       .exec(Common.configUI)
       .exec(Common.configJson)
@@ -568,18 +699,6 @@ object CourtAdmin_PRL_C100_AddOrderServe {
       .exec(Common.userDetails)
       .exec(Common.caseActivityPost)
       .exec(Common.caseActivityOnlyGet)
-
-  /*=====================================================================================
-   * Select Court from dropdown and submit
-   ======================================================================================*/
-
-    .exec(http("XUI_PRL_040_005_SelectCourtSubmit")
-      .post(BaseURL + "data/case-types/PRLAPPS/validate?pageId=issueAndSendToLocalCourtCallback1")
-      .headers(Headers.commonHeader)
-      .header("Accept", "application/json, text/plain, */*")
-      .header("x-xsrf-token", "#{XSRFToken}")
-      .body(StringBody("""{"userIds":["${userId}"],"services":["${jurisdiction}"]}"""))
-      .check(substring("[")))
 
 
 

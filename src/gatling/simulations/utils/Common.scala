@@ -237,7 +237,6 @@ object Common {
 			.headers(Headers.commonHeader)
       .check(substring("[")))
 
-
 // CHECK BODY ON THIS REQUEST ********************
   val waUsersByServiceName = 
     exec(http("XUI_Common_000_WAUsersByServiceName")

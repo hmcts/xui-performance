@@ -160,7 +160,7 @@
         ]
      }
   },
-  "event_token": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJuM2o3NDJhaXZwMm8zbTU3bjFkZzNqY3VjcSIsInN1YiI6IjBmNzE1OTA1LTNkNzEtNDI0MC04ZmQ3LTA5MWEyYjQ0YjhjZiIsImlhdCI6MTcxOTgyMzYzMCwiY2FzZS1pZCI6IjE0ODY3OTUzIiwiZXZlbnQtaWQiOiJpc3N1ZUFuZFNlbmRUb0xvY2FsQ291cnRDYWxsYmFjayIsImNhc2UtdHlwZS1pZCI6IlBSTEFQUFMiLCJqdXJpc2RpY3Rpb24taWQiOiJQUklWQVRFTEFXIiwiY2FzZS1zdGF0ZSI6IlNVQk1JVFRFRF9QQUlEIiwiY2FzZS12ZXJzaW9uIjoiYmFkOTVmMjRiMDlkNzkzMGI0ZDQ2ZWI2MWNiMmU4NGM3ZDlmNzJkYzM4ODJlZDdiYTRjYmQ1ZjU3ZmU4NThmYiIsImVudGl0eS12ZXJzaW9uIjozN30.jVE-GkAlp2tq9sAsdIxSvUgs-s3p9ff6MYL0MrgKjmo",
+  "event_token": "#{event_token}",
   "ignore_warning": false,
-  "case_reference": "1719421056934753"
+  "case_reference": "#{caseId}"
 }
