@@ -156,19 +156,19 @@ class XUI_Simulation extends Simulation {
 	val PRLCourtAdminScenario = scenario("***** Private Law Court Admin *****")
 		.exitBlockOnFail {
 	// Solicitor C100 Creation & Logout
-		  //feed(UserFeederPRL)
-      			//.exec(_.set("env", s"${env}")
-           		//.set("caseType", "PRLAPPS"))
-      			//.exec(Homepage.XUIHomePage)
-      			//.exec(Login.XUILogin)
+		  feed(UserFeederPRL)
+      			.exec(_.set("env", s"${env}")
+           		.set("caseType", "PRLAPPS"))
+      			.exec(Homepage.XUIHomePage)
+      			.exec(Login.XUILogin)
       		
 			// commented out as come c100 steps not working 16/07/24
-			//.exec(CourtAdmin_PRL_C100_AddOrderServe.CaseCreationSolicitor)
-	  		//	.exec(Logout.XUILogout)
+			.exec(CourtAdmin_PRL_C100_AddOrderServe.CaseCreationSolicitor)
+	  			.exec(Logout.XUILogout)
 
 	// Feed cases into this scenario currently (to be changed)		
 	// Court Admin Progress Case
-	  		feed(UserFeederPRLCourtAdmin)
+	  		//feed(UserFeederPRLCourtAdmin)
 	  			.exec(_.set("env", s"${env}")
             	.set("caseType", "PRLAPPS"))
 	  			.exec(Homepage.XUIHomePage)
