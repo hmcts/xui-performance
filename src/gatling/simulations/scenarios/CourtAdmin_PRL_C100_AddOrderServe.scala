@@ -204,7 +204,13 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Click on 'Respondent Details'
     ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_100_RespondentDetailsCaseEvent")
+      .exec(http("XUI_PRL_C100_XXX_100_RespondentDetailsTriger")
+        .get("/cases/case-details/#{caseId}/trigger/respondentsDetails/respondentsDetails1")
+        .headers(Headers.navigationHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .check(substring("HMCTS Manage cases")))
+
+      .exec(http("XUI_PRL_C100_XXX_110_RespondentDetailsEventTriger")
         .get("/data/internal/cases/#{caseId}/event-triggers/respondentsDetails?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -216,8 +222,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     /*======================================================================================
     * Respondent Details Submit
     ======================================================================================*/
-
-      .exec(http("XUI_PRL_C100_XXX_110_RespondentDetailsSubmit")
+      .exec(http("XUI_PRL_C100_XXX_120_RespondentDetailsSubmit")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -236,8 +241,8 @@ object CourtAdmin_PRL_C100_AddOrderServe {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
-        .check(jsonPath("$.case_fields[1].value[0].value.whoDoesTheChildLiveWith.list_items[0].code").findAll.saveAs("liveWithListItemsCode"))
-        .check(jsonPath("$.case_fields[1].value[0].value.whoDoesTheChildLiveWith.list_items[0].label").findAll.saveAs("liveWithListItemsLabel"))
+        .check(jsonPath("$.case_fields[1].value[0].value.whoDoesTheChildLiveWith.list_items[*].code").findAll.saveAs("liveWithListItemsCode"))
+        .check(jsonPath("$.case_fields[1].value[0].value.whoDoesTheChildLiveWith.list_items[*].label").findAll.saveAs("liveWithListItemsLabel"))
         .check(jsonPath("$.case_fields[1].value[0].value.whoDoesTheChildLiveWith.list_items").findAll.saveAs("liveWithListItems"))
         .check(jsonPath("$.case_fields[1].value[0].id").saveAs("childDetailsID"))
         .check(jsonPath("$.id").is("childDetailsRevised")))
@@ -253,7 +258,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100/PRLChildAdditionalDetailsOriginal.json"))
+        .body(ElFileBody("bodies/prl/c100/PRLChildAdditionalDetails.json"))
         .check(substring("trigger/childDetailsRevised")))
 
     .pause(MinThinkTime, MaxThinkTime)
