@@ -14,7 +14,8 @@
                "code": "#{liveWithListItemsCode(0)}",
                "label": "#{liveWithListItemsLabel(0)}"
             },
-            "list_items": #{liveWithListItems.jsonStringify()}
+            "list_items": [#{liveWithListItems.jsonStringify()}
+          ]
             },
           "isDateOfBirthUnknown": null,
           "cafcassOfficerName": null,
