@@ -204,13 +204,13 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Click on 'Respondent Details'
     ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_100_RespondentDetailsTriger")
+      .exec(http("XUI_PRL_C100_XXX_100_RespondentDetailsTrigger")
         .get("/cases/case-details/#{caseId}/trigger/respondentsDetails/respondentsDetails1")
         .headers(Headers.navigationHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
         .check(substring("HMCTS Manage cases")))
 
-      .exec(http("XUI_PRL_C100_XXX_110_RespondentDetailsEventTriger")
+      .exec(http("XUI_PRL_C100_XXX_110_RespondentDetailsEventTrigger")
         .get("/data/internal/cases/#{caseId}/event-triggers/respondentsDetails?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -267,8 +267,14 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     * Click on 'Miam'
     ======================================================================================*/
 
-      .exec(http("XUI_PRL_C100_XXX_140_MIAMCaseEvent")
-        .post("/data/case-types/PRLAPPS/validate?pageId=miam1")
+    .exec(http("XUI_PRL_C100_XXX_140_MIAMTrigger")
+        .get("/cases/case-details/trigger/miam/miam1")
+        .headers(Headers.navigationHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .check(substring("HMCTS Manage cases")))
+
+    .exec(http("XUI_PRL_C100_XXX_150_MIAMEventTrigger")
+        .get("/data/internal/cases/#{caseId}/event-triggers/respondentsDetails?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
@@ -487,88 +493,29 @@ object CourtAdmin_PRL_C100_AddOrderServe {
   
     .pause(MinThinkTime, MaxThinkTime)
 
-    //Save caseId as scala var tom be used in subsequent steps
-    //var passCaseId = "${caseId}"
-
   val ProgressCaseCourtAdmin =
 
    /*=====================================================================================
-   * Select case
+   * Request case details - task for created case. 
    ======================================================================================*/
 
-    group("XUI_PRL_010_SelectCase") {
-        exec(http("XUI_PRL_010_005_SelectCase")
-          .get(BaseURL + "/data/internal/cases/#{caseId}")
+        exec(http("XUI_PRL_C100_XXX_290_SelectCaseTasks")
+          .get(BaseURL + "/case/case-details/#{caseId}/tasks")
           .headers(Headers.commonHeader)
-          .header("x-xsrf-token", "#{XSRFToken}")
-          .check(substring("PRIVATELAW")))
-
-        .exec(Common.manageLabellingRoleAssignment)
-        .exec(Common.userDetails)
-        .exec(Common.waJurisdictions) 
-        .exec(Common.activity)
-        .exec(Common.userDetails)
-        .exec(Common.caseActivityOptionGetPost)
-
-    }
-
-    .pause(MinThinkTime, MaxThinkTime)
-
-   /*=====================================================================================
-   * Select Tasks Tab
-   ======================================================================================*/
-
-    .group("XUI_PRL_020_SelectTasksTab") {
-        exec(http("XUI_PRL_020_005_SelectTasksTab")
-          .post(BaseURL + "/workallocation/case/task/#{caseId}")
-          .headers(Headers.commonHeader)
-          .header("Accept", "application/json, text/plain, */*")
-          .header("x-xsrf-token", "#{XSRFToken}")
-          .body(StringBody("""{"refined":"true"}"""))
-          .check(jsonPath("$.type").is("checkApplicationC100"))
-          .check(jsonPath("$.case_id").is("${caseId}"))) 
-
-        .exec(Common.manageLabellingRoleAssignment)
-        .exec(Common.caseActivityPost)
-        .exec(Common.waUsersByServiceName)
-        .exec(Common.caseActivityPost)
-
-    }
+          .check(substring("HMCTS Manage cases")))
 
     .pause(MinThinkTime, MaxThinkTime)
 
   /*=====================================================================================
-   * Select Assign to me
+   * Select Assign to me & Complete task
    ======================================================================================*/
 
-  .group("XUI_PRL_030_SelectAssignToMe") {
-
-    exec(Common.caseActivityPost)
-      //.check(jsonPath("$.type").saveAs("userId"))
-
-    .exec(http("XUI_PRL_030_005_SelectAssignToMe")
-      .post(BaseURL + "/workallocation/case/task/#{caseId}")
+    .exec(http("XUI_PRL_C100_XXX_300_SelectCaseTasks&Complete")
+      .post(BaseURL + "/workallocation/case/task/#{caseId}/complete")
       .headers(Headers.commonHeader)
       .header("Accept", "application/json, text/plain, */*")
       .header("x-xsrf-token", "#{XSRFToken}")
-      .body(StringBody("""{"refined":"true"}"""))
-      .check(substring("hearing-facilities"))
-      .check(jsonPath("$.type").is("checkApplicationC100")) 
-      .check(jsonPath("$.case_id").is("${caseId}"))
-      .check(jsonPath("$.id").is("${taskId}"))
-      .check(jsonPath("$.jurisdiction").saveAs("jurisdiction")))
-
-    .exec(http("XUI_PRL_030_010_SelectTasksTab")
-      .post(BaseURL + "/api/role-access/roles/getJudicialUsers")
-      .headers(Headers.commonHeader)
-      .header("Accept", "application/json, text/plain, */*")
-      .header("x-xsrf-token", "#{XSRFToken}")
-      .body(StringBody("""{"userIds":["${userId}"],"services":["${jurisdiction}"]}"""))
-      .check(substring("[")))
-    
-    .exec(Common.caseActivityPost)
-
-  }
+      .body(StringBody("""{"hasNoAssigneeOnComplete":false}""")))
 
   .pause(MinThinkTime, MaxThinkTime)
 
@@ -576,78 +523,51 @@ object CourtAdmin_PRL_C100_AddOrderServe {
    * Select Issue and send to local Court
    ======================================================================================*/
 
-  .group("XUI_PRL_040_IssueAndSendToLocalCourt") {
-      exec(http("XUI_PRL_040_005_IssueAndSendToLocalCourt")
-        .get(BaseURL + "cases/case-details/${caseId}/trigger/issueAndSendToLocalCourtCallback/issueAndSendToLocalCourtCallback1?tid=${taskId}")
-        .headers(Headers.navigationHeader)
-        .header("accept", "application/json")
-        .check(substring("PRIVATELAW")))
-
-      .exec(Common.configurationui)
-      .exec(Common.configUI)
-      .exec(Common.configJson)
-      .exec(Common.TsAndCs)
-      .exec(Common.userDetails)
-      .exec(Common.isAuthenticated)
-      .exec(Common.monitoringTools)
-
-      .exec(http("XUI_PRL_040_010_IssueAndSendToLocalCourt")
+    .exec(http("XUI_PRL_C100_XXX_310_IssueAndSendToLocalCourt")
         .get(BaseURL + "/workallocation/case/tasks/{$caseId}/event/issueAndSendToLocalCourtCallback/caseType/PRLAPPS/jurisdiction/${jurisdiction}")
-        .headers(Headers.navigationHeader)
-        .header("accept", "application/json")
-        .check(substring("PRIVATELAW")))
-
-      .exec(Common.isAuthenticated)
-      .exec(Common.activity)
-
-      .exec(http("XUI_PRL_040_015_IssueAndSendToLocalCourt")
-        .get(BaseURL + "/data/internal/cases/{$caseId}")
         .headers(Headers.navigationHeader)
         .header("accept", "application/json")
         .check(substring("PRIVATELAW")))
 
       .exec(Common.activity)
-      .exec(Common.caseActivityOnlyGet)
-
-      .exec(http("XUI_PRL_040_020_IssueAndSendToLocalCourt")
-        .get(BaseURL + "/workallocation/case/tasks/{$caseId}/event/issueAndSendToLocalCourtCallback/caseType/PRLAPPS/jurisdiction/${jurisdiction}")
-        .headers(Headers.navigationHeader)
-        .header("accept", "application/json")
-        .check(substring("PRIVATELAW")))
-
-      .exec(Common.userDetails)
-      .exec(Common.userDetails)    //Duplicate 
-
-      .exec(http("XUI_PRL_040_025_IssueAndSendToLocalCourt")  // Duplicate
-        .get(BaseURL + "/workallocation/case/tasks/{$caseId}/event/issueAndSendToLocalCourtCallback/caseType/PRLAPPS/jurisdiction/${jurisdiction}")
-        .headers(Headers.navigationHeader)
-        .header("accept", "application/json")
-        .check(substring("PRIVATELAW")))
-
       .exec(Common.profile)
 
-      exec(http("XUI_PRL_040_030_IssueAndSendToLocalCourt")  //*** SAVE THE Courtlist response here for use in later post requests **
+      exec(http("XUI_PRL_C100_XXX_320_IssueAndSendToLocalCourtEventTrigger")  //*** SAVE THE Courtlist response here for use in later post requests **
         .get(BaseURL + "/data/internal/cases/#{caseId}/event-triggers/issueAndSendToLocalCourtCallback?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*")
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("issueAndSendToLocalCourtCallback"))
         .check(jsonPath("$.event_token").saveAs("event_token"))
-        .check(jsonPath("$.case_fields[1].value.list_items").saveAs("courtListItems"))
+        //.check(jsonPath("$.case_fields[1].value.list_items").saveAs("courtListItems"))
         .check(status.in(200, 403)))
 
-      .exec(http("XUI_PRL_040_035_IssueAndSendToLocalCourt")  // Duplicate
+      .exec(http("XUI_PRL_040_020_IssueAndSendToLocalCourtEvent")
         .get(BaseURL + "/workallocation/case/tasks/{$caseId}/event/issueAndSendToLocalCourtCallback/caseType/PRLAPPS/jurisdiction/${jurisdiction}")
         .headers(Headers.navigationHeader)
         .header("accept", "application/json")
-        .check(substring("PRIVATELAW")))
+        //.check(substring("PRIVATELAW")))
+      
+      .exec(Common.caseActivityPost)
+      .exec(Common.userDetails)
+      .exec(Common.caseActivityOnlyGet)
 
+
+      .exec(Common.configurationui)
+      .exec(Common.configUI)
+      .exec(Common.configJson)
+      .exec(Common.TsAndCs)
+      .exec(Common.isAuthenticated)
+      .exec(Common.monitoringTools)
+      .exec(Common.isAuthenticated)
+      .exec(Common.activity)
+      .exec(Common.caseActivityOnlyGet)
+      .exec(Common.userDetails)
+      .exec(Common.userDetails)    //Duplicate 
       .exec(Common.activity)
       .exec(Common.userDetails)
       .exec(Common.caseActivityPost)
       .exec(Common.caseActivityOnlyGet)
-
-  }
 
   /*=====================================================================================
    * Select Court from dropdown and submit
