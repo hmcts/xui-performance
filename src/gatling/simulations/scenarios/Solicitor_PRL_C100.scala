@@ -673,7 +673,7 @@ object Solicitor_PRL_C100 {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100/PRLChildAdditionalDetails.json"))
+        .body(ElFileBody("bodies/prl/c100/PRLChildAdditionalDetailsOriginal.json"))
         .check(substring("trigger/childDetailsRevised")))
 
       .exec(http("XUI_PRL_C100_260_010_ChildDetailsAdditionalDetailsViewCase")

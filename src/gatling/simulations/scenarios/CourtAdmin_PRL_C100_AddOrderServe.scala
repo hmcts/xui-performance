@@ -203,7 +203,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
     /*======================================================================================
     * Click on 'Respondent Details'
     ======================================================================================*/
-/*
+
       .exec(http("XUI_PRL_C100_XXX_100_RespondentDetailsCaseEvent")
         .get("/data/internal/cases/#{caseId}/event-triggers/respondentsDetails?ignore-warning=false")
         .headers(Headers.commonHeader)
@@ -226,8 +226,6 @@ object CourtAdmin_PRL_C100_AddOrderServe {
         .check(substring("trigger/respondentsDetails")))
 
     .pause(MinThinkTime, MaxThinkTime)
-
-*/ //16/07/24 - COMMENTED OUT AS GETTING A 502 on /data/internal/cases/1721141495195263/event-triggers/respondentsDetails?ignore-warning=false
 
     /*======================================================================================
     * Click on 'Child Details'
@@ -255,7 +253,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100/PRLChildAdditionalDetails.json"))
+        .body(ElFileBody("bodies/prl/c100/PRLChildAdditionalDetailsOriginal.json"))
         .check(substring("trigger/childDetailsRevised")))
 
     .pause(MinThinkTime, MaxThinkTime)
