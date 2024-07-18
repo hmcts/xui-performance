@@ -495,8 +495,189 @@ object CourtAdmin_PRL_C100_AddOrderServe {
 
   val ProgressCaseCourtAdmin =
 
+  //session => session.set("taskId","#{respTaskId}")
+
+  /*=====================================================================================
+   * Select case
+   ======================================================================================*/
+
+   exec(http("XUI_PRL_C100_XXX_290_SelectCase")
+      .get(BaseURL + "/data/internal/cases/#{caseId}")
+      .headers(Headers.commonHeader)
+      .check(jsonPath("$.case_id").is("#{caseId}")))
+
+      .exec(Common.waJurisdictions)
+      .exec(Common.activity)
+      .exec(Common.userDetails)
+      .exec(Common.caseActivityGet)
+      .exec(Common.isAuthenticated)
+
+  .pause(MinThinkTime, MaxThinkTime)
+
    /*=====================================================================================
-   * Select Case
+   * Select task tab 
+   ======================================================================================*/
+
+    .exec(http("XUI_PRL_C100_XXX_300_SelectCase")
+      .get(BaseURL + "/cases/case-details/#{caseId}/task")
+      .headers(Headers.commonHeader)
+      .check(substring("HMCTS Manage cases")))
+
+     .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+      
+    .exec(Common.activity)
+    .exec(Common.configUI)
+    .exec(Common.configJson)
+    .exec(Common.userDetails)
+
+
+    //.exec(http("XUI_PRL_C100_XXX_310_SelectCaseTask")
+    //  .get(BaseURL + "/workallocation/case/task/#{caseId}")
+    //  .headers(Headers.commonHeader)
+    //  .header("Accept", "application/json, text/plain, */*")
+    //  .header("x-xsrf-token", "#{XSRFToken}")
+    //  .check(regex(""""id":"(.*)","name":""").optional.saveAs("respTaskId")))
+
+
+  //.asLongAs(session => !session.attributes.get("respTaskId").forall(_ == null)) {
+ // asLongAs(session => session.attributes.get("basicNextPage").filterNot(_ == null).isDefined)
+ // .exec(session => session.set("respTaskState", "respTaskState"))
+
+
+  // Wait until the work allocation task is visible 
+  .doWhile(session => session("respTaskType").as[String] != "checkApplicationC100") {
+    exec(http("XUI_PRL_C100_XXX_310_SelectCaseTaskRepeat")
+      .get(BaseURL + "/workallocation/case/task/#{caseId}")
+      .headers(Headers.commonHeader)
+      .header("Accept", "application/json, text/plain, */*")
+      .header("x-xsrf-token", "#{XSRFToken}")
+      .check(regex(""","type":"(.*)","task_state":""").optional.saveAs("respTaskType")))
+      //.check(jsonPath("$.type").optional.saveAs("respTaskType")))
+    .pause(10, 30) //Long wait time to allow the task to become available
+  }
+
+     // .check(regex(""""id":"(.*)","name":""").optional.saveAs("respTaskId"))
+      //.check(regex(""","type":"(.*)","task_state":""").optional.saveAs("respTaskState"))
+
+      //.exec{
+    //session =>
+    //  println(session("#{respTaskState}").as[String])
+    //  session
+
+  
+    .exec(Common.userDetails)
+    .exec(Common.waUsersByServiceName)
+    .exec(Common.caseActivityGet)
+    .exec(Common.monitoringTools)
+    .exec(Common.isAuthenticated)
+
+    .exec(http("XUI_PRL_C100_XXX_320_SelectCase")
+      .get(BaseURL + "/data/internal/cases/#{caseId}")
+      .headers(Headers.commonHeader)
+      .check(jsonPath("$.case_type.name").is("C100 & FL401 Applications")))
+
+    .exec(Common.activity)
+
+.pause(MinThinkTime, MaxThinkTime)
+
+/*=====================================================================================
+* Select Assign to me
+======================================================================================*/
+
+    .exec(http("XUI_PRL_C100_XXX_330_AssignToMeClaim")
+      .post(BaseURL + "/workallocation/task/#{respTaskId}/claim")
+      .headers(Headers.commonHeader)
+      .header("Accept", "application/json, text/plain, */*")
+      .header("x-xsrf-token", "#{XSRFToken}")
+      .check(jsonPath("$.type").is("checkApplicationC100"))
+      .check(jsonPath("$.id").saveAs("taskId")))
+
+    .exec(http("XUI_PRL_C100_XXX_340_AssignToMe")
+      .get(BaseURL + "/workallocation/case/task/#{caseId}")
+      .headers(Headers.commonHeader)
+      .header("Accept", "application/json, text/plain, */*")
+      .header("x-xsrf-token", "#{XSRFToken}")
+      .body(StringBody("""{"refined":true}"""))
+      .check(jsonPath("$.type").is("checkApplicationC100"))
+      .check(jsonPath("$.task_state").is("assigned")))
+
+    .exec(http("XUI_PRL_C100_XXX_350_GetJudicalUsers")
+      .get(BaseURL + "/api/role-access/roles/getJudicalUsers")
+      .headers(Headers.commonHeader)
+      .header("Accept", "application/json, text/plain, */*")
+      .header("x-xsrf-token", "#{XSRFToken}")
+      .body(StringBody("""{"userIds":["0f715905-3d71-4240-8fd7-091a2b44b8cf"],"services":["PRIVATELAW"]}"""))
+      .check(jsonPath("$.type").is("checkApplicationC100"))
+      .check(jsonPath("$.task_state").is("assigned")))
+
+    .exec(Common.caseActivityPost)
+    .exec(Common.caseActivityOnlyGet)
+
+  .pause(MinThinkTime, MaxThinkTime)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /*======================================================================================
+  * Select 'Issue and send to local court'
+  =====================================================================================*/
+
+  group("XUI_PRL_040_SelectIssue") {
+    exec(http("XUI_PRL_040_005_SelectIssue")
+      .get(BaseURL + "/data/internal/cases/${caseId}/event-triggers/issueAndSendToLocalCourtCallback?ignore-warning=false")
+      .headers(Headers.navigationHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+      .check(jsonPath("$.event_token").saveAs("event_token"))
+      //   .check(jsonPath("$.case_fields[0].formatted_value[0].id").saveAs("local_Court_Id"))
+      .check(jsonPath("$.id").is("issueAndSendToLocalCourtCallback")))
+
+      .exec(Common.userDetails)
+
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+  }
+
+  .pause(MinThinkTime, MaxThinkTime)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   /*=====================================================================================
+   * ** START AGAIN *** OLD STEPS:::::: Select Case
    ======================================================================================*/
 
     exec(http("XUI_PRL_C100_XXX_290_SelectCase")
@@ -506,7 +687,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
 
       .exec(Common.waJurisdictions)
       .exec(Common.activity)
-      .exec(Common.refreshRoleAssignments)
+      .exec(Common.userDetails)
       .exec(Common.caseActivityGet)
 
   .pause(MinThinkTime, MaxThinkTime)
@@ -515,17 +696,39 @@ object CourtAdmin_PRL_C100_AddOrderServe {
    * Select task tab 
    ======================================================================================*/
 
-    .exec(http("XUI_PRL_C100_XXX_300_SelectCaseTask")
+    .exec(http("XUI_PRL_C100_XXX_300_SelectCase")
+      .get(BaseURL + "/cases/case-details/#{caseId}/task")
+      .headers(Headers.commonHeader)
+      .check(substring("HMCTS Manage cases")))
+
+     .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+      
+    .exec(Common.activity)
+    .exec(Common.configUI)
+    .exec(Common.configJson)
+    .exec(Common.userDetails)
+
+    .exec(http("XUI_PRL_C100_XXX_310_SelectCaseTask")
       .post(BaseURL + "/workallocation/case/task/#{caseId}")
       .headers(Headers.commonHeader)
       .header("Accept", "application/json, text/plain, */*")
       .header("x-xsrf-token", "#{XSRFToken}")
-      .check(jsonPath("$.type").is("checkApplicationC100"))
-      .check(jsonPath("$.id").saveAs("taskId")))
+      .body(StringBody("""{"refined":true}""")))
+      //.check(jsonPath("$.type").is("checkApplicationC100"))
+      //.check(jsonPath("$.id").saveAs("taskId")))
   
-      .exec(Common.refreshRoleAssignments)
-      .exec(Common.waUsersByServiceName)
-      .exec(Common.caseActivityGet)
+    .exec(Common.userDetails)
+    .exec(Common.waUsersByServiceName)
+    .exec(Common.caseActivityGet)
+    .exec(Common.monitoringTools)
+    .exec(Common.isAuthenticated)
+
+    .exec(http("XUI_PRL_C100_XXX_320_SelectCase")
+      .get(BaseURL + "/data/internal/cases/#{caseId}")
+      .headers(Headers.commonHeader)
+      .check(jsonPath("$.case_type.name").is("C100 & FL401 Applications")))
+
+    .exec(Common.activity)
 
 .pause(MinThinkTime, MaxThinkTime)
 
@@ -533,7 +736,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
    * Select Assign to me
    ======================================================================================*/
 
-    .exec(http("XUI_PRL_C100_XXX_310_AssignToMeClaim")
+    .exec(http("XUI_PRL_C100_XXX_330_AssignToMeClaim")
       .post(BaseURL + "/workallocation/task/#{taskId}/claim")
       .headers(Headers.commonHeader)
       .header("Accept", "application/json, text/plain, */*")
@@ -541,24 +744,28 @@ object CourtAdmin_PRL_C100_AddOrderServe {
       .check(jsonPath("$.type").is("checkApplicationC100"))
       .check(jsonPath("$.id").saveAs("taskId")))
 
-    .exec(http("XUI_PRL_C100_XXX_320_AssignToMe")
+    .exec(http("XUI_PRL_C100_XXX_340_AssignToMe")
       .post(BaseURL + "/workallocation/case/task/#{caseId}")
       .headers(Headers.commonHeader)
       .header("Accept", "application/json, text/plain, */*")
       .header("x-xsrf-token", "#{XSRFToken}")
+      .body(StringBody("""{"refined":true}"""))
       .check(jsonPath("$.type").is("checkApplicationC100"))
       .check(jsonPath("$.task_state").is("assigned")))
 
-    .exec(http("XUI_PRL_C100_XXX_330_GetJudicalUsers")
+    .exec(http("XUI_PRL_C100_XXX_350_GetJudicalUsers")
       .post(BaseURL + "/api/role-access/roles/getJudicalUsers")
       .headers(Headers.commonHeader)
       .header("Accept", "application/json, text/plain, */*")
       .header("x-xsrf-token", "#{XSRFToken}")
-      .body(StringBody({"userIds":["0f715905-3d71-4240-8fd7-091a2b44b8cf"],"services":["PRIVATELAW"]}))
+      .body(StringBody("""{"userIds":["0f715905-3d71-4240-8fd7-091a2b44b8cf"],"services":["PRIVATELAW"]}"""))
       .check(jsonPath("$.type").is("checkApplicationC100"))
       .check(jsonPath("$.task_state").is("assigned")))
 
-      
+    .exec(Common.caseActivityPost)
+    .exec(Common.caseActivityOnlyGet)
+
+  .pause(MinThinkTime, MaxThinkTime)
 
    /*=====================================================================================
    * Request case details - task for created case. 
