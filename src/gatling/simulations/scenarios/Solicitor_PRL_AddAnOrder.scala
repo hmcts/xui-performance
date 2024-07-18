@@ -47,28 +47,27 @@ object Solicitor_PRL_AddAnOrder {
         .exec(Common.userDetails)
     }
 
-      .pause(MinThinkTime, MaxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
+    /*======================================================================================
+    * Select 'Issue and send to local court'
+    ======================================================================================*/
 
-        /*======================================================================================
-        * Select 'Issue and send to local court'
-        ======================================================================================*/
+      .group("XUI_PRL_040_SelectIssue") {
+        exec(http("XUI_PRL_040_005_SelectIssue")
+          .get(BaseURL + "/data/internal/cases/${caseId}/event-triggers/issueAndSendToLocalCourtCallback?ignore-warning=false")
+          .headers(Headers.navigationHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+          .check(jsonPath("$.event_token").saveAs("event_token"))
+          //   .check(jsonPath("$.case_fields[0].formatted_value[0].id").saveAs("local_Court_Id"))
+          .check(jsonPath("$.id").is("issueAndSendToLocalCourtCallback")))
 
-        .group("XUI_PRL_040_SelectIssue") {
-          exec(http("XUI_PRL_040_005_SelectIssue")
-            .get(BaseURL + "/data/internal/cases/${caseId}/event-triggers/issueAndSendToLocalCourtCallback?ignore-warning=false")
-            .headers(Headers.navigationHeader)
-            .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-            .check(jsonPath("$.event_token").saveAs("event_token"))
-            //   .check(jsonPath("$.case_fields[0].formatted_value[0].id").saveAs("local_Court_Id"))
-            .check(jsonPath("$.id").is("issueAndSendToLocalCourtCallback")))
+          .exec(Common.userDetails)
 
-            .exec(Common.userDetails)
+          .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+      }
 
-            .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
-        }
-
-        .pause(MinThinkTime, MaxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
         /*======================================================================================
         *Add local court Admin
