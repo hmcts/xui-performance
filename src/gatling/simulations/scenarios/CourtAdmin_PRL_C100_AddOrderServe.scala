@@ -716,8 +716,6 @@ object CourtAdmin_PRL_C100_AddOrderServe {
       .exec(Common.userDetails)
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
 
-    }
-
   .pause(MinThinkTime, MaxThinkTime)
 
   /*======================================================================================
@@ -729,7 +727,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100Continued/PRLAddGateKeeper.json"))
+        .body(ElFileBody("bodies/prl/courtAdmin/PRLAddGateKeeper.json"))
         .check(substring("gatekeeper")))
 
   .pause(MinThinkTime, MaxThinkTime)
@@ -743,7 +741,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100Continued/PRLAddGateKeeperSubmit.json"))
+        .body(ElFileBody("bodies/prl/courtAdmin/PRLAddGateKeeperSubmit.json"))
         .check(substring("GATE_KEEPING")))
 
   .pause(MinThinkTime, MaxThinkTime)
@@ -776,7 +774,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100Continued/PRLCreateOrder.json"))
+        .body(ElFileBody("bodies/prl/courtAdmin/PRLCreateOrder.json"))
         .check(substring("SearchCriteria")))
     }
 
@@ -792,7 +790,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100Continued/PRLSelectOrder.json"))
+        .body(ElFileBody("bodies/prl/courtAdmin//PRLSelectOrder.json"))
         .check(substring("abductionChildHasPassport")))
     }
 
@@ -808,7 +806,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
           .header("x-xsrf-token", "${XSRFToken}")
-          .body(ElFileBody("bodies/prl/c100Continued/PRLOrderDetails.json"))
+          .body(ElFileBody("bodies/prl/courtAdmin/PRLOrderDetails.json"))
           .check(substring("isEngDocGen")))
       }
 
@@ -824,7 +822,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
           .header("x-xsrf-token", "${XSRFToken}")
-          .body(ElFileBody("bodies/prl/c100Continued/PRLGuardianName.json"))
+          .body(ElFileBody("bodies/prl/courtAdmin/PRLGuardianName.json"))
           .check(jsonPath("$.data.previewOrderDoc.document_url").saveAs("document_url"))
           .check(jsonPath("$.data.previewOrderDoc.document_hash").saveAs("document_hash"))
           .check(substring("previewOrderDoc")))
@@ -836,13 +834,13 @@ object CourtAdmin_PRL_C100_AddOrderServe {
   * Check Your Order
   ======================================================================================*/
 
-    .group("XUI_PRL_150_CheckYourOrder") {
-      exec(http("XUI_PRL_150_005_CheckYourOrder")
+    .group("XUI_PRL_XXX_500_CheckYourOrder") {
+      exec(http("XUI_PRL_XXX_500_005_CheckYourOrder")
         .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders16")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100Continued/PRLCheckOrder.json"))
+        .body(ElFileBody("bodies/prl/courtAdmin/PRLCheckOrder.json"))
         .check(substring("previewOrderDoc")))
     }
 
@@ -852,13 +850,13 @@ object CourtAdmin_PRL_C100_AddOrderServe {
   * Order Recipients
   ======================================================================================*/
 
-    .group("XUI_PRL_160_OrderRecipients") {
-      exec(http("XUI_PRL_160_005_OrderRecipients")
+    .group("XUI_PRL_XXX_510_OrderRecipients") {
+      exec(http("XUI_PRL_XXX_510_005_OrderRecipients")
         .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders17")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100Continued/PRLOrderRecipients.json"))
+        .body(ElFileBody("bodies/prl/courtAdmin/PRLOrderRecipients.json"))
         .check(substring("orderRecipients")))
     }
 
@@ -868,13 +866,13 @@ object CourtAdmin_PRL_C100_AddOrderServe {
   * Order Submit
   ======================================================================================*/
 
-    .group("XUI_PRL_170_OrderSubmit") {
-      exec(http("XUI_PRL_170_005_OrderSubmit")
+    .group("XUI_PRL_XXX_520_OrderSubmit") {
+      exec(http("XUI_PRL_XXX_520_005_OrderSubmit")
         .post(BaseURL + "/data/cases/${caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100Continued/PRLOrderSubmit.json"))
+        .body(ElFileBody("bodies/prl/courtAdmin/PRLOrderSubmit.json"))
         .check(substring("GATE_KEEPING")))
     }
 
@@ -884,8 +882,8 @@ object CourtAdmin_PRL_C100_AddOrderServe {
   * Click on 'Service of Application'
   ======================================================================================*/
 
-    .group("XUI_PRL_180_ServiceOfApplication") {
-      exec(http("XUI_PRL_180_005_ServiceOfApplication")
+    .group("XUI_PRL_XXX_530_ServiceOfApplication") {
+      exec(http("XUI_PRL_XXX_530_005_ServiceOfApplication")
         .get(BaseURL + "/data/internal/cases/${caseId}/event-triggers/serviceOfApplication?ignore-warning=false")
         .headers(Headers.navigationHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -903,8 +901,8 @@ object CourtAdmin_PRL_C100_AddOrderServe {
   * PD36Q letter Upload
   ======================================================================================*/
 
-    .group("XUI_PRL_190_PD36QUpload") {
-      exec(http("XUI_PRL_190_005_PD36QUpload")
+    .group("XUI_PRL_XXX_540_PD36QUpload") {
+      exec(http("XUI_PRL_XXX_540_005_PD36QUpload")
         .post("/documentsv2")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -929,8 +927,8 @@ object CourtAdmin_PRL_C100_AddOrderServe {
   * Special arrangements letter  Upload
   ======================================================================================*/
 
-    .group("XUI_PRL_200_SpecialArrangementsUpload") {
-      exec(http("XUI_PRL_200_005_SpecialArrangementsUpload")
+    .group("XUI_PRL_XXX_550_SpecialArrangementsUpload") {
+      exec(http("XUI_PRL_XXX_550_005_SpecialArrangementsUpload")
         .post("/documentsv2")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -955,8 +953,8 @@ object CourtAdmin_PRL_C100_AddOrderServe {
   * Additional documents Upload
   ======================================================================================*/
 
-    .group("XUI_PRL_210_AdditionalDocumentsUpload") {
-      exec(http("XUI_PRL_210_005_AdditionalDocumentsUpload")
+    .group("XUI_PRL_XXX_560_AdditionalDocumentsUpload") {
+      exec(http("XUI_PRL_XXX_560_005_AdditionalDocumentsUpload")
         .post("/documentsv2")
         .headers(Headers.commonHeader)
          .header("accept", "application/json, text/plain, */*")
@@ -982,13 +980,13 @@ object CourtAdmin_PRL_C100_AddOrderServe {
   * Service of Application document uploads
   ======================================================================================*/
 
-    .group("XUI_PRL_220_DocumentUpload") {
-      exec(http("XUI_PRL_220_005_DocumentUpload")
+    .group("XUI_PRL_XXX_570_DocumentUpload") {
+      exec(http("XUI_PRL_570_005_DocumentUpload")
         .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=serviceOfApplicationorderDetails")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100Continued/PRLSoADocuments.json"))
+        .body(ElFileBody("bodies/prl/courtAdmin/PRLSoADocuments.json"))
         .check(substring("additionalDocuments")))
     }
 
@@ -998,13 +996,13 @@ object CourtAdmin_PRL_C100_AddOrderServe {
   * Service of Application Confirm recipients
   ======================================================================================*/
 
-    .group("XUI_PRL_230_ServiceRecipients") {
-      exec(http("XUI_PRL_230_005_ServiceRecipients")
+    .group("XUI_PRL_XXX_580_ServiceRecipients") {
+      exec(http("XUI_PRL_XXX_580_005_ServiceRecipients")
         .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=serviceOfApplicationconfirmRecipients")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100Continued/PRLSoARecipients.json"))
+        .body(ElFileBody("bodies/prl/courtAdmin/PRLSoARecipients.json"))
         .check(substring("confirmRecipients")))
     }
 
@@ -1014,13 +1012,13 @@ object CourtAdmin_PRL_C100_AddOrderServe {
   * Service of Application Submit
   ======================================================================================*/
 
-    .group("XUI_PRL_240_ServiceSubmit") {
-      exec(http("XUI_PRL_240_005_ServiceSubmit")
+    .group("XUI_PRL_XXX_590_ServiceSubmit") {
+      exec(http("XUI_PRL_XXX_590_005_ServiceSubmit")
         .post(BaseURL + "/data/cases/${caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "${XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100Continued/PRLSoASubmit.json"))
+        .body(ElFileBody("bodies/prl/courtAdmin/PRLSoASubmit.json"))
         .check(regex("""accessCode":"(\w{8})""").saveAs("prlAccessCode")))
 
 
@@ -1041,255 +1039,7 @@ object CourtAdmin_PRL_C100_AddOrderServe {
       .exec(Common.caseActivityPost)
       .exec(Common.caseActivityOnlyGet)
 
-
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  /*======================================================================================
-  * Select 'Issue and send to local court'
-  =====================================================================================*/
-
-  .group("XUI_PRL_XXX_370_SelectIssue") {
-    exec(http("XUI_PRL_XXX_370_005_SelectIssue")
-      .get(BaseURL + "/data/internal/cases/${caseId}/event-triggers/issueAndSendToLocalCourtCallback?ignore-warning=false")
-      .headers(Headers.navigationHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-      .check(jsonPath("$.event_token").saveAs("event_token"))
-      //   .check(jsonPath("$.case_fields[0].formatted_value[0].id").saveAs("local_Court_Id"))
-      .check(jsonPath("$.id").is("issueAndSendToLocalCourtCallback")))
-
-      .exec(Common.userDetails)
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
-  }
-
-  .pause(MinThinkTime, MaxThinkTime)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   /*=====================================================================================
-   * ** START AGAIN *** OLD STEPS:::::: Select Case
-   ======================================================================================*/
-
-    exec(http("XUI_PRL_C100_XXX_290_SelectCase")
-      .get(BaseURL + "/data/internal/cases/#{caseId}")
-      .headers(Headers.commonHeader)
-      .check(jsonPath("$.case_id").is("#{caseId}")))
-
-      .exec(Common.waJurisdictions)
-      .exec(Common.activity)
-      .exec(Common.userDetails)
-      .exec(Common.caseActivityGet)
-
-  .pause(MinThinkTime, MaxThinkTime)
-
-   /*=====================================================================================
-   * Select task tab 
-   ======================================================================================*/
-
-    .exec(http("XUI_PRL_C100_XXX_300_SelectCase")
-      .get(BaseURL + "/cases/case-details/#{caseId}/task")
-      .headers(Headers.commonHeader)
-      .check(substring("HMCTS Manage cases")))
-
-     .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
-      
-    .exec(Common.activity)
-    .exec(Common.configUI)
-    .exec(Common.configJson)
-    .exec(Common.userDetails)
-
-    .exec(http("XUI_PRL_C100_XXX_310_SelectCaseTask")
-      .post(BaseURL + "/workallocation/case/task/#{caseId}")
-      .headers(Headers.commonHeader)
-      .header("Accept", "application/json, text/plain, */*")
-      .header("x-xsrf-token", "#{XSRFToken}")
-      .body(StringBody("""{"refined":true}""")))
-      //.check(jsonPath("$.type").is("checkApplicationC100"))
-      //.check(jsonPath("$.id").saveAs("taskId")))
-  
-    .exec(Common.userDetails)
-    .exec(Common.waUsersByServiceName)
-    .exec(Common.caseActivityGet)
-    .exec(Common.monitoringTools)
-    .exec(Common.isAuthenticated)
-
-    .exec(http("XUI_PRL_C100_XXX_320_SelectCase")
-      .get(BaseURL + "/data/internal/cases/#{caseId}")
-      .headers(Headers.commonHeader)
-      .check(jsonPath("$.case_type.name").is("C100 & FL401 Applications")))
-
-    .exec(Common.activity)
-
-.pause(MinThinkTime, MaxThinkTime)
-
-  /*=====================================================================================
-   * Select Assign to me
-   ======================================================================================*/
-
-    .exec(http("XUI_PRL_C100_XXX_330_AssignToMeClaim")
-      .post(BaseURL + "/workallocation/task/#{taskId}/claim")
-      .headers(Headers.commonHeader)
-      .header("Accept", "application/json, text/plain, */*")
-      .header("x-xsrf-token", "#{XSRFToken}")
-      .check(jsonPath("$.type").is("checkApplicationC100"))
-      .check(jsonPath("$.id").saveAs("taskId")))
-
-    .exec(http("XUI_PRL_C100_XXX_340_AssignToMe")
-      .post(BaseURL + "/workallocation/case/task/#{caseId}")
-      .headers(Headers.commonHeader)
-      .header("Accept", "application/json, text/plain, */*")
-      .header("x-xsrf-token", "#{XSRFToken}")
-      .body(StringBody("""{"refined":true}"""))
-      .check(jsonPath("$.type").is("checkApplicationC100"))
-      .check(jsonPath("$.task_state").is("assigned")))
-
-    .exec(http("XUI_PRL_C100_XXX_350_GetJudicalUsers")
-      .post(BaseURL + "/api/role-access/roles/getJudicalUsers")
-      .headers(Headers.commonHeader)
-      .header("Accept", "application/json, text/plain, */*")
-      .header("x-xsrf-token", "#{XSRFToken}")
-      .body(StringBody("""{"userIds":["0f715905-3d71-4240-8fd7-091a2b44b8cf"],"services":["PRIVATELAW"]}"""))
-      .check(jsonPath("$.type").is("checkApplicationC100"))
-      .check(jsonPath("$.task_state").is("assigned")))
-
-    .exec(Common.caseActivityPost)
-    .exec(Common.caseActivityOnlyGet)
-
-  .pause(MinThinkTime, MaxThinkTime)
-
-   /*=====================================================================================
-   * Request case details - task for created case. 
-   ======================================================================================*/
-
-    exec(http("XUI_PRL_C100_XXX_290_SelectCaseTasks")
-      .get(BaseURL + "/case/case-details/#{caseId}/tasks")
-      .headers(Headers.commonHeader)
-      .check(substring("HMCTS Manage cases")))
-
-    .pause(MinThinkTime, MaxThinkTime)
-
-  /*=====================================================================================
-   * Select Issue and send to local Court
-   ======================================================================================*/
-
-    .exec(http("XUI_PRL_C100_XXX_310_IssueAndSendToLocalCourt")
-        .get(BaseURL + "/workallocation/case/tasks/#{caseId}/event/issueAndSendToLocalCourtCallback/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
-        .headers(Headers.navigationHeader)
-        .header("accept", "application/json")
-        .check(jsonPath("$.task_required_for_event").is("false")))
-
-      .exec(Common.activity)
-      .exec(Common.profile)
-
-      .exec(http("XUI_PRL_C100_XXX_320_IssueAndSendToLocalCourtEventTrigger")  //*** SAVE THE Courtlist response here for use in later post requests **
-        .get(BaseURL + "/data/internal/cases/#{caseId}/event-triggers/issueAndSendToLocalCourtCallback?ignore-warning=false")
-        .headers(Headers.commonHeader)
-        .header("Accept", "application/json, text/plain, */*")
-        .check(jsonPath("$.event_token").saveAs("event_token"))
-        .check(jsonPath("$.id").is("issueAndSendToLocalCourtCallback"))
-        //.check(jsonPath("$.case_fields[1].value.list_items").saveAs("courtListItems"))
-        .check(status.in(200, 403)))
-
-      .exec(http("XUI_PRL_C100_XXX_330_IssueAndSendToLocalCourtEvent")
-        .get(BaseURL + "/workallocation/case/tasks/#{caseId}/event/issueAndSendToLocalCourtCallback/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
-        .headers(Headers.navigationHeader)
-        .header("accept", "application/json"))
-        //.check(substring("PRIVATELAW")))
-      
-      .exec(Common.caseActivityPost)
-      .exec(Common.userDetails)
-      .exec(Common.caseActivityOnlyGet)
-
-    .pause(MinThinkTime, MaxThinkTime)
-
-  /*=====================================================================================
-   * Select Court from dropdown and submit
-   ======================================================================================*/
-
-    .exec(http("XUI_PRL_C100_XXX_340_SelectCourt")
-      .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=issueAndSendToLocalCourtCallback1")
-      .headers(Headers.commonHeader)
-      .header("Accept", "application/json, text/plain, */*")
-      .header("x-xsrf-token", "#{XSRFToken}")
-      .body(ElFileBody("bodies/prl/courtAdmin/PRLLocalCourt.json"))
-      .check(jsonPath("$.data.courtList.value.code").is("234946:")))
-
-  .pause(MinThinkTime, MaxThinkTime)
-
-  
+}  
 }
 
 
