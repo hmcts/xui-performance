@@ -8,7 +8,7 @@ object ETCreateMultiple {
 
   val CcdAPIURL = Environment.ccdAPIURL
 
-  val CreateMultiple =
+  val CreateMultiple = 
 
     exec(http("ET_000_GetCCDEventToken")
       .get(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/Employment/case-types/ET_EnglandWales_Multiple/event-triggers/createMultiple/token")
@@ -28,6 +28,5 @@ object ETCreateMultiple {
       .check(jsonPath("$.id").saveAs("caseId")))
 
     .pause(1)
-
 
 }

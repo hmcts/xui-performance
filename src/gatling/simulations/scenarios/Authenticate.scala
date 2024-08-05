@@ -16,7 +16,7 @@ object Authenticate {
 
     exec(http("ET_000_Auth")
       .post(RpeAPIURL + "/testing-support/lease")
-      .body(StringBody("""{"microservice":"ccd_data"}""")).asJson
+      .body(StringBody("""{"microservice":"xui_webapp"}""")).asJson   // ccd_data
       .check(regex("(.+)").saveAs("authToken")))
 
     .pause(1)
