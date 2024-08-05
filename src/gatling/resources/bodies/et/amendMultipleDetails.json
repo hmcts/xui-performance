@@ -4,7 +4,7 @@
       "Amend multiple name",
       "Add cases to multiple"
     ],
-    "multipleName": "ET Multiple (#{singlesCountInMultiple})",
+    "multipleName": "ET Multiple (#{singlesCountInMultiple}) - Add Docs",
     "leadCase": "#{leadCaseHTML}",
     "newLeadCase": null,
     "caseIdCollection": [

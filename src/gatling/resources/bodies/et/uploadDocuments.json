@@ -1,0 +1,67 @@
+{
+  "data": {
+     "documentCollection": [
+        {
+           "value": {
+              "topLevelDocuments": "#{topLevelDocuments0}",
+              "startingClaimDocuments": "#{startingClaimDocuments0}",
+              "responseClaimDocuments": "#{responseClaimDocuments0}",
+              "initialConsiderationDocuments": null,
+              "caseManagementDocuments": "#{caseManagementDocuments0}",
+              "withdrawalSettledDocuments": null,
+              "hearingsDocuments": "#{hearingsDocuments0}",
+              "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments0}",
+              "reconsiderationDocuments": null,
+              "miscDocuments": null,
+              "typeOfDocument": null,
+              "shortDescription": null,
+              "dateOfCorrespondence": null,
+              "documentType": null,
+              "docNumber": null,
+              "documentIndex": null,
+              "uploadedDocument": {
+                 "document_url": "#{responseArrayDocLinkSelfHash(0)}",
+                 "document_binary_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/#{responseArrayDocLinkSelfHash(0)}/binary",
+                 "document_filename": "#{fileName0}"
+              },
+              "excludeFromDcf": []
+           },
+           "id": null
+        },
+        {
+          "value": {
+            "topLevelDocuments": "#{topLevelDocuments1}",
+            "startingClaimDocuments": "#{startingClaimDocuments1}",
+            "responseClaimDocuments": "#{responseClaimDocuments1}",
+            "initialConsiderationDocuments": null,
+            "caseManagementDocuments": "#{caseManagementDocuments1}",
+            "withdrawalSettledDocuments": null,
+            "hearingsDocuments": "#{hearingsDocuments1}",
+            "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments1}",
+            "reconsiderationDocuments": null,
+            "miscDocuments": null,
+            "typeOfDocument": null,
+            "shortDescription": null,
+            "dateOfCorrespondence": null,
+            "documentType": null,
+            "docNumber": null,
+            "documentIndex": null,
+            "uploadedDocument": {
+               "document_url": "#{responseArrayDocLinkSelfHash(1)}",
+               "document_binary_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/#{responseArrayDocLinkSelfHash(1)}/binary",
+               "document_filename": "#{fileName1}"
+              },
+              "excludeFromDcf": []
+           },
+           "id": null
+        }
+     ]
+  },
+  "event": {
+     "id": "uploadDocument",
+     "summary": "",
+     "description": ""
+  },
+  "event_token": "#{eventToken}",
+  "ignore_warning": false
+}
