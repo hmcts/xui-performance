@@ -11,9 +11,6 @@ object ETAddDocumentsToMultiple {
   val CcdAPIURL = Environment.ccdAPIURL
   val CaseDocAPIURL = Environment.caseDocAPIURL
 
-  //val totalMultiCasesToUpdate = csv("multipleCaseId.csv").recordsCount
-  //val multipleCaseIdFeeder = csv("multipleCaseId.csv").circular
-
   // Initialise array to store extracted variables within the session.
   val initialiseDocLinkSelfArray = exec { session =>
     session.set("responseArrayDocLinkSelfHash", List.empty[String])
@@ -207,9 +204,7 @@ object ETAddDocumentsToMultiple {
   }
 
 
-
-
-
+/// CLEAN UP LATER
 
 /*
 
