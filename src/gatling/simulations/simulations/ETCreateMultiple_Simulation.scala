@@ -11,6 +11,7 @@ class ETCreateMultiple_Simulation extends Simulation {
 	val UserFeederET = csv("UserDataET.csv").random
 	val UserFeederETMultiples = csv("UserDataETMultiples.csv")
 	val outputFilenameMultiples = "casesCreatedMultiples.csv"
+	val microservice = "ccd_data"
 
 	/*===============================================================================================
 	* ET Create Singles Cases

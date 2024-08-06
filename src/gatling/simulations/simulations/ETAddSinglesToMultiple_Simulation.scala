@@ -7,6 +7,7 @@ import scenarios._
 class ETAddSinglesToMultiple_Simulation extends Simulation {
 
 	val UserFeederETMultiples = csv("UserDataETMultiples.csv")
+	val microservice = "ccd_data"
 
 	/*===============================================================================================
 	* ET Add Singles to Multiple

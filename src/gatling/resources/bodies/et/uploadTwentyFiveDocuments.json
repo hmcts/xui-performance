@@ -1,0 +1,688 @@
+{
+  "data": {
+     "documentCollection": [
+        {
+           "value": {
+              "topLevelDocuments": "#{topLevelDocuments0}",
+              "startingClaimDocuments": "#{startingClaimDocuments0}",
+              "responseClaimDocuments": "#{responseClaimDocuments0}",
+              "initialConsiderationDocuments": null,
+              "caseManagementDocuments": "#{caseManagementDocuments0}",
+              "withdrawalSettledDocuments": null,
+              "hearingsDocuments": "#{hearingsDocuments0}",
+              "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments0}",
+              "reconsiderationDocuments": null,
+              "miscDocuments": null,
+              "typeOfDocument": null,
+              "shortDescription": null,
+              "dateOfCorrespondence": null,
+              "documentType": null,
+              "docNumber": null,
+              "documentIndex": null,
+              "uploadedDocument": {
+                 "document_url": "#{responseArrayDocLinkSelfHash(0)}",
+                 "document_binary_url": "#{responseArrayDocLinkSelfHash(0)}/binary",
+                 "document_filename": "#{fileName0}"
+              },
+              "excludeFromDcf": []
+           },
+           "id": null
+        },
+        {
+          "value": {
+            "topLevelDocuments": "#{topLevelDocuments1}",
+            "startingClaimDocuments": "#{startingClaimDocuments1}",
+            "responseClaimDocuments": "#{responseClaimDocuments1}",
+            "initialConsiderationDocuments": null,
+            "caseManagementDocuments": "#{caseManagementDocuments1}",
+            "withdrawalSettledDocuments": null,
+            "hearingsDocuments": "#{hearingsDocuments1}",
+            "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments1}",
+            "reconsiderationDocuments": null,
+            "miscDocuments": null,
+            "typeOfDocument": null,
+            "shortDescription": null,
+            "dateOfCorrespondence": null,
+            "documentType": null,
+            "docNumber": null,
+            "documentIndex": null,
+            "uploadedDocument": {
+               "document_url": "#{responseArrayDocLinkSelfHash(1)}",
+               "document_binary_url": "#{responseArrayDocLinkSelfHash(1)}/binary",
+               "document_filename": "#{fileName1}"
+              },
+              "excludeFromDcf": []
+           },
+           "id": null
+        },
+        {
+         "value": {
+           "topLevelDocuments": "#{topLevelDocuments2}",
+           "startingClaimDocuments": "#{startingClaimDocuments2}",
+           "responseClaimDocuments": "#{responseClaimDocuments2}",
+           "initialConsiderationDocuments": null,
+           "caseManagementDocuments": "#{caseManagementDocuments2}",
+           "withdrawalSettledDocuments": null,
+           "hearingsDocuments": "#{hearingsDocuments2}",
+           "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments2}",
+           "reconsiderationDocuments": null,
+           "miscDocuments": null,
+           "typeOfDocument": null,
+           "shortDescription": null,
+           "dateOfCorrespondence": null,
+           "documentType": null,
+           "docNumber": null,
+           "documentIndex": null,
+           "uploadedDocument": {
+              "document_url": "#{responseArrayDocLinkSelfHash(2)}",
+              "document_binary_url": "#{responseArrayDocLinkSelfHash(2)}/binary",
+              "document_filename": "#{fileName2}"
+             },
+             "excludeFromDcf": []
+          },
+          "id": null
+       },
+       {
+         "value": {
+           "topLevelDocuments": "#{topLevelDocuments3}",
+           "startingClaimDocuments": "#{startingClaimDocuments3}",
+           "responseClaimDocuments": "#{responseClaimDocuments3}",
+           "initialConsiderationDocuments": null,
+           "caseManagementDocuments": "#{caseManagementDocuments3}",
+           "withdrawalSettledDocuments": null,
+           "hearingsDocuments": "#{hearingsDocuments3}",
+           "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments3}",
+           "reconsiderationDocuments": null,
+           "miscDocuments": null,
+           "typeOfDocument": null,
+           "shortDescription": null,
+           "dateOfCorrespondence": null,
+           "documentType": null,
+           "docNumber": null,
+           "documentIndex": null,
+           "uploadedDocument": {
+              "document_url": "#{responseArrayDocLinkSelfHash(3)}",
+              "document_binary_url": "#{responseArrayDocLinkSelfHash(3)}/binary",
+              "document_filename": "#{fileName3}"
+             },
+             "excludeFromDcf": []
+          },
+          "id": null
+       },
+       {
+         "value": {
+           "topLevelDocuments": "#{topLevelDocuments4}",
+           "startingClaimDocuments": "#{startingClaimDocuments4}",
+           "responseClaimDocuments": "#{responseClaimDocuments4}",
+           "initialConsiderationDocuments": null,
+           "caseManagementDocuments": "#{caseManagementDocuments4}",
+           "withdrawalSettledDocuments": null,
+           "hearingsDocuments": "#{hearingsDocuments4}",
+           "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments4}",
+           "reconsiderationDocuments": null,
+           "miscDocuments": null,
+           "typeOfDocument": null,
+           "shortDescription": null,
+           "dateOfCorrespondence": null,
+           "documentType": null,
+           "docNumber": null,
+           "documentIndex": null,
+           "uploadedDocument": {
+              "document_url": "#{responseArrayDocLinkSelfHash(4)}",
+              "document_binary_url": "#{responseArrayDocLinkSelfHash(4)}/binary",
+              "document_filename": "#{fileName4}"
+             },
+             "excludeFromDcf": []
+          },
+          "id": null
+       },
+       {
+         "value": {
+           "topLevelDocuments": "#{topLevelDocuments5}",
+           "startingClaimDocuments": "#{startingClaimDocuments5}",
+           "responseClaimDocuments": "#{responseClaimDocuments5}",
+           "initialConsiderationDocuments": null,
+           "caseManagementDocuments": "#{caseManagementDocuments5}",
+           "withdrawalSettledDocuments": null,
+           "hearingsDocuments": "#{hearingsDocuments5}",
+           "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments5}",
+           "reconsiderationDocuments": null,
+           "miscDocuments": null,
+           "typeOfDocument": null,
+           "shortDescription": null,
+           "dateOfCorrespondence": null,
+           "documentType": null,
+           "docNumber": null,
+           "documentIndex": null,
+           "uploadedDocument": {
+              "document_url": "#{responseArrayDocLinkSelfHash(5)}",
+              "document_binary_url": "#{responseArrayDocLinkSelfHash(5)}/binary",
+              "document_filename": "#{fileName5}"
+             },
+             "excludeFromDcf": []
+          },
+          "id": null
+       },
+       {
+         "value": {
+           "topLevelDocuments": "#{topLevelDocuments6}",
+           "startingClaimDocuments": "#{startingClaimDocuments6}",
+           "responseClaimDocuments": "#{responseClaimDocuments6}",
+           "initialConsiderationDocuments": null,
+           "caseManagementDocuments": "#{caseManagementDocuments6}",
+           "withdrawalSettledDocuments": null,
+           "hearingsDocuments": "#{hearingsDocuments6}",
+           "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments6}",
+           "reconsiderationDocuments": null,
+           "miscDocuments": null,
+           "typeOfDocument": null,
+           "shortDescription": null,
+           "dateOfCorrespondence": null,
+           "documentType": null,
+           "docNumber": null,
+           "documentIndex": null,
+           "uploadedDocument": {
+              "document_url": "#{responseArrayDocLinkSelfHash(6)}",
+              "document_binary_url": "#{responseArrayDocLinkSelfHash(6)}/binary",
+              "document_filename": "#{fileName6}"
+             },
+             "excludeFromDcf": []
+          },
+          "id": null
+       },
+       {
+         "value": {
+           "topLevelDocuments": "#{topLevelDocuments7}",
+           "startingClaimDocuments": "#{startingClaimDocuments7}",
+           "responseClaimDocuments": "#{responseClaimDocuments7}",
+           "initialConsiderationDocuments": null,
+           "caseManagementDocuments": "#{caseManagementDocuments7}",
+           "withdrawalSettledDocuments": null,
+           "hearingsDocuments": "#{hearingsDocuments7}",
+           "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments7}",
+           "reconsiderationDocuments": null,
+           "miscDocuments": null,
+           "typeOfDocument": null,
+           "shortDescription": null,
+           "dateOfCorrespondence": null,
+           "documentType": null,
+           "docNumber": null,
+           "documentIndex": null,
+           "uploadedDocument": {
+              "document_url": "#{responseArrayDocLinkSelfHash(7)}",
+              "document_binary_url": "#{responseArrayDocLinkSelfHash(7)}/binary",
+              "document_filename": "#{fileName7}"
+             },
+             "excludeFromDcf": []
+          },
+          "id": null
+       },
+       {
+         "value": {
+           "topLevelDocuments": "#{topLevelDocuments8}",
+           "startingClaimDocuments": "#{startingClaimDocuments8}",
+           "responseClaimDocuments": "#{responseClaimDocuments8}",
+           "initialConsiderationDocuments": null,
+           "caseManagementDocuments": "#{caseManagementDocuments8}",
+           "withdrawalSettledDocuments": null,
+           "hearingsDocuments": "#{hearingsDocuments8}",
+           "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments8}",
+           "reconsiderationDocuments": null,
+           "miscDocuments": null,
+           "typeOfDocument": null,
+           "shortDescription": null,
+           "dateOfCorrespondence": null,
+           "documentType": null,
+           "docNumber": null,
+           "documentIndex": null,
+           "uploadedDocument": {
+              "document_url": "#{responseArrayDocLinkSelfHash(8)}",
+              "document_binary_url": "#{responseArrayDocLinkSelfHash(8)}/binary",
+              "document_filename": "#{fileName8}"
+             },
+             "excludeFromDcf": []
+          },
+          "id": null
+       },
+       {
+         "value": {
+           "topLevelDocuments": "#{topLevelDocuments9}",
+           "startingClaimDocuments": "#{startingClaimDocuments9}",
+           "responseClaimDocuments": "#{responseClaimDocuments9}",
+           "initialConsiderationDocuments": null,
+           "caseManagementDocuments": "#{caseManagementDocuments9}",
+           "withdrawalSettledDocuments": null,
+           "hearingsDocuments": "#{hearingsDocuments9}",
+           "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments9}",
+           "reconsiderationDocuments": null,
+           "miscDocuments": null,
+           "typeOfDocument": null,
+           "shortDescription": null,
+           "dateOfCorrespondence": null,
+           "documentType": null,
+           "docNumber": null,
+           "documentIndex": null,
+           "uploadedDocument": {
+              "document_url": "#{responseArrayDocLinkSelfHash(9)}",
+              "document_binary_url": "#{responseArrayDocLinkSelfHash(9)}/binary",
+              "document_filename": "#{fileName9}"
+             },
+             "excludeFromDcf": []
+          },
+          "id": null
+       },
+       {
+         "value": {
+            "topLevelDocuments": "#{topLevelDocuments10}",
+            "startingClaimDocuments": "#{startingClaimDocuments10}",
+            "responseClaimDocuments": "#{responseClaimDocuments10}",
+            "initialConsiderationDocuments": null,
+            "caseManagementDocuments": "#{caseManagementDocuments10}",
+            "withdrawalSettledDocuments": null,
+            "hearingsDocuments": "#{hearingsDocuments10}",
+            "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments10}",
+            "reconsiderationDocuments": null,
+            "miscDocuments": null,
+            "typeOfDocument": null,
+            "shortDescription": null,
+            "dateOfCorrespondence": null,
+            "documentType": null,
+            "docNumber": null,
+            "documentIndex": null,
+            "uploadedDocument": {
+               "document_url": "#{responseArrayDocLinkSelfHash(10)}",
+               "document_binary_url": "#{responseArrayDocLinkSelfHash(10)}/binary",
+               "document_filename": "#{fileName10}"
+            },
+            "excludeFromDcf": []
+         },
+         "id": null
+      },
+      {
+        "value": {
+          "topLevelDocuments": "#{topLevelDocuments11}",
+          "startingClaimDocuments": "#{startingClaimDocuments11}",
+          "responseClaimDocuments": "#{responseClaimDocuments11}",
+          "initialConsiderationDocuments": null,
+          "caseManagementDocuments": "#{caseManagementDocuments11}",
+          "withdrawalSettledDocuments": null,
+          "hearingsDocuments": "#{hearingsDocuments11}",
+          "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments11}",
+          "reconsiderationDocuments": null,
+          "miscDocuments": null,
+          "typeOfDocument": null,
+          "shortDescription": null,
+          "dateOfCorrespondence": null,
+          "documentType": null,
+          "docNumber": null,
+          "documentIndex": null,
+          "uploadedDocument": {
+             "document_url": "#{responseArrayDocLinkSelfHash(11)}",
+             "document_binary_url": "#{responseArrayDocLinkSelfHash(11)}/binary",
+             "document_filename": "#{fileName11}"
+            },
+            "excludeFromDcf": []
+         },
+         "id": null
+      },
+      {
+       "value": {
+         "topLevelDocuments": "#{topLevelDocuments12}",
+         "startingClaimDocuments": "#{startingClaimDocuments12}",
+         "responseClaimDocuments": "#{responseClaimDocuments12}",
+         "initialConsiderationDocuments": null,
+         "caseManagementDocuments": "#{caseManagementDocuments12}",
+         "withdrawalSettledDocuments": null,
+         "hearingsDocuments": "#{hearingsDocuments12}",
+         "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments12}",
+         "reconsiderationDocuments": null,
+         "miscDocuments": null,
+         "typeOfDocument": null,
+         "shortDescription": null,
+         "dateOfCorrespondence": null,
+         "documentType": null,
+         "docNumber": null,
+         "documentIndex": null,
+         "uploadedDocument": {
+            "document_url": "#{responseArrayDocLinkSelfHash(12)}",
+            "document_binary_url": "#{responseArrayDocLinkSelfHash(12)}/binary",
+            "document_filename": "#{fileName12}"
+           },
+           "excludeFromDcf": []
+        },
+        "id": null
+     },
+     {
+       "value": {
+         "topLevelDocuments": "#{topLevelDocuments13}",
+         "startingClaimDocuments": "#{startingClaimDocuments13}",
+         "responseClaimDocuments": "#{responseClaimDocuments13}",
+         "initialConsiderationDocuments": null,
+         "caseManagementDocuments": "#{caseManagementDocuments13}",
+         "withdrawalSettledDocuments": null,
+         "hearingsDocuments": "#{hearingsDocuments13}",
+         "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments13}",
+         "reconsiderationDocuments": null,
+         "miscDocuments": null,
+         "typeOfDocument": null,
+         "shortDescription": null,
+         "dateOfCorrespondence": null,
+         "documentType": null,
+         "docNumber": null,
+         "documentIndex": null,
+         "uploadedDocument": {
+            "document_url": "#{responseArrayDocLinkSelfHash(3)}",
+            "document_binary_url": "#{responseArrayDocLinkSelfHash(3)}/binary",
+            "document_filename": "#{fileName13}"
+           },
+           "excludeFromDcf": []
+        },
+        "id": null
+     },
+     {
+       "value": {
+         "topLevelDocuments": "#{topLevelDocuments14}",
+         "startingClaimDocuments": "#{startingClaimDocuments14}",
+         "responseClaimDocuments": "#{responseClaimDocuments14}",
+         "initialConsiderationDocuments": null,
+         "caseManagementDocuments": "#{caseManagementDocuments14}",
+         "withdrawalSettledDocuments": null,
+         "hearingsDocuments": "#{hearingsDocuments14}",
+         "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments14}",
+         "reconsiderationDocuments": null,
+         "miscDocuments": null,
+         "typeOfDocument": null,
+         "shortDescription": null,
+         "dateOfCorrespondence": null,
+         "documentType": null,
+         "docNumber": null,
+         "documentIndex": null,
+         "uploadedDocument": {
+            "document_url": "#{responseArrayDocLinkSelfHash(14)}",
+            "document_binary_url": "#{responseArrayDocLinkSelfHash(14)}/binary",
+            "document_filename": "#{fileName14}"
+           },
+           "excludeFromDcf": []
+        },
+        "id": null
+     },
+     {
+       "value": {
+         "topLevelDocuments": "#{topLevelDocuments15}",
+         "startingClaimDocuments": "#{startingClaimDocuments15}",
+         "responseClaimDocuments": "#{responseClaimDocuments15}",
+         "initialConsiderationDocuments": null,
+         "caseManagementDocuments": "#{caseManagementDocuments15}",
+         "withdrawalSettledDocuments": null,
+         "hearingsDocuments": "#{hearingsDocuments15}",
+         "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments15}",
+         "reconsiderationDocuments": null,
+         "miscDocuments": null,
+         "typeOfDocument": null,
+         "shortDescription": null,
+         "dateOfCorrespondence": null,
+         "documentType": null,
+         "docNumber": null,
+         "documentIndex": null,
+         "uploadedDocument": {
+            "document_url": "#{responseArrayDocLinkSelfHash(15)}",
+            "document_binary_url": "#{responseArrayDocLinkSelfHash(15)}/binary",
+            "document_filename": "#{fileName15}"
+           },
+           "excludeFromDcf": []
+        },
+        "id": null
+     },
+     {
+       "value": {
+         "topLevelDocuments": "#{topLevelDocuments16}",
+         "startingClaimDocuments": "#{startingClaimDocuments16}",
+         "responseClaimDocuments": "#{responseClaimDocuments16}",
+         "initialConsiderationDocuments": null,
+         "caseManagementDocuments": "#{caseManagementDocuments16}",
+         "withdrawalSettledDocuments": null,
+         "hearingsDocuments": "#{hearingsDocuments16}",
+         "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments16}",
+         "reconsiderationDocuments": null,
+         "miscDocuments": null,
+         "typeOfDocument": null,
+         "shortDescription": null,
+         "dateOfCorrespondence": null,
+         "documentType": null,
+         "docNumber": null,
+         "documentIndex": null,
+         "uploadedDocument": {
+            "document_url": "#{responseArrayDocLinkSelfHash(16)}",
+            "document_binary_url": "#{responseArrayDocLinkSelfHash(16)}/binary",
+            "document_filename": "#{fileName16}"
+           },
+           "excludeFromDcf": []
+        },
+        "id": null
+     },
+     {
+       "value": {
+         "topLevelDocuments": "#{topLevelDocuments17}",
+         "startingClaimDocuments": "#{startingClaimDocuments17}",
+         "responseClaimDocuments": "#{responseClaimDocuments17}",
+         "initialConsiderationDocuments": null,
+         "caseManagementDocuments": "#{caseManagementDocuments17}",
+         "withdrawalSettledDocuments": null,
+         "hearingsDocuments": "#{hearingsDocuments17}",
+         "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments17}",
+         "reconsiderationDocuments": null,
+         "miscDocuments": null,
+         "typeOfDocument": null,
+         "shortDescription": null,
+         "dateOfCorrespondence": null,
+         "documentType": null,
+         "docNumber": null,
+         "documentIndex": null,
+         "uploadedDocument": {
+            "document_url": "#{responseArrayDocLinkSelfHash(17)}",
+            "document_binary_url": "#{responseArrayDocLinkSelfHash(17)}/binary",
+            "document_filename": "#{fileName17}"
+           },
+           "excludeFromDcf": []
+        },
+        "id": null
+     },
+     {
+       "value": {
+         "topLevelDocuments": "#{topLevelDocuments18}",
+         "startingClaimDocuments": "#{startingClaimDocuments18}",
+         "responseClaimDocuments": "#{responseClaimDocuments18}",
+         "initialConsiderationDocuments": null,
+         "caseManagementDocuments": "#{caseManagementDocuments18}",
+         "withdrawalSettledDocuments": null,
+         "hearingsDocuments": "#{hearingsDocuments18}",
+         "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments18}",
+         "reconsiderationDocuments": null,
+         "miscDocuments": null,
+         "typeOfDocument": null,
+         "shortDescription": null,
+         "dateOfCorrespondence": null,
+         "documentType": null,
+         "docNumber": null,
+         "documentIndex": null,
+         "uploadedDocument": {
+            "document_url": "#{responseArrayDocLinkSelfHash(18)}",
+            "document_binary_url": "#{responseArrayDocLinkSelfHash(18)}/binary",
+            "document_filename": "#{fileName18}"
+           },
+           "excludeFromDcf": []
+        },
+        "id": null
+     },
+     {
+       "value": {
+         "topLevelDocuments": "#{topLevelDocuments19}",
+         "startingClaimDocuments": "#{startingClaimDocuments19}",
+         "responseClaimDocuments": "#{responseClaimDocuments19}",
+         "initialConsiderationDocuments": null,
+         "caseManagementDocuments": "#{caseManagementDocuments19}",
+         "withdrawalSettledDocuments": null,
+         "hearingsDocuments": "#{hearingsDocuments19}",
+         "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments19}",
+         "reconsiderationDocuments": null,
+         "miscDocuments": null,
+         "typeOfDocument": null,
+         "shortDescription": null,
+         "dateOfCorrespondence": null,
+         "documentType": null,
+         "docNumber": null,
+         "documentIndex": null,
+         "uploadedDocument": {
+            "document_url": "#{responseArrayDocLinkSelfHash(19)}",
+            "document_binary_url": "#{responseArrayDocLinkSelfHash(19)}/binary",
+            "document_filename": "#{fileName19}"
+           },
+           "excludeFromDcf": []
+        },
+        "id": null
+     },
+     {
+      "value": {
+         "topLevelDocuments": "#{topLevelDocuments20}",
+         "startingClaimDocuments": "#{startingClaimDocuments20}",
+         "responseClaimDocuments": "#{responseClaimDocuments20}",
+         "initialConsiderationDocuments": null,
+         "caseManagementDocuments": "#{caseManagementDocuments20}",
+         "withdrawalSettledDocuments": null,
+         "hearingsDocuments": "#{hearingsDocuments20}",
+         "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments20}",
+         "reconsiderationDocuments": null,
+         "miscDocuments": null,
+         "typeOfDocument": null,
+         "shortDescription": null,
+         "dateOfCorrespondence": null,
+         "documentType": null,
+         "docNumber": null,
+         "documentIndex": null,
+         "uploadedDocument": {
+            "document_url": "#{responseArrayDocLinkSelfHash(20)}",
+            "document_binary_url": "#{responseArrayDocLinkSelfHash(20)}/binary",
+            "document_filename": "#{fileName20}"
+         },
+         "excludeFromDcf": []
+      },
+      "id": null
+   },
+   {
+     "value": {
+       "topLevelDocuments": "#{topLevelDocuments21}",
+       "startingClaimDocuments": "#{startingClaimDocuments21}",
+       "responseClaimDocuments": "#{responseClaimDocuments21}",
+       "initialConsiderationDocuments": null,
+       "caseManagementDocuments": "#{caseManagementDocuments21}",
+       "withdrawalSettledDocuments": null,
+       "hearingsDocuments": "#{hearingsDocuments21}",
+       "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments21}",
+       "reconsiderationDocuments": null,
+       "miscDocuments": null,
+       "typeOfDocument": null,
+       "shortDescription": null,
+       "dateOfCorrespondence": null,
+       "documentType": null,
+       "docNumber": null,
+       "documentIndex": null,
+       "uploadedDocument": {
+          "document_url": "#{responseArrayDocLinkSelfHash(21)}",
+          "document_binary_url": "#{responseArrayDocLinkSelfHash(21)}/binary",
+          "document_filename": "#{fileName21}"
+         },
+         "excludeFromDcf": []
+      },
+      "id": null
+   },
+   {
+    "value": {
+      "topLevelDocuments": "#{topLevelDocuments22}",
+      "startingClaimDocuments": "#{startingClaimDocuments22}",
+      "responseClaimDocuments": "#{responseClaimDocuments22}",
+      "initialConsiderationDocuments": null,
+      "caseManagementDocuments": "#{caseManagementDocuments22}",
+      "withdrawalSettledDocuments": null,
+      "hearingsDocuments": "#{hearingsDocuments22}",
+      "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments22}",
+      "reconsiderationDocuments": null,
+      "miscDocuments": null,
+      "typeOfDocument": null,
+      "shortDescription": null,
+      "dateOfCorrespondence": null,
+      "documentType": null,
+      "docNumber": null,
+      "documentIndex": null,
+      "uploadedDocument": {
+         "document_url": "#{responseArrayDocLinkSelfHash(22)}",
+         "document_binary_url": "#{responseArrayDocLinkSelfHash(22)}/binary",
+         "document_filename": "#{fileName22}"
+        },
+        "excludeFromDcf": []
+     },
+     "id": null
+  },
+  {
+    "value": {
+      "topLevelDocuments": "#{topLevelDocuments23}",
+      "startingClaimDocuments": "#{startingClaimDocuments23}",
+      "responseClaimDocuments": "#{responseClaimDocuments23}",
+      "initialConsiderationDocuments": null,
+      "caseManagementDocuments": "#{caseManagementDocuments23}",
+      "withdrawalSettledDocuments": null,
+      "hearingsDocuments": "#{hearingsDocuments23}",
+      "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments23}",
+      "reconsiderationDocuments": null,
+      "miscDocuments": null,
+      "typeOfDocument": null,
+      "shortDescription": null,
+      "dateOfCorrespondence": null,
+      "documentType": null,
+      "docNumber": null,
+      "documentIndex": null,
+      "uploadedDocument": {
+         "document_url": "#{responseArrayDocLinkSelfHash(23)}",
+         "document_binary_url": "#{responseArrayDocLinkSelfHash(23)}/binary",
+         "document_filename": "#{fileName23}"
+        },
+        "excludeFromDcf": []
+     },
+     "id": null
+  },
+  {
+    "value": {
+      "topLevelDocuments": "#{topLevelDocuments24}",
+      "startingClaimDocuments": "#{startingClaimDocuments24}",
+      "responseClaimDocuments": "#{responseClaimDocuments24}",
+      "initialConsiderationDocuments": null,
+      "caseManagementDocuments": "#{caseManagementDocuments24}",
+      "withdrawalSettledDocuments": null,
+      "hearingsDocuments": "#{hearingsDocuments24}",
+      "judgmentAndReasonsDocuments": "#{judgmentAndReasonsDocuments24}",
+      "reconsiderationDocuments": null,
+      "miscDocuments": null,
+      "typeOfDocument": null,
+      "shortDescription": null,
+      "dateOfCorrespondence": null,
+      "documentType": null,
+      "docNumber": null,
+      "documentIndex": null,
+      "uploadedDocument": {
+         "document_url": "#{responseArrayDocLinkSelfHash(24)}",
+         "document_binary_url": "#{responseArrayDocLinkSelfHash(24)}/binary",
+         "document_filename": "#{fileName24}"
+        },
+        "excludeFromDcf": []
+     },
+     "id": null
+  }
+     ]
+  },
+  "event": {
+     "id": "uploadDocument",
+     "summary": "",
+     "description": ""
+  },
+  "event_token": "#{eventToken}",
+  "ignore_warning": false
+}

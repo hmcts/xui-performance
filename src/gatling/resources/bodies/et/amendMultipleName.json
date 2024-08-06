@@ -1,0 +1,17 @@
+{
+  "data": {
+    "typeOfAmendment": [
+      "Amend multiple name"
+    ],
+    "multipleName": "ET Multiple (5) - #{caseName}",
+    "leadCase": "#{leadCaseHTML}",
+    "newLeadCase": null
+  },
+  "event": {
+    "id": "amendMultipleDetails",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "#{eventToken}",
+  "ignore_warning": false
+}
