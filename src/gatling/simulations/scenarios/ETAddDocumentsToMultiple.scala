@@ -11,34 +11,112 @@ object ETAddDocumentsToMultiple {
   val CcdAPIURL = Environment.ccdAPIURL
   val CaseDocAPIURL = Environment.caseDocAPIURL
 
-  val totalMultiCasesToUpdate = csv("multipleCaseId.csv").recordsCount
-  val multipleCaseIdFeeder = csv("multipleCaseId.csv").circular
+  //val totalMultiCasesToUpdate = csv("multipleCaseId.csv").recordsCount
+  //val multipleCaseIdFeeder = csv("multipleCaseId.csv").circular
 
   // Initialise array to store extracted variables within the session.
   val initialiseDocLinkSelfArray = exec { session =>
     session.set("responseArrayDocLinkSelfHash", List.empty[String])
   }
 
- // Define all 10 Documents as an array with mapped assosciated params
+  val numberOfDocumentsToUpload: Int = 25 // Configure this value (10,25,50) for below switch case
+
+  // Use a match case to define different arrays and caseName based on the number of documents to upload
+  val (files, caseName) = numberOfDocumentsToUpload match {
+    case 10 =>
+      val caseName = "10 Docs"
+      //Define all 10 Documents as an array with mapped assosciated params
+      val files = Array(
+        Map("fileName" -> "et1-eng-original_16Page_388KB.pdf", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ET1", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "ET1 Vetting - Perf Test_1Page_41KB.pdf", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ET1 Vetting", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "Court_Judgment_2Page_83KB.pdf", "topLevelDocuments" -> "Judgment and Reasons", "startingClaimDocuments" -> "", "judgmentAndReasonsDocuments" -> "Judgment", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "Court_Reasons_3Page_56KB.pdf", "topLevelDocuments" -> "Judgment and Reasons", "startingClaimDocuments" -> "", "judgmentAndReasonsDocuments" -> "Reasons", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "Change of Party Details_1Page_13KB.docx", "topLevelDocuments" -> "Case Management", "startingClaimDocuments" -> "", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "ACAS Cert_Image_19KB.jpg", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ACAS Certificate", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "ET Notice of Hearing_Image_241KB.jpeg", "topLevelDocuments" -> "Hearings", "startingClaimDocuments" -> "", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "Notice of Hearing", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "ET1_CASE_DOCUMENT_Citizen_Five_16Page_419KB.pdf", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ET1", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "ET1 Vetting - Citizen Five_caseStart_2Page_43KB.pdf", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ET1 Vetting", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "ET3_Response_9page_92KB.pdf", "topLevelDocuments" -> "Response to a Claim", "startingClaimDocuments" -> "", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> "ET3")
+      )
+      (files, caseName)
+
+    case 25 =>
+      val caseName = "25 Docs"
+      val files = Array(
+        Map("fileName" -> "et1-eng-original_16Page_388KB.pdf", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ET1", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "ET1 Vetting - Perf Test_1Page_41KB.pdf", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ET1 Vetting", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "Court_Judgment_2Page_83KB.pdf", "topLevelDocuments" -> "Judgment and Reasons", "startingClaimDocuments" -> "", "judgmentAndReasonsDocuments" -> "Judgment", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "Court_Reasons_3Page_56KB.pdf", "topLevelDocuments" -> "Judgment and Reasons", "startingClaimDocuments" -> "", "judgmentAndReasonsDocuments" -> "Reasons", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "Change of Party Details_1Page_13KB.docx", "topLevelDocuments" -> "Case Management", "startingClaimDocuments" -> "", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "ACAS Cert_Image_19KB.jpg", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ACAS Certificate", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "ET Notice of Hearing_Image_241KB.jpeg", "topLevelDocuments" -> "Hearings", "startingClaimDocuments" -> "", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "Notice of Hearing", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "ET1_CASE_DOCUMENT_Citizen_Five_16Page_419KB.pdf", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ET1", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "ET1 Vetting - Citizen Five_caseStart_2Page_43KB.pdf", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ET1 Vetting", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "ET3_Response_9page_92KB.pdf", "topLevelDocuments" -> "Response to a Claim", "startingClaimDocuments" -> "", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> "ET3"),
+        Map("fileName" -> "et1-eng-original_16Page_388KB.pdf", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ET1", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "ET1 Vetting - Perf Test_1Page_41KB.pdf", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ET1 Vetting", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "Court_Judgment_2Page_83KB.pdf", "topLevelDocuments" -> "Judgment and Reasons", "startingClaimDocuments" -> "", "judgmentAndReasonsDocuments" -> "Judgment", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "Court_Reasons_3Page_56KB.pdf", "topLevelDocuments" -> "Judgment and Reasons", "startingClaimDocuments" -> "", "judgmentAndReasonsDocuments" -> "Reasons", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "Change of Party Details_1Page_13KB.docx", "topLevelDocuments" -> "Case Management", "startingClaimDocuments" -> "", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "ACAS Cert_Image_19KB.jpg", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ACAS Certificate", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "ET Notice of Hearing_Image_241KB.jpeg", "topLevelDocuments" -> "Hearings", "startingClaimDocuments" -> "", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "Notice of Hearing", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "ET1_CASE_DOCUMENT_Citizen_Five_16Page_419KB.pdf", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ET1", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "ET1 Vetting - Citizen Five_caseStart_2Page_43KB.pdf", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ET1 Vetting", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "ET3_Response_9page_92KB.pdf", "topLevelDocuments" -> "Response to a Claim", "startingClaimDocuments" -> "", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> "ET3"), 
+        Map("fileName" -> "et1-eng-original_16Page_388KB.pdf", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ET1", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "ET1 Vetting - Perf Test_1Page_41KB.pdf", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ET1 Vetting", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "Court_Judgment_2Page_83KB.pdf", "topLevelDocuments" -> "Judgment and Reasons", "startingClaimDocuments" -> "", "judgmentAndReasonsDocuments" -> "Judgment", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "Court_Reasons_3Page_56KB.pdf", "topLevelDocuments" -> "Judgment and Reasons", "startingClaimDocuments" -> "", "judgmentAndReasonsDocuments" -> "Reasons", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+        Map("fileName" -> "Change of Party Details_1Page_13KB.docx", "topLevelDocuments" -> "Case Management", "startingClaimDocuments" -> "", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> "")
+     )
+      (files, caseName)
+
+    case 50 =>
+      val caseName = "50 Docs"
+      val files = Array(
+        // Add 50 documents here in the same format as above
+        // Copy and modify the documents accordingly
+      )
+      (files, caseName)
+
+    case _ =>
+      throw new IllegalArgumentException("Invalid number of documents to upload. Must be 10, 20, or 50.")
+  }
+
+/* FIX THIS CODE ** IMPROVEMENT FOR CASE NAME ***
+  val numberOfDocumentsToUpload: Int = 10 // Configure this value (10,25,50) for below switch case
+
+ // // Use a match case to define different arrays based on the number of documents to upload
+  val caseName = numberOfDocumentsToUpload match {
+    case 10 =>
+      exec(session => session.set("caseName", session("10 Docs").as[String]))
+    case 25 => 
+      exec(session => session.set("caseName", session("25 Docs").as[String]))  
+  case 50 =>
+      exec(session => session.set("caseName", session("50 Docs").as[String]))    
+  case _ =>
+    throw new IllegalArgumentException("Invalid number of documents to upload. Must be 10, 25, or 50.")
+} */
+
+ /* //Define all 10 Documents as an array with mapped assosciated params
   val files = Array(
-    Map("fileName" -> "et1-eng-original_16Page_388KB.pdf", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ET1", "judgmentAndReasonsDocuments" -> "null", "caseManagementDocuments" -> "null", "hearingsDocuments" -> "null", "responseClaimDocuments" -> "null"),
-    Map("fileName" -> "ET1 Vetting - Perf Test_1Page_41KB.pdf", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ET1 Vetting", "judgmentAndReasonsDocuments" -> "null", "caseManagementDocuments" -> "null", "hearingsDocuments" -> "null", "responseClaimDocuments" -> "null"),
-    Map("fileName" -> "Court_Judgment_2Page_83KB.pdf", "topLevelDocuments" -> "Judgment and Reasons", "startingClaimDocuments" -> "null", "judgmentAndReasonsDocuments" -> "Judgment", "caseManagementDocuments" -> "null", "hearingsDocuments" -> "null", "responseClaimDocuments" -> "null"),
-    Map("fileName" -> "Court_Reasons_3Page_56KB.pdf", "topLevelDocuments" -> "Judgment and Reasons", "startingClaimDocuments" -> "null", "judgmentAndReasonsDocuments" -> "Reasons", "caseManagementDocuments" -> "null", "hearingsDocuments" -> "null", "responseClaimDocuments" -> "null"),
-    Map("fileName" -> "Change of Party Details_1Page_13KB.docx", "topLevelDocuments" -> "Case Management", "startingClaimDocuments" -> "null", "judgmentAndReasonsDocuments" -> "null", "caseManagementDocuments" -> "Change of party's details", "hearingsDocuments" -> "null", "responseClaimDocuments" -> "null"),
-    Map("fileName" -> "ACAS Cert_Image_19KB.jpg", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ACAS Certificate", "judgmentAndReasonsDocuments" -> "null", "caseManagementDocuments" -> "null", "hearingsDocuments" -> "null", "responseClaimDocuments" -> "null"),
-    Map("fileName" -> "ET Notice of Hearing_Image_241KB.jpeg", "topLevelDocuments" -> "Hearings", "startingClaimDocuments" -> "null", "judgmentAndReasonsDocuments" -> "null", "caseManagementDocuments" -> "null", "hearingsDocuments" -> "Notice of Hearing", "responseClaimDocuments" -> "null"),
-    Map("fileName" -> "ET1_CASE_DOCUMENT_Citizen_Five_16Page_419KB.pdf", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ET1", "judgmentAndReasonsDocuments" -> "null", "caseManagementDocuments" -> "null", "hearingsDocuments" -> "null", "responseClaimDocuments" -> "null"),
-    Map("fileName" -> "ET1 Vetting - Citizen Five_caseStart_2Page_43KB.pdf", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ET1 Vetting", "judgmentAndReasonsDocuments" -> "null", "caseManagementDocuments" -> "null", "hearingsDocuments" -> "null", "responseClaimDocuments" -> "null"),
-    Map("fileName" -> "ET3_Response_9page_92KB.pdf", "topLevelDocuments" -> "Response to a Claim", "startingClaimDocuments" -> "null", "judgmentAndReasonsDocuments" -> "null", "caseManagementDocuments" -> "null", "hearingsDocuments" -> "null", "responseClaimDocuments" -> "ET3")
-  )
+    Map("fileName" -> "et1-eng-original_16Page_388KB.pdf", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ET1", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+    Map("fileName" -> "ET1 Vetting - Perf Test_1Page_41KB.pdf", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ET1 Vetting", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+    Map("fileName" -> "Court_Judgment_2Page_83KB.pdf", "topLevelDocuments" -> "Judgment and Reasons", "startingClaimDocuments" -> "", "judgmentAndReasonsDocuments" -> "Judgment", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+    Map("fileName" -> "Court_Reasons_3Page_56KB.pdf", "topLevelDocuments" -> "Judgment and Reasons", "startingClaimDocuments" -> "", "judgmentAndReasonsDocuments" -> "Reasons", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+    Map("fileName" -> "Change of Party Details_1Page_13KB.docx", "topLevelDocuments" -> "Case Management", "startingClaimDocuments" -> "", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+    Map("fileName" -> "ACAS Cert_Image_19KB.jpg", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ACAS Certificate", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+    Map("fileName" -> "ET Notice of Hearing_Image_241KB.jpeg", "topLevelDocuments" -> "Hearings", "startingClaimDocuments" -> "", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "Notice of Hearing", "responseClaimDocuments" -> ""),
+    Map("fileName" -> "ET1_CASE_DOCUMENT_Citizen_Five_16Page_419KB.pdf", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ET1", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+    Map("fileName" -> "ET1 Vetting - Citizen Five_caseStart_2Page_43KB.pdf", "topLevelDocuments" -> "Starting a Claim", "startingClaimDocuments" -> "ET1 Vetting", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> ""),
+    Map("fileName" -> "ET3_Response_9page_92KB.pdf", "topLevelDocuments" -> "Response to a Claim", "startingClaimDocuments" -> "", "judgmentAndReasonsDocuments" -> "", "caseManagementDocuments" -> "", "hearingsDocuments" -> "", "responseClaimDocuments" -> "ET3")
+  ) */
 
   // Create FileFeeder
   val fileFeeder = Iterator.continually(files).flatten.map(file => file + ("FileToUpload" -> file("fileName")))
 
   val AddDocumentsToMultipleUpload =
-    feed(multipleCaseIdFeeder)
-    .exec(initialiseDocLinkSelfArray)
+    exec(initialiseDocLinkSelfArray)
     .repeat(files.length) { // Repeat for the number of files
       feed(fileFeeder)
       .exec(http("CaseDocApi_UploadDoc")
@@ -66,24 +144,24 @@ object ETAddDocumentsToMultiple {
         println(s"Doc Link Array ${updatedArrayDocLinkSelfHash.toString} records: ${updatedArrayDocLinkSelfHash.length}")
         println("\n======== \n")
 
+        //Set for later use
         session.set("responseArrayDocLinkSelfHash", updatedArrayDocLinkSelfHash)
         }
       .pause(2)
   } // End of Repeat Loop
 
-
-//val AddDocToMultipleCase {
+      // Get Event token for Document Upload
       .exec(http("ET_000_GetCCDEventToken")
         .get(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/Employment/case-types/ET_EnglandWales_Multiple/cases/#{caseId}/event-triggers/uploadDocument/token")
         .header("Authorization", "Bearer #{bearerToken}")
         .header("ServiceAuthorization", "#{authToken}")
         .header("Content-Type", "application/json")
         .check(jsonPath("$.token").saveAs("eventToken")))
-        //.check(jsonPath("$.case_details.case_data.caseCounter").saveAs("caseCounterBeforeUpdate"))
-        //.check(jsonPath("$.case_details.case_data.leadCase").transform(str => str.replace(""""""","""\"""")).saveAs("leadCaseHTML")))
 
-      .exec(session => {
       // Set each file's details to the session
+      .exec(session => {
+      // Process each file in the files array, retrieve properties, and store the properties in the Gatling session with unique keys.
+      // The keys are constructed using the index of the file, ensuring that each file's details are stored separately and can be accessed later
       files.zipWithIndex.foldLeft(session) { case (sess, (file, idx)) =>
         sess
           .set(s"topLevelDocuments$idx", file("topLevelDocuments"))
@@ -95,16 +173,39 @@ object ETAddDocumentsToMultiple {
           .set(s"fileName$idx", file("fileName"))
       }
     })
-        .exec(http("AddDocToMultiplceCase_DocUpload")
+        .exec(http("AddDocToMultipleCase_DocUpload")
           .post(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/Employment/case-types/ET_EnglandWales_Multiple/cases/#{caseId}/events")
             .header("Authorization", "Bearer #{bearerToken}")
             .header("ServiceAuthorization", "#{authToken}")
             .header("Content-Type", "application/json")
-          .body(ElFileBody("bodies/et/uploadDocuments.json")))
+            .body(ElFileBody("bodies/et/uploadTwentyFiveDocuments.json")) //Change Json here to upload more/less documents
+            .check(status.in(200,201)))
 
     .pause(2)
 
+    // Get Event Token for Multiple Rename 
+     .exec(http("ET_000_GetCCDEventToken")
+        .get(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/Employment/case-types/ET_EnglandWales_Multiple/cases/#{caseId}/event-triggers/amendMultipleDetails/token")
+        .header("Authorization", "Bearer #{bearerToken}")
+        .header("ServiceAuthorization", "#{authToken}")
+        .header("Content-Type", "application/json")
+        .check(jsonPath("$.token").saveAs("eventToken"))
+        .check(jsonPath("$.case_details.case_data.caseCounter").saveAs("caseCounterBeforeUpdate"))
+        .check(jsonPath("$.case_details.case_data.leadCase").transform(str => str.replace(""""""","""\"""")).saveAs("leadCaseHTML")))
+
+      .pause(2)
+
+    // Rename Multiple
+      .exec(http("ET_000_CCDEvent-amendMultipleDetails")
+        .post(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/Employment/case-types/ET_EnglandWales_Multiple/cases/#{caseId}/events")
+        .header("Authorization", "Bearer #{bearerToken}")
+        .header("ServiceAuthorization", "#{authToken}")
+        .header("Content-Type", "application/json")
+        .body(ElFileBody("bodies/et/amendMultipleName.json")).asJson
+        .check(status.in(200,201)))
+
   }
+
 
 
 

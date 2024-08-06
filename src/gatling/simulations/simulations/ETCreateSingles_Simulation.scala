@@ -11,6 +11,7 @@ class ETCreateSingles_Simulation extends Simulation {
 
 	val UserFeederET = csv("UserDataET.csv").random
 	val outputFilenameSingles = "casesCreatedSingles.csv"
+	val microservice = "ccd_data"
 
 	/* PERFORMANCE TEST CONFIGURATION */
 	val numberOfSinglesToCreatePerUser: Int = 21

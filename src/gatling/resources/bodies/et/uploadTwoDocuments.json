@@ -21,7 +21,7 @@
               "documentIndex": null,
               "uploadedDocument": {
                  "document_url": "#{responseArrayDocLinkSelfHash(0)}",
-                 "document_binary_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/#{responseArrayDocLinkSelfHash(0)}/binary",
+                 "document_binary_url": "#{responseArrayDocLinkSelfHash(0)}/binary",
                  "document_filename": "#{fileName0}"
               },
               "excludeFromDcf": []
@@ -48,14 +48,14 @@
             "documentIndex": null,
             "uploadedDocument": {
                "document_url": "#{responseArrayDocLinkSelfHash(1)}",
-               "document_binary_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/#{responseArrayDocLinkSelfHash(1)}/binary",
+               "document_binary_url": "#{responseArrayDocLinkSelfHash(1)}/binary",
                "document_filename": "#{fileName1}"
               },
               "excludeFromDcf": []
            },
            "id": null
         }
-     ]
+     ] 
   },
   "event": {
      "id": "uploadDocument",
