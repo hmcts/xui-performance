@@ -10,21 +10,17 @@
                "parentalResponsibilityDetails": "Child's father",
                "whoDoesTheChildLiveWith": {
                   "value": {
-                     "code": "f68419a5-b6d3-4a36-8678-6f5e1985d56e",
-                     "label": "AppCSdDf TestSwxWF - ROCKLANDS COURT, BRADLEIGH AVENUE, RM17 5UL"
+                     "code": "#{childLiveWithCode(0)}",
+                     "label": "#{childLiveWithLabel(0)}"
                   },
                   "list_items": [
                      {
-                        "code": "f68419a5-b6d3-4a36-8678-6f5e1985d56e",
-                        "label": "AppCSdDf TestSwxWF - ROCKLANDS COURT, BRADLEIGH AVENUE, RM17 5UL"
+                        "code": "#{childLiveWithCode(0)}",
+                        "label": "#{childLiveWithLabel(0)}"
                      },
                      {
-                        "code": "f2815615-91d1-43d8-99a7-3ae307bfa986",
-                        "label": "AppgjePZ TestpbWbN - ROCKLANDS COURT, BRADLEIGH AVENUE, RM17 5UL"
-                     },
-                     {
-                        "code": "fd1f81ae-985a-4c7c-b7cb-dfffc3f1bdb6",
-                        "label": "RespVuRSP TestVuOJL - 16, MILLFIELD CRESCENT, ST2 7DG"
+                        "code": "#{childLiveWithLabel(1)}",
+                        "label": "#{childLiveWithLabel(1)}"
                      }
                   ]
                },
@@ -39,9 +35,9 @@
             "childArrangementsOrder"
           ]
         },
-            "id": "f971163f-aa0a-4e48-b456-6c56eec723fa"
+            "id": "#{childLiveWithId}"
       }
-    ],
+    ]
   },
   "event": {
     "id": "childDetailsRevised",
@@ -58,22 +54,18 @@
                "gender": "male",
                "parentalResponsibilityDetails": "Mother",
                "whoDoesTheChildLiveWith": {
-                  "value": {
-                     "code": "f68419a5-b6d3-4a36-8678-6f5e1985d56e",
-                     "label": "AppCSdDf TestSwxWF - ROCKLANDS COURT, BRADLEIGH AVENUE, RM17 5UL"
+                 "value": {
+                     "code": "#{childLiveWithCode(0)}",
+                     "label": "#{childLiveWithLabel(0)}"
                   },
                   "list_items": [
                      {
-                        "code": "f68419a5-b6d3-4a36-8678-6f5e1985d56e",
-                        "label": "AppCSdDf TestSwxWF - ROCKLANDS COURT, BRADLEIGH AVENUE, RM17 5UL"
+                        "code": "#{childLiveWithCode(0)}",
+                        "label": "#{childLiveWithLabel(0)}"
                      },
                      {
-                        "code": "f2815615-91d1-43d8-99a7-3ae307bfa986",
-                        "label": "AppgjePZ TestpbWbN - ROCKLANDS COURT, BRADLEIGH AVENUE, RM17 5UL"
-                     },
-                     {
-                        "code": "fd1f81ae-985a-4c7c-b7cb-dfffc3f1bdb6",
-                        "label": "RespVuRSP TestVuOJL - 16, MILLFIELD CRESCENT, ST2 7DG"
+                        "code": "#{childLiveWithLabel(1)}",
+                        "label": "#{childLiveWithLabel(1)}"
                      }
                   ]
                },
@@ -88,7 +80,7 @@
                   "childArrangementsOrder"
                ]
             },
-            "id": "f971163f-aa0a-4e48-b456-6c56eec723fa"
+            "id": "#{childLiveWithId}"
          }
       ]
    },
