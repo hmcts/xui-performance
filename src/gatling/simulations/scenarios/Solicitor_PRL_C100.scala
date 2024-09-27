@@ -3,7 +3,6 @@ package scenarios
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import utils.{Common, Environment, Headers}
-import java.io.{BufferedWriter, FileWriter}
 
 /*======================================================================================
 * Create a new Private Law application as a professional user (e.g. solicitor)

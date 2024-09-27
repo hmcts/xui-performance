@@ -52,5 +52,5 @@
   },
   "event_token": "#{event_token}",
   "ignore_warning": false,
-  "case_reference": "1727440087926992"
+  "case_reference": "#{caseId}"
 }
