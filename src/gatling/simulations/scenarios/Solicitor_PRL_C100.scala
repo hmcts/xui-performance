@@ -3,6 +3,7 @@ package scenarios
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import utils.{Common, Environment, Headers}
+import java.io.{BufferedWriter, FileWriter}
 
 /*======================================================================================
 * Create a new Private Law application as a professional user (e.g. solicitor)
@@ -1548,6 +1549,12 @@ object Solicitor_PRL_C100 {
       .exec(http("XUI_PRL_C100_530_015_SubmitAndPayRedirectEvent")
         .get("/data/internal/cases/#{caseId}/event-triggers/submitAndPay?ignore-warning=false")
         .headers(Headers.commonHeader)
+        //.header("accept-encoding", "gzip, deflate, br, zstd")
+        //.header("accept-language", "en-GB,en-US;q=0.9,en;q=0.8")
+        //.header("content-type", "application/json")
+        //.header("sec-fetch-dest", "empty")
+        //.header("sec-fetch-mode", "cors")
+        //.header("sec-fetch-site", "same-origin")
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("submitAndPay")))
@@ -1686,5 +1693,13 @@ object Solicitor_PRL_C100 {
     }
 
     .pause(MinThinkTime, MaxThinkTime)
+
+      .exec { session =>
+      val fw = new BufferedWriter(new FileWriter("C100Cases.csv", true))
+      try {
+        fw.write(session("caseId").as[String] + "\r\n")
+      } finally fw.close()
+      session
+    }
 
 }
