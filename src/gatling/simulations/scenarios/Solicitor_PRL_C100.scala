@@ -603,6 +603,9 @@ object Solicitor_PRL_C100 {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.case_fields[1].value[0].value.whoDoesTheChildLiveWith.list_items[*].code").findAll.saveAs("childLiveWithCode"))
+        .check(jsonPath("$.case_fields[1].value[0].value.whoDoesTheChildLiveWith.list_items[*].label").findAll.saveAs("childLiveWithLabel"))
+        .check(jsonPath("$.case_fields[1].value[0].id").saveAs("childLiveWithId"))        
         .check(jsonPath("$.id").is("childDetailsRevised")))
 
       .exec(Common.userDetails)
@@ -626,7 +629,7 @@ object Solicitor_PRL_C100 {
 
     .group("XUI_PRL_C100_240_ChildDetailsAddNew") {
       exec(http("XUI_PRL_C100_240_005_ChildDetailsAddNew")
-        .post("/data/case-types/PRLAPPS/validate?pageId=childDetails1")
+        .post("/data/case-types/PRLAPPS/validate?pageId=childDetailsRevised1")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -647,7 +650,7 @@ object Solicitor_PRL_C100 {
       exec(Common.postcodeLookup)
 
       .exec(http("XUI_PRL_C100_250_005_ChildDetailsAdditionalDetails")
-        .post("/data/case-types/PRLAPPS/validate?pageId=childDetails2")
+        .post("/data/case-types/PRLAPPS/validate?pageId=childDetailsRevised2")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -669,7 +672,7 @@ object Solicitor_PRL_C100 {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100/PRLChildAdditionalDetails.json"))
+        .body(ElFileBody("bodies/prl/c100/PRLChildDetailsEvent.json"))
         .check(substring("trigger/childDetailsRevised")))
 
       .exec(http("XUI_PRL_C100_260_010_ChildDetailsAdditionalDetailsViewCase")
