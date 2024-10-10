@@ -809,6 +809,13 @@ object Solicitor_PRL_C100 {
         .header("x-xsrf-token", "#{XSRFToken}")
         .check(substring("HMCTS Manage cases")))
 
+      //see xui-webapp cookie capture in the Homepage scenario for details of why this is being used.
+      //after a period of time during a performance test, the cookie would change and subsequent calls would fail
+      //with a 401 unauthorized, so this code is forcing the original cookie back in to the Gatling session
+      .exec(addCookie(Cookie("xui-webapp", "#{xuiWebAppCookie}")
+        .withMaxAge(28800)
+        .withSecure(true)))
+
       .exec(Common.configurationui)
 
       .exec(Common.configJson)
