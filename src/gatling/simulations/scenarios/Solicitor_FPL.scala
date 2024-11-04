@@ -3,6 +3,7 @@ package scenarios
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import utils.{Environment, Common, Headers}
+import java.time.LocalDateTime
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -16,7 +17,9 @@ object Solicitor_FPL {
 
   val patternDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
   val patternYear = DateTimeFormatter.ofPattern("yyyy")
-  val now = LocalDate.now()
+  val now = LocalDateTime.now()
+  // val nowTime = LocalDateTime.now()
+  val patternTimeNow = DateTimeFormatter.ofPattern("HH:mm:ss.S")
 
   val CreateFPLCase =
 
@@ -906,13 +909,113 @@ object Solicitor_FPL {
     ======================================================================================*/
 
     group("XUI_FPL_330_ReturnToCase") {
-      exec(http("XUI_FPL_330_010_ViewCase")
+      exec(http("XUI_FPL_330_005_ViewCase")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
         .check(substring("CCD ID")))
     }
 
+    /*.exec {
+			session =>
+				println(session)
+				session
+		}*/
+
     .pause(MinThinkTime , MaxThinkTime )
+
+  val QueryManagement = 
+
+    group("XUI_FPL_340_RaiseNewQuery") {
+      exec(http("XUI_FPL_340_005_RaiseNewQuery")
+      .get("/query-management/query/#{caseId}")
+      .headers(Headers.commonHeader)
+      .check(substring("HMCTS Manage cases"))) // No page specific text is returned
+
+      .exec(Common.isAuthenticated)
+
+      .exec(http("XUI_FPL_340_005_ViewCase")
+        .get("/data/internal/cases/#{caseId}")
+        .headers(Headers.commonHeader))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    .group("XUI_FPL_350_ConfirmQueryDetails") {
+      exec(http("XUI_FPL_350_005_ConfirmQueryDetails")
+        .get("/data/internal/cases/#{caseId}/event-triggers/queryManagementRaiseQuery?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        // .check(bodyString.saveAs("BODY"))
+        )
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    .exec(http("XUI_FPL_360_005_RaiseNewQuery")
+      .get("/query-management/query/#{caseId}raiseAQuery")
+      .headers(Headers.commonHeader)
+      // .check(substring("HMCTS Manage cases"))
+      // .check(bodyString.saveAs("BODY"))
+      )
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    .exec(_.setAll("currentTime" -> now.format(patternTimeNow)))
+
+    .group("XUI_FPL_370_SubmitNewQuery") {
+      exec(http("XUI_FPL_370_005_SubmitNewQuery")
+        .post("/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/fpl/FPLRaiseNewQuery.json")))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+  val RespondToQueryManagement = 
+
+    group("XUI_FPL_380_ViewCase") {
+      exec(http("XUI_FPL_380_005_ViewCase")
+        .get("/data/internal/cases/#{caseId}")
+        .headers(Headers.commonHeader)
+        .check(substring("CCD ID")))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    .group("XUI_FPL_390_ViewQuery") {
+      exec(Common.isAuthenticated)
+
+      .exec(http("XUI_FPL_390_005_ViewQuery")
+        .get("/data/internal/cases/#{caseId}/event-triggers/queryManagementRespondQuery?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token")))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    .exec(_.setAll("currentTimeNew" -> now.format(patternTimeNow)))
+
+    .group("XUI_FPL_400_SubmitQueryResponse") {
+      exec(http("XUI_FPL_400_005_SubmitQueryResponse")
+        .post("/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/fpl/FPLRespondToQuery.json")))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    .exec {
+			session =>
+				println(session)
+				session
+		}
+
 
 }
