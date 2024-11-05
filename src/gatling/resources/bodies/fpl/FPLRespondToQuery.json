@@ -5,14 +5,14 @@
         "roleOnCase": "",
         "caseMessages": [
            {
-              "id": "c759f8ce-edb2-4bf3-9ab1-b89d37c5dc2d",
+              "id": "#{raiseQueryParentId}",
               "value": {
-                 "id": "ac2a8d76-d68f-4b29-8b3a-f14cccbb504b",
+                 "id": "#{raiseQueryId}",
                  "body": "Some perf test query details go here for query management perf testing",
                  "name": "sdsdsdsd hjhjhjhj",
                  "subject": "Perf test query subject",
-                 "createdBy": "ef58a480-1d1d-4e90-ac98-42408c2a2e62",
-                 "createdOn": "#{currentDate}T#{currentTime}Z",
+                 "createdBy": "#{queryCreatedBy}",
+                 "createdOn": "#{queryCreatedOn}",
                  "attachments": [],
                  "hearingDate": null,
                  "isHearingRelated": "No"
@@ -21,16 +21,16 @@
            {
               "id": null,
               "value": {
-                 "id": "bd09b5b0-1ce9-42a9-a999-831d1136b345",
+                 "id": "#{randomUuid()}",
                  "subject": "Perf test query subject",
                  "name": "Perftest Caseworker",
                  "body": "Here is my response to your query",
                  "attachments": [],
                  "isHearingRelated": "Yes",
                  "hearingDate": null,
-                 "createdOn": "#{currentDate}T#{currentTimeNew}Z",
-                 "createdBy": "dbcc775a-f2a6-48a8-b4d0-95ef5d25339d",
-                 "parentId": "ac2a8d76-d68f-4b29-8b3a-f14cccbb504b"
+                 "createdOn": "#{currentDate}T#{currentTime}Z",
+                 "createdBy": "#{idamId}",
+                 "parentId": "#{raiseQueryId}"
               }
            }
         ]

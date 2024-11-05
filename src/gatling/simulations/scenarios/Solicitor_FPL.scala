@@ -916,12 +916,6 @@ object Solicitor_FPL {
         .check(substring("CCD ID")))
     }
 
-    /*.exec {
-			session =>
-				println(session)
-				session
-		}*/
-
     .pause(MinThinkTime , MaxThinkTime )
 
   val QueryManagement = 
@@ -939,6 +933,8 @@ object Solicitor_FPL {
         .headers(Headers.commonHeader))
     }
 
+    .exec(getCookieValue(CookieKey("__userid__").withDomain(BaseURL.replace("https://", "")).saveAs("idamId")))
+
     .pause(MinThinkTime , MaxThinkTime )
 
     .group("XUI_FPL_350_ConfirmQueryDetails") {
@@ -946,19 +942,17 @@ object Solicitor_FPL {
         .get("/data/internal/cases/#{caseId}/event-triggers/queryManagementRaiseQuery?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-        .check(jsonPath("$.event_token").saveAs("event_token"))
-        // .check(bodyString.saveAs("BODY"))
-        )
+        .check(jsonPath("$.event_token").saveAs("event_token")))
     }
 
     .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(http("XUI_FPL_360_005_RaiseNewQuery")
-      .get("/query-management/query/#{caseId}raiseAQuery")
-      .headers(Headers.commonHeader)
-      // .check(substring("HMCTS Manage cases"))
-      // .check(bodyString.saveAs("BODY"))
-      )
+    .group("XUI_FPL_360_RaiseNewQuery") {
+      exec(http("XUI_FPL_360_005_RaiseNewQuery")
+        .get("/query-management/query/#{caseId}raiseAQuery")
+        .headers(Headers.commonHeader)
+        .check(substring("HMCTS Manage cases")))
+    }
 
     .pause(MinThinkTime , MaxThinkTime )
 
@@ -993,12 +987,17 @@ object Solicitor_FPL {
         .get("/data/internal/cases/#{caseId}/event-triggers/queryManagementRespondQuery?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-        .check(jsonPath("$.event_token").saveAs("event_token")))
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmCaseQueriesCollectionLASol')].value.caseMessages[0].id").saveAs("raiseQueryParentId"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmCaseQueriesCollectionLASol')].value.caseMessages[0].value.id").saveAs("raiseQueryId"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmCaseQueriesCollectionLASol')].value.caseMessages[0].value.createdBy").saveAs("queryCreatedBy"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmCaseQueriesCollectionLASol')].value.caseMessages[0].value.createdOn").saveAs("queryCreatedOn")))
     }
 
     .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(_.setAll("currentTimeNew" -> now.format(patternTimeNow)))
+    .exec(_.setAll("currentTime" -> now.format(patternTimeNow)))
+    .exec(getCookieValue(CookieKey("__userid__").withDomain(BaseURL.replace("https://", "")).saveAs("idamId")))
 
     .group("XUI_FPL_400_SubmitQueryResponse") {
       exec(http("XUI_FPL_400_005_SubmitQueryResponse")
@@ -1011,11 +1010,11 @@ object Solicitor_FPL {
 
     .pause(MinThinkTime , MaxThinkTime )
 
-    .exec {
+    /*.exec {
 			session =>
 				println(session)
 				session
-		}
+		}*/
 
 
 }
