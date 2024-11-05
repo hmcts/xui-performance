@@ -3,17 +3,13 @@ package scenarios
 import com.typesafe.config.ConfigFactory
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import utils._
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import utils.Environment
 
 object CCDAPI {
 
   val RpeAPIURL = Environment.rpeAPIURL
   val IdamAPIURL = Environment.idamAPIURL
   val CcdAPIURL = Environment.ccdAPIURL
-  val now = LocalDateTime.now()
-  val patternDate = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
@@ -90,35 +86,6 @@ object CCDAPI {
 
     .exec(http("XUI_000_CCDEvent-#{eventName}")
       .post(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/#{jurisdiction}/case-types/#{caseType}/cases/#{caseId}/events")
-      .header("Authorization", "Bearer #{bearerToken}")
-      .header("ServiceAuthorization", "#{authToken}")
-      .header("Content-Type", "application/json")
-      .body(ElFileBody(payloadPath))
-      .check(jsonPath("$.id")))
-
-    .pause(1)
-
-  // allows the create case to be used where the userType = "Caseworker" or "Legal"
-  def CreateCase(userType: String, jurisdiction: String, caseType: String, eventName: String, payloadPath: String) =
-
-    exec(_.set("eventName", eventName)
-          .set("jurisdiction", jurisdiction)
-          .set("caseType", caseType)
-          .set("currentDate", now.format(patternDate)))
-
-    .exec(Auth(userType))
-
-    .exec(http("XUI_000_GetCCDEventToken")
-      .get(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/#{jurisdiction}/case-types/#{caseType}/event-triggers/#{eventName}/token")
-      .header("Authorization", "Bearer #{bearerToken}")
-      .header("ServiceAuthorization", "#{authToken}")
-      .header("Content-Type", "application/json")
-      .check(jsonPath("$.token").saveAs("eventToken")))
-
-    .pause(1)
-
-    .exec(http("XUI_000_CCDCreate-#{eventName}")
-      .post(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/#{jurisdiction}/case-types/#{caseType}/cases/")
       .header("Authorization", "Bearer #{bearerToken}")
       .header("ServiceAuthorization", "#{authToken}")
       .header("Content-Type", "application/json")
