@@ -929,7 +929,8 @@ object Solicitor_FPL {
 
       .exec(http("XUI_FPL_340_005_ViewCase")
         .get("/data/internal/cases/#{caseId}")
-        .headers(Headers.commonHeader))
+        .headers(Headers.commonHeader)
+        .check(substring("CCD ID")))
     }
 
     .exec(getCookieValue(CookieKey("__userid__").withDomain(BaseURL.replace("https://", "")).saveAs("idamId")))
