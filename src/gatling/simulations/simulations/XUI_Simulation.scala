@@ -15,18 +15,18 @@ import scala.util.Random
 
 class XUI_Simulation extends Simulation {
 
-	val CaseworkerUserFeeder = csv("UserDataCaseworkers.csv").circular
-	val UserFeederDivorce = csv("UserDataDivorce.csv").circular
-	val UserFeederFPL = csv("UserDataFPL.csv").circular
-	val UserFeederFR = csv("UserDataFR.csv").circular
-	val UserFeederIAC = csv("UserDataIAC.csv").circular
-	val UserFeederNFD = csv("UserDataNFD.csv").circular
-	val UserFeederProbate = csv("UserDataProbate.csv").circular
-	val UserFeederPRL = csv("UserDataPRL.csv").circular
-	val UserFeederBails = csv("UserDataBails.csv").circular
-	val UserFeederBailsHO = csv("UserDataBailsHO.csv").circular
+  val CaseworkerUserFeeder = csv("UserDataCaseworkers.csv").circular
+  val UserFeederDivorce = csv("UserDataDivorce.csv").circular
+  val UserFeederFPL = csv("UserDataFPL.csv").circular
+  val UserFeederFR = csv("UserDataFR.csv").circular
+  val UserFeederIAC = csv("UserDataIAC.csv").circular
+  val UserFeederNFD = csv("UserDataNFD.csv").circular
+  val UserFeederProbate = csv("UserDataProbate.csv").circular
+  val UserFeederPRL = csv("UserDataPRL.csv").circular
+  val UserFeederBails = csv("UserDataBails.csv").circular
+  val UserFeederBailsHO = csv("UserDataBailsHO.csv").circular
   val UserFeederBailsAdmin = csv("UserDataBailsAdmin.csv").circular
-	val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
+  val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
   val UserFeederCTSC = csv("UserDataCTSC.csv").circular
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
