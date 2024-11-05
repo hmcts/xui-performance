@@ -18,7 +18,6 @@ object Solicitor_FPL {
   val patternDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
   val patternYear = DateTimeFormatter.ofPattern("yyyy")
   val now = LocalDateTime.now()
-  // val nowTime = LocalDateTime.now()
   val patternTimeNow = DateTimeFormatter.ofPattern("HH:mm:ss.S")
 
   val CreateFPLCase =
@@ -1009,12 +1008,5 @@ object Solicitor_FPL {
     }
 
     .pause(MinThinkTime , MaxThinkTime )
-
-    /*.exec {
-			session =>
-				println(session)
-				session
-		}*/
-
 
 }
