@@ -15,18 +15,19 @@ import scala.util.Random
 
 class XUI_Simulation extends Simulation {
 
-	val CaseworkerUserFeeder = csv("UserDataCaseworkers.csv").circular
-	val UserFeederDivorce = csv("UserDataDivorce.csv").circular
-	val UserFeederFPL = csv("UserDataFPL.csv").circular
-	val UserFeederFR = csv("UserDataFR.csv").circular
-	val UserFeederIAC = csv("UserDataIAC.csv").circular
-	val UserFeederNFD = csv("UserDataNFD.csv").circular
-	val UserFeederProbate = csv("UserDataProbate.csv").circular
-	val UserFeederPRL = csv("UserDataPRL.csv").circular
-	val UserFeederBails = csv("UserDataBails.csv").circular
-	val UserFeederBailsHO = csv("UserDataBailsHO.csv").circular
-    val UserFeederBailsAdmin = csv("UserDataBailsAdmin.csv").circular
-	val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
+      val CaseworkerUserFeeder = csv("UserDataCaseworkers.csv").circular
+      val UserFeederDivorce = csv("UserDataDivorce.csv").circular
+      val UserFeederFPL = csv("UserDataFPL.csv").circular
+      val UserFeederFR = csv("UserDataFR.csv").circular
+      val UserFeederIAC = csv("UserDataIAC.csv").circular
+      val UserFeederNFD = csv("UserDataNFD.csv").circular
+      val UserFeederProbate = csv("UserDataProbate.csv").circular
+      val UserFeederPRL = csv("UserDataPRL.csv").circular
+      val UserFeederBails = csv("UserDataBails.csv").circular
+      val UserFeederBailsHO = csv("UserDataBailsHO.csv").circular
+      val UserFeederBailsAdmin = csv("UserDataBailsAdmin.csv").circular
+      val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
+      val UserFeederCTSC = csv("UserDataCTSC.csv").circular
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
@@ -59,7 +60,7 @@ class XUI_Simulation extends Simulation {
 	val prlTargetPerHour: Double = 100
 	val probateTargetPerHour: Double = 250
 	val iacTargetPerHour: Double = 20
-	val fplTargetPerHour: Double = 10
+	val fplTargetPerHour: Double = 30
 	val divorceTargetPerHour: Double = 240
 	val nfdSoleTargetPerHour: Double = 120
 	val nfdJointTargetPerHour: Double = 120
@@ -480,6 +481,12 @@ class XUI_Simulation extends Simulation {
 				.exec(Solicitor_FPL.fplAllocationProposal)
 				.exec(Solicitor_FPL.fplSubmitApplication)
 				.exec(Solicitor_FPL.fplReturnToCase)
+        .exec(Solicitor_FPL.QueryManagement)
+        .exec(Logout.XUILogout)
+        .feed(UserFeederCTSC)
+        .exec(Homepage.XUIHomePage)
+				.exec(Login.XUILogin)
+        .exec(Solicitor_FPL.RespondToQueryManagement)
 				.exec(Logout.XUILogout)
 		}
 
@@ -558,20 +565,20 @@ class XUI_Simulation extends Simulation {
 		}
 	}
 
-	setUp(
-		BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
-		ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
-		FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		DivorceSolicitorScenario.inject(simulationProfile(testType, divorceTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
-    	FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-    	PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
-	).protocols(httpProtocol)
-		.assertions(assertions(testType))
-		.maxDuration(75 minutes)
+  setUp(
+      BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
+      ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
+      FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      DivorceSolicitorScenario.inject(simulationProfile(testType, divorceTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
+      FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+  ).protocols(httpProtocol)
+    .assertions(assertions(testType))
+    .maxDuration(75 minutes)
 
 
 }

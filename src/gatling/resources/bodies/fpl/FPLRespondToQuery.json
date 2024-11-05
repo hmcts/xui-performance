@@ -1,0 +1,46 @@
+{
+  "data": {
+     "qmCaseQueriesCollectionLASol": {
+        "partyName": "",
+        "roleOnCase": "",
+        "caseMessages": [
+           {
+              "id": "#{raiseQueryParentId}",
+              "value": {
+                 "id": "#{raiseQueryId}",
+                 "body": "Some perf test query details go here for query management perf testing",
+                 "name": "sdsdsdsd hjhjhjhj",
+                 "subject": "Perf test query subject",
+                 "createdBy": "#{queryCreatedBy}",
+                 "createdOn": "#{queryCreatedOn}",
+                 "attachments": [],
+                 "hearingDate": null,
+                 "isHearingRelated": "No"
+              }
+           },
+           {
+              "id": null,
+              "value": {
+                 "id": "#{randomUuid()}",
+                 "subject": "Perf test query subject",
+                 "name": "Perftest Caseworker",
+                 "body": "Here is my response to your query",
+                 "attachments": [],
+                 "isHearingRelated": "Yes",
+                 "hearingDate": null,
+                 "createdOn": "#{currentDate}T#{currentTime}Z",
+                 "createdBy": "#{idamId}",
+                 "parentId": "#{raiseQueryId}"
+              }
+           }
+        ]
+     }
+  },
+  "event": {
+     "id": "queryManagementRespondQuery",
+     "summary": "",
+     "description": "Respond to a query"
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false
+}
