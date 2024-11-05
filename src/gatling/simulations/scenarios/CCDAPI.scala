@@ -20,7 +20,7 @@ object CCDAPI {
 
   val clientSecret = ConfigFactory.load.getString("auth.clientSecret")
 
-  //userType must be "Caseworker", "Legal" or "Citizen" - QM user type added for Query Management testing, October 2024
+  //userType must be "Caseworker", "Legal" or "Citizen"
   def Auth(userType: String) =
 
     exec(session => userType match {
