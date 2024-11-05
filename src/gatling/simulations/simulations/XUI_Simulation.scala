@@ -27,7 +27,6 @@ class XUI_Simulation extends Simulation {
 	val UserFeederBailsHO = csv("UserDataBailsHO.csv").circular
   val UserFeederBailsAdmin = csv("UserDataBailsAdmin.csv").circular
 	val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
-  val UserFeederQueryManagement = csv("UserDataQueryManagement.csv").circular
   val UserFeederCTSC = csv("UserDataCTSC.csv").circular
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
