@@ -1,0 +1,31 @@
+{
+  "data": {
+     "qmCaseQueriesCollectionLASol": {
+        "partyName": "",
+        "roleOnCase": "",
+        "caseMessages": [
+           {
+              "id": null,
+              "value": {
+                 "id": "#{randomUuid()}",
+                 "subject": "Perf test query subject",
+                 "name": "dsdsdsd hjhjhjhj",
+                 "body": "Some perf test query details go here for query management perf testing",
+                 "attachments": [],
+                 "isHearingRelated": "No",
+                 "hearingDate": null,
+                 "createdOn": "#{currentDate}T#{currentTime}Z",
+                 "createdBy": "#{idamId}"
+              }
+           }
+        ]
+     }
+  },
+  "event": {
+     "id": "queryManagementRaiseQuery",
+     "summary": "",
+     "description": "Raise a new query"
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false
+}

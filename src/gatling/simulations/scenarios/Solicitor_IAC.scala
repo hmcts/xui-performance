@@ -58,7 +58,7 @@ object Solicitor_IAC {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
-        .check(substring("Start your appeal")))
+        .check(substring("Start the appeal")))
 
       .exec(Common.profile)
 
