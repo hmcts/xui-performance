@@ -26,7 +26,7 @@
                  "name": "Perftest Caseworker",
                  "body": "Here is my response to your query",
                  "attachments": [],
-                 "isHearingRelated": "Yes",
+                 "isHearingRelated": "No",
                  "hearingDate": null,
                  "createdOn": "#{currentDate}T#{currentTime}Z",
                  "createdBy": "#{idamId}",
