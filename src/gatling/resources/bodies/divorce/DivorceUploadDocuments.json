@@ -11,7 +11,8 @@
           "DocumentLink": {
             "document_url": "#{DocumentURL1}",
             "document_binary_url": "#{DocumentURL1}/binary",
-            "document_filename": "3MB.pdf"
+            "document_filename": "3MB.pdf",
+            "document_hash": "#{DocumentHash1}"
           }
         },
         "id": null
@@ -26,7 +27,8 @@
           "DocumentLink": {
             "document_url": "#{DocumentURL2}",
             "document_binary_url": "#{DocumentURL2}/binary",
-            "document_filename": "3MB.pdf"
+            "document_filename": "3MB.pdf",
+            "document_hash": "#{DocumentHash2}"
           }
         },
         "id": null
@@ -41,7 +43,8 @@
           "DocumentLink": {
             "document_url": "#{DocumentURL3}",
             "document_binary_url": "#{DocumentURL3}/binary",
-            "document_filename": "120KB.pdf"
+            "document_filename": "120KB.pdf",
+            "document_hash": "#{DocumentHash3}"
           }
         },
         "id": null
@@ -129,7 +132,8 @@
           "DocumentLink": {
             "document_url": "#{DocumentURL1}",
             "document_binary_url": "#{DocumentURL1}/binary",
-            "document_filename": "3MB.pdf"
+            "document_filename": "3MB.pdf",
+            "document_hash": "#{DocumentHash1}"
           }
         },
         "id": null
@@ -144,7 +148,8 @@
           "DocumentLink": {
             "document_url": "#{DocumentURL2}",
             "document_binary_url": "#{DocumentURL2}/binary",
-            "document_filename": "3MB.pdf"
+            "document_filename": "3MB.pdf",
+            "document_hash": "#{DocumentHash2}"
           }
         },
         "id": null
