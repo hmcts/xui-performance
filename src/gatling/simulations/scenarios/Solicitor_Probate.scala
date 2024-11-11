@@ -594,18 +594,21 @@ object Solicitor_Probate {
 
       .group("XUI_Probate_270_UploadStatementOfTruth") {
         exec(http("XUI_Probate_270_005_UploadStatementOfTruth")
-          .post("/documents")
+          .post("/documentsv2")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
           .header("content-type", "multipart/form-data")
           .header("x-xsrf-token", "#{XSRFToken}")
+          .formParam("classification", "PUBLIC")
+          .formParam("caseTypeId", "null")
+          .formParam("jurisdictionId", "null")
           .bodyPart(RawFileBodyPart("files", "3MB.pdf")
             .fileName("3MB.pdf")
             .transferEncoding("binary"))
           .asMultipartForm
-          .formParam("classification", "PUBLIC")
           .check(substring("originalDocumentName"))
-          .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("SOTDocumentURL")))
+          .check(jsonPath("$.documents[0].hashToken").saveAs("DocumentHash"))
+          .check(jsonPath("$.documents[0]._links.self.href").saveAs("SOTDocumentURL")))
       }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -653,7 +656,8 @@ object Solicitor_Probate {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/probate/ProbateExtraCopies.json"))
-        .check(substring("extraCopiesOfGrant")))
+        .check(substring("extraCopiesOfGrant"))
+        .check(jsonPath("$.data.solsPBAPaymentReference").saveAs("PBAPaymentReference")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
