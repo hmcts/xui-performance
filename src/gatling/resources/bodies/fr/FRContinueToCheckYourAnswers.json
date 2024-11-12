@@ -33,6 +33,7 @@
     "solicitorDXnumber": null,
     "solicitorAgreeToReceiveEmails": "No",
     "divorceCaseNumber": "EZ12D91234",
+    "civilPartnership":"No",
     "divorceStageReached": "Petition Issued",
     "applicantFMName": "ApplicantPerf",
     "applicantLName": "ApplicantTest",
@@ -72,13 +73,15 @@
     "consentOrder": {
       "document_url": "#{ConsentOrderDocumentURL}",
       "document_binary_url": "#{ConsentOrderDocumentURL}/binary",
-      "document_filename": "3MB.pdf"
+      "document_filename": "3MB.pdf",
+      "document_hash": "#{ConsentOrderDocumentHash}"
     },
     "d81Question": "Yes",
     "d81Joint": {
       "document_url": "#{D81DocumentURL}",
       "document_binary_url": "#{D81DocumentURL}/binary",
-      "document_filename": "3MB.pdf"
+      "document_filename": "3MB.pdf",
+      "document_hash": "#{D81DocumentHash}"
     },
     "otherCollection": []
   },

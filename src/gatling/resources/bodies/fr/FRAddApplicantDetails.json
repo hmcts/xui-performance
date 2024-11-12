@@ -39,6 +39,7 @@
     "solicitorDXnumber": null,
     "solicitorAgreeToReceiveEmails": "No",
     "divorceCaseNumber": "EZ12D91234",
+    "civilPartnership":"No",
     "divorceStageReached": "Petition Issued",
     "applicantFMName": "ApplicantPerf",
     "applicantLName": "ApplicantTest",
