@@ -36,7 +36,8 @@
               "document": {
                  "document_url": "#{DocumentURL1}",
                  "document_binary_url": "#{DocumentURL1}/binary",
-                 "document_filename": "3MB.pdf"
+                 "document_filename": "3MB.pdf",
+                 "document_hash": "#{DocumentHash}"
               }
            },
            "id": null
