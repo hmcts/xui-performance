@@ -127,10 +127,9 @@ object Solicitor_IAC {
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
-        .formParam("caseTypeId", "null")
-        .formParam("jurisdictionId", "null")
+        .formParam("caseTypeId", "Asylum")
+        .formParam("jurisdictionId", "IA")
         .check(substring("originalDocumentName"))
-        // .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL1"))
         .check(jsonPath("$.documents[0].hashToken").saveAs("DocumentHash"))
         .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL1")))
     }

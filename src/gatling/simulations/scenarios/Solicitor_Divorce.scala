@@ -333,12 +333,11 @@ object Solicitor_Divorce {
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
-        .formParam("caseTypeId", "null")
-        .formParam("jurisdictionId", "null")
+        .formParam("caseTypeId", "DIVORCE")
+        .formParam("jurisdictionId", "DIVORCE")
         .check(substring("originalDocumentName"))
         .check(substring("originalDocumentName"))
         .check(jsonPath("$.documents[0].hashToken").saveAs("DocumentHash1"))
-        // .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL1"))
         .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL1")))
 
       .exec(Common.userDetails)
@@ -359,11 +358,10 @@ object Solicitor_Divorce {
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
-        .formParam("caseTypeId", "null")
-        .formParam("jurisdictionId", "null")
+        .formParam("caseTypeId", "DIVORCE")
+        .formParam("jurisdictionId", "DIVORCE")
         .check(substring("originalDocumentName"))
         .check(jsonPath("$.documents[0].hashToken").saveAs("DocumentHash2"))
-        // .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL2"))
         .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL2")))
 
       .exec(Common.userDetails)
@@ -384,11 +382,10 @@ object Solicitor_Divorce {
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
-        .formParam("caseTypeId", "null")
-        .formParam("jurisdictionId", "null")
+        .formParam("caseTypeId", "DIVORCE")
+        .formParam("jurisdictionId", "DIVORCE")
         .check(substring("originalDocumentName"))
         .check(jsonPath("$.documents[0].hashToken").saveAs("DocumentHash3"))
-        // .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL3"))
         .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL3")))
 
       .exec(Common.userDetails)
