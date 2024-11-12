@@ -3,7 +3,8 @@
     "consentOrder": {
       "document_url": "#{ConsentOrderDocumentURL}",
       "document_binary_url": "#{ConsentOrderDocumentURL}/binary",
-      "document_filename": "3MB.pdf"
+      "document_filename": "3MB.pdf",
+      "document_hash": "#{ConsentOrderDocumentHash}"
     }
   },
   "event": {
@@ -39,6 +40,7 @@
     "solicitorDXnumber": null,
     "solicitorAgreeToReceiveEmails": "No",
     "divorceCaseNumber": "EZ12D91234",
+    "civilPartnership":"No",
     "divorceStageReached": "Petition Issued",
     "applicantFMName": "ApplicantPerf",
     "applicantLName": "ApplicantTest",
@@ -78,7 +80,8 @@
     "consentOrder": {
       "document_url": "#{ConsentOrderDocumentURL}",
       "document_binary_url": "#{ConsentOrderDocumentURL}/binary",
-      "document_filename": "3MB.pdf"
+      "document_filename": "3MB.pdf",
+      "document_hash": "#{ConsentOrderDocumentHash}"
     }
   },
   "event_token": "#{event_token}",

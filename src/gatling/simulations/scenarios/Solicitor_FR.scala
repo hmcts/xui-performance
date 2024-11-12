@@ -185,7 +185,7 @@ object Solicitor_FR  {
 
     .group("XUI_FR_110_UploadConsentOrder") {
       exec(http("XUI_FR_110_005_UploadConsentOrder")
-        .post("/documents")
+        .post("/documentsv2")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .header("content-type", "multipart/form-data")
@@ -195,8 +195,11 @@ object Solicitor_FR  {
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
+        .formParam("caseTypeId", "FinancialRemedyMVP2")
+        .formParam("jurisdictionId", "DIVORCE")
         .check(substring("originalDocumentName"))
-        .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("ConsentOrderDocumentURL")))
+        .check(jsonPath("$.documents[0].hashToken").saveAs("ConsentOrderDocumentHash"))
+        .check(jsonPath("$.documents[0]._links.self.href").saveAs("ConsentOrderDocumentURL")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -222,7 +225,7 @@ object Solicitor_FR  {
 
     .group("XUI_FR_130_UploadJointD81") {
       exec(http("XUI_FR_130_005_UploadJointD81")
-        .post("/documents")
+        .post("/documentsv2")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .header("content-type", "multipart/form-data")
@@ -232,8 +235,11 @@ object Solicitor_FR  {
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
+        .formParam("caseTypeId", "FinancialRemedyMVP2")
+        .formParam("jurisdictionId", "DIVORCE")
         .check(substring("originalDocumentName"))
-        .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("D81DocumentURL")))
+        .check(jsonPath("$.documents[0].hashToken").saveAs("D81DocumentHash"))
+        .check(jsonPath("$.documents[0]._links.self.href").saveAs("D81DocumentURL")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
