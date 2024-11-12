@@ -212,7 +212,7 @@ class XUI_Simulation extends Simulation {
 				.exec(Login.XUILogin)
 				.repeat(2) {
 					exec(Solicitor_IAC.CreateIACCase)
-					.exec(Solicitor_IAC.shareacase)
+					// .exec(Solicitor_IAC.shareacase) //Temp removed as the way to share a case is now done through the case list
 				}
 				.exec(Logout.XUILogout)
 		}
