@@ -323,7 +323,7 @@ object Solicitor_Divorce {
 
     .group("XUI_Divorce_170_UploadMarriageCertificate") {
       exec(http("XUI_Divorce_170_UploadMarriageCertificate")
-        .post("/documents")
+        .post("/documentsv2")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .header("content-type", "multipart/form-data")
@@ -333,8 +333,12 @@ object Solicitor_Divorce {
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
+        .formParam("caseTypeId", "DIVORCE")
+        .formParam("jurisdictionId", "DIVORCE")
         .check(substring("originalDocumentName"))
-        .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL1")))
+        .check(substring("originalDocumentName"))
+        .check(jsonPath("$.documents[0].hashToken").saveAs("DocumentHash1"))
+        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL1")))
 
       .exec(Common.userDetails)
       .exec(Common.userDetails)
@@ -344,7 +348,7 @@ object Solicitor_Divorce {
 
     .group("XUI_Divorce_175_UploadMarriageCertificate") { //This step may fail when run in debug mode, due to upload rate limiting introduced by XUI
       exec(http("XUI_Divorce_175_UploadMarriageCertificate")
-        .post("/documents")
+        .post("/documentsv2")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .header("content-type", "multipart/form-data")
@@ -354,8 +358,11 @@ object Solicitor_Divorce {
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
+        .formParam("caseTypeId", "DIVORCE")
+        .formParam("jurisdictionId", "DIVORCE")
         .check(substring("originalDocumentName"))
-        .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL2")))
+        .check(jsonPath("$.documents[0].hashToken").saveAs("DocumentHash2"))
+        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL2")))
 
       .exec(Common.userDetails)
       .exec(Common.userDetails)
@@ -365,7 +372,7 @@ object Solicitor_Divorce {
 
     .group("XUI_Divorce_176_UploadMarriageCertificate") {
       exec(http("XUI_Divorce_176_UploadMarriageCertificate")
-        .post("/documents")
+        .post("/documentsv2")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .header("content-type", "multipart/form-data")
@@ -375,8 +382,11 @@ object Solicitor_Divorce {
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
+        .formParam("caseTypeId", "DIVORCE")
+        .formParam("jurisdictionId", "DIVORCE")
         .check(substring("originalDocumentName"))
-        .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL3")))
+        .check(jsonPath("$.documents[0].hashToken").saveAs("DocumentHash3"))
+        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL3")))
 
       .exec(Common.userDetails)
       .exec(Common.userDetails)

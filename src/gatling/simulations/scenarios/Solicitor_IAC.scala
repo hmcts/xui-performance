@@ -117,18 +117,21 @@ object Solicitor_IAC {
 
     .group("XUI_IAC_090_UploadNoticeDecision") {
       exec(http("XUI_IAC_090_005_UploadNoticeDecision")
-        .post("/documents")
+        .post("/documentsv2")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
         .header("content-type", "multipart/form-data")
         .header("x-xsrf-token", "#{XSRFToken}")
         .bodyPart(RawFileBodyPart("files", "3MB.pdf")
-        .fileName("3MB.pdf")
-        .transferEncoding("binary"))
+          .fileName("3MB.pdf")
+          .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
+        .formParam("caseTypeId", "Asylum")
+        .formParam("jurisdictionId", "IA")
         .check(substring("originalDocumentName"))
-        .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL1")))
+        .check(jsonPath("$.documents[0].hashToken").saveAs("DocumentHash"))
+        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL1")))
     }
 
     .group("XUI_IAC_090_010_StartUploadNoticeDecision") {
