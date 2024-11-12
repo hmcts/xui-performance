@@ -153,6 +153,22 @@
           }
         },
         "id": null
+      },
+      {
+        "value": {
+          "DocumentType": "generalOrder",
+          "DocumentEmailContent": null,
+          "DocumentDateAdded": null,
+          "DocumentComment": null,
+          "DocumentFileName": null,
+          "DocumentLink": {
+            "document_url": "#{DocumentURL3}",
+            "document_binary_url": "#{DocumentURL3}/binary",
+            "document_filename": "120KB.pdf",
+            "document_hash": "#{DocumentHash3}"
+          }
+        },
+        "id": null
       }
     ]
   },
