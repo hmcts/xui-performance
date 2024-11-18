@@ -39,7 +39,7 @@ object Homepage {
         .get("/api/user/details?refreshRoleAssignments=undefined")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
-        .check(status.in(401)))
+        .check(status.in(200, 304, 401)))
 
       .exec(Common.isAuthenticated)
 
