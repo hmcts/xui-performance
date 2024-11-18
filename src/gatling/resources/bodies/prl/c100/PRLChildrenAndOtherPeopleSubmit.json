@@ -1,0 +1,39 @@
+{
+  "data": {
+     "buffChildAndOtherPeopleRelations": [
+        {
+           "value": {
+              "otherPeopleFullName": "#{otherPeopleFullName0}",
+              "childFullName": "#{childFullName}",
+              "childAndOtherPeopleRelation": "guardian",
+              "childAndOtherPeopleRelationOtherDetails": null,
+              "childLivesWith": "No",
+              "isChildLivesWithPersonConfidential": null,
+              "otherPeopleId": "#{otherPeopleSubId0}",
+              "childId": "#{childId}"
+           },
+           "id": "#{otherPeopleId0}"
+        },
+        {
+           "value": {
+              "otherPeopleFullName": "#{otherPeopleFullName1}",
+              "childFullName": "#{childFullName}",
+              "childAndOtherPeopleRelation": "guardian",
+              "childAndOtherPeopleRelationOtherDetails": null,
+              "childLivesWith": "No",
+              "isChildLivesWithPersonConfidential": null,
+              "otherPeopleId": "#{otherPeopleSubId1}",
+              "childId": "#{childId}"
+           },
+           "id": "#{otherPeopleId1}"
+        }
+     ]
+  },
+  "event": {
+     "id": "childrenAndOtherPeople",
+     "summary": "",
+     "description": ""
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false
+}

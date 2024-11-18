@@ -1,0 +1,54 @@
+{
+  "data": {
+     "buffChildAndOtherPeopleRelations": [
+        {
+           "value": {
+              "otherPeopleFullName": "#{otherPeopleFullName0}",
+              "childFullName": "#{childFullName}",
+              "childAndOtherPeopleRelation": "guardian",
+              "childLivesWith": "No"
+           },
+           "id": "#{otherPeopleId0}"
+        },
+        {
+           "value": {
+              "otherPeopleFullName": "#{otherPeopleFullName1}",
+              "childFullName": "#{childFullName}",
+              "childAndOtherPeopleRelation": "guardian",
+              "childLivesWith": "No"
+           },
+           "id": "#{otherPeopleId1}"
+        }
+     ]
+  },
+  "event": {
+     "id": "childrenAndOtherPeople",
+     "summary": "",
+     "description": ""
+  },
+  "event_data": {
+     "buffChildAndOtherPeopleRelations": [
+        {
+           "value": {
+              "otherPeopleFullName": "#{otherPeopleFullName0}",
+              "childFullName": "#{childFullName}",
+              "childAndOtherPeopleRelation": "guardian",
+              "childLivesWith": "No"
+           },
+           "id": "#{otherPeopleId0}"
+        },
+        {
+           "value": {
+              "otherPeopleFullName": "#{otherPeopleFullName1}",
+              "childFullName": "#{childFullName}",
+              "childAndOtherPeopleRelation": "guardian",
+              "childLivesWith": "No"
+           },
+           "id": "#{otherPeopleId1}"
+        }
+     ]
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
+}
