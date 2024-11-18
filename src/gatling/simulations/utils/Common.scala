@@ -155,7 +155,7 @@ object Common {
       .get("/api/user/details?refreshRoleAssignments=undefined")
       .headers(Headers.commonHeader)
       .header("accept", "application/json, text/plain, */*")
-      .check(status.in(200, 304, 401)))
+      .check(status.in(200, 304)))
 
   val configUI =
     exec(http("XUI_Common_000_ConfigUI")
