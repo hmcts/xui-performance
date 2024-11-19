@@ -118,17 +118,19 @@ class XUI_Simulation extends Simulation {
         .exec(Solicitor_PRL_C100.ApplicantDetails)
         .exec(Solicitor_PRL_C100.ChildDetails)
         .exec(Solicitor_PRL_C100.RespondentDetails)
-        .exec(Solicitor_PRL_C100.MIAM)
         .exec(Solicitor_PRL_C100.AllegationsOfHarm)
         .exec(Solicitor_PRL_C100.OtherChildrenNotInCase)
+        .exec(Solicitor_PRL_C100.OtherPeopleInCase)
         .exec(Solicitor_PRL_C100.ChildrenAndApplicants)
         .exec(Solicitor_PRL_C100.ChildrenAndRespondents)
+        .exec(Solicitor_PRL_C100.ChildrenAndOtherPeople)
+        .exec(Solicitor_PRL_C100.MIAM)
         .exec(Solicitor_PRL_C100.ViewPdfApplication)
         .exec(Solicitor_PRL_C100.SubmitAndPay)
         .exec(Solicitor_PRL_C100.HearingsTab)
       } 
       {
-      // 	//FL401 Journey
+      	//FL401 Journey
         exec(Solicitor_PRL_FL401.CreatePrivateLawCase)
         .exec(Solicitor_PRL_FL401.TypeOfApplication)
         .exec(Solicitor_PRL_FL401.WithoutNoticeOrder)
@@ -570,7 +572,7 @@ class XUI_Simulation extends Simulation {
       ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
       ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
       FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      DivorceSolicitorScenario.inject(simulationProfile(testType, divorceTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
+      // DivorceSolicitorScenario.inject(simulationProfile(testType, divorceTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
       FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
