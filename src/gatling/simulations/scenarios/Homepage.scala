@@ -34,7 +34,12 @@ object Homepage {
 
       .exec(Common.configUI)
 
-      .exec(Common.userDetails)
+      // .exec(Common.userDetails)
+      .exec(http("XUI_Common_000_UserDetails")
+        .get("/api/user/details?refreshRoleAssignments=undefined")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json, text/plain, */*")
+        .check(status.in(200, 304, 401)))
 
       .exec(Common.isAuthenticated)
 
