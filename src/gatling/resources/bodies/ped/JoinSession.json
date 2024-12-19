@@ -1,0 +1,15 @@
+{
+  "type": "event",
+  "event": "IcpClientJoinSession",
+  "data": {
+    "presenterName": "",
+    "participants": "{}",
+    "dateOfHearing": "#{session_dateOfHearing}",
+    "caseId": "1712674566646674",
+    "presenterId": "",
+    "sessionId": "#{session_sessionId}",
+    "documentId": "7e488855-9fb5-4ee0-9545-5f9b5714a167",
+    "connectionUrl": "#{session_connectionUrl}",
+    "username": "#{session_username}"
+  }
+}
