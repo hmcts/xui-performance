@@ -15,19 +15,20 @@ import scala.util.Random
 
 class XUI_Simulation extends Simulation {
 
-      val CaseworkerUserFeeder = csv("UserDataCaseworkers.csv").circular
-      val UserFeederDivorce = csv("UserDataDivorce.csv").circular
-      val UserFeederFPL = csv("UserDataFPL.csv").circular
-      val UserFeederFR = csv("UserDataFR.csv").circular
-      val UserFeederIAC = csv("UserDataIAC.csv").circular
-      val UserFeederNFD = csv("UserDataNFD.csv").circular
-      val UserFeederProbate = csv("UserDataProbate.csv").circular
-      val UserFeederPRL = csv("UserDataPRL.csv").circular
-      val UserFeederBails = csv("UserDataBails.csv").circular
-      val UserFeederBailsHO = csv("UserDataBailsHO.csv").circular
-      val UserFeederBailsAdmin = csv("UserDataBailsAdmin.csv").circular
-      val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
-      val UserFeederCTSC = csv("UserDataCTSC.csv").circular
+	val CaseworkerUserFeeder = csv("UserDataCaseworkers.csv").circular
+	val UserFeederDivorce = csv("UserDataDivorce.csv").circular
+	val UserFeederFPL = csv("UserDataFPL.csv").circular
+	val UserFeederFR = csv("UserDataFR.csv").circular
+	val UserFeederIAC = csv("UserDataIAC.csv").circular
+	val UserFeederNFD = csv("UserDataNFD.csv").circular
+	val UserFeederProbate = csv("UserDataProbate.csv").circular
+	val UserFeederPRL = csv("UserDataPRL.csv").circular
+	val UserFeederBails = csv("UserDataBails.csv").circular
+	val UserFeederBailsHO = csv("UserDataBailsHO.csv").circular
+	val UserFeederBailsAdmin = csv("UserDataBailsAdmin.csv").circular
+	val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
+	val UserFeederCTSC = csv("UserDataCTSC.csv").circular
+	val PEDUserFeeder = csv("UserDataPED.csv").circular
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
@@ -92,6 +93,7 @@ class XUI_Simulation extends Simulation {
 		.inferHtmlResources()
 		.silentResources
 		.header("experimental", "true") //used to send through client id, s2s and bearer tokens. Might be temporary
+		.wsUnmatchedInboundMessageBufferSize(10)
 
 	before {
 		println(s"Test Type: ${testType}")
@@ -518,6 +520,19 @@ class XUI_Simulation extends Simulation {
 		}
 
 	/*===============================================================================================
+	* Presenting Evidence Digitally (PED) POC
+ 	===============================================================================================*/
+	val PEDScenario = scenario("***** PED Websockets Journey ******")
+		.exitBlockOnFail {
+			feed(PEDUserFeeder)
+			.exec(_.set("env", s"${env}")
+				.set("caseType", "Benefit"))
+			.exec(Homepage.XUIHomePage)
+			.exec(Login.XUILogin)
+			.exec(PresentingEvidenceDigitally.Presenter)
+		}
+
+	/*===============================================================================================
 	* Simulation Configuration
 	 ===============================================================================================*/
 
@@ -567,6 +582,8 @@ class XUI_Simulation extends Simulation {
 	}
 
   setUp(
+		PEDScenario.inject(atOnceUsers(1))
+		/*
       BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
       ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
@@ -577,9 +594,10 @@ class XUI_Simulation extends Simulation {
       NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+		 */
   ).protocols(httpProtocol)
-    .assertions(assertions(testType))
-    .maxDuration(75 minutes)
+    //.assertions(assertions(testType))
+    //.maxDuration(75 minutes)
 
 
 }
