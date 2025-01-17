@@ -1,6 +1,6 @@
 {
   "type": "event",
-  "event": "IcpClientJoinSession",
+  "event": "IcpClientLeaveSession",
   "data": {
     "presenterName": "#{session_presenterName}",
     "participants": "#{session_participants}",
@@ -9,7 +9,6 @@
     "presenterId": "#{session_presenterId}",
     "sessionId": "#{session_sessionId}",
     "documentId": "7e488855-9fb5-4ee0-9545-5f9b5714a167",
-    "connectionUrl": "#{session_connectionUrl}",
-    "username": "#{session_username}"
+    "connectionUrl": "#{session_connectionUrl}"
   }
 }
