@@ -9,6 +9,8 @@ import scala.io.Source
 import io.gatling.core.controller.inject.open.OpenInjectionStep
 import io.gatling.commons.stats.assertion.Assertion
 import io.gatling.core.pause.PauseType
+import jdk.jshell.ExpressionSnippet
+import scenarios.PresentingEvidenceDigitally.{pedAllUsersJoined, pedReadyToSendMessages, pedAllFollowersLeft}
 
 import scala.concurrent.duration._
 import scala.util.Random
@@ -522,14 +524,48 @@ class XUI_Simulation extends Simulation {
 	/*===============================================================================================
 	* Presenting Evidence Digitally (PED) POC
  	===============================================================================================*/
-	val PEDScenario = scenario("***** PED Websockets Journey ******")
+	val PEDPresenterScenario = scenario("***** PED Websockets Journey - Presenter ******")
 		.exitBlockOnFail {
 			feed(PEDUserFeeder)
 			.exec(_.set("env", s"${env}")
 				.set("caseType", "Benefit"))
 			.exec(Homepage.XUIHomePage)
 			.exec(Login.XUILogin)
-			.exec(PresentingEvidenceDigitally.Presenter)
+			.exec(PresentingEvidenceDigitally.GetSessionInfo)
+			.exec(PresentingEvidenceDigitally.JoinSession)
+			.exec(PresentingEvidenceDigitally.PresenterStartPresenting)
+			.exec(PresentingEvidenceDigitally.WaitForAllUsersToJoin)
+			//.pause(35) //pause whilst the followers join
+			.exec(PresentingEvidenceDigitally.CheckForReceivedMessages)
+			.rendezVous(1) //wait for all presenters to reach this point before sending messages
+			.exec(PresentingEvidenceDigitally.SetEvent(pedReadyToSendMessages, true))
+			.exec(PresentingEvidenceDigitally.PresenterSendMessages)
+			.exec(PresentingEvidenceDigitally.WaitForAllFollowersToLeave)
+			//.pause(30) //pause whilst the followers leave
+			.exec(PresentingEvidenceDigitally.CheckForReceivedMessages)
+			.exec(PresentingEvidenceDigitally.PresneterStopPresenting)
+			.exec(PresentingEvidenceDigitally.LeaveSession)
+		}
+
+	/*===============================================================================================
+	* Presenting Evidence Digitally (PED) POC
+	 ===============================================================================================*/
+	val PEDFollowerScenario = scenario("***** PED Websockets Journey - Follower ******")
+		.exitBlockOnFail {
+			feed(PEDUserFeeder)
+			.exec(_.set("env", s"${env}")
+				.set("caseType", "Benefit"))
+			.exec(Homepage.XUIHomePage)
+			.exec(Login.XUILogin)
+			.exec(PresentingEvidenceDigitally.GetSessionInfo)
+			.exec(PresentingEvidenceDigitally.JoinSession)
+			.rendezVous(1) //wait for all followers to reach this point before marking them as joined
+			.exec(PresentingEvidenceDigitally.SetEvent(pedAllUsersJoined, true))
+			.exec(PresentingEvidenceDigitally.WaitForPresentersToSendMessages)
+			.exec(PresentingEvidenceDigitally.CheckForReceivedMessages)
+			.exec(PresentingEvidenceDigitally.LeaveSession)
+			.rendezVous(1) //wait for all users to have left before allowing presenters to stop presenting
+			.exec(PresentingEvidenceDigitally.SetEvent(pedAllFollowersLeft, true))
 		}
 
 	/*===============================================================================================
@@ -582,7 +618,8 @@ class XUI_Simulation extends Simulation {
 	}
 
   setUp(
-		PEDScenario.inject(atOnceUsers(1))
+		PEDPresenterScenario.inject(atOnceUsers(1)),
+		PEDFollowerScenario.inject(nothingFor(30), atOnceUsers(1))
 		/*
       BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 

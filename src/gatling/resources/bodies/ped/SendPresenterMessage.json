@@ -1,0 +1,18 @@
+{
+  "type": "event",
+  "event": "IcpUpdateScreen",
+  "data": {
+    "body": {
+      "pdfPosition": {
+        "pageNumber": 1,
+        "scale": 100,
+        "top": 842,
+        "left": -375,
+        "rotation": 0,
+        "pdfOpenParams": "#page=1&zoom=100,-375,842"
+      }
+    },
+    "caseId": "1712674566646674",
+    "documentId": "7e488855-9fb5-4ee0-9545-5f9b5714a167"
+  }
+}

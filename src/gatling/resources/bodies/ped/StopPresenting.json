@@ -1,0 +1,14 @@
+{
+  "type": "event",
+  "event": "IcpNewPresenterStartsPresenting",
+  "data": {
+    "sessionId": "#{session_sessionId}",
+    "caseId": "1712674566646674",
+    "documentId": "7e488855-9fb5-4ee0-9545-5f9b5714a167",
+    "dateOfHearing": "#{session_dateOfHearing}",
+    "presenterId": "",
+    "presenterName": "",
+    "participants": "#{session_participants}",
+    "connectionUrl": "#{session_connectionUrl}"
+  }
+}
