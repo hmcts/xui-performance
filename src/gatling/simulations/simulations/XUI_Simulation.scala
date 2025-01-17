@@ -10,7 +10,8 @@ import io.gatling.core.controller.inject.open.OpenInjectionStep
 import io.gatling.commons.stats.assertion.Assertion
 import io.gatling.core.pause.PauseType
 import jdk.jshell.ExpressionSnippet
-import scenarios.PresentingEvidenceDigitally.{pedAllUsersJoined, pedReadyToSendMessages, pedAllFollowersLeft}
+import scenarios.ped.requests.PresentingEvidenceDigitally.{pedAllFollowersLeft, pedAllUsersJoined, pedReadyToSendMessages}
+import scenarios.ped.requests.PresentingEvidenceDigitally
 
 import scala.concurrent.duration._
 import scala.util.Random
@@ -69,6 +70,8 @@ class XUI_Simulation extends Simulation {
 	val nfdJointTargetPerHour: Double = 120
 	val frTargetPerHour: Double = 100
 	val caseworkerTargetPerHour: Double = 1000
+
+	val pedNumberOfUsers = 2
 
 	//This determines the percentage split of PRL journeys, by C100 or FL401
 	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
@@ -524,6 +527,7 @@ class XUI_Simulation extends Simulation {
 	/*===============================================================================================
 	* Presenting Evidence Digitally (PED) POC
  	===============================================================================================*/
+	/*
 	val PEDPresenterScenario = scenario("***** PED Websockets Journey - Presenter ******")
 		.exitBlockOnFail {
 			feed(PEDUserFeeder)
@@ -546,11 +550,12 @@ class XUI_Simulation extends Simulation {
 			.exec(PresentingEvidenceDigitally.PresneterStopPresenting)
 			.exec(PresentingEvidenceDigitally.LeaveSession)
 		}
+	 */
 
 	/*===============================================================================================
 	* Presenting Evidence Digitally (PED) POC
 	 ===============================================================================================*/
-	val PEDFollowerScenario = scenario("***** PED Websockets Journey - Follower ******")
+	/*val PEDFollowerScenario = scenario("***** PED Websockets Journey - Follower ******")
 		.exitBlockOnFail {
 			feed(PEDUserFeeder)
 			.exec(_.set("env", s"${env}")
@@ -567,6 +572,14 @@ class XUI_Simulation extends Simulation {
 			.rendezVous(1) //wait for all users to have left before allowing presenters to stop presenting
 			.exec(PresentingEvidenceDigitally.SetEvent(pedAllFollowersLeft, true))
 		}
+	 */
+
+	/*===============================================================================================
+	* Presenting Evidence Digitally (PED) POC
+	 ===============================================================================================*/
+		val PEDScenario = scenario("***** PED Websockets Journey ******")
+			.exec(_.set("env", s"${env}"))
+			.exec(ped.PED_Scenario.PEDScenario(pedNumberOfUsers))
 
 	/*===============================================================================================
 	* Simulation Configuration
@@ -618,8 +631,9 @@ class XUI_Simulation extends Simulation {
 	}
 
   setUp(
-		PEDPresenterScenario.inject(atOnceUsers(1)),
-		PEDFollowerScenario.inject(nothingFor(30), atOnceUsers(1))
+		//PEDPresenterScenario.inject(atOnceUsers(1)),
+		//PEDFollowerScenario.inject(nothingFor(30), atOnceUsers(1))
+		PEDScenario.inject(atOnceUsers(pedNumberOfUsers))
 		/*
       BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
