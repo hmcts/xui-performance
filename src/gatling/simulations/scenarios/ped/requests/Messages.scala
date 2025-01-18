@@ -19,8 +19,8 @@ object Messages {
     .foreach("#{messages}", "message", "messageCounter") {
       exec {
         session =>
-          println(session("user").as[String] + " (" + session("type").as[String] + ") received message. Message "
-            + (session("messageCounter").as[Int] + 1).toString + ": " + session("message").as[String])
+          println(session("session_sessionId").as[String] + "," + session("user").as[String] + "," + session("type").as[String] + ","
+            + (session("messageCounter").as[Int] + 1).toString + "," + session("message").as[String])
           session
       }
     }

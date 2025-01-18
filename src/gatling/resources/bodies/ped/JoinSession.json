@@ -5,10 +5,10 @@
     "presenterName": "#{session_presenterName}",
     "participants": "#{session_participants}",
     "dateOfHearing": "#{session_dateOfHearing}",
-    "caseId": "1712674566646674",
+    "caseId": "#{caseId}",
     "presenterId": "#{session_presenterId}",
     "sessionId": "#{session_sessionId}",
-    "documentId": "7e488855-9fb5-4ee0-9545-5f9b5714a167",
+    "documentId": "#{docId}",
     "connectionUrl": "#{session_connectionUrl}",
     "username": "#{session_username}"
   }

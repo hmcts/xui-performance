@@ -3,8 +3,8 @@
   "event": "IcpNewPresenterStartsPresenting",
   "data": {
     "sessionId": "#{session_sessionId}",
-    "caseId": "1712674566646674",
-    "documentId": "7e488855-9fb5-4ee0-9545-5f9b5714a167",
+    "caseId": "#{caseId}",
+    "documentId": "#{docId}",
     "dateOfHearing": "#{session_dateOfHearing}",
     "presenterId": "",
     "presenterName": "",
