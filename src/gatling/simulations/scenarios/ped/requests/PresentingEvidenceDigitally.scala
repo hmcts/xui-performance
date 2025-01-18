@@ -18,7 +18,7 @@ object PresentingEvidenceDigitally {
   val GetSessionInfo =
 
     exec(http("PED_010_GetSessionInfo")
-      .get("/icp/sessions/1712674566646674/7e488855-9fb5-4ee0-9545-5f9b5714a167") // caseId/DocId
+      .get("/icp/sessions/#{caseId}/#{docId}") // caseId/DocId
       .header("x-xsrf-token", "#{XSRFToken}")
       .check(jsonPath("$.username").saveAs("session_username"))
       .check(jsonPath("$.session.presenterName").saveAs("session_presenterName"))
