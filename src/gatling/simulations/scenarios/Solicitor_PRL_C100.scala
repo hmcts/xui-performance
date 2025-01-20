@@ -74,7 +74,7 @@ object Solicitor_PRL_C100 {
 
       .exec(Common.userDetails)
 
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -203,8 +203,6 @@ object Solicitor_PRL_C100 {
         .check(jsonPath("$.id").is("selectApplicationType")))
 
       .exec(Common.userDetails)
-
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -216,6 +214,7 @@ object Solicitor_PRL_C100 {
     .group("XUI_PRL_C100_095_TypeOfApplicationProfile") {
       exec(Common.profile)
     }
+
     .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
@@ -389,8 +388,6 @@ object Solicitor_PRL_C100 {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("hearingUrgency")))
-
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
 
       .exec(Common.userDetails)
 
@@ -1211,12 +1208,6 @@ object Solicitor_PRL_C100 {
         .body(ElFileBody("bodies/prl/c100/PRLOtherPeopleValidate.json"))
         .check(substring("isPlaceOfBirthKnown"))
         .check(substring("otherPersonRelationshipToChildren")))
-
-      /*.exec(session => {
-        val response = session("BODY").as[String]
-        println(s"Response body: \n$response")
-        session
-      })*/
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1310,7 +1301,7 @@ object Solicitor_PRL_C100 {
         .body(ElFileBody("bodies/prl/c100/PRLChildrenAndApplicantValidate.json"))
         .check(substring("buffChildAndApplicantRelations")))
 
-    .exec(Common.userDetails)
+      .exec(Common.userDetails)
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1446,12 +1437,6 @@ object Solicitor_PRL_C100 {
     }
 
     .pause(MinThinkTime, MaxThinkTime)
-
-    /*.exec {
-			session =>
-				println(session)
-				session
-		}*/
 
   val ChildrenAndOtherPeople = 
 
@@ -1685,7 +1670,6 @@ object Solicitor_PRL_C100 {
         .check(jsonPath("$.id").is("submitAndPay")))
 
       .exec(Common.userDetails)
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
