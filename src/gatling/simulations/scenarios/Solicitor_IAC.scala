@@ -62,7 +62,7 @@ object Solicitor_IAC {
 
       .exec(Common.profile)
 
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -486,7 +486,7 @@ object Solicitor_IAC {
 * Below group contains all the requests for starting submit appeal declaration submitted
 ======================================================================================*/
 
-    .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+    .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
 
     .group("XUI_IAC_280_005_AppealDeclarationSubmitted") {
       exec(http("XUI_IAC_280_AppealDeclarationSubmitted")
