@@ -854,8 +854,6 @@ object Solicitor_NFD {
         .check(jsonPath("$.id").is("draft-aos")))
 
       .exec(Common.userDetails)
-
-//      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -990,8 +988,6 @@ object Solicitor_NFD {
         .check(jsonPath("$.id").is("submit-aos")))
 
       .exec(Common.userDetails)
-
-//      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1094,8 +1090,6 @@ object Solicitor_NFD {
         .check(jsonPath("$.id").is("draft-conditional-order")))
 
       .exec(Common.userDetails)
-
-//      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1193,8 +1187,6 @@ object Solicitor_NFD {
         .check(jsonPath("$.id").is("draft-conditional-order")))
 
       .exec(Common.userDetails)
-
-//      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1294,8 +1286,6 @@ object Solicitor_NFD {
         .check(jsonPath("$.id").is("draft-joint-conditional-order")))
 
       .exec(Common.userDetails)
-
-//      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1379,8 +1369,6 @@ object Solicitor_NFD {
           .check(jsonPath("$.id").is("submit-conditional-order")))
 
         .exec(Common.userDetails)
-
-//        .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1446,8 +1434,6 @@ object Solicitor_NFD {
         .check(jsonPath("$.id").is("submit-joint-conditional-order")))
 
       .exec(Common.userDetails)
-
-//      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1529,8 +1515,6 @@ object Solicitor_NFD {
         .check(jsonPath("$.id").is("final-order-requested")))
 
       .exec(Common.userDetails)
-
-//      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1612,8 +1596,6 @@ object Solicitor_NFD {
         .check(jsonPath("$.id").is("applicant2-final-order-requested")))
 
       .exec(Common.userDetails)
-
-//      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
