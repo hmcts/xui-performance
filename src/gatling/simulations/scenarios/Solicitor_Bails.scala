@@ -33,7 +33,6 @@ object Solicitor_Bails {
       "BailsSupporterEmail" -> (Common.randomString(7) + "@gmail.com"),
       "currentDate" -> now.format(patternDate)))
 
-
     /*======================================================================================
     * Click the Create Case link
     ======================================================================================*/
@@ -61,7 +60,7 @@ object Solicitor_Bails {
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.id").is("startApplication")))
 
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
 
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -826,9 +825,6 @@ object Solicitor_Bails {
         .check(substring("Submit the application")))
 
       .exec(Common.isAuthenticated)
-
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
-
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1034,8 +1030,6 @@ object Solicitor_Bails {
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.case_id").is("#{caseId}"))
         .check(substring("access_granted")))
-
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1121,8 +1115,6 @@ object Solicitor_Bails {
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.case_id").is("#{caseId}"))
         .check(substring("access_granted")))
-
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1360,8 +1352,6 @@ object Solicitor_Bails {
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(jsonPath("$.case_id").is("#{caseId}"))
         .check(substring("access_granted")))
-
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
