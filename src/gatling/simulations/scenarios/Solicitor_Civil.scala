@@ -447,49 +447,8 @@ object Solicitor_Civil {
 
     .pause(MinThinkTime, MaxThinkTime)
 
-val ClaimFeePayment =
-  // ================================SERVICE REQUEST TAB==================================,
-  group("Civil_CreateSpecClaim_10_36_CreateCase") {
-    exec(http("Paymentgroups")
-      .get("/payments/cases/#{caseId}/paymentgroups")
-      .headers(Headers.commonHeader)
-      .check(regex("calculated_amount\":(.*?).00,").saveAs("calculated_amount"))
-      .check(substring("payment_group_reference")))
-
-      .exec(http("CaseNo")
-        .get("/pay-bulkscan/cases/#{caseId}")
-        .headers(Headers.commonHeader)
-        .check(substring("HMCTS Manage cases")))
-
-      .exec(http("PayOrder")
-        .get("/payments/case-payment-orders?case_ids=#{caseId}")
-        .headers(Headers.commonHeader)
-        .header("csrf-token", "#{csrf}")
-        .header("x-requested-with", "xmlhttprequest")
-        .check(jsonPath("$.content[0].orderReference").optional.saveAs("OrdRefNo")))
-  }
-    .pause(2)
-
-    // ==========================================Click Pay Now=======================,
-    .group("Civil_CreateSpecClaim_10_37_CreateCase") {
-      exec(http("PayNow")
-        .get("/payments/pba-accounts")
-        .headers(Headers.commonHeader)
-        .check(substring("paymentAccount")))
-    }
-    .pause(2)
-
-    // ====================CONFIRM PAY========================,
-    .group("Civil_CreateSpecClaim_10_38_CreateCase") {
-      exec(http("ConfirmPayment")
-        .post("/payments/service-request/#{OrdRefNo}/pba-payments")
-        .headers(Headers.commonHeader)
-        .header("x-requested-with", "xmlhttprequest")
-        .body(StringBody("""{"account_number": "PBA0077597", "amount": #{calculated_amount}, "currency": "GBP",
-          |"customer_reference": "NFT", "idempotency_key": "idam-key-#{Idempotencynumber}",
-          |"organisation_name": "Civil Damages Claims - Organisation 1"}""".stripMargin))
-        .check(substring("success")))
-    }
-    .pause(MinThinkTime, MaxThinkTime)
+//  val QueryManagement =
+    
+    //Query Management requests to go here once ready - ETA end of February 2025
 
 }
