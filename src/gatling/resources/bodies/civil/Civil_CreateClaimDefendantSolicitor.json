@@ -1,0 +1,109 @@
+{
+  "data": {
+    "respondent1OrgRegistered": "Yes",
+    "respondent1OrganisationPolicy": {
+      "OrgPolicyReference": "DefSol123",
+      "Organisation": {
+        "OrganisationID": "#{orgId}",
+        "OrganisationName": "#{orgName}"
+      },
+      "PreviousOrganisations": []
+    }
+  },
+  "event": {
+    "id": "CREATE_CLAIM_SPEC",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "solicitorReferences": {
+      "applicantSolicitor1Reference": "claimant-perf123",
+      "respondentSolicitor1Reference": "defendant-perf123"
+    },
+    "applicant1": {
+      "type": "COMPANY",
+      "companyName": "Claimant",
+      "partyEmail": null,
+      "partyPhone": null,
+      "partyName": "Claimant",
+      "partyTypeDisplayValue": "Company",
+      "partyID": null,
+      "primaryAddress": {
+        "AddressLine1": "#{addressLines(0)}",
+        "AddressLine2": "#{addressLines(1)}",
+        "AddressLine3": "",
+        "PostTown": "#{addressLines(2)}",
+        "County": "",
+        "Country": "United Kingdom",
+        "PostCode": "#{addressLines(3)}"
+      },
+      "unavailableDates": [],
+      "flags": {
+        "roleOnCase": null,
+        "partyName": null,
+        "groupId": null,
+        "visibility": null,
+        "details": []
+      }
+    },
+    "addApplicant2": "No",
+    "applicantSolicitor1CheckEmail": {
+      "email": "#{user}",
+      "correct": "No"
+    },
+    "applicantSolicitor1UserDetails": {
+      "email": "civilmoneyclaimsdemo@gmail.com",
+      "id": null
+    },
+    "applicant1OrganisationPolicy": {
+      "OrgPolicyReference": "SolRef123",
+      "PrepopulateToUsersOrganisation": null,
+      "Organisation": {
+        "OrganisationID": "#{orgId}",
+        "OrganisationName": "#{orgName}"
+      },
+      "PreviousOrganisations": []
+    },
+    "specApplicantCorrespondenceAddressRequired": "No",
+    "respondent1": {
+      "type": "COMPANY",
+      "companyName": "Defendant",
+      "partyEmail": null,
+      "partyPhone": null,
+      "individualDateOfBirth": null,
+      "soleTraderDateOfBirth": null,
+      "partyName": "Defendant",
+      "partyTypeDisplayValue": "Company",
+      "partyID": null,
+      "primaryAddress": {
+        "AddressLine1": "#{addressLines(0)}",
+        "AddressLine2": "#{addressLines(1)}",
+        "AddressLine3": "",
+        "PostTown": "#{addressLines(2)}",
+        "County": "",
+        "Country": "United Kingdom",
+        "PostCode": "#{addressLines(3)}"
+      },
+      "unavailableDates": [],
+      "flags": {
+        "roleOnCase": null,
+        "partyName": null,
+        "groupId": null,
+        "visibility": null,
+        "details": []
+      }
+    },
+    "specRespondent1Represented": "Yes",
+    "respondent1OrgRegistered": "Yes",
+    "respondent1OrganisationPolicy": {
+      "OrgPolicyReference": "DefSol123",
+      "Organisation": {
+        "OrganisationID": "#{orgId}",
+        "OrganisationName": "#{orgName}"
+      },
+      "PreviousOrganisations": []
+    }
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false
+}

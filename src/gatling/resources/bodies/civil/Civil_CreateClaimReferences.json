@@ -1,0 +1,21 @@
+{
+  "data": {
+    "solicitorReferences": {
+      "applicantSolicitor1Reference": "claimaint-perf-123",
+      "respondentSolicitor1Reference": "defendant-perf-123"
+    }
+  },
+  "event": {
+    "id": "CREATE_CLAIM_SPEC",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "solicitorReferences": {
+      "applicantSolicitor1Reference": "claimaint-perf-123",
+      "respondentSolicitor1Reference": "defendant-perf-123"
+    }
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false
+}
