@@ -30,6 +30,10 @@ object Common {
     rnd.alphanumeric.filter(_.isDigit).take(length).mkString
   }
 
+  def randomNumberBetweenXandY(min: Int, max: Int) = {
+    rnd.between(min, max)
+  }
+
   def getDay(): String = {
     (1 + rnd.nextInt(28)).toString.format(patternDay).reverse.padTo(2, '0').reverse //pads single-digit dates with a leading zero
   }
