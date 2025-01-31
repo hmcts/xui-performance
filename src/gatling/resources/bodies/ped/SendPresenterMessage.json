@@ -4,12 +4,12 @@
   "data": {
     "body": {
       "pdfPosition": {
-        "pageNumber": 1,
+        "pageNumber": #{randomNumberBetweenXandY},
         "scale": 100,
-        "top": 842,
-        "left": -375,
+        "top": #{message_top},
+        "left": #{message_left},
         "rotation": 0,
-        "pdfOpenParams": "#page=1&zoom=100,-375,842"
+        "pdfOpenParams": "#page=#{randomNumberBetweenXandY}&zoom=100,#{message_left},#{message_top}"
       }
     },
     "caseId": "#{caseId}",

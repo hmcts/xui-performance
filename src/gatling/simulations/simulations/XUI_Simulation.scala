@@ -31,7 +31,8 @@ class XUI_Simulation extends Simulation {
 	val UserFeederBailsAdmin = csv("UserDataBailsAdmin.csv").circular
 	val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
 	val UserFeederCTSC = csv("UserDataCTSC.csv").circular
-	val PEDUserFeeder = csv("UserDataPED.csv").circular
+
+	val pedNumberOfUsers = csv("UserDataPED.csv").recordsCount
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
@@ -70,8 +71,6 @@ class XUI_Simulation extends Simulation {
 	val nfdJointTargetPerHour: Double = 120
 	val frTargetPerHour: Double = 100
 	val caseworkerTargetPerHour: Double = 1000
-
-	val pedNumberOfUsers = 2
 
 	//This determines the percentage split of PRL journeys, by C100 or FL401
 	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio

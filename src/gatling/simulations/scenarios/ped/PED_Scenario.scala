@@ -3,9 +3,11 @@ package scenarios.ped
 import io.gatling.core.Predef._
 import scenarios.{Homepage, Login, Logout}
 
+import scala.concurrent.duration._
+
 object PED_Scenario {
 
-  val PEDUserFeeder = csv("UserDataPED.csv").circular
+  val PEDUserFeeder = csv("UserDataPED.csv")
 
   def PEDScenario(totalUsers: Int) = scenario("***** PED Websockets Journey ******")
 
@@ -38,16 +40,17 @@ object PED_Scenario {
 
     /* PRESENTERS SEND MESSAGES*/
 
-    .repeat(5, "counter") {
-      doIfEquals("#{type}", "Presenter") {
+    .doIfEquals("#{type}", "Presenter") {
+      pause(10.millis, 500.millis) //stagger the Presenters before starting to send messages
+      .repeat(5, "counter") {
         exec {
           session =>
-            println(session("user").as[String] + " (Presenter) sending message " + (session("counter").as[Int] + 1).toString)
-            session
-        }
+              println(session("user").as[String] + " (Presenter) sending message " + (session("counter").as[Int] + 1).toString)
+              session
+          }
         .exec(requests.Messages.PresenterSendMessage)
+        .pause(5) //update to 500.milliseconds
       }
-      .pause(1)
     }
 
     /* FOLLOWERS OUTPUT RECEIVED MESSAGES */
