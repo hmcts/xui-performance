@@ -30,7 +30,7 @@ object Common {
     rnd.alphanumeric.filter(_.isDigit).take(length).mkString
   }
 
-  def randomNumberBetweenXandY(min: Int, max: Int) = {
+  def randomNumberBetween(min: Int, max: Int) = {
     rnd.between(min, max)
   }
 

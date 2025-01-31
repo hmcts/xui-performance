@@ -9,7 +9,6 @@ import scala.io.Source
 import io.gatling.core.controller.inject.open.OpenInjectionStep
 import io.gatling.commons.stats.assertion.Assertion
 import io.gatling.core.pause.PauseType
-import jdk.jshell.ExpressionSnippet
 import scenarios.ped.requests.PresentingEvidenceDigitally.{pedAllFollowersLeft, pedAllUsersJoined, pedReadyToSendMessages}
 import scenarios.ped.requests.PresentingEvidenceDigitally
 
