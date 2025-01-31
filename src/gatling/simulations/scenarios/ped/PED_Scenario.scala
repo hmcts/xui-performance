@@ -22,6 +22,11 @@ object PED_Scenario {
     /* PRESENTERS JOIN FIRST AND START PRESENTING */
 
     .rendezVous(totalUsers) //Wait for everyone to login to XUI
+    .exec {
+      session =>
+        println("Testing Rendezvous 1: " + System.currentTimeMillis())
+        session
+    }
     .doIfEquals("#{type}", "Presenter") {
       exec(requests.Session.GetSessionInfo)
       .exec(requests.Session.JoinSession)
@@ -31,11 +36,22 @@ object PED_Scenario {
     /* FOLLOWERS JOIN THE PRESENTATION */
 
     .rendezVous(totalUsers) //Wait for the presenters to start presenting before proceeding
+    .exec {
+      session =>
+        println("Testing Rendezvous 2: " + System.currentTimeMillis())
+        session
+    }
     .doIfEquals("#{type}", "Follower") {
       exec(requests.Session.GetSessionInfo)
       .exec(requests.Session.JoinSession)
     }
+    .crashLoadGeneratorIf("ERROR: One or more of the users couldn't join the presentation, aborting simulation...", "#{connectionId.isUndefined()}")
     .rendezVous(totalUsers) //Wait for the followers to join - everyone should be in the session now
+    .exec {
+      session =>
+        println("Testing Rendezvous 3: " + System.currentTimeMillis())
+        session
+    }
     .exec(requests.Messages.CheckForReceivedMessages)
 
     /* PRESENTERS SEND MESSAGES*/
@@ -56,6 +72,11 @@ object PED_Scenario {
     /* FOLLOWERS OUTPUT RECEIVED MESSAGES */
 
     .rendezVous(totalUsers) //Wait for all messages to be received before proceeding
+    .exec {
+      session =>
+        println("Testing Rendezvous 4: " + System.currentTimeMillis())
+        session
+    }
     .doIfEquals("#{type}", "Follower") {
       exec(requests.Messages.CheckForReceivedMessages)
     }
@@ -63,6 +84,11 @@ object PED_Scenario {
     /* PRESENTERS STOP PRESENTING */
 
     .rendezVous(totalUsers) //Wait for the presentation to finish
+    .exec {
+      session =>
+        println("Testing Rendezvous 5: " + System.currentTimeMillis())
+        session
+    }
     .doIfEquals("#{type}", "Presenter") {
       exec(requests.Presentation.StopPresenting)
     }
@@ -72,6 +98,11 @@ object PED_Scenario {
     /* FOLLOWERS LEAVE FIRST */
 
     .rendezVous(totalUsers)
+    .exec {
+      session =>
+        println("Testing Rendezvous 6: " + System.currentTimeMillis())
+        session
+    }
     .doIfEquals("#{type}", "Follower") {
       exec(requests.Session.LeaveSession)
     }
@@ -81,6 +112,11 @@ object PED_Scenario {
     /* PRESENTERS LEAVE */
 
     .rendezVous(totalUsers)
+    .exec {
+      session =>
+        println("Testing Rendezvous 7: " + System.currentTimeMillis())
+        session
+    }
     .doIfEquals("#{type}", "Presenter") {
       exec(requests.Session.LeaveSession)
     }
@@ -88,6 +124,11 @@ object PED_Scenario {
     /* ALL USERS LOGOUT OF XUI */
 
     .rendezVous(totalUsers)
+    .exec {
+      session =>
+        println("Testing Rendezvous 8: " + System.currentTimeMillis())
+        session
+    }
     .exec(Logout.XUILogout)
 
 }
