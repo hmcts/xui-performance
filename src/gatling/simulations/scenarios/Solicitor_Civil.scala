@@ -3,6 +3,8 @@ package scenarios
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import utils.{Common, Environment, Headers}
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 /*======================================================================================
 * Create a new Private Law FL401 application as a professional user (e.g. solicitor)
@@ -447,8 +449,96 @@ object Solicitor_Civil {
 
     .pause(MinThinkTime, MaxThinkTime)
 
-//  val QueryManagement =
-    
-    //Query Management requests to go here once ready - ETA end of February 2025
+  val QueryManagement =
 
+    group("XUI_Civil_330_RaiseNewQuery") {
+      exec(http("XUI_Civil_330_005_RaiseNewQuery")
+        .get("/query-management/query/#{caseId}")
+        .headers(Headers.commonHeader)
+        .check(substring("HMCTS Manage cases"))) // No page specific text is returned
+
+      .exec(Common.isAuthenticated)
+
+      .exec(http("XUI_Civil_330_005_ViewCase")
+        .get("/data/internal/cases/#{caseId}")
+        .headers(Headers.commonHeader)
+        .check(substring("CCD ID")))
+    }
+
+    .exec(getCookieValue(CookieKey("__userid__").withDomain(BaseURL.replace("https://", "")).saveAs("idamId")))
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    .group("XUI_Civil_340_ConfirmQueryDetails") {
+      exec(http("XUI_Civil_340_005_ConfirmQueryDetails")
+        .get("/data/internal/cases/#{caseId}/event-triggers/queryManagementRaiseQuery?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token")))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    .group("XUI_Civil_350_RaiseNewQuery") {
+      exec(http("XUI_Civil_350_005_RaiseNewQuery")
+        .get("/query-management/query/#{caseId}raiseAQuery")
+        .headers(Headers.commonHeader)
+        .check(substring("HMCTS Manage cases")))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    .exec(_.setAll("currentTime" -> now.format(patternTimeNow)))
+
+    .group("XUI_Civil_360_SubmitNewQuery") {
+      exec(http("XUI_Civil_360_005_SubmitNewQuery")
+        .post("/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/civil/CivilRaiseNewQuery.json")))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+  val RespondToQueryManagement =
+
+    group("XUI_Civil_370_ViewCase") {
+      exec(http("XUI_Civil_370_005_ViewCase")
+        .get("/data/internal/cases/#{caseId}")
+        .headers(Headers.commonHeader)
+        .check(substring("CCD ID")))
+    }
+
+      .pause(MinThinkTime , MaxThinkTime )
+
+      .group("XUI_Civil_380_ViewQuery") {
+        exec(Common.isAuthenticated)
+
+        .exec(http("XUI_Civil_380_005_ViewQuery")
+          .get("/data/internal/cases/#{caseId}/event-triggers/queryManagementRespondQuery?ignore-warning=false")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+          .check(jsonPath("$.event_token").saveAs("event_token"))
+          .check(jsonPath("$.case_fields[?(@.id=='qmCaseQueriesCollectionLASol')].value.caseMessages[0].id").saveAs("raiseQueryParentId"))
+          .check(jsonPath("$.case_fields[?(@.id=='qmCaseQueriesCollectionLASol')].value.caseMessages[0].value.id").saveAs("raiseQueryId"))
+          .check(jsonPath("$.case_fields[?(@.id=='qmCaseQueriesCollectionLASol')].value.caseMessages[0].value.createdBy").saveAs("queryCreatedBy"))
+          .check(jsonPath("$.case_fields[?(@.id=='qmCaseQueriesCollectionLASol')].value.caseMessages[0].value.createdOn").saveAs("queryCreatedOn")))
+      }
+
+      .pause(MinThinkTime , MaxThinkTime )
+
+      .exec(_.setAll("currentTime" -> now.format(patternTimeNow)))
+      .exec(getCookieValue(CookieKey("__userid__").withDomain(BaseURL.replace("https://", "")).saveAs("idamId")))
+
+      .group("XUI_Civil_390_SubmitQueryResponse") {
+        exec(http("XUI_Civil_390_005_SubmitQueryResponse")
+          .post("/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(ElFileBody("bodies/civil/CivilRespondToQuery.json")))
+      }
+
+      .pause(MinThinkTime , MaxThinkTime )
 }
