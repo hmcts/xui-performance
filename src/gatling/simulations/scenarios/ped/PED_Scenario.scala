@@ -45,6 +45,7 @@ object PED_Scenario {
       exec(requests.Session.GetSessionInfo)
       .exec(requests.Session.JoinSession)
     }
+    //If any users don't obtain a Connection ID, abort the test
     .crashLoadGeneratorIf("ERROR: One or more of the users couldn't join the presentation, aborting simulation...", "#{connectionId.isUndefined()}")
     .rendezVous(totalUsers) //Wait for the followers to join - everyone should be in the session now
     .exec {
