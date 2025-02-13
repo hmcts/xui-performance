@@ -266,7 +266,7 @@ object Solicitor_FPL {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/fpl/FPLHearingUrgencyAdd.json"))
-        .check(substring("Within 7 days")))
+        .check(substring("STANDARD")))
     }
 
     .pause(MinThinkTime , MaxThinkTime )
@@ -282,7 +282,7 @@ object Solicitor_FPL {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/fpl/FPLHearingUrgencySubmit.json"))
-        .check(jsonPath("$.data.hearing.timeFrame").is("Within 7 days"))
+        .check(jsonPath("$.data.hearing.hearingUrgencyType").is("STANDARD"))
         .check(jsonPath("$.state").is("Open")))
 
       .exec(http("XUI_FPL_130_010_ViewCase")

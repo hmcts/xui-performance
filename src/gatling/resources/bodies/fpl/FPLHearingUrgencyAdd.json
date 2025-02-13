@@ -1,19 +1,17 @@
 {
   "data": {
     "hearing": {
-      "timeFrame": "Within 7 days",
+      "hearingUrgencyType": "STANDARD",
+      "respondentsAware": "Yes",
+      "timeFrame": null,
       "reason": null,
       "reason2Days": null,
       "reason7Days": null,
       "reason12Days": null,
-      "type": "Standard case management hearing",
-      "type_GiveReason": "Reason text",
-      "withoutNotice": "No",
-      "withoutNoticeReason": null,
-      "reducedNotice": "No",
-      "reducedNoticeReason": null,
-      "respondentsAware": "No",
-      "respondentsAwareReason": null
+      "type": null,
+      "type_GiveReason": null,
+      "reducedNotice": null,
+      "reducedNoticeReason": null
     }
   },
   "event": {
@@ -23,19 +21,17 @@
   },
   "event_data": {
     "hearing": {
-      "timeFrame": "Within 7 days",
+      "hearingUrgencyType": "STANDARD",
+      "respondentsAware": "Yes",
+      "timeFrame": null,
       "reason": null,
       "reason2Days": null,
       "reason7Days": null,
       "reason12Days": null,
-      "type": "Standard case management hearing",
-      "type_GiveReason": "Reason text",
-      "withoutNotice": "No",
-      "withoutNoticeReason": null,
-      "reducedNotice": "No",
-      "reducedNoticeReason": null,
-      "respondentsAware": "No",
-      "respondentsAwareReason": null
+      "type": null,
+      "type_GiveReason": null,
+      "reducedNotice": null,
+      "reducedNoticeReason": null
     }
   },
   "event_token": "#{event_token}",
