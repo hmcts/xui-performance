@@ -483,13 +483,13 @@ class XUI_Simulation extends Simulation {
 				.exec(Solicitor_FPL.fplAllocationProposal)
 				.exec(Solicitor_FPL.fplSubmitApplication)
 				.exec(Solicitor_FPL.fplReturnToCase)
-        .exec(Solicitor_FPL.QueryManagement)
+        //.exec(Solicitor_FPL.QueryManagement) //Temporarily removing QM until FPL is onboarded in XUI master
         .exec(Logout.XUILogout)
-        .feed(UserFeederCTSC)
-        .exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-        .exec(Solicitor_FPL.RespondToQueryManagement)
-				.exec(Logout.XUILogout)
+        //.feed(UserFeederCTSC)
+        //.exec(Homepage.XUIHomePage)
+				//.exec(Login.XUILogin)
+        //.exec(Solicitor_FPL.RespondToQueryManagement)
+				//.exec(Logout.XUILogout)
 		}
 
 	/*===============================================================================================
