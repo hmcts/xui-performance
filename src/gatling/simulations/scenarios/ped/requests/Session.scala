@@ -33,8 +33,8 @@ object Session {
         exec(ws("PED_030_010_JoinSession")
           .sendText(ElFileBody("bodies/ped/JoinSession.json"))
           .await(10)(
-            //the below section was previously 3 checks instead of 3 matching statements.
-            //on one playback, the messages were received in a different order (1, 3, 2) so it failed the second check.
+            //The below section was previously 3 checks instead of 3 matching statements.
+            //On one playback, the messages were received in a different order (1, 3, 2) so it failed the second check.
             //Trying to switch them to matching, but not sure if this means the order can be different, so look out to see
             //if this works if the responses are not in the order 1, 2, 3.
             //If this doesn't work, may need to change .is(1) to .in(1, 2, 3) for each check.
@@ -46,7 +46,7 @@ object Session {
             //.check(jsonPath("$.data.eventName").is("IcpParticipantsListUpdated")),
             ws.checkTextMessage("PED_030_030_JoinSessionResponse3")
               .matching(jsonPath("$.data.eventName").is("IcpNewParticipantJoinedSession"))))
-        //.check(jsonPath("$.data.eventName").is("IcpNewParticipantJoinedSession"))))
+            //.check(jsonPath("$.data.eventName").is("IcpNewParticipantJoinedSession"))))
       )
     )
 
