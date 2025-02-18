@@ -8,11 +8,12 @@ import scala.concurrent.duration._
 
 object PED_Scenario {
 
-  val SendMessageFreqMs = Config.PED_SEND_MESSAGE_FREQ_MS
-  val PollMessageFreqMs = Config.PED_POLL_MESSAGES_FREQ_MS
   val PEDUserFeeder = csv("UserDataPED.csv")
-  val NumberOfMessagesToSend = Config.PED_PRESENTATION_DURATION_MINS * 60 * 1000 / SendMessageFreqMs
-  val NumberOfTimesToCheckForMessages = Config.PED_PRESENTATION_DURATION_MINS * 60 * 1000 / PollMessageFreqMs
+
+  val sendMessageFreqMs = Config.PED_SEND_MESSAGE_FREQ_MS
+  val pollMessageFreqMs = Config.PED_POLL_MESSAGES_FREQ_MS
+  val numberOfMessagesToSend = Config.PED_PRESENTATION_DURATION_MINS * 60 * 1000 / sendMessageFreqMs
+  val numberOfTimesToCheckForMessages = Config.PED_PRESENTATION_DURATION_MINS * 60 * 1000 / pollMessageFreqMs
 
   def PEDScenario(totalUsers: Int) = scenario("***** PED Websockets Journey ******")
 
@@ -48,20 +49,20 @@ object PED_Scenario {
     /* PRESENTERS SEND MESSAGES*/
 
     .doIfEquals("#{type}", "Presenter") {
-      pause(10.millis, SendMessageFreqMs.millis) //stagger the Presenters before starting to send messages
-      .repeat(NumberOfMessagesToSend, "counter") {
+      pause(10.millis, sendMessageFreqMs.millis) //Stagger the Presenters before starting to send messages
+      .repeat(numberOfMessagesToSend, "counter") {
         exec(requests.Messages.PresenterSendMessage)
-        .pause(SendMessageFreqMs.millis)
+        .pause(sendMessageFreqMs.millis)
       }
     }
 
     .doIfEquals("#{type}", "Follower") {
-      pause(PollMessageFreqMs.millis) //delay polling to allow for the first set of messages to be sent
-      //messages are polled periodically as to not exhaust the .wsUnmatchedInboundMessageBufferSize(50) configuration defined in the http protocol
+      pause(pollMessageFreqMs.millis) //Delay polling to allow for the first set of messages to be sent
+      //Messages are polled periodically as to not exhaust the .wsUnmatchedInboundMessageBufferSize(50) configuration defined in the http protocol
       //update the config if this value is expected to be exceeded per poll
-      .repeat(NumberOfTimesToCheckForMessages) {
-        exec(requests.Messages.CheckForReceivedMessages) // Check for any remaining messages periodically
-        .pause(PollMessageFreqMs.millis)
+      .repeat(numberOfTimesToCheckForMessages) {
+        exec(requests.Messages.CheckForReceivedMessages) //Check for messages periodically
+        .pause(pollMessageFreqMs.millis)
       }
     }
 
@@ -69,7 +70,7 @@ object PED_Scenario {
 
     .rendezVous(totalUsers) //Wait for all messages to be sent before proceeding
     .doIfEquals("#{type}", "Follower") {
-      exec(requests.Messages.CheckForReceivedMessages) // Check for any remaining messages
+      exec(requests.Messages.CheckForReceivedMessages) //Check for any remaining messages
     }
 
     /* PRESENTERS STOP PRESENTING */
@@ -80,7 +81,7 @@ object PED_Scenario {
     }
 
     /* WAIT FOR PRESENTERS TO STOP PRESENTING */
-    
+
     .rendezVous(totalUsers)
     .exec(requests.Messages.CheckForReceivedMessages) //Confirmation of end of presentation
 
