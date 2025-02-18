@@ -47,7 +47,7 @@ object PED_Scenario {
 
     .doIfEquals("#{type}", "Presenter") {
       pause(10.millis, 500.millis) //stagger the Presenters before starting to send messages
-      .repeat(NumberOfMessagesToSend) {
+      .repeat(NumberOfMessagesToSend, "counter") {
         exec(requests.Messages.PresenterSendMessage)
         .pause(500.millis)
       }
