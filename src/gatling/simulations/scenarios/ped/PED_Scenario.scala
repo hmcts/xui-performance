@@ -8,9 +8,11 @@ import scala.concurrent.duration._
 
 object PED_Scenario {
 
+  val SendMessageFreqMs = Config.PED_SEND_MESSAGE_FREQ_MS
+  val PollMessageFreqMs = Config.PED_POLL_MESSAGES_FREQ_MS
   val PEDUserFeeder = csv("UserDataPED.csv")
-  val NumberOfMessagesToSend = Config.PED_PRESENTATION_DURATION_MINS * 60 * 2 //one message every 500ms
-  val NumberOfTimesToCheckForMessages = Config.PED_PRESENTATION_DURATION_MINS * 6 //one check every 10s
+  val NumberOfMessagesToSend = Config.PED_PRESENTATION_DURATION_MINS * 60 * 1000 / SendMessageFreqMs
+  val NumberOfTimesToCheckForMessages = Config.PED_PRESENTATION_DURATION_MINS * 60 * 1000 / PollMessageFreqMs
 
   def PEDScenario(totalUsers: Int) = scenario("***** PED Websockets Journey ******")
 
@@ -46,19 +48,20 @@ object PED_Scenario {
     /* PRESENTERS SEND MESSAGES*/
 
     .doIfEquals("#{type}", "Presenter") {
-      pause(10.millis, 500.millis) //stagger the Presenters before starting to send messages
+      pause(10.millis, SendMessageFreqMs.millis) //stagger the Presenters before starting to send messages
       .repeat(NumberOfMessagesToSend, "counter") {
         exec(requests.Messages.PresenterSendMessage)
-        .pause(500.millis)
+        .pause(SendMessageFreqMs.millis)
       }
     }
 
     .doIfEquals("#{type}", "Follower") {
-      pause(10.seconds) //delay polling to allow for the first set of messages to be sent
+      pause(PollMessageFreqMs.millis) //delay polling to allow for the first set of messages to be sent
       //messages are polled periodically as to not exhaust the .wsUnmatchedInboundMessageBufferSize(50) configuration defined in the http protocol
+      //update the config if this value is expected to be exceeded per poll
       .repeat(NumberOfTimesToCheckForMessages) {
         exec(requests.Messages.CheckForReceivedMessages) // Check for any remaining messages periodically
-        .pause(10.seconds) // Polls for messages every 10s. If this value is updated, the definition for NumberOfTimesToCheckForMessages will need amending
+        .pause(PollMessageFreqMs.millis)
       }
     }
 
@@ -75,8 +78,11 @@ object PED_Scenario {
     .doIfEquals("#{type}", "Presenter") {
       exec(requests.Presentation.StopPresenting)
     }
-    .pause(5)
-    .exec(requests.Messages.CheckForReceivedMessages)
+
+    /* WAIT FOR PRESENTERS TO STOP PRESENTING */
+    
+    .rendezVous(totalUsers)
+    .exec(requests.Messages.CheckForReceivedMessages) //Confirmation of end of presentation
 
     /* FOLLOWERS LEAVE FIRST */
 
@@ -84,7 +90,10 @@ object PED_Scenario {
     .doIfEquals("#{type}", "Follower") {
       exec(requests.Session.LeaveSession)
     }
-    .pause(5)
+
+    /* WAIT FOR FOLLOWERS TO LEAVE */
+
+    .rendezVous(totalUsers)
     .doIfEquals("#{type}", "Presenter") {
       exec(requests.Messages.CheckForReceivedMessages) //Confirmation of Followers leaving
     }
