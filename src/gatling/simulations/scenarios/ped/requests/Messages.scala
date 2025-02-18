@@ -16,7 +16,7 @@ object Messages {
     exec(_.setAll("message_page" -> Common.randomNumberBetween(1, 10),
                   "message_top" -> Common.randomNumberBetween(1, 1000),
                   "message_left" -> (Common.randomNumberBetween(1, 1000) - 1000)))
-
+    /*
     .exec {
       session =>
         println(session("session_sessionId").as[String] + "," + session("user").as[String] + "," + session("type").as[String] + ","
@@ -24,6 +24,7 @@ object Messages {
           + " top:" + session("message_top").as[String] + " left:" + session("message_left").as[String] + " at " + System.currentTimeMillis())
         session
     }
+     */
 
     .exec { session =>
       val logFileFullPath = Config.LOG_OUTPUT_PATH + "/" + session("session_sessionId").as[String] + "-user" + session.userId + "-" + session("type").as[String] + ".log"
@@ -46,12 +47,14 @@ object Messages {
     exec(ws.processUnmatchedMessages((messages, session) => session.set("messages", messages)))
 
     .foreach("#{messages}", "message", "messageCounter") {
+      /*
       exec {
         session =>
           println(session("session_sessionId").as[String] + "," + session("user").as[String] + "," + session("type").as[String] + ","
             + (session("messageCounter").as[Int] + 1).toString + "," + session("message").as[String])
           session
       }
+       */
       .exec { session =>
         val logFileFullPath = Config.LOG_OUTPUT_PATH + "/" + session("session_sessionId").as[String] + "-user" + session.userId + "-" + session("type").as[String] + ".log"
         val fw = new BufferedWriter(new FileWriter(logFileFullPath, true))

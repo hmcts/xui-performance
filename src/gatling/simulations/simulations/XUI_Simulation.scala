@@ -96,7 +96,7 @@ class XUI_Simulation extends Simulation {
 		.inferHtmlResources()
 		.silentResources
 		.header("experimental", "true") //used to send through client id, s2s and bearer tokens. Might be temporary
-		.wsUnmatchedInboundMessageBufferSize(10)
+		.wsUnmatchedInboundMessageBufferSize(50)
 
 	before {
 		println(s"Test Type: ${testType}")
