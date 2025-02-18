@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter
 object Config {
 
   val TEST_DATE_TIME = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmm"))
-  val LOG_OUTPUT_PATH = "logs/" + TEST_DATE_TIME
+  val PED_LOG_OUTPUT_PATH = "logs/ped/" + TEST_DATE_TIME
 
   val PED_PRESENTATION_DURATION_MINS = 1
   val PED_SEND_MESSAGE_FREQ_MS = 500 //send messages every 500ms

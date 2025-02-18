@@ -9,7 +9,7 @@ import java.nio.file.{Files, Paths}
 
 object Messages {
 
-  Files.createDirectories(Paths.get(Config.LOG_OUTPUT_PATH))
+  Files.createDirectories(Paths.get(Config.PED_LOG_OUTPUT_PATH))
 
   val PresenterSendMessage =
 
@@ -17,6 +17,7 @@ object Messages {
                   "message_top" -> Common.randomNumberBetween(1, 1000),
                   "message_left" -> (Common.randomNumberBetween(1, 1000) - 1000)))
     /*
+    // OUTPUT MESSAGES TO THE CONSOLE
     .exec {
       session =>
         println(session("session_sessionId").as[String] + "," + session("user").as[String] + "," + session("type").as[String] + ","
@@ -27,7 +28,7 @@ object Messages {
      */
 
     .exec { session =>
-      val logFileFullPath = Config.LOG_OUTPUT_PATH + "/" + session("session_sessionId").as[String] + "-user" + session.userId + "-" + session("type").as[String] + ".log"
+      val logFileFullPath = Config.PED_LOG_OUTPUT_PATH + "/" + session("session_sessionId").as[String] + "-user" + session.userId + "-" + session("type").as[String] + ".log"
       val fw = new BufferedWriter(new FileWriter(logFileFullPath, true))
       try {
         fw.write(session("session_sessionId").as[String] + "," + session("user").as[String] + "," + session("type").as[String] + ","
@@ -48,6 +49,7 @@ object Messages {
 
     .foreach("#{messages}", "message", "messageCounter") {
       /*
+      // OUTPUT MESSAGES TO THE CONSOLE
       exec {
         session =>
           println(session("session_sessionId").as[String] + "," + session("user").as[String] + "," + session("type").as[String] + ","
@@ -56,7 +58,7 @@ object Messages {
       }
        */
       exec { session =>
-        val logFileFullPath = Config.LOG_OUTPUT_PATH + "/" + session("session_sessionId").as[String] + "-user" + session.userId + "-" + session("type").as[String] + ".log"
+        val logFileFullPath = Config.PED_LOG_OUTPUT_PATH + "/" + session("session_sessionId").as[String] + "-user" + session.userId + "-" + session("type").as[String] + ".log"
         val fw = new BufferedWriter(new FileWriter(logFileFullPath, true))
         try {
           fw.write(session("session_sessionId").as[String] + "," + session("user").as[String] + "," + session("type").as[String] + ","
