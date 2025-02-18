@@ -55,7 +55,7 @@ object Messages {
           session
       }
        */
-      .exec { session =>
+      exec { session =>
         val logFileFullPath = Config.LOG_OUTPUT_PATH + "/" + session("session_sessionId").as[String] + "-user" + session.userId + "-" + session("type").as[String] + ".log"
         val fw = new BufferedWriter(new FileWriter(logFileFullPath, true))
         try {
