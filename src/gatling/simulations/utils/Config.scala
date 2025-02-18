@@ -8,4 +8,6 @@ object Config {
   val TEST_DATE_TIME = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmm"))
   val LOG_OUTPUT_PATH = "logs/" + TEST_DATE_TIME
 
+  val PED_PRESENTATION_DURATION_MINS = 1
+
 }

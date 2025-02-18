@@ -1,3 +1,7 @@
 user,password,type,caseId,docId
-SSCS-perftest-superuser@justice.gov.uk,Testing123,Presenter,1712674566646674,7e488855-9fb5-4ee0-9545-5f9b5714a167
-SSCS-perftest-superuser2@justice.gov.uk,Testing123,Follower,1712674566646674,7e488855-9fb5-4ee0-9545-5f9b5714a167
+PED-SSCS-User1@justice.gov.uk,Password12,Presenter,1712674566646674,7e488855-9fb5-4ee0-9545-5f9b5714a167
+PED-SSCS-User2@justice.gov.uk,Password12,Follower,1712674566646674,7e488855-9fb5-4ee0-9545-5f9b5714a167
+PED-SSCS-User3@justice.gov.uk,Password12,Follower,1712674566646674,7e488855-9fb5-4ee0-9545-5f9b5714a167
+PED-SSCS-User4@justice.gov.uk,Password12,Presenter,1711566568949901,fada1ad8-76fd-4081-b572-a5b18b5fc9b4
+PED-SSCS-User5@justice.gov.uk,Password12,Follower,1711566568949901,fada1ad8-76fd-4081-b572-a5b18b5fc9b4
+PED-SSCS-User6@justice.gov.uk,Password12,Follower,1711566568949901,fada1ad8-76fd-4081-b572-a5b18b5fc9b4
