@@ -12,13 +12,21 @@ object PED_Scenario {
 
   val sendMessageFreqMs = Config.PED_SEND_MESSAGE_FREQ_MS
   val pollMessageFreqMs = Config.PED_POLL_MESSAGES_FREQ_MS
-  val numberOfMessagesToSend = Config.PED_PRESENTATION_DURATION_MINS * 60 * 1000 / sendMessageFreqMs
-  val numberOfTimesToCheckForMessages = Config.PED_PRESENTATION_DURATION_MINS * 60 * 1000 / pollMessageFreqMs
+  //val numberOfMessagesToSend = Config.PED_PRESENTATION_DURATION_MINS * 60 * 1000 / sendMessageFreqMs
+  //val numberOfTimesToCheckForMessages = Config.PED_PRESENTATION_DURATION_MINS * 60 * 1000 / pollMessageFreqMs
 
-  def PEDScenario(totalUsers: Int) = scenario("***** PED Websockets Journey ******")
+  def PEDScenario(totalUsers: Int, debugMode: String) = scenario("***** PED Websockets Journey ******")
 
     .feed(PEDUserFeeder)
-    .exec(_.set("caseType", "Benefit"))
+
+    //initialise session variables
+    .exec { session =>
+      val numberOfMessagesToSend = if(debugMode == "off") Config.PED_PRESENTATION_DURATION_MINS * 60 * 1000 / sendMessageFreqMs else 1
+      val numberOfTimesToCheckForMessages = if(debugMode == "off")  Config.PED_PRESENTATION_DURATION_MINS * 60 * 1000 / pollMessageFreqMs else 1
+      session.setAll( "numberOfMessagesToSend" -> numberOfMessagesToSend,
+                      "numberOfTimesToCheckForMessages" -> numberOfTimesToCheckForMessages,
+                      "caseType" -> "Benefit")
+    }
 
     /* ALL USERS LOGIN TO XUI */
 
@@ -32,6 +40,8 @@ object PED_Scenario {
       exec(requests.Session.GetSessionInfo)
       .exec(requests.Session.JoinSession)
       .exec(requests.Presentation.StartPresenting)
+      //If any users can't start presenting, abort the test
+      .crashLoadGeneratorIf("ERROR: One or more of the users couldn't start the presentation, aborting simulation...", "#{PresentationStarted.isUndefined()}")
     }
 
     /* FOLLOWERS JOIN THE PRESENTATION */
@@ -41,8 +51,9 @@ object PED_Scenario {
       exec(requests.Session.GetSessionInfo)
       .exec(requests.Session.JoinSession)
     }
-    //If any users don't obtain a Connection ID, abort the test
-    .crashLoadGeneratorIf("ERROR: One or more of the users couldn't join the presentation, aborting simulation...", "#{connectionId.isUndefined()}")
+    //If any users can't connect, abort the test
+    .crashLoadGeneratorIf("ERROR: One or more of the users couldn't connect to the presentation, aborting simulation...", "#{connectionId.isUndefined()}")
+    .crashLoadGeneratorIf("ERROR: One or more of the users couldn't join the presentation, aborting simulation...", "#{JoinedSessionEvent.isUndefined()}")
     .rendezVous(totalUsers) //Wait for the followers to join - everyone should be in the session now
     .exec(requests.Messages.CheckForReceivedMessages)
 
@@ -50,7 +61,7 @@ object PED_Scenario {
 
     .doIfEquals("#{type}", "Presenter") {
       pause(10.millis, sendMessageFreqMs.millis) //Stagger the Presenters before starting to send messages
-      .repeat(numberOfMessagesToSend, "counter") {
+      .repeat("#{numberOfMessagesToSend}", "counter") {
         exec(requests.Messages.PresenterSendMessage)
         .pause(sendMessageFreqMs.millis)
       }
@@ -60,7 +71,7 @@ object PED_Scenario {
       pause(pollMessageFreqMs.millis) //Delay polling to allow for the first set of messages to be sent
       //Messages are polled periodically as to not exhaust the .wsUnmatchedInboundMessageBufferSize(50) configuration defined in the http protocol
       //update the config if this value is expected to be exceeded per poll
-      .repeat(numberOfTimesToCheckForMessages) {
+      .repeat("#{numberOfTimesToCheckForMessages}") {
         exec(requests.Messages.CheckForReceivedMessages) //Check for messages periodically
         .pause(pollMessageFreqMs.millis)
       }
