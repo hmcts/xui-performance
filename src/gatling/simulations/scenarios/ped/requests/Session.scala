@@ -33,20 +33,14 @@ object Session {
         exec(ws("PED_030_010_JoinSession")
           .sendText(ElFileBody("bodies/ped/JoinSession.json"))
           .await(10)(
-            //The below section was previously 3 checks instead of 3 matching statements.
-            //On one playback, the messages were received in a different order (1, 3, 2) so it failed the second check.
-            //Trying to switch them to matching, but not sure if this means the order can be different, so look out to see
-            //if this works if the responses are not in the order 1, 2, 3.
-            //If this doesn't work, may need to change .is(1) to .in(1, 2, 3) for each check.
+            //The following 3 messages are sometimes received in a different order (e.g. 1, 3, 2) so allowing any option on each check.
+            //Saving the third one to ensure all three responses were received
             ws.checkTextMessage("PED_030_010_JoinSessionResponse1")
-              .matching(jsonPath("$.data.eventName").is("IcpClientJoinedSession")),
-            //.check(jsonPath("$.data.eventName").is("IcpClientJoinedSession")),
+              .check(jsonPath("$.data.eventName").in("IcpClientJoinedSession", "IcpParticipantsListUpdated", "IcpNewParticipantJoinedSession")),
             ws.checkTextMessage("PED_030_020_JoinSessionResponse2")
-              .matching(jsonPath("$.data.eventName").is("IcpParticipantsListUpdated")),
-            //.check(jsonPath("$.data.eventName").is("IcpParticipantsListUpdated")),
+              .check(jsonPath("$.data.eventName").in("IcpClientJoinedSession", "IcpParticipantsListUpdated", "IcpNewParticipantJoinedSession")),
             ws.checkTextMessage("PED_030_030_JoinSessionResponse3")
-              .matching(jsonPath("$.data.eventName").is("IcpNewParticipantJoinedSession"))))
-            //.check(jsonPath("$.data.eventName").is("IcpNewParticipantJoinedSession"))))
+              .check(jsonPath("$.data.eventName").in("IcpClientJoinedSession", "IcpParticipantsListUpdated", "IcpNewParticipantJoinedSession").saveAs("JoinedSessionEvent"))))
       )
     )
 

@@ -10,7 +10,7 @@ object Presentation {
     exec(ws("PED_040_010_StartPresenting")
       .sendText(ElFileBody("bodies/ped/StartPresenting.json"))
       .await(10)(ws.checkTextMessage("PED_040_020_StartPresentingResponse")
-        .check(jsonPath("$.data.eventName").is("IcpPresenterUpdated"))
+        .check(jsonPath("$.data.eventName").is("IcpPresenterUpdated").saveAs("PresentationStarted"))
         .check(jsonPath("$.data.data.id").is("#{connectionId}"))))
 
   val StopPresenting =

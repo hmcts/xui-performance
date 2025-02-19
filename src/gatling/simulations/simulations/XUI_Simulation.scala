@@ -29,8 +29,6 @@ class XUI_Simulation extends Simulation {
 	val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
 	val UserFeederCTSC = csv("UserDataCTSC.csv").circular
 
-	val pedNumberOfUsers = csv("UserDataPED.csv").recordsCount
-
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
 	val nfdSoleLabelsPopulated = Source.fromResource("bodies/nfd/labels/soleLabelsPopulated.txt").mkString
@@ -68,6 +66,8 @@ class XUI_Simulation extends Simulation {
 	val nfdJointTargetPerHour: Double = 120
 	val frTargetPerHour: Double = 100
 	val caseworkerTargetPerHour: Double = 1000
+
+	val pedNumberOfUsers = if(debugMode	== "off") csv("UserDataPED.csv").recordsCount else 1
 
 	//This determines the percentage split of PRL journeys, by C100 or FL401
 	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
@@ -525,7 +525,7 @@ class XUI_Simulation extends Simulation {
 	 ===============================================================================================*/
 		val PEDScenario = scenario("***** PED Websockets Journey ******")
 			.exec(_.set("env", s"${env}"))
-			.exec(ped.PED_Scenario.PEDScenario(pedNumberOfUsers))
+			.exec(ped.PED_Scenario.PEDScenario(pedNumberOfUsers, debugMode))
 
 	/*===============================================================================================
 	* Simulation Configuration
