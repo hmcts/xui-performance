@@ -3,7 +3,7 @@ package scenarios
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import utils.{Common, Environment, Headers}
-import java.time.LocalDateTime
+import java.time.LocalDate.now
 import java.time.format.DateTimeFormatter
 
 /*======================================================================================
@@ -15,6 +15,7 @@ object Solicitor_Civil {
   val BaseURL = Environment.baseURL
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
+  val patternTimeNow = DateTimeFormatter.ofPattern("HH:mm:ss.S")
 
   val CreateCivilCase =
 

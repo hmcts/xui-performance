@@ -602,8 +602,8 @@ object Solicitor_Probate {
           .formParam("classification", "PUBLIC")
           .formParam("caseTypeId", "GrantOfRepresentation")
           .formParam("jurisdictionId", "PROBATE")
-          .bodyPart(RawFileBodyPart("files", "3MB.pdf")
-            .fileName("3MB.pdf")
+          .bodyPart(RawFileBodyPart("files", "120KB.pdf")
+            .fileName("120KB.pdf")
             .transferEncoding("binary"))
           .asMultipartForm
           .check(substring("originalDocumentName"))
