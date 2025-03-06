@@ -8,7 +8,7 @@ import scala.concurrent.duration._
 
 object PED_Scenario {
 
-  val PEDUserFeeder = csv("UserDataPED.csv")
+  val PEDUserFeeder = csv(Config.PED_USERS_CSV_PATH)
 
   val sendMessageFreqMs = Config.PED_SEND_MESSAGE_FREQ_MS
   val pollMessageFreqMs = Config.PED_POLL_MESSAGES_FREQ_MS

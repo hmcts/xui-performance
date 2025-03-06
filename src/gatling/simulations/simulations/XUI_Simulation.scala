@@ -67,7 +67,7 @@ class XUI_Simulation extends Simulation {
 	val frTargetPerHour: Double = 100
 	val caseworkerTargetPerHour: Double = 1000
 
-	val pedNumberOfUsers = if(debugMode	== "off") csv("UserDataPED.csv").recordsCount else 1
+	val pedNumberOfUsers = if(debugMode	== "off") csv(Config.PED_USERS_CSV_PATH).recordsCount else 1
 
 	//This determines the percentage split of PRL journeys, by C100 or FL401
 	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
