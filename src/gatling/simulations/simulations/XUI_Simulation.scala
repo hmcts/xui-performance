@@ -577,7 +577,7 @@ class XUI_Simulation extends Simulation {
 	}
 
   setUp(
-		PEDScenario.inject(rampUsers(pedNumberOfUsers).during(1.minutes))
+		PEDScenario.inject(rampUsers(pedNumberOfUsers).during(5.minutes))
 		/*
       BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 

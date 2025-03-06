@@ -35,7 +35,7 @@ object PED_Scenario {
 
     /* PRESENTERS JOIN FIRST AND START PRESENTING */
 
-    .rendezVous(totalUsers) //Wait for everyone to login to XUI
+    //.rendezVous(totalUsers) //Wait for everyone to login to XUI - commenting out to ensure all users don't bombard the service at once
     .doIfEquals("#{type}", "Presenter") {
       exec(requests.Session.GetSessionInfo)
       .exec(requests.Session.JoinSession)
@@ -46,9 +46,10 @@ object PED_Scenario {
 
     /* FOLLOWERS JOIN THE PRESENTATION */
 
-    .rendezVous(totalUsers) //Wait for the presenters to start presenting before proceeding
+    //.rendezVous(totalUsers) //Wait for the presenters to start presenting before proceeding - commenting out to ensure all users don't bombard the service at once
     .doIfEquals("#{type}", "Follower") {
-      exec(requests.Session.GetSessionInfo)
+      pause(5) //Wait to give the Presenter time to start presenting
+      .exec(requests.Session.GetSessionInfo)
       .exec(requests.Session.JoinSession)
     }
     //If any users can't connect, abort the test
