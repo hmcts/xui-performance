@@ -20,6 +20,7 @@ object Config {
   object TestVolumesToCsvMapping {
 
     val USERS40_SESSIONS5 = "UserDataPED-40users-5sessions.csv" //CSV containing 5 Presenters and 35 Followers, across 5 sessions
+    val USERS80_SESSIONS10 = "UserDataPED-80users-10sessions.csv" //CSV containing 10 Presenters and 70 Followers, across 10 sessions
     val USERS1000_SESSIONS125 = "UserDataPED-1000users-125sessions.csv" //CSV containing 125 Presenters and 875 Followers, across 125 sessions
 
   }
