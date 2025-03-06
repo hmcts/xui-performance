@@ -22,6 +22,7 @@ object Config {
     val USERS40_SESSIONS5 = "UserDataPED-40users-5sessions.csv" //CSV containing 5 Presenters and 35 Followers, across 5 sessions
     val USERS80_SESSIONS10 = "UserDataPED-80users-10sessions.csv" //CSV containing 10 Presenters and 70 Followers, across 10 sessions
     val USERS160_SESSIONS20 = "UserDataPED-160users-20sessions.csv" //CSV containing 20 Presenters and 140 Followers, across 20 sessions
+    val USERS520_SESSIONS65 = "UserDataPED-160users-20sessions.csv" //CSV containing 65 Presenters and 455 Followers, across 65 sessions
     val USERS1000_SESSIONS125 = "UserDataPED-1000users-125sessions.csv" //CSV containing 125 Presenters and 875 Followers, across 125 sessions
 
   }
