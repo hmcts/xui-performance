@@ -82,45 +82,52 @@ object PED_Scenario {
 
     .rendezVous(totalUsers) //Wait for all messages to be sent before proceeding
     .doIfEquals("#{type}", "Follower") {
-      exec(requests.Messages.CheckForReceivedMessages) //Check for any remaining messages
+      pause(1, 10) //Stagger user requests
+      .exec(requests.Messages.CheckForReceivedMessages) //Check for any remaining messages
     }
 
     /* PRESENTERS STOP PRESENTING */
 
     .rendezVous(totalUsers) //Wait for the presentation to finish
     .doIfEquals("#{type}", "Presenter") {
-      exec(requests.Presentation.StopPresenting)
+      pause(1, 10)
+      .exec(requests.Presentation.StopPresenting)
     }
 
     /* WAIT FOR PRESENTERS TO STOP PRESENTING */
 
     .rendezVous(totalUsers)
+    .pause(1, 10)
     .exec(requests.Messages.CheckForReceivedMessages) //Confirmation of end of presentation
 
     /* FOLLOWERS LEAVE FIRST */
 
     .rendezVous(totalUsers)
     .doIfEquals("#{type}", "Follower") {
-      exec(requests.Session.LeaveSession)
+      pause(1, 10)
+      .exec(requests.Session.LeaveSession)
     }
 
     /* WAIT FOR FOLLOWERS TO LEAVE */
 
     .rendezVous(totalUsers)
     .doIfEquals("#{type}", "Presenter") {
-      exec(requests.Messages.CheckForReceivedMessages) //Confirmation of Followers leaving
+      pause(1, 10)
+      .exec(requests.Messages.CheckForReceivedMessages) //Confirmation of Followers leaving
     }
 
     /* PRESENTERS LEAVE */
 
     .rendezVous(totalUsers)
     .doIfEquals("#{type}", "Presenter") {
-      exec(requests.Session.LeaveSession)
+      pause(1, 10)
+      .exec(requests.Session.LeaveSession)
     }
 
     /* ALL USERS LOGOUT OF XUI */
 
     .rendezVous(totalUsers)
+    .pause(1, 10)
     .exec(Logout.XUILogout)
 
 }
