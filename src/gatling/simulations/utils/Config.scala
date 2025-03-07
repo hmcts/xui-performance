@@ -13,7 +13,7 @@ object Config {
   val PED_USERS_CSV_PATH = TestVolumesToCsvMapping.USERS40_SESSIONS5 //This controls the test volume
   val PED_PRESENTATION_DURATION_MINS = 20 //The duration for which Presenters will send messages
   val PED_SEND_MESSAGE_FREQ_MS = 500 //Send messages every 500ms
-  val PED_POLL_MESSAGES_FREQ_MS = 10000 //Poll every 10s for new messages - ensure wsUnmatchedInboundMessageBufferSize(50)
+  val PED_POLL_MESSAGES_FREQ_MS = 5000 //Poll every 10s for new messages - ensure wsUnmatchedInboundMessageBufferSize(50)
                                         //is set high enough to handle the volume of messages in the poll window
 
   /* PED USER FILE MAPPINGS - Define CSV user files here for running the PED scenario with different user/session configurations */
