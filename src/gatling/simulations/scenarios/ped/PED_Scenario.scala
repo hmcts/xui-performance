@@ -4,6 +4,7 @@ import io.gatling.core.Predef._
 import scenarios.{Homepage, Login, Logout}
 import utils.Config
 
+import java.io.{BufferedWriter, FileWriter}
 import scala.concurrent.duration._
 
 object PED_Scenario {
@@ -64,7 +65,7 @@ object PED_Scenario {
       pause(10.millis, sendMessageFreqMs.millis) //Stagger the Presenters before starting to send messages
       .repeat("#{numberOfMessagesToSend}", "counter") {
         exec(requests.Messages.PresenterSendMessage)
-        .pause(sendMessageFreqMs.millis)
+        .pause((sendMessageFreqMs - 50).millis) // minus 50ms (average time taken to send the message and receive a response)
       }
     }
 
