@@ -5,9 +5,10 @@
          "email": "#{laName}@test.com",
          "legalTeamManager": null,
          "pbaNumber": "PBA0066906",
-         "customerReference": null,
+         "customerReference": "PBA0066906",
          "clientCode": null,
-         "phone": "07000000000",
+         "colleagues": [],
+         "phone": null,
          "id": "#{laId}",
          "designated": null,
          "address": {
@@ -18,11 +19,15 @@
             "County": "",
             "PostCode": "#{laPostcode}",
             "Country": "UK"
+         },
+         "representingDetails": {
+            "firstName": null,
+            "lastName": null
          }
       }
    },
    "event": {
-      "id": "enterLocalAuthority",
+      "id": "enterApplicantDetailsLA",
       "summary": "",
       "description": ""
    },
@@ -32,9 +37,10 @@
          "email": "#{laName}@test.com",
          "legalTeamManager": null,
          "pbaNumber": "PBA0066906",
-         "customerReference": null,
+         "customerReference": "PBA0066906",
          "clientCode": null,
-         "phone": "07000000000",
+         "colleagues": [],
+         "phone": null,
          "id": "#{laId}",
          "designated": null,
          "address": {
@@ -45,6 +51,10 @@
             "County": "",
             "PostCode": "#{laPostcode}",
             "Country": "UK"
+         },
+         "representingDetails": {
+            "firstName": null,
+            "lastName": null
          }
       }
    },
