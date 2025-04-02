@@ -36,11 +36,11 @@ object Solicitor_FPL {
                     "respondentLastName" -> ("Test" + Common.randomString(5)),
                     "dobYearResp" -> Common.getDobYear(),
                     "currentDate" -> now.format(patternDate)))
-
+ 
     /*======================================================================================
     Click On Create Case for FPL
     ======================================================================================*/
-
+  
     .group("XUI_FPL_040_CreateCase") {
 
       exec(http("XUI_FPL_040_CreateCase")
@@ -53,7 +53,7 @@ object Solicitor_FPL {
     }
 
     .pause(MinThinkTime , MaxThinkTime)
-
+    
     /*======================================================================================
     Select Jurisdiction as Family Law and Casetype as CARE_SUPERVISION_EPO
     ======================================================================================*/
@@ -75,7 +75,7 @@ object Solicitor_FPL {
     /*======================================================================================
     Enter case name and click Continue
     ======================================================================================*/
-
+    
     .group("XUI_FPL_060_CaseNameContinue") {
       exec(http("XUI_FPL_060_005_CaseNameContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=openCaseprovideCaseName")
@@ -85,13 +85,13 @@ object Solicitor_FPL {
         .body(ElFileBody("bodies/fpl/FPLOpenCase.json"))
         .check(substring("caseName")))
     }
-
+    
     .pause(MinThinkTime , MaxThinkTime )
 
     /*======================================================================================
     Click Save and Continue to create the case
     ======================================================================================*/
-
+    
     .group("XUI_FPL_070_CaseNameSaveContinue") {
       exec(http("XUI_FPL_070_005_CaseNameSaveContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/cases?ignore-warning=false")
@@ -108,7 +108,7 @@ object Solicitor_FPL {
         .header("x-xsrf-token", "#{XSRFToken}")
         .check(substring("CCD ID")))
     }
-
+      
     .pause(MinThinkTime , MaxThinkTime )
 
   val fplOrdersAndDirections =
@@ -116,7 +116,7 @@ object Solicitor_FPL {
     /*======================================================================================
     Click on the 'Orders and directions sought' link
     ======================================================================================*/
-
+      
     group("XUI_FPL_080_OrdersAndDirections") {
       exec(http("XUI_FPL_080_005_OrdersAndDirectionsTrigger")
         .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/#{caseId}/trigger/ordersNeeded")
@@ -156,17 +156,17 @@ object Solicitor_FPL {
 
       .exec(Common.isAuthenticated)
     }
-
+    
     .exec(Common.caseActivityGet)
 
     .pause(MinThinkTime , MaxThinkTime )
-
+  
     /*======================================================================================
     Select options and click Continue:
     Orders = Care order
     Directions = No
     ======================================================================================*/
-
+    
     .group("XUI_FPL_090_AddOrdersAndDirections") {
       exec(http("XUI_FPL_090_005_AddOrdersAndDirections")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=ordersNeeded1")
@@ -176,13 +176,13 @@ object Solicitor_FPL {
         .body(ElFileBody("bodies/fpl/FPLOrdersAndDirectionsAdd.json"))
         .check(substring("emergencyProtectionOrderDetails")))
     }
-
+    
     .pause(MinThinkTime , MaxThinkTime )
 
     /*======================================================================================
     Review details and click Save and Continue
     ======================================================================================*/
-
+    
     .group("XUI_FPL_100_SubmitOrdersAndDirections") {
       exec(http("XUI_FPL_100_005_SubmitOrdersAndDirections")
         .post("/data/cases/#{caseId}/events")
@@ -198,7 +198,7 @@ object Solicitor_FPL {
         .header("x-xsrf-token", "#{XSRFToken}")
         .check(substring("""event_id":"ordersNeeded""")))
     }
-
+      
     .pause(MinThinkTime , MaxThinkTime )
 
   val fplHearingUrgency =
@@ -917,7 +917,7 @@ object Solicitor_FPL {
 
     .pause(MinThinkTime , MaxThinkTime )
 
-  val QueryManagement =
+  val QueryManagement = 
 
     group("XUI_FPL_340_RaiseNewQuery") {
       exec(http("XUI_FPL_340_005_RaiseNewQuery")
@@ -969,7 +969,7 @@ object Solicitor_FPL {
 
     .pause(MinThinkTime , MaxThinkTime )
 
-  val RespondToQueryManagement =
+  val RespondToQueryManagement = 
 
     group("XUI_FPL_380_ViewCase") {
       exec(http("XUI_FPL_380_005_ViewCase")
