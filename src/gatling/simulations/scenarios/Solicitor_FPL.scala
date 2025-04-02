@@ -47,7 +47,6 @@ object Solicitor_FPL {
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
-        .header("x-xsrf-token", "#{XSRFToken}")
         .check(substring("PUBLICLAW")))
 
       .exec(Common.userDetails)
@@ -67,6 +66,8 @@ object Solicitor_FPL {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(substring("Start application")))
+
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime , MaxThinkTime)
