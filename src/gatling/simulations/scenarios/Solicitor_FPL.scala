@@ -393,7 +393,7 @@ object Solicitor_FPL {
 
     group("XUI_FPL_170_LocalAuthorityDetails") {
       exec(http("XUI_FPL_170_005_LocalAuthorityTrigger")
-        .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/#{caseId}/trigger/enterLocalAuthority")
+        .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/#{caseId}/trigger/enterApplicantDetailsLA")
         .headers(Headers.navigationHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
         .check(substring("HMCTS Manage cases")))
@@ -421,7 +421,7 @@ object Solicitor_FPL {
       .exec(Common.profile)
 
       .exec(http("XUI_FPL_170_015_LocalAuthorityEvent")
-        .get("/data/internal/cases/#{caseId}/event-triggers/enterLocalAuthority?ignore-warning=false")
+        .get("/data/internal/cases/#{caseId}/event-triggers/enterApplicantDetailsLA?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -432,7 +432,7 @@ object Solicitor_FPL {
         .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.PostTown").saveAs("laPostTown"))
         .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.PostCode").saveAs("laPostcode"))
         .check(jsonPath("$.event_token").saveAs("event_token"))
-        .check(jsonPath("$.id").is("enterLocalAuthority")))
+        .check(jsonPath("$.id").is("enterApplicantDetailsLA")))
 
       .exec(Common.isAuthenticated)
     }
@@ -452,7 +452,7 @@ object Solicitor_FPL {
 
     .group("XUI_FPL_180_AddLocalAuthorityDetails") {
       exec(http("XUI_FPL_180_005_AddLocalAuthority")
-        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterLocalAuthorityDetails")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterApplicantDetailsLAApplicantDetails")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -472,13 +472,13 @@ object Solicitor_FPL {
 
     .group("XUI_FPL_190_AddLocalAuthorityColleagues") {
       exec(http("XUI_FPL_190_005_AddLocalAuthorityColleagues")
-        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterLocalAuthorityColleagues")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterApplicantDetailsLAApplicantContact")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/fpl/FPLLocalAuthorityColleagueAdd.json"))
-        .check(jsonPath("$.data.localAuthorityColleagues[0].id").saveAs("colleagueId"))
-        .check(substring("localAuthorityColleaguesList")))
+        .check(jsonPath("$.data.applicantContact.firstName").is("PerfTest"))
+        .check(jsonPath("$.data.applicantContact.lastName").is("ApplicantContact")))
     }
 
     .pause(MinThinkTime , MaxThinkTime )
@@ -501,7 +501,7 @@ object Solicitor_FPL {
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
-        .check(substring("""event_id":"enterLocalAuthority""")))
+        .check(substring("""event_id":"enterApplicantDetailsLA""")))
     }
 
     .pause(MinThinkTime , MaxThinkTime )
@@ -801,7 +801,7 @@ object Solicitor_FPL {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/fpl/FPLAllocationProposalSubmit.json"))
-        .check(jsonPath("$.data.allocationProposal.proposal").is("Circuit judge"))
+        .check(jsonPath("$.data.allocationProposal.proposalV2").is("Circuit judge"))
         .check(jsonPath("$.state").is("Open")))
 
       .exec(http("XUI_FPL_290_010_ViewCase")
