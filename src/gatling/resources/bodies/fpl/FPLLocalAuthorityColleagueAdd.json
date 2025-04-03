@@ -1,23 +1,23 @@
 {
   "data": {
-    "localAuthorityColleagues": [
-      {
-        "value": {
-          "role": "SOLICITOR",
-          "dx": null,
-          "reference": null,
-          "fullName": "Perf Test",
-          "email": "#{laName}@test.com",
-          "phone": null,
-          "notificationRecipient": "No",
-          "mainContact": null
-        },
-        "id": null
-      }
-    ]
+    "applicantContact": {
+      "firstName": "PerfTest",
+      "lastName": "ApplicantContact",
+      "fullName": null,
+      "phone": "123456789",
+      "alternativePhone": null,
+      "dx": null,
+      "email": null,
+      "mainContact": null,
+      "notificationRecipient": null,
+      "reference": null,
+      "role": null,
+      "title": null
+    },
+    "applicantContactOthers": []
   },
   "event": {
-    "id": "enterLocalAuthority",
+    "id": "enterApplicantDetailsLA",
     "summary": "",
     "description": ""
   },
@@ -27,9 +27,10 @@
       "email": "#{laName}@test.com",
       "legalTeamManager": null,
       "pbaNumber": "PBA0066906",
-      "customerReference": null,
+      "customerReference": "PBA0066906",
       "clientCode": null,
-      "phone": "07000000000",
+      "colleagues": [],
+      "phone": null,
       "id": "#{laId}",
       "designated": null,
       "address": {
@@ -40,23 +41,27 @@
         "County": "",
         "PostCode": "#{laPostcode}",
         "Country": "UK"
+      },
+      "representingDetails": {
+        "firstName": null,
+        "lastName": null
       }
     },
-    "localAuthorityColleagues": [
-      {
-        "value": {
-          "role": "SOLICITOR",
-          "dx": null,
-          "reference": null,
-          "fullName": "Perf Test",
-          "email": "#{laName}@test.com",
-          "phone": null,
-          "notificationRecipient": "No",
-          "mainContact": null
-        },
-        "id": null
-      }
-    ]
+    "applicantContact": {
+      "firstName": "PerfTest",
+      "lastName": "ApplicantContact",
+      "fullName": null,
+      "phone": "123456789",
+      "alternativePhone": null,
+      "dx": null,
+      "email": null,
+      "mainContact": null,
+      "notificationRecipient": null,
+      "reference": null,
+      "role": null,
+      "title": null
+    },
+    "applicantContactOthers": []
   },
   "event_token": "#{event_token}",
   "ignore_warning": false,

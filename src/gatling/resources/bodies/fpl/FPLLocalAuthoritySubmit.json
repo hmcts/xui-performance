@@ -5,9 +5,10 @@
       "email": "#{laName}@test.com",
       "legalTeamManager": null,
       "pbaNumber": "PBA0066906",
-      "customerReference": null,
+      "customerReference": "PBA0066906",
       "clientCode": null,
-      "phone": "07000000000",
+      "colleagues": [],
+      "phone": null,
       "id": "#{laId}",
       "designated": null,
       "address": {
@@ -19,27 +20,29 @@
         "PostCode": "#{laPostcode}",
         "Country": "UK"
       },
-      "colleagues": []
-    },
-    "localAuthorityColleagues": [
-      {
-        "value": {
-          "role": "SOLICITOR",
-          "dx": null,
-          "title": null,
-          "reference": null,
-          "fullName": "Perf Test",
-          "email": "#{laName}@test.com",
-          "phone": null,
-          "notificationRecipient": "No",
-          "mainContact": null
-        },
-        "id": "#{colleagueId}"
+      "representingDetails": {
+        "firstName": null,
+        "lastName": null
       }
-    ]
+    },
+    "applicantContact": {
+      "firstName": "PerfTest",
+      "lastName": "ApplicantContact",
+      "fullName": null,
+      "phone": "123456789",
+      "alternativePhone": null,
+      "dx": null,
+      "email": null,
+      "mainContact": null,
+      "notificationRecipient": null,
+      "reference": null,
+      "role": null,
+      "title": null
+    },
+    "applicantContactOthers": []
   },
   "event": {
-    "id": "enterLocalAuthority",
+    "id": "enterApplicantDetailsLA",
     "summary": "",
     "description": ""
   },
