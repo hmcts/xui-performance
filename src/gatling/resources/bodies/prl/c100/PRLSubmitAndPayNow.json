@@ -12,7 +12,7 @@
     "payAgreeStatement": [
       "agree"
     ],
-    "feeAmount": "£232.00",
+    "feeAmount": "#{feeAmount}",
     "isEngDocGen": null,
     "submitAndPayDownloadApplicationWelshLink": null,
     "submitAndPayDownloadApplicationLink": {
