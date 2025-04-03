@@ -1554,7 +1554,7 @@ object Solicitor_PRL_C100 {
 
     group("XUI_PRL_C100_650_SubmitAndPayRedirect") {
       exec(http("XUI_PRL_C100_650_005_SubmitAndPayRedirect")
-        .get("/cases/case-details/#{caseId}/trigger/submitAndPay/submitAndPay1")
+        .get("/cases/case-details/#{caseId}/trigger/***PurposeFullError/submitAndPay/submitAndPay1")
         .headers(Headers.navigationHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
         .check(substring("HMCTS Manage cases")))
@@ -1687,7 +1687,7 @@ object Solicitor_PRL_C100 {
 
     group("XUI_PRL_C100_710_HearingsTab") {
       exec(http("XUI_PRL_C100_710_GetHearings")
-        .get("/api/hearings/getHearings?caseId=#{caseId}")
+        .get("/api/hearings/getHearings?caseId=#{caseId}***PurposeFullError")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*")
         .check(status.in(200, 403)))
