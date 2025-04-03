@@ -179,6 +179,8 @@ object Solicitor_PRL_FL401 {
         .check(jsonPath("$.id").is("fl401TypeOfApplication")))
 
       .exec(Common.userDetails)
+
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -298,6 +300,8 @@ object Solicitor_PRL_FL401 {
         .check(jsonPath("$.id").is("withoutNoticeOrderDetails")))
 
       .exec(Common.userDetails)
+
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -460,6 +464,8 @@ object Solicitor_PRL_FL401 {
         .header("accept", "application/json, text/plain, */*"))
 
       .exec(Common.userDetails)
+
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -572,6 +578,8 @@ object Solicitor_PRL_FL401 {
         .header("accept", "application/json, text/plain, */*"))
 
       .exec(Common.userDetails)
+
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -681,6 +689,10 @@ object Solicitor_PRL_FL401 {
         .check(jsonPath("$.id").is("fl401ApplicantFamilyDetails")))
 
       .exec(Common.userDetails)
+      .exec(Common.userDetails)
+      .exec(Common.userDetails)
+
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -782,6 +794,8 @@ object Solicitor_PRL_FL401 {
         .check(jsonPath("$.id").is("respondentRelationship")))
 
       .exec(Common.userDetails)
+
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -901,6 +915,8 @@ object Solicitor_PRL_FL401 {
         .check(jsonPath("$.id").is("respondentBehaviour")))
 
       .exec(Common.userDetails)
+
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1002,6 +1018,8 @@ object Solicitor_PRL_FL401 {
         .check(jsonPath("$.id").is("fl401Home")))
 
       .exec(Common.userDetails)
+
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1105,6 +1123,8 @@ object Solicitor_PRL_FL401 {
         .check(jsonPath("$.id").is("fl401UploadDocuments")))
 
       .exec(Common.userDetails)
+
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1234,6 +1254,8 @@ object Solicitor_PRL_FL401 {
         .check(jsonPath("$.id").is("viewPdfDocument")))
 
       .exec(Common.userDetails)
+
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1335,6 +1357,8 @@ object Solicitor_PRL_FL401 {
         .check(jsonPath("$.id").is("fl401StatementOfTruthAndSubmit")))
 
       .exec(Common.userDetails)
+
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
