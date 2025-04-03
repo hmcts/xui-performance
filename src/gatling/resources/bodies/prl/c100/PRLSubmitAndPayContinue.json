@@ -19,7 +19,7 @@
     "payAgreeStatement": [
       "agree"
     ],
-    "feeAmount": "£232.00",
+    "feeAmount": "#{feeAmount}",
     "submitAndPayDownloadApplicationWelshLink": null,
     "submitAndPayDownloadApplicationLink": {
       "document_url": "#{DocumentUrl}",
