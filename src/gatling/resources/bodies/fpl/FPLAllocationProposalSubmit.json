@@ -1,7 +1,8 @@
 {
   "data": {
     "allocationProposal": {
-      "proposal": "Circuit judge",
+      "proposal": null,
+      "proposalV2": "Circuit judge",
       "proposalReason": "Reason text"
     }
   },
