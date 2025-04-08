@@ -24,7 +24,6 @@
   },
   "event_data": {
     #{NFDLabelsPopulated}
-    "isJudicialSeparation": "No",
     "coApplicant1IsDrafted": "No",
     "coApplicant1IsSubmitted": "No",
     "coApplicant2IsDrafted": null,
