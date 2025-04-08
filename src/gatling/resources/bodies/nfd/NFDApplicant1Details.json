@@ -8,7 +8,7 @@
     "marriageFormationType": "oppositeSexCouple",
     "applicant1Email": "applicant1@perftest12345.com",
     "applicant1PhoneNumber": "07000000000",
-    "applicant1Address": {
+    "applicant1NonConfidentialAddress": {
       "AddressLine1": "#{addressLines(0)}",
       "AddressLine2": "#{addressLines(1)}",
       "AddressLine3": "",
@@ -26,7 +26,6 @@
   },
   "event_data": {
     #{NFDLabelsPopulated}
-    "isJudicialSeparation": "No",
     "coApplicant1IsDrafted": "No",
     "coApplicant1IsSubmitted": "No",
     "coApplicant2IsDrafted": null,
@@ -58,7 +57,8 @@
     "marriageFormationType": "oppositeSexCouple",
     "applicant1Email": "applicant1@perftest12345.com",
     "applicant1PhoneNumber": "07000000000",
-    "applicant1Address": {
+    "applicant1AddressOverseas": "No",
+    "applicant1NonConfidentialAddress": {
       "AddressLine1": "#{addressLines(0)}",
       "AddressLine2": "#{addressLines(1)}",
       "AddressLine3": "",
