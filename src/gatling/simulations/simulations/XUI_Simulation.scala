@@ -547,7 +547,7 @@ class XUI_Simulation extends Simulation {
 			case "perftest" | "pipeline" => //currently using the same assertions for a performance test and the pipeline
 				if (debugMode == "off") {
 					Seq(global.successfulRequests.percent.gte(95),
-						details("XUI_PRL_C100_620_SubmitAndPayNow").successfulRequests.percent.gte(80),
+						details("XUI_PRL_C100_700_SubmitAndPayNow").successfulRequests.percent.gte(80),
 						details("XUI_PRL_FL401_490_SOTSubmit").successfulRequests.percent.gte(80),
 						details("XUI_Bails_770_Upload_Signed_Notice_Submit").successfulRequests.percent.gte(80),
 						details("XUI_Probate_330_ViewCase").successfulRequests.percent.gte(80),
