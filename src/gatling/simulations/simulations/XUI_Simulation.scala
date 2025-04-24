@@ -16,6 +16,7 @@ import scala.util.Random
 class XUI_Simulation extends Simulation {
 
 	val UserFeederPRL = csv("UserDataPRL.csv").circular
+	val UserFeederPRLCourtAdmin = csv("UserDataPRLCourtAdmin.csv").circular
 	val UserFeederBails = csv("UserDataBails.csv").circular
 	val UserFeederBailsHO = csv("UserDataBailsHO.csv").circular
 	val UserFeederBailsAdmin = csv("UserDataBailsAdmin.csv").circular
@@ -109,25 +110,39 @@ class XUI_Simulation extends Simulation {
             .set("caseType", "PRLAPPS"))
       .exec(Homepage.XUIHomePage)
       .exec(Login.XUILogin)
-      .feed(randomFeeder)
-      .doIfOrElse(session => session("prl-percentage").as[Int] < prlC100Percentage) {
-        //C100 Journey
-        exec(Solicitor_PRL_C100.CreatePrivateLawCase)
-        .exec(Solicitor_PRL_C100.TypeOfApplication)
-        .exec(Solicitor_PRL_C100.HearingUrgency)
-        .exec(Solicitor_PRL_C100.ApplicantDetails)
-        .exec(Solicitor_PRL_C100.ChildDetails)
-        .exec(Solicitor_PRL_C100.RespondentDetails)
-        .exec(Solicitor_PRL_C100.AllegationsOfHarm)
-        .exec(Solicitor_PRL_C100.OtherChildrenNotInCase)
-        .exec(Solicitor_PRL_C100.OtherPeopleInCase)
-        .exec(Solicitor_PRL_C100.ChildrenAndApplicants)
-        .exec(Solicitor_PRL_C100.ChildrenAndRespondents)
-        .exec(Solicitor_PRL_C100.ChildrenAndOtherPeople)
-        .exec(Solicitor_PRL_C100.MIAM)
-        .exec(Solicitor_PRL_C100.ViewPdfApplication)
-        .exec(Solicitor_PRL_C100.SubmitAndPay)
-        .exec(Solicitor_PRL_C100.HearingsTab)
+		.feed(randomFeeder)
+		.doIfOrElse(session => session("prl-percentage").as[Int] < prlC100Percentage) {
+			//C100 Journey
+			exec(Solicitor_PRL_C100.CreatePrivateLawCase)
+			.exec(Solicitor_PRL_C100.TypeOfApplication)
+			.exec(Solicitor_PRL_C100.HearingUrgency)
+			.exec(Solicitor_PRL_C100.ApplicantDetails)
+			.exec(Solicitor_PRL_C100.ChildDetails)
+			.exec(Solicitor_PRL_C100.RespondentDetails)
+			.exec(Solicitor_PRL_C100.AllegationsOfHarm)
+			.exec(Solicitor_PRL_C100.OtherChildrenNotInCase)
+			.exec(Solicitor_PRL_C100.OtherPeopleInCase)
+			.exec(Solicitor_PRL_C100.ChildrenAndApplicants)
+			.exec(Solicitor_PRL_C100.ChildrenAndRespondents)
+			.exec(Solicitor_PRL_C100.ChildrenAndOtherPeople)
+			.exec(Solicitor_PRL_C100.MIAM)
+			.exec(Solicitor_PRL_C100.ViewPdfApplication)
+			.exec(Solicitor_PRL_C100.SubmitAndPay)
+			//.exec(Solicitor_PRL_C100.HearingsTab) //Remove? **
+		.exec(Logout.XUILogout)
+		//C100 Case Progression
+		.feed(UserFeederPRLCourtAdmin)
+		.exec(Homepage.XUIHomePage)
+		.exec(Login.XUILogin)
+			.exec(CourtAdmin_PRL_C100.CourtAdminCheckApplication)
+			.exec(CourtAdmin_PRL_C100.CourtAdminSendToGateKeeper)
+			.exec(CourtAdmin_PRL_C100.CourtAdminManageOrders)
+			.exec(CourtAdmin_PRL_C100.CourtAdminServiceApplication)
+			.exec(CourtAdmin_PRL_C100.CourtAdminListHearing)
+			//List the hearing (Mimic request back from List Assist)
+				.exec(ListHearingLA.ListHearingC100)
+			//View hearings tab once listed 
+			.exec(CourtAdmin_PRL_C100.CourtAdminHearingsTab)
       } 
       {
       	//FL401 Journey
@@ -143,7 +158,21 @@ class XUI_Simulation extends Simulation {
         .exec(Solicitor_PRL_FL401.UploadDocuments)
         .exec(Solicitor_PRL_FL401.ViewPDF)
         .exec(Solicitor_PRL_FL401.StatementOfTruth)
-        .exec(Solicitor_PRL_FL401.HearingsTab)
+        //.exec(Solicitor_PRL_FL401.HearingsTab)
+				.exec(Logout.XUILogout)
+		//FL401 Case Progression
+		.feed(UserFeederPRLCourtAdmin)
+		.exec(Homepage.XUIHomePage)
+		.exec(Login.XUILogin)
+			.exec(CourtAdmin_PRL_FL401.CourtAdminCheckApplication)
+			.exec(CourtAdmin_PRL_FL401.CourtAdminSendToGateKeeper)
+			.exec(CourtAdmin_PRL_FL401.CourtAdminManageOrders)
+			.exec(CourtAdmin_PRL_FL401.CourtAdminServiceApplication)
+			.exec(CourtAdmin_PRL_FL401.CourtAdminListHearing)
+			//List the hearing (Mimic request back from List Assist)
+				.exec(ListHearingLA.ListHearingFL401)
+			//View hearings tab once listed 
+			.exec(CourtAdmin_PRL_FL401.CourtAdminHearingsTab)
         }
       .exec(Logout.XUILogout)
 		}
@@ -576,7 +605,8 @@ class XUI_Simulation extends Simulation {
     //   CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
     //   NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
     //   NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-	  PRLSolicitorScenario.inject(constantConcurrentUsers(1).during(10))
+	  PRLSolicitorScenario.inject(constantConcurrentUsers(5).during(10))
+	  
       //PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
