@@ -799,7 +799,7 @@ val CourtAdminListHearing =
         .header("Content-Type", "application/json; charset=utf-8")
         .header("Accept", "application/json, text/plain, */*")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/prl/C100/PRLC100SubmitHearing.json"))
+        .body(ElFileBody("bodies/prl/c100/PRLC100SubmitHearing.json"))
         .check(jsonPath("$.hearingRequestID").saveAs("hearingRequestId"))
         .check(status.is(201)))
 

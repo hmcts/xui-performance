@@ -57,7 +57,7 @@ class XUI_Simulation extends Simulation {
 	/* ******************************** */
 
 	/* PERFORMANCE TEST CONFIGURATION */
-	val prlTargetPerHour: Double =  100
+	val prlTargetPerHour: Double =  90
 	val bailsTargetPerHour: Double = 10
 	val probateTargetPerHour: Double = 250
 	val iacTargetPerHour: Double = 20
@@ -606,6 +606,7 @@ class XUI_Simulation extends Simulation {
     //   NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
     //   NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),  
     	 PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+		 //PRLSolicitorScenario.inject(constantConcurrentUsers(10).during(10.minutes))
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
     .maxDuration(75 minutes)
