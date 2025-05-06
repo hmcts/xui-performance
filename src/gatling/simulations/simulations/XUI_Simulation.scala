@@ -86,7 +86,7 @@ class XUI_Simulation extends Simulation {
 	val pauseOption: PauseType = debugMode match {
 		case "off" if testType == "perftest" => constantPauses
 		case "off" if testType == "pipeline" => customPauses(pipelinePausesMillis)
-		case _ => disabledPauses
+		case _ => constantPauses //disabledPauses
 	}
 
 	val httpProtocol = http
@@ -502,12 +502,24 @@ class XUI_Simulation extends Simulation {
 			.exec(Homepage.XUIHomePage)
 			.exec(Login.XUILogin)
 			.exec(Solicitor_Civil.CreateCivilCase)
+			.pause(60)
+			.exec(Solicitor_Civil.s2s("civil_service"))
+			.exec(Solicitor_Civil.s2s("xui_webapp"))
+			.exec(Solicitor_Civil.AddPayment)
+			.pause(60)
+			.exec(Solicitor_Civil.QueryManagement)
+			.exec(Logout.XUILogout)
+			.feed(UserFeederCTSC)
+			.exec(Homepage.XUIHomePage)
+			.exec(Login.XUILogin)
+			.exec(Solicitor_Civil.RespondToQueryManagement)
 			.exec(Logout.XUILogout)
 		}
 
 	/*===============================================================================================
 	* XUI Caseworker - Search & View Case Scenario
 	 ===============================================================================================*/
+
 	val CaseworkerScenario = scenario("***** Caseworker Journey ******")
 		.exitBlockOnFail {
 			feed(CaseworkerUserFeeder)
@@ -580,16 +592,16 @@ class XUI_Simulation extends Simulation {
 	}
 
   setUp(
-      BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      // DivorceSolicitorScenario.inject(simulationProfile(testType, divorceTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      // NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      // NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//      BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//      ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//      ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//      FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//      // DivorceSolicitorScenario.inject(simulationProfile(testType, divorceTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//      FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//      CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//      // NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//      // NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//      PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			CivilSolicitorScenario.inject(simulationProfile(testType, civilTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
   ).protocols(httpProtocol)
     .assertions(assertions(testType))

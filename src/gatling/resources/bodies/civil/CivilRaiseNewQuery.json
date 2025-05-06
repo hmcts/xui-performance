@@ -1,0 +1,31 @@
+{
+  "data": {
+    "qmApplicantSolicitorQueries": {
+      "partyName": "Case sol2",
+      "roleOnCase": "",
+      "caseMessages": [
+        {
+          "id": null,
+          "value": {
+            "id": "#{randomUuid()}",
+            "subject": "Perf test query",
+            "name": "Case sol2",
+            "body": "Here are some details about the perf test query",
+            "attachments": [],
+            "isHearingRelated": "No",
+            "hearingDate": null,
+            "createdOn": "#{currentDate}T#{currentTime}Z",
+            "createdBy": "#{idamId}"
+          }
+        }
+      ]
+    }
+  },
+  "event": {
+    "id": "queryManagementRaiseQuery",
+    "summary": "",
+    "description": "Raise a new query"
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false
+}
