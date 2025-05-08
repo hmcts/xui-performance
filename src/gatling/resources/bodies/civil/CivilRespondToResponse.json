@@ -16,12 +16,25 @@
           }
         },
         {
+          "id": "#{raiseQueryParentId2}",
+          "value": {
+            "id": ",#{raiseQueryId2}",
+            "body": "some response details",
+            "name": "cuiuser r2",
+            "subject": "Test",
+            "parentId": "#{raiseQueryId1}",
+            "createdBy": "#{queryCreatedBy2}”",
+            "createdOn": "#{queryCreatedOn2}",
+            "isHearingRelated": "No"
+          }
+        },
+        {
           "id": null,
           "value": {
             "id": "#{randomUuid()}",
-            "subject": "Perf test query subject",
-            "name": "cuiuser r2",
-            "body": "Here is my response to your query",
+            "subject": "Test",
+            "name": "Case sol2",
+            "body": "here is my second follow up question",
             "attachments": [],
             "isHearingRelated": "No",
             "createdOn": "#{currentDate}T#{currentTime}Z",
@@ -33,9 +46,9 @@
     }
   },
   "event": {
-    "id": "queryManagementRespondQuery",
+    "id": "queryManagementRaiseQuery",
     "summary": "",
-    "description": "Respond to a query"
+    "description": "Raise a new query"
   },
   "event_token": "#{event_token}",
   "ignore_warning": false
