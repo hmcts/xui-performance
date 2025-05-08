@@ -509,10 +509,23 @@ class XUI_Simulation extends Simulation {
 			.pause(60)
 			.exec(Solicitor_Civil.QueryManagement)
 			.exec(Logout.XUILogout)
+
 			.feed(UserFeederCTSC)
 			.exec(Homepage.XUIHomePage)
 			.exec(Login.XUILogin)
 			.exec(Solicitor_Civil.RespondToQueryManagement)
+			.exec(Logout.XUILogout)
+
+			.feed(UserFeederCivil)
+			.exec(Homepage.XUIHomePage)
+			.exec(Login.XUILogin)
+			.exec(Solicitor_Civil.RespondToCTSCResponse)
+			.exec(Logout.XUILogout)
+
+			.feed(UserFeederCTSC)
+			.exec(Homepage.XUIHomePage)
+			.exec(Login.XUILogin)
+			.exec(Solicitor_Civil.CTSCResponseToSecondQuery)
 			.exec(Logout.XUILogout)
 		}
 

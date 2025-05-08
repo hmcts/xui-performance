@@ -1,0 +1,68 @@
+{
+  "data": {
+    "qmApplicantSolicitorQueries": {
+      "partyName": "Claimant",
+      "caseMessages": [
+        {
+          "id": "#{raiseQueryParentId1}",
+          "value": {
+            "id": "#{raiseQueryId1}",
+            "body": "Here are some details about the perf test query",
+            "name": "Case sol2",
+            "subject": "Perf test query",
+            "createdBy": "#{queryCreatedBy}",
+            "createdOn": "#{queryCreatedOn}",
+            "isHearingRelated": "No"
+          }
+        },
+        {
+          "id": "#{raiseQueryParentId2}",
+          "value": {
+            "id": ",#{raiseQueryId2}",
+            "body": "some response details",
+            "name": "cuiuser r2",
+            "subject": "Test",
+            "parentId": "#{raiseQueryId1}",
+            "createdBy": "#{queryCreatedBy2}”",
+            "createdOn": "#{queryCreatedOn2}",
+            "isHearingRelated": "No"
+          }
+        },
+        {
+          "id": "#{raiseQueryParentId3}",
+          "value": {
+            "id": "#{raiseQueryId3}",
+            "body": "here is my second follow up question",
+            "name": "Case sol2",
+            "subject": "Test",
+            "parentId": "#{raiseQueryId1}",
+            "createdBy": "#{queryCreatedBy3}",
+            "createdOn": "#{queryCreatedOn3}",
+            "isHearingRelated": "No"
+          }
+        },
+        {
+          "id": null,
+          "value": {
+            "id": "#{randomUuid()}",
+            "subject": "Test",
+            "name": "cuiuser r2",
+            "body": "I am responding to the follow up question",
+            "attachments": [],
+            "isHearingRelated": "No",
+            "createdOn": "2#{currentDate}T#{currentTime}Z",
+            "createdBy": "#{idamId}",
+            "parentId": "#{raiseQueryId1}"
+          }
+        }
+      ]
+    }
+  },
+  "event": {
+    "id": "queryManagementRespondQuery",
+    "summary": "",
+    "description": "Respond to a query"
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false
+}
