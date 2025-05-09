@@ -547,16 +547,6 @@ object Solicitor_Civil {
 
     .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(_.setAll(
-      "currentTime" -> now.format(patternTimeNow),
-      "currentDate" -> now.format(patternDate)))
-
-    .exec(session => {
-      val response = session("currentTime").as[String]
-      println(s"Current Time: \n$response")
-      session
-    })
-
     /*======================================================================================
     * Submit query
     ======================================================================================*/
@@ -682,16 +672,6 @@ object Solicitor_Civil {
     * Enter response details and click submit
     ======================================================================================*/
 
-    .exec(_.setAll(
-      "currentTime" -> now.format(patternTimeNow),
-      "currentDate" -> now.format(patternDate)))
-
-    .exec(session => {
-      val response = session("currentTime").as[String]
-      println(s"Current Time:: \n$response")
-      session
-    })
-
     .group("XUI_Civil_410_SubmitResponse") {
       exec(http("XUI_Civil_410_005_SubmitResponse")
         .post("/data/cases/#{caseId}/events")
@@ -716,66 +696,93 @@ object Solicitor_Civil {
 
   val RespondToCTSCResponse =
 
-    exec(http("request_0")
-      .get("/data/internal/cases/#{caseId}")
-      .headers(Headers.commonHeader)
-      .check(substring("case_id")))
+    /*======================================================================================
+    * View the case as Solicitor
+    ======================================================================================*/
+
+    group("XUI_Civil_420_005_ViewCase") {
+      exec(http("XUI_Civil_420_005_ViewCase")
+        .get("/data/internal/cases/#{caseId}")
+        .headers(Headers.commonHeader)
+        .check(substring("case_id")))
+    }
 
     .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(Common.isAuthenticated)
-      
-    .exec(http("request_2")
-      .get("/data/internal/cases/#{caseId}/event-triggers/queryManagementRaiseQuery?ignore-warning=false")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-      .check(jsonPath("$.case_fields[?(@.id=='qmApplicantSolicitorQueries')].value.caseMessages[0].id").saveAs("raiseQueryParentId2"))
-      .check(jsonPath("$.case_fields[?(@.id=='qmApplicantSolicitorQueries')].value.caseMessages[0].value.id").saveAs("raiseQueryId2"))
-      .check(jsonPath("$.case_fields[?(@.id=='qmApplicantSolicitorQueries')].value.caseMessages[0].value.createdBy").saveAs("queryCreatedBy2"))
-      .check(jsonPath("$.case_fields[?(@.id=='qmApplicantSolicitorQueries')].value.caseMessages[0].value.createdOn").saveAs("queryCreatedOn2"))
-      .check(jsonPath("$.event_token").saveAs("event_token")))
+    /*======================================================================================
+    * Respond to the CTSC response
+    ======================================================================================*/
+
+    .group("XUI_Civil_430_RespondToQuery") {
+      exec(Common.isAuthenticated)
+
+      .exec(http("XUI_Civil_430_005_RespondToQuery")
+        .get("/data/internal/cases/#{caseId}/event-triggers/queryManagementRaiseQuery?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.case_fields[?(@.id=='qmApplicantSolicitorQueries')].value.caseMessages[1].id").saveAs("raiseQueryParentId2"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmApplicantSolicitorQueries')].value.caseMessages[1].value.id").saveAs("raiseQueryId2"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmApplicantSolicitorQueries')].value.caseMessages[1].value.createdBy").saveAs("queryCreatedBy2"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmApplicantSolicitorQueries')].value.caseMessages[1].value.createdOn").saveAs("queryCreatedOn2"))
+        .check(jsonPath("$.event_token").saveAs("event_token")))
+    }
 
     .pause(MinThinkTime , MaxThinkTime )
 
-    .exec(_.setAll(
-      "currentTime" -> now.format(patternTimeNow),
-      "currentDate" -> now.format(patternDate)))
+    /*======================================================================================
+    * Submit the response as a Solicitor
+    ======================================================================================*/
 
-    .exec(session => {
-      val response = session("currentTime").as[String]
-      println(s"Current Time:: \n$response")
-      session
-    })
-      
-    .exec(http("request_3")
-      .post("/data/cases/#{caseId}/events")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "#{XSRFToken}")
-      .body(ElFileBody("bodies/civil/CivilRespondToResponse.json")))
+    .group("XUI_Civil_440_SubmitResponse") {
+      exec(http("XUI_Civil_440_005_SubmitResponse")
+        .post("/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/civil/CivilRespondToResponse.json")))
 
-    .exec(Common.isAuthenticated)
-    .exec(Common.waJurisdictions)
-    .exec(Common.manageLabellingRoleAssignment)
+      .exec(Common.isAuthenticated)
+      .exec(Common.waJurisdictions)
+      .exec(Common.manageLabellingRoleAssignment)
+    }
 
     .pause(MinThinkTime , MaxThinkTime)
 
   val CTSCResponseToSecondQuery =
 
-    exec(http("request_2")
-      .post("/workallocation/case/task/#{caseId}")
-      .headers(Headers.commonHeader)
-      .header("Accept", "application/json, text/plain, */*")
-      .header("x-xsrf-token", "#{XSRFToken}")
-      .body(StringBody("""{"refined":true}"""))
-      .check(jsonPath("$[0].id").optional.saveAs("taskId"))
-      .check(jsonPath("$[0].type").optional.saveAs("taskType")))
+    /*======================================================================================
+    *  View the case as CTSC admin
+    ======================================================================================*/
 
-    .exec(http("request_3")
-      .post("/workallocation/caseworker/getUsersByServiceName")
-      .headers(Headers.commonHeader)
-      .header("x-xsrf-token", "#{XSRFToken}")
-      .body(StringBody("""{"services":["CIVIL"]}""")))
+    group("XUI_Civil_450_ViewCase") {
+      exec(http("XUI_Civil_450_005_ViewCase")
+        .get("/data/internal/cases/#{caseId}")
+        .headers(Headers.commonHeader)
+        .check(substring("case_id")))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    /*======================================================================================
+    *  Click on the Tasks tab and check if a task has appeared
+    ======================================================================================*/
+
+    .group("XUI_Civil_460_ViewTask") {
+      exec(http("XUI_Civil_460_005_ViewTask")
+        .post("/workallocation/case/task/#{caseId}")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(StringBody("""{"refined":true}"""))
+        .check(jsonPath("$[0].id").optional.saveAs("taskId"))
+        .check(jsonPath("$[0].type").optional.saveAs("taskType")))
+
+      .exec(http("XUI_Civil_460_010_ViewTask")
+        .post("/workallocation/caseworker/getUsersByServiceName")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(StringBody("""{"services":["CIVIL"]}""")))
+    }
 
     .pause(MinThinkTime , MaxThinkTime)
 
@@ -790,7 +797,7 @@ object Solicitor_Civil {
 
     // Loop until the task type matches "respondToQueryCTSC"
     .asLongAs(session => session("taskType").as[String] != "respondToQueryCTSC") {
-      exec(http("XUI_Civil_380_005_ViewTask")
+      exec(http("XUI_Civil_460_005_ViewTask")
         .get("/workallocation/case/task/#{caseId}")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*")
@@ -801,60 +808,80 @@ object Solicitor_Civil {
         .pause(5, 10) // Wait between retries
     }
 
-    .exec(http("request_6")
-      .post("/workallocation/task/#{taskId}/claim")
-      .headers(Headers.commonHeader)
-      .header("Accept", "application/json, text/plain, */*")
-      .header("x-xsrf-token", "#{XSRFToken}")
-      .body(StringBody("""{}""")))
+    /*======================================================================================
+    *  Click on Assign to Me link
+    ======================================================================================*/
 
-    .exec(http("request_7")
-      .post("/workallocation/case/task/#{caseId}")
-      .headers(Headers.commonHeader)
-      .header("Accept", "application/json, text/plain, */*")
-      .header("x-xsrf-token", "#{XSRFToken}")
-      .body(StringBody("""{"refined":true}"""))
-      .check(substring("Respond to a query")))
+    .group("XUI_Civil_470_ClaimTask") {
+      exec(http("XUI_Civil_470_005_ClaimTask")
+        .post("/workallocation/task/#{taskId}/claim")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(StringBody("""{}""")))
 
-    .pause(MinThinkTime , MaxThinkTime)
-
-    .exec(Common.isAuthenticated)
-
-    .exec(http("request_11")
-      .get("/data/internal/cases/#{caseId}")
-      .headers(Headers.commonHeader)
-      .check(substring("case_id")))
-
-    .exec(http("request_12")
-      .get("/data/internal/cases/#{caseId}/event-triggers/queryManagementRespondQuery?ignore-warning=false")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-      .check(jsonPath("$.case_fields[?(@.id=='qmApplicantSolicitorQueries')].value.caseMessages[0].id").saveAs("raiseQueryParentId3"))
-      .check(jsonPath("$.case_fields[?(@.id=='qmApplicantSolicitorQueries')].value.caseMessages[0].value.id").saveAs("raiseQueryId3"))
-      .check(jsonPath("$.case_fields[?(@.id=='qmApplicantSolicitorQueries')].value.caseMessages[0].value.createdBy").saveAs("queryCreatedBy3"))
-      .check(jsonPath("$.case_fields[?(@.id=='qmApplicantSolicitorQueries')].value.caseMessages[0].value.createdOn").saveAs("queryCreatedOn3"))
-      .check(jsonPath("$.event_token").saveAs("event_token")))
-
-    .exec(http("request_13")
-      .get("/workallocation/case/tasks/#{caseId}/event/queryManagementRespondQuery/caseType/CIVIL/jurisdiction/CIVIL")
-      .headers(Headers.commonHeader)
-      .check(substring("respondToQueryCTSC")))
+      .exec(http("XUI_Civil_470_010_ClaimTask")
+        .post("/workallocation/case/task/#{caseId}")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(StringBody("""{"refined":true}"""))
+        .check(substring("Respond to a query")))
+    }
 
     .pause(MinThinkTime , MaxThinkTime)
 
-    .exec(http("request_14")
-      .post("/data/cases/#{caseId}/events")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "#{XSRFToken}")
-      .body(ElFileBody("bodies/civil/CivilCTSCRespondToResponse.json"))
-      .check(substring("AWAITING_RESPONDENT_ACKNOWLEDGEMENT")))
+    /*======================================================================================
+    *  Click on the Respond to Query link
+    ======================================================================================*/
 
-    .exec(http("request_15")
-      .post("/workallocation/task/#{taskId}/complete")
-      .headers(Headers.commonHeader)
-      .header("x-xsrf-token", "#{XSRFToken}")
-      .body(StringBody("""{"actionByEvent":true,"eventName":"Respond to a query"}""")))
+    .group("XUI_Civil_480_RespondToQuery") {
+      exec(Common.isAuthenticated)
+
+      .exec(http("XUI_Civil_480_005_RespondToQuery")
+        .get("/data/internal/cases/#{caseId}")
+        .headers(Headers.commonHeader)
+        .check(substring("case_id")))
+
+      .exec(http("XUI_Civil_480_010_RespondToQuery")
+        .get("/data/internal/cases/#{caseId}/event-triggers/queryManagementRespondQuery?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.case_fields[?(@.id=='qmApplicantSolicitorQueries')].value.caseMessages[2].id").saveAs("raiseQueryParentId3"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmApplicantSolicitorQueries')].value.caseMessages[2].value.id").saveAs("raiseQueryId3"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmApplicantSolicitorQueries')].value.caseMessages[2].value.createdBy").saveAs("queryCreatedBy3"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmApplicantSolicitorQueries')].value.caseMessages[2].value.createdOn").saveAs("queryCreatedOn3"))
+        .check(jsonPath("$.event_token").saveAs("event_token")))
+
+      .exec(http("XUI_Civil_480_015_RespondToQuery")
+        .get("/workallocation/case/tasks/#{caseId}/event/queryManagementRespondQuery/caseType/CIVIL/jurisdiction/CIVIL")
+        .headers(Headers.commonHeader)
+        .check(substring("respondToQueryCTSC")))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime)
+
+    .exec(getCookieValue(CookieKey("__userid__").withDomain(BaseURL.replace("https://", "")).saveAs("idamId")))
+
+    /*======================================================================================
+    *  Enter response details and click on Submit
+    ======================================================================================*/
+
+    .group("XUI_Civil_490_SubmitResponse") {
+      exec(http("XUI_Civil_490_005_SubmitResponse")
+        .post("/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/civil/CivilCTSCRespondToResponse.json"))
+        .check(substring("AWAITING_RESPONDENT_ACKNOWLEDGEMENT")))
+
+      .exec(http("XUI_Civil_490_010_SubmitResponse")
+        .post("/workallocation/task/#{taskId}/complete")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(StringBody("""{"actionByEvent":true,"eventName":"Respond to a query"}""")))
+      }
 
     .pause(MinThinkTime , MaxThinkTime)
 
