@@ -1,7 +1,7 @@
 {
   "data": {
     "qmApplicantSolicitorQueries": {
-      "partyName": "Case sol2",
+      "partyName": "Claimant",
       "roleOnCase": "",
       "caseMessages": [
         {
@@ -14,7 +14,7 @@
             "attachments": [],
             "isHearingRelated": "No",
             "hearingDate": null,
-            "createdOn": "#{currentDate}T#{currentTime}Z",
+            "createdOn": "#{currentDate(yyyy-MM-dd)}T#{currentDate(HH:mm:ss.S)}Z",
             "createdBy": "#{idamId}"
           }
         }

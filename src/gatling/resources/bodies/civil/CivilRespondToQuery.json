@@ -24,7 +24,7 @@
             "body": "Here is my response to your query",
             "attachments": [],
             "isHearingRelated": "No",
-            "createdOn": "#{currentDate}T#{currentTime}Z",
+            "createdOn": "#{currentDate(yyyy-MM-dd)}T#{currentDate(HH:mm:ss.S)}Z",
             "createdBy": "#{idamId}",
             "parentId": "#{raiseQueryId1}"
           }
