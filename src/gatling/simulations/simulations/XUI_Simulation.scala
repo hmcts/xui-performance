@@ -521,9 +521,10 @@ class XUI_Simulation extends Simulation {
 			.exec(Login.XUILogin)
 			.exec(Solicitor_Civil.RespondToCTSCResponse)
 			.exec(Logout.XUILogout)
+				
 			.exec(flushHttpCache)
 			.exec(flushCookieJar)
-
+			.pause(60)
 			.feed(UserFeederCTSC)
 			.exec(Homepage.XUIHomePage)
 			.exec(Login.XUILogin)
