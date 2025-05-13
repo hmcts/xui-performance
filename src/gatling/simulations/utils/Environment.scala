@@ -10,7 +10,7 @@ object Environment {
  val s2sUrl = "http://rpe-service-auth-provider-#{env}.service.core-compute-#{env}.internal"
  val refDataApiURL = "https://rd-professional-api-perftest.service.core-compute-perftest.internal"
 
- val minThinkTime = 5
- val maxThinkTime = 7
+ val minThinkTime = 7
+ val maxThinkTime = 10
 
 }

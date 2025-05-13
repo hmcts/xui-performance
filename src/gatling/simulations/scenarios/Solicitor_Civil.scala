@@ -538,11 +538,13 @@ object Solicitor_Civil {
 
     .pause(MinThinkTime , MaxThinkTime )
 
-    .group("XUI_Civil_350_RaiseNewQuery") {
-      exec(http("XUI_Civil_350_005_RaiseNewQuery")
-        .get("/query-management/query/#{caseId}raiseAQuery")
-        .headers(Headers.commonHeader)
-        .check(substring("HMCTS Manage cases")))
+    .group("XUI_RaiseQuery") {
+      group("XUI_Civil_350_RaiseNewQuery") {
+        exec(http("XUI_Civil_350_005_RaiseNewQuery")
+          .get("/query-management/query/#{caseId}raiseAQuery")
+          .headers(Headers.commonHeader)
+          .check(substring("HMCTS Manage cases")))
+      }
     }
 
     .pause(MinThinkTime , MaxThinkTime )
@@ -672,24 +674,26 @@ object Solicitor_Civil {
     * Enter response details and click submit
     ======================================================================================*/
 
-    .group("XUI_Civil_410_SubmitResponse") {
-      exec(http("XUI_Civil_410_005_SubmitResponse")
-        .post("/data/cases/#{caseId}/events")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/civil/CivilRespondToQuery.json"))
-        .check(substring("AWAITING_RESPONDENT_ACKNOWLEDGEMENT")))
+    .group("XUI_RespondToQuery") {
+      group("XUI_Civil_410_SubmitResponse") {
+        exec(http("XUI_Civil_410_005_SubmitResponse")
+          .post("/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(ElFileBody("bodies/civil/CivilRespondToQuery.json"))
+          .check(substring("AWAITING_RESPONDENT_ACKNOWLEDGEMENT")))
 
-      .exec(http("XUI_Civil_410_010_SubmitResponse")
-        .post("/workallocation/task/#{taskId}/complete")
-        .headers(Headers.commonHeader)
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody("""{"actionByEvent":true,"eventName":"Respond to a query"}""")))
+          .exec(http("XUI_Civil_410_010_SubmitResponse")
+            .post("/workallocation/task/#{taskId}/complete")
+            .headers(Headers.commonHeader)
+            .header("x-xsrf-token", "#{XSRFToken}")
+            .body(StringBody("""{"actionByEvent":true,"eventName":"Respond to a query"}""")))
 
-      .exec(Common.isAuthenticated)
-      .exec(Common.waJurisdictions)
-      .exec(Common.manageLabellingRoleAssignment)
+          .exec(Common.isAuthenticated)
+          .exec(Common.waJurisdictions)
+          .exec(Common.manageLabellingRoleAssignment)
+      }
     }
 
     .pause(MinThinkTime , MaxThinkTime )
@@ -733,17 +737,19 @@ object Solicitor_Civil {
     * Submit the response as a Solicitor
     ======================================================================================*/
 
-    .group("XUI_Civil_440_SubmitResponse") {
-      exec(http("XUI_Civil_440_005_SubmitResponse")
-        .post("/data/cases/#{caseId}/events")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/civil/CivilRespondToResponse.json")))
+    .group("XUI_RaiseQuery") {
+      group("XUI_Civil_440_SubmitResponse") {
+        exec(http("XUI_Civil_440_005_SubmitResponse")
+          .post("/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(ElFileBody("bodies/civil/CivilRespondToResponse.json")))
 
-      .exec(Common.isAuthenticated)
-      .exec(Common.waJurisdictions)
-      .exec(Common.manageLabellingRoleAssignment)
+          .exec(Common.isAuthenticated)
+          .exec(Common.waJurisdictions)
+          .exec(Common.manageLabellingRoleAssignment)
+      }
     }
 
     .pause(MinThinkTime , MaxThinkTime)
@@ -808,6 +814,8 @@ object Solicitor_Civil {
         .pause(5, 10) // Wait between retries
     }
 
+    .pause(MinThinkTime , MaxThinkTime)
+
     /*======================================================================================
     *  Click on Assign to Me link
     ======================================================================================*/
@@ -867,21 +875,23 @@ object Solicitor_Civil {
     *  Enter response details and click on Submit
     ======================================================================================*/
 
-    .group("XUI_Civil_490_SubmitResponse") {
-      exec(http("XUI_Civil_490_005_SubmitResponse")
-        .post("/data/cases/#{caseId}/events")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/civil/CivilCTSCRespondToResponse.json"))
-        .check(substring("AWAITING_RESPONDENT_ACKNOWLEDGEMENT")))
+    .group("XUI_RespondToQuery") {
+      group("XUI_Civil_490_SubmitResponse") {
+        exec(http("XUI_Civil_490_005_SubmitResponse")
+          .post("/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(ElFileBody("bodies/civil/CivilCTSCRespondToResponse.json"))
+          .check(substring("AWAITING_RESPONDENT_ACKNOWLEDGEMENT")))
 
-      .exec(http("XUI_Civil_490_010_SubmitResponse")
-        .post("/workallocation/task/#{taskId}/complete")
-        .headers(Headers.commonHeader)
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody("""{"actionByEvent":true,"eventName":"Respond to a query"}""")))
+          .exec(http("XUI_Civil_490_010_SubmitResponse")
+            .post("/workallocation/task/#{taskId}/complete")
+            .headers(Headers.commonHeader)
+            .header("x-xsrf-token", "#{XSRFToken}")
+            .body(StringBody("""{"actionByEvent":true,"eventName":"Respond to a query"}""")))
       }
+    }
 
     .pause(MinThinkTime , MaxThinkTime)
 
