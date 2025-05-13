@@ -524,7 +524,7 @@ class XUI_Simulation extends Simulation {
 
 			.exec(flushHttpCache)
 			.exec(flushCookieJar)
-			.pause(60)
+			.pause(120)
 			.feed(UserFeederCTSC)
 			.exec(Homepage.XUIHomePage)
 			.exec(Login.XUILogin)
