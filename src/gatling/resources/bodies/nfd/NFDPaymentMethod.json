@@ -1,6 +1,21 @@
 {
   "data": {
-    "solPaymentHowToPay": "feePayByAccount"
+    "applicationFeeServiceRequestReference": "2025-#{feeReference}",
+    "solPaymentHowToPay": "feePayByAccount",
+    "applicationFeeOrderSummary": {
+      "PaymentReference": null,
+      "PaymentTotal": "61200",
+      "Fees": [
+        {
+          "value": {
+            "FeeCode": "FEE0002",
+            "FeeAmount": "61200",
+            "FeeDescription": "Filing an application for a divorce, nullity or civil partnership dissolution",
+            "FeeVersion": "8"
+          }
+        }
+      ]
+    }
   },
   "event": {
     "id": "solicitor-submit-application",
@@ -30,7 +45,22 @@
     "solStatementOfReconciliationFirm": "#{orgnames(0)}",
     "statementOfReconciliationComments": null,
     "solApplicationFeeInPounds": "#{feeInPounds}",
-    "solPaymentHowToPay": "feePayByAccount"
+    "applicationFeeServiceRequestReference": "2025-1750000851839",
+    "solPaymentHowToPay": "feePayByAccount",
+    "applicationFeeOrderSummary": {
+      "PaymentReference": null,
+      "PaymentTotal": "61200",
+      "Fees": [
+        {
+          "value": {
+            "FeeCode": "FEE0002",
+            "FeeAmount": "61200",
+            "FeeDescription": "Filing an application for a divorce, nullity or civil partnership dissolution",
+            "FeeVersion": "8"
+          }
+        }
+      ]
+    }
   },
   "event_token": "#{event_token}",
   "ignore_warning": false,
