@@ -42,14 +42,14 @@
     ],
     "applicationFeeOrderSummary": {
       "PaymentReference": null,
-      "PaymentTotal": "61200",
+      "PaymentTotal": "#{paymentTotal}",
       "Fees": [
         {
           "value": {
-            "FeeCode": "FEE0002",
-            "FeeAmount": "61200",
-            "FeeDescription": "Filing an application for a divorce, nullity or civil partnership dissolution",
-            "FeeVersion": "8"
+            "FeeCode": "#{feeCode}",
+            "FeeAmount": "#{feeAmount}",
+            "FeeDescription": "#{feeDescription}",
+            "FeeVersion": "#{feeVersion}"
           }
         }
       ]
