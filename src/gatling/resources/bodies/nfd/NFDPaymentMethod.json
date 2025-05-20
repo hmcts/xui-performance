@@ -1,7 +1,5 @@
 {
   "data": {
-    "applicationFeeServiceRequestReference": "2025-#{feeReference}",
-    "solPaymentHowToPay": "feePayByAccount",
     "applicationFeeOrderSummary": {
       "PaymentReference": null,
       "PaymentTotal": "61200",
@@ -15,7 +13,9 @@
           }
         }
       ]
-    }
+    },
+    "applicationFeeServiceRequestReference": null,
+    "solPaymentHowToPay": "feePayByAccount"
   },
   "event": {
     "id": "solicitor-submit-application",
@@ -45,7 +45,7 @@
     "solStatementOfReconciliationFirm": "#{orgnames(0)}",
     "statementOfReconciliationComments": null,
     "solApplicationFeeInPounds": "#{feeInPounds}",
-    "applicationFeeServiceRequestReference": "2025-1750000851839",
+    "applicationFeeServiceRequestReference": null,
     "solPaymentHowToPay": "feePayByAccount",
     "applicationFeeOrderSummary": {
       "PaymentReference": null,

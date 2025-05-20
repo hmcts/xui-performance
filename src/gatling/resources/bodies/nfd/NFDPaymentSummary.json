@@ -37,7 +37,7 @@
         }
       ]
     },
-    "applicationFeeServiceRequestReference": "2025-#{feeReference}",
+    "applicationFeeServiceRequestReference": "#{applicationFeeRef}",
     "solPaymentHowToPay": "feePayByAccount",
     "pbaNumbers": {
       "value": {
