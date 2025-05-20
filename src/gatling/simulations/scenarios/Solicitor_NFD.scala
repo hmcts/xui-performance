@@ -26,7 +26,8 @@ object Solicitor_NFD {
       "applicant2LastName" -> ("Test" + Common.randomString(5)),
       "marriageDay" -> Common.getDay(),
       "marriageMonth" -> Common.getMonth(),
-      "marriageYear" -> Common.getMarriageYear()))
+      "marriageYear" -> Common.getMarriageYear(),
+      "feeReference" -> Common.randomNumber(6)))
 
     /*======================================================================================
     * Click the Create Case link

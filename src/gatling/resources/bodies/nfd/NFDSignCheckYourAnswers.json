@@ -3,7 +3,6 @@
     "applicationType": "soleApplication",
     "divorceOrDissolution": "divorce",
     "solUrgentCase": "No",
-    "solUrgentCaseSupportingInformation": null,
     "applicant1FinancialOrder": "No",
     "serviceMethod": "courtService",
     "solStatementOfReconciliationCertify": "Yes",
@@ -11,7 +10,6 @@
     "applicant1PrayerDissolveDivorce": [
       "dissolveDivorce"
     ],
-    "applicant1PrayerEndCivilPartnership": [],
     "applicant1PrayerFinancialOrdersThemselves": [
       "financialOrdersThemselves"
     ],
@@ -24,6 +22,21 @@
     "solStatementOfReconciliationFirm": "#{orgnames(0)}",
     "statementOfReconciliationComments": null,
     "solApplicationFeeInPounds": "#{feeInPounds}",
+    "applicationFeeOrderSummary": {
+      "PaymentReference": null,
+      "PaymentTotal": "#{paymentTotal}",
+      "Fees": [
+        {
+          "value": {
+            "FeeCode": "#{feeCode}",
+            "FeeAmount": "#{feeAmount}",
+            "FeeDescription": "#{feeDescription}",
+            "FeeVersion": "#{feeVersion}"
+          }
+        }
+      ]
+    },
+    "applicationFeeServiceRequestReference": "2025-1750000#{feeReference}",
     "solPaymentHowToPay": "feePayByAccount",
     "pbaNumbers": {
       "value": {
@@ -41,21 +54,7 @@
         }
       ]
     },
-    "feeAccountReference": "PerfPayRef",
-    "applicationFeeOrderSummary": {
-      "PaymentReference": null,
-      "PaymentTotal": "#{paymentTotal}",
-      "Fees": [
-        {
-          "value": {
-            "FeeCode": "#{feeCode}",
-            "FeeAmount": "#{feeAmount}",
-            "FeeDescription": "#{feeDescription}",
-            "FeeVersion": "#{feeVersion}"
-          }
-        }
-      ]
-    }
+    "feeAccountReference": "PerfPayRef"
   },
   "event": {
     "id": "solicitor-submit-application",
