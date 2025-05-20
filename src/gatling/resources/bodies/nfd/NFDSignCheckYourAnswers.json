@@ -40,12 +40,12 @@
     "solPaymentHowToPay": "feePayByAccount",
     "pbaNumbers": {
       "value": {
-        "code": "c7c2286d-84c6-48ab-bc52-5b85f09c54ea",
+        "code": "12fb13f2-960a-419d-895f-dd7955bd3da1",
         "label": "PBA0077597"
       },
       "list_items": [
         {
-          "code": "c7c2286d-84c6-48ab-bc52-5b85f09c54ea",
+          "code": "12fb13f2-960a-419d-895f-dd7955bd3da1",
           "label": "PBA0077597"
         }
       ]
