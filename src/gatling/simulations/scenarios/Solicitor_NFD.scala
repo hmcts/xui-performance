@@ -791,7 +791,7 @@ object Solicitor_NFD {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/nfd/NFDJointPaymentSummary.json"))
-        .check(substring("applicationFeeOrderSummary")))
+        .check(substring("applicationSolPaymentSummary")))
 
       .exec(Common.userDetails)
     }
