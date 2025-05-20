@@ -30,6 +30,7 @@
     "solStatementOfReconciliationFirm": "#{orgnames(0)}",
     "statementOfReconciliationComments": null,
     "solApplicationFeeInPounds": "#{feeInPounds}",
+    "applicationFeeServiceRequestReference": "#{applicationFeeRef}",
     "solPaymentHowToPay": "feePayByAccount",
     "pbaNumbers": {
       "value": {
