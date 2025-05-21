@@ -1,6 +1,20 @@
 {
   "data": {
-    "solPaymentHowToPay": "feePayByAccount"
+    "solPaymentHowToPay": "feePayByAccount",
+    "applicationFeeOrderSummary": {
+      "PaymentReference": null,
+      "PaymentTotal": "#{paymentTotal}",
+      "Fees": [
+        {
+          "value": {
+            "FeeCode": "#{feeCode}",
+            "FeeAmount": "#{feeAmount}",
+            "FeeDescription": "#{feeDescription}",
+            "FeeVersion": "#{feeVersion}"
+          }
+        }
+      ]
+    }
   },
   "event": {
     "id": "solicitor-submit-application",
@@ -35,7 +49,21 @@
     "solStatementOfReconciliationFirm": "#{orgnames(0)}",
     "statementOfReconciliationComments": null,
     "solApplicationFeeInPounds": "#{feeInPounds}",
-    "solPaymentHowToPay": "feePayByAccount"
+    "solPaymentHowToPay": "feePayByAccount",
+    "applicationFeeOrderSummary": {
+      "PaymentReference": null,
+      "PaymentTotal": "#{paymentTotal}",
+      "Fees": [
+        {
+          "value": {
+            "FeeCode": "#{feeCode}",
+            "FeeAmount": "#{feeAmount}",
+            "FeeDescription": "#{feeDescription}",
+            "FeeVersion": "#{feeVersion}"
+          }
+        }
+      ]
+    }
   },
   "event_token": "#{event_token}",
   "ignore_warning": false,
