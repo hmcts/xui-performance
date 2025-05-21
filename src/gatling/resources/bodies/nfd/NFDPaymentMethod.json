@@ -1,5 +1,20 @@
 {
   "data": {
+    "applicationFeeOrderSummary": {
+      "PaymentReference": null,
+      "PaymentTotal": "#{paymentTotal}",
+      "Fees": [
+        {
+          "value": {
+            "FeeCode": "#{feeCode}",
+            "FeeAmount": "#{feeAmount}",
+            "FeeDescription": "#{feeDescription}",
+            "FeeVersion": "#{feeVersion}"
+          }
+        }
+      ]
+    },
+    "applicationFeeServiceRequestReference": null,
     "solPaymentHowToPay": "feePayByAccount"
   },
   "event": {
@@ -30,7 +45,22 @@
     "solStatementOfReconciliationFirm": "#{orgnames(0)}",
     "statementOfReconciliationComments": null,
     "solApplicationFeeInPounds": "#{feeInPounds}",
-    "solPaymentHowToPay": "feePayByAccount"
+    "applicationFeeServiceRequestReference": null,
+    "solPaymentHowToPay": "feePayByAccount",
+    "applicationFeeOrderSummary": {
+    "PaymentReference": null,
+    "PaymentTotal": "#{paymentTotal}",
+    "Fees": [
+      {
+        "value": {
+          "FeeCode": "#{feeCode}",
+          "FeeAmount": "#{feeAmount}",
+          "FeeDescription": "#{feeDescription}",
+          "FeeVersion": "#{feeVersion}"
+          }
+        }
+      ]
+    }
   },
   "event_token": "#{event_token}",
   "ignore_warning": false,

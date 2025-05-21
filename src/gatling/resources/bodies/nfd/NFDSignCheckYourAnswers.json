@@ -3,7 +3,6 @@
     "applicationType": "soleApplication",
     "divorceOrDissolution": "divorce",
     "solUrgentCase": "No",
-    "solUrgentCaseSupportingInformation": null,
     "applicant1FinancialOrder": "No",
     "serviceMethod": "courtService",
     "solStatementOfReconciliationCertify": "Yes",
@@ -11,7 +10,6 @@
     "applicant1PrayerDissolveDivorce": [
       "dissolveDivorce"
     ],
-    "applicant1PrayerEndCivilPartnership": [],
     "applicant1PrayerFinancialOrdersThemselves": [
       "financialOrdersThemselves"
     ],
@@ -24,24 +22,6 @@
     "solStatementOfReconciliationFirm": "#{orgnames(0)}",
     "statementOfReconciliationComments": null,
     "solApplicationFeeInPounds": "#{feeInPounds}",
-    "solPaymentHowToPay": "feePayByAccount",
-    "pbaNumbers": {
-      "value": {
-        "code": "12fb13f2-960a-419d-895f-dd7955bd3da1",
-        "label": "PBA0077597"
-      },
-      "list_items": [
-        {
-          "code": "12fb13f2-960a-419d-895f-dd7955bd3da1",
-          "label": "PBA0077597"
-        },
-        {
-          "code": "3254d1df-79ad-4892-a530-f1b9cefc412c",
-          "label": "PBAVRQSJEP"
-        }
-      ]
-    },
-    "feeAccountReference": "PerfPayRef",
     "applicationFeeOrderSummary": {
       "PaymentReference": null,
       "PaymentTotal": "#{paymentTotal}",
@@ -55,7 +35,22 @@
           }
         }
       ]
-    }
+    },
+    "applicationFeeServiceRequestReference": "#{applicationFeeRef}",
+    "solPaymentHowToPay": "feePayByAccount",
+    "pbaNumbers": {
+      "value": {
+        "code": "12fb13f2-960a-419d-895f-dd7955bd3da1",
+        "label": "PBA0077597"
+      },
+      "list_items": [
+        {
+          "code": "12fb13f2-960a-419d-895f-dd7955bd3da1",
+          "label": "PBA0077597"
+        }
+      ]
+    },
+    "feeAccountReference": "PerfPayRef"
   },
   "event": {
     "id": "solicitor-submit-application",
