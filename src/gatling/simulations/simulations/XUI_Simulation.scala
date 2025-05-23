@@ -22,7 +22,6 @@ class XUI_Simulation extends Simulation {
 	val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
 	val UserFeederProbate = csv("UserDataProbate.csv").circular
 	val UserFeederIAC = csv("UserDataIAC.csv").circular
-	val UserFeederDivorce = csv("UserDataDivorce.csv").circular
 	val UserFeederNFD = csv("UserDataNFD.csv").circular
 	val UserFeederFR = csv("UserDataFR.csv").circular
 	val UserFeederFPL = csv("UserDataFPL.csv").circular
@@ -60,7 +59,6 @@ class XUI_Simulation extends Simulation {
 	val bailsTargetPerHour: Double = 10
 	val probateTargetPerHour: Double = 250
 	val iacTargetPerHour: Double = 20
-	val divorceTargetPerHour: Double = 240
 	val nfdSoleTargetPerHour: Double = 120
 	val nfdJointTargetPerHour: Double = 120
 	val fplTargetPerHour: Double = 30
@@ -215,22 +213,6 @@ class XUI_Simulation extends Simulation {
 				.repeat(2) {
 					exec(Solicitor_IAC.CreateIACCase)
 					// .exec(Solicitor_IAC.shareacase) //Temp removed as the way to share a case is now done through the case list
-				}
-				.exec(Logout.XUILogout)
-		}
-
-	/*===============================================================================================
-	* XUI Solicitor Divorce Scenario
-	 ===============================================================================================*/
-	val DivorceSolicitorScenario = scenario("***** Divorce Create Case *****")
-		.exitBlockOnFail {
-			feed(UserFeederDivorce)
-				.exec(_.set("env", s"${env}")
-							.set("caseType", "DIVORCE"))
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.repeat(2) {
-					exec(Solicitor_Divorce.CreateDivorceCase)
 				}
 				.exec(Logout.XUILogout)
 		}
@@ -571,7 +553,6 @@ class XUI_Simulation extends Simulation {
       BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
       ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      // DivorceSolicitorScenario.inject(simulationProfile(testType, divorceTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
