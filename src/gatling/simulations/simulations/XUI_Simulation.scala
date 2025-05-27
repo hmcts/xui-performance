@@ -74,7 +74,7 @@ class XUI_Simulation extends Simulation {
 	val oneHundredMbStoreTargetPerHour:Double = 51
 	val twofiftyMbStoreTargetPerHour:Double = 22
 	val fiveHundredMbStoreTargetPerHour:Double = 4
-	val oneGbStoreTargetPerHour:Double = 1
+	val nineHundredMbStoreTargetPerHour:Double = 1
 
 	//This determines the percentage split of PRL journeys, by C100 or FL401
 	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
@@ -672,7 +672,7 @@ class XUI_Simulation extends Simulation {
 				.exec(Logout.XUILogout)
 		}
 
-	val CDAMScenario1000mb = scenario("***** CDAM 1000mb Doc Upload/Download ******")
+	val CDAMScenario900mb = scenario("***** CDAM 900mb Doc Upload/Download ******")
 		.exitBlockOnFail {
 			exec(_.set("env", s"${env}"))
 				.feed(UserFeederCDAM)
@@ -682,7 +682,7 @@ class XUI_Simulation extends Simulation {
 				.exec(Homepage.XUIHomePage)
 				.exec(Login.XUILogin)
 				.exec(Caseworker_Navigation.ViewCase)
-				.exec(_.set("filename", "1000MB.pdf"))
+				.exec(_.set("filename", "900MB.pdf"))
 				.exec(Caseworker_Navigation.UploadDocument)
 				.doIf("#{Document_ID.exists()}") {
 					repeat(4) {
@@ -761,7 +761,7 @@ class XUI_Simulation extends Simulation {
 		CDAMScenario100mb.inject(simulationProfile(testType, oneHundredMbStoreTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		CDAMScenario250mb.inject(simulationProfile(testType, twofiftyMbStoreTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		CDAMScenario500mb.inject(simulationProfile(testType, fiveHundredMbStoreTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		CDAMScenario1000mb.inject(simulationProfile(testType, oneMbStoreTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+		CDAMScenario900mb.inject(simulationProfile(testType, nineHundredMbStoreTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 
 
 	).protocols(httpProtocol)
