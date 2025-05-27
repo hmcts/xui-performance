@@ -27,6 +27,7 @@ class XUI_Simulation extends Simulation {
 	val UserFeederFPL = csv("UserDataFPL.csv").circular
 	val CaseworkerUserFeeder = csv("UserDataCaseworkers.csv").circular
 	val UserFeederCTSC = csv("UserDataCTSC.csv").circular
+	val UserFeederCDAM = csv("UserDataCDAM.csv").circular
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
@@ -64,6 +65,14 @@ class XUI_Simulation extends Simulation {
 	val fplTargetPerHour: Double = 30
 	val frTargetPerHour: Double = 100
 	val caseworkerTargetPerHour: Double = 1000
+
+	val oneMbStoreTargetPerHour:Double = 10760
+	val fiveMbStoreTargetPerHour:Double = 1200
+	val tenMbStoreTargetPerHour:Double = 450
+	val twentyMbStoreTargetPerHour:Double = 306
+	val fiftyMbStoreTargetPerHour:Double = 104
+	val oneHundredMbStoreTargetPerHour:Double = 51
+	val twofiftyMbStoreTargetPerHour:Double = 22
 
 	//This determines the percentage split of PRL journeys, by C100 or FL401
 	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
@@ -499,6 +508,110 @@ class XUI_Simulation extends Simulation {
 		}
 
 	/*===============================================================================================
+	* XUI CDAM Testing Scenarios
+	 ===============================================================================================*/
+	val CDAMScenario1mb = scenario("***** CDAM 1mb Doc Upload/Download ******")
+		.exitBlockOnFail {
+			exec(_.set("env", s"${env}"))
+			.feed(UserFeederCDAM)
+			.exec(CCDAPI.S2SLogin)
+			.exec(CCDAPI.idamLogin)
+			.exec(CCDAPI.CreateCase)
+			.exec(Homepage.XUIHomePage)
+			.exec(Login.XUILogin)
+			.exec(Caseworker_Navigation.ViewCase)
+			.exec(_.set("filename", "1MB.pdf"))
+			.exec(Caseworker_Navigation.UploadDocument)
+			.doIf("#{Document_ID.exists()}") {
+				repeat(4) {
+					exec(Caseworker_Navigation.DocumentDownload)
+				}
+			}
+			.exec(Logout.XUILogout)
+	}
+
+	val CDAMScenario5mb = scenario("***** CDAM 5mb Doc Upload/Download ******")
+		.exitBlockOnFail {
+			exec(_.set("env", s"${env}"))
+				.feed(UserFeederCDAM)
+				.exec(CCDAPI.S2SLogin)
+				.exec(CCDAPI.idamLogin)
+				.exec(CCDAPI.CreateCase)
+				.exec(Homepage.XUIHomePage)
+				.exec(Login.XUILogin)
+				.exec(Caseworker_Navigation.ViewCase)
+				.exec(_.set("filename", "5MB.pdf"))
+				.exec(Caseworker_Navigation.UploadDocument)
+				.doIf("#{Document_ID.exists()}") {
+					repeat(4) {
+						exec(Caseworker_Navigation.DocumentDownload)
+					}
+				}
+				.exec(Logout.XUILogout)
+		}
+
+	val CDAMScenario10mb = scenario("***** CDAM 10mb Doc Upload/Download ******")
+		.exitBlockOnFail {
+			exec(_.set("env", s"${env}"))
+				.feed(UserFeederCDAM)
+				.exec(CCDAPI.S2SLogin)
+				.exec(CCDAPI.idamLogin)
+				.exec(CCDAPI.CreateCase)
+				.exec(Homepage.XUIHomePage)
+				.exec(Login.XUILogin)
+				.exec(Caseworker_Navigation.ViewCase)
+				.exec(_.set("filename", "10MB.pdf"))
+				.exec(Caseworker_Navigation.UploadDocument)
+				.doIf("#{Document_ID.exists()}") {
+					repeat(4) {
+						exec(Caseworker_Navigation.DocumentDownload)
+					}
+				}
+				.exec(Logout.XUILogout)
+		}
+
+	val CDAMScenario20mb = scenario("***** CDAM 20mb Doc Upload/Download ******")
+		.exitBlockOnFail {
+			exec(_.set("env", s"${env}"))
+				.feed(UserFeederCDAM)
+				.exec(CCDAPI.S2SLogin)
+				.exec(CCDAPI.idamLogin)
+				.exec(CCDAPI.CreateCase)
+				.exec(Homepage.XUIHomePage)
+				.exec(Login.XUILogin)
+				.exec(Caseworker_Navigation.ViewCase)
+				.exec(_.set("filename", "20MB.pdf"))
+				.exec(Caseworker_Navigation.UploadDocument)
+				.doIf("#{Document_ID.exists()}") {
+					repeat(4) {
+						exec(Caseworker_Navigation.DocumentDownload)
+					}
+				}
+				.exec(Logout.XUILogout)
+		}
+
+	val CDAMScenario50mb = scenario("***** CDAM 50mb Doc Upload/Download ******")
+		.exitBlockOnFail {
+			exec(_.set("env", s"${env}"))
+				.feed(UserFeederCDAM)
+				.exec(CCDAPI.S2SLogin)
+				.exec(CCDAPI.idamLogin)
+				.exec(CCDAPI.CreateCase)
+				.exec(Homepage.XUIHomePage)
+				.exec(Login.XUILogin)
+				.exec(Caseworker_Navigation.ViewCase)
+				.exec(_.set("filename", "50MB.pdf"))
+				.exec(Caseworker_Navigation.UploadDocument)
+				.doIf("#{Document_ID.exists()}") {
+					repeat(4) {
+						exec(Caseworker_Navigation.DocumentDownload)
+					}
+				}
+				.exec(Logout.XUILogout)
+		}
+
+
+	/*===============================================================================================
 	* Simulation Configuration
 	 ===============================================================================================*/
 
@@ -549,17 +662,23 @@ class XUI_Simulation extends Simulation {
 	}
 
   setUp(
-			PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
-      ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-			NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-			NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-			FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//			PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//      BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//      ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//      ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//			NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//			NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//      FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//			FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//      CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		CDAMScenario1mb.inject(simulationProfile(testType, oneMbStoreTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		CDAMScenario5mb.inject(simulationProfile(testType, fiveMbStoreTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		CDAMScenario10mb.inject(simulationProfile(testType, tenMbStoreTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		CDAMScenario20mb.inject(simulationProfile(testType, twentyMbStoreTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		CDAMScenario50mb.inject(simulationProfile(testType, fiftyMbStoreTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 
-  ).protocols(httpProtocol)
+
+	).protocols(httpProtocol)
     .assertions(assertions(testType))
     .maxDuration(75 minutes)
 }
