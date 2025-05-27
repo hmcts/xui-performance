@@ -15,6 +15,7 @@ object CCDAPI {
   val MaxThinkTime = Environment.maxThinkTime
 
   val clientSecret = ConfigFactory.load.getString("auth.clientSecret")
+  val ccdScope = "openid profile authorities acr roles openid profile roles"
 
   //userType must be "Caseworker", "Legal" or "Citizen"
   def Auth(userType: String) =
@@ -93,5 +94,58 @@ object CCDAPI {
       .check(jsonPath("$.id")))
 
     .pause(1)
+
+  val S2SLogin =
+
+    exec(http("GetS2SToken")
+      .post(RpeAPIURL + "/testing-support/lease")
+      .header("Content-Type", "application/json")
+      .body(StringBody("{\"microservice\":\"probate_backend\"}")) //probate_backend
+      .check(bodyString.saveAs("bearerToken"))) //docUploadBearerToken
+      .exitHereIfFailed
+
+  val idamLogin =
+
+    exec(http("GetIdamToken")
+      .post(IdamAPIURL + "/o/token?client_id=ccd_gateway&client_secret=" + clientSecret + "&grant_type=password&scope=" + ccdScope + "&username=#{user}&password=#{password}")
+      .header("Content-Type", "application/x-www-form-urlencoded")
+      .header("Content-Length", "0")
+      .check(status.is(200))
+      .check(jsonPath("$.access_token").saveAs("accessToken")))
+
+  val CreateCase =
+
+    exec(http("API_Probate_GetEventToken")
+      .get(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/PROBATE/case-types/GrantOfRepresentation/event-triggers/applyForGrant/token")
+      .header("ServiceAuthorization", "Bearer #{bearerToken}")
+      .header("Authorization", "Bearer #{accessToken}")
+      .header("Content-Type","application/json")
+      .check(jsonPath("$.token").saveAs("eventToken")))
+
+    .exec(http("API_Probate_CreateCase")
+      .post(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases")
+      .header("ServiceAuthorization", "Bearer #{bearerToken}")
+      .header("Authorization", "Bearer #{accessToken}")
+      .header("Content-Type","application/json")
+      .body(StringBody("{\n  \"data\": {},\n  \"event\": {\n    \"id\": \"applyForGrant\",\n    \"summary\": \"test case\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"#{eventToken}\",\n  \"ignore_warning\": false,\n  \"draft_id\": null\n}"))
+      .check(jsonPath("$.id").saveAs("caseId")))
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    .exec(http("API_Probate_GetEventToken")
+      .get(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases/#{caseId}/event-triggers/paymentSuccessApp/token")
+      .header("ServiceAuthorization", "Bearer #{bearerToken}")
+      .header("Authorization", "Bearer #{accessToken}")
+      .header("Content-Type","application/json")
+      .check(jsonPath("$.token").saveAs("eventToken")))
+
+    .exec(http("API_Probate_PaymentSuccessful")
+      .post(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases/#{caseId}/events")
+      .header("ServiceAuthorization", "Bearer #{bearerToken}")
+      .header("Authorization", "Bearer #{accessToken}")
+      .header("Content-Type","application/json")
+      .body(StringBody("{\n    \"data\": {\n      \"applicationSubmittedDate\": \"2025-05-03\"\n    },\n    \"event\": {\n      \"id\": \"paymentSuccessApp\",\n      \"summary\": \"\",\n      \"description\": \"\"\n    },\n    \"event_token\": \"#{eventToken}\",\n    \"ignore_warning\": false\n  }")))
+
+    .pause(MinThinkTime, MaxThinkTime)
 
 }

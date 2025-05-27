@@ -225,6 +225,60 @@ object Caseworker_Navigation {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+  val UploadDocument =
+
+    exec(http("XUI_Caseworker_080_UploadDocumentEvent")
+      .get("/data/internal/cases/#{caseId}/event-triggers/boUploadDocumentsAwaitingDoc?ignore-warning=false")
+      .headers(Headers.navigationHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+//      .header("x-xsrf-token", "#{XSRFToken}")
+      .check(jsonPath("$.event_token").saveAs("event_token"))
+      .check(substring("Documents uploaded")))
+
+      //see xui-webapp cookie capture in the Homepage scenario for details of why this is being used.
+      //after a period of time during a performance test, the cookie would change and subsequent calls would fail
+      //with a 401 unauthorized, so this code is forcing the original cookie back in to the Gatling session
+      .exec(addCookie(Cookie("xui-webapp", "#{xuiWebAppCookie}")
+        .withMaxAge(28800)
+        .withSecure(true)))
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    .exec(http("XUI_Caseworker_090_UploadDocument_#{filename}")
+      .post("/documentsv2")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .header("content-type", "multipart/form-data")
+      .header("x-xsrf-token", "#{XSRFToken}")
+      .bodyPart(RawFileBodyPart("files", "#{filename}")
+        .fileName("#{filename}")
+        .transferEncoding("binary"))
+      .asMultipartForm
+      .formParam("classification", "PUBLIC")
+      .formParam("caseTypeId", "#{caseType}")
+      .formParam("jurisdictionId", "PROBATE")
+      .check(substring("originalDocumentName"))
+      .check(regex("""documents/([0-9a-z-]+?)/binary""").saveAs("Document_ID"))
+      .check(jsonPath("$.documents[0].hashToken").saveAs("hashToken")))
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    .exec(http("XUI_Caseworker_100_UploadDocumentSubmit")
+      .post("/data/cases/#{caseId}/events")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "#{XSRFToken}")
+      .body(ElFileBody("bodies/CWDocUpload.json")))
+
+    val DocumentDownload =
+
+      exec(http("XUI_Caseworker_110_DocumentDownload_#{filename}")
+        .get("/documentsv2/#{Document_ID}/binary")
+        .headers(Headers.navigationHeader)
+        .header("accept", "*/*"))
+
+      .pause(MinThinkTime, MaxThinkTime)
+
 }
 
 

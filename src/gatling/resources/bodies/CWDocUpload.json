@@ -1,0 +1,26 @@
+{
+  "data": {
+    "boDocumentsUploaded": [
+      {
+        "value": {
+          "DocumentType": "will",
+          "Comment": "test doc upload",
+          "DocumentLink": {
+            "document_url": "http://dm-store-#{env}.service.core-compute-#{env}.internal/documents/#{Document_ID}",
+            "document_binary_url": "http://dm-store-#{env}.service.core-compute-#{env}.internal/documents/#{Document_ID}/binary",
+            "document_filename": "#{filename}",
+            "document_hash": "#{hashToken}"
+          }
+        },
+        "id": null
+      }
+    ]
+  },
+  "event": {
+    "id": "boUploadDocumentsAwaitingDoc",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false
+}
