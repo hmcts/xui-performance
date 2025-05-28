@@ -258,8 +258,27 @@ object Caseworker_Navigation {
       .formParam("caseTypeId", "#{caseType}")
       .formParam("jurisdictionId", "PROBATE")
       .check(substring("originalDocumentName"))
-      .check(regex("""documents/([0-9a-z-]+?)/binary""").saveAs("Document_ID"))
-      .check(jsonPath("$.documents[0].hashToken").saveAs("hashToken")))
+      .check(regex("""documents/([0-9a-z-]+?)/binary""").saveAs("Document_ID1"))
+      .check(jsonPath("$.documents[0].hashToken").saveAs("hashToken1")))
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    .exec(http("XUI_Caseworker_090_UploadDocument_#{filename}")
+      .post("/documentsv2")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .header("content-type", "multipart/form-data")
+      .header("x-xsrf-token", "#{XSRFToken}")
+      .bodyPart(RawFileBodyPart("files", "#{filename}")
+        .fileName("#{filename}")
+        .transferEncoding("binary"))
+      .asMultipartForm
+      .formParam("classification", "PUBLIC")
+      .formParam("caseTypeId", "#{caseType}")
+      .formParam("jurisdictionId", "PROBATE")
+      .check(substring("originalDocumentName"))
+      .check(regex("""documents/([0-9a-z-]+?)/binary""").saveAs("Document_ID2"))
+      .check(jsonPath("$.documents[0].hashToken").saveAs("hashToken2")))
 
     .pause(MinThinkTime, MaxThinkTime)
 
