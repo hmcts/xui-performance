@@ -1,15 +1,29 @@
+
 {
   "data": {
     "boDocumentsUploaded": [
       {
         "value": {
-          "DocumentType": "will",
-          "Comment": "test doc upload",
+          "DocumentType": "correspondence",
+          "Comment": "test file 1",
           "DocumentLink": {
-            "document_url": "http://dm-store-#{env}.service.core-compute-#{env}.internal/documents/#{Document_ID}",
-            "document_binary_url": "http://dm-store-#{env}.service.core-compute-#{env}.internal/documents/#{Document_ID}/binary",
+            "document_url": "http://dm-store-#{env}.service.core-compute-#{env}.internal/documents/#{Document_ID1}",
+            "document_binary_url": "http://dm-store-#{env}.service.core-compute-#{env}.internal/documents/#{Document_ID1}/binary",
             "document_filename": "#{filename}",
-            "document_hash": "#{hashToken}"
+            "document_hash": "#{hashToken1}"
+          }
+        },
+        "id": null
+      },
+      {
+        "value": {
+          "DocumentType": "correspondence",
+          "Comment": "test file 2",
+          "DocumentLink": {
+            "document_url": "http://dm-store-#{env}.service.core-compute-#{env}.internal/documents/#{Document_ID2}",
+            "document_binary_url": "http://dm-store-#{env}.service.core-compute-#{env}.internal/documents/#{Document_ID2}/binary",
+            "document_filename": "#{filename}",
+            "document_hash": "#{hashToken2}"
           }
         },
         "id": null

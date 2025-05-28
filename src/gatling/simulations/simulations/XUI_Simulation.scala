@@ -66,13 +66,13 @@ class XUI_Simulation extends Simulation {
 	val frTargetPerHour: Double = 100
 	val caseworkerTargetPerHour: Double = 1000
 
-	val oneMbStoreTargetPerHour:Double = 10760
-	val fiveMbStoreTargetPerHour:Double = 1200
-	val tenMbStoreTargetPerHour:Double = 450
-	val twentyMbStoreTargetPerHour:Double = 306
-	val fiftyMbStoreTargetPerHour:Double = 104
-	val oneHundredMbStoreTargetPerHour:Double = 51
-	val twofiftyMbStoreTargetPerHour:Double = 22
+	val oneMbStoreTargetPerHour:Double = 5500
+	val fiveMbStoreTargetPerHour:Double = 600
+	val tenMbStoreTargetPerHour:Double = 225
+	val twentyMbStoreTargetPerHour:Double = 160
+	val fiftyMbStoreTargetPerHour:Double = 52
+	val oneHundredMbStoreTargetPerHour:Double = 26
+	val twofiftyMbStoreTargetPerHour:Double = 11
 	val fiveHundredMbStoreTargetPerHour:Double = 4
 	val nineHundredMbStoreTargetPerHour:Double = 1
 
@@ -93,7 +93,7 @@ class XUI_Simulation extends Simulation {
 	val pauseOption: PauseType = debugMode match {
 		case "off" if testType == "perftest" => constantPauses
 		case "off" if testType == "pipeline" => customPauses(pipelinePausesMillis)
-		case _ => disabledPauses
+		case _ => constantPauses //disabledPauses
 	}
 
 	val httpProtocol = http
