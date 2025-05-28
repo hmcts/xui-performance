@@ -137,14 +137,14 @@ object CCDAPI {
       .header("ServiceAuthorization", "Bearer #{bearerToken}")
       .header("Authorization", "Bearer #{accessToken}")
       .header("Content-Type","application/json")
-      .check(jsonPath("$.token").saveAs("eventToken")))
+      .check(jsonPath("$.token").saveAs("eventToken2")))
 
     .exec(http("API_Probate_PaymentSuccessful")
       .post(CcdAPIURL + "/caseworkers/#{idamId}/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases/#{caseId}/events")
       .header("ServiceAuthorization", "Bearer #{bearerToken}")
       .header("Authorization", "Bearer #{accessToken}")
       .header("Content-Type","application/json")
-      .body(StringBody("{\n    \"data\": {\n      \"applicationSubmittedDate\": \"2025-05-03\"\n    },\n    \"event\": {\n      \"id\": \"paymentSuccessApp\",\n      \"summary\": \"\",\n      \"description\": \"\"\n    },\n    \"event_token\": \"#{eventToken}\",\n    \"ignore_warning\": false\n  }")))
+      .body(StringBody("{\n    \"data\": {\n      \"applicationSubmittedDate\": \"2025-05-03\"\n    },\n    \"event\": {\n      \"id\": \"paymentSuccessApp\",\n      \"summary\": \"\",\n      \"description\": \"\"\n    },\n    \"event_token\": \"#{eventToken2}\",\n    \"ignore_warning\": false\n  }")))
 
     .pause(MinThinkTime, MaxThinkTime)
 
