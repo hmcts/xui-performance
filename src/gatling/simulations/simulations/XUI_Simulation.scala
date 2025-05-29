@@ -524,9 +524,14 @@ class XUI_Simulation extends Simulation {
 			.exec(Caseworker_Navigation.ViewCase)
 			.exec(_.set("filename", "1MB.pdf"))
 			.exec(Caseworker_Navigation.UploadDocument)
-			.doIf("#{Document_ID.exists()}") {
+			.doIf("#{Document_ID1.exists()}") {
 				repeat(4) {
-					exec(Caseworker_Navigation.DocumentDownload)
+					exec(Caseworker_Navigation.DocumentDownload1)
+				}
+			}
+			.doIf("#{Document_ID2.exists()}") {
+				repeat(4) {
+					exec(Caseworker_Navigation.DocumentDownload2)
 				}
 			}
 			.exec(Logout.XUILogout)
@@ -535,166 +540,201 @@ class XUI_Simulation extends Simulation {
 	val CDAMScenario5mb = scenario("***** CDAM 5mb Doc Upload/Download ******")
 		.exitBlockOnFail {
 			exec(_.set("env", s"${env}"))
-				.feed(UserFeederCDAM)
-				.exec(CCDAPI.S2SLogin)
-				.exec(CCDAPI.idamLogin)
-				.exec(CCDAPI.CreateCase)
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.exec(Caseworker_Navigation.ViewCase)
-				.exec(_.set("filename", "5MB.pdf"))
-				.exec(Caseworker_Navigation.UploadDocument)
-				.doIf("#{Document_ID.exists()}") {
-					repeat(4) {
-						exec(Caseworker_Navigation.DocumentDownload)
-					}
+			.feed(UserFeederCDAM)
+			.exec(CCDAPI.S2SLogin)
+			.exec(CCDAPI.idamLogin)
+			.exec(CCDAPI.CreateCase)
+			.exec(Homepage.XUIHomePage)
+			.exec(Login.XUILogin)
+			.exec(Caseworker_Navigation.ViewCase)
+			.exec(_.set("filename", "5MB.pdf"))
+			.exec(Caseworker_Navigation.UploadDocument)
+			.doIf("#{Document_ID1.exists()}") {
+				repeat(4) {
+					exec(Caseworker_Navigation.DocumentDownload1)
 				}
-				.exec(Logout.XUILogout)
+			}
+			.doIf("#{Document_ID2.exists()}") {
+				repeat(4) {
+					exec(Caseworker_Navigation.DocumentDownload2)
+				}
+			}
+			.exec(Logout.XUILogout)
 		}
 
 	val CDAMScenario10mb = scenario("***** CDAM 10mb Doc Upload/Download ******")
 		.exitBlockOnFail {
 			exec(_.set("env", s"${env}"))
-				.feed(UserFeederCDAM)
-				.exec(CCDAPI.S2SLogin)
-				.exec(CCDAPI.idamLogin)
-				.exec(CCDAPI.CreateCase)
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.exec(Caseworker_Navigation.ViewCase)
-				.exec(_.set("filename", "10MB.pdf"))
-				.exec(Caseworker_Navigation.UploadDocument)
-				.doIf("#{Document_ID.exists()}") {
-					repeat(4) {
-						exec(Caseworker_Navigation.DocumentDownload)
-					}
+			.feed(UserFeederCDAM)
+			.exec(CCDAPI.S2SLogin)
+			.exec(CCDAPI.idamLogin)
+			.exec(CCDAPI.CreateCase)
+			.exec(Homepage.XUIHomePage)
+			.exec(Login.XUILogin)
+			.exec(Caseworker_Navigation.ViewCase)
+			.exec(_.set("filename", "10MB.pdf"))
+			.exec(Caseworker_Navigation.UploadDocument)
+			.doIf("#{Document_ID1.exists()}") {
+				repeat(4) {
+					exec(Caseworker_Navigation.DocumentDownload1)
 				}
-				.exec(Logout.XUILogout)
+			}
+			.doIf("#{Document_ID2.exists()}") {
+				repeat(4) {
+					exec(Caseworker_Navigation.DocumentDownload2)
+				}
+			}
+			.exec(Logout.XUILogout)
 		}
 
 	val CDAMScenario20mb = scenario("***** CDAM 20mb Doc Upload/Download ******")
 		.exitBlockOnFail {
 			exec(_.set("env", s"${env}"))
-				.feed(UserFeederCDAM)
-				.exec(CCDAPI.S2SLogin)
-				.exec(CCDAPI.idamLogin)
-				.exec(CCDAPI.CreateCase)
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.exec(Caseworker_Navigation.ViewCase)
-				.exec(_.set("filename", "20MB.pdf"))
-				.exec(Caseworker_Navigation.UploadDocument)
-				.doIf("#{Document_ID.exists()}") {
-					repeat(4) {
-						exec(Caseworker_Navigation.DocumentDownload)
-					}
+			.feed(UserFeederCDAM)
+			.exec(CCDAPI.S2SLogin)
+			.exec(CCDAPI.idamLogin)
+			.exec(CCDAPI.CreateCase)
+			.exec(Homepage.XUIHomePage)
+			.exec(Login.XUILogin)
+			.exec(Caseworker_Navigation.ViewCase)
+			.exec(_.set("filename", "20MB.pdf"))
+			.exec(Caseworker_Navigation.UploadDocument)
+			.doIf("#{Document_ID1.exists()}") {
+				repeat(4) {
+					exec(Caseworker_Navigation.DocumentDownload1)
 				}
-				.exec(Logout.XUILogout)
+			}
+			.doIf("#{Document_ID2.exists()}") {
+				repeat(4) {
+					exec(Caseworker_Navigation.DocumentDownload2)
+				}
+			}
+			.exec(Logout.XUILogout)
 		}
 
 	val CDAMScenario50mb = scenario("***** CDAM 50mb Doc Upload/Download ******")
 		.exitBlockOnFail {
 			exec(_.set("env", s"${env}"))
-				.feed(UserFeederCDAM)
-				.exec(CCDAPI.S2SLogin)
-				.exec(CCDAPI.idamLogin)
-				.exec(CCDAPI.CreateCase)
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.exec(Caseworker_Navigation.ViewCase)
-				.exec(_.set("filename", "50MB.pdf"))
-				.exec(Caseworker_Navigation.UploadDocument)
-				.doIf("#{Document_ID.exists()}") {
-					repeat(4) {
-						exec(Caseworker_Navigation.DocumentDownload)
-					}
+			.feed(UserFeederCDAM)
+			.exec(CCDAPI.S2SLogin)
+			.exec(CCDAPI.idamLogin)
+			.exec(CCDAPI.CreateCase)
+			.exec(Homepage.XUIHomePage)
+			.exec(Login.XUILogin)
+			.exec(Caseworker_Navigation.ViewCase)
+			.exec(_.set("filename", "50MB.pdf"))
+			.exec(Caseworker_Navigation.UploadDocument)
+			.doIf("#{Document_ID1.exists()}") {
+				repeat(4) {
+					exec(Caseworker_Navigation.DocumentDownload1)
 				}
-				.exec(Logout.XUILogout)
+			}
+			.doIf("#{Document_ID2.exists()}") {
+				repeat(4) {
+					exec(Caseworker_Navigation.DocumentDownload2)
+				}
+			}
+			.exec(Logout.XUILogout)
 		}
 
 	val CDAMScenario100mb = scenario("***** CDAM 100mb Doc Upload/Download ******")
 		.exitBlockOnFail {
 			exec(_.set("env", s"${env}"))
-				.feed(UserFeederCDAM)
-				.exec(CCDAPI.S2SLogin)
-				.exec(CCDAPI.idamLogin)
-				.exec(CCDAPI.CreateCase)
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.exec(Caseworker_Navigation.ViewCase)
-				.exec(_.set("filename", "100MB.pdf"))
-				.exec(Caseworker_Navigation.UploadDocument)
-				.doIf("#{Document_ID.exists()}") {
-					repeat(4) {
-						exec(Caseworker_Navigation.DocumentDownload)
-					}
+			.feed(UserFeederCDAM)
+			.exec(CCDAPI.S2SLogin)
+			.exec(CCDAPI.idamLogin)
+			.exec(CCDAPI.CreateCase)
+			.exec(Homepage.XUIHomePage)
+			.exec(Login.XUILogin)
+			.exec(Caseworker_Navigation.ViewCase)
+			.exec(_.set("filename", "100MB.pdf"))
+			.exec(Caseworker_Navigation.UploadDocument)
+			.doIf("#{Document_ID1.exists()}") {
+				repeat(4) {
+					exec(Caseworker_Navigation.DocumentDownload1)
 				}
-				.exec(Logout.XUILogout)
+			}
+			.doIf("#{Document_ID2.exists()}") {
+				repeat(4) {
+					exec(Caseworker_Navigation.DocumentDownload2)
+				}
+			}
+			.exec(Logout.XUILogout)
 		}
 
 	val CDAMScenario250mb = scenario("***** CDAM 250mb Doc Upload/Download ******")
 		.exitBlockOnFail {
 			exec(_.set("env", s"${env}"))
-				.feed(UserFeederCDAM)
-				.exec(CCDAPI.S2SLogin)
-				.exec(CCDAPI.idamLogin)
-				.exec(CCDAPI.CreateCase)
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.exec(Caseworker_Navigation.ViewCase)
-				.exec(_.set("filename", "250MB.pdf"))
-				.exec(Caseworker_Navigation.UploadDocument)
-				.doIf("#{Document_ID.exists()}") {
-					repeat(4) {
-						exec(Caseworker_Navigation.DocumentDownload)
-					}
+			.feed(UserFeederCDAM)
+			.exec(CCDAPI.S2SLogin)
+			.exec(CCDAPI.idamLogin)
+			.exec(CCDAPI.CreateCase)
+			.exec(Homepage.XUIHomePage)
+			.exec(Login.XUILogin)
+			.exec(Caseworker_Navigation.ViewCase)
+			.exec(_.set("filename", "250MB.pdf"))
+			.exec(Caseworker_Navigation.UploadDocument)
+			.doIf("#{Document_ID1.exists()}") {
+				repeat(4) {
+					exec(Caseworker_Navigation.DocumentDownload1)
 				}
-				.exec(Logout.XUILogout)
+			}
+			.doIf("#{Document_ID2.exists()}") {
+				repeat(4) {
+					exec(Caseworker_Navigation.DocumentDownload2)
+				}
+			}
+			.exec(Logout.XUILogout)
 		}
 
 	val CDAMScenario500mb = scenario("***** CDAM 500mb Doc Upload/Download ******")
 		.exitBlockOnFail {
 			exec(_.set("env", s"${env}"))
-				.feed(UserFeederCDAM)
-				.exec(CCDAPI.S2SLogin)
-				.exec(CCDAPI.idamLogin)
-				.exec(CCDAPI.CreateCase)
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.exec(Caseworker_Navigation.ViewCase)
-				.exec(_.set("filename", "500MB.pdf"))
-				.exec(Caseworker_Navigation.UploadDocument)
-				.doIf("#{Document_ID.exists()}") {
-					repeat(4) {
-						exec(Caseworker_Navigation.DocumentDownload)
-					}
+			.feed(UserFeederCDAM)
+			.exec(CCDAPI.S2SLogin)
+			.exec(CCDAPI.idamLogin)
+			.exec(CCDAPI.CreateCase)
+			.exec(Homepage.XUIHomePage)
+			.exec(Login.XUILogin)
+			.exec(Caseworker_Navigation.ViewCase)
+			.exec(_.set("filename", "500MB.pdf"))
+			.exec(Caseworker_Navigation.UploadDocument)
+			.doIf("#{Document_ID1.exists()}") {
+				repeat(4) {
+					exec(Caseworker_Navigation.DocumentDownload1)
 				}
-				.exec(Logout.XUILogout)
+			}
+			.doIf("#{Document_ID2.exists()}") {
+				repeat(4) {
+					exec(Caseworker_Navigation.DocumentDownload2)
+				}
+			}
+			.exec(Logout.XUILogout)
 		}
 
 	val CDAMScenario900mb = scenario("***** CDAM 900mb Doc Upload/Download ******")
 		.exitBlockOnFail {
 			exec(_.set("env", s"${env}"))
-				.feed(UserFeederCDAM)
-				.exec(CCDAPI.S2SLogin)
-				.exec(CCDAPI.idamLogin)
-				.exec(CCDAPI.CreateCase)
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.exec(Caseworker_Navigation.ViewCase)
-				.exec(_.set("filename", "900MB.pdf"))
-				.exec(Caseworker_Navigation.UploadDocument)
-				.doIf("#{Document_ID1.exists()}") {
-					repeat(4) {
-						exec(Caseworker_Navigation.DocumentDownload1)
-					}
+			.feed(UserFeederCDAM)
+			.exec(CCDAPI.S2SLogin)
+			.exec(CCDAPI.idamLogin)
+			.exec(CCDAPI.CreateCase)
+			.exec(Homepage.XUIHomePage)
+			.exec(Login.XUILogin)
+			.exec(Caseworker_Navigation.ViewCase)
+			.exec(_.set("filename", "900MB.pdf"))
+			.exec(Caseworker_Navigation.UploadDocument)
+			.doIf("#{Document_ID1.exists()}") {
+				repeat(4) {
+					exec(Caseworker_Navigation.DocumentDownload1)
 				}
-				.doIf("#{Document_ID2.exists()}") {
-					repeat(4) {
-						exec(Caseworker_Navigation.DocumentDownload2)
-					}
+			}
+			.doIf("#{Document_ID2.exists()}") {
+				repeat(4) {
+					exec(Caseworker_Navigation.DocumentDownload2)
 				}
-				.exec(Logout.XUILogout)
+			}
+			.exec(Logout.XUILogout)
 		}
 
 
