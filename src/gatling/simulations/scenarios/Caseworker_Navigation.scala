@@ -289,14 +289,23 @@ object Caseworker_Navigation {
       .header("x-xsrf-token", "#{XSRFToken}")
       .body(ElFileBody("bodies/CWDocUpload.json")))
 
-    val DocumentDownload =
+  val DocumentDownload1 =
 
-      exec(http("XUI_Caseworker_110_DocumentDownload_#{filename}")
-        .get("/documentsv2/#{Document_ID}/binary")
-        .headers(Headers.navigationHeader)
-        .header("accept", "*/*"))
+    exec(http("XUI_Caseworker_110_DocumentDownload_#{filename}")
+      .get("/documentsv2/#{Document_ID1}/binary")
+      .headers(Headers.navigationHeader)
+      .header("accept", "*/*"))
 
-      .pause(MinThinkTime, MaxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
+
+  val DocumentDownload2 =
+
+    exec(http("XUI_Caseworker_110_DocumentDownload_#{filename}")
+      .get("/documentsv2/#{Document_ID2}/binary")
+      .headers(Headers.navigationHeader)
+      .header("accept", "*/*"))
+
+    .pause(MinThinkTime, MaxThinkTime)
 
 }
 
