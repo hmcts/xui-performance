@@ -684,9 +684,14 @@ class XUI_Simulation extends Simulation {
 				.exec(Caseworker_Navigation.ViewCase)
 				.exec(_.set("filename", "900MB.pdf"))
 				.exec(Caseworker_Navigation.UploadDocument)
-				.doIf("#{Document_ID.exists()}") {
+				.doIf("#{Document_ID1.exists()}") {
 					repeat(4) {
-						exec(Caseworker_Navigation.DocumentDownload)
+						exec(Caseworker_Navigation.DocumentDownload1)
+					}
+				}
+				.doIf("#{Document_ID2.exists()}") {
+					repeat(4) {
+						exec(Caseworker_Navigation.DocumentDownload2)
 					}
 				}
 				.exec(Logout.XUILogout)
