@@ -115,11 +115,11 @@ object Caseworker_Navigation {
         }).optional.saveAs("documentUrl"))
       )
 
-      .exec(Common.caseActivityPost)
+      /*.exec(Common.caseActivityPost)
       .pause(2)
       .exec(Common.caseActivityGet)
 
-      .exec(Common.userDetails)
+      .exec(Common.userDetails)*/
     }
 
     .pause(MinThinkTime, MaxThinkTime)
