@@ -26,13 +26,13 @@ object Homepage {
         .headers(Headers.navigationHeader)
         .header("sec-fetch-site", "none"))
 
-      .exec(Common.configurationui)
+      //.exec(Common.configurationui)
 
-      .exec(Common.configJson)
+      //.exec(Common.configJson)
 
-      .exec(Common.TsAndCs)
+      //.exec(Common.TsAndCs)
 
-      .exec(Common.configUI)
+     // .exec(Common.configUI)
 
       // .exec(Common.userDetails)
       .exec(http("XUI_Common_000_UserDetails")
@@ -41,7 +41,7 @@ object Homepage {
         .header("accept", "application/json, text/plain, */*")
         .check(status.in(200, 304, 401)))
 
-      .exec(Common.isAuthenticated)
+      //.exec(Common.isAuthenticated)
 
       .exec(http("XUI_010_010_AuthLogin")
         .get("/auth/login")

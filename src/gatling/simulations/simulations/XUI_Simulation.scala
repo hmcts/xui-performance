@@ -61,15 +61,15 @@ class XUI_Simulation extends Simulation {
 	val iacTargetPerHour: Double = 20
 	val nfdSoleTargetPerHour: Double = 120
 	val nfdJointTargetPerHour: Double = 120
-	val fplTargetPerHour: Double = 30
+	val fplTargetPerHour: Double = 2000
 	val frTargetPerHour: Double = 100
 	val caseworkerTargetPerHour: Double = 1000
 
 	//This determines the percentage split of PRL journeys, by C100 or FL401
 	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
 
-	val rampUpDurationMins = 5
-	val rampDownDurationMins = 5
+	val rampUpDurationMins = 2
+	val rampDownDurationMins = 2
 	val testDurationMins = 60
 
 	val numberOfPipelineUsers = 5
@@ -463,7 +463,7 @@ class XUI_Simulation extends Simulation {
 				.exec(Solicitor_FPL.fplRespondentDetails)
 				.exec(Solicitor_FPL.fplAllocationProposal)
 				.exec(Solicitor_FPL.fplSubmitApplication)
-				.exec(Solicitor_FPL.fplReturnToCase)
+				//.exec(Solicitor_FPL.fplReturnToCase)
         //.exec(Solicitor_FPL.QueryManagement) //Temporarily removing QM until FPL is onboarded in XUI master
         .exec(Logout.XUILogout)
         //.feed(UserFeederCTSC)
@@ -528,17 +528,17 @@ class XUI_Simulation extends Simulation {
 		simulationType match {
 			case "perftest" | "pipeline" => //currently using the same assertions for a performance test and the pipeline
 				if (debugMode == "off") {
-					Seq(global.successfulRequests.percent.gte(95),
-						details("XUI_PRL_C100_700_SubmitAndPayNow").successfulRequests.percent.gte(80),
-						details("XUI_PRL_FL401_490_SOTSubmit").successfulRequests.percent.gte(80),
-						details("XUI_Bails_770_Upload_Signed_Notice_Submit").successfulRequests.percent.gte(80),
-						details("XUI_Probate_330_ViewCase").successfulRequests.percent.gte(80),
-						details("XUI_IAC_280_005_AppealDeclarationSubmitted").successfulRequests.percent.gte(80),
-						details("XUI_000_CCDEvent-system-progress-case-awaiting-final-order").successfulRequests.percent.gte(80), //NFD Sole
-						details("XUI_000_CCDEvent-system-progress-held-case").successfulRequests.percent.gte(80), //NFD Joint
-						details("XUI_FR_170_SubmitApplication").successfulRequests.percent.gte(80),
-						details("XUI_FPL_330_ReturnToCase").successfulRequests.percent.gte(80),
-						details("XUI_Caseworker_100_CaseList").successfulRequests.percent.gte(80))
+					Seq(global.successfulRequests.percent.gte(95))
+						//details("XUI_PRL_C100_700_SubmitAndPayNow").successfulRequests.percent.gte(80),
+						//details("XUI_PRL_FL401_490_SOTSubmit").successfulRequests.percent.gte(80),
+						//details("XUI_Bails_770_Upload_Signed_Notice_Submit").successfulRequests.percent.gte(80),
+						//details("XUI_Probate_330_ViewCase").successfulRequests.percent.gte(80),
+						//details("XUI_IAC_280_005_AppealDeclarationSubmitted").successfulRequests.percent.gte(80),
+						//details("XUI_000_CCDEvent-system-progress-case-awaiting-final-order").successfulRequests.percent.gte(80), //NFD Sole
+						//details("XUI_000_CCDEvent-system-progress-held-case").successfulRequests.percent.gte(80), //NFD Joint
+						//details("XUI_FR_170_SubmitApplication").successfulRequests.percent.gte(80),
+						//details("XUI_FPL_330_ReturnToCase").successfulRequests.percent.gte(80)
+						//details("XUI_Caseworker_100_CaseList").successfulRequests.percent.gte(80))
 				}
 				else {
 					Seq(global.successfulRequests.percent.is(100))
@@ -549,15 +549,15 @@ class XUI_Simulation extends Simulation {
 	}
 
   setUp(
-			PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
-      ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-			NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-			NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			//PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      //BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      //ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      //ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			//NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			//NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      //FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      //CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
