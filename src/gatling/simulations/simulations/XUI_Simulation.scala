@@ -1,17 +1,15 @@
 package simulations
 
+import io.gatling.commons.stats.assertion.Assertion
 import io.gatling.core.Predef._
+import io.gatling.core.controller.inject.open.OpenInjectionStep
+import io.gatling.core.pause.PauseType
 import io.gatling.http.Predef._
 import scenarios._
 import utils._
 
-import scala.io.Source
-import io.gatling.core.controller.inject.open.OpenInjectionStep
-import io.gatling.commons.stats.assertion.Assertion
-import io.gatling.core.pause.PauseType
-
 import scala.concurrent.duration._
-import scala.util.Random
+import scala.io.Source
 
 class XUI_Simulation extends Simulation {
 
@@ -34,8 +32,6 @@ class XUI_Simulation extends Simulation {
 	val nfdJointLabelsInitialised = Source.fromResource("bodies/nfd/labels/jointLabelsInitialised.txt").mkString
 	val nfdJointLabelsPopulated = Source.fromResource("bodies/nfd/labels/jointLabelsPopulated.txt").mkString
 
-	val randomFeeder = Iterator.continually(Map("prl-percentage" -> Random.nextInt(100)))
-
 	/* TEST TYPE DEFINITION */
 	/* pipeline = nightly pipeline against the AAT environment (see the Jenkins_nightly file) */
 	/* perftest (default) = performance test against the perftest environment */
@@ -55,7 +51,8 @@ class XUI_Simulation extends Simulation {
 	/* ******************************** */
 
 	/* PERFORMANCE TEST CONFIGURATION */
-	val prlTargetPerHour: Double = 100
+	val prlC100TargetPerHour: Double = 66
+	val prlFL401TargetPerHour: Double = 34
 	val bailsTargetPerHour: Double = 10
 	val probateTargetPerHour: Double = 250
 	val iacTargetPerHour: Double = 20
@@ -64,9 +61,6 @@ class XUI_Simulation extends Simulation {
 	val fplTargetPerHour: Double = 30
 	val frTargetPerHour: Double = 100
 	val caseworkerTargetPerHour: Double = 1000
-
-	//This determines the percentage split of PRL journeys, by C100 or FL401
-	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
 
 	val rampUpDurationMins = 5
 	val rampDownDurationMins = 5
@@ -98,52 +92,58 @@ class XUI_Simulation extends Simulation {
 	}
 
 	/*===============================================================================================
-	* XUI Solicitor Private Law Scenario
+	* XUI Solicitor Private Law C100 Scenario
  	===============================================================================================*/
-	val PRLSolicitorScenario = scenario("***** Private Law Create Case *****")
+	val PRLC100SolicitorScenario = scenario("***** Private Law C100 Create Case *****")
 		.exitBlockOnFail {
 			feed(UserFeederPRL)
       .exec(_.set("env", s"${env}")
             .set("caseType", "PRLAPPS"))
       .exec(Homepage.XUIHomePage)
       .exec(Login.XUILogin)
-      .feed(randomFeeder)
-      .doIfOrElse(session => session("prl-percentage").as[Int] < prlC100Percentage) {
-        //C100 Journey
-        exec(Solicitor_PRL_C100.CreatePrivateLawCase)
-        .exec(Solicitor_PRL_C100.TypeOfApplication)
-        .exec(Solicitor_PRL_C100.HearingUrgency)
-        .exec(Solicitor_PRL_C100.ApplicantDetails)
-        .exec(Solicitor_PRL_C100.ChildDetails)
-        .exec(Solicitor_PRL_C100.RespondentDetails)
-        .exec(Solicitor_PRL_C100.AllegationsOfHarm)
-        .exec(Solicitor_PRL_C100.OtherChildrenNotInCase)
-        .exec(Solicitor_PRL_C100.OtherPeopleInCase)
-        .exec(Solicitor_PRL_C100.ChildrenAndApplicants)
-        .exec(Solicitor_PRL_C100.ChildrenAndRespondents)
-        .exec(Solicitor_PRL_C100.ChildrenAndOtherPeople)
-        .exec(Solicitor_PRL_C100.MIAM)
-        .exec(Solicitor_PRL_C100.ViewPdfApplication)
-        .exec(Solicitor_PRL_C100.SubmitAndPay)
-        .exec(Solicitor_PRL_C100.HearingsTab)
-      } 
-      {
-      	//FL401 Journey
-        exec(Solicitor_PRL_FL401.CreatePrivateLawCase)
-        .exec(Solicitor_PRL_FL401.TypeOfApplication)
-        .exec(Solicitor_PRL_FL401.WithoutNoticeOrder)
-        .exec(Solicitor_PRL_FL401.ApplicantDetails)
-        .exec(Solicitor_PRL_FL401.RespondentDetails)
-        .exec(Solicitor_PRL_FL401.ApplicantsFamily)
-        .exec(Solicitor_PRL_FL401.Relationship)
-        .exec(Solicitor_PRL_FL401.Behaviour)
-        .exec(Solicitor_PRL_FL401.TheHome)
-        .exec(Solicitor_PRL_FL401.UploadDocuments)
-        .exec(Solicitor_PRL_FL401.ViewPDF)
-        .exec(Solicitor_PRL_FL401.StatementOfTruth)
-        .exec(Solicitor_PRL_FL401.HearingsTab)
-        }
+			.exec(Solicitor_PRL_C100.CreatePrivateLawCase)
+			.exec(Solicitor_PRL_C100.TypeOfApplication)
+			.exec(Solicitor_PRL_C100.HearingUrgency)
+			.exec(Solicitor_PRL_C100.ApplicantDetails)
+			.exec(Solicitor_PRL_C100.ChildDetails)
+			.exec(Solicitor_PRL_C100.RespondentDetails)
+			.exec(Solicitor_PRL_C100.AllegationsOfHarm)
+			.exec(Solicitor_PRL_C100.OtherChildrenNotInCase)
+			.exec(Solicitor_PRL_C100.OtherPeopleInCase)
+			.exec(Solicitor_PRL_C100.ChildrenAndApplicants)
+			.exec(Solicitor_PRL_C100.ChildrenAndRespondents)
+			.exec(Solicitor_PRL_C100.ChildrenAndOtherPeople)
+			.exec(Solicitor_PRL_C100.MIAM)
+			.exec(Solicitor_PRL_C100.ViewPdfApplication)
+			.exec(Solicitor_PRL_C100.SubmitAndPay)
+			.exec(Solicitor_PRL_C100.HearingsTab)
       .exec(Logout.XUILogout)
+		}
+
+	/*===============================================================================================
+	* XUI Solicitor Private Law FL401 Scenario
+ 	===============================================================================================*/
+	val PRLFL401SolicitorScenario = scenario("***** Private Law FL401 Create Case *****")
+		.exitBlockOnFail {
+			feed(UserFeederPRL)
+			.exec(_.set("env", s"${env}")
+						.set("caseType", "PRLAPPS"))
+			.exec(Homepage.XUIHomePage)
+			.exec(Login.XUILogin)
+			.exec(Solicitor_PRL_FL401.CreatePrivateLawCase)
+			.exec(Solicitor_PRL_FL401.TypeOfApplication)
+			.exec(Solicitor_PRL_FL401.WithoutNoticeOrder)
+			.exec(Solicitor_PRL_FL401.ApplicantDetails)
+			.exec(Solicitor_PRL_FL401.RespondentDetails)
+			.exec(Solicitor_PRL_FL401.ApplicantsFamily)
+			.exec(Solicitor_PRL_FL401.Relationship)
+			.exec(Solicitor_PRL_FL401.Behaviour)
+			.exec(Solicitor_PRL_FL401.TheHome)
+			.exec(Solicitor_PRL_FL401.UploadDocuments)
+			.exec(Solicitor_PRL_FL401.ViewPDF)
+			.exec(Solicitor_PRL_FL401.StatementOfTruth)
+			.exec(Solicitor_PRL_FL401.HearingsTab)
+			.exec(Logout.XUILogout)
 		}
 
 	/*===============================================================================================
@@ -549,9 +549,10 @@ class XUI_Simulation extends Simulation {
 	}
 
   setUp(
-			PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
+      ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
