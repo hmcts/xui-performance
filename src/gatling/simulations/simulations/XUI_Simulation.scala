@@ -101,7 +101,7 @@ class XUI_Simulation extends Simulation {
 	}
 
 	/*===============================================================================================
-	* XUI Solicitor Private Law Scenario
+	* XUI Solicitor Private Law Scenario 
  	===============================================================================================*/
 	val PRLSolicitorScenario = scenario("***** Private Law Create Case *****")
 		.exitBlockOnFail {
