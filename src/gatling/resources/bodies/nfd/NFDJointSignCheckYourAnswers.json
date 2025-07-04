@@ -30,15 +30,16 @@
     "solStatementOfReconciliationFirm": "#{orgnames(0)}",
     "statementOfReconciliationComments": null,
     "solApplicationFeeInPounds": "#{feeInPounds}",
+    "applicationFeeServiceRequestReference": "#{applicationFeeRef}",
     "solPaymentHowToPay": "feePayByAccount",
     "pbaNumbers": {
       "value": {
-        "code": "82f92650-d346-4837-bc18-7c83531e70d7",
+        "code": "12fb13f2-960a-419d-895f-dd7955bd3da1",
         "label": "PBA0077597"
       },
       "list_items": [
         {
-          "code": "82f92650-d346-4837-bc18-7c83531e70d7",
+          "code": "12fb13f2-960a-419d-895f-dd7955bd3da1",
           "label": "PBA0077597"
         },
         {

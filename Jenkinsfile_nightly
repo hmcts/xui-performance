@@ -14,7 +14,7 @@ properties([
 
 
 def product = "xui"
-def component = "MANAGE ORGANISATION"
+def component = "webapp"
 
 def secrets = [
         'ccd-perftest': [
