@@ -1,17 +1,15 @@
 package simulations
 
+import io.gatling.commons.stats.assertion.Assertion
 import io.gatling.core.Predef._
+import io.gatling.core.controller.inject.open.OpenInjectionStep
+import io.gatling.core.pause.PauseType
 import io.gatling.http.Predef._
 import scenarios._
 import utils._
 
-import scala.io.Source
-import io.gatling.core.controller.inject.open.OpenInjectionStep
-import io.gatling.commons.stats.assertion.Assertion
-import io.gatling.core.pause.PauseType
-
 import scala.concurrent.duration._
-import scala.util.Random
+import scala.io.Source
 
 class XUI_Simulation extends Simulation {
 
@@ -23,7 +21,6 @@ class XUI_Simulation extends Simulation {
 	val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
 	val UserFeederProbate = csv("UserDataProbate.csv").circular
 	val UserFeederIAC = csv("UserDataIAC.csv").circular
-	val UserFeederDivorce = csv("UserDataDivorce.csv").circular
 	val UserFeederNFD = csv("UserDataNFD.csv").circular
 	val UserFeederFR = csv("UserDataFR.csv").circular
 	val UserFeederFPL = csv("UserDataFPL.csv").circular
@@ -35,8 +32,6 @@ class XUI_Simulation extends Simulation {
 	val nfdSoleLabelsPopulated = Source.fromResource("bodies/nfd/labels/soleLabelsPopulated.txt").mkString
 	val nfdJointLabelsInitialised = Source.fromResource("bodies/nfd/labels/jointLabelsInitialised.txt").mkString
 	val nfdJointLabelsPopulated = Source.fromResource("bodies/nfd/labels/jointLabelsPopulated.txt").mkString
-
-	val randomFeeder = Iterator.continually(Map("prl-percentage" -> Random.nextInt(100)))
 
 	/* TEST TYPE DEFINITION */
 	/* pipeline = nightly pipeline against the AAT environment (see the Jenkins_nightly file) */
@@ -61,15 +56,11 @@ class XUI_Simulation extends Simulation {
 	val bailsTargetPerHour: Double = 10
 	val probateTargetPerHour: Double = 250
 	val iacTargetPerHour: Double = 20
-	val divorceTargetPerHour: Double = 240
 	val nfdSoleTargetPerHour: Double = 120
 	val nfdJointTargetPerHour: Double = 120
 	val fplTargetPerHour: Double = 30
 	val frTargetPerHour: Double = 100
 	val caseworkerTargetPerHour: Double = 1000
-
-	//This determines the percentage split of PRL journeys, by C100 or FL401
-	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
 
 	val rampUpDurationMins = 5
 	val rampDownDurationMins = 5
@@ -103,7 +94,7 @@ class XUI_Simulation extends Simulation {
 	/*===============================================================================================
 	* XUI Solicitor Private Law Scenario 
  	===============================================================================================*/
-	val PRLSolicitorScenario = scenario("***** Private Law Create Case *****")
+	val PRLC100SolicitorScenario = scenario("***** Private Law C100 Create Case *****")
 		.exitBlockOnFail {
 			feed(UserFeederPRL)
       .exec(_.set("env", s"${env}")
@@ -244,22 +235,6 @@ class XUI_Simulation extends Simulation {
 				.repeat(2) {
 					exec(Solicitor_IAC.CreateIACCase)
 					// .exec(Solicitor_IAC.shareacase) //Temp removed as the way to share a case is now done through the case list
-				}
-				.exec(Logout.XUILogout)
-		}
-
-	/*===============================================================================================
-	* XUI Solicitor Divorce Scenario
-	 ===============================================================================================*/
-	val DivorceSolicitorScenario = scenario("***** Divorce Create Case *****")
-		.exitBlockOnFail {
-			feed(UserFeederDivorce)
-				.exec(_.set("env", s"${env}")
-							.set("caseType", "DIVORCE"))
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.repeat(2) {
-					exec(Solicitor_Divorce.CreateDivorceCase)
 				}
 				.exec(Logout.XUILogout)
 		}
@@ -576,7 +551,7 @@ class XUI_Simulation extends Simulation {
 			case "perftest" | "pipeline" => //currently using the same assertions for a performance test and the pipeline
 				if (debugMode == "off") {
 					Seq(global.successfulRequests.percent.gte(95),
-						details("XUI_PRL_C100_620_SubmitAndPayNow").successfulRequests.percent.gte(80),
+						details("XUI_PRL_C100_700_SubmitAndPayNow").successfulRequests.percent.gte(80),
 						details("XUI_PRL_FL401_490_SOTSubmit").successfulRequests.percent.gte(80),
 						details("XUI_Bails_770_Upload_Signed_Notice_Submit").successfulRequests.percent.gte(80),
 						details("XUI_Probate_330_ViewCase").successfulRequests.percent.gte(80),
