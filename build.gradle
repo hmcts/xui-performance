@@ -31,9 +31,18 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    gatlingImplementation project(':common-performance')
+}
+
+dependencyCheck {
+    suppressionFile = "common/common-performance/owasp/owasp-suppressions.xml"
+    analyzers.assemblyEnabled = false
+}
+
 gatling {
     gatlingVersion '3.9.5'
-    scalaVersion '2.13.10'
+    scalaVersion '2.13.11'
     jvmArgs = ['-Xms2048m', '-Xmx4096m']
     simulations = {
         include "simulations/XUI_Simulation.scala"
