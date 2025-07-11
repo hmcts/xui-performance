@@ -22,7 +22,8 @@ object CCDAPI {
     exec(session => userType match {
       case "Caseworker" => session.set("emailAddressCCD", "ccdloadtest-cw@gmail.com").set("passwordCCD", "Password12").set("microservice", "ccd_data")
       case "Legal" => session.set("emailAddressCCD", "ccdloadtest-la@gmail.com").set("passwordCCD", "Password12").set("microservice", "ccd_data")
-      case "Solicitor" => session.set("emailAddressCCD", session("user").as[String]).set("passwordCCD", session("password").as[String]).set("microservice", "nfdiv_case_api")
+//      case "Solicitor" => session.set("emailAddressCCD", session("user").as[String]).set("passwordCCD", session("password").as[String]).set("microservice", "nfdiv_case_api")
+      case "Solicitor" => session.set("emailAddressCCD", session("user").as[Seq[String]].apply(1)).set("passwordCCD", session("password").as[Seq[String]].apply(1)).set("microservice", "nfdiv_case_api")
     })
 
     .exec(http("XUI_000_Auth")
