@@ -3,7 +3,7 @@
     "applicant1SolicitorName": "AppSolicitor",
     "applicant1SolicitorReference": "ApplicantSolRef",
     "applicant1SolicitorPhone": "07000000000",
-    "applicant1SolicitorEmail": "#{users(0)}",
+    "applicant1SolicitorEmail": "#{user(0)}",
     "applicant1SolicitorAgreeToReceiveEmailsCheckbox": [
       "Yes"
     ],
@@ -12,8 +12,8 @@
       "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
-        "OrganisationID": "#{orgrefs(0)}",
-        "OrganisationName": "#{orgnames(0)}"
+        "OrganisationID": "#{orgref(0)}",
+        "OrganisationName": "#{orgname(0)}"
       }
     }
   },
@@ -33,7 +33,7 @@
     "applicant1SolicitorName": "AppSolicitor",
     "applicant1SolicitorReference": "ApplicantSolRef",
     "applicant1SolicitorPhone": "07000000000",
-    "applicant1SolicitorEmail": "#{users(0)}",
+    "applicant1SolicitorEmail": "#{user(0)}",
     "applicant1SolicitorAgreeToReceiveEmailsCheckbox": [
       "Yes"
     ],
@@ -42,8 +42,8 @@
       "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
-        "OrganisationID": "#{orgrefs(0)}",
-        "OrganisationName": "#{orgnames(0)}"
+        "OrganisationID": "#{orgref(0)}",
+        "OrganisationName": "#{orgname(0)}"
       }
     }
   },

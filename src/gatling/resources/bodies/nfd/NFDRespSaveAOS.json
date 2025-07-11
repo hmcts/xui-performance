@@ -9,7 +9,7 @@
     "labelContentDivorceOrCivilPartnership": "divorce",
     "applicant2SolicitorName": "RespSolicitor",
     "applicant2SolicitorPhone": "07000000000",
-    "applicant2SolicitorEmail": "#{users(1)}",
+    "applicant2SolicitorEmail": "#{user(1)}",
     "applicant2SolicitorAgreeToReceiveEmailsCheckbox": [
       "Yes"
     ],
