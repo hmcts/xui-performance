@@ -9,7 +9,7 @@
     "applicant2LegalProceedingsDetails": null,
     "statementOfTruth": "Yes",
     "solicitorName": "RespSolicitor",
-    "solicitorFirm": "#{orgnames(1)}",
+    "solicitorFirm": "#{orgname(1)}",
     "additionalComments": null
   },
   "event": {
