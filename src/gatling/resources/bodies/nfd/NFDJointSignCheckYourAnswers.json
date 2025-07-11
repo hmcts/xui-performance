@@ -27,7 +27,7 @@
     "applicant1StatementOfTruth": "Yes",
     "solSignStatementOfTruth": "Yes",
     "solStatementOfReconciliationName": "AppSolicitor",
-    "solStatementOfReconciliationFirm": "#{orgnames(0)}",
+    "solStatementOfReconciliationFirm": "#{orgname(0)}",
     "statementOfReconciliationComments": null,
     "solApplicationFeeInPounds": "#{feeInPounds}",
     "applicationFeeServiceRequestReference": "#{applicationFeeRef}",

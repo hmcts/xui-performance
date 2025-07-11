@@ -2,7 +2,7 @@
   "data": {
     "coApplicant2StatementOfTruth": "Yes",
     "coApplicant2SolicitorName": "RespSolicitor",
-    "coApplicant2SolicitorFirm": "#{orgnames(1)}",
+    "coApplicant2SolicitorFirm": "#{orgname(1)}",
     "coApplicant2SolicitorAdditionalComments": null
   },
   "event": {
