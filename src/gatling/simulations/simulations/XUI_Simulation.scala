@@ -234,47 +234,34 @@ class XUI_Simulation extends Simulation {
 				or session("users").as[Seq[String]].apply(0) without the DSL
 				 */
 				.exec { session =>
-					session.set("users", session("user").as[Array[AnyRef]].toSeq)
-						.set("passwords", session("password").as[Array[AnyRef]].toSeq)
-						.set("orgnames", session("orgname").as[Array[AnyRef]].toSeq)
-						.set("orgrefs", session("orgref").as[Array[AnyRef]].toSeq)
-
-						.set("env", s"${env}")
-						.set("caseType", "NFD")
-						.set("nfdCaseType", "sole")
-						.set("NFDLabelsInitialised", nfdSoleLabelsInitialised) //sets the initialised labels for JSON bodies
-						.set("NFDLabelsPopulated", nfdSoleLabelsPopulated) //sets the populated labels for JSON bodies
+					session
+					.set("env", s"${env}")
+					.set("caseType", "NFD")
+					.set("nfdCaseType", "sole")
+					.set("NFDLabelsInitialised", nfdSoleLabelsInitialised) //sets the initialised labels for JSON bodies
+					.set("NFDLabelsPopulated", nfdSoleLabelsPopulated) //sets the populated labels for JSON bodies
 				}
 
 				//Solicitor 1 - Divorce Application
 				.exec(XuiHelper.Homepage)
-				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
-				.exec(session => session.set("user", session("users").as[Seq[String]].apply(0))
-					.set("password", session("passwords").as[Seq[String]].apply(0)))
-				.exec(XuiHelper.Login("#{user}", "#{password}"))
+				.exec(XuiHelper.Login("#{user(0)}", "#{password(0)}"))
 				.exec(Solicitor_NFD.CreateNFDCase)
 				.exec(Solicitor_NFD.SignAndSubmitSole)
 				.exec(Logout.XUILogout)
 				//Caseworker - Issue Application
 				.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-issue-application", "bodies/nfd/CWIssueApplication.json"))
-				//set 'user'/'password' to the second one (applicant2's solicitor) for assigning the case and login
-				.exec(session => session.set("user", session("users").as[Seq[String]].apply(1))
-					.set("password", session("passwords").as[Seq[String]].apply(1)))
 				//Update the case in CCD to assign it to the second solicitor
 				.exec(CCDAPI.AssignCase)
 				//Solicitor 2 - Respond to Divorce Application
 				.exec(XuiHelper.Homepage)
-				.exec(XuiHelper.Login("#{user}", "#{password}"))
+				.exec(XuiHelper.Login("#{user(1)}", "#{password(1)}"))
 				.exec(Solicitor_NFD.RespondToNFDCase)
 				.exec(Logout.XUILogout)
 				//Caseworker - Mark the Case as Awaiting Conditional Order (to bypass 20-week holding)
 				.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-progress-held-case", "bodies/nfd/CWAwaitingConditionalOrder.json"))
 				//Solicitor 1 - Apply for Conditional Order
 				.exec(XuiHelper.Homepage)
-				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
-				.exec(session => session.set("user", session("users").as[Seq[String]].apply(0))
-					.set("password", session("passwords").as[Seq[String]].apply(0)))
-				.exec(XuiHelper.Login("#{user}", "#{password}"))
+				.exec(XuiHelper.Login("#{user(0)}", "#{password(0)}"))
 				.exec(Solicitor_NFD.ApplyForCOSole)
 				.exec(Solicitor_NFD.SubmitCO)
 				.exec(Logout.XUILogout)
@@ -296,7 +283,7 @@ class XUI_Simulation extends Simulation {
 					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-progress-case-awaiting-final-order", "bodies/nfd/CWAwaitingFinalOrder.json"))
 				//Solicitor 1 - Apply for Final Order
 				.exec(XuiHelper.Homepage)
-				.exec(XuiHelper.Login("#{user}", "#{password}"))
+				.exec(XuiHelper.Login("#{user(0)}", "#{password(0)}"))
 				.exec(Solicitor_NFD.ApplyForFO)
 				.exec(Logout.XUILogout)
 				//Caseworker - Grant Final Order
@@ -326,10 +313,7 @@ class XUI_Simulation extends Simulation {
 				or session("users").as[Seq[String]].apply(0) without the DSL
 				 */
 				.exec { session =>
-					session.set("users", session("user").as[Array[AnyRef]].toSeq)
-						.set("passwords", session("password").as[Array[AnyRef]].toSeq)
-						.set("orgnames", session("orgname").as[Array[AnyRef]].toSeq)
-						.set("orgrefs", session("orgref").as[Array[AnyRef]].toSeq)
+					session
 						.set("env", s"${env}")
 						.set("caseType", "NFD")
 						.set("nfdCaseType", "joint")
@@ -339,29 +323,20 @@ class XUI_Simulation extends Simulation {
 
 				//Solicitor 1 - Divorce Application
 				.exec(XuiHelper.Homepage)
-				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
-				.exec(session => session.set("user", session("users").as[Seq[String]].apply(0))
-					.set("password", session("passwords").as[Seq[String]].apply(0)))
-				.exec(XuiHelper.Login("#{user}", "#{password}"))
+				.exec(XuiHelper.Login("#{user(0)}", "#{password(0)}"))
 				.exec(Solicitor_NFD.CreateNFDCase)
 				.exec(Solicitor_NFD.JointInviteApplicant2)
 				.exec(Logout.XUILogout)
-				//set 'user'/'password' to the second one (applicant2's solicitor) for assigning the case and login
-				.exec(session => session.set("user", session("users").as[Seq[String]].apply(1))
-					.set("password", session("passwords").as[Seq[String]].apply(1)))
 				//Update the case in CCD to assign it to the second solicitor
 				.exec(CCDAPI.AssignCase)
 				//Solicitor 2 - Confirm Divorce Application
 				.exec(XuiHelper.Homepage)
-				.exec(XuiHelper.Login("#{user}", "#{password}"))
+				.exec(XuiHelper.Login("#{user(1)}", "#{password(1)}"))
 				.exec(Solicitor_NFD.SubmitJointApplication)
 				.exec(Logout.XUILogout)
 				//Solicitor 1 - Submit Application
 				.exec(XuiHelper.Homepage)
-				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
-				.exec(session => session.set("user", session("users").as[Seq[String]].apply(0))
-					.set("password", session("passwords").as[Seq[String]].apply(0)))
-				.exec(XuiHelper.Login("#{user}", "#{password}"))
+				.exec(XuiHelper.Login("#{user(0)}", "#{password(0)}"))
 				.exec(Solicitor_NFD.SignAndSubmitJoint)
 				.exec(Logout.XUILogout)
 				//Caseworker - Issue Application
@@ -370,19 +345,13 @@ class XUI_Simulation extends Simulation {
 				.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-progress-held-case", "bodies/nfd/CWAwaitingConditionalOrder.json"))
 				//Solicitor 1 - Apply for Conditional Order
 				.exec(XuiHelper.Homepage)
-				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
-				.exec(session => session.set("user", session("users").as[Seq[String]].apply(0))
-					.set("password", session("passwords").as[Seq[String]].apply(0)))
-				.exec(XuiHelper.Login("#{user}", "#{password}"))
+				.exec(XuiHelper.Login("#{user(0)}", "#{password(0)}"))
 				.exec(Solicitor_NFD.ApplyForCOJointApplicant1)
 				.exec(Solicitor_NFD.SubmitCO)
 				.exec(Logout.XUILogout)
 				//Solicitor 2 - Apply for Conditional Order
 				.exec(XuiHelper.Homepage)
-				//since two records were grabbed, set 'user'/'password' to the second one (applicant2's solicitor) for login
-				.exec(session => session.set("user", session("users").as[Seq[String]].apply(1))
-					.set("password", session("passwords").as[Seq[String]].apply(1)))
-				.exec(XuiHelper.Login("#{user}", "#{password}"))
+				.exec(XuiHelper.Login("#{user(1)}", "#{password(1)}"))
 				.exec(Solicitor_NFD.ApplyForCOJointApplicant2)
 				.exec(Solicitor_NFD.SubmitCOJoint)
 				.exec(Logout.XUILogout)
@@ -404,18 +373,12 @@ class XUI_Simulation extends Simulation {
 					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-progress-case-awaiting-final-order", "bodies/nfd/CWAwaitingFinalOrder.json"))
 				//Solicitor 1 - Apply for Final Order
 				.exec(XuiHelper.Homepage)
-				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
-				.exec(session => session.set("user", session("users").as[Seq[String]].apply(0))
-					.set("password", session("passwords").as[Seq[String]].apply(0)))
-				.exec(XuiHelper.Login("#{user}", "#{password}"))
+				.exec(XuiHelper.Login("#{user(0)}", "#{password(0)}"))
 				.exec(Solicitor_NFD.ApplyForFO)
 				.exec(Logout.XUILogout)
 				//Solicitor 2 - Apply for Final Order
 				.exec(XuiHelper.Homepage)
-				//since two records were grabbed, set 'user'/'password' to the second one (applicant1's solicitor) for login
-				.exec(session => session.set("user", session("users").as[Seq[String]].apply(1))
-					.set("password", session("passwords").as[Seq[String]].apply(1)))
-				.exec(XuiHelper.Login("#{user}", "#{password}"))
+				.exec(XuiHelper.Login("#{user(1)}", "#{password(1)}"))
 				.exec(Solicitor_NFD.ApplyForFOJoint)
 				.exec(Logout.XUILogout)
 				//Caseworker - Grant Final Order
