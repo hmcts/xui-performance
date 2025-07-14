@@ -10,7 +10,7 @@ properties([
 
 
 
-@Library("Infrastructure") 
+@Library("Infrastructure@jenkins-alerts-poc")
 
 
 def product = "xui"
