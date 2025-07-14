@@ -198,7 +198,7 @@ class XUI_Simulation extends Simulation {
 					.exec(Solicitor_Probate.AddApplicationDetails)
 					.exec(Solicitor_Probate.ReviewAndSubmitApplication) 
 				}
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 		}
 
 	/*===============================================================================================
@@ -215,7 +215,7 @@ class XUI_Simulation extends Simulation {
 					exec(Solicitor_IAC.CreateIACCase)
 					// .exec(Solicitor_IAC.shareacase) //Temp removed as the way to share a case is now done through the case list
 				}
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 		}
 
 	/*===============================================================================================
@@ -247,7 +247,7 @@ class XUI_Simulation extends Simulation {
 				.exec(XuiHelper.Login("#{user(0)}", "#{password(0)}"))
 				.exec(Solicitor_NFD.CreateNFDCase)
 				.exec(Solicitor_NFD.SignAndSubmitSole)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 				//Caseworker - Issue Application
 				.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-issue-application", "bodies/nfd/CWIssueApplication.json"))
 				//Update the case in CCD to assign it to the second solicitor
@@ -256,7 +256,7 @@ class XUI_Simulation extends Simulation {
 				.exec(XuiHelper.Homepage)
 				.exec(XuiHelper.Login("#{user(1)}", "#{password(1)}"))
 				.exec(Solicitor_NFD.RespondToNFDCase)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 				//Caseworker - Mark the Case as Awaiting Conditional Order (to bypass 20-week holding)
 				.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-progress-held-case", "bodies/nfd/CWAwaitingConditionalOrder.json"))
 				//Solicitor 1 - Apply for Conditional Order
@@ -264,7 +264,7 @@ class XUI_Simulation extends Simulation {
 				.exec(XuiHelper.Login("#{user(0)}", "#{password(0)}"))
 				.exec(Solicitor_NFD.ApplyForCOSole)
 				.exec(Solicitor_NFD.SubmitCO)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 				//Legal Advisor - Grant Conditional Order
 				.exec(CCDAPI.CreateEvent("Legal", "DIVORCE", "NFD", "legal-advisor-make-decision", "bodies/nfd/LAMakeDecision.json"))
 				//Caseworker - Make Eligible for Final Order
@@ -285,7 +285,7 @@ class XUI_Simulation extends Simulation {
 				.exec(XuiHelper.Homepage)
 				.exec(XuiHelper.Login("#{user(0)}", "#{password(0)}"))
 				.exec(Solicitor_NFD.ApplyForFO)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 				//Caseworker - Grant Final Order
 				.exec(
 					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-grant-final-order", "bodies/nfd/CWGrantFinalOrder.json"))
@@ -326,19 +326,19 @@ class XUI_Simulation extends Simulation {
 				.exec(XuiHelper.Login("#{user(0)}", "#{password(0)}"))
 				.exec(Solicitor_NFD.CreateNFDCase)
 				.exec(Solicitor_NFD.JointInviteApplicant2)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 				//Update the case in CCD to assign it to the second solicitor
 				.exec(CCDAPI.AssignCase)
 				//Solicitor 2 - Confirm Divorce Application
 				.exec(XuiHelper.Homepage)
 				.exec(XuiHelper.Login("#{user(1)}", "#{password(1)}"))
 				.exec(Solicitor_NFD.SubmitJointApplication)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 				//Solicitor 1 - Submit Application
 				.exec(XuiHelper.Homepage)
 				.exec(XuiHelper.Login("#{user(0)}", "#{password(0)}"))
 				.exec(Solicitor_NFD.SignAndSubmitJoint)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 				//Caseworker - Issue Application
 				.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-issue-application", "bodies/nfd/CWIssueApplication.json"))
 				//Caseworker - Mark the Case as Awaiting Conditional Order (to bypass 20-week holding)
@@ -348,13 +348,13 @@ class XUI_Simulation extends Simulation {
 				.exec(XuiHelper.Login("#{user(0)}", "#{password(0)}"))
 				.exec(Solicitor_NFD.ApplyForCOJointApplicant1)
 				.exec(Solicitor_NFD.SubmitCO)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 				//Solicitor 2 - Apply for Conditional Order
 				.exec(XuiHelper.Homepage)
 				.exec(XuiHelper.Login("#{user(1)}", "#{password(1)}"))
 				.exec(Solicitor_NFD.ApplyForCOJointApplicant2)
 				.exec(Solicitor_NFD.SubmitCOJoint)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 				//Legal Advisor - Grant Conditional Order
 				.exec(CCDAPI.CreateEvent("Legal", "DIVORCE", "NFD", "legal-advisor-make-decision", "bodies/nfd/LAMakeDecision.json"))
 				//Caseworker - Make Eligible for Final Order
@@ -375,12 +375,12 @@ class XUI_Simulation extends Simulation {
 				.exec(XuiHelper.Homepage)
 				.exec(XuiHelper.Login("#{user(0)}", "#{password(0)}"))
 				.exec(Solicitor_NFD.ApplyForFO)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 				//Solicitor 2 - Apply for Final Order
 				.exec(XuiHelper.Homepage)
 				.exec(XuiHelper.Login("#{user(1)}", "#{password(1)}"))
 				.exec(Solicitor_NFD.ApplyForFOJoint)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 				//Caseworker - Grant Final Order
 				.exec(
 					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-grant-final-order", "bodies/nfd/CWGrantFinalOrder.json"))
@@ -405,7 +405,7 @@ class XUI_Simulation extends Simulation {
 				.repeat(2) {
 					exec(Solicitor_FR.CreateFRCase)
 				}
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 		}
 
 	/*===============================================================================================
@@ -429,12 +429,12 @@ class XUI_Simulation extends Simulation {
 				.exec(Solicitor_FPL.fplSubmitApplication)
 				.exec(Solicitor_FPL.fplReturnToCase)
         //.exec(Solicitor_FPL.QueryManagement) //Temporarily removing QM until FPL is onboarded in XUI master
-        .exec(Logout.XUILogout)
+        .exec(XuiHelper.Logout)
         //.feed(UserFeederCTSC)
         //.exec(Homepage.XUIHomePage)
 				//.exec(Login.XUILogin)
         //.exec(Solicitor_FPL.RespondToQueryManagement)
-				//.exec(Logout.XUILogout)
+				//.exec(XuiHelper.Logout)
 		}
 
 	/*===============================================================================================
