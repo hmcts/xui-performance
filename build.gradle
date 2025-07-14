@@ -94,7 +94,7 @@ configurations {
 
 /* Generate stats per transaction for use in Jenkins*/
 ext {
-    transactionNamesToGraph = ["Probate_090_StartApplication", "Probate_250_SubmitApplication"] // set the transactions to graph here
+    transactionNamesToGraph = [""] // set the transactions to graph here
 }
 
 tasks.register('generateStats', JavaExec) {
