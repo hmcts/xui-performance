@@ -30,4 +30,4 @@ Please ensure that you run `git submodule update --init --recursive` to populate
 
 #### Also ensure that you run `git submodule update --recursive --remote`, followed by `./gradlew clean build` to check that you have the latest code from the common repo, before running or doing any updates to this repo.
 
-#### Note - This will also need doing the first time you run this from one of the VMs too!
+#### Note - These steps will also be required when you clone or run on the VMs!
