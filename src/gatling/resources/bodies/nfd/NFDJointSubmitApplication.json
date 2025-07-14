@@ -27,7 +27,7 @@
     "applicant2StatementOfTruth": "Yes",
     "applicant2SolSignStatementOfTruth": "Yes",
     "applicant2SolStatementOfReconciliationName": "RespSolicitor",
-    "applicant2SolStatementOfReconciliationFirm": "#{orgnames(1)}",
+    "applicant2SolStatementOfReconciliationFirm": "#{orgname(1)}",
     "applicant2StatementOfReconciliationComments": null
   },
   "event": {
