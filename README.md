@@ -25,8 +25,9 @@ To make other configuration changes to the file, first run `git update-index --n
 
 The XUI-Performance repo now utilises calls from the [common-performance](https://github.com/hmcts/common-performance) repo, using the XUIHelper file.
 
-Please ensure that you run `git submodule update --init --recursive` to populate the common folder with the required folders & files for the first time. (If it has not been added, follow the [Setup Instructions](https://github.com/hmcts/common-performance/tree/master?tab=readme-ov-file#%EF%B8%8F-setup-instructions))
+Please ensure that you run `git submodule update --init --recursive` to populate the common folder with the required folders & files for the first time. Then run `./gradlew clean build` to ensure any changes are picked up. (For further information, please refer to the [Setup Instructions](https://github.com/hmcts/common-performance/tree/master?tab=readme-ov-file#%EF%B8%8F-setup-instructions))
 
-#### Also ensure that you run `git submodule update --recursive --remote` to check that you have the latest code from the common repo, before running or doing any updates to this repo.
+
+#### Also ensure that you run `git submodule update --recursive --remote`, followed by `./gradlew clean build` to check that you have the latest code from the common repo, before running or doing any updates to this repo.
 
 #### Note - This will also need doing the first time you run this from one of the VMs too!
