@@ -10,6 +10,7 @@ import utils._
 
 import scala.concurrent.duration._
 import scala.io.Source
+import scala.util.Random
 
 class XUI_Simulation extends Simulation {
 
@@ -26,6 +27,9 @@ class XUI_Simulation extends Simulation {
 	val UserFeederFPL = csv("UserDataFPL.csv").circular
 	val CaseworkerUserFeeder = csv("UserDataCaseworkers.csv").circular
 	val UserFeederCTSC = csv("UserDataCTSC.csv").circular
+
+	// For PRL Solicitor Scenario
+	val randomFeeder = Iterator.continually(Map("prl-percentage" -> Random.nextInt(100)))
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
@@ -61,6 +65,9 @@ class XUI_Simulation extends Simulation {
 	val fplTargetPerHour: Double = 30
 	val frTargetPerHour: Double = 100
 	val caseworkerTargetPerHour: Double = 1000
+	//This determines the percentage split of PRL journeys, by C100 or FL401
+	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
+
 
 	val rampUpDurationMins = 5
 	val rampDownDurationMins = 5
@@ -94,7 +101,7 @@ class XUI_Simulation extends Simulation {
 	/*===============================================================================================
 	* XUI Solicitor Private Law Scenario 
  	===============================================================================================*/
-	val PRLC100SolicitorScenario = scenario("***** Private Law C100 Create Case *****")
+	val PRLSolicitorScenario = scenario("***** Private Law Solicitor Scenario *****")
 		.exitBlockOnFail {
 			feed(UserFeederPRL)
       .exec(_.set("env", s"${env}")
@@ -580,8 +587,8 @@ class XUI_Simulation extends Simulation {
     //   CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
     //   NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
     //   NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),  
-    	 PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
-		 //PRLSolicitorScenario.inject(constantConcurrentUsers(10).during(10.minutes))
+    	 //PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+		 PRLSolicitorScenario.inject(constantConcurrentUsers(5).during(10.minutes))
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
     .maxDuration(75 minutes)
