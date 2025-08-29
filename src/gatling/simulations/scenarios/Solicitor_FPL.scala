@@ -298,7 +298,7 @@ object Solicitor_FPL {
   val fplGrounds =
 
     /*======================================================================================
-    Click on the 'Hearing urgency' link
+    Click on the 'Grounds for the application' link
     ======================================================================================*/
 
     group("XUI_FPL_140_GroundsForTheApplication") {
