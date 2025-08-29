@@ -7,7 +7,6 @@
     "applicantEmail": null,
     "solicitorName": "#{firmName}",
     "ApplicantOrganisationPolicy": {
-      "OrgPolicyCaseAssignedRole": "[APPSOLICITOR]",
       "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
@@ -71,7 +70,6 @@
     "appRespondentRep": "Yes",
     "rSolicitorName": "#{respondentOrgs(0)}",
     "RespondentOrganisationPolicy": {
-      "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
       "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
