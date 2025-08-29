@@ -154,7 +154,7 @@ object Solicitor_FR  {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/fr/FRAddRespondentDetails.json"))
-        .check(jsonPath("$.data.RespondentOrganisationPolicy.OrgPolicyCaseAssignedRole").is("[RESPSOLICITOR]")))
+        .check(jsonPath("$.data.appRespondentRep").is("Yes")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -266,7 +266,7 @@ object Solicitor_FR  {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/fr/FROtherDocuments.json"))
-        .check(substring("otherCollection")))
+        .check(substring("ApplicantOrganisationPolicy")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
