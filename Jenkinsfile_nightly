@@ -10,11 +10,11 @@ properties([
 
 
 
-@Library("Infrastructure") 
+@Library("Infrastructure")
 
 
 def product = "xui"
-def component = "MANAGE ORGANISATION"
+def component = "webapp"
 
 def secrets = [
         'ccd-perftest': [
@@ -35,7 +35,11 @@ withNightlyPipeline("java", product, component) {
 
     loadVaultSecrets(secrets)
 
-    enablePerformanceTest(30)
+    afterAlways('checkout') {
+        sh """ git submodule update --init --recursive"""
+    }
+
+    enablePerformanceTest(timeout=30, perfGatlingAlerts=true, perfRerunOnFail=true)
 
     after('performanceTest') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'functional-output/**/*'

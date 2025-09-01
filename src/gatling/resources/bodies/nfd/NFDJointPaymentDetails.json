@@ -2,12 +2,12 @@
   "data": {
     "pbaNumbers": {
       "value": {
-        "code": "82f92650-d346-4837-bc18-7c83531e70d7",
+        "code": "12fb13f2-960a-419d-895f-dd7955bd3da1",
         "label": "PBA0077597"
       },
       "list_items": [
         {
-          "code": "82f92650-d346-4837-bc18-7c83531e70d7",
+          "code": "12fb13f2-960a-419d-895f-dd7955bd3da1",
           "label": "PBA0077597"
         },
         {
@@ -48,18 +48,33 @@
     "applicant1StatementOfTruth": "Yes",
     "solSignStatementOfTruth": "Yes",
     "solStatementOfReconciliationName": "AppSolicitor",
-    "solStatementOfReconciliationFirm": "#{orgnames(0)}",
+    "solStatementOfReconciliationFirm": "#{orgname(0)}",
     "statementOfReconciliationComments": null,
     "solApplicationFeeInPounds": "#{feeInPounds}",
+    "applicationFeeServiceRequestReference": "#{applicationFeeRef}",
     "solPaymentHowToPay": "feePayByAccount",
+    "applicationFeeOrderSummary": {
+      "PaymentReference": null,
+      "PaymentTotal": "#{paymentTotal}",
+      "Fees": [
+        {
+          "value": {
+            "FeeCode": "#{feeCode}",
+            "FeeAmount": "#{feeAmount}",
+            "FeeDescription": "#{feeDescription}",
+            "FeeVersion": "#{feeVersion}"
+          }
+        }
+      ]
+    },
     "pbaNumbers": {
       "value": {
-        "code": "82f92650-d346-4837-bc18-7c83531e70d7",
+        "code": "12fb13f2-960a-419d-895f-dd7955bd3da1",
         "label": "PBA0077597"
       },
       "list_items": [
         {
-          "code": "82f92650-d346-4837-bc18-7c83531e70d7",
+          "code": "12fb13f2-960a-419d-895f-dd7955bd3da1",
           "label": "PBA0077597"
         },
         {

@@ -1,26 +1,5 @@
 {
   "data": {
-    "applicationFeeOrderSummary": {
-      "PaymentReference": null,
-      "PaymentTotal": "#{paymentTotal}",
-      "Fees": [
-        {
-          "value": {
-            "FeeCode": "#{feeCode}",
-            "FeeAmount": "#{feeAmount}",
-            "FeeDescription": "#{feeDescription}",
-            "FeeVersion": "#{feeVersion}"
-          }
-        }
-      ]
-    }
-  },
-  "event": {
-    "id": "solicitor-submit-application",
-    "summary": "",
-    "description": ""
-  },
-  "event_data": {
     "applicationType": "soleApplication",
     "divorceOrDissolution": "divorce",
     "solUrgentCase": "No",
@@ -37,12 +16,28 @@
     "applicant1PrayerFinancialOrdersChild": [
       "financialOrdersChild"
     ],
+
     "applicant1StatementOfTruth": "Yes",
     "solSignStatementOfTruth": "Yes",
     "solStatementOfReconciliationName": "AppSolicitor",
-    "solStatementOfReconciliationFirm": "#{orgnames(0)}",
+    "solStatementOfReconciliationFirm": "#{orgname(0)}",
     "statementOfReconciliationComments": null,
     "solApplicationFeeInPounds": "#{feeInPounds}",
+    "applicationFeeOrderSummary": {
+      "PaymentReference": null,
+      "PaymentTotal": "#{paymentTotal}",
+      "Fees": [
+        {
+          "value": {
+            "FeeCode": "#{feeCode}",
+            "FeeAmount": "#{feeAmount}",
+            "FeeDescription": "#{feeDescription}",
+            "FeeVersion": "#{feeVersion}"
+          }
+        }
+      ]
+    },
+    "applicationFeeServiceRequestReference": "#{applicationFeeRef}",
     "solPaymentHowToPay": "feePayByAccount",
     "pbaNumbers": {
       "value": {
@@ -60,21 +55,12 @@
         }
       ]
     },
-    "feeAccountReference": "PerfPayRef",
-    "applicationFeeOrderSummary": {
-      "PaymentReference": null,
-      "PaymentTotal": "#{paymentTotal}",
-      "Fees": [
-        {
-          "value": {
-            "FeeCode": "#{feeCode}",
-            "FeeAmount": "#{feeAmount}",
-            "FeeDescription": "#{feeDescription}",
-            "FeeVersion": "#{feeVersion}"
-          }
-        }
-      ]
-    }
+    "feeAccountReference": "PerfPayRef"
+  },
+  "event": {
+    "id": "solicitor-submit-application",
+    "summary": "",
+    "description": ""
   },
   "event_token": "#{event_token}",
   "ignore_warning": false,
