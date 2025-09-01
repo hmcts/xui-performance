@@ -12,7 +12,6 @@
   },
   "event_data": {
     #{NFDLabelsPopulated}
-    "isJudicialSeparation": "No",
     "coApplicant1IsDrafted": "No",
     "coApplicant1IsSubmitted": "No",
     "coApplicant2IsDrafted": null,
@@ -22,7 +21,7 @@
     "applicant1SolicitorName": "AppSolicitor",
     "applicant1SolicitorReference": "ApplicantSolRef",
     "applicant1SolicitorPhone": "07000000000",
-    "applicant1SolicitorEmail": "#{users(0)}",
+    "applicant1SolicitorEmail": "#{user(0)}",
     "applicant1SolicitorAgreeToReceiveEmailsCheckbox": [
       "Yes"
     ],
@@ -31,8 +30,8 @@
       "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
-        "OrganisationID": "#{orgrefs(0)}",
-        "OrganisationName": "#{orgnames(0)}"
+        "OrganisationID": "#{orgref(0)}",
+        "OrganisationName": "#{orgname(0)}"
       }
     },
     "applicant1ScreenHasMarriageBroken": "Yes",
@@ -44,7 +43,8 @@
     "marriageFormationType": "oppositeSexCouple",
     "applicant1Email": "applicant1@perftest12345.com",
     "applicant1PhoneNumber": "07000000000",
-    "applicant1Address": {
+    "applicant1AddressOverseas": "No",
+    "applicant1NonConfidentialAddress": {
       "AddressLine1": "#{addressLines(0)}",
       "AddressLine2": "#{addressLines(1)}",
       "AddressLine3": "",

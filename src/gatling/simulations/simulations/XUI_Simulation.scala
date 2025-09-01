@@ -1,17 +1,16 @@
 package simulations
 
+import io.gatling.commons.stats.assertion.Assertion
 import io.gatling.core.Predef._
+import io.gatling.core.controller.inject.open.OpenInjectionStep
+import io.gatling.core.pause.PauseType
 import io.gatling.http.Predef._
 import scenarios._
 import utils._
-
-import scala.io.Source
-import io.gatling.core.controller.inject.open.OpenInjectionStep
-import io.gatling.commons.stats.assertion.Assertion
-import io.gatling.core.pause.PauseType
+import xui._
 
 import scala.concurrent.duration._
-import scala.util.Random
+import scala.io.Source
 
 class XUI_Simulation extends Simulation {
 
@@ -23,7 +22,6 @@ class XUI_Simulation extends Simulation {
 	val UserFeederBailsJudge = csv("UserDataBailsJudge.csv").circular
 	val UserFeederProbate = csv("UserDataProbate.csv").circular
 	val UserFeederIAC = csv("UserDataIAC.csv").circular
-	val UserFeederDivorce = csv("UserDataDivorce.csv").circular
 	val UserFeederNFD = csv("UserDataNFD.csv").circular
 	val UserFeederFR = csv("UserDataFR.csv").circular
 	val UserFeederFPL = csv("UserDataFPL.csv").circular
@@ -35,8 +33,6 @@ class XUI_Simulation extends Simulation {
 	val nfdSoleLabelsPopulated = Source.fromResource("bodies/nfd/labels/soleLabelsPopulated.txt").mkString
 	val nfdJointLabelsInitialised = Source.fromResource("bodies/nfd/labels/jointLabelsInitialised.txt").mkString
 	val nfdJointLabelsPopulated = Source.fromResource("bodies/nfd/labels/jointLabelsPopulated.txt").mkString
-
-	val randomFeeder = Iterator.continually(Map("prl-percentage" -> Random.nextInt(100)))
 
 	/* TEST TYPE DEFINITION */
 	/* pipeline = nightly pipeline against the AAT environment (see the Jenkins_nightly file) */
@@ -57,19 +53,17 @@ class XUI_Simulation extends Simulation {
 	/* ******************************** */
 
 	/* PERFORMANCE TEST CONFIGURATION */
+	val prlC100TargetPerHour: Double = 66
+	val prlFL401TargetPerHour: Double = 34
 	val prlTargetPerHour: Double =  90
 	val bailsTargetPerHour: Double = 10
 	val probateTargetPerHour: Double = 250
 	val iacTargetPerHour: Double = 20
-	val divorceTargetPerHour: Double = 240
 	val nfdSoleTargetPerHour: Double = 120
 	val nfdJointTargetPerHour: Double = 120
 	val fplTargetPerHour: Double = 30
 	val frTargetPerHour: Double = 100
 	val caseworkerTargetPerHour: Double = 1000
-
-	//This determines the percentage split of PRL journeys, by C100 or FL401
-	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
 
 	val rampUpDurationMins = 5
 	val rampDownDurationMins = 5
@@ -101,7 +95,7 @@ class XUI_Simulation extends Simulation {
 	}
 
 	/*===============================================================================================
-	* XUI Solicitor Private Law Scenario 
+	* XUI Solicitor Private Law Scenario
  	===============================================================================================*/
 	val PRLSolicitorScenario = scenario("***** Private Law Create Case *****")
 		.exitBlockOnFail {
@@ -141,9 +135,9 @@ class XUI_Simulation extends Simulation {
 			.exec(CourtAdmin_PRL_C100.CourtAdminListHearing)
 			//List the hearing (Mimic request back from List Assist)
 				.exec(ListHearingLA.ListHearingC100)
-			//View hearings tab once listed 
+			//View hearings tab once listed
 			.exec(CourtAdmin_PRL_C100.CourtAdminHearingsTab)
-      } 
+      }
       {
       	//FL401 Journey
         exec(Solicitor_PRL_FL401.CreatePrivateLawCase)
@@ -171,7 +165,7 @@ class XUI_Simulation extends Simulation {
 			.exec(CourtAdmin_PRL_FL401.CourtAdminListHearing)
 			//List the hearing (Mimic request back from List Assist)
 				.exec(ListHearingLA.ListHearingFL401)
-			//View hearings tab once listed 
+			//View hearings tab once listed
 			.exec(CourtAdmin_PRL_FL401.CourtAdminHearingsTab)
         }
       .exec(Logout.XUILogout)
@@ -185,31 +179,31 @@ class XUI_Simulation extends Simulation {
 			feed(UserFeederBails)
 				.exec(_.set("env", s"${env}")
         .set("caseType", "Bail"))
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user}", "#{password}"))
         .exec(Solicitor_Bails.CreateBailApplication)
         .exec(Solicitor_Bails.SubmitBailApplication)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 
         .feed(UserFeederBailsAdmin)
-        .exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user}", "#{password}"))
         .exec(Solicitor_Bails.ConfirmLocation)
         .exec(Solicitor_Bails.ListCase)
-        .exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 
 				.feed(UserFeederBailsHO)
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user}", "#{password}"))
         .exec(Solicitor_Bails.UploadBailSummary)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 
 				.feed(UserFeederBailsJudge)
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user}", "#{password}"))
         .exec(Solicitor_Bails.RecordBailDecision)
         .exec(Solicitor_Bails.UploadSignedDecision)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 		}
 
 	/*===============================================================================================
@@ -220,15 +214,15 @@ class XUI_Simulation extends Simulation {
 			feed(UserFeederProbate)
 				.exec(_.set("env", s"${env}")
 							.set("caseType", "GrantOfRepresentation"))
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user}", "#{password}"))
 				.repeat(2) {
 					exec(Solicitor_Probate.CreateProbateCase)
 					.exec(Solicitor_Probate.AddDeceasedDetails)
 					.exec(Solicitor_Probate.AddApplicationDetails)
 					.exec(Solicitor_Probate.ReviewAndSubmitApplication) 
 				}
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 		}
 
 	/*===============================================================================================
@@ -239,29 +233,13 @@ class XUI_Simulation extends Simulation {
 			feed(UserFeederIAC)
 				.exec(_.set("env", s"${env}")
 							.set("caseType", "Asylum"))
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user}", "#{password}"))
 				.repeat(2) {
 					exec(Solicitor_IAC.CreateIACCase)
 					// .exec(Solicitor_IAC.shareacase) //Temp removed as the way to share a case is now done through the case list
 				}
-				.exec(Logout.XUILogout)
-		}
-
-	/*===============================================================================================
-	* XUI Solicitor Divorce Scenario
-	 ===============================================================================================*/
-	val DivorceSolicitorScenario = scenario("***** Divorce Create Case *****")
-		.exitBlockOnFail {
-			feed(UserFeederDivorce)
-				.exec(_.set("env", s"${env}")
-							.set("caseType", "DIVORCE"))
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
-				.repeat(2) {
-					exec(Solicitor_Divorce.CreateDivorceCase)
-				}
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 		}
 
 	/*===============================================================================================
@@ -280,50 +258,37 @@ class XUI_Simulation extends Simulation {
 				or session("users").as[Seq[String]].apply(0) without the DSL
 				 */
 				.exec { session =>
-					session.set("users", session("user").as[Array[AnyRef]].toSeq)
-						.set("passwords", session("password").as[Array[AnyRef]].toSeq)
-						.set("orgnames", session("orgname").as[Array[AnyRef]].toSeq)
-						.set("orgrefs", session("orgref").as[Array[AnyRef]].toSeq)
-
-						.set("env", s"${env}")
-						.set("caseType", "NFD")
-						.set("nfdCaseType", "sole")
-						.set("NFDLabelsInitialised", nfdSoleLabelsInitialised) //sets the initialised labels for JSON bodies
-						.set("NFDLabelsPopulated", nfdSoleLabelsPopulated) //sets the populated labels for JSON bodies
+					session
+					.set("env", s"${env}")
+					.set("caseType", "NFD")
+					.set("nfdCaseType", "sole")
+					.set("NFDLabelsInitialised", nfdSoleLabelsInitialised) //sets the initialised labels for JSON bodies
+					.set("NFDLabelsPopulated", nfdSoleLabelsPopulated) //sets the populated labels for JSON bodies
 				}
 
 				//Solicitor 1 - Divorce Application
-				.exec(Homepage.XUIHomePage)
-				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
-				.exec(session => session.set("user", session("users").as[Seq[String]].apply(0))
-					.set("password", session("passwords").as[Seq[String]].apply(0)))
-				.exec(Login.XUILogin)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user(0)}", "#{password(0)}"))
 				.exec(Solicitor_NFD.CreateNFDCase)
 				.exec(Solicitor_NFD.SignAndSubmitSole)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 				//Caseworker - Issue Application
 				.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-issue-application", "bodies/nfd/CWIssueApplication.json"))
-				//set 'user'/'password' to the second one (applicant2's solicitor) for assigning the case and login
-				.exec(session => session.set("user", session("users").as[Seq[String]].apply(1))
-					.set("password", session("passwords").as[Seq[String]].apply(1)))
 				//Update the case in CCD to assign it to the second solicitor
 				.exec(CCDAPI.AssignCase)
 				//Solicitor 2 - Respond to Divorce Application
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user(1)}", "#{password(1)}"))
 				.exec(Solicitor_NFD.RespondToNFDCase)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 				//Caseworker - Mark the Case as Awaiting Conditional Order (to bypass 20-week holding)
 				.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-progress-held-case", "bodies/nfd/CWAwaitingConditionalOrder.json"))
 				//Solicitor 1 - Apply for Conditional Order
-				.exec(Homepage.XUIHomePage)
-				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
-				.exec(session => session.set("user", session("users").as[Seq[String]].apply(0))
-					.set("password", session("passwords").as[Seq[String]].apply(0)))
-				.exec(Login.XUILogin)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user(0)}", "#{password(0)}"))
 				.exec(Solicitor_NFD.ApplyForCOSole)
 				.exec(Solicitor_NFD.SubmitCO)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 				//Legal Advisor - Grant Conditional Order
 				.exec(CCDAPI.CreateEvent("Legal", "DIVORCE", "NFD", "legal-advisor-make-decision", "bodies/nfd/LAMakeDecision.json"))
 				//Caseworker - Make Eligible for Final Order
@@ -341,10 +306,10 @@ class XUI_Simulation extends Simulation {
 					//set case as awaiting final order
 					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-progress-case-awaiting-final-order", "bodies/nfd/CWAwaitingFinalOrder.json"))
 				//Solicitor 1 - Apply for Final Order
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user(0)}", "#{password(0)}"))
 				.exec(Solicitor_NFD.ApplyForFO)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 				//Caseworker - Grant Final Order
 				.exec(
 					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-grant-final-order", "bodies/nfd/CWGrantFinalOrder.json"))
@@ -372,10 +337,7 @@ class XUI_Simulation extends Simulation {
 				or session("users").as[Seq[String]].apply(0) without the DSL
 				 */
 				.exec { session =>
-					session.set("users", session("user").as[Array[AnyRef]].toSeq)
-						.set("passwords", session("password").as[Array[AnyRef]].toSeq)
-						.set("orgnames", session("orgname").as[Array[AnyRef]].toSeq)
-						.set("orgrefs", session("orgref").as[Array[AnyRef]].toSeq)
+					session
 						.set("env", s"${env}")
 						.set("caseType", "NFD")
 						.set("nfdCaseType", "joint")
@@ -384,54 +346,39 @@ class XUI_Simulation extends Simulation {
 				}
 
 				//Solicitor 1 - Divorce Application
-				.exec(Homepage.XUIHomePage)
-				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
-				.exec(session => session.set("user", session("users").as[Seq[String]].apply(0))
-					.set("password", session("passwords").as[Seq[String]].apply(0)))
-				.exec(Login.XUILogin)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user(0)}", "#{password(0)}"))
 				.exec(Solicitor_NFD.CreateNFDCase)
 				.exec(Solicitor_NFD.JointInviteApplicant2)
-				.exec(Logout.XUILogout)
-				//set 'user'/'password' to the second one (applicant2's solicitor) for assigning the case and login
-				.exec(session => session.set("user", session("users").as[Seq[String]].apply(1))
-					.set("password", session("passwords").as[Seq[String]].apply(1)))
+				.exec(XuiHelper.Logout)
 				//Update the case in CCD to assign it to the second solicitor
 				.exec(CCDAPI.AssignCase)
 				//Solicitor 2 - Confirm Divorce Application
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user(1)}", "#{password(1)}"))
 				.exec(Solicitor_NFD.SubmitJointApplication)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 				//Solicitor 1 - Submit Application
-				.exec(Homepage.XUIHomePage)
-				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
-				.exec(session => session.set("user", session("users").as[Seq[String]].apply(0))
-					.set("password", session("passwords").as[Seq[String]].apply(0)))
-				.exec(Login.XUILogin)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user(0)}", "#{password(0)}"))
 				.exec(Solicitor_NFD.SignAndSubmitJoint)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 				//Caseworker - Issue Application
 				.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-issue-application", "bodies/nfd/CWIssueApplication.json"))
 				//Caseworker - Mark the Case as Awaiting Conditional Order (to bypass 20-week holding)
 				.exec(CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-progress-held-case", "bodies/nfd/CWAwaitingConditionalOrder.json"))
 				//Solicitor 1 - Apply for Conditional Order
-				.exec(Homepage.XUIHomePage)
-				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
-				.exec(session => session.set("user", session("users").as[Seq[String]].apply(0))
-					.set("password", session("passwords").as[Seq[String]].apply(0)))
-				.exec(Login.XUILogin)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user(0)}", "#{password(0)}"))
 				.exec(Solicitor_NFD.ApplyForCOJointApplicant1)
 				.exec(Solicitor_NFD.SubmitCO)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 				//Solicitor 2 - Apply for Conditional Order
-				.exec(Homepage.XUIHomePage)
-				//since two records were grabbed, set 'user'/'password' to the second one (applicant2's solicitor) for login
-				.exec(session => session.set("user", session("users").as[Seq[String]].apply(1))
-					.set("password", session("passwords").as[Seq[String]].apply(1)))
-				.exec(Login.XUILogin)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user(1)}", "#{password(1)}"))
 				.exec(Solicitor_NFD.ApplyForCOJointApplicant2)
 				.exec(Solicitor_NFD.SubmitCOJoint)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 				//Legal Advisor - Grant Conditional Order
 				.exec(CCDAPI.CreateEvent("Legal", "DIVORCE", "NFD", "legal-advisor-make-decision", "bodies/nfd/LAMakeDecision.json"))
 				//Caseworker - Make Eligible for Final Order
@@ -449,21 +396,15 @@ class XUI_Simulation extends Simulation {
 					//set case as awaiting final order
 					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "system-progress-case-awaiting-final-order", "bodies/nfd/CWAwaitingFinalOrder.json"))
 				//Solicitor 1 - Apply for Final Order
-				.exec(Homepage.XUIHomePage)
-				//since two records were grabbed, set 'user'/'password' to the first one (applicant1's solicitor) for login
-				.exec(session => session.set("user", session("users").as[Seq[String]].apply(0))
-					.set("password", session("passwords").as[Seq[String]].apply(0)))
-				.exec(Login.XUILogin)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user(0)}", "#{password(0)}"))
 				.exec(Solicitor_NFD.ApplyForFO)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 				//Solicitor 2 - Apply for Final Order
-				.exec(Homepage.XUIHomePage)
-				//since two records were grabbed, set 'user'/'password' to the second one (applicant1's solicitor) for login
-				.exec(session => session.set("user", session("users").as[Seq[String]].apply(1))
-					.set("password", session("passwords").as[Seq[String]].apply(1)))
-				.exec(Login.XUILogin)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user(1)}", "#{password(1)}"))
 				.exec(Solicitor_NFD.ApplyForFOJoint)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 				//Caseworker - Grant Final Order
 				.exec(
 					CCDAPI.CreateEvent("Caseworker", "DIVORCE", "NFD", "caseworker-grant-final-order", "bodies/nfd/CWGrantFinalOrder.json"))
@@ -483,12 +424,12 @@ class XUI_Simulation extends Simulation {
 			feed(UserFeederFR)
 				.exec(_.set("env", s"${env}")
 							.set("caseType", "FinancialRemedyMVP2"))
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user}", "#{password}"))
 				.repeat(2) {
 					exec(Solicitor_FR.CreateFRCase)
 				}
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 		}
 
 	/*===============================================================================================
@@ -499,8 +440,8 @@ class XUI_Simulation extends Simulation {
 			feed(UserFeederFPL)
 				.exec(_.set("env", s"${env}")
 							.set("caseType", "CARE_SUPERVISION_EPO"))
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user}", "#{password}"))
 				.exec(Solicitor_FPL.CreateFPLCase)
 				.exec(Solicitor_FPL.fplOrdersAndDirections)
 				.exec(Solicitor_FPL.fplHearingUrgency)
@@ -512,12 +453,12 @@ class XUI_Simulation extends Simulation {
 				.exec(Solicitor_FPL.fplSubmitApplication)
 				.exec(Solicitor_FPL.fplReturnToCase)
         //.exec(Solicitor_FPL.QueryManagement) //Temporarily removing QM until FPL is onboarded in XUI master
-        .exec(Logout.XUILogout)
+        .exec(XuiHelper.Logout)
         //.feed(UserFeederCTSC)
         //.exec(Homepage.XUIHomePage)
 				//.exec(Login.XUILogin)
         //.exec(Solicitor_FPL.RespondToQueryManagement)
-				//.exec(Logout.XUILogout)
+				//.exec(XuiHelper.Logout)
 		}
 
 	/*===============================================================================================
@@ -529,8 +470,8 @@ class XUI_Simulation extends Simulation {
 				//TODO: UPDATE caseType with something more dynamic
 				.exec(_.set("env", s"${env}")
 							.set("caseType", "NFD"))
-				.exec(Homepage.XUIHomePage)
-				.exec(Login.XUILogin)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user}", "#{password}"))
 				.exec(Caseworker_Navigation.ApplyFilter)
 				.exec(Caseworker_Navigation.SortByLastModifiedDate)
 				.exec(Caseworker_Navigation.LoadPage2)
@@ -542,7 +483,7 @@ class XUI_Simulation extends Simulation {
           .exec(Caseworker_Navigation.ViewDocument)
 				}
 				.exec(Caseworker_Navigation.LoadCaseList)
-				.exec(Logout.XUILogout)
+				.exec(XuiHelper.Logout)
 		}
 
 	/*===============================================================================================
@@ -555,16 +496,16 @@ class XUI_Simulation extends Simulation {
 			case "perftest" =>
 				if (debugMode == "off") {
 					Seq(
-						rampUsersPerSec(0.00) to (userPerSecRate) during (rampUpDurationMins minutes),
-						constantUsersPerSec(userPerSecRate) during (testDurationMins minutes),
-						rampUsersPerSec(userPerSecRate) to (0.00) during (rampDownDurationMins minutes)
+						rampUsersPerSec(0.00) to (userPerSecRate) during (rampUpDurationMins.minutes),
+						constantUsersPerSec(userPerSecRate) during (testDurationMins.minutes),
+						rampUsersPerSec(userPerSecRate) to (0.00) during (rampDownDurationMins.minutes)
 					)
 				}
 				else {
 					Seq(atOnceUsers(1))
 				}
 			case "pipeline" =>
-				Seq(rampUsers(numberOfPipelineUsers.toInt) during (2 minutes))
+				Seq(rampUsers(numberOfPipelineUsers.toInt) during (2.minutes))
 			case _ =>
 				Seq(nothingFor(0))
 		}
@@ -576,7 +517,7 @@ class XUI_Simulation extends Simulation {
 			case "perftest" | "pipeline" => //currently using the same assertions for a performance test and the pipeline
 				if (debugMode == "off") {
 					Seq(global.successfulRequests.percent.gte(95),
-						details("XUI_PRL_C100_620_SubmitAndPayNow").successfulRequests.percent.gte(80),
+						details("XUI_PRL_C100_700_SubmitAndPayNow").successfulRequests.percent.gte(80),
 						details("XUI_PRL_FL401_490_SOTSubmit").successfulRequests.percent.gte(80),
 						details("XUI_Bails_770_Upload_Signed_Notice_Submit").successfulRequests.percent.gte(80),
 						details("XUI_Probate_330_ViewCase").successfulRequests.percent.gte(80),
@@ -596,18 +537,18 @@ class XUI_Simulation extends Simulation {
 	}
 
   setUp(
-    //   BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-    //   ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
-    //   ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
-    //   FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-    //   // DivorceSolicitorScenario.inject(simulationProfile(testType, divorceTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
-    //   FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-    //   CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-    //   NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-    //   NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),  
-    	 PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
-		 //PRLSolicitorScenario.inject(constantConcurrentUsers(10).during(10.minutes))
+			PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
-    .maxDuration(75 minutes)
+    .maxDuration(75.minutes)
 }
