@@ -478,7 +478,7 @@ object Solicitor_PRL_FL401 {
     * Applicant Details
     ======================================================================================*/
 
-    //.exec(Common.postcodeLookup)
+    .exec(Common.postcodeLookup)
 
     .group("XUI_PRL_FL401_200_ApplicantDetails") {
       exec(http("XUI_PRL_FL401_200_005_ApplicantDetails")
@@ -590,7 +590,7 @@ object Solicitor_PRL_FL401 {
     * Respondent Details
     ======================================================================================*/
 
-    //.exec(Common.postcodeLookup)
+    .exec(Common.postcodeLookup)
 
     .group("XUI_PRL_FL401_230_RespondentDetails") {
       exec(http("XUI_PRL_FL401_230_005_RespondentDetails")
@@ -1020,7 +1020,7 @@ object Solicitor_PRL_FL401 {
     * Complete The Home Details
     ======================================================================================*/
 
-    //.exec(Common.postcodeLookup)
+    .exec(Common.postcodeLookup)
 
     .group("XUI_PRL_FL401_360_TheHome") {
       exec(http("XUI_PRL_FL401_360_005_TheHome")
