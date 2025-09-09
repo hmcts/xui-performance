@@ -504,7 +504,7 @@ object Solicitor_PRL_C100 {
 
     .group("XUI_PRL_C100_240_ApplicantDetails") {
       exec(Common.caseShareOrgs)
-      .exec(Common.postcodeLookup)
+      //.exec(Common.postcodeLookup)
 
       .exec(http("XUI_PRL_C100_240_015_ApplicantDetailValidate")
         .post("/data/case-types/PRLAPPS/validate?pageId=applicantsDetails1")
@@ -526,7 +526,7 @@ object Solicitor_PRL_C100 {
     ======================================================================================*/
 
     .group("XUI_PRL_C100_250_ApplicantDetailsCheckYourAnswers") {
-      exec(Common.postcodeLookup)
+      //exec(Common.postcodeLookup)
 
       .exec(http("XUI_PRL_C100_250_005_ApplicantDetailsCheckYourAnswers")
         .post("/data/cases/#{caseId}/events")
@@ -626,9 +626,9 @@ object Solicitor_PRL_C100 {
     ======================================================================================*/
 
     .group("XUI_PRL_C100_290_ChildDetailsAdditionalDetails") {
-      exec(Common.postcodeLookup)
+      //exec(Common.postcodeLookup)
 
-      .exec(http("XUI_PRL_C100_290_005_ChildDetailsAdditionalDetails")
+      exec(http("XUI_PRL_C100_290_005_ChildDetailsAdditionalDetails")
         .post("/data/case-types/PRLAPPS/validate?pageId=childDetailsRevised2")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -674,7 +674,7 @@ object Solicitor_PRL_C100 {
     ======================================================================================*/
 
     group("XUI_PRL_C100_310_RespondentDetailsRedirect") {
-      exec(Common.postcodeLookup)
+      //exec(Common.postcodeLookup)
 
       .exec(http("XUI_PRL_C100_310_005_RespondentDetailsRedirect")
         .get("/cases/case-details/#{caseId}/trigger/respondentsDetails/respondentsDetails1")
@@ -725,7 +725,7 @@ object Solicitor_PRL_C100 {
 
     .group("XUI_PRL_C100_330_RespondentDetailsAddNew") {
       exec(Common.caseShareOrgs)
-      .exec(Common.postcodeLookup)
+      //.exec(Common.postcodeLookup)
 
       .exec(http("XUI_PRL_C100_330_005_RespondentDetailsAddNew")
         .post("/data/case-types/PRLAPPS/validate?pageId=respondentsDetails1")
