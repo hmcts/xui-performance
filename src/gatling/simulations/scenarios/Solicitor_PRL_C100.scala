@@ -528,7 +528,7 @@ object Solicitor_PRL_C100 {
     .group("XUI_PRL_C100_250_ApplicantDetailsCheckYourAnswers") {
       //exec(Common.postcodeLookup)
 
-      .exec(http("XUI_PRL_C100_250_005_ApplicantDetailsCheckYourAnswers")
+      exec(http("XUI_PRL_C100_250_005_ApplicantDetailsCheckYourAnswers")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -676,7 +676,7 @@ object Solicitor_PRL_C100 {
     group("XUI_PRL_C100_310_RespondentDetailsRedirect") {
       //exec(Common.postcodeLookup)
 
-      .exec(http("XUI_PRL_C100_310_005_RespondentDetailsRedirect")
+      exec(http("XUI_PRL_C100_310_005_RespondentDetailsRedirect")
         .get("/cases/case-details/#{caseId}/trigger/respondentsDetails/respondentsDetails1")
         .headers(Headers.navigationHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
