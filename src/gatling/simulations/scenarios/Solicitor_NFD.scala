@@ -176,7 +176,7 @@ object Solicitor_NFD {
     //Not calling postcode lookup here, as it will override the applicant's address in the session.
     // Will just use the same address for both applicants
 
-    //.exec(Common.postcodeLookup)
+    .exec(Common.postcodeLookup)
 
     .group("XUI_NFD_100_RespondentRepresented") {
       exec(http("XUI_NFD_100_005_RespondentRepresented")
