@@ -68,7 +68,7 @@ object Barrister_PRL_FL401 {
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("#{currentPath}/src/gatling/resources/bodies/prl/FL401/PRLDraftAnOrderOptions.json"))
+          .body(ElFileBody("bodies/prl/fl401/PRLDraftAnOrderOptions.json"))
           .check(substring("c7ResponseSubmitted"))
           .check(status.is(200)))
 
@@ -83,7 +83,7 @@ object Barrister_PRL_FL401 {
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("#{currentPath}/src/gatling/resources/bodies/prl/FL401/PRLDraftAnOrderType.json"))
+          .body(ElFileBody("bodies/prl/fl401/PRLDraftAnOrderType.json"))
           .check(substring("typesOfApplication"))
           .check(status.is(200)))
 
@@ -98,7 +98,7 @@ object Barrister_PRL_FL401 {
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("#{currentPath}/src/gatling/resources/bodies/prl/FL401/PRLDraftAnOrderDetails.json"))
+          .body(ElFileBody("bodies/prl/fl401/PRLDraftAnOrderDetails.json"))
           .check(substring("caseNameHmctsInternal"))
           .check(status.is(200)))
 
@@ -113,7 +113,7 @@ object Barrister_PRL_FL401 {
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("#{currentPath}/src/gatling/resources/bodies/prl/FL401/PRLDraftAnOrderHearingOutcome.json"))
+          .body(ElFileBody("bodies/prl/fl401/PRLDraftAnOrderHearingOutcome.json"))
           .check(substring("judgeOrMagistratesLastName"))
           .check(status.is(200)))
 
@@ -128,7 +128,7 @@ object Barrister_PRL_FL401 {
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("bodies/prl/FL401/PRLDraftAnOrderHearingDetails.json"))
+          .body(ElFileBody("bodies/prl/fl401/PRLDraftAnOrderHearingDetails.json"))
           .check(jsonPath("$.data.previewOrderDoc.document_hash").saveAs("document_hash"))
           .check(jsonPath("$.data.previewOrderDoc.document_url").saveAs("document_url"))
           .check(jsonPath("$.data.previewOrderDoc.document_binary_url").saveAs("document_binary_url"))
@@ -147,7 +147,7 @@ object Barrister_PRL_FL401 {
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("#{currentPath}/src/gatling/resources/bodies/prl/FL401/PRLDraftAnOrderPreview.json"))
+          .body(ElFileBody("bodies/prl/fl401/PRLDraftAnOrderPreview.json"))
           .check(substring("previewOrderDoc"))
           .check(status.is(200)))
 
@@ -162,7 +162,7 @@ object Barrister_PRL_FL401 {
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("#{currentPath}/src/gatling/resources/bodies/prl/FL401/PRLDraftAnOrderEvent.json"))
+          .body(ElFileBody("bodies/prl/fl401/PRLDraftAnOrderEvent.json"))
           .check(substring("missingAddressWarningText"))
           .check(status.is(201)))
     }
