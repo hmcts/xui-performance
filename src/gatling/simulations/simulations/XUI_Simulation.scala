@@ -150,7 +150,7 @@ class XUI_Simulation extends Simulation {
 					"appBarristerFirm" -> session("barristerFirm").as[String],
 					"appBarristerFirstName" -> session("barristerFirstName").as[String],
 					"appBarristerLastName" -> session("barristerLastName").as[String],
-
+					//removed the variable
 					)
 				)
 				.feed(UserFeederPRLBarrister)
