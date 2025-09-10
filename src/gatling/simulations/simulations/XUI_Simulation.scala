@@ -76,8 +76,8 @@ class XUI_Simulation extends Simulation {
 	val fplTargetPerHour: Double = 30
 	val frTargetPerHour: Double = 100
 	val caseworkerTargetPerHour: Double = 1000
-	val prlC100BarristerTargetPerHour: Double = 16
-	val prlFL401BarristerTargetPerHour: Double = 10
+	val prlC100BarristerTargetPerHour: Double = 19
+	val prlFL401BarristerTargetPerHour: Double = 12
 	//This determines the percentage split of PRL journeys, by C100 or FL401
 	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
 
@@ -718,9 +718,9 @@ class XUI_Simulation extends Simulation {
 	}
 
   setUp(
-			PRLC100BarristerScenario.inject(simulationProfile(testType, prlC100BarristerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-			PRLFL401BarristerScenario.inject(simulationProfile(testType, prlFL401BarristerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
-			//PRLC100BarristerScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption)
+			//PRLC100BarristerScenario.inject(simulationProfile(testType, prlC100BarristerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			//PRLFL401BarristerScenario.inject(simulationProfile(testType, prlFL401BarristerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+			PRLC100BarristerScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption)
 			//PRLFL401BarristerScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption)
 			//PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 			//PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),

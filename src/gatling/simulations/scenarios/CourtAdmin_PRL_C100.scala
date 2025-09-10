@@ -1176,7 +1176,7 @@ val CourtAdminHearingsTab =
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("bodies/prl/C100/PRLServiceOfApplicationDetails.json"))
+          .body(ElFileBody("bodies/prl/c100/PRLServiceOfApplicationDetails.json"))
           .check(substring("serviceOfApplicationHeader"))
           .check(status.is(200)))
 
@@ -1191,7 +1191,7 @@ val CourtAdminHearingsTab =
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("bodies/prl/C100/PRLServiceOfApplicationDetailsSubmit.json"))
+          .body(ElFileBody("bodies/prl/c100/PRLServiceOfApplicationDetailsSubmit.json"))
           .check(substring("FPRL Child Arrangements"))
           .check(status.is(200)))
 
@@ -1206,7 +1206,7 @@ val CourtAdminHearingsTab =
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("bodies/prl/C100/PRLServiceOfApplicationEvent.json"))
+          .body(ElFileBody("bodies/prl/c100/PRLServiceOfApplicationEvent.json"))
           .check(substring("I understand that proceedings for contempt of court"))
           .check(status.is(201)))
     }
@@ -1255,7 +1255,7 @@ val CourtAdminHearingsTab =
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("bodies/prl/C100/PRLFinalOrder.json"))
+          .body(ElFileBody("bodies/prl/c100/PRLFinalOrder.json"))
           .check(substring("solicitorRepresented"))
           .check(status.is(200)))
 
@@ -1270,7 +1270,7 @@ val CourtAdminHearingsTab =
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("bodies/prl/C100/PRLFinalOrderDetails.json"))
+          .body(ElFileBody("bodies/prl/c100/PRLFinalOrderDetails.json"))
           .check(substring("solicitorRepresented"))
           .check(status.is(200)))
 
@@ -1285,7 +1285,7 @@ val CourtAdminHearingsTab =
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("bodies/prl/C100/PRLFinalOrderEvent.json"))
+          .body(ElFileBody("bodies/prl/c100/PRLFinalOrderEvent.json"))
           .check(substring("ALL_FINAL_ORDERS_ISSUED"))
           .check(status.is(201)))
     }
