@@ -1530,7 +1530,7 @@ object Solicitor_PRL_FL401 {
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("#{currentPath}/src/gatling/resources/bodies/prl/FL401/PRLAddBarrister.json"))
+          .body(ElFileBody("bodies/prl/fl401/PRLAddBarrister.json"))
           .check(substring("perf_barrister"))
           .check(status.is(200)))
 
@@ -1541,7 +1541,7 @@ object Solicitor_PRL_FL401 {
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("#{currentPath}/src/gatling/resources/bodies/prl/FL401/PRLAddBarristerEvent.json"))
+          .body(ElFileBody("bodies/prl/fl401/PRLAddBarristerEvent.json"))
           .check(substring("perf_barrister"))
           .check(status.is(201)))
 
@@ -1586,7 +1586,7 @@ object Solicitor_PRL_FL401 {
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("#{currentPath}/src/gatling/resources/bodies/prl/fl401/PRLRemoveBarrister.json"))
+          .body(ElFileBody("bodies/prl/fl401/PRLRemoveBarrister.json"))
           .check(substring("barristerOrg"))
           .check(status.is(200)))
 
@@ -1597,7 +1597,7 @@ object Solicitor_PRL_FL401 {
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("#{currentPath}/src/gatling/resources/bodies/prl/fl401/PRLRemoveBarristerEvent.json"))
+          .body(ElFileBody("bodies/prl/fl401/PRLRemoveBarristerEvent.json"))
           .check(substring("Statement of truth and submit"))
           .check(status.is(201)))
     }

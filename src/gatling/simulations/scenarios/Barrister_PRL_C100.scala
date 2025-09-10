@@ -77,7 +77,7 @@ object Barrister_PRL_C100 {
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("#{currentPath}/src/gatling/resources/bodies/prl/c100/PRLAddDocument.json"))
+          .body(ElFileBody("bodies/prl/c100/PRLAddDocument.json"))
           .check(substring("isCurrentAddressKnown"))
           .check(status.is(200)))
 
@@ -88,7 +88,7 @@ object Barrister_PRL_C100 {
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("#{currentPath}/src/gatling/resources/bodies/prl/c100/PRLAddDocumentEvent.json"))
+          .body(ElFileBody("bodies/prl/c100/PRLAddDocumentEvent.json"))
           .check(substring("newAllegationsOfHarmDomesticAbuseYesNo"))
           .check(status.is(201)))
 
@@ -147,7 +147,7 @@ object Barrister_PRL_C100 {
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("#{currentPath}/src/gatling/resources/bodies/prl/c100/PRLAddDocumentRespondent.json"))
+          .body(ElFileBody("bodies/prl/c100/PRLAddDocumentRespondent.json"))
           .check(substring("isCurrentAddressKnown"))
           .check(status.is(200)))
 
@@ -158,7 +158,7 @@ object Barrister_PRL_C100 {
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("#{currentPath}/src/gatling/resources/bodies/prl/c100/PRLAddDocumentEventRespondent.json"))
+          .body(ElFileBody("bodies/prl/c100/PRLAddDocumentEventRespondent.json"))
           .check(substring("newAllegationsOfHarmDomesticAbuseYesNo"))
           .check(status.is(201)))
 
