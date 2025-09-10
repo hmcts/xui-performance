@@ -1,0 +1,36 @@
+{
+   "data": {
+      "allocatedBarrister": {
+         "partyList": {
+            "value": {
+               "code":"#{appCode1}",
+               "label":"#{appLabel1}"
+            },
+            "list_items": [
+               {
+                  "code":"#{appCode1}",
+                  "label":"#{appLabel1}"
+               },
+               {
+                  "code":"#{appCode2}",
+                  "label":"#{appLabel2}"
+               }
+            ]
+         },
+         "barristerFirstName": null,
+         "barristerLastName": null,
+         "barristerEmail": null,
+         "barristerOrg": {
+            "OrganisationID": null,
+            "OrganisationName": null
+         }
+      }
+   },
+   "event": {
+      "id": "adminRemoveBarrister",
+      "summary": "",
+      "description": ""
+   },
+   "event_token": "#{event_token}",
+   "ignore_warning": false
+}

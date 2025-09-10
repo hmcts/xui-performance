@@ -1,0 +1,72 @@
+{
+   "data": {
+      "serviceOfApplicationHeader": null,
+      "isConfidential": "Yes",
+      "serviceOfApplicationScreen1": {
+         "value": [
+            {
+               "code":"#{appCode1}",
+               "label":"#{appLabel1}"
+            }
+         ],
+         "list_items": [
+            {
+               "code":"#{appCode1}",
+               "label":"#{appLabel1}"
+            }
+         ]
+      },
+      "pd36qLetter": {
+         "document_url": "#{pd36qLetter_document_url}",
+         "document_binary_url": "#{pd36qLetter_document_binary_url}",
+         "document_filename": "BarristerDocument.pdf"
+      },
+      "specialArrangementsLetter": {
+         "document_url": "#{specialArrangementsLetter_document_url}",
+         "document_binary_url": "#{specialArrangementsLetter_document_binary_url}",
+         "document_filename": "BarristerDocument.pdf"
+      },
+      "additionalDocumentsList": [],
+      "soaIsOrderListEmpty": "No",
+      "missingAddressWarningText": "<div class='govuk-warning-text'><span class='govuk-warning-text__icon' aria-hidden='true'>!</span><strong class='govuk-warning-text__text'>There is no postal address for other people in the case</strong></div>"
+   },
+   "event": {
+      "id": "serviceOfApplication",
+      "summary": "",
+      "description": ""
+   },
+   "event_data": {
+      "serviceOfApplicationHeader": null,
+      "isConfidential": "Yes",
+      "serviceOfApplicationScreen1": {
+         "value": [
+            {
+               "code":"#{appCode1}",
+               "label":"#{appLabel1}"
+            }
+         ],
+         "list_items": [
+            {
+               "code":"#{appCode1}",
+               "label":"#{appLabel1}"
+            }
+         ]
+      },
+      "pd36qLetter": {
+         "document_url": "#{pd36qLetter_document_url}",
+         "document_binary_url": "#{pd36qLetter_document_binary_url}",
+         "document_filename": "BarristerDocument.pdf"
+      },
+      "specialArrangementsLetter": {
+         "document_url": "#{specialArrangementsLetter_document_url}",
+         "document_binary_url": "#{specialArrangementsLetter_document_binary_url}",
+         "document_filename": "BarristerDocument.pdf"
+      },
+      "additionalDocumentsList": [],
+      "soaIsOrderListEmpty": "No",
+      "missingAddressWarningText": "<div class='govuk-warning-text'><span class='govuk-warning-text__icon' aria-hidden='true'>!</span><strong class='govuk-warning-text__text'>There is no postal address for other people in the case</strong></div>"
+   },
+   "event_token": "#{event_token}",
+   "ignore_warning": false,
+   "case_reference": "#{caseId}"
+}

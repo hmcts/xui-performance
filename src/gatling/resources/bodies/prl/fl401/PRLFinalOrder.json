@@ -1,0 +1,16 @@
+{
+   "data": {
+      "isTheDecisionAboutAllChildren": "Yes"
+   },
+   "event": {
+      "id": "recordFinalDecision",
+      "summary": "",
+      "description": ""
+   },
+   "event_data": {
+      "isTheDecisionAboutAllChildren": "Yes"
+   },
+   "event_token": "#{event_token}",
+   "ignore_warning": false,
+   "case_reference": "#{caseId}"
+}

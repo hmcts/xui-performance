@@ -2,7 +2,10 @@ package scenarios
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
+import scenarios.Barrister_PRL_C100.{MaxThinkTime, MinThinkTime}
+import scenarios.CourtAdmin_PRL_C100.{MaxThinkTime, MinThinkTime}
 import utils.{Common, CsrfCheck, Environment, Headers}
+
 import java.io.{BufferedWriter, FileWriter}
 
 /*===============================================================================================================
@@ -741,6 +744,204 @@ val CourtAdminHearingsTab =
       .exec(Common.caseActivityPost)
     }
     .pause(MinThinkTime, MaxThinkTime)
+
+
+  val ServiceOfApplicationFL401 =
+
+    /*======================================================================================
+    * Run ServiceOfApplication task
+    ======================================================================================*/
+
+    group("XUI_PRL_FL401progress_400_ServiceOfApplication") {
+      exec(http("XUI_PRL_FL401progress_400_010_ServiceOfApplicationPrivateLaw")
+        .get("/workallocation/case/tasks/#{caseId}/event/adminAddBarrister/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("task_required_for_event"))
+        .check(status.is(200)))
+
+        .pause(MinThinkTime, MaxThinkTime)
+
+        .exec(http("XUI_PRL_FL401progress_400_020_ServiceOfApplicationTask_EventTrigger")
+          .get("/data/internal/cases/#{caseId}/event-triggers/serviceOfApplication?ignore-warning=false")
+          .headers(Headers.commonHeader)
+          .header("Accept", "application/json, text/plain, */*")
+          .check(jsonPath("$.case_fields[7].value.list_items[0].code").saveAs("appCodeOrder1"))
+          .check(jsonPath("$.case_fields[7].value.list_items[0].label").saveAs("appLabelOrder1"))
+          .check(jsonPath("$.case_fields[30].value.list_items[0].code").saveAs("appCode1"))
+          .check(jsonPath("$.case_fields[30].value.list_items[0].label").saveAs("appLabel1"))
+          .check(jsonPath("$.case_fields[30].value.list_items[1].code").saveAs("appCode2"))
+          .check(jsonPath("$.case_fields[30].value.list_items[1].label").saveAs("appLabel2"))
+          .check(jsonPath("$.event_token").saveAs("event_token"))
+          .check(substring("Event to serve the parties"))
+          .check(status.is(200)))
+
+        .pause(MinThinkTime, MaxThinkTime)
+
+        /*======================================================================================
+        * Document Upload
+        ======================================================================================*/
+
+        .exec(http("XUI_PRL_FL401progress_200_030_ServiceOfApplicationTask_Upload")
+          .post("/documents")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/json, text/plain, */*")
+          .header("content-type", "multipart/form-data")
+          .bodyPart(RawFileBodyPart("files", "BarristerDocument.pdf")
+            .fileName("BarristerDocument.pdf")
+            .transferEncoding("binary"))
+          .asMultipartForm
+          .formParam("classification", "PUBLIC")
+          .formParam("caseTypeId", "PRLAPPS")
+          .formParam("jurisdictionId", "PRIVATELAW")
+          .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("document_url"))
+          .check(jsonPath("$._embedded.documents[0]._links.binary.href").saveAs("document_binary_url"))
+          .check(substring("originalDocumentName"))
+          .check(status.is(200)))
+
+        .pause(MinThinkTime, MaxThinkTime)
+
+        /*======================================================================================
+        * Select the Draft Order
+        ======================================================================================*/
+
+        .exec(http("XUI_PRL_FL401progress_400_040_ServiceOfApplicationDetails")
+          .post("/data/case-types/PRLAPPS/validate?pageId=serviceOfApplication2")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/fl401/PRLServiceOfApplicationDetails.json"))
+          .check(substring("serviceOfApplicationHeader"))
+          .check(status.is(200)))
+
+        .pause(MinThinkTime, MaxThinkTime)
+
+        /*======================================================================================
+        * Enter final decision details
+        ======================================================================================*/
+
+        .exec(http("XUI_PRL_FL401progress_400_040_ServiceOfApplicationDetailsSubmit")
+          .post("/data/case-types/PRLAPPS/validate?pageId=serviceOfApplication4")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/fl401/PRLServiceOfApplicationDetailsSubmit.json"))
+          .check(substring("FPRL Child Arrangements"))
+          .check(status.is(200)))
+
+        .pause(MinThinkTime, MaxThinkTime)
+
+        /*======================================================================================
+        * ServiceOfApplication Event
+        ======================================================================================*/
+
+        .exec(http("XUI_PRL_FL401progress_400_050_ServiceOfApplicationEvent")
+          .post("/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/fl401/PRLServiceOfApplicationEvent.json"))
+          .check(substring("I understand that proceedings for contempt of court"))
+          .check(status.is(201)))
+    }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+  val FinalDecisionFL401 =
+
+    /*======================================================================================
+    * Run recordFinalDecision task
+    ======================================================================================*/
+
+    group("XUI_PRL_FL401progress_500_FinalOrder") {
+      exec(http("XUI_PRL_FL401progress_500_010_FinalOrderPrivateLaw")
+        .get("/workallocation/case/tasks/#{caseId}/event/adminAddBarrister/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("task_required_for_event"))
+        .check(status.is(200)))
+
+        .pause(MinThinkTime, MaxThinkTime)
+
+        .exec(http("XUI_PRL_FL401progress_500_020_FinalOrderTask_EventTrigger")
+          .get("/data/internal/cases/#{caseId}/event-triggers/recordFinalDecision?ignore-warning=false")
+          .headers(Headers.commonHeader)
+          .header("Accept", "application/json, text/plain, */*")
+          .check(jsonPath("$.event_token").saveAs("event_token"))
+          .check(substring("Record final decision"))
+          .check(status.is(200)))
+
+        .pause(MinThinkTime, MaxThinkTime)
+
+        /*======================================================================================
+        * Upload Doc
+        ======================================================================================*/
+
+        .exec(http("XUI_PRL_FL401progress_500_030_FinalOrderTask_Upload")
+          .post("/documents")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/json, text/plain, */*")
+          .header("content-type", "multipart/form-data")
+          .bodyPart(RawFileBodyPart("files", "BarristerDocument.pdf")
+            .fileName("BarristerDocument.pdf")
+            .transferEncoding("binary"))
+          .asMultipartForm
+          .formParam("classification", "PUBLIC")
+          .formParam("caseTypeId", "PRLAPPS")
+          .formParam("jurisdictionId", "PRIVATELAW")
+          .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("document_url"))
+          .check(jsonPath("$._embedded.documents[0]._links.binary.href").saveAs("document_binary_url"))
+          .check(substring("originalDocumentName"))
+          .check(status.is(200)))
+
+        .pause(MinThinkTime, MaxThinkTime)
+
+        /*======================================================================================
+        * Select final order
+        ======================================================================================*/
+
+        .exec(http("XUI_PRL_FL401progress_500_040_FinalOrderDetails")
+          .post("/data/case-types/PRLAPPS/validate?pageId=recordFinalDecision1")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/fl401/PRLFinalOrder.json"))
+          .check(substring("fl401UploadWitnessDocuments"))
+          .check(status.is(200)))
+
+        .pause(MinThinkTime, MaxThinkTime)
+
+        /*======================================================================================
+        * Enter final order details
+        ======================================================================================*/
+
+        .exec(http("XUI_PRL_FL401progress_500_040_FinalOrderDetailsSubmit")
+          .post("/data/case-types/PRLAPPS/validate?pageId=recordFinalDecision2")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/fl401/PRLFinalOrderDetails.json"))
+          .check(substring("solicitorRepresented"))
+          .check(status.is(200)))
+
+        .pause(MinThinkTime, MaxThinkTime)
+
+        /*======================================================================================
+        * Final order Event
+        ======================================================================================*/
+
+        .exec(http("XUI_PRL_FL401progress_500_050_FinalOrderEvent")
+          .post("/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/fl401/PRLFinalOrderEvent.json"))
+          .check(substring("ALL_FINAL_ORDERS_ISSUED"))
+          .check(status.is(201)))
+    }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
 }
 
 //Write applicant access code to file

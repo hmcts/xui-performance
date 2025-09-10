@@ -1,0 +1,62 @@
+{
+   "data": {
+      "isConfidential": "Yes",
+      "serviceOfApplicationHeader": null,
+      "sentDocumentPlaceHolder": "<details class='govuk-details'>\n\n<summary class='govuk-details__summary'>\n\n<h3 class='govuk-details__summary-text'>\n\nDocuments served in the pack\n\n</h3>\n\n</summary>\n\n<div class='govuk-details__text'>\n\nCertain documents will be automatically included in the pack that is sent out on parties (the people in the case).\n\nThis includes:\n\n<ul><li>an application form (FL401)</li><li>witness statement</li><li>privacy notice</li><li>cover letter (if not represented)</li></ul>\n\nYou do not need to upload these documents yourself.\n\n</div>\n\n</details>",
+      "serviceOfApplicationScreen1": {
+         "value": [
+            {
+               "code":"#{appCodeOrder1}",
+               "label":"#{appLabelOrder1}"
+            }
+         ],
+         "list_items": [
+            {
+               "code":"#{appCodeOrder1}",
+               "label":"#{appLabelOrder1}"
+            }
+         ]
+      },
+      "noticeOfSafetySupportLetter": {
+         "document_url": "#{document_url}",
+         "document_binary_url": "#{document_binary_url}",
+         "document_filename": "BarristerDocument.pdf"
+      },
+      "additionalDocumentsList": [],
+      "caseTypeOfApplication": "FL401",
+      "soaIsOrderListEmpty": "No",
+      "missingAddressWarningText": "",
+      "displayLegalRepOption": "Yes",
+      "isC8CheckNeeded": null,
+      "responsibleForService": null,
+      "isOccupationOrderSelected": null,
+      "isApplicantRepresented": "Yes",
+      "productHearingBundleOn": null,
+      "soaServeToRespondentOptions": "No",
+      "soaRecipientsOptions": {
+         "value": [
+            {
+               "code":"#{appCode2}",
+               "label":"#{appLabel2}"
+            }
+         ],
+         "list_items": [
+            {
+               "code":"#{appCode1}",
+               "label":"#{appLabel1}"
+            },
+            {
+               "code":"#{appCode2}",
+               "label":"#{appLabel2}"
+            }
+         ]
+      }
+   },
+   "event": {
+      "id": "serviceOfApplication",
+      "summary": "",
+      "description": ""
+   },
+   "event_token": "#{event_token}",
+   "ignore_warning": false
+}
