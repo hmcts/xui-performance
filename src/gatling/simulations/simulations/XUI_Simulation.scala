@@ -11,6 +11,9 @@ import xui._
 import elasticSearchFeeder._
 import scenarios.Solicitor_FPL.{now, patternDate}
 
+import scala.concurrent.duration._
+import scala.io.Source
+import scala.util.Random
 import java.time.format.DateTimeFormatter
 import scala.concurrent.duration._
 import scala.io.Source
@@ -31,6 +34,9 @@ class XUI_Simulation extends Simulation {
 	val UserFeederFPL = csv("UserDataFPL.csv").circular
 	val CaseworkerUserFeeder = csv("UserDataCaseworkers.csv").circular
 	val UserFeederCTSC = csv("UserDataCTSC.csv").circular
+
+	// For PRL Solicitor Scenario
+	//val randomFeeder = Iterator.continually(Map("prl-percentage" -> Random.nextInt(100)))
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
@@ -72,6 +78,9 @@ class XUI_Simulation extends Simulation {
 	val caseworkerTargetPerHour: Double = 1000
 	val prlC100BarristerTargetPerHour: Double = 16
 	val prlFL401BarristerTargetPerHour: Double = 10
+	//This determines the percentage split of PRL journeys, by C100 or FL401
+	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
+
 
 	val rampUpDurationMins = 5
 	val rampDownDurationMins = 5
@@ -252,6 +261,7 @@ class XUI_Simulation extends Simulation {
 	/*===============================================================================================
 	* XUI Solicitor Private Law Scenario - C100
  	===============================================================================================*/
+	val PRLSolicitorScenario = scenario("***** Private Law Solicitor Scenario *****")
 	val PRLC100OriginalScenario = scenario("***** Private Law C100 Create Case *****")
 		.exitBlockOnFail {
 			feed(UserFeederPRL)
@@ -405,6 +415,9 @@ class XUI_Simulation extends Simulation {
 					exec(Solicitor_IAC.CreateIACCase)
 					// .exec(Solicitor_IAC.shareacase) //Temp removed as the way to share a case is now done through the case list
 				}
+				.exec(Logout.XUILogout)
+		}
+
 				.exec(XuiHelper.Logout)
 		}
 
@@ -703,6 +716,17 @@ class XUI_Simulation extends Simulation {
 	}
 
   setUp(
+    //   BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+    //   ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
+    //   ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
+    //   FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+    //   // DivorceSolicitorScenario.inject(simulationProfile(testType, divorceTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
+    //   FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+    //   CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+    //   NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+    //   NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),  
+    	 //PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+		 PRLSolicitorScenario.inject(constantConcurrentUsers(5).during(10.minutes))
 			PRLC100BarristerScenario.inject(simulationProfile(testType, prlC100BarristerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			PRLFL401BarristerScenario.inject(simulationProfile(testType, prlFL401BarristerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 			//PRLC100BarristerScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption)
