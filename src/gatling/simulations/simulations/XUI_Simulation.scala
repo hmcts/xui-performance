@@ -150,7 +150,6 @@ class XUI_Simulation extends Simulation {
 					"appBarristerFirm" -> session("barristerFirm").as[String],
 					"appBarristerFirstName" -> session("barristerFirstName").as[String],
 					"appBarristerLastName" -> session("barristerLastName").as[String],
-						"currentPath" -> session("currentPath").as[String]
 
 					)
 				)
@@ -163,7 +162,6 @@ class XUI_Simulation extends Simulation {
 						"defBarristerFirm" -> session("barristerFirm").as[String],
 						"defBarristerFirstName" -> session("barristerFirstName").as[String],
 						"defBarristerLastName" -> session("barristerLastName").as[String],
-						"currentPath" -> session("currentPath").as[String]
 					))
 				.exec(getCaseC100(caseIdFeederC100))
 				.exec(_.set("env", s"${env}")
