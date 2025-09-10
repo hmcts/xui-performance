@@ -149,7 +149,11 @@ class XUI_Simulation extends Simulation {
 					"appBarristerPassword" -> session("barristerPassword").as[String],
 					"appBarristerFirm" -> session("barristerFirm").as[String],
 					"appBarristerFirstName" -> session("barristerFirstName").as[String],
-					"appBarristerLastName" -> session("barristerLastName").as[String]))
+					"appBarristerLastName" -> session("barristerLastName").as[String],
+						"currentPath" -> session("currentPath").as[String]
+
+					)
+				)
 				.feed(UserFeederPRLBarrister)
 				.exec(session =>
 					session.setAll(
@@ -158,7 +162,9 @@ class XUI_Simulation extends Simulation {
 						"defBarristerPassword" -> session("barristerPassword").as[String],
 						"defBarristerFirm" -> session("barristerFirm").as[String],
 						"defBarristerFirstName" -> session("barristerFirstName").as[String],
-						"defBarristerLastName" -> session("barristerLastName").as[String]))
+						"defBarristerLastName" -> session("barristerLastName").as[String],
+						"currentPath" -> session("currentPath").as[String]
+					))
 				.exec(getCaseC100(caseIdFeederC100))
 				.exec(_.set("env", s"${env}")
 				.set("caseType", "PRLAPPS"))

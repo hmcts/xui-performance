@@ -810,7 +810,7 @@ val CourtAdminHearingsTab =
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("bodies/prl/fl401/PRLServiceOfApplicationDetails.json"))
+          .body(ElFileBody("#{currentPath}/src/gatling/resources/bodies/prl/fl401/PRLServiceOfApplicationDetails.json"))
           .check(substring("serviceOfApplicationHeader"))
           .check(status.is(200)))
 
@@ -825,7 +825,7 @@ val CourtAdminHearingsTab =
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("bodies/prl/fl401/PRLServiceOfApplicationDetailsSubmit.json"))
+          .body(ElFileBody("#{currentPath}/src/gatling/resources/bodies/prl/fl401/PRLServiceOfApplicationDetailsSubmit.json"))
           .check(substring("FPRL Child Arrangements"))
           .check(status.is(200)))
 
@@ -840,7 +840,7 @@ val CourtAdminHearingsTab =
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("bodies/prl/fl401/PRLServiceOfApplicationEvent.json"))
+          .body(ElFileBody("#{currentPath}/src/gatling/resources/bodies/prl/fl401/PRLServiceOfApplicationEvent.json"))
           .check(substring("I understand that proceedings for contempt of court"))
           .check(status.is(201)))
     }
@@ -905,7 +905,7 @@ val CourtAdminHearingsTab =
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("bodies/prl/fl401/PRLFinalOrder.json"))
+          .body(ElFileBody("#{currentPath}/src/gatling/resources/bodies/prl/fl401/PRLFinalOrder.json"))
           .check(substring("fl401UploadWitnessDocuments"))
           .check(status.is(200)))
 
@@ -920,7 +920,7 @@ val CourtAdminHearingsTab =
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("bodies/prl/fl401/PRLFinalOrderDetails.json"))
+          .body(ElFileBody("#{currentPath}/src/gatling/resources/bodies/prl/fl401/PRLFinalOrderDetails.json"))
           .check(substring("solicitorRepresented"))
           .check(status.is(200)))
 
@@ -935,7 +935,7 @@ val CourtAdminHearingsTab =
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("bodies/prl/fl401/PRLFinalOrderEvent.json"))
+          .body(ElFileBody("#{currentPath}/src/gatling/resources/bodies/prl/fl401/PRLFinalOrderEvent.json"))
           .check(substring("ALL_FINAL_ORDERS_ISSUED"))
           .check(status.is(201)))
     }
