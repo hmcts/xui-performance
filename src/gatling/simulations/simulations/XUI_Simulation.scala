@@ -76,8 +76,8 @@ class XUI_Simulation extends Simulation {
 	val fplTargetPerHour: Double = 30
 	val frTargetPerHour: Double = 100
 	val caseworkerTargetPerHour: Double = 1000
-	val prlC100BarristerTargetPerHour: Double = 19
-	val prlFL401BarristerTargetPerHour: Double = 12
+	val prlC100BarristerTargetPerHour: Double = 17
+	val prlFL401BarristerTargetPerHour: Double = 11
 	//This determines the percentage split of PRL journeys, by C100 or FL401
 	val prlC100Percentage = 66 //Percentage of C100s (the rest will be FL401s) - should be 66 for the 2:1 ratio
 
@@ -112,8 +112,8 @@ class XUI_Simulation extends Simulation {
 	}
 
 	//Elastic search is being used to identify appropriate cases for Barrister scenarios
-	val iterationsC100 = if (debugMode == "off") CalculateRecordsRequired.calculate(prlC100BarristerTargetPerHour*2, rampUpDurationMins, testDurationMins, rampDownDurationMins) else 1
-	val iterationsFL401 = if (debugMode == "off") CalculateRecordsRequired.calculate(prlFL401BarristerTargetPerHour*2, rampUpDurationMins, testDurationMins, rampDownDurationMins) else 1
+	val iterationsC100 = if (debugMode == "off") CalculateRecordsRequired.calculate(prlC100BarristerTargetPerHour*3, rampUpDurationMins, testDurationMins, rampDownDurationMins) else 1
+	val iterationsFL401 = if (debugMode == "off") CalculateRecordsRequired.calculate(prlFL401BarristerTargetPerHour*3, rampUpDurationMins, testDurationMins, rampDownDurationMins) else 1
 	val currentPath: String = System.getProperty("user.dir")
 
 	val caseIdFeederC100 = ElasticSearchCaseFeeder.feeder(
