@@ -262,7 +262,6 @@ class XUI_Simulation extends Simulation {
 	* XUI Solicitor Private Law Scenario - C100
  	===============================================================================================*/
 	val PRLSolicitorScenario = scenario("***** Private Law Solicitor Scenario *****")
-	val PRLC100OriginalScenario = scenario("***** Private Law C100 Create Case *****")
 		.exitBlockOnFail {
 			feed(UserFeederPRL)
 				.exec(_.set("env", s"${env}")
@@ -415,11 +414,9 @@ class XUI_Simulation extends Simulation {
 					exec(Solicitor_IAC.CreateIACCase)
 					// .exec(Solicitor_IAC.shareacase) //Temp removed as the way to share a case is now done through the case list
 				}
-				.exec(Logout.XUILogout)
-		}
-
 				.exec(XuiHelper.Logout)
 		}
+
 
 	/*===============================================================================================
 	* XUI Solicitor NFD Scenario (Sole Application)
@@ -595,6 +592,7 @@ class XUI_Simulation extends Simulation {
 				session
 		}*/
 
+
 	/*===============================================================================================
 	* XUI Solicitor Financial Remedy (FR) Scenario
 	 ===============================================================================================*/
@@ -716,21 +714,10 @@ class XUI_Simulation extends Simulation {
 	}
 
   setUp(
-    //   BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-    //   ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
-    //   ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
-    //   FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-    //   // DivorceSolicitorScenario.inject(simulationProfile(testType, divorceTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption), 
-    //   FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-    //   CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-    //   NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-    //   NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),  
-    	 //PRLSolicitorScenario.inject(simulationProfile(testType, prlTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
-		 PRLSolicitorScenario.inject(constantConcurrentUsers(5).during(10.minutes))
-			PRLC100BarristerScenario.inject(simulationProfile(testType, prlC100BarristerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-			PRLFL401BarristerScenario.inject(simulationProfile(testType, prlFL401BarristerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+			//PRLC100BarristerScenario.inject(simulationProfile(testType, prlC100BarristerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+			//PRLFL401BarristerScenario.inject(simulationProfile(testType, prlFL401BarristerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 			//PRLC100BarristerScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption)
-			//PRLFL401BarristerScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption)
+			PRLFL401BarristerScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption)
 			//PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 			//PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       //BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
@@ -745,4 +732,5 @@ class XUI_Simulation extends Simulation {
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
     .maxDuration(75.minutes)
+
 }
