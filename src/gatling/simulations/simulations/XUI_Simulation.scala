@@ -8,13 +8,17 @@ import io.gatling.http.Predef._
 import scenarios._
 import utils._
 import xui._
+import elasticSearchFeeder._
+import scenarios.Solicitor_FPL.{now, patternDate}
 
+import java.time.format.DateTimeFormatter
 import scala.concurrent.duration._
 import scala.io.Source
 
 class XUI_Simulation extends Simulation {
 
 	val UserFeederPRL = csv("UserDataPRL.csv").circular
+	val UserFeederPRLBarrister = csv("UserDataPRLBarristerList.csv").circular
 	val UserFeederPRLCourtAdmin = csv("UserDataPRLCourtAdmin.csv").circular
 	val UserFeederBails = csv("UserDataBails.csv").circular
 	val UserFeederBailsHO = csv("UserDataBailsHO.csv").circular
@@ -33,6 +37,8 @@ class XUI_Simulation extends Simulation {
 	val nfdSoleLabelsPopulated = Source.fromResource("bodies/nfd/labels/soleLabelsPopulated.txt").mkString
 	val nfdJointLabelsInitialised = Source.fromResource("bodies/nfd/labels/jointLabelsInitialised.txt").mkString
 	val nfdJointLabelsPopulated = Source.fromResource("bodies/nfd/labels/jointLabelsPopulated.txt").mkString
+
+	val patternDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
 	/* TEST TYPE DEFINITION */
 	/* pipeline = nightly pipeline against the AAT environment (see the Jenkins_nightly file) */
@@ -64,6 +70,8 @@ class XUI_Simulation extends Simulation {
 	val fplTargetPerHour: Double = 30
 	val frTargetPerHour: Double = 100
 	val caseworkerTargetPerHour: Double = 1000
+	val prlC100BarristerTargetPerHour: Double = 16
+	val prlFL401BarristerTargetPerHour: Double = 10
 
 	val rampUpDurationMins = 5
 	val rampDownDurationMins = 5
@@ -94,81 +102,239 @@ class XUI_Simulation extends Simulation {
 		println(s"Debug Mode: ${debugMode}")
 	}
 
+	//Elastic search is being used to identify appropriate cases for Barrister scenarios
+	val iterationsC100 = if (debugMode == "off") CalculateRecordsRequired.calculate(prlC100BarristerTargetPerHour*2, rampUpDurationMins, testDurationMins, rampDownDurationMins) else 1
+	val iterationsFL401 = if (debugMode == "off") CalculateRecordsRequired.calculate(prlFL401BarristerTargetPerHour*2, rampUpDurationMins, testDurationMins, rampDownDurationMins) else 1
+	val currentPath: String = System.getProperty("user.dir")
+
+	val caseIdFeederC100 = ElasticSearchCaseFeeder.feeder(
+		esIndices.PRL,
+		s"${currentPath}/src/gatling/resources/bodies/prl/c100/C100_ElasticSearch_Query.json",
+		FeederType.RANDOM,
+		iterationsC100)
+
+	val caseIdFeederFL401 = ElasticSearchCaseFeeder.feeder(
+		esIndices.PRL,
+		s"${currentPath}/src/gatling/resources/bodies/prl/fl401/FL401_ElasticSearch_Query.json",
+		FeederType.RANDOM,
+		iterationsFL401)
+
+	def getCaseC100(caseIdFeederC100: Iterator[Map[String, Any]]) =
+		feed(caseIdFeederC100)
+
+	def getCaseFL401(caseIdFeederFL401: Iterator[Map[String, Any]]) =
+		feed(caseIdFeederFL401)
+
+
 	/*===============================================================================================
-	* XUI Solicitor Private Law Scenario
- 	===============================================================================================*/
-	val PRLSolicitorScenario = scenario("***** Private Law Create Case *****")
+* XUI Solicitor Private Law C100 Scenario
+ ===============================================================================================*/
+	val PRLC100BarristerScenario = scenario("***** Private Law C100 Create Case *****")
 		.exitBlockOnFail {
 			feed(UserFeederPRL)
-      .exec(_.set("env", s"${env}")
-            .set("caseType", "PRLAPPS"))
-      .exec(Homepage.XUIHomePage)
-      .exec(Login.XUILogin)
-		.feed(randomFeeder)
-		.doIfOrElse(session => session("prl-percentage").as[Int] < prlC100Percentage) {
-			//C100 Journey
-			exec(Solicitor_PRL_C100.CreatePrivateLawCase)
-			.exec(Solicitor_PRL_C100.TypeOfApplication)
-			.exec(Solicitor_PRL_C100.HearingUrgency)
-			.exec(Solicitor_PRL_C100.ApplicantDetails)
-			.exec(Solicitor_PRL_C100.ChildDetails)
-			.exec(Solicitor_PRL_C100.RespondentDetails)
-			.exec(Solicitor_PRL_C100.AllegationsOfHarm)
-			.exec(Solicitor_PRL_C100.OtherChildrenNotInCase)
-			.exec(Solicitor_PRL_C100.OtherPeopleInCase)
-			.exec(Solicitor_PRL_C100.ChildrenAndApplicants)
-			.exec(Solicitor_PRL_C100.ChildrenAndRespondents)
-			.exec(Solicitor_PRL_C100.ChildrenAndOtherPeople)
-			.exec(Solicitor_PRL_C100.MIAM)
-			.exec(Solicitor_PRL_C100.ViewPdfApplication)
-			.exec(Solicitor_PRL_C100.SubmitAndPay)
-			//.exec(Solicitor_PRL_C100.HearingsTab) //Remove? **
-		.exec(Logout.XUILogout)
-		//C100 Case Progression
-		.feed(UserFeederPRLCourtAdmin)
-		.exec(Homepage.XUIHomePage)
-		.exec(Login.XUILogin)
-			.exec(CourtAdmin_PRL_C100.CourtAdminCheckApplication)
-			.exec(CourtAdmin_PRL_C100.CourtAdminSendToGateKeeper)
-			.exec(CourtAdmin_PRL_C100.CourtAdminManageOrders)
-			.exec(CourtAdmin_PRL_C100.CourtAdminServiceApplication)
-			.exec(CourtAdmin_PRL_C100.CourtAdminListHearing)
-			//List the hearing (Mimic request back from List Assist)
-				.exec(ListHearingLA.ListHearingC100)
-			//View hearings tab once listed
-			.exec(CourtAdmin_PRL_C100.CourtAdminHearingsTab)
-      }
-      {
-      	//FL401 Journey
-        exec(Solicitor_PRL_FL401.CreatePrivateLawCase)
-        .exec(Solicitor_PRL_FL401.TypeOfApplication)
-        .exec(Solicitor_PRL_FL401.WithoutNoticeOrder)
-        .exec(Solicitor_PRL_FL401.ApplicantDetails)
-        .exec(Solicitor_PRL_FL401.RespondentDetails)
-        .exec(Solicitor_PRL_FL401.ApplicantsFamily)
-        .exec(Solicitor_PRL_FL401.Relationship)
-        .exec(Solicitor_PRL_FL401.Behaviour)
-        .exec(Solicitor_PRL_FL401.TheHome)
-        .exec(Solicitor_PRL_FL401.UploadDocuments)
-        .exec(Solicitor_PRL_FL401.ViewPDF)
-        .exec(Solicitor_PRL_FL401.StatementOfTruth)
-        //.exec(Solicitor_PRL_FL401.HearingsTab)
-				.exec(Logout.XUILogout)
-		//FL401 Case Progression
-		.feed(UserFeederPRLCourtAdmin)
-		.exec(Homepage.XUIHomePage)
-		.exec(Login.XUILogin)
-			.exec(CourtAdmin_PRL_FL401.CourtAdminCheckApplication)
-			.exec(CourtAdmin_PRL_FL401.CourtAdminSendToGateKeeper)
-			.exec(CourtAdmin_PRL_FL401.CourtAdminManageOrders)
-			.exec(CourtAdmin_PRL_FL401.CourtAdminServiceApplication)
-			.exec(CourtAdmin_PRL_FL401.CourtAdminListHearing)
-			//List the hearing (Mimic request back from List Assist)
-				.exec(ListHearingLA.ListHearingFL401)
-			//View hearings tab once listed
-			.exec(CourtAdmin_PRL_FL401.CourtAdminHearingsTab)
-        }
-      .exec(Logout.XUILogout)
+				.feed(UserFeederPRLBarrister)
+				.exec(session =>
+					session.setAll(
+					"appOrgID" -> session("orgID").as[String],
+					"appBarristerUser" -> session("barristerUser").as[String],
+					"appBarristerPassword" -> session("barristerPassword").as[String],
+					"appBarristerFirm" -> session("barristerFirm").as[String],
+					"appBarristerFirstName" -> session("barristerFirstName").as[String],
+					"appBarristerLastName" -> session("barristerLastName").as[String]))
+				.feed(UserFeederPRLBarrister)
+				.exec(session =>
+					session.setAll(
+						"defOrgID" -> session("orgID").as[String],
+						"defBarristerUser" -> session("barristerUser").as[String],
+						"defBarristerPassword" -> session("barristerPassword").as[String],
+						"defBarristerFirm" -> session("barristerFirm").as[String],
+						"defBarristerFirstName" -> session("barristerFirstName").as[String],
+						"defBarristerLastName" -> session("barristerLastName").as[String]))
+				.exec(getCaseC100(caseIdFeederC100))
+				.exec(_.set("env", s"${env}")
+				.set("caseType", "PRLAPPS"))
+				.feed(UserFeederPRLCourtAdmin)
+				.exec(_.set("currentDate", now.format(patternDate)))
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
+				.exec(CourtAdmin_PRL_C100.AddBarristerC100Applicant)
+				.exec(XuiHelper.Logout)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{appBarristerUser}", "#{appBarristerPassword}"))
+				.exec(Barrister_PRL_C100.AddDocumentC100Applicant)
+				.exec(XuiHelper.Logout)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
+				.exec(CourtAdmin_PRL_C100.AddBarristerC100Defendent)
+				.exec(XuiHelper.Logout)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{defBarristerUser}", "#{defBarristerPassword}"))
+				.exec(Barrister_PRL_C100.AddDocumentC100Respondent)
+				.exec(XuiHelper.Logout)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
+				.exec(CourtAdmin_PRL_C100.ServiceOfApplicationC100)
+				.exec(CourtAdmin_PRL_C100.FinalDecisionC100)
+				.exec(XuiHelper.Logout)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
+				.exec(CourtAdmin_PRL_C100.RemoveBarristerC100Applicant)
+				.exec(CourtAdmin_PRL_C100.RemoveBarristerC100Defendent)
+				.exec(XuiHelper.Logout)
+		}
+
+
+	/*===============================================================================================
+* XUI Solicitor Private Law C100 Scenario
+ ===============================================================================================*/
+	val PRLFL401BarristerScenario = scenario("***** Private Law FL401 Create Case *****")
+		.exitBlockOnFail {
+			feed(UserFeederPRL)
+				.feed(UserFeederPRLBarrister)
+				.exec(session =>
+					session.setAll(
+						"appOrgID" -> session("orgID").as[String],
+						"appBarristerUser" -> session("barristerUser").as[String],
+						"appBarristerPassword" -> session("barristerPassword").as[String],
+						"appBarristerFirm" -> session("barristerFirm").as[String],
+						"appBarristerFirstName" -> session("barristerFirstName").as[String],
+						"appBarristerLastName" -> session("barristerLastName").as[String]))
+				.exec(_.set("currentDate", now.format(patternDate)))
+				.exec(getCaseFL401(caseIdFeederFL401))
+				.exec(_.set("env", s"${env}")
+				.set("caseType", "PRLAPPS"))
+				.feed(UserFeederPRLCourtAdmin)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
+				.exec(Solicitor_PRL_FL401.AddBarristerFL401Applicant)
+				.exec(XuiHelper.Logout)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{appBarristerUser}", "#{appBarristerPassword}"))
+				.exec(Barrister_PRL_FL401.DraftAnOrderFL401)
+				.exec(XuiHelper.Logout)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
+				.exec(CourtAdmin_PRL_FL401.ServiceOfApplicationFL401)
+				.exec(CourtAdmin_PRL_FL401.FinalDecisionFL401)
+				.exec(XuiHelper.Logout)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
+				.exec(Solicitor_PRL_FL401.RemoveBarristerFL401Applicant)
+				.exec(XuiHelper.Logout)
+		}
+
+	/*===============================================================================================
+	* XUI Solicitor Private Law FL401 Scenario
+ 	===============================================================================================*/
+	val PRLFL401SolicitorScenario = scenario("***** Private Law FL401 Create Case *****")
+		.exitBlockOnFail {
+			feed(UserFeederPRL)
+				.exec(_.set("env", s"${env}")
+					.set("caseType", "PRLAPPS"))
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user}", "#{password}"))
+				.exec(Solicitor_PRL_FL401.CreatePrivateLawCase)
+				.exec(Solicitor_PRL_FL401.TypeOfApplication)
+				.exec(Solicitor_PRL_FL401.WithoutNoticeOrder)
+				.exec(Solicitor_PRL_FL401.ApplicantDetails)
+				.exec(Solicitor_PRL_FL401.RespondentDetails)
+				.exec(Solicitor_PRL_FL401.ApplicantsFamily)
+				.exec(Solicitor_PRL_FL401.Relationship)
+				.exec(Solicitor_PRL_FL401.Behaviour)
+				.exec(Solicitor_PRL_FL401.TheHome)
+				.exec(Solicitor_PRL_FL401.UploadDocuments)
+				.exec(Solicitor_PRL_FL401.ViewPDF)
+				.exec(Solicitor_PRL_FL401.StatementOfTruth)
+				.exec(Solicitor_PRL_FL401.HearingsTab)
+				.exec(XuiHelper.Logout)
+		}
+
+	/*===============================================================================================
+	* XUI Solicitor Private Law Scenario - C100
+ 	===============================================================================================*/
+	val PRLC100OriginalScenario = scenario("***** Private Law C100 Create Case *****")
+		.exitBlockOnFail {
+			feed(UserFeederPRL)
+				.exec(_.set("env", s"${env}")
+					.set("caseType", "PRLAPPS"))
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user}", "#{password}"))
+				.feed(UserFeederPRL)
+					//C100 Journey
+					exec(Solicitor_PRL_C100.CreatePrivateLawCase)
+						.exec(Solicitor_PRL_C100.TypeOfApplication)
+						.exec(Solicitor_PRL_C100.HearingUrgency)
+						.exec(Solicitor_PRL_C100.ApplicantDetails)
+						.exec(Solicitor_PRL_C100.ChildDetails)
+						.exec(Solicitor_PRL_C100.RespondentDetails)
+						.exec(Solicitor_PRL_C100.AllegationsOfHarm)
+						.exec(Solicitor_PRL_C100.OtherChildrenNotInCase)
+						.exec(Solicitor_PRL_C100.OtherPeopleInCase)
+						.exec(Solicitor_PRL_C100.ChildrenAndApplicants)
+						.exec(Solicitor_PRL_C100.ChildrenAndRespondents)
+						.exec(Solicitor_PRL_C100.ChildrenAndOtherPeople)
+						.exec(Solicitor_PRL_C100.MIAM)
+						.exec(Solicitor_PRL_C100.ViewPdfApplication)
+						.exec(Solicitor_PRL_C100.SubmitAndPay)
+						//.exec(Solicitor_PRL_C100.HearingsTab) //Remove? **
+						.exec(XuiHelper.Logout)
+						//C100 Case Progression
+						.feed(UserFeederPRLCourtAdmin)
+						.exec(XuiHelper.Homepage)
+						.exec(XuiHelper.Logout)
+						.exec(CourtAdmin_PRL_C100.CourtAdminCheckApplication)
+						.exec(CourtAdmin_PRL_C100.CourtAdminSendToGateKeeper)
+						.exec(CourtAdmin_PRL_C100.CourtAdminManageOrders)
+						.exec(CourtAdmin_PRL_C100.CourtAdminServiceApplication)
+						.exec(CourtAdmin_PRL_C100.CourtAdminListHearing)
+						//List the hearing (Mimic request back from List Assist)
+						.exec(ListHearingLA.ListHearingC100)
+						//View hearings tab once listed
+						.exec(CourtAdmin_PRL_C100.CourtAdminHearingsTab)
+
+		}
+
+	/*===============================================================================================
+	* XUI Solicitor Private Law Scenario - FL401
+ 	===============================================================================================*/
+	val PRLFL401OriginalScenario = scenario("***** Private Law FL401 Create Case *****")
+		.exitBlockOnFail {
+			feed(UserFeederPRL)
+				.exec(_.set("env", s"${env}")
+					.set("caseType", "PRLAPPS"))
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user}", "#{password}"))
+				.feed(UserFeederPRL)
+					//FL401 Journey
+					exec(Solicitor_PRL_FL401.CreatePrivateLawCase)
+						.exec(Solicitor_PRL_FL401.TypeOfApplication)
+						.exec(Solicitor_PRL_FL401.WithoutNoticeOrder)
+						.exec(Solicitor_PRL_FL401.ApplicantDetails)
+						.exec(Solicitor_PRL_FL401.RespondentDetails)
+						.exec(Solicitor_PRL_FL401.ApplicantsFamily)
+						.exec(Solicitor_PRL_FL401.Relationship)
+						.exec(Solicitor_PRL_FL401.Behaviour)
+						.exec(Solicitor_PRL_FL401.TheHome)
+						.exec(Solicitor_PRL_FL401.UploadDocuments)
+						.exec(Solicitor_PRL_FL401.ViewPDF)
+						.exec(Solicitor_PRL_FL401.StatementOfTruth)
+						//.exec(Solicitor_PRL_FL401.HearingsTab)
+						.exec(XuiHelper.Logout)
+						//FL401 Case Progression
+						.feed(UserFeederPRLCourtAdmin)
+						.exec(XuiHelper.Homepage)
+						.exec(XuiHelper.Login("#{user}", "#{password}"))
+						.exec(CourtAdmin_PRL_FL401.CourtAdminCheckApplication)
+						.exec(CourtAdmin_PRL_FL401.CourtAdminSendToGateKeeper)
+						.exec(CourtAdmin_PRL_FL401.CourtAdminManageOrders)
+						.exec(CourtAdmin_PRL_FL401.CourtAdminServiceApplication)
+						.exec(CourtAdmin_PRL_FL401.CourtAdminListHearing)
+						//List the hearing (Mimic request back from List Assist)
+						.exec(ListHearingLA.ListHearingFL401)
+						//View hearings tab once listed
+						.exec(CourtAdmin_PRL_FL401.CourtAdminHearingsTab)
+						.exec(XuiHelper.Logout)
+
 		}
 
 	/*===============================================================================================
@@ -537,16 +703,20 @@ class XUI_Simulation extends Simulation {
 	}
 
   setUp(
-			PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-			PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-			NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-			NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-			FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			PRLC100BarristerScenario.inject(simulationProfile(testType, prlC100BarristerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			PRLFL401BarristerScenario.inject(simulationProfile(testType, prlFL401BarristerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+			//PRLC100BarristerScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption)
+			//PRLFL401BarristerScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption)
+			//PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+			//PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      //BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      //ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      //ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			//NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			//NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      //FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			//FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      //CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
