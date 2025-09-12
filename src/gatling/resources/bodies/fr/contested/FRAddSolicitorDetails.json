@@ -1,0 +1,69 @@
+{
+  "data": {
+    "applicantSolicitorName": "#{firmName}",
+    "ApplicantOrganisationPolicy": {
+      "OrgPolicyReference": null,
+      "PrepopulateToUsersOrganisation": null,
+      "LastNoCRequestedBy": null,
+      "Organisation": {
+        "OrganisationID": "#{applicantOrgs(1)}",
+        "OrganisationName": "#{applicantOrgs(0)}"
+      },
+      "PreviousOrganisations": []
+    },
+    "applicantSolicitorFirm": "#{firmName}",
+    "solicitorReference": "#{firmRef}",
+    "applicantSolicitorAddress": {
+      "AddressLine1": "#{firmAddress1}",
+      "AddressLine2": "#{firmAddress2}",
+      "AddressLine3": "#{firmAddress3}",
+      "PostTown": "#{firmPostTown}",
+      "County": "#{firmCounty}",
+      "PostCode": "#{firmPostcode}",
+      "Country": "UK"
+    },
+    "applicantSolicitorPhone": "07777777777",
+    "applicantSolicitorEmail": "#{firmName}@test.com",
+    "applicantSolicitorDXnumber": null,
+    "applicantSolicitorConsentForEmails": "No",
+    "typeOfApplication": "In connection to matrimonial and civil partnership proceedings"
+  },
+  "event": {
+    "id": "FR_solicitorCreate",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "isAdmin": "No",
+    "applicantRepresented": "Yes",
+    "applicantSolicitorName": "#{firmName}",
+    "ApplicantOrganisationPolicy": {
+      "OrgPolicyReference": null,
+      "PrepopulateToUsersOrganisation": null,
+      "LastNoCRequestedBy": null,
+      "Organisation": {
+        "OrganisationID": "#{applicantOrgs(1)}",
+        "OrganisationName": "#{applicantOrgs(0)}"
+      },
+      "PreviousOrganisations": []
+    },
+    "applicantSolicitorFirm": "#{firmName}",
+    "solicitorReference": "#{firmRef}",
+    "applicantSolicitorAddress": {
+      "AddressLine1": "#{firmAddress1}",
+      "AddressLine2": "#{firmAddress2}",
+      "AddressLine3": "#{firmAddress3}",
+      "PostTown": "#{firmPostTown}",
+      "County": "#{firmCounty}",
+      "PostCode": "#{firmPostcode}",
+      "Country": "UK"
+    },
+    "applicantSolicitorPhone": "07777777777",
+    "applicantSolicitorEmail": "#{firmName}@test.com",
+    "applicantSolicitorDXnumber": null,
+    "applicantSolicitorConsentForEmails": "No",
+    "typeOfApplication": "In connection to matrimonial and civil partnership proceedings"
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false
+}
