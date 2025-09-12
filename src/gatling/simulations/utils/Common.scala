@@ -232,5 +232,4 @@ object Common {
       .check(jsonPath("$.documents[0]._links.self.href").saveAs(saveAsKey + "DocumentURL"))
       .check(jsonPath("$.documents[0].hashToken").saveAs(saveAsKey + "DocumentHashToken"))
       .check(status.is(200)))
-
 }
