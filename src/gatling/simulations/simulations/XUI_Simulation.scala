@@ -409,6 +409,22 @@ class XUI_Simulation extends Simulation {
 		}
 
 	/*===============================================================================================
+	* XUI Solicitor Financial Remedy (FR) Contested Scenario
+	 ===============================================================================================*/
+	val FinancialRemedySolicitorContestedScenario = scenario("***** FR Create Contested Case *****")
+		.exitBlockOnFail {
+			feed(UserFeederFR)
+				.exec(_.set("env", s"${env}")
+					.set("caseType", "FinancialRemedyContested"))
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user}", "#{password}"))
+				.repeat(1) {
+					exec(Solicitor_FR_Contested.CreateFRCase)
+				}
+				.exec(XuiHelper.Logout)
+		}
+
+	/*===============================================================================================
 	* XUI Solicitor Family Public Law (FPL) Scenario
 	 ===============================================================================================*/
 	val FamilyPublicLawSolicitorScenario = scenario("***** FPL Create Case *****")
@@ -513,16 +529,17 @@ class XUI_Simulation extends Simulation {
 	}
 
   setUp(
-			PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			/*PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-			FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),*/
+			FinancialRemedySolicitorContestedScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			/*FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),*/
 
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
