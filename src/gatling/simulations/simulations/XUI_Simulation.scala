@@ -395,7 +395,7 @@ class XUI_Simulation extends Simulation {
 	/*===============================================================================================
 	* XUI Solicitor Financial Remedy (FR) Scenario
 	 ===============================================================================================*/
-	val FinancialRemedySolicitorScenario = scenario("***** FR Create Case *****")
+	val FinancialRemedySolicitorConsentedScenario = scenario("***** FR Create Consented Case *****")
 		.exitBlockOnFail {
 			feed(UserFeederFR)
 				.exec(_.set("env", s"${env}")
@@ -403,7 +403,7 @@ class XUI_Simulation extends Simulation {
 				.exec(XuiHelper.Homepage)
 				.exec(XuiHelper.Login("#{user}", "#{password}"))
 				.repeat(2) {
-					exec(Solicitor_FR.CreateFRCase)
+					exec(Solicitor_FR_Consented.CreateFRCase)
 				}
 				.exec(XuiHelper.Logout)
 		}
@@ -529,14 +529,14 @@ class XUI_Simulation extends Simulation {
 	}
 
   setUp(
-			PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		  PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      FinancialRemedySolicitorConsentedScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			FinancialRemedySolicitorContestedScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),

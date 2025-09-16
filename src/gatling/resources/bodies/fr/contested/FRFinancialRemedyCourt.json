@@ -47,15 +47,15 @@
     "typeOfApplication": "In connection to matrimonial and civil partnership proceedings",
     "divorceCaseNumber": "EZ12D91234",
     "civilPartnership": "No",
-    "dateOfMarriage": "2019-01-01",
-    "dateOfSepration": "2021-01-01",
-    "divorcePetitionIssuedDate": "2022-01-01",
+    "dateOfMarriage": "#{dom}",
+    "dateOfSepration": "#{dos}",
+    "divorcePetitionIssuedDate": "#{issueDate}",
     "nameOfCourtDivorceCentre": "Liverpool court",
     "divorceStageReached": "Petition Issued",
     "divorceUploadPetition": {
       "document_url": "#{PetitionDocumentURL}",
       "document_binary_url": "#{PetitionDocumentURL}/binary",
-      "document_filename": "3MB.pdf",
+      "document_filename": "#{PetitionDocumentFileName}",
       "document_hash": "#{PetitionDocumentHashToken}"
     },
     "applicantFMName": "Applicant perf",
@@ -99,7 +99,7 @@
       "PostCode": "#{addressLines(3)}",
       "Country": "United Kingdom"
     },
-    "rSolicitorPhone": "888888888",
+    "rSolicitorPhone": "07788888888",
     "rSolicitorEmail": "#{respondentOrgs(1)}@test.com",
     "rSolicitorDXnumber": null,
     "natureOfApplicationChecklist": [
