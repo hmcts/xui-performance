@@ -2,15 +2,15 @@
   "data": {
     "divorceCaseNumber": "EZ12D91234",
     "civilPartnership": "No",
-    "dateOfMarriage": "2019-01-01",
-    "dateOfSepration": "2021-01-01",
-    "divorcePetitionIssuedDate": "2022-01-01",
+    "dateOfMarriage": "#{dom}",
+    "dateOfSepration": "#{dos}",
+    "divorcePetitionIssuedDate": "#{issueDate}",
     "nameOfCourtDivorceCentre": "Liverpool Court",
     "divorceStageReached": "Petition Issued",
     "divorceUploadPetition": {
       "document_url": "#{PetitionDocumentURL}",
       "document_binary_url": "#{PetitionDocumentURL}/binary",
-      "document_filename": "3MB.pdf",
+      "document_filename": "#{PetitionDocumentFileName}",
       "document_hash": "#{PetitionDocumentHashToken}"
     }
   },
@@ -32,9 +32,9 @@
     "typeOfApplication": "In connection to matrimonial and civil partnership proceedings",
     "divorceCaseNumber": "EZ12D91234",
     "civilPartnership": "No",
-    "dateOfMarriage": "2019-01-01",
-    "dateOfSepration": "2021-01-01",
-    "divorcePetitionIssuedDate": "2022-01-01",
+    "dateOfMarriage": "#{dom}",
+    "dateOfSepration": "#{dos}",
+    "divorcePetitionIssuedDate": "#{issueDate}",
     "nameOfCourtDivorceCentre": "Liverpool Court",
     "divorceStageReached": "Petition Issued",
     "ApplicantOrganisationPolicy": {
@@ -59,7 +59,7 @@
     "divorceUploadPetition": {
       "document_url": "#{PetitionDocumentURL}",
       "document_binary_url": "#{PetitionDocumentURL}/binary",
-      "document_filename": "3MB.pdf",
+      "document_filename": "#{PetitionDocumentFileName}",
       "document_hash": "#{PetitionDocumentHashToken}"
     }
   },
