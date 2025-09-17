@@ -21,8 +21,8 @@ object Solicitor_FR_Consented  {
 
   val CreateFRCase =
 
-    group("XUI_FR_Consented_Consented_030_CreateCase") {
-      exec(http("XUI_FR_Consented_Consented_030_CreateCase")
+    group("XUI_FR_Consented_030_CreateCase") {
+      exec(http("XUI_FR_Consented_030_CreateCase")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
