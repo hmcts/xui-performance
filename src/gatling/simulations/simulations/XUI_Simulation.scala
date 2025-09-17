@@ -60,7 +60,8 @@ class XUI_Simulation extends Simulation {
 	val nfdSoleTargetPerHour: Double = 120
 	val nfdJointTargetPerHour: Double = 120
 	val fplTargetPerHour: Double = 30
-	val frTargetPerHour: Double = 100
+	val frConsentedTargetPerHour: Double = 50
+	val frContestedTargetPerHour: Double = 50
 	val caseworkerTargetPerHour: Double = 1000
 
 	val rampUpDurationMins = 5
@@ -393,9 +394,9 @@ class XUI_Simulation extends Simulation {
 		}*/
 
 	/*===============================================================================================
-	* XUI Solicitor Financial Remedy (FR) Scenario
+	* XUI Solicitor Financial Remedy (FR) Consented Scenario
 	 ===============================================================================================*/
-	val FinancialRemedySolicitorScenario = scenario("***** FR Create Case *****")
+	val FinancialRemedySolicitorConsentedScenario = scenario("***** FR Create Consented Case *****")
 		.exitBlockOnFail {
 			feed(UserFeederFR)
 				.exec(_.set("env", s"${env}")
@@ -403,7 +404,23 @@ class XUI_Simulation extends Simulation {
 				.exec(XuiHelper.Homepage)
 				.exec(XuiHelper.Login("#{user}", "#{password}"))
 				.repeat(2) {
-					exec(Solicitor_FR.CreateFRCase)
+					exec(Solicitor_FR_Consented.CreateFRCase)
+				}
+				.exec(XuiHelper.Logout)
+		}
+
+	/*===============================================================================================
+	* XUI Solicitor Financial Remedy (FR) Contested Scenario
+	 ===============================================================================================*/
+	val FinancialRemedySolicitorContestedScenario = scenario("***** FR Create Contested Case *****")
+		.exitBlockOnFail {
+			feed(UserFeederFR)
+				.exec(_.set("env", s"${env}")
+					.set("caseType", "FinancialRemedyContested"))
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user}", "#{password}"))
+				.repeat(1) {
+					exec(Solicitor_FR_Contested.CreateFRCase)
 				}
 				.exec(XuiHelper.Logout)
 		}
@@ -513,14 +530,15 @@ class XUI_Simulation extends Simulation {
 	}
 
   setUp(
-			PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		  PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      FinancialRemedySolicitorScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      FinancialRemedySolicitorConsentedScenario.inject(simulationProfile(testType, frConsentedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			FinancialRemedySolicitorContestedScenario.inject(simulationProfile(testType, frContestedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 

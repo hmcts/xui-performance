@@ -1,0 +1,17 @@
+{
+  "data": {
+    "isAdmin": null,
+    "applicantRepresented": null
+  },
+  "event": {
+    "id": "FR_solicitorCreate",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "isAdmin": null,
+    "applicantRepresented": null
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false
+}
