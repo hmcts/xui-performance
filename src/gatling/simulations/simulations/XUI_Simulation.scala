@@ -60,7 +60,8 @@ class XUI_Simulation extends Simulation {
 	val nfdSoleTargetPerHour: Double = 120
 	val nfdJointTargetPerHour: Double = 120
 	val fplTargetPerHour: Double = 30
-	val frTargetPerHour: Double = 100
+	val frConsentedTargetPerHour: Double = 50
+	val frContestedTargetPerHour: Double = 50
 	val caseworkerTargetPerHour: Double = 1000
 
 	val rampUpDurationMins = 5
@@ -393,7 +394,7 @@ class XUI_Simulation extends Simulation {
 		}*/
 
 	/*===============================================================================================
-	* XUI Solicitor Financial Remedy (FR) Scenario
+	* XUI Solicitor Financial Remedy (FR) Consented Scenario
 	 ===============================================================================================*/
 	val FinancialRemedySolicitorConsentedScenario = scenario("***** FR Create Consented Case *****")
 		.exitBlockOnFail {
@@ -536,8 +537,8 @@ class XUI_Simulation extends Simulation {
       ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      FinancialRemedySolicitorConsentedScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-			FinancialRemedySolicitorContestedScenario.inject(simulationProfile(testType, frTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+      FinancialRemedySolicitorConsentedScenario.inject(simulationProfile(testType, frConsentedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			FinancialRemedySolicitorContestedScenario.inject(simulationProfile(testType, frContestedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
       CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 

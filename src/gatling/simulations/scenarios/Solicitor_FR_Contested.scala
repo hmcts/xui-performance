@@ -20,13 +20,17 @@ object Solicitor_FR_Contested {
   * Click the Create Case link
   ======================================================================================*/
   val CreateFRCase = {
-    //marriage date between 1 and 5 years ago
-    exec(_.set("dom", DateUtils.getDatePastRandom("yyyy-MM-dd", minYears = 5, maxYears = 10)))
-      //separation date between 1 and 5 years ago
-    .exec(_.set("dos", DateUtils.getDatePastRandom("yyyy-MM-dd", minYears = 2, maxYears = 5)))
-      //Divorce Petition Issue date between 1 and 5 years ago
-    .exec(_.set("issueDate", DateUtils.getDatePastRandom("yyyy-MM-dd", minYears = 1, maxYears = 2)))
 
+      exec(
+        _.setAll(
+          //marriage date between 5 and 10 years ago
+          "dateOfMarriage" -> DateUtils.getDatePastRandom("yyyy-MM-dd", minYears = 5, maxYears = 10),
+          //separation date between 2 and 5 years ago, after marriage date
+          "dateOfSeparation" -> DateUtils.getDatePastRandom("yyyy-MM-dd", minYears = 2, maxYears = 5),
+          //Divorce Petition Issue date between 1 and 2 years ago and after separation date
+          "divorcePetitionIssueDate" -> DateUtils.getDatePastRandom("yyyy-MM-dd", minYears = 1, maxYears = 2)
+        )
+      )
     .group("XUI_FR_Contested_010_CreateCase") {
       exec(
         http("XUI_FR_Contested_010_CreateCase")
@@ -332,7 +336,7 @@ object Solicitor_FR_Contested {
           .check(jsonPath("$.data.applicantAttendedMIAM").is("Yes"))
         )
       }
-        .pause(5)
+        .pause(MinThinkTime, MaxThinkTime)
 
       /*======================================================================================
       * Add MIAM certification details and click Continue
@@ -340,7 +344,7 @@ object Solicitor_FR_Contested {
 
       .exec(Common.uploadFile("3MB.pdf", "PUBLIC", "FinancialRemedyContested", "DIVORCE", "Miam"))
 
-        .pause(5)
+        .pause(MinThinkTime, MaxThinkTime)
 
       .group("XUI_FR_Contested_170_AddMIAMCertificationDetails") {
         exec(http("XUI_FR_Contested_170_005_AddMIAMCertificationDetails")
@@ -352,7 +356,7 @@ object Solicitor_FR_Contested {
           .check(jsonPath("$.data.soleTraderName").is("Wizard divorce service"))
         )
       }
-        .pause(5)
+        .pause(MinThinkTime, MaxThinkTime)
 
       /*======================================================================================
        * Add Variation order details and click Continue
@@ -364,7 +368,7 @@ object Solicitor_FR_Contested {
 
       .exec(Common.uploadFile("3MB.pdf", "PUBLIC", "FinancialRemedyContested", "DIVORCE", "OtherDocument"))
 
-        .pause(5)
+        .pause(MinThinkTime, MaxThinkTime)
 
       .group("XUI_FR_Contested_180_AddVariationOrderDetails") {
 
