@@ -356,6 +356,9 @@ object Solicitor_FR_Contested {
           .check(jsonPath("$.data.soleTraderName").is("Wizard divorce service"))
         )
       }
+        // Adding additional pauses to avoid http 429 too many requests error from document management service
+        .pause(MinThinkTime, MaxThinkTime)
+        .pause(MinThinkTime, MaxThinkTime)
         .pause(MinThinkTime, MaxThinkTime)
 
       /*======================================================================================
@@ -364,8 +367,13 @@ object Solicitor_FR_Contested {
 
       .exec(Common.uploadFile("3MB.pdf", "PUBLIC", "FinancialRemedyContested", "DIVORCE", "Variation"))
 
-        // Adding hardcoded pauses to avoid http 429 too many requests error from document management service
-        .pause(15)
+        // Adding additional pauses to avoid http 429 too many requests error from document management service
+        // (manually setting a higher pause time is overriden by the simulation configuration when running in a pipeline)
+        .pause(MinThinkTime, MaxThinkTime)
+        .pause(MinThinkTime, MaxThinkTime)
+        .pause(MinThinkTime, MaxThinkTime)
+        .pause(MinThinkTime, MaxThinkTime)
+        .pause(MinThinkTime, MaxThinkTime)
 
       .exec(Common.uploadFile("3MB.pdf", "PUBLIC", "FinancialRemedyContested", "DIVORCE", "OtherDocument"))
 
