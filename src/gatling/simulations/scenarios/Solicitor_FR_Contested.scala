@@ -356,7 +356,8 @@ object Solicitor_FR_Contested {
           .check(jsonPath("$.data.soleTraderName").is("Wizard divorce service"))
         )
       }
-        .pause(MinThinkTime, MaxThinkTime)
+        // Adding hardcoded pauses to avoid http 429 too many requests error from document management service
+        .pause(30)
 
       /*======================================================================================
        * Add Variation order details and click Continue
@@ -365,7 +366,7 @@ object Solicitor_FR_Contested {
       .exec(Common.uploadFile("3MB.pdf", "PUBLIC", "FinancialRemedyContested", "DIVORCE", "Variation"))
 
         // Adding hardcoded pauses to avoid http 429 too many requests error from document management service
-        .pause(15)
+        .pause(30)
 
       .exec(Common.uploadFile("3MB.pdf", "PUBLIC", "FinancialRemedyContested", "DIVORCE", "OtherDocument"))
 
