@@ -517,7 +517,8 @@ class XUI_Simulation extends Simulation {
 						details("XUI_IAC_280_005_AppealDeclarationSubmitted").successfulRequests.percent.gte(80),
 						details("XUI_000_CCDEvent-system-progress-case-awaiting-final-order").successfulRequests.percent.gte(80), //NFD Sole
 						details("XUI_000_CCDEvent-system-progress-held-case").successfulRequests.percent.gte(80), //NFD Joint
-						details("XUI_FR_170_SubmitApplication").successfulRequests.percent.gte(80),
+						details("XUI_FR_Consented_170_SubmitApplication").successfulRequests.percent.gte(80),
+            details("XUI_FR_Contested_200_ReviewAndSubmitApplication").successfulRequests.percent.gte(80),
 						details("XUI_FPL_330_ReturnToCase").successfulRequests.percent.gte(80),
 						details("XUI_Caseworker_100_CaseList").successfulRequests.percent.gte(80))
 				}
