@@ -52,7 +52,7 @@
     "civilPartnership": "No",
     "dateOfMarriage": "#{dateOfMarriage}",
     "dateOfSepration": "#{dateOfSeparation}",
-    "divorcePetitionIssuedDate": "#{issueDate}",
+    "divorcePetitionIssuedDate": "#{divorcePetitionIssueDate}",
     "nameOfCourtDivorceCentre": "Liverpool Court",
     "divorceStageReached": "Petition Issued",
     "divorceUploadPetition": {
