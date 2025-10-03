@@ -106,7 +106,7 @@ object Solicitor_IAC {
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("x-xsrf-token", "#{XSRFToken}")
       .body(ElFileBody("bodies/iac/IACHomeOfficeDecision.json"))
-      .check(substring("haveHearingAttendeesAndDurationBeenRecorded")))
+      .check(substring("letterSentOrReceived")))
     }
     .pause(MinThinkTime, MaxThinkTime)
 
