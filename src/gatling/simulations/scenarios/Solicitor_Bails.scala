@@ -830,7 +830,7 @@ object Solicitor_Bails {
         .post("/data/case-types/Bail/validate?pageId=confirmDetentionLocationconfirmDetentionLocation")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .body(RawFileBody("bodies/bails/BailsValidateLocation.json"))
+        .body(ElFileBody("bodies/bails/BailsValidateLocation.json"))
         .check(substring("isDetentionLocationCorrect")))
 
       .exec(Common.isAuthenticated)
