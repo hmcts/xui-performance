@@ -235,4 +235,23 @@ object Common {
       .check(status.is(204))) 
       //No response body is returned, therefore no substring check is possible
 
+  def uploadFile(fileName: String, classification: String, caseTypeId: String, jurisdictionId: String, saveAsKey: String) =
+    exec(http("XUI_Common_000_UploadFile_" + fileName)
+      .post("/documentsv2")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .header("content-type", "multipart/form-data")
+      .header("x-xsrf-token", "#{XSRFToken}")
+      .bodyPart(RawFileBodyPart("files", fileName)
+        .fileName(fileName)
+        .transferEncoding("binary"))
+      .asMultipartForm
+      .formParam("classification", classification)
+      .formParam("caseTypeId", caseTypeId)
+      .formParam("jurisdictionId", jurisdictionId)
+      .check(substring("originalDocumentName"))
+      .check(jsonPath("$.documents[0]._links.self.href").saveAs(saveAsKey + "DocumentURL"))
+      .check(jsonPath("$.documents[0].hashToken").saveAs(saveAsKey + "DocumentHashToken"))
+      .check(jsonPath("$.documents[0].originalDocumentName").saveAs(saveAsKey + "DocumentFileName"))
+      .check(status.is(200)))
 }
