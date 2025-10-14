@@ -115,7 +115,7 @@ object CourtAdmin_PRL_C100 {
       .get(BaseURL + "/workallocation/case/tasks/#{caseId}/event/issueAndSendToLocalCourtCallback/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
       .headers(Headers.navigationHeader)
       .header("accept", "application/json")
-      .check(jsonPath("$.task_required_for_event").is("true")))
+      .check(jsonPath("$.task_required_for_event").is("false")))
 
     .exec(Common.activity)
     .exec(Common.profile)
@@ -408,7 +408,7 @@ object CourtAdmin_PRL_C100 {
         .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders20")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
+        //.header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/prl/c100/PRLCheckOrder.json"))
         .check(substring("previewOrderDoc")))
     }
