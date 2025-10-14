@@ -4,7 +4,7 @@
    file name: gatling-shared-cli-0.0.6.jar
    ]]></notes>
         <sha1>c5d088612e930784d34a5b08aca454198d0c11cc</sha1>
-        <cve>CVE-2025-51306</cpe>
+        <cve>CVE-2025-51306</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
@@ -18,7 +18,7 @@
    file name: gatling-shared-model_2.13-0.1.1.jar
    ]]></notes>
         <sha1>c5d088612e930784d34a5b08aca454198d0c11cc</sha1>
-        <cve>CVE-2025-51306</cpe>
+        <cve>CVE-2025-51306</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
@@ -32,7 +32,7 @@
    file name: gatling-shared-util_2.13-0.0.12.jar
    ]]></notes>
         <sha1>c5d088612e930784d34a5b08aca454198d0c11cc</sha1>
-        <cve>CVE-2025-51306</cpe>
+        <cve>CVE-2025-51306</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
