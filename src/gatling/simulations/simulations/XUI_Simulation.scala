@@ -164,9 +164,6 @@ class XUI_Simulation extends Simulation {
         .exec(CourtAdmin_PRL_C100.CourtAdminManageOrders)
         .exec(CourtAdmin_PRL_C100.CourtAdminServiceApplication)
         .exec(CourtAdmin_PRL_C100.CourtAdminListHearing)
-        //List the hearing (Mimic request back from List Assist)
-        //.exec(ListHearingLA.ListHearingC100)
-        //View hearings tab once listed
         .exec(CourtAdmin_PRL_C100.CourtAdminHearingsTab)
     }
 
@@ -205,9 +202,6 @@ class XUI_Simulation extends Simulation {
         .exec(CourtAdmin_PRL_FL401.CourtAdminManageOrders)
         .exec(CourtAdmin_PRL_FL401.CourtAdminServiceApplication)
         .exec(CourtAdmin_PRL_FL401.CourtAdminListHearing)
-        //List the hearing (Mimic request back from List Assist)
-        //.exec(ListHearingLA.ListHearingFL401)
-        //View hearings tab once listed
         .exec(CourtAdmin_PRL_FL401.CourtAdminHearingsTab)
         .exec(XuiHelper.Logout)
 
