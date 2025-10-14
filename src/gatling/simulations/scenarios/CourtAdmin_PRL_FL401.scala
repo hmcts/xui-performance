@@ -56,7 +56,7 @@ object CourtAdmin_PRL_FL401 {
     .get(BaseURL + "/workallocation/case/tasks/#{caseId}/event/issueAndSendToLocalCourtCallback/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
     .headers(Headers.navigationHeader)
     .header("accept", "application/json")
-    .check(jsonPath("$.task_required_for_event").is("true")))
+    .check(jsonPath("$.task_required_for_event").is("false")))
 
   .exec(Common.activity)
   .exec(Common.profile)
@@ -192,10 +192,10 @@ object CourtAdmin_PRL_FL401 {
   .exec(http("XUI_PRL_FL401Progress_130_SelectCase")
     .get(BaseURL + "/data/internal/cases/#{caseId}")
     .headers(Headers.commonHeader)
-    .check(jsonPath("$.tabs[6].fields[3].value.firstName").saveAs("ApplicantFirstName"))
-    .check(jsonPath("$.tabs[6].fields[3].value.lastName").saveAs("ApplicantLastName"))
-    .check(jsonPath("$.tabs[6].fields[8].value.firstName").saveAs("RespondentFirstName"))
-    .check(jsonPath("$.tabs[6].fields[8].value.lastName").saveAs("RespondentLastName"))
+    .check(jsonPath("$.tabs[6].fields[0].value.firstName").saveAs("ApplicantFirstName"))
+    .check(jsonPath("$.tabs[6].fields[0].value.lastName").saveAs("ApplicantLastName"))
+    .check(jsonPath("$.tabs[6].fields[1].value.firstName").saveAs("RespondentFirstName"))
+    .check(jsonPath("$.tabs[6].fields[1].value.lastName").saveAs("RespondentLastName"))
     .check(jsonPath("$.case_id").is("#{caseId}")))
 
   .pause(MinThinkTime, MaxThinkTime)
