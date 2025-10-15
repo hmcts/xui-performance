@@ -137,7 +137,7 @@ class XUI_Simulation extends Simulation {
           .set("caseType", "PRLAPPS"))
         .exec(XuiHelper.Homepage)
         .exec(XuiHelper.Login("#{user}", "#{password}"))
-        //C100 Journey
+        //Solicitor creates application
         .exec(Solicitor_PRL_C100.CreatePrivateLawCase)
         .exec(Solicitor_PRL_C100.TypeOfApplication)
         .exec(Solicitor_PRL_C100.HearingUrgency)
@@ -153,12 +153,11 @@ class XUI_Simulation extends Simulation {
         .exec(Solicitor_PRL_C100.MIAM)
         .exec(Solicitor_PRL_C100.ViewPdfApplication)
         .exec(Solicitor_PRL_C100.SubmitAndPay)
-        //.exec(Solicitor_PRL_C100.HearingsTab) //Remove? **
         .exec(XuiHelper.Logout)
-        //C100 Case Progression
         .feed(UserFeederPRLCourtAdmin)
         .exec(XuiHelper.Homepage)
         .exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
+        //Case worker progress case
         .exec(CourtAdmin_PRL_C100.CourtAdminCheckApplication)
         .exec(CourtAdmin_PRL_C100.CourtAdminSendToGateKeeper)
         .exec(CourtAdmin_PRL_C100.CourtAdminManageOrders)
@@ -178,7 +177,7 @@ class XUI_Simulation extends Simulation {
         .exec(XuiHelper.Homepage)
         .exec(XuiHelper.Login("#{user}", "#{password}"))
         .feed(UserFeederPRL)
-        //FL401 Journey
+        //Solicitor creates application
         .exec(Solicitor_PRL_FL401.CreatePrivateLawCase)
         .exec(Solicitor_PRL_FL401.TypeOfApplication)
         .exec(Solicitor_PRL_FL401.WithoutNoticeOrder)
@@ -191,12 +190,11 @@ class XUI_Simulation extends Simulation {
         .exec(Solicitor_PRL_FL401.UploadDocuments)
         .exec(Solicitor_PRL_FL401.ViewPDF)
         .exec(Solicitor_PRL_FL401.StatementOfTruth)
-        //.exec(Solicitor_PRL_FL401.HearingsTab)
         .exec(XuiHelper.Logout)
-        //FL401 Case Progression
         .feed(UserFeederPRLCourtAdmin)
         .exec(XuiHelper.Homepage)
         .exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
+        //Case worker progress case
         .exec(CourtAdmin_PRL_FL401.CourtAdminCheckApplication)
         .exec(CourtAdmin_PRL_FL401.CourtAdminSendToGateKeeper)
         .exec(CourtAdmin_PRL_FL401.CourtAdminManageOrders)
@@ -239,18 +237,22 @@ class XUI_Simulation extends Simulation {
 				.set("caseType", "PRLAPPS"))
 				.feed(UserFeederPRLCourtAdmin)
 				.exec(_.set("currentDate", LocalDateTime.now.format(patternDate)))
+        //Add Barrister for Applicant
 				.exec(XuiHelper.Homepage)
 				.exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
 				.exec(CourtAdmin_PRL_C100.AddBarristerC100Applicant)
 				.exec(XuiHelper.Logout)
+        //Add Document
 				.exec(XuiHelper.Homepage)
 				.exec(XuiHelper.Login("#{appBarristerUser}", "#{appBarristerPassword}"))
 				.exec(Barrister_PRL_C100.AddDocumentC100Applicant)
 				.exec(XuiHelper.Logout)
+        //Add Barrister for Applicant
 				.exec(XuiHelper.Homepage)
 				.exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
 				.exec(CourtAdmin_PRL_C100.AddBarristerC100Defendent)
 				.exec(XuiHelper.Logout)
+        //Add Document
 				.exec(XuiHelper.Homepage)
 				.exec(XuiHelper.Login("#{defBarristerUser}", "#{defBarristerPassword}"))
 				.exec(Barrister_PRL_C100.AddDocumentC100Respondent)
@@ -260,6 +262,7 @@ class XUI_Simulation extends Simulation {
 				.exec(CourtAdmin_PRL_C100.ServiceOfApplicationC100)
 				.exec(CourtAdmin_PRL_C100.FinalDecisionC100)
 				.exec(XuiHelper.Logout)
+        //Remove Barrister
 				.exec(XuiHelper.Homepage)
 				.exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
 				.exec(CourtAdmin_PRL_C100.RemoveBarristerC100Applicant)
@@ -288,10 +291,12 @@ class XUI_Simulation extends Simulation {
 				.exec(_.set("env", s"${env}")
 				.set("caseType", "PRLAPPS"))
 				.feed(UserFeederPRLCourtAdmin)
+        //Add Barrister
 				.exec(XuiHelper.Homepage)
 				.exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
 				.exec(Solicitor_PRL_FL401.AddBarristerFL401Applicant)
 				.exec(XuiHelper.Logout)
+        //Draft order
 				.exec(XuiHelper.Homepage)
 				.exec(XuiHelper.Login("#{appBarristerUser}", "#{appBarristerPassword}"))
 				.exec(Barrister_PRL_FL401.DraftAnOrderFL401)
@@ -301,6 +306,7 @@ class XUI_Simulation extends Simulation {
 				.exec(CourtAdmin_PRL_FL401.ServiceOfApplicationFL401)
 				.exec(CourtAdmin_PRL_FL401.FinalDecisionFL401)
 				.exec(XuiHelper.Logout)
+        //Remove Barrister
 				.exec(XuiHelper.Homepage)
 				.exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
 				.exec(Solicitor_PRL_FL401.RemoveBarristerFL401Applicant)
