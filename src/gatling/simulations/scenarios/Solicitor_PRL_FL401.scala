@@ -1499,17 +1499,19 @@ object Solicitor_PRL_FL401 {
     * Run Add Barrister task
     ======================================================================================*/
 
-    group("XUI_PRL_FL401progress_100_AddBarristerApplicant") {
+    group("XUI_PRL_FL401progress_100_010_ApplicantAddBarristerPrivateLaw") {
       exec(http("XUI_PRL_FL401progress_100_010_ApplicantAddBarristerPrivateLaw")
         .get("/workallocation/case/tasks/#{caseId}/event/adminAddBarrister/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*")
         .check(substring("task_required_for_event"))
         .check(status.is(200)))
+    }
 
-        .pause(MinThinkTime, MaxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
-        .exec(http("XUI_PRL_FL401progress_100_020_ApplicantAddBarristerTask_EventTrigger")
+    .group("XUI_PRL_FL401progress_100_020_ApplicantAddBarristerTask_EventTrigger") {
+      exec(http("XUI_PRL_FL401progress_100_020_ApplicantAddBarristerTask_EventTrigger")
           .get("/data/internal/cases/#{caseId}/event-triggers/adminAddBarrister?ignore-warning=false")
           .headers(Headers.commonHeader)
           .header("Accept", "application/json, text/plain, */*")
@@ -1518,14 +1520,15 @@ object Solicitor_PRL_FL401 {
           .check(jsonPath("$.case_fields[0].value.partyList.list_items[0].label").saveAs("appLabel1"))
           .check(substring("Organisation Search"))
           .check(status.is(200)))
+    }
 
-        .pause(MinThinkTime, MaxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
         /*======================================================================================
         * Submit Barrister Details
         ======================================================================================*/
-
-        .exec(http("XUI_PRL_FL401progress_100_040_ApplicantBarristerDetailsSubmit")
+    .group("XUI_PRL_FL401progress_100_040_ApplicantBarristerDetailsSubmit") {
+      exec(http("XUI_PRL_FL401progress_100_040_ApplicantBarristerDetailsSubmit")
           .post("/data/case-types/PRLAPPS/validate?pageId=adminAddBarrister1")
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
@@ -1533,10 +1536,12 @@ object Solicitor_PRL_FL401 {
           .body(ElFileBody("bodies/prl/fl401/PRLAddBarrister.json"))
           .check(substring("perf_barrister"))
           .check(status.is(200)))
+    }
 
-        .pause(MinThinkTime, MaxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
-        .exec(http("XUI_PRL_FL401progress_100_050_ApplicantBarristerEvent")
+    .group("XUI_PRL_FL401progress_100_050_ApplicantBarristerEvent") {
+      exec(http("XUI_PRL_FL401progress_100_050_ApplicantBarristerEvent")
           .post("/data/cases/#{caseId}/events")
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
@@ -1544,10 +1549,9 @@ object Solicitor_PRL_FL401 {
           .body(ElFileBody("bodies/prl/fl401/PRLAddBarristerEvent.json"))
           .check(substring("perf_barrister"))
           .check(status.is(201)))
-
     }
 
-      .pause(MinThinkTime, MaxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
   val RemoveBarristerFL401Applicant =
 
@@ -1555,17 +1559,18 @@ object Solicitor_PRL_FL401 {
     * Run Remove Barrister task
     ======================================================================================*/
 
-    group("XUI_PRL_FL401progress_300_RemoveBarrister") {
+    group("XUI_PRL_FL401progress_300_010_ApplicantRemoveBarristerPrivateLaw") {
       exec(http("XUI_PRL_FL401progress_300_010_ApplicantRemoveBarristerPrivateLaw")
         .get("/workallocation/case/tasks/#{caseId}/event/adminRemoveBarrister/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*")
         .check(substring("task_required_for_event"))
         .check(status.is(200)))
+    }
+    .pause(MinThinkTime, MaxThinkTime)
 
-        .pause(MinThinkTime, MaxThinkTime)
-
-        .exec(http("XUI_PRL_FL401progress_300_020_ApplicantRemoveBarristerTask_EventTrigger")
+    .group("XUI_PRL_FL401progress_300_020_ApplicantRemoveBarristerTask_EventTrigger") {
+      exec(http("XUI_PRL_FL401progress_300_020_ApplicantRemoveBarristerTask_EventTrigger")
           .get("/data/internal/cases/#{caseId}/event-triggers/adminRemoveBarrister?ignore-warning=false")
           .headers(Headers.commonHeader)
           .header("Accept", "application/json, text/plain, */*")
@@ -1574,25 +1579,28 @@ object Solicitor_PRL_FL401 {
           .check(jsonPath("$.case_fields[0].value.partyList.list_items[0].label").saveAs("appLabel1"))
           .check(substring("Caseworker remove barrister"))
           .check(status.is(200)))
+      }
 
-        .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
         /*======================================================================================
         * Submit Barrister Remove Details
         ======================================================================================*/
+      .group("XUI_PRL_FL401progress_300_040_ApplicantRemoveBarristerDetailsSubmit") {
+        exec(http("XUI_PRL_FL401progress_300_040_ApplicantRemoveBarristerDetailsSubmit")
+            .post("/data/case-types/PRLAPPS/validate?pageId=adminRemoveBarrister1")
+            .headers(Headers.commonHeader)
+            .header("Content-Type", "application/json; charset=utf-8")
+            .header("Accept", "application/json, text/plain, */*")
+            .body(ElFileBody("bodies/prl/fl401/PRLRemoveBarrister.json"))
+            .check(substring("barristerOrg"))
+            .check(status.is(200)))
+      }
 
-        .exec(http("XUI_PRL_FL401progress_300_040_ApplicantRemoveBarristerDetailsSubmit")
-          .post("/data/case-types/PRLAPPS/validate?pageId=adminRemoveBarrister1")
-          .headers(Headers.commonHeader)
-          .header("Content-Type", "application/json; charset=utf-8")
-          .header("Accept", "application/json, text/plain, */*")
-          .body(ElFileBody("bodies/prl/fl401/PRLRemoveBarrister.json"))
-          .check(substring("barristerOrg"))
-          .check(status.is(200)))
+      .pause(MinThinkTime, MaxThinkTime)
 
-        .pause(MinThinkTime, MaxThinkTime)
-
-        .exec(http("XUI_PRL_FL401progress_300_050_ApplicantRemoveBarristerEvent")
+      .group("XUI_PRL_FL401progress_300_050_ApplicantRemoveBarristerEvent") {
+        exec(http("XUI_PRL_FL401progress_300_050_ApplicantRemoveBarristerEvent")
           .post("/data/cases/#{caseId}/events")
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
@@ -1600,9 +1608,8 @@ object Solicitor_PRL_FL401 {
           .body(ElFileBody("bodies/prl/fl401/PRLRemoveBarristerEvent.json"))
           .check(substring("Statement of truth and submit"))
           .check(status.is(201)))
-    }
+      }
 
       .pause(MinThinkTime, MaxThinkTime)
-
 
 }
