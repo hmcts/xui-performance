@@ -18,7 +18,7 @@
       },
       "noticeOfSafetySupportLetter": {
          "document_url": "#{document_url}",
-         "document_binary_url": "#{document_binary_url}",
+         "document_binary_url": "#{document_url}/binary",
          "document_filename": "120KB.pdf"
       },
       "additionalDocumentsList": [],
@@ -49,7 +49,7 @@
       },
       "noticeOfSafetySupportLetter": {
          "document_url": "#{document_url}",
-         "document_binary_url": "#{document_binary_url}",
+         "document_binary_url": "#{document_url}/binary",
          "document_filename": "120KB.pdf"
       },
       "additionalDocumentsList": [],
