@@ -394,6 +394,7 @@ object CourtAdmin_PRL_C100 {
         .body(ElFileBody("bodies/prl/c100/PRLGuardianName.json"))
         .check(jsonPath("$.data.previewOrderDoc.document_url").saveAs("document_url"))
         .check(jsonPath("$.data.previewOrderDoc.document_hash").saveAs("document_hash"))
+        .check(jsonPath("$.data.previewOrderDoc.document_hash").saveAs("document_filename"))
         .check(substring("previewOrderDoc")))
     }
 
