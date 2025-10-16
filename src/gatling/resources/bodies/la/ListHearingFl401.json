@@ -128,7 +128,7 @@
               "entityId":"#{solicitorOrgId}",
               "entityType":"ORG",
               "entityClass":"ORG",
-              "entityName":"perf-prl-aALof",
+              "entityName":"#{orgname}",
               "entityRole":{
                  "code":"LGRP",
                  "description":"Legal Representative"

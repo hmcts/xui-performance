@@ -35,7 +35,7 @@
      "judgeOrMagistrateTitle": "herHonourJudge",
      "judgeOrMagistratesLastName": "Judge First",
      "justiceLegalAdviserFullName": "Judge Last",
-     "dateOrderMade": "2024-07-14",
+     "dateOrderMade": "#{todayDate}",
      "isTheOrderAboutAllChildren": "Yes",
      "recitalsOrPreamble": "Some details",
      "orderDirections": null,

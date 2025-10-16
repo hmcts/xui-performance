@@ -202,7 +202,7 @@
       "judgeOrMagistrateTitle": "districtJudge",
       "judgeOrMagistratesLastName": "firstJudge",
       "justiceLegalAdviserFullName": null,
-      "dateOrderMade": "2025-04-08",
+      "dateOrderMade": "#{todayDate}",
       "isTheOrderAboutChildren": "No",
       "recitalsOrPreamble": "dkdskfkjfsdzffsdsdfds",
       "orderDirections": "fdsfsdsakdsjksdjskjsfsf",

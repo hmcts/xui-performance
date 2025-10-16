@@ -445,8 +445,8 @@ object CourtAdmin_PRL_FL401 {
         .header("accept", "application/json, text/plain, */*")
         .header("content-type", "multipart/form-data")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .bodyPart(RawFileBodyPart("files", "TestFile.pdf")
-        .fileName("TestFile.pdf")
+        .bodyPart(RawFileBodyPart("files", "120KB.pdf")
+        .fileName("120KB.pdf")
         .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
@@ -790,8 +790,8 @@ val CourtAdminHearingsTab =
             .headers(Headers.commonHeader)
             .header("accept", "application/json, text/plain, */*")
             .header("content-type", "multipart/form-data")
-            .bodyPart(RawFileBodyPart("files", "BarristerDocument.pdf")
-              .fileName("BarristerDocument.pdf")
+            .bodyPart(RawFileBodyPart("files", "120KB.pdf")
+              .fileName("120KB.pdf")
               .transferEncoding("binary"))
             .asMultipartForm
             .formParam("classification", "PUBLIC")
@@ -891,8 +891,8 @@ val CourtAdminHearingsTab =
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
           .header("content-type", "multipart/form-data")
-          .bodyPart(RawFileBodyPart("files", "BarristerDocument.pdf")
-            .fileName("BarristerDocument.pdf")
+          .bodyPart(RawFileBodyPart("files", "120KB.pdf")
+            .fileName("120KB.pdf")
             .transferEncoding("binary"))
           .asMultipartForm
           .formParam("classification", "PUBLIC")

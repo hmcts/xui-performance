@@ -4,7 +4,7 @@
     "previewOrderDoc": {
       "document_url": "#{document_url}",
       "document_binary_url": "#{document_url}/binary",
-      "document_filename": "blank_order_fl404b_draft.pdf",
+      "document_filename": "#{document_filename}",
       "document_hash": "#{document_hash}"
     }
   },
@@ -116,7 +116,7 @@
     "previewOrderDoc": {
       "document_url": "#{document_url}",
       "document_binary_url": "#{document_url}/binary",
-      "document_filename": "blank_order_fl404b_draft.pdf",
+      "document_filename": "#{document_filename}",
       "document_hash": "#{document_hash}"
     },
     "ordersHearingDetails": [
