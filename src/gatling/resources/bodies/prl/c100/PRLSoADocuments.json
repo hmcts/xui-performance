@@ -24,7 +24,7 @@
      "specialArrangementsLetter": {
         "document_url": "#{DocumentURLSpecial}",
         "document_binary_url": "#{DocumentURLSpecial}/binary",
-        "document_filename": "TestFile.pdf"
+        "document_filename": "120KB.pdf"
      },
      "additionalDocumentsList": [],
      "soaIsOrderListEmpty": "No",
@@ -60,7 +60,7 @@
      "specialArrangementsLetter": {
         "document_url": "#{DocumentURLSpecial}",
         "document_binary_url": "#{DocumentURLSpecial}/binary",
-        "document_filename": "TestFile.pdf"
+        "document_filename": "120KB.pdf"
      },
      "additionalDocumentsList": [],
      "soaIsOrderListEmpty": "No",

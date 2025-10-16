@@ -37,7 +37,7 @@
      "caseRef": "#{caseId}",
      "requestTimeStamp": null,
      "hearingID": null,
-     "caseDeepLink": "https://manage-case.perftest.platform.hmcts.net/cases/case-details/#{caseId}#Case File View",
+     "caseDeepLink": "https://manage-case.#{env}.platform.hmcts.net/cases/case-details/#{caseId}#Case File View",
      "hmctsInternalCaseName": "#{caseName}",
      "publicCaseName": "#{ApplicantLastName} and #{RespondentLastName}",
      "caseAdditionalSecurityFlag": false,
@@ -144,12 +144,12 @@
      {
         "partyID": "#{solicitorOrgId}",
         "partyType": "ORG",
-        "partyName": "perf-prl-aALof",
+        "partyName": "#{orgname}",
         "partyRole": "LGRP",
         "organisationDetails": {
-           "name": "perf-prl-aALof",
+           "name": "#{orgname}",
            "organisationType": "ORG",
-           "cftOrganisationID": "U1NS7EH"
+           "cftOrganisationID": "#{orgref}"
         }
      }
   ]

@@ -62,8 +62,8 @@ object Barrister_PRL_C100 {
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
           .header("content-type", "multipart/form-data")
-          .bodyPart(RawFileBodyPart("files", "BarristerDocument.pdf")
-            .fileName("BarristerDocument.pdf")
+          .bodyPart(RawFileBodyPart("files", "120KB.pdf")
+            .fileName("120KB.pdf")
             .transferEncoding("binary"))
           .asMultipartForm
           .formParam("classification", "PUBLIC")
@@ -139,8 +139,8 @@ object Barrister_PRL_C100 {
             .headers(Headers.commonHeader)
             .header("accept", "application/json, text/plain, */*")
             .header("content-type", "multipart/form-data")
-            .bodyPart(RawFileBodyPart("files", "BarristerDocument.pdf")
-              .fileName("BarristerDocument.pdf")
+            .bodyPart(RawFileBodyPart("files", "120KB.pdf")
+              .fileName("120KB.pdf")
               .transferEncoding("binary"))
             .asMultipartForm
             .formParam("classification", "PUBLIC")

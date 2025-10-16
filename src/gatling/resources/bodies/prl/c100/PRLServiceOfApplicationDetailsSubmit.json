@@ -65,12 +65,12 @@
       "pd36qLetter": {
          "document_url": "#{pd36qLetter_document_url}",
          "document_binary_url": "#{pd36qLetter_document_binary_url}",
-         "document_filename": "BarristerDocument.pdf"
+         "document_filename": "120KB.pdf"
       },
       "specialArrangementsLetter": {
          "document_url": "#{specialArrangementsLetter_document_url}",
          "document_binary_url": "#{specialArrangementsLetter_document_binary_url}",
-         "document_filename": "BarristerDocument.pdf"
+         "document_filename": "120KB.pdf"
       },
       "additionalDocumentsList": [],
       "soaIsOrderListEmpty": "No",

@@ -4,7 +4,7 @@
     "previewOrderDoc": {
       "document_url": "#{document_url}",
       "document_binary_url": "#{document_url}/binary",
-      "document_filename": "Special_Guardianship_Order_C43A_Draft.pdf",
+      "document_filename": "#{document_filename}",
       "document_hash": "#{document_hash}"
 
     }
@@ -52,7 +52,7 @@
     "previewOrderDoc": {
       "document_url": "#{document_url}",
       "document_binary_url": "#{document_url}/binary",
-      "document_filename": "Special_Guardianship_Order_C43A_Draft.pdf",
+      "document_filename": "#{document_filename}",
       "document_hash": "#{document_hash}"
     }
   },

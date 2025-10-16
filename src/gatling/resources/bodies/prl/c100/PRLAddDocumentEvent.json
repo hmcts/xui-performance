@@ -246,7 +246,7 @@
                "document": {
                   "document_url": "#{document_url}",
                   "document_binary_url": "#{document_binary_url}",
-                  "document_filename": "BarristerDocument.pdf"
+                  "document_filename": "120KB.pdf"
                },
                "documentRestrictCheckbox": []
             },
