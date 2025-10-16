@@ -38,7 +38,6 @@ object Barrister_PRL_C100 {
         .header("Accept", "application/json, text/plain, */*")
         .check(substring("task_required_for_event"))
         .check(status.is(200)))
-
     }
 
     .pause(MinThinkTime, MaxThinkTime)
