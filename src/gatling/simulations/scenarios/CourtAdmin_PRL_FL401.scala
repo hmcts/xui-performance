@@ -798,7 +798,6 @@ val CourtAdminHearingsTab =
             .formParam("caseTypeId", "PRLAPPS")
             .formParam("jurisdictionId", "PRIVATELAW")
             .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("document_url"))
-            .check(jsonPath("$._embedded.documents[0]._links.binary.href").saveAs("document_binary_url"))
             .check(substring("originalDocumentName"))
             .check(status.is(200)))
       }
@@ -899,7 +898,6 @@ val CourtAdminHearingsTab =
           .formParam("caseTypeId", "PRLAPPS")
           .formParam("jurisdictionId", "PRIVATELAW")
           .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("document_url"))
-          .check(jsonPath("$._embedded.documents[0]._links.binary.href").saveAs("document_binary_url"))
           .check(substring("originalDocumentName"))
           .check(status.is(200)))
     }

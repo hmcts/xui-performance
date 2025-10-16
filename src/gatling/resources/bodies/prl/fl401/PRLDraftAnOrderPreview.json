@@ -3,7 +3,7 @@
       "previewOrderDocWelsh": null,
       "previewOrderDoc": {
          "document_url": "#{document_url}",
-         "document_binary_url": "#{document_binary_url}",
+         "document_binary_url": "#{document_url}/binary",
          "document_filename": "#{document_filename}",
          "document_hash": "#{document_hash}"
       }
@@ -92,7 +92,7 @@
       "previewOrderDocWelsh": null,
       "previewOrderDoc": {
          "document_url": "#{document_url}",
-         "document_binary_url": "#{document_binary_url}",
+         "document_binary_url": "#{document_url}/binary",
          "document_filename": "#{document_filename}",
          "document_hash": "#{document_hash}"
       }

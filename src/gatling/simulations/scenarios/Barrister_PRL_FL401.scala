@@ -137,7 +137,6 @@ object Barrister_PRL_FL401 {
               .body(ElFileBody("bodies/prl/fl401/PRLDraftAnOrderHearingDetails.json"))
               .check(jsonPath("$.data.previewOrderDoc.document_hash").saveAs("document_hash"))
               .check(jsonPath("$.data.previewOrderDoc.document_url").saveAs("document_url"))
-              .check(jsonPath("$.data.previewOrderDoc.document_binary_url").saveAs("document_binary_url"))
               .check(jsonPath("$.data.previewOrderDoc.document_filename").saveAs("document_filename"))
               .check(substring("attendToCourt"))
               .check(status.is(200)))
