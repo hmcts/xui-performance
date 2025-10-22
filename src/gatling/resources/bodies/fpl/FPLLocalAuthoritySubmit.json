@@ -5,19 +5,19 @@
       "email": "#{laName}@test.com",
       "pbaNumberDynamicList": {
         "value": {
-          "code": "PBA0080000",
-          "label": "PBA0080000"
+          "code": "PBA0066906",
+          "label": "PBA0066906"
         },
         "list_items": [
           {
-            "code": "PBA0080000",
-            "label": "PBA0080000"
+            "code": "PBA0066906",
+            "label": "PBA0066906"
           }
         ]
       },
       "legalTeamManager": null,
-      "pbaNumber": "PBA0080000",
-      "customerReference": "PBA0080000",
+      "pbaNumber": "PBA0066906",
+      "customerReference": "PBA0066906",
       "clientCode": null,
       "phone": null,
       "id": "#{laId}",
