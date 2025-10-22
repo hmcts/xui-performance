@@ -3,14 +3,25 @@
       "localAuthority": {
          "name": "#{laName}",
          "email": "#{laName}@test.com",
+         "pbaNumberDynamicList": {
+            "value": {
+               "code": "PBA0066906",
+               "label": "PBA0066906"
+            },
+            "list_items": [
+               {
+                  "code": "PBA0066906",
+                  "label": "PBA0066906"
+               }
+            ]
+         },
          "legalTeamManager": null,
          "pbaNumber": "PBA0066906",
          "customerReference": "PBA0066906",
          "clientCode": null,
-         "colleagues": [],
          "phone": null,
          "id": "#{laId}",
-         "designated": null,
+         "designated": "Yes",
          "address": {
             "AddressLine1": "#{laAddressLine1}",
             "AddressLine2": "#{laAddressLine2}",
@@ -20,6 +31,7 @@
             "PostCode": "#{laPostcode}",
             "Country": "UK"
          },
+         "colleagues": [],
          "representingDetails": {
             "firstName": null,
             "lastName": null
@@ -35,14 +47,25 @@
       "localAuthority": {
          "name": "#{laName}",
          "email": "#{laName}@test.com",
+         "pbaNumberDynamicList": {
+            "value": {
+               "code": "PBA0066906",
+               "label": "PBA0066906"
+            },
+            "list_items": [
+               {
+                  "code": "PBA0066906",
+                  "label": "PBA0066906"
+               }
+            ]
+         },
          "legalTeamManager": null,
          "pbaNumber": "PBA0066906",
          "customerReference": "PBA0066906",
          "clientCode": null,
-         "colleagues": [],
          "phone": null,
          "id": "#{laId}",
-         "designated": null,
+         "designated": "Yes",
          "address": {
             "AddressLine1": "#{laAddressLine1}",
             "AddressLine2": "#{laAddressLine2}",
@@ -52,6 +75,7 @@
             "PostCode": "#{laPostcode}",
             "Country": "UK"
          },
+         "colleagues": [],
          "representingDetails": {
             "firstName": null,
             "lastName": null
