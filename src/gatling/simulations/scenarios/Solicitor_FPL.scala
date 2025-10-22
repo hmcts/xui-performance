@@ -445,7 +445,7 @@ object Solicitor_FPL {
     Select options and click Continue:
     Local Authority Name: pre-filled (captured)
     Local Authority Group Email Address: Text
-    PBA Number: PBA0066906
+    PBA Number: PBA0080000
     Address: pre-filled (captured)
     Phone Number: 07000000000
     ======================================================================================*/
@@ -478,7 +478,8 @@ object Solicitor_FPL {
         .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/fpl/FPLLocalAuthorityColleagueAdd.json"))
         .check(jsonPath("$.data.applicantContact.firstName").is("PerfTest"))
-        .check(jsonPath("$.data.applicantContact.lastName").is("ApplicantContact")))
+        .check(jsonPath("$.data.applicantContact.lastName").is("ApplicantContact"))
+        .check(jsonPath("$.data.applicantContactOthers[0].id").saveAs("applicantContactOthersId")))
     }
 
     .pause(MinThinkTime , MaxThinkTime )
