@@ -445,7 +445,7 @@ object Solicitor_FPL {
     Select options and click Continue:
     Local Authority Name: pre-filled (captured)
     Local Authority Group Email Address: Text
-    PBA Number: PBA0080000
+    PBA Number: PBA0066906
     Address: pre-filled (captured)
     Phone Number: 07000000000
     ======================================================================================*/
