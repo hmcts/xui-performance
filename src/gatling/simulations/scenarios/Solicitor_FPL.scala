@@ -478,7 +478,8 @@ object Solicitor_FPL {
         .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/fpl/FPLLocalAuthorityColleagueAdd.json"))
         .check(jsonPath("$.data.applicantContact.firstName").is("PerfTest"))
-        .check(jsonPath("$.data.applicantContact.lastName").is("ApplicantContact")))
+        .check(jsonPath("$.data.applicantContact.lastName").is("ApplicantContact"))
+        .check(jsonPath("$.data.applicantContactOthers[0].id").saveAs("applicantContactOthersId")))
     }
 
     .pause(MinThinkTime , MaxThinkTime )
