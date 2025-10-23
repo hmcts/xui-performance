@@ -1,0 +1,34 @@
+{
+   "data": {
+      "draftOrderOptions": "draftAnOrder",
+      "caseTypeOfApplication": "FL401",
+      "sdoPreamblesTempList": null,
+      "sdoCafcassOrCymruTempList": null,
+      "sdoLocalAuthorityTempList": null,
+      "sdoCourtTempList": null,
+      "sdoDocumentationAndEvidenceTempList": null,
+      "sdoOtherTempList": null,
+      "sdoHearingsAndNextStepsTempList": null,
+      "listElementsSetToDefaultValue": null
+   },
+   "event": {
+      "id": "draftAnOrder",
+      "summary": "",
+      "description": ""
+   },
+   "event_data": {
+      "draftOrderOptions": "draftAnOrder",
+      "caseTypeOfApplication": "FL401",
+      "sdoPreamblesTempList": null,
+      "sdoCafcassOrCymruTempList": null,
+      "sdoLocalAuthorityTempList": null,
+      "sdoCourtTempList": null,
+      "sdoDocumentationAndEvidenceTempList": null,
+      "sdoOtherTempList": null,
+      "sdoHearingsAndNextStepsTempList": null,
+      "listElementsSetToDefaultValue": null
+   },
+   "event_token": "#{event_token}",
+   "ignore_warning": false,
+   "case_reference": "#{caseId}"
+}

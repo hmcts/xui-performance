@@ -1,7 +1,7 @@
 {
   "data": {
     "solicitorName": "#{C100SolicitorName}",
-    "feeAmount": "£232.00",
+    "feeAmount": "#{feeAmount}",
     "submitAndPayDownloadApplicationWelshLink": null,
     "submitAndPayDownloadApplicationLink": {
       "document_url": "#{DocumentUrl}",
@@ -22,7 +22,7 @@
     "applicantSolicitorEmailAddress": "#{user}",
     "caseworkerEmailAddress": "prl_caseworker_solicitor@mailinator.com",
     "solicitorName": "#{C100SolicitorName}",
-    "feeAmount": "£232.00",
+    "feeAmount": "#{feeAmount}",
     "submitAndPayDownloadApplicationWelshLink": null,
     "submitAndPayDownloadApplicationLink": {
       "document_url": "#{DocumentUrl}",

@@ -1,0 +1,121 @@
+{
+   "data": {
+      "soaServeToRespondentOptions": "No",
+      "soaRecipientsOptions": {
+         "value": [
+            {
+               "code":"#{personAppCode3}",
+               "label":"#{personAppLabel3}"
+            }
+         ],
+         "list_items": [
+            {
+               "code":"#{personAppCode1}",
+               "label":"#{personAppLabel1}"
+            },
+            {
+               "code":"#{personAppCode2}",
+               "label":"#{personAppLabel2}"
+            },
+            {
+               "code":"#{personAppCode3}",
+               "label":"#{personAppLabel3}"
+            }
+         ]
+      },
+      "soaOtherParties": {
+         "value": [],
+         "list_items": [
+            {
+               "code":"#{otherPartiesAppCode1}",
+               "label":"#{otherPartiesAppLabel1}"
+            },
+            {
+               "code":"#{otherPartiesAppCode2}",
+               "label":"#{otherPartiesAppLabel2}"
+            }
+         ]
+      },
+      "soaCafcassCymruServedOptions": "Yes",
+      "soaCafcassCymruEmail": "test@testcafcass.com",
+      "soaServeLocalAuthorityYesOrNo": "No"
+   },
+   "event": {
+      "id": "serviceOfApplication",
+      "summary": "",
+      "description": ""
+   },
+   "event_data": {
+      "serviceOfApplicationHeader": null,
+      "isConfidential": "Yes",
+      "serviceOfApplicationScreen1": {
+         "value": [
+            {
+               "code":"#{appCode1}",
+               "label":"#{appLabel1}"
+            }
+         ],
+         "list_items": [
+            {
+               "code":"#{appCode1}",
+               "label":"#{appLabel1}"
+            }
+         ]
+      },
+      "pd36qLetter": {
+         "document_url": "#{pd36qLetter_document_url}",
+         "document_binary_url": "#{pd36qLetter_document_url}/binary",
+         "document_filename": "120KB.pdf"
+      },
+      "specialArrangementsLetter": {
+         "document_url": "#{specialArrangementsLetter_document_url}",
+         "document_binary_url": "#{specialArrangementsLetter_document_url}/binary",
+         "document_filename": "120KB.pdf"
+      },
+      "additionalDocumentsList": [],
+      "soaIsOrderListEmpty": "No",
+      "missingAddressWarningText": "<div class='govuk-warning-text'><span class='govuk-warning-text__icon' aria-hidden='true'>!</span><strong class='govuk-warning-text__text'>There is no postal address for other people in the case</strong></div>",
+      "soaServeToRespondentOptions": "No",
+      "soaRecipientsOptions": {
+         "value": [
+            {
+               "code":"#{personAppCode3}",
+               "label":"#{personAppLabel3}"
+            }
+         ],
+         "list_items": [
+            {
+               "code":"#{personAppCode1}",
+               "label":"#{personAppLabel1}"
+            },
+            {
+               "code":"#{personAppCode2}",
+               "label":"#{personAppLabel2}"
+            },
+            {
+               "code":"#{personAppCode3}",
+               "label":"#{personAppLabel3}"
+            }
+         ]
+      },
+      "soaOtherParties": {
+         "value": [],
+         "list_items": [
+            {
+               "code":"#{otherPartiesAppCode1}",
+               "label":"#{otherPartiesAppLabel1}"
+            },
+            {
+               "code":"#{otherPartiesAppCode2}",
+               "label":"#{otherPartiesAppLabel2}"
+            }
+         ]
+      },
+      "soaCafcassCymruServedOptions": "Yes",
+      "soaCafcassCymruEmail": "test@testcafcass.com",
+      "soaServeLocalAuthorityYesOrNo": "No"
+   },
+   "event_token": "#{event_token}",
+   "ignore_warning": false,
+   "case_reference": "#{caseId}"
+}

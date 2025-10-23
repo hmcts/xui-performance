@@ -1534,7 +1534,7 @@ object Solicitor_PRL_C100 {
         .body(ElFileBody("bodies/prl/c100/PRLViewPdfContinueSubmit.json")))
 
       .exec(http("XUI_PRL_C100_640_010_ViewPdfSubmit")
-        .get("/data/internal/cases/#{caseId}")
+        .get("/data/internal/cases/#{caseId}")   
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -1581,6 +1581,8 @@ object Solicitor_PRL_C100 {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.case_fields[17].value").saveAs("courtName"))
+        .check(jsonPath("$.case_fields[7].value").saveAs("feeAmount"))
         .check(jsonPath("$.id").is("submitAndPay")))
 
       .exec(Common.userDetails)
@@ -1679,34 +1681,69 @@ object Solicitor_PRL_C100 {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+    /*======================================================================================
+    * Select Dummy Payment Confirmation
+    ======================================================================================*/
+
+    .exec(http("XUI_PRL_C100_710_DummyPaymentEventTrigger")
+        .get("/data/internal/cases/#{caseId}/event-triggers/testingSupportPaymentSuccessCallback?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("testingSupportPaymentSuccessCallback")))
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    .group("XUI_PRL_C100_720_DummySubmitAndPayNow") {
+      exec(http("XUI_PRL_C100_720_005_DummySubmitAndPayNow")
+        .post("/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/prl/c100/PRLDummyPaymentSubmit.json"))
+        .check(substring("created_on")))
+
+      .exec(http("XUI_PRL_C100_730_010_DummySubmitAndPayNowViewCase")
+        .get("/data/internal/cases/#{caseId}")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .check(jsonPath("$.events[?(@.event_id=='testingSupportPaymentSuccessCallback')]")))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
     val HearingsTab = 
 
     /*======================================================================================
     * Click on the Hearings tab to view any Hearings
     ======================================================================================*/
 
-    group("XUI_PRL_C100_710_HearingsTab") {
-      exec(http("XUI_PRL_C100_710_GetHearings")
+    group("XUI_PRL_C100_730_HearingsTab") {
+      exec(http("XUI_PRL_C100_730_GetHearings")
         .get("/api/hearings/getHearings?caseId=#{caseId}")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*")
         .check(status.in(200, 403)))
 
-      .exec(http("XUI_PRL_C100_710_GetHearingsJurisdiction")
+      .exec(http("XUI_PRL_C100_730_GetHearingsJurisdiction")
         .post("/api/hearings/loadServiceHearingValues?jurisdictionId=PRIVATELAW")
         .headers(Headers.commonHeader)
-        .header("Content-Type", "application/json; charset=utf-8")
+        .header("Content-Type", "application/json")
         .header("Accept", "application/json, text/plain, */*")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody("""{"caseReference":"#{caseId}"}"""))
+        .body(StringBody("""{"caseReference":"#{caseId}"}""""))
         .check(substring("hearing-facilities")))
 
-      .exec(http("XUI_PRL_C100_710_GetRoleAssignments")
+      .exec(http("XUI_PRL_C100_730_GetRoleAssignments")
         .get("/api/user/details?refreshRoleAssignments=undefined")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*"))
 
-      .exec(http("XUI_PRL_C100_710_GetHearingTypes")
+      .exec(http("XUI_PRL_C100_730_GetHearingTypes")
         .get("/api/prd/lov/getLovRefData?categoryId=HearingType&serviceId=ABA5&isChildRequired=N")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*")
