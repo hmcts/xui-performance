@@ -24,7 +24,7 @@
       "PostCode": "#{addressLines(3)}",
       "Country": "United Kingdom"
     },
-    "rSolicitorPhone": null,
+    "rSolicitorPhone": "07000000009",
     "rSolicitorEmail": "#{firmName}Resp@test.com",
     "rSolicitorDXnumber": null
   },
@@ -56,7 +56,7 @@
       "PostCode": "#{addressLines(3)}",
       "Country": "UK"
     },
-    "solicitorPhone": null,
+    "solicitorPhone": "07000000000",
     "solicitorEmail": "#{firmName}@test.com",
     "solicitorDXnumber": null,
     "solicitorAgreeToReceiveEmails": "No",
@@ -92,7 +92,7 @@
       "PostCode": "#{addressLines(3)}",
       "Country": "United Kingdom"
     },
-    "rSolicitorPhone": null,
+    "rSolicitorPhone": "07000000009",
     "rSolicitorEmail": "#{firmName}Resp@test.com",
     "rSolicitorDXnumber": null
   },
