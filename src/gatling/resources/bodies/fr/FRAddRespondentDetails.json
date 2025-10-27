@@ -57,7 +57,7 @@
       "Country": "UK"
     },
     "solicitorPhone": null,
-    "solicitorEmail": "#{firmName}@test.com",
+    "solicitorEmail": "#{firmName}Resp@test.com",
     "solicitorDXnumber": null,
     "solicitorAgreeToReceiveEmails": "No",
     "divorceCaseNumber": "EZ12D91234",
