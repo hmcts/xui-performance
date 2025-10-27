@@ -21,7 +21,7 @@
       "PostCode": "#{firmPostcode}",
       "Country": "UK"
     },
-    "solicitorPhone": null,
+    "solicitorPhone": "07000000000",
     "solicitorEmail": "#{firmName}@test.com",
     "solicitorDXnumber": null,
     "solicitorAgreeToReceiveEmails": "No"
