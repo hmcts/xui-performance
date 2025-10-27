@@ -25,7 +25,7 @@
       "Country": "United Kingdom"
     },
     "rSolicitorPhone": null,
-    "rSolicitorEmail": null,
+    "rSolicitorEmail": "#{firmName}Resp@test.com",
     "rSolicitorDXnumber": null
   },
   "event": {
@@ -57,7 +57,7 @@
       "Country": "UK"
     },
     "solicitorPhone": null,
-    "solicitorEmail": "#{firmName}Resp@test.com",
+    "solicitorEmail": "#{firmName}@test.com",
     "solicitorDXnumber": null,
     "solicitorAgreeToReceiveEmails": "No",
     "divorceCaseNumber": "EZ12D91234",
@@ -93,7 +93,7 @@
       "Country": "United Kingdom"
     },
     "rSolicitorPhone": null,
-    "rSolicitorEmail": null,
+    "rSolicitorEmail": "#{firmName}Resp@test.com",
     "rSolicitorDXnumber": null
   },
   "event_token": "#{event_token}",
