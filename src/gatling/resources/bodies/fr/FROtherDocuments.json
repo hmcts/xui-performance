@@ -69,7 +69,7 @@
       "Country": "United Kingdom"
     },
     "rSolicitorPhone": null,
-    "rSolicitorEmail": null,
+    "rSolicitorEmail": "#{firmName}Resp@test.com",
     "rSolicitorDXnumber": null,
     "natureOfApplication2": [
       "Lump Sum Order"
