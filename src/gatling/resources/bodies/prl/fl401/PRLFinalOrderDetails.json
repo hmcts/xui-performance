@@ -1,0 +1,23 @@
+{
+   "data": {
+      "dateFinalDecisionWasMade": {
+         "finalDecisionDate": "#{currentDate}T12:00:00.000"
+      },
+      "finalOutcomeForChildren": []
+   },
+   "event": {
+      "id": "recordFinalDecision",
+      "summary": "",
+      "description": ""
+   },
+   "event_data": {
+      "isTheDecisionAboutAllChildren": "Yes",
+      "dateFinalDecisionWasMade": {
+         "finalDecisionDate": "#{currentDate}T12:00:00.000"
+      },
+      "finalOutcomeForChildren": []
+   },
+   "event_token": "#{event_token}",
+   "ignore_warning": false,
+   "case_reference": "#{caseId}"
+}

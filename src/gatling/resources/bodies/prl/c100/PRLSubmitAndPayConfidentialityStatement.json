@@ -6,7 +6,8 @@
       ]
     },
     "applicantSolicitorEmailAddress": "#{user}",
-    "caseworkerEmailAddress": "prl_caseworker_solicitor@mailinator.com"
+    "caseworkerEmailAddress": "prl_caseworker_solicitor@mailinator.com",
+    "courtName": "#{courtName}"
   },
   "event": {
     "id": "submitAndPay",
@@ -20,7 +21,8 @@
       ]
     },
     "applicantSolicitorEmailAddress": "#{user}",
-    "caseworkerEmailAddress": "prl_caseworker_solicitor@mailinator.com"
+    "caseworkerEmailAddress": "prl_caseworker_solicitor@mailinator.com",
+    "courtName": "#{courtName}"
   },
   "event_token": "#{event_token}",
   "ignore_warning": false,

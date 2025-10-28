@@ -1,0 +1,76 @@
+{
+   "data": {
+      "soaServeToRespondentOptions": "No",
+      "soaRecipientsOptions": {
+         "value": [
+            {
+               "code":"#{appCode2}",
+               "label":"#{appLabel2}"
+            }
+         ],
+         "list_items": [
+            {
+               "code":"#{appCode1}",
+               "label":"#{appLabel1}"
+            },
+            {
+               "code":"#{appCode2}",
+               "label":"#{appLabel2}"
+            }
+         ]
+      }
+   },
+   "event": {
+      "id": "serviceOfApplication",
+      "summary": "",
+      "description": ""
+   },
+   "event_data": {
+      "isConfidential": "Yes",
+      "serviceOfApplicationHeader": null,
+      "serviceOfApplicationScreen1": {
+         "value": [
+            {
+               "code":"#{appCodeOrder1}",
+               "label":"#{appLabelOrder1}"
+            }
+         ],
+         "list_items": [
+            {
+               "code":"#{appCodeOrder1}",
+               "label":"#{appLabelOrder1}"
+            }
+         ]
+      },
+      "noticeOfSafetySupportLetter": {
+         "document_url": "#{document_url}",
+         "document_binary_url": "#{document_url}/binary",
+         "document_filename": "120KB.pdf"
+      },
+      "additionalDocumentsList": [],
+      "soaIsOrderListEmpty": "No",
+      "missingAddressWarningText": "",
+      "soaServeToRespondentOptions": "No",
+      "soaRecipientsOptions": {
+         "value": [
+            {
+               "code":"#{appCode2}",
+               "label":"#{appLabel2}"
+            }
+         ],
+         "list_items": [
+            {
+               "code":"#{appCode1}",
+               "label":"#{appLabel1}"
+            },
+            {
+               "code":"#{appCode2}",
+               "label":"#{appLabel2}"
+            }
+         ]
+      }
+   },
+   "event_token": "#{event_token}",
+   "ignore_warning": false,
+   "case_reference": "#{caseId}"
+}

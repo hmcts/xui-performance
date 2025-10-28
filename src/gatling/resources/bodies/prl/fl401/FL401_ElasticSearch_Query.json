@@ -1,0 +1,13 @@
+{
+   "_source": [
+      "reference"
+   ],
+   "query": {
+      "bool":{
+         "must":[
+            {"match": {"state":"PREPARE_FOR_HEARING_CONDUCT_HEARING"}},
+            {"match": {"data.CaseAccessCategory":"FL401"}}
+         ]
+      }
+   }
+}
