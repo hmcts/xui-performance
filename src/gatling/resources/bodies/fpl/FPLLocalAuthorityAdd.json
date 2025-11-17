@@ -21,7 +21,7 @@
          "clientCode": null,
          "phone": null,
          "id": "#{laId}",
-         "designated": "Yes",
+         "designated": null,
          "address": {
             "AddressLine1": "#{laAddressLine1}",
             "AddressLine2": "#{laAddressLine2}",
@@ -44,6 +44,7 @@
       "description": ""
    },
    "event_data": {
+      "isCTSCUser": "No",
       "localAuthority": {
          "name": "#{laName}",
          "email": "#{laName}@test.com",
