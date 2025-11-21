@@ -1,47 +1,31 @@
 {
-  "data": {
-     "appellantTitle": "Mr",
-     "appellantGivenNames": "#{firstName}",
-     "appellantFamilyName": "#{lastName}",
-     "appellantDateOfBirth": "1980-09-01"
-  },
-  "event": {
-     "id": "startAppeal",
-     "summary": "",
-     "description": ""
-  },
-  "event_data": {
-     "isOutOfCountryEnabled": "Yes",
-     "checklist": {
-        "checklist2": [
-           "isNotDetained"
-        ],
-        "checklist7": [
-           "isNotEUDecision"
-        ]
-     },
-     "appellantInUk": "Yes",
-     "homeOfficeReferenceNumber": "123456789",
-     "homeOfficeDecisionDate": "#{currentDate}",
-     "uploadTheNoticeOfDecisionDocs": [
-        {
-           "value": {
-              "description": "test doc1",
-              "document": {
-                 "document_url": "#{DocumentURL1}",
-                 "document_binary_url": "#{DocumentURL1}/binary",
-                 "document_filename": "3MB.pdf",
-                 "document_hash": "#{DocumentHash}"
-              }
-           },
-           "id": null
-        }
-     ],
-     "appellantTitle": "Mr",
-     "appellantGivenNames": "#{firstName}",
-     "appellantFamilyName": "#{lastName}",
-     "appellantDateOfBirth": "#{dobYear}-#{dobMonth}-#{dobDay}"
-  },
+   "data": {
+      "appellantTitle": "Mr",
+      "appellantGivenNames": "#{firstName}",
+      "appellantFamilyName": "Test",
+      "appellantDateOfBirth": "#{dobYear}-#{dobMonth}-#{dobDay}"
+   },
+   "event": {
+      "id": "startAppeal",
+      "summary": "",
+      "description": ""
+   },
+   "event_data": {
+      "searchParties": [],
+      "isCaseUsingLocationRefData": null,
+      "checklist": {
+         "checklist2": [
+            "isNotDetained"
+         ]
+      },
+      "isOutOfCountryEnabled": "Yes",
+      "appellantInUk": "Yes",
+      "homeOfficeReferenceNumber": "123456789",
+      "appellantTitle": "Mr",
+      "appellantGivenNames": "#{firstName}",
+      "appellantFamilyName": "#{lastName}",
+      "appellantDateOfBirth": "#{dobYear}-#{dobMonth}-#{dobDay}"
+   },
   "event_token": "#{event_token}",
   "ignore_warning": false
 }
