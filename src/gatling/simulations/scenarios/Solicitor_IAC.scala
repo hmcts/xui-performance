@@ -109,6 +109,11 @@ object Solicitor_IAC {
     }
     .pause(MinThinkTime, MaxThinkTime)
 
+  /*======================================================================================
+  *Business process : Following business process is for IAC Case Creation
+  *Enter the appeal basic details
+  ======================================================================================*/
+
     .group("XUI_IAC_100_StartAppealBasicDetails") {
       exec(http("XUI_IAC_100_StartAppealBasicDetails")
         .post("/data/case-types/Asylum/validate?pageId=startAppealappellantBasicDetails")
@@ -120,6 +125,11 @@ object Solicitor_IAC {
     }
 
     .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+  *Business process : Following business process is for IAC Case Creation
+  *Enter the appealant nationality
+  ======================================================================================*/
 
     .group("XUI_IAC_110_StartAppealantNationality") {
       exec(http("XUI_IAC_110_StartAppealantNationality")
@@ -137,6 +147,11 @@ object Solicitor_IAC {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+  /*======================================================================================
+  *Business process : Following business process is for IAC Case Creation
+  *Enter postcode and confirm address
+  ======================================================================================*/
+
     .group("XUI_IAC_130_StartAppealAppellantAddress") {
       exec(http("XUI_IAC_130_StartAppealAppellantAddress")
         .post("/data/case-types/Asylum/validate?pageId=startAppealappellantAddress")
@@ -151,6 +166,11 @@ object Solicitor_IAC {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+  /*======================================================================================
+  *Business process : Following business process is for IAC Case Creation
+  *Select contact preferences & enter email address
+  ======================================================================================*/
+
     .group("XUI_IAC_140_AppellantContactPref") {
       exec(http("XUI_IAC_140_AppellantContactPref")
         .post("/data/case-types/Asylum/validate?pageId=startAppealappellantContactPreference")
@@ -162,6 +182,11 @@ object Solicitor_IAC {
     }
 
     .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+  *Business process : Following business process is for IAC Case Creation
+  *Select the appeal type
+  ======================================================================================*/
 
     .group("XUI_IAC_150_StartAppealAppealType") {
       exec(http("XUI_IAC_150_StartAppealAppealType")
@@ -175,6 +200,11 @@ object Solicitor_IAC {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+  /*======================================================================================
+  *Business process : Following business process is for IAC Case Creation
+  *Select the grounds for appeal
+  ======================================================================================*/
+
     .group("XUI_IAC_160_StartAppealGroundsRevocation") {
       exec(http("XUI_IAC_160_StartAppealGroundsRevocation")
         .post("/data/case-types/Asylum/validate?pageId=startAppealappealGroundsHumanRightsRefusal")
@@ -187,6 +217,11 @@ object Solicitor_IAC {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+  /*======================================================================================
+  *Business process : Following business process is for IAC Case Creation
+  *Enter the Home Office letter decision date
+  ======================================================================================*/
+
     .group("XUI_IAC_170_StartAppealHomeOfficeDecisionDate") {
       exec(http("XUI_IAC_170_StartAppealHomeOfficeDecisionDate")
         .post("/data/case-types/Asylum/validate?pageId=startAppealhomeOfficeDecisionLetter")
@@ -198,6 +233,11 @@ object Solicitor_IAC {
     }
 
     .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+  *Business process : Following business process is for IAC Case Creation
+  *Upload the notice decision & continue
+  ======================================================================================*/
 
     .group("XUI_IAC_180_UploadNoticeDecision") {
       exec(http("XUI_IAC_180_005_UploadNoticeDecision")
@@ -230,6 +270,11 @@ object Solicitor_IAC {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+  /*======================================================================================
+  *Business process : Following business process is for IAC Case Creation
+  *Select no sponsor & continue
+  ======================================================================================*/
+
     .group("XUI_IAC_200_StartAppealSponsor") {
       exec(http("XUI_IAC_200_StartAppealSponsor")
         .post("/data/case-types/Asylum/validate?pageId=startAppealsponsor")
@@ -242,6 +287,11 @@ object Solicitor_IAC {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+  /*======================================================================================
+  *Business process : Following business process is for IAC Case Creation
+  *Select any deportation order options (no)
+  ======================================================================================*/
+
     .group("XUI_IAC_210_StartAppealDeportationOrder") {
       exec(http("XUI_IAC_210_StartAppealDeportationOrder")
         .post("/data/case-types/Asylum/validate?pageId=startAppealdeportationOrderPage")
@@ -253,6 +303,11 @@ object Solicitor_IAC {
     }
 
     .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+  *Business process : Following business process is for IAC Case Creation
+  *Enter any new appeal matters
+  ======================================================================================*/
 
     .group("XUI_IAC_220_StartAppealNewMatters") {
       exec(http("XUI_IAC_220_StartAppealNewMatters")
@@ -267,7 +322,7 @@ object Solicitor_IAC {
 
 /*======================================================================================
 *Business process : Following business process is for IAC Case Creation
-*Below group contains all the requests for entering the details if appealant has any other appeals
+*Enter any other new appeals
 ======================================================================================*/
 
     .group("XUI_IAC_230_StartAppealHasOtherAppeals") {
@@ -283,7 +338,7 @@ object Solicitor_IAC {
 
 /*======================================================================================
 *Business process : Following business process is for IAC  Case Creation
-*Below group contains all the requests for entering the details of appeallant legal representative details
+*Enter the legal representative details
 ======================================================================================*/
 
     .group("XUI_IAC_240_StartAppealLegalRepresentative") {
@@ -302,7 +357,7 @@ object Solicitor_IAC {
 
 /*======================================================================================
 *Business process : Following business process is for IAC  Case Creation
-*Below group contains all the requests for selecting appeal type and fee
+*Select the Fee Decision option
 ======================================================================================*/
 
     .group("XUI_IAC_250_StartAppealFeeDecision") {
@@ -318,46 +373,6 @@ object Solicitor_IAC {
     }
 
     .pause(MinThinkTime, MaxThinkTime)
-
-/*======================================================================================
-*Business process : Following business process is for IAC  Case Creation
-*Below group contains all the requests for selecting Remission Type
-======================================================================================*/
-
-//    .group("XUI_IAC_220_StartAppealPayByAccount") {
-//      exec(http("XUI_IAC_220_StartAppealPayByAccount")
-//        .post("/data/case-types/Asylum/validate?pageId=startAppealpaymentOptions")
-//        .headers(Headers.commonHeader)
-//        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-//        .header("x-xsrf-token", "#{XSRFToken}")
-//        .body(ElFileBody("bodies/iac/IACAppealPaymentOption.json"))
-//        .check(substring("howToPayLabel")))
-//
-//      .exec(Common.profile)
-//    }
-//
-//    .pause(MinThinkTime, MaxThinkTime)
-//
-///*======================================================================================
-//*Business process : Following business process is for IAC  Case Creation
-//*Below group contains all the requests for selecting Remission Type
-//======================================================================================*/
-//
-//  .group("XUI_IAC_230_StartAppealPaymentType") {
-//      exec(http("XUI_IAC_230_StartAppealPaymentType")
-//        .post("/data/case-types/Asylum/validate?pageId=startAppealpaymentOptions")
-//        .headers(Headers.commonHeader)
-//        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-//        .header("x-xsrf-token", "#{XSRFToken}")
-//        .body(ElFileBody("bodies/iac/IACAppealPaymentOption.json"))
-//        .check(substring("howToPayLabel"))
-//        // .check(jsonPath("").saveAs("legalRepName"))
-//        )
-//
-//      .exec(Common.profile)
-//    }
-//
-//    .pause(MinThinkTime, MaxThinkTime)
 
 /*======================================================================================
 *Business process : Following business process is for IAC Case Creation
@@ -379,7 +394,7 @@ object Solicitor_IAC {
 
 /*======================================================================================
 *Business process : Following business process is for IAC Case Creation
-*Below group contains all the requests for starting start submit appeal
+*Check all details and Submit
 ======================================================================================*/
 
     .group("XUI_IAC_270_005_StartSubmitAppeal") {
