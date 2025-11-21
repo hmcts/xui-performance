@@ -23,21 +23,6 @@
      },
      "appellantInUk": "Yes",
      "homeOfficeReferenceNumber": "123456789",
-     "homeOfficeDecisionDate": "#{currentDate}",
-     "uploadTheNoticeOfDecisionDocs": [
-        {
-           "value": {
-              "description": "test doc 1",
-              "document": {
-                 "document_url": "#{DocumentURL1}",
-                 "document_binary_url": "#{DocumentURL1}/binary",
-                 "document_filename": "3MB.pdf",
-                 "document_hash": "#{DocumentHash}"
-              }
-           },
-           "id": null
-        }
-     ],
      "appellantTitle": "Mr",
      "appellantGivenNames": "#{firstName}",
      "appellantFamilyName": "#{lastName}",
@@ -48,7 +33,7 @@
            "value": {
               "code": "AF"
            },
-           "id": null
+           "id": "#{nationalityId}"
         }
      ],
      "appellantHasFixedAddress": "Yes",
