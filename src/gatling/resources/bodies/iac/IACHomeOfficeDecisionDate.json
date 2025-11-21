@@ -1,6 +1,6 @@
 {
   "data": {
-    "homeOfficeDecisionDate": "2025-11-20"
+    "homeOfficeDecisionDate": "#{currentDate}"
   },
   "event": {
     "id": "startAppeal",
