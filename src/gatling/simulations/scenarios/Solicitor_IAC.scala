@@ -1,11 +1,10 @@
 package scenarios
 
-import java.text.SimpleDateFormat
-import java.util.Date
-
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import utils.{Environment, Common, Headers}
+import java.text.SimpleDateFormat
+import java.util.Date
+import utils.{Common, Environment, Headers}
 
 object Solicitor_IAC {
 
@@ -101,7 +100,7 @@ object Solicitor_IAC {
 
     .group("XUI_IAC_080_StartAppealHomeOfficeDecision") {
       exec(http("XUI_IAC_080_StartAppealHomeOfficeDecision")
-      .post("/data/case-types/Asylum/validate?pageId=startAppealhomeOfficeDecision")
+      .post("/data/case-types/Asylum/validate?pageId=startAppealhomeOfficeReferenceNumber")
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("x-xsrf-token", "#{XSRFToken}")
@@ -110,13 +109,138 @@ object Solicitor_IAC {
     }
     .pause(MinThinkTime, MaxThinkTime)
 
-/*======================================================================================
-*Business process : Following business process is for IAC Case Creation
-*Below group contains all the requests for uploading notification Decision
-======================================================================================*/
+  /*======================================================================================
+  *Business process : Following business process is for IAC Case Creation
+  *Enter the appeal basic details
+  ======================================================================================*/
 
-    .group("XUI_IAC_090_UploadNoticeDecision") {
-      exec(http("XUI_IAC_090_005_UploadNoticeDecision")
+    .group("XUI_IAC_100_StartAppealBasicDetails") {
+      exec(http("XUI_IAC_100_StartAppealBasicDetails")
+        .post("/data/case-types/Asylum/validate?pageId=startAppealappellantBasicDetails")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACAppellantBasicDetails.json"))
+        .check(substring("appellantGivenNames")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+  *Business process : Following business process is for IAC Case Creation
+  *Enter the appealant nationality
+  ======================================================================================*/
+
+    .group("XUI_IAC_110_StartAppealantNationality") {
+      exec(http("XUI_IAC_110_StartAppealantNationality")
+        .post("/data/case-types/Asylum/validate?pageId=startAppealappellantNationalities")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACAppellantNationalities.json"))
+        .check(substring("hasNationality")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    .exec(Common.postcodeLookup)
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+  *Business process : Following business process is for IAC Case Creation
+  *Enter postcode and confirm address
+  ======================================================================================*/
+
+    .group("XUI_IAC_130_StartAppealAppellantAddress") {
+      exec(http("XUI_IAC_130_StartAppealAppellantAddress")
+        .post("/data/case-types/Asylum/validate?pageId=startAppealappellantAddress")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACAppellantAddress.json"))
+        .check(substring("appellantHasFixedAddress"))
+        .check(jsonPath("$.data.appellantNationalities[0].id").saveAs("nationalityId"))
+       )
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+  *Business process : Following business process is for IAC Case Creation
+  *Select contact preferences & enter email address
+  ======================================================================================*/
+
+    .group("XUI_IAC_140_AppellantContactPref") {
+      exec(http("XUI_IAC_140_AppellantContactPref")
+        .post("/data/case-types/Asylum/validate?pageId=startAppealappellantContactPreference")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACContactPreference.json"))
+        .check(substring("contactPreference")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+  *Business process : Following business process is for IAC Case Creation
+  *Select the appeal type
+  ======================================================================================*/
+
+    .group("XUI_IAC_150_StartAppealAppealType") {
+      exec(http("XUI_IAC_150_StartAppealAppealType")
+        .post("/data/case-types/Asylum/validate?pageId=startAppealappealType")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACAppealType.json"))
+        .check(substring("appealType")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+  *Business process : Following business process is for IAC Case Creation
+  *Select the grounds for appeal
+  ======================================================================================*/
+
+    .group("XUI_IAC_160_StartAppealGroundsRevocation") {
+      exec(http("XUI_IAC_160_StartAppealGroundsRevocation")
+        .post("/data/case-types/Asylum/validate?pageId=startAppealappealGroundsHumanRightsRefusal")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACAppealGrounds.json"))
+        .check(substring("appealGroundsDecisionHumanRightsRefusal")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+  *Business process : Following business process is for IAC Case Creation
+  *Enter the Home Office letter decision date
+  ======================================================================================*/
+
+    .group("XUI_IAC_170_StartAppealHomeOfficeDecisionDate") {
+      exec(http("XUI_IAC_170_StartAppealHomeOfficeDecisionDate")
+        .post("/data/case-types/Asylum/validate?pageId=startAppealhomeOfficeDecisionLetter")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACHomeOfficeDecisionDate.json"))
+        .check(substring("homeOfficeDecisionDate")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
+  *Business process : Following business process is for IAC Case Creation
+  *Upload the notice decision & continue
+  ======================================================================================*/
+
+    .group("XUI_IAC_180_UploadNoticeDecision") {
+      exec(http("XUI_IAC_180_005_UploadNoticeDecision")
         .post("/documentsv2")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -134,8 +258,8 @@ object Solicitor_IAC {
         .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL1")))
     }
 
-    .group("XUI_IAC_090_010_StartUploadNoticeDecision") {
-      exec(http("XUI_IAC_090_010_StartUploadNoticeDecision")
+    .group("XUI_IAC_190_010_StartUploadNoticeDecision") {
+      exec(http("XUI_IAC_190_010_StartUploadNoticeDecision")
       .post("/data/case-types/Asylum/validate?pageId=startAppealuploadTheNoticeOfDecision")
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -146,124 +270,30 @@ object Solicitor_IAC {
 
     .pause(MinThinkTime, MaxThinkTime)
 
-/*======================================================================================
-*Business process : Following business process is for IAC Case Creation
-*Below group contains all the requests for Appeal Basic Details
-======================================================================================*/
+  /*======================================================================================
+  *Business process : Following business process is for IAC Case Creation
+  *Select no sponsor & continue
+  ======================================================================================*/
 
-    .group("XUI_IAC_100_StartAppealBasicDetails") {
-      exec(http("XUI_IAC_100_StartAppealBasicDetails")
-        .post("/data/case-types/Asylum/validate?pageId=startAppealappellantBasicDetails")
+    .group("XUI_IAC_200_StartAppealSponsor") {
+      exec(http("XUI_IAC_200_StartAppealSponsor")
+        .post("/data/case-types/Asylum/validate?pageId=startAppealsponsor")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/iac/IACAppellantBasicDetails.json"))
-        .check(substring("appellantGivenNames")))
+        .body(ElFileBody("bodies/iac/IACAppealSponsor.json"))
+        .check(substring("hasSponsor")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
 
- /*======================================================================================
-*Business process : Following business process is for IAC Case Creation
-*Below group contains all the requests for Appealant nationality
-======================================================================================*/
+  /*======================================================================================
+  *Business process : Following business process is for IAC Case Creation
+  *Select any deportation order options (no)
+  ======================================================================================*/
 
-    .group("XUI_IAC_110_StartAppealantNationality") {
-      exec(http("XUI_IAC_110_StartAppealantNationality")
-        .post("/data/case-types/Asylum/validate?pageId=startAppealappellantNationalities")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/iac/IACAppellantNationalities.json"))
-        .check(substring("hasNationality")))
-    }
-
-    .pause(MinThinkTime, MaxThinkTime)
-
-/*======================================================================================
-*Business process : Following business process is for IAC Case Creation
-* Below group contains all the requests for Appealant address search
-======================================================================================*/
-    
-    .exec(Common.postcodeLookup)
-
-    .pause(MinThinkTime, MaxThinkTime)
-
-/*======================================================================================
-*Business process : Following business process is for IAC Case Creation
-* Below group contains all the requests for Appealant address
-======================================================================================*/
-
-    .group("XUI_IAC_130_StartAppealAppellantAddress") {
-      exec(http("XUI_IAC_130_StartAppealAppellantAddress")
-        .post("/data/case-types/Asylum/validate?pageId=startAppealappellantAddress")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/iac/IACAppellantAddress.json"))
-        .check(substring("appellantHasFixedAddress")))
-    }
-
-    .pause(MinThinkTime, MaxThinkTime)
-
-/*======================================================================================
-*Business process : Following business process is for IAC Case Creation
-*Below group contains all the requests for contact preference
-======================================================================================*/
-      
-    .group("XUI_IAC_140_AppellantContactPref") {
-      exec(http("XUI_IAC_140_AppellantContactPref")
-      .post("/data/case-types/Asylum/validate?pageId=startAppealappellantContactPreference")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "#{XSRFToken}")
-      .body(ElFileBody("bodies/iac/IACContactPreference.json"))
-      .check(substring("contactPreference")))
-    }
-
-    .pause(MinThinkTime, MaxThinkTime)
-
-/*======================================================================================
-*Business process : Following business process is for IAC Case Creation
-*Below group contains all the requests for entering the details of appeal type
-======================================================================================*/
-
-    .group("XUI_IAC_150_StartAppealAppealType") {
-      exec(http("XUI_IAC_150_StartAppealAppealType")
-        .post("/data/case-types/Asylum/validate?pageId=startAppealappealType")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/iac/IACAppealType.json"))
-        .check(substring("appealType")))
-    }
-
-    .pause(MinThinkTime, MaxThinkTime)
-
-/*======================================================================================
-*Business process : Following business process is for IAC Case Creation
-*Below group contains all the requests for entering the details of ground revocation
-======================================================================================*/
-
-    .group("XUI_IAC_160_StartAppealGroundsRevocation") {
-      exec(http("XUI_IAC_160_StartAppealGroundsRevocation")
-        .post("/data/case-types/Asylum/validate?pageId=startAppealappealGroundsHumanRightsRefusal")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/iac/IACAppealGrounds.json"))
-        .check(substring("appealGroundsDecisionHumanRightsRefusal")))
-    }
-
-    .pause(MinThinkTime, MaxThinkTime)
-
-/*======================================================================================
-*Business process : Following business process is for IAC Case Creation
-*Below group contains all the requests for entering the details of appeal new matters
-======================================================================================*/
-
-    .group("XUI_IAC_170_StartAppealNewMatters") {
-      exec(http("XUI_IAC_170_StartAppealNewMatters")
+    .group("XUI_IAC_210_StartAppealDeportationOrder") {
+      exec(http("XUI_IAC_210_StartAppealDeportationOrder")
         .post("/data/case-types/Asylum/validate?pageId=startAppealdeportationOrderPage")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -274,13 +304,13 @@ object Solicitor_IAC {
 
     .pause(MinThinkTime, MaxThinkTime)
 
-/*======================================================================================
-*Business process : Following business process is for IAC Case Creation
-*Below group contains all the requests for entering the details of appeal new matters
-======================================================================================*/
+  /*======================================================================================
+  *Business process : Following business process is for IAC Case Creation
+  *Enter any new appeal matters
+  ======================================================================================*/
 
-    .group("XUI_IAC_180_StartAppealNewMatters") {
-      exec(http("XUI_IAC_180_StartAppealNewMatters")
+    .group("XUI_IAC_220_StartAppealNewMatters") {
+      exec(http("XUI_IAC_220_StartAppealNewMatters")
         .post("/data/case-types/Asylum/validate?pageId=startAppealnewMatters")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -292,11 +322,11 @@ object Solicitor_IAC {
 
 /*======================================================================================
 *Business process : Following business process is for IAC Case Creation
-*Below group contains all the requests for entering the details if appealant has any other appeals
+*Enter any other new appeals
 ======================================================================================*/
 
-    .group("XUI_IAC_190_StartAppealHasOtherAppeals") {
-      exec(http("XUI_IAC_190_StartAppealHasOtherAppeals")
+    .group("XUI_IAC_230_StartAppealHasOtherAppeals") {
+      exec(http("XUI_IAC_230_StartAppealHasOtherAppeals")
         .post("/data/case-types/Asylum/validate?pageId=startAppealhasOtherAppeals")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -308,11 +338,11 @@ object Solicitor_IAC {
 
 /*======================================================================================
 *Business process : Following business process is for IAC  Case Creation
-*Below group contains all the requests for entering the details of appeallant legal representative details
+*Enter the legal representative details
 ======================================================================================*/
 
-    .group("XUI_IAC_200_StartAppealLegalRepresentative") {
-      exec(http("XUI_IAC_200_StartAppealLegalRepresentative")
+    .group("XUI_IAC_240_StartAppealLegalRepresentative") {
+      exec(http("XUI_IAC_240_StartAppealLegalRepresentative")
         .post("/data/case-types/Asylum/validate?pageId=startAppeallegalRepresentativeDetails")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -327,11 +357,11 @@ object Solicitor_IAC {
 
 /*======================================================================================
 *Business process : Following business process is for IAC  Case Creation
-*Below group contains all the requests for selecting appeal type and fee
+*Select the Fee Decision option
 ======================================================================================*/
 
-    .group("XUI_IAC_210_StartAppealFeeDecision") {
-      exec(http("XUI_IAC_210_StartAppealFeeDecision")
+    .group("XUI_IAC_250_StartAppealFeeDecision") {
+      exec(http("XUI_IAC_250_StartAppealFeeDecision")
         .post("/data/case-types/Asylum/validate?pageId=startAppealhearingFeeDecision")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -345,52 +375,12 @@ object Solicitor_IAC {
     .pause(MinThinkTime, MaxThinkTime)
 
 /*======================================================================================
-*Business process : Following business process is for IAC  Case Creation
-*Below group contains all the requests for selecting Remission Type
-======================================================================================*/
-
-    .group("XUI_IAC_220_StartAppealPayByAccount") {
-      exec(http("XUI_IAC_220_StartAppealPayByAccount")
-        .post("/data/case-types/Asylum/validate?pageId=startAppealpaymentOptions")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/iac/IACAppealPaymentOption.json"))
-        .check(substring("howToPayLabel")))
-
-      .exec(Common.profile)
-    }
-
-    .pause(MinThinkTime, MaxThinkTime)
-
-/*======================================================================================
-*Business process : Following business process is for IAC  Case Creation
-*Below group contains all the requests for selecting Remission Type
-======================================================================================*/
-
-  .group("XUI_IAC_230_StartAppealPaymentType") {
-      exec(http("XUI_IAC_230_StartAppealPaymentType")
-        .post("/data/case-types/Asylum/validate?pageId=startAppealpaymentOptions")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/iac/IACAppealPaymentOption.json"))
-        .check(substring("howToPayLabel"))
-        // .check(jsonPath("").saveAs("legalRepName"))
-        )
-
-      .exec(Common.profile)
-    }
-
-    .pause(MinThinkTime, MaxThinkTime)
-
-/*======================================================================================
 *Business process : Following business process is for IAC Case Creation
 *Below group contains all the requests for starting appeal case save
 ======================================================================================*/
 
-    .group("XUI_IAC_240_005_StartAppealCaseSave") {
-      exec(http("XUI_IAC_240_StartAppealCaseSave")
+    .group("XUI_IAC_260_StartAppealCaseSave") {
+      exec(http("XUI_IAC_260_StartAppealCaseSave")
         .post("/data/case-types/Asylum/cases?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-case.v2+json;charset=UTF-8")
@@ -404,11 +394,11 @@ object Solicitor_IAC {
 
 /*======================================================================================
 *Business process : Following business process is for IAC Case Creation
-*Below group contains all the requests for starting start submit appeal
+*Check all details and Submit
 ======================================================================================*/
 
-    .group("XUI_IAC_250_005_StartSubmitAppeal") {
-      exec(http("XUI_IAC_250_005_StartSubmitAppeal")
+    .group("XUI_IAC_270_005_StartSubmitAppeal") {
+      exec(http("XUI_IAC_270_005_StartSubmitAppeal")
         .get("/case/IA/Asylum/#{caseId}/trigger/submitAppeal")
         .headers(Headers.navigationHeader)
         .check(substring("HMCTS Manage")))
@@ -423,7 +413,7 @@ object Solicitor_IAC {
 
       .exec(Common.isAuthenticated)
 
-      .exec(http("XUI_IAC_250_035_SaveCaseView")
+      .exec(http("XUI_IAC_270_035_SaveCaseView")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
@@ -442,8 +432,8 @@ object Solicitor_IAC {
 *Below group contains all the requests for starting submit appeal
 ======================================================================================*/
 
-    .group("XUI_IAC_260_PayAndSubmitAppeal") {
-      exec(http("XUI_IAC_260_005_PayAndSubmitAppeal")
+    .group("XUI_IAC_280_PayAndSubmitAppeal") {
+      exec(http("XUI_IAC_280_005_PayAndSubmitAppeal")
       .get("/data/internal/cases/#{caseId}/event-triggers/submitAppeal?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -469,8 +459,8 @@ object Solicitor_IAC {
 * Below group contains all the requests for confirmation statement and clicking continue
 ======================================================================================*/
 
-    .group("XUI_IAC_270_ConfirmDeclaration") {
-      exec(http("XUI_IAC_270_005_ConfirmDeclaration")
+    .group("XUI_IAC_290_ConfirmDeclaration") {
+      exec(http("XUI_IAC_290_005_ConfirmDeclaration")
         .post("/data/case-types/Asylum/validate?pageId=payAndSubmitAppealdeclaration")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -488,8 +478,8 @@ object Solicitor_IAC {
 
     .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
 
-    .group("XUI_IAC_280_005_AppealDeclarationSubmitted") {
-      exec(http("XUI_IAC_280_AppealDeclarationSubmitted")
+    .group("XUI_IAC_300_AppealDeclarationSubmitted") {
+      exec(http("XUI_IAC_300_AppealDeclarationSubmitted")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -510,8 +500,8 @@ object Solicitor_IAC {
 
   val shareacase =
 
-    group("XUI_IAC_290_ShareACase") {
-      exec(http("XUI_IAC_290_005_ShareACase")
+    group("XUI_IAC_310_ShareACase") {
+      exec(http("XUI_IAC_310_005_ShareACase")
         .get("/api/caseshare/cases?case_ids=#{caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
