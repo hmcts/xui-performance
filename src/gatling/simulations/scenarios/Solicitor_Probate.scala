@@ -79,7 +79,7 @@ object Solicitor_Probate {
         .check(substring("""{"data":{}""")))
 
       .exec(http("XUI_Probate_060_010_CreateApplicationDraft")
-        .post("/data/internal/case-types/GrantOfRepresentation/drafts/")
+        .post("/data/internal/case-types/GrantOfRepresentation/drafts")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-draft-create.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
