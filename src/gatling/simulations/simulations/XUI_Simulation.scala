@@ -118,7 +118,7 @@ class XUI_Simulation extends Simulation {
 			.exec(Solicitor_PRL_C100.MIAM)
 			.exec(Solicitor_PRL_C100.ViewPdfApplication)
 			.exec(Solicitor_PRL_C100.SubmitAndPay)
-			.exec(Solicitor_PRL_C100.HearingsTab)
+//			.exec(Solicitor_PRL_C100.HearingsTab)
 			.exec(XuiHelper.Logout)
 		}
 
@@ -144,7 +144,7 @@ class XUI_Simulation extends Simulation {
 			.exec(Solicitor_PRL_FL401.UploadDocuments)
 			.exec(Solicitor_PRL_FL401.ViewPDF)
 			.exec(Solicitor_PRL_FL401.StatementOfTruth)
-			.exec(Solicitor_PRL_FL401.HearingsTab)
+//			.exec(Solicitor_PRL_FL401.HearingsTab)
 			.exec(XuiHelper.Logout)
 		}
 
