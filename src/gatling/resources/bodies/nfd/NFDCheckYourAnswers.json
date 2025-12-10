@@ -34,8 +34,8 @@
     "applicant1Gender": null,
     "divorceWho": "wife",
     "marriageFormationType": "oppositeSexCouple",
-    "applicant1Email": "applicant1@perftest12345.com",
-    "applicant1PhoneNumber": "07000000000",
+    "applicant1NonConfidentialEmail": "applicant1@perftest12345.com",
+    "applicant1NonConfidentialPhone": "07000000000",
     "applicant1AddressOverseas": "No",
     "applicant1NonConfidentialAddress": {
       "AddressLine1": "#{addressLines(0)}",
@@ -50,9 +50,8 @@
     "applicant2FirstName": "#{applicant2FirstName}",
     "applicant2MiddleName": null,
     "applicant2LastName": "#{applicant2LastName}",
-    "applicant2NameDifferentToMarriageCertificate": null,
-    "applicant2NameChangedHow": [],
-    "applicant2NameChangedHowOtherDetails": null,
+    "applicant2NameDifferentToMarriageCertificate": "No",
+    "marriageApplicant2Name": "#{applicant2FirstName} #{applicant2LastName}",
     "applicant2SolicitorRepresented": "Yes",
     "applicant2SolicitorName": "RespSolicitor",
     "applicant2SolicitorReference": "RespondentSolRef",
@@ -81,18 +80,12 @@
       "PostCode": "#{addressLines(3)}"
     },
     "marriageDate": "#{marriageYear}-#{marriageMonth}-#{marriageDay}",
-    "marriageApplicant1Name": "#{applicant1FirstName} #{applicant1LastName}",
-    "marriageApplicant2Name": "#{applicant2FirstName} #{applicant2LastName}",
     "marriageMarriedInUk": "Yes",
-    "marriagePlaceOfMarriage": null,
-    "marriageCountryOfMarriage": null,
     "jurisdictionConnections": [
       "F"
     ],
     "applicant1LegalProceedings": "No",
-    "applicant1LegalProceedingsDetails": null,
     "applicant1FinancialOrder": "No",
-    "applicant1FinancialOrdersFor": [],
     "applicant1DocumentsUploaded": [
       {
         "value": {
