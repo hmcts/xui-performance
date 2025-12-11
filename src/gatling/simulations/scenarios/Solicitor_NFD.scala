@@ -661,7 +661,7 @@ object Solicitor_NFD {
 
     .pause(MinThinkTime, MaxThinkTime)
 
-  val SignAndSubmitJoint =
+  val SignAndSubmitJoint = 
 
     /*======================================================================================
     * View Case
@@ -672,7 +672,7 @@ object Solicitor_NFD {
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
-        .check(jsonPath("$.state.id").is("Applicant2Approved")))
+        .check(jsonPath("$.state.id").is("Applicant2Approved"))) 
 
       .exec(Common.userDetails)
     }
