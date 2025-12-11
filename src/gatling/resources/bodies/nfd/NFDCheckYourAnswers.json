@@ -22,13 +22,15 @@
       "Organisation": {
         "OrganisationID": "#{orgref(0)}",
         "OrganisationName": "#{orgname(0)}"
-      }
+      },
+      "PreviousOrganisations": []
     },
     "applicant1ScreenHasMarriageBroken": "Yes",
     "applicant1FirstName": "#{applicant1FirstName}",
     "applicant1MiddleName": null,
     "applicant1LastName": "#{applicant1LastName}",
     "applicant1NameDifferentToMarriageCertificate": "No",
+    "marriageApplicant1Name": "#{applicant1FirstName} #{applicant1LastName}",
     "applicant1NameChangedHow": [],
     "applicant1NameChangedHowOtherDetails": null,
     "applicant1Gender": null,
@@ -58,6 +60,7 @@
     "applicant2SolicitorPhone": "07000000000",
     "applicant2SolicitorEmail": "#{user(1)}",
     "applicant2SolicitorAddress": "1 Perf Test Road\nPerf Test Town\nPR1 1RF",
+    "applicant2SolicitorAddressOverseas": "No",
     "applicant2SolicitorOrganisationPolicy": {
       "OrgPolicyCaseAssignedRole": "[APPTWOSOLICITOR]",
       "OrgPolicyReference": null,
@@ -68,7 +71,7 @@
       },
       "PreviousOrganisations": []
     },
-    "applicant2Email": "applicant2@perftest12345.com",
+    "applicant2NonConfidentialEmail": "applicant2@perftest12345.com",
     "applicant2AddressOverseas": "No",
     "applicant2NonConfidentialAddress": {
       "AddressLine1": "#{addressLines(0)}",
