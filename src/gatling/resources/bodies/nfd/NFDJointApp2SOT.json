@@ -28,18 +28,24 @@
     "labelContentDivorceOrLegallyEnd": "get a divorce",
     "applicant2ScreenHasMarriageBroken": "Yes",
     "applicant2FinancialOrder": "No",
-    "applicant2NeedsHelpWithFees": "No",
     "applicant1SolicitorAnswersLink": {
       "document_url": "#{app1AnswersDocumentURL}",
       "document_binary_url": "#{app1AnswersDocumentURL}/binary",
-      "document_filename": "#{app1AnswersFilename}"
+      "document_filename": "#{app1AnswersFilename}",
+      "document_hash": null
     },
     "applicant2ConfirmApplicant1Information": "No",
     "divorceOrDissolution": "divorce",
     "solStatementOfReconciliationCertify": "Yes",
     "solStatementOfReconciliationDiscussed": "Yes",
-    "applicant2PrayerHasBeenGivenCheckbox": [
-      "Yes"
+    "applicant2PrayerDissolveDivorce": [
+      "dissolveDivorce"
+    ],
+    "applicant2PrayerFinancialOrdersThemselves": [
+      "financialOrdersThemselves"
+    ],
+    "applicant2PrayerFinancialOrdersChild": [
+      "financialOrdersChild"
     ],
     "applicant2StatementOfTruth": "Yes",
     "applicant2SolSignStatementOfTruth": "Yes",
