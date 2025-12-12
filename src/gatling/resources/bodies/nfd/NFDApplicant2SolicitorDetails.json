@@ -6,23 +6,24 @@
     "applicant2SolicitorPhone": "07000000000",
     "applicant2SolicitorEmail": "#{user(1)}",
     "applicant2SolicitorAddress": "1 Perf Test Road\nPerf Test Town\nPR1 1RF",
+    "applicant2SolicitorAddressOverseas": "No",
+    "applicant2NonConfidentialEmail": "",
+    "applicant2AddressOverseas": "No",
     "applicant2SolicitorOrganisationPolicy": {
-      "OrgPolicyCaseAssignedRole": "[APPTWOSOLICITOR]",
-      "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
+      "LastNoCRequestedBy": null,
       "Organisation": {
         "OrganisationID": "#{orgref(1)}",
         "OrganisationName": "#{orgname(1)}"
-      }
+      },
+      "PreviousOrganisations": []
     },
-    "applicant2Email": "applicant2@perftest12345.com",
-    "applicant2AddressOverseas": "No",
     "applicant2NonConfidentialAddress": {
       "AddressLine1": "#{addressLines(0)}",
       "AddressLine2": "#{addressLines(1)}",
       "AddressLine3": "",
       "PostTown": "#{addressLines(2)}",
-      "County": "",
+      "County": null,
       "Country": "United Kingdom",
       "PostCode": "#{addressLines(3)}"
     }
@@ -34,6 +35,7 @@
   },
   "event_data": {
     #{NFDLabelsPopulated}
+    "supplementaryCaseType": "notApplicable",
     "coApplicant1IsDrafted": "No",
     "coApplicant1IsSubmitted": "No",
     "coApplicant2IsDrafted": null,
@@ -48,60 +50,64 @@
       "Yes"
     ],
     "applicant1SolicitorOrganisationPolicy": {
-      "OrgPolicyCaseAssignedRole": "[APPONESOLICITOR]",
-      "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
+      "LastNoCRequestedBy": null,
       "Organisation": {
         "OrganisationID": "#{orgref(0)}",
         "OrganisationName": "#{orgname(0)}"
-      }
+      },
+      "PreviousOrganisations": []
     },
     "applicant1ScreenHasMarriageBroken": "Yes",
     "applicant1FirstName": "#{applicant1FirstName}",
-    "applicant1MiddleName": null,
+    "applicant1MiddleName": "",
     "applicant1LastName": "#{applicant1LastName}",
     "applicant1NameDifferentToMarriageCertificate": "No",
+    "marriageApplicant1Name": "Perftest LastPerf",
     "divorceWho": "wife",
     "marriageFormationType": "oppositeSexCouple",
-    "applicant1Email": "applicant1@perftest12345.com",
-    "applicant1PhoneNumber": "07000000000",
+    "applicant1NonConfidentialEmail": "applicant1@perftest12345.com",
+    "applicant1NonConfidentialPhone": "07000000000",
     "applicant1AddressOverseas": "No",
-    "applicant1NonConfidentialAddress": {
-      "AddressLine1": "#{addressLines(0)}",
-      "AddressLine2": "#{addressLines(1)}",
-      "AddressLine3": "",
-      "PostTown": "#{addressLines(2)}",
-      "County": "",
-      "Country": "United Kingdom",
-      "PostCode": "#{addressLines(3)}"
-    },
     "applicant1ContactDetailsType": "public",
     "applicant2FirstName": "#{applicant2FirstName}",
     "applicant2MiddleName": null,
     "applicant2LastName": "#{applicant2LastName}",
     "applicant2NameDifferentToMarriageCertificate": "No",
+    "marriageApplicant2Name": "#{applicant2FirstName} #{applicant2LastName}",
+    "applicant1NonConfidentialAddress": {
+      "AddressLine1": "#{addressLines(0)}",
+      "AddressLine2": "#{addressLines(1)}",
+      "AddressLine3": "",
+      "PostTown": "#{addressLines(2)}",
+      "County": null,
+      "Country": "United Kingdom",
+      "PostCode": "#{addressLines(3)}"
+    },
     "applicant2SolicitorRepresented": "Yes",
     "applicant2SolicitorName": "RespSolicitor",
     "applicant2SolicitorReference": "RespondentSolRef",
     "applicant2SolicitorPhone": "07000000000",
     "applicant2SolicitorEmail": "#{user(1)}",
     "applicant2SolicitorAddress": "1 Perf Test Road\nPerf Test Town\nPR1 1RF",
+    "applicant2SolicitorAddressOverseas": "No",
+    "applicant2NonConfidentialEmail": "",
+    "applicant2AddressOverseas": "No",
     "applicant2SolicitorOrganisationPolicy": {
-      "OrgPolicyCaseAssignedRole": "[APPTWOSOLICITOR]",
-      "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
+      "LastNoCRequestedBy": null,
       "Organisation": {
         "OrganisationID": "#{orgref(1)}",
         "OrganisationName": "#{orgname(1)}"
-      }
+      },
+      "PreviousOrganisations": []
     },
-    "applicant2Email": "applicant2@perftest12345.com",
-    "applicant2Address": {
+    "applicant2NonConfidentialAddress": {
       "AddressLine1": "#{addressLines(0)}",
       "AddressLine2": "#{addressLines(1)}",
       "AddressLine3": "",
       "PostTown": "#{addressLines(2)}",
-      "County": "",
+      "County": null,
       "Country": "United Kingdom",
       "PostCode": "#{addressLines(3)}"
     }

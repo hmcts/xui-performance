@@ -8,13 +8,13 @@
       "Yes"
     ],
     "applicant1SolicitorOrganisationPolicy": {
-      "OrgPolicyCaseAssignedRole": "[APPONESOLICITOR]",
-      "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
+      "LastNoCRequestedBy": null,
       "Organisation": {
         "OrganisationID": "#{orgref(0)}",
         "OrganisationName": "#{orgname(0)}"
-      }
+      },
+      "PreviousOrganisations": []
     }
   },
   "event": {
@@ -38,13 +38,13 @@
       "Yes"
     ],
     "applicant1SolicitorOrganisationPolicy": {
-      "OrgPolicyCaseAssignedRole": "[APPONESOLICITOR]",
-      "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
+      "LastNoCRequestedBy": null,
       "Organisation": {
         "OrganisationID": "#{orgref(0)}",
         "OrganisationName": "#{orgname(0)}"
-      }
+      },
+      "PreviousOrganisations": []
     }
   },
   "event_token": "#{event_token}",
