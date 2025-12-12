@@ -37,7 +37,6 @@ class XUI_Simulation extends Simulation {
 	/* pipeline = nightly pipeline against the AAT environment (see the Jenkins_nightly file) */
 	/* perftest (default) = performance test against the perftest environment */
 	val testType = scala.util.Properties.envOrElse("TEST_TYPE", "perftest")
-	//val testType = "pipeline"
 
 	//set the environment based on the test type
 	val environment = testType match {
