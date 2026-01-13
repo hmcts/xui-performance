@@ -49,11 +49,11 @@ object CourtAdmin_PRL_FL401 {
     .pause(MinThinkTime, MaxThinkTime)
 
   /*=====================================================================================
-  * Select Issue and send to local Court
+  * Add case number
   ======================================================================================*/
 
-  .exec(http("XUI_PRL_FL401Progress_040_IssueAndSendToLocalCourt")
-    .get(BaseURL + "/workallocation/case/tasks/#{caseId}/event/issueAndSendToLocalCourtCallback/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
+  .exec(http("XUI_PRL_FL401Progress_040_AddCaseNumber")
+    .get(BaseURL + "/workallocation/case/tasks/#{caseId}/event/fl401AddCaseNumber/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
     .headers(Headers.navigationHeader)
     .header("accept", "application/json")
     .check(jsonPath("$.task_required_for_event").is("false")))
@@ -61,16 +61,16 @@ object CourtAdmin_PRL_FL401 {
   .exec(Common.activity)
   .exec(Common.profile)
 
-  .exec(http("XUI_PRL_FL401Progress_050_IssueAndSendToLocalCourtEventTrigger")  //*** SAVE THE Courtlist response here for use in later post requests **
-    .get(BaseURL + "/data/internal/cases/#{caseId}/event-triggers/issueAndSendToLocalCourtCallback?ignore-warning=false")
+  .exec(http("XUI_PRL_FL401Progress_050_AddCaseNumberEventTrigger")  //*** SAVE THE Courtlist response here for use in later post requests **
+    .get(BaseURL + "/data/internal/cases/#{caseId}/event-triggers/fl401AddCaseNumber?ignore-warning=false")
     .headers(Headers.commonHeader)
     .header("Accept", "application/json, text/plain, */*")
     .check(jsonPath("$.event_token").saveAs("event_token"))
-    .check(jsonPath("$.id").is("issueAndSendToLocalCourtCallback"))
+    .check(jsonPath("$.id").is("fl401AddCaseNumber"))
     .check(status.in(200, 403)))
 
-  .exec(http("XUI_PRL_FL401Progress_060_IssueAndSendToLocalCourtEvent")
-    .get(BaseURL + "/workallocation/case/tasks/#{caseId}/event/issueAndSendToLocalCourtCallback/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
+  .exec(http("XUI_PRL_FL401Progress_060_AddCaseNumberEvent")
+    .get(BaseURL + "/workallocation/case/tasks/#{caseId}/event/fl401AddCaseNumber/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
     .headers(Headers.navigationHeader)
     .header("accept", "application/json"))
     
@@ -83,13 +83,13 @@ object CourtAdmin_PRL_FL401 {
   * Select Court from dropdown and submit
   ======================================================================================*/
 
-  .exec(http("XUI_PRL_FL401Progress_070_SelectCourt")
-    .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=issueAndSendToLocalCourtCallback1")
+  .exec(http("XUI_PRL_FL401Progress_070_AddCaseNumberEventValidate")
+    .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=fl401AddCaseNumber1")
     .headers(Headers.commonHeader)
     .header("Accept", "application/json, text/plain, */*")
     .header("x-xsrf-token", "#{XSRFToken}")
-    .body(ElFileBody("bodies/prl/fl401/PRLLocalCourt.json"))
-    .check(jsonPath("$.data.courtList.value.code").is("234946:")))  //Value does not change for now. 
+    .body(ElFileBody("bodies/prl/fl401/AddCaseNumber.json")))
+    //.check("familymanCaseNumber")
 
   .pause(MinThinkTime, MaxThinkTime)
 
@@ -97,13 +97,19 @@ object CourtAdmin_PRL_FL401 {
   .exec(Common.userDetails)
   .exec(Common.activity)
 
-  .exec(http("XUI_PRL_FL401Progress_080_SubmitToLocalCourtEvent")
+  .exec(http("XUI_PRL_FL401Progress_080_AddCaseNumberCheckApplication")
+    .get(BaseURL + "/workallocation/task/ee006e5a-f09e-11f0-8c83-b2f39bbc3f04")
+    .headers(Headers.navigationHeader)
+    .header("accept", "application/json")
+    .check(jsonPath("$.task.name").is("Check Application")))
+
+  .exec(http("XUI_PRL_FL401Progress_080_AddCaseNumberFinalEvent")
     .post(BaseURL + "/data/cases/#{caseId}/events")
     .headers(Headers.commonHeader)
     .header("Accept", "application/json, text/plain, */*")
     .header("x-xsrf-token", "#{XSRFToken}")
-    .body(ElFileBody("bodies/prl/fl401/PRLLocalCourtSubmit.json"))
-    .check(jsonPath("$.data.courtList.value.code").is("234946:")))  //Value does not change for now. 
+    .body(ElFileBody("bodies/prl/fl401/AddCaseNumberSubmit.json"))
+    .check(jsonPath("$.state").is("CASE_ISSUED")))
 
   .pause(MinThinkTime, MaxThinkTime)
 
