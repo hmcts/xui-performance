@@ -3,7 +3,7 @@
     "uploadSignedDecisionNoticeDocument": {
       "document_url": "#{DocumentURL}",
       "document_binary_url": "#{DocumentURL}/binary",
-      "document_filename": "120KB.pdf",
+      "document_filename": "CaseSummary.pdf",
       "document_hash": "#{DocumentHash}"
     }
   },
@@ -16,7 +16,7 @@
     "uploadSignedDecisionNoticeDocument": {
       "document_url": "#{DocumentURL}",
       "document_binary_url": "#{DocumentURL}/binary",
-      "document_filename": "120KB.pdf",
+      "document_filename": "CaseSummary.pdf",
       "document_hash": "#{DocumentHash}"
     }
   },

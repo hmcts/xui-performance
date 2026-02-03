@@ -5,11 +5,11 @@
     "applicant2ScreenHasMarriageBroken": "Yes",
     "applicant2FinancialOrder": "No",
     "applicant2ConfirmApplicant1Information": "No",
-    "applicant2FinancialOrdersFor": [],
     "applicant1SolicitorAnswersLink": {
       "document_url": "#{app1AnswersDocumentURL}",
       "document_binary_url": "#{app1AnswersDocumentURL}/binary",
-      "document_filename": "#{app1AnswersFilename}"
+      "document_filename": "#{app1AnswersFilename}",
+      "document_hash": null
     },
     "divorceOrDissolution": "divorce",
     "solStatementOfReconciliationCertify": "Yes",
@@ -17,7 +17,6 @@
     "applicant2PrayerDissolveDivorce": [
       "dissolveDivorce"
     ],
-    "applicant2PrayerEndCivilPartnership": [],
     "applicant2PrayerFinancialOrdersThemselves": [
       "financialOrdersThemselves"
     ],
@@ -27,7 +26,7 @@
     "applicant2StatementOfTruth": "Yes",
     "applicant2SolSignStatementOfTruth": "Yes",
     "applicant2SolStatementOfReconciliationName": "RespSolicitor",
-    "applicant2SolStatementOfReconciliationFirm": "#{orgnames(1)}",
+    "applicant2SolStatementOfReconciliationFirm": "#{orgname(1)}",
     "applicant2StatementOfReconciliationComments": null
   },
   "event": {

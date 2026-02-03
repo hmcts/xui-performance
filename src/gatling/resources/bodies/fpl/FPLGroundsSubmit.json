@@ -3,6 +3,7 @@
     "EPO_REASONING_SHOW": [],
     "groundsForEPO": null,
     "grounds": {
+      "hasThresholdDocument": "NO",
       "thresholdDetails": "Free text",
       "thresholdReason": [
         "beyondControl"

@@ -13,13 +13,13 @@
     "isAdmin": "No",
     "solicitorName": "#{firmName}",
     "ApplicantOrganisationPolicy": {
-      "OrgPolicyCaseAssignedRole": "[APPSOLICITOR]",
       "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
         "OrganisationID": "#{applicantOrgs(1)}",
         "OrganisationName": "#{applicantOrgs(0)}"
-      }
+      },
+      "PreviousOrganisations": []
     },
     "solicitorFirm": "#{firmName}",
     "solicitorReference": "#{firmRef}",
@@ -32,7 +32,7 @@
       "PostCode": "#{firmPostcode}",
       "Country": "UK"
     },
-    "solicitorPhone": null,
+    "solicitorPhone": "07000000000",
     "solicitorEmail": "#{firmName}@test.com",
     "solicitorDXnumber": null,
     "solicitorAgreeToReceiveEmails": "No",

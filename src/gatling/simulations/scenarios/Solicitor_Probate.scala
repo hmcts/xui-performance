@@ -60,7 +60,7 @@ object Solicitor_Probate {
 
       .exec(Common.userDetails)
 
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -79,7 +79,7 @@ object Solicitor_Probate {
         .check(substring("""{"data":{}""")))
 
       .exec(http("XUI_Probate_060_010_CreateApplicationDraft")
-        .post("/data/internal/case-types/GrantOfRepresentation/drafts/")
+        .post("/data/internal/case-types/GrantOfRepresentation/drafts")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-draft-create.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")

@@ -1,13 +1,26 @@
 {
   "data": {
+    "isCTSCUser": "No",
     "localAuthority": {
       "name": "#{laName}",
       "email": "#{laName}@test.com",
+      "pbaNumberDynamicList": {
+        "value": {
+          "code": "PBA0066906",
+          "label": "PBA0066906"
+        },
+        "list_items": [
+          {
+            "code": "PBA0066906",
+            "label": "PBA0066906"
+          }
+        ]
+      },
       "legalTeamManager": null,
       "pbaNumber": "PBA0066906",
-      "customerReference": null,
+      "customerReference": "PBA0066906",
       "clientCode": null,
-      "phone": "07000000000",
+      "phone": null,
       "id": "#{laId}",
       "designated": null,
       "address": {
@@ -19,27 +32,42 @@
         "PostCode": "#{laPostcode}",
         "Country": "UK"
       },
-      "colleagues": []
+      "colleagues": [],
+      "representingDetails": {
+        "firstName": null,
+        "lastName": null
+      }
     },
-    "localAuthorityColleagues": [
+    "applicantContact": {
+      "firstName": "PerfTest",
+      "lastName": "ApplicantContact",
+      "fullName": null,
+      "phone": "07000000000",
+      "alternativePhone": null,
+      "dx": null,
+      "email": null,
+      "mainContact": "Yes",
+      "notificationRecipient": null,
+      "reference": null,
+      "role": null,
+      "title": null
+    },
+    "applicantContactOthers": [
       {
         "value": {
+          "firstName": "PerfTest",
+          "lastName": "ApplicantContact",
+          "email": "perftestcontact@test.com",
           "role": "SOLICITOR",
-          "dx": null,
           "title": null,
-          "reference": null,
-          "fullName": "Perf Test",
-          "email": "#{laName}@test.com",
-          "phone": null,
-          "notificationRecipient": "No",
           "mainContact": null
         },
-        "id": "#{colleagueId}"
+        "id": "#{applicantContactOthersId}"
       }
     ]
   },
   "event": {
-    "id": "enterLocalAuthority",
+    "id": "enterApplicantDetailsLA",
     "summary": "",
     "description": ""
   },

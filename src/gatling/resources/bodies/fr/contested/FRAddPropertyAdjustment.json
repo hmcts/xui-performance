@@ -1,0 +1,135 @@
+{
+  "data": {
+    "propertyAddress": "prop1",
+    "mortgageDetail": "Applicant prop1",
+    "additionalPropertyOrderDecision": "Yes",
+    "propertyAdjutmentOrderDetail": [
+      {
+        "value": {
+          "propertAddress": "prop2",
+          "nameForProperty": "Applicant prop2"
+        },
+        "id": null
+      }
+    ]
+  },
+  "event": {
+    "id": "FR_solicitorCreate",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "isAdmin": "No",
+    "applicantRepresented": "Yes",
+    "applicantSolicitorName": "#{firmName}",
+    "ApplicantOrganisationPolicy": {
+      "OrgPolicyReference": null,
+      "PrepopulateToUsersOrganisation": null,
+      "LastNoCRequestedBy": null,
+      "Organisation": {
+        "OrganisationID": "#{applicantOrgs(1)}",
+        "OrganisationName": "#{applicantOrgs(0)}"
+      },
+      "PreviousOrganisations": []
+    },
+    "applicantSolicitorFirm": "#{firmName}",
+    "solicitorReference": "#{firmRef}",
+    "applicantSolicitorAddress": {
+      "AddressLine1": "#{firmAddress1}",
+      "AddressLine2": "#{firmAddress2}",
+      "AddressLine3": "#{firmAddress3}",
+      "PostTown": "#{firmPostTown}",
+      "County": "#{firmCounty}",
+      "PostCode": "#{firmPostcode}",
+      "Country": "UK"
+    },
+    "applicantSolicitorPhone": "07777777777",
+    "applicantSolicitorEmail": "#{firmName}@test.com",
+    "applicantSolicitorDXnumber": null,
+    "applicantSolicitorConsentForEmails": "Yes",
+    "typeOfApplication": "In connection to matrimonial and civil partnership proceedings",
+    "divorceCaseNumber": "EZ12D91234",
+    "civilPartnership": "No",
+    "dateOfMarriage": "#{dateOfMarriage}",
+    "dateOfSepration": "#{dateOfSeparation}",
+    "divorcePetitionIssuedDate": "#{divorcePetitionIssueDate}",
+    "nameOfCourtDivorceCentre": "Liverpool Court",
+    "divorceStageReached": "Petition Issued",
+    "divorceUploadPetition": {
+      "document_url": "#{PetitionDocumentURL}",
+      "document_binary_url": "#{PetitionDocumentURL}/binary",
+      "document_filename": "#{PetitionDocumentFileName}",
+      "document_hash": "#{PetitionDocumentHashToken}"
+    },
+    "applicantFMName": "Applicant perf",
+    "applicantLName": "applicant ln",
+    "applicantResideOutsideUK": "No",
+    "applicantAddress": {
+      "AddressLine1": "#{applicantAddress1}",
+      "AddressLine2": "#{applicantAddress2}",
+      "AddressLine3": "#{applicantAddress3}",
+      "PostTown": "#{applicantPostTown}",
+      "County": "#{applicantCounty}",
+      "PostCode": "#{applicantPostcode}",
+      "Country": "United Kingdom"
+    },
+    "applicantPhone": null,
+    "applicantEmail": null,
+    "applicantAddressConfidential": "Yes",
+    "applicantInRefugeQuestion": "No",
+    "respondentFMName": "RespondentPerf",
+    "respondentLName": "RespondentTest",
+    "respondentRepresented": "Yes",
+    "RespondentOrganisationPolicy": {
+      "OrgPolicyReference": null,
+      "PrepopulateToUsersOrganisation": null,
+      "LastNoCRequestedBy": null,
+      "Organisation": {
+        "OrganisationID": "#{respondentOrgs(1)}",
+        "OrganisationName": "#{respondentOrgs(0)}"
+      },
+      "PreviousOrganisations": []
+    },
+    "rSolicitorName": "#{respondentOrgs(0)}",
+    "rSolicitorReference": "#{respondentOrgs(1)}",
+    "rSolicitorFirm": "#{respondentOrgs(1)}",
+    "rSolicitorAddress": {
+      "AddressLine1": "#{addressLines(0)}",
+      "AddressLine2": "#{addressLines(1)}",
+      "AddressLine3": "",
+      "PostTown": "#{addressLines(2)}",
+      "County": "",
+      "PostCode": "#{addressLines(3)}",
+      "Country": "United Kingdom"
+    },
+    "rSolicitorPhone": "07788888888",
+    "rSolicitorEmail": "#{respondentOrgs(1)}@test.com",
+    "rSolicitorDXnumber": null,
+    "natureOfApplicationChecklist": [
+      "Maintenance Pending Suit",
+      "Lump Sum Order",
+      "propertyAdjustmentOrder",
+      "A settlement or a transfer of property",
+      "periodicalPaymentOrder",
+      "Pension Sharing Order",
+      "Pension Attachment Order",
+      "Pension Compensation Sharing Order",
+      "Pension Compensation Attachment Order",
+      "variationOrder"
+    ],
+    "propertyAddress": "prop1",
+    "mortgageDetail": "Applicant prop1",
+    "additionalPropertyOrderDecision": "Yes",
+    "propertyAdjutmentOrderDetail": [
+      {
+        "value": {
+          "propertAddress": "prop2",
+          "nameForProperty": "Applicant prop2"
+        },
+        "id": null
+      }
+    ]
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false
+}

@@ -1,35 +1,60 @@
 {
   "data": {
-    "localAuthorityColleagues": [
+    "applicantContact": {
+      "firstName": "PerfTest",
+      "lastName": "Test",
+      "phone": "07000000000",
+      "alternativePhone": null,
+      "email": null,
+      "role": null,
+      "title": null,
+      "dx": null,
+      "reference": null,
+      "fullName": null,
+      "notificationRecipient": null,
+      "mainContact": null
+    },
+    "applicantContactOthers": [
       {
         "value": {
+          "firstName": "Perf",
+          "lastName": "Test",
+          "email": "perftestcolleague@test.com",
           "role": "SOLICITOR",
-          "dx": null,
-          "reference": null,
-          "fullName": "Perf Test",
-          "email": "#{laName}@test.com",
-          "phone": null,
-          "notificationRecipient": "No",
           "mainContact": null
         },
         "id": null
       }
     ]
   },
+
   "event": {
-    "id": "enterLocalAuthority",
+    "id": "enterApplicantDetailsLA",
     "summary": "",
     "description": ""
   },
   "event_data": {
+    "isCTSCUser": "No",
     "localAuthority": {
       "name": "#{laName}",
       "email": "#{laName}@test.com",
+      "pbaNumberDynamicList": {
+        "value": {
+          "code": "PBA0066906",
+          "label": "PBA0066906"
+        },
+        "list_items": [
+          {
+            "code": "PBA0066906",
+            "label": "PBA0066906"
+          }
+        ]
+      },
       "legalTeamManager": null,
       "pbaNumber": "PBA0066906",
-      "customerReference": null,
+      "customerReference": "PBA0066906",
       "clientCode": null,
-      "phone": "07000000000",
+      "phone": null,
       "id": "#{laId}",
       "designated": null,
       "address": {
@@ -40,24 +65,40 @@
         "County": "",
         "PostCode": "#{laPostcode}",
         "Country": "UK"
+      },
+      "colleagues": [],
+      "representingDetails": {
+        "firstName": null,
+        "lastName": null
       }
     },
-    "localAuthorityColleagues": [
+    "applicantContact": {
+      "firstName": "PerfTest",
+      "lastName": "ApplicantContact",
+      "phone": "07000000000",
+      "alternativePhone": null,
+      "email": null,
+      "role": null,
+      "title": null,
+      "dx": null,
+      "reference": null,
+      "fullName": null,
+      "notificationRecipient": null,
+      "mainContact": null
+    },
+    "applicantContactOthers": [
       {
         "value": {
+          "firstName": "PerfTest",
+          "lastName": "ApplicantContact",
+          "email": "perftestcolleague@test.com",
           "role": "SOLICITOR",
-          "dx": null,
-          "reference": null,
-          "fullName": "Perf Test",
-          "email": "#{laName}@test.com",
-          "phone": null,
-          "notificationRecipient": "No",
           "mainContact": null
         },
         "id": null
       }
     ]
-  },
+},
   "event_token": "#{event_token}",
   "ignore_warning": false,
   "case_reference": "#{caseId}"

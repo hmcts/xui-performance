@@ -3,11 +3,23 @@
       "localAuthority": {
          "name": "#{laName}",
          "email": "#{laName}@test.com",
+         "pbaNumberDynamicList": {
+            "value": {
+               "code": "PBA0066906",
+               "label": "PBA0066906"
+            },
+            "list_items": [
+               {
+                  "code": "PBA0066906",
+                  "label": "PBA0066906"
+               }
+            ]
+         },
          "legalTeamManager": null,
          "pbaNumber": "PBA0066906",
-         "customerReference": null,
+         "customerReference": "PBA0066906",
          "clientCode": null,
-         "phone": "07000000000",
+         "phone": null,
          "id": "#{laId}",
          "designated": null,
          "address": {
@@ -18,25 +30,43 @@
             "County": "",
             "PostCode": "#{laPostcode}",
             "Country": "UK"
+         },
+         "colleagues": [],
+         "representingDetails": {
+            "firstName": null,
+            "lastName": null
          }
       }
    },
    "event": {
-      "id": "enterLocalAuthority",
+      "id": "enterApplicantDetailsLA",
       "summary": "",
       "description": ""
    },
    "event_data": {
+      "isCTSCUser": "No",
       "localAuthority": {
          "name": "#{laName}",
          "email": "#{laName}@test.com",
+         "pbaNumberDynamicList": {
+            "value": {
+               "code": "PBA0066906",
+               "label": "PBA0066906"
+            },
+            "list_items": [
+               {
+                  "code": "PBA0066906",
+                  "label": "PBA0066906"
+               }
+            ]
+         },
          "legalTeamManager": null,
          "pbaNumber": "PBA0066906",
-         "customerReference": null,
+         "customerReference": "PBA0066906",
          "clientCode": null,
-         "phone": "07000000000",
+         "phone": null,
          "id": "#{laId}",
-         "designated": null,
+         "designated": "Yes",
          "address": {
             "AddressLine1": "#{laAddressLine1}",
             "AddressLine2": "#{laAddressLine2}",
@@ -45,6 +75,11 @@
             "County": "",
             "PostCode": "#{laPostcode}",
             "Country": "UK"
+         },
+         "colleagues": [],
+         "representingDetails": {
+            "firstName": null,
+            "lastName": null
          }
       }
    },

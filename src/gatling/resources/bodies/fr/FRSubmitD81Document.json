@@ -15,15 +15,16 @@
   },
   "event_data": {
     "isAdmin": "No",
+    "applicantRepresented": "Yes",
     "solicitorName": "#{firmName}",
     "ApplicantOrganisationPolicy": {
-      "OrgPolicyCaseAssignedRole": "[APPSOLICITOR]",
       "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
         "OrganisationID": "#{applicantOrgs(1)}",
         "OrganisationName": "#{applicantOrgs(0)}"
-      }
+      },
+      "PreviousOrganisations": []
     },
     "solicitorFirm": "#{firmName}",
     "solicitorReference": "#{firmRef}",
@@ -36,12 +37,12 @@
       "PostCode": "#{addressLines(3)}",
       "Country": "UK"
     },
-    "solicitorPhone": null,
+    "solicitorPhone": "07000000000",
     "solicitorEmail": "#{firmName}@test.com",
     "solicitorDXnumber": null,
     "solicitorAgreeToReceiveEmails": "No",
     "divorceCaseNumber": "EZ12D91234",
-    "civilPartnership":"No",
+    "civilPartnership": "No",
     "divorceStageReached": "Petition Issued",
     "applicantFMName": "ApplicantPerf",
     "applicantLName": "ApplicantTest",
@@ -53,13 +54,13 @@
     "appRespondentRep": "Yes",
     "rSolicitorName": "#{respondentOrgs(0)}",
     "RespondentOrganisationPolicy": {
-      "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
       "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
         "OrganisationID": "#{respondentOrgs(1)}",
         "OrganisationName": "#{respondentOrgs(0)}"
-      }
+      },
+      "PreviousOrganisations": []
     },
     "rSolicitorFirm": "#{respondentOrgs(0)}",
     "rSolicitorReference": null,
@@ -72,8 +73,8 @@
       "PostCode": "#{addressLines(3)}",
       "Country": "United Kingdom"
     },
-    "rSolicitorPhone": null,
-    "rSolicitorEmail": null,
+    "rSolicitorPhone": "07000000009",
+    "rSolicitorEmail": "#{firmName}Resp@test.com",
     "rSolicitorDXnumber": null,
     "natureOfApplication2": [
       "Lump Sum Order"
