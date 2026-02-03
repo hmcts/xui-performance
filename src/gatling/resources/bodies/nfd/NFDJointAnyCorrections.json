@@ -3,7 +3,8 @@
     "applicant1SolicitorAnswersLink": {
       "document_url": "#{app1AnswersDocumentURL}",
       "document_binary_url": "#{app1AnswersDocumentURL}/binary",
-      "document_filename": "#{app1AnswersFilename}"
+      "document_filename": "#{app1AnswersFilename}",
+      "document_hash": null
     },
     "applicant2ConfirmApplicant1Information": "No"
   },
@@ -17,11 +18,11 @@
     "labelContentDivorceOrLegallyEnd": "get a divorce",
     "applicant2ScreenHasMarriageBroken": "Yes",
     "applicant2FinancialOrder": "No",
-    "applicant2NeedsHelpWithFees": "No",
     "applicant1SolicitorAnswersLink": {
       "document_url": "#{app1AnswersDocumentURL}",
       "document_binary_url": "#{app1AnswersDocumentURL}/binary",
-      "document_filename": "#{app1AnswersFilename}"
+      "document_filename": "#{app1AnswersFilename}",
+      "document_hash": null
     },
     "applicant2ConfirmApplicant1Information": "No"
   },

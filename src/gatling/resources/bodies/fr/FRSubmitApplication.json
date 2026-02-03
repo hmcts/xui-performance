@@ -7,7 +7,6 @@
     "applicantEmail": null,
     "solicitorName": "#{firmName}",
     "ApplicantOrganisationPolicy": {
-      "OrgPolicyCaseAssignedRole": "[APPSOLICITOR]",
       "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
@@ -71,7 +70,6 @@
     "appRespondentRep": "Yes",
     "rSolicitorName": "#{respondentOrgs(0)}",
     "RespondentOrganisationPolicy": {
-      "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]",
       "OrgPolicyReference": null,
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
@@ -91,8 +89,8 @@
       "PostCode": "#{addressLines(3)}",
       "Country": "United Kingdom"
     },
-    "rSolicitorPhone": null,
-    "rSolicitorEmail": null,
+    "rSolicitorPhone": "07000000009",
+    "rSolicitorEmail": "#{firmName}Resp@test.com",
     "rSolicitorDXnumber": null,
     "respondentAddress": null,
     "respondentPhone": null,

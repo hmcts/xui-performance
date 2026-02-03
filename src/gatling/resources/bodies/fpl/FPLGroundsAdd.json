@@ -1,6 +1,7 @@
 {
   "data": {
     "grounds": {
+      "hasThresholdDocument": "NO",
       "thresholdDetails": "Free text",
       "thresholdReason": [
         "beyondControl"
@@ -14,6 +15,7 @@
   },
   "event_data": {
     "grounds": {
+      "hasThresholdDocument": "NO",
       "thresholdDetails": "Free text",
       "thresholdReason": [
         "beyondControl"

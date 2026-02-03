@@ -4,7 +4,8 @@
       "document_url": "#{documentURL}",
       "document_binary_url": "#{documentURL}/binary",
       "document_filename": "legalStatementGrantOfProbate.pdf",
-      "document_hash":null
+      "document_hash": null,
+      "upload_timestamp": null
     },
     "solsSOTNeedToUpdate": "No",
     "solsLegalStatementUpload": {

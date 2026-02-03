@@ -1,7 +1,7 @@
 package scenarios.ped
 
 import io.gatling.core.Predef._
-import scenarios.{Homepage, Login, Logout}
+import xui._
 import utils.Config
 
 import java.io.{BufferedWriter, FileWriter}
@@ -31,8 +31,8 @@ object PED_Scenario {
 
     /* ALL USERS LOGIN TO XUI */
 
-    .exec(Homepage.XUIHomePage)
-    .exec(Login.XUILogin)
+    .exec(XuiHelper.Homepage)
+    .exec(XuiHelper.Login("#{user}", "#{password}"))
 
     /* PRESENTERS JOIN FIRST AND START PRESENTING */
 
@@ -129,7 +129,7 @@ object PED_Scenario {
 
     .rendezVous(totalUsers)
     .pause(1, 10)
-    .exec(Logout.XUILogout)
+    .exec(XuiHelper.Logout)
 
 }
 
