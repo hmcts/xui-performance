@@ -204,7 +204,7 @@ object Solicitor_PRL_C100 {
         .header("x-xsrf-token", "#{XSRFToken}")
         .check(substring("Application for a court order to make arrangements for a child")))
 
-      .exec(Common.caseActivityGet)
+      //.exec(Common.caseActivityGet)
 
       .exec(http("XUI_PRL_C100_100_015_CreateTypeOfApplicationEvent")
         .get("/data/internal/cases/#{caseId}/event-triggers/selectApplicationType?ignore-warning=false")
@@ -289,12 +289,33 @@ object Solicitor_PRL_C100 {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+    .group("XUI_PRL_C100_150_PermissionUpload") {
+        exec(http("XUI_PRL_C100_150_005_PermissionUpload")
+          .post("/documents")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/json, text/plain, */*")
+          .header("content-type", "multipart/form-data")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .bodyPart(RawFileBodyPart("files", "3MB.pdf")
+            .fileName("3MB.pdf")
+            .transferEncoding("binary"))
+          .asMultipartForm
+          .formParam("classification", "PUBLIC")
+          .formParam("caseTypeId", "PRLAPPS")
+          .formParam("jurisdictionId", "PRIVATELAW")
+          .check(substring("originalDocumentName"))
+          //.check(jsonPath("$.documents[0].hashToken").saveAs("documentHash_permission"))
+          .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL_permission")))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
     /*======================================================================================
     * Have you applied to the court for permission to make this application? - Yes
     ======================================================================================*/
 
-    .group("XUI_PRL_C100_150_PermissionForApplication") {
-      exec(http("XUI_PRL_C100_150_005_PermissionForApplication")
+    .group("XUI_PRL_C100_150_010_PermissionForApplication") {
+      exec(http("XUI_PRL_C100_150_010_PermissionForApplication")
         .post("/data/case-types/PRLAPPS/validate?pageId=selectApplicationType3")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -385,7 +406,7 @@ object Solicitor_PRL_C100 {
         .header("x-xsrf-token", "#{XSRFToken}")
         .check(substring("Application for a court order to make arrangements for a child")))
 
-      .exec(Common.caseActivityGet)
+      //.exec(Common.caseActivityGet)
 
       .exec(http("XUI_PRL_C100_180_020_HearingUrgencyEvent")
         .get("/data/internal/cases/#{caseId}/event-triggers/hearingUrgency?ignore-warning=false")
@@ -469,7 +490,7 @@ object Solicitor_PRL_C100 {
       .exec(Common.userDetails)
       .exec(Common.isAuthenticated)
       .exec(Common.monitoringTools)
-      .exec(Common.caseActivityGet)
+      //.exec(Common.caseActivityGet)
 
       .exec(http("XUI_PRL_C100_220_005_ApplicantDetailsViewCase")
         .get("/data/internal/cases/#{caseId}")
@@ -569,7 +590,7 @@ object Solicitor_PRL_C100 {
       .exec(Common.userDetails)
       .exec(Common.isAuthenticated)
       .exec(Common.monitoringTools)
-      .exec(Common.caseActivityGet)
+      //.exec(Common.caseActivityGet)
 
       .exec(http("XUI_PRL_C100_260_010_ChildDetailsCaseView")
         .get("/data/internal/cases/#{caseId}")
@@ -689,7 +710,7 @@ object Solicitor_PRL_C100 {
       .exec(Common.userDetails)
       .exec(Common.isAuthenticated)
       .exec(Common.monitoringTools)
-      .exec(Common.caseActivityGet)
+      //.exec(Common.caseActivityGet)
 
       .exec(http("XUI_PRL_C100_310_010_RespondentDetailsCaseView")
         .get("/data/internal/cases/#{caseId}")
@@ -791,7 +812,7 @@ object Solicitor_PRL_C100 {
       .exec(Common.userDetails)
       .exec(Common.isAuthenticated)
       .exec(Common.monitoringTools)
-      .exec(Common.caseActivityGet)
+      //.exec(Common.caseActivityGet)
 
       .exec(http("XUI_PRL_C100_350_010_MIAMCaseView")
         .get("/data/internal/cases/#{caseId}")
@@ -884,7 +905,7 @@ object Solicitor_PRL_C100 {
       .exec(Common.userDetails)
       .exec(Common.isAuthenticated)
       .exec(Common.monitoringTools)
-      .exec(Common.caseActivityGet)
+      //.exec(Common.caseActivityGet)
 
       .exec(http("XUI_PRL_C100_390_010_AllegationsOfHarmRedirectCaseView")
         .get("/data/internal/cases/#{caseId}")
@@ -1125,7 +1146,7 @@ object Solicitor_PRL_C100 {
         .header("accept", "application/json")
         .check(substring("task_required_for_event")))
 
-      .exec(Common.caseActivityGet)
+      //.exec(Common.caseActivityGet)
 
       .exec(http("XUI_PRL_C100_490_015_OtherPeopleInTheCase")
         .get("/data/internal/cases/#{caseId}")
@@ -1389,7 +1410,7 @@ object Solicitor_PRL_C100 {
         .header("accept", "application/json")
         .check(substring("task_required_for_event")))
 
-      .exec(Common.caseActivityGet)
+      //.exec(Common.caseActivityGet)
 
       .exec(http("XUI_PRL_518_015_ChildrenAndOtherPeople")
         .get("/data/internal/cases/#{caseId}")
@@ -1469,7 +1490,7 @@ object Solicitor_PRL_C100 {
       .exec(Common.userDetails)
       .exec(Common.isAuthenticated)
       .exec(Common.monitoringTools)
-      .exec(Common.caseActivityGet)
+      //.exec(Common.caseActivityGet)
 
       .exec(http("XUI_PRL_C100_610_010_ViewPdfApplicationRedirectCaseView")
         .get("/data/internal/cases/#{caseId}")
@@ -1566,7 +1587,7 @@ object Solicitor_PRL_C100 {
       .exec(Common.userDetails)
       .exec(Common.isAuthenticated)
       .exec(Common.monitoringTools)
-      .exec(Common.caseActivityGet)
+      //.exec(Common.caseActivityGet)
 
       .exec(http("XUI_PRL_C100_650_010_SubmitAndPayRedirectCaseView")
         .get("/data/internal/cases/#{caseId}")
