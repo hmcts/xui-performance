@@ -75,6 +75,7 @@ object Solicitor_PRL_C100 {
       .exec(Common.userDetails)
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
+      .exec(getCookieValue(CookieKey("__auth__").saveAs("authToken")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
