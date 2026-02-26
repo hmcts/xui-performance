@@ -52,6 +52,8 @@ object Solicitor_FPL {
       .exec(Common.userDetails)
     }
 
+    .exec(getCookieValue(CookieKey("__auth__").saveAs("authToken")))
+
     .pause(MinThinkTime , MaxThinkTime)
     
     /*======================================================================================
