@@ -101,33 +101,35 @@ object Common {
 
   val caseActivityGet =
     exec(http("XUI_Common_000_ActivityOptions")
-      .options("/activity/cases/#{caseId}/activity")
+      .options(Environment.ccdGatewayURL + "/activity/cases/#{caseId}/activity")
       .headers(Headers.commonHeader)
       .header("accept", "application/json, text/plain, */*")
       .header("sec-fetch-site", "same-site")
       .check(status.in(200, 304, 403)))
 
     .exec(http("XUI_Common_000_ActivityGet")
-      .get("/activity/cases/#{caseId}/activity")
+      .get(Environment.ccdGatewayURL + "/activity/cases/#{caseId}/activity")
       .headers(Headers.commonHeader)
       .header("accept", "application/json, text/plain, */*")
       .header("sec-fetch-site", "same-site")
+      .header("Authorization", "Bearer #{authToken}")
       .check(status.in(200, 304, 403)))
 
   val caseActivityPost =
     exec(http("XUI_Common_000_ActivityOptions")
-      .options("/activity/cases/#{caseId}/activity")
+      .options(Environment.ccdGatewayURL + "/activity/cases/#{caseId}/activity")
       .headers(Headers.commonHeader)
       .header("accept", "application/json, text/plain, */*")
       .header("sec-fetch-site", "same-site")
-      .check(status.in(200, 304, 403)))
+      .check(status.in(200, 201, 304, 403)))
 
     .exec(http("XUI_Common_000_ActivityPost")
-      .post("/activity/cases/#{caseId}/activity")
+      .post(Environment.ccdGatewayURL + "/activity/cases/#{caseId}/activity")
       .headers(Headers.commonHeader)
       .header("accept", "application/json, text/plain, */*")
       .header("sec-fetch-site", "same-site")
-      .body(StringBody("{\n  \"activity\": \"view\"\n}"))
+      .header("Authorization", "Bearer #{authToken}")
+      .body(StringBody("""{"activity": "view"}"""))
       .check(status.in(200, 201, 304, 403)))
 
   val configurationui =
