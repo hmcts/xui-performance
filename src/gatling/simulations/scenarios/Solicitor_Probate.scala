@@ -44,6 +44,8 @@ object Solicitor_Probate {
       .exec(Common.userDetails)
     }
 
+    .exec(getCookieValue(CookieKey("__auth__").saveAs("authToken")))
+
     .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
