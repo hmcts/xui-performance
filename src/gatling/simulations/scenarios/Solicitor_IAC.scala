@@ -45,7 +45,7 @@ object Solicitor_IAC {
     }
 
     .exec(getCookieValue(CookieKey("__auth__").saveAs("authToken")))
-    
+
     .pause(MinThinkTime, MaxThinkTime)
 
   /*======================================================================================
