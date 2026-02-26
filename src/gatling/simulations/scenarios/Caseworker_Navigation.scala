@@ -2,6 +2,7 @@ package scenarios
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
+
 import utils.{Common, Environment, Headers}
 
 object Caseworker_Navigation {
@@ -28,6 +29,8 @@ object Caseworker_Navigation {
         .check(jsonPath("$.total").saveAs("numberOfResults"))
         .check(jsonPath("$.results[*].case_id").findRandom.optional.saveAs("caseId")))
     }
+
+    .exec(getCookieValue(CookieKey("__auth__").saveAs("authToken")))
 
     .pause(MinThinkTime, MaxThinkTime)
 
