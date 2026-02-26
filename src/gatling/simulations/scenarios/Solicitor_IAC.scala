@@ -43,6 +43,8 @@ object Solicitor_IAC {
         .header("accept", "application/json")
         .check(substring("IA")))
     }
+
+    .exec(getCookieValue(CookieKey("__auth__").saveAs("authToken")))
     
     .pause(MinThinkTime, MaxThinkTime)
 
