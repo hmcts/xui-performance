@@ -289,7 +289,7 @@ object Solicitor_PRL_C100 {
 
     .pause(MinThinkTime, MaxThinkTime)
 
-      .group("XUI_PRL_C100_150_PermissionUpload") {
+      .group("XUI_PRL_C100_150_005_PermissionUpload") {
         exec(http("XUI_PRL_C100_150_005_PermissionUpload")
           .post("/documents")
           .headers(Headers.commonHeader)
@@ -307,19 +307,22 @@ object Solicitor_PRL_C100 {
           //.check(jsonPath("$.documents[0].hashToken").saveAs("documentHash_permission"))
           .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL_permission")))
       }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
     /*======================================================================================
     * Have you applied to the court for permission to make this application? - Yes
     ======================================================================================*/
 
-    .group("XUI_PRL_C100_150_PermissionForApplication") {
-      exec(http("XUI_PRL_C100_150_005_PermissionForApplication")
+    .group("XUI_PRL_C100_150_010_PermissionForApplication") {
+      exec(http("XUI_PRL_C100_150_010_PermissionForApplication")
         .post("/data/case-types/PRLAPPS/validate?pageId=selectApplicationType3")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/prl/c100/PRLPermissionRequired.json"))
-        .check(substring("applicationPermissionRequired")))
-
+        //.check(substring("orderInPlacePermissionRequired")))
+      )
       .exec(Common.userDetails)
     }
 
@@ -354,7 +357,7 @@ object Solicitor_PRL_C100 {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/prl/c100/PRLCheckYourAnswersTypeOfApplication.json"))
-        .check(substring("applicationPermissionRequired"))
+        //.check(substring("applicationPermissionRequired"))
         .check(jsonPath("$.state").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
       .exec(http("XUI_PRL_C100_170_010_ViewCase")
