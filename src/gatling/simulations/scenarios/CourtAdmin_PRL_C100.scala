@@ -672,7 +672,7 @@ val CourtAdminListHearing =
         .header("Accept", "application/json, text/plain, */*")
         .check(substring("HearingType")))
 
-      .exec(Common.caseActivityPost)
+      //.exec(Common.caseActivityPost)
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -683,8 +683,8 @@ val CourtAdminListHearing =
 
     .group("XUI_PRL_C100Progress_380_RequestHearing") {
 
-      exec(Common.caseActivityPost)
-      .exec(Common.isAuthenticated)
+      //exec(Common.caseActivityPost)
+      exec(Common.isAuthenticated)
 
       .exec(http("XUI_PRL_C100Progress_380_005_GetCaseFlag")
         .get("/api/prd/caseFlag/getCaseFlagRefData?serviceId=ABA5")
@@ -868,7 +868,7 @@ val CourtAdminHearingsTab =
         .header("Accept", "application/json, text/plain, */*")
         .check(substring("HearingType")))
 
-      .exec(Common.caseActivityPost)
+      //.exec(Common.caseActivityPost)
     }
 
 

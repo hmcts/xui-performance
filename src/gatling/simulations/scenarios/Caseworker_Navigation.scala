@@ -115,7 +115,7 @@ object Caseworker_Navigation {
         }).optional.saveAs("documentUrl"))
       )
 
-      .exec(Common.caseActivityPost)
+      //.exec(Common.caseActivityPost)
       .pause(2)
       .exec(Common.caseActivityGet)
 
@@ -176,7 +176,7 @@ object Caseworker_Navigation {
           )
       }
 
-      .exec(Common.caseActivityPost)
+      //.exec(Common.caseActivityPost)
       .pause(2)
       .exec(Common.caseActivityGet)
 

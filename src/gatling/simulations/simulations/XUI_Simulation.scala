@@ -108,7 +108,7 @@ class XUI_Simulation extends Simulation {
 	val iterationsFL401 = if (debugMode == "off") CalculateRecordsRequired.calculate(prlFL401BarristerTargetPerHour*3, rampUpDurationMins, testDurationMins, rampDownDurationMins) else 1
 	val currentPath: String = System.getProperty("user.dir")
 
-	val caseIdFeederC100 = ElasticSearchCaseFeeder.feeder(
+	/*val caseIdFeederC100 = ElasticSearchCaseFeeder.feeder(
 		esIndices.PRL,
 		s"${currentPath}/src/gatling/resources/bodies/prl/c100/C100_ElasticSearch_Query.json",
 		FeederType.RANDOM,
@@ -124,7 +124,7 @@ class XUI_Simulation extends Simulation {
 		feed(caseIdFeederC100)
 
   def getCaseFL401(caseIdFeederFL401: Iterator[Map[String, Any]]) =
-		feed(caseIdFeederFL401)
+		feed(caseIdFeederFL401)*/
 
 
   /*===============================================================================================
@@ -208,7 +208,7 @@ class XUI_Simulation extends Simulation {
   /*===============================================================================================
 * XUI Barrister Private Law C100 Scenario
  ===============================================================================================*/
-	val PRLC100BarristerScenario = scenario("***** Private Law Barrister C100 Create Case *****")
+	/*val PRLC100BarristerScenario = scenario("***** Private Law Barrister C100 Create Case *****")
 		.exitBlockOnFail {
 			feed(UserFeederPRL)
 				.feed(UserFeederPRLBarrister)
@@ -268,13 +268,13 @@ class XUI_Simulation extends Simulation {
 				.exec(CourtAdmin_PRL_C100.RemoveBarristerC100Applicant)
 				.exec(CourtAdmin_PRL_C100.RemoveBarristerC100Defendent)
 				.exec(XuiHelper.Logout)
-		}
+		}*/
 
 
 	/*===============================================================================================
 * XUI Barrister Private Law FL401 Scenario
  ===============================================================================================*/
-	val PRLFL401BarristerScenario = scenario("***** Private Law Barrister FL401 Create Case *****")
+	/*val PRLFL401BarristerScenario = scenario("***** Private Law Barrister FL401 Create Case *****")
 		.exitBlockOnFail {
 			feed(UserFeederPRL)
 				.feed(UserFeederPRLBarrister)
@@ -311,7 +311,7 @@ class XUI_Simulation extends Simulation {
 				.exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
 				.exec(Solicitor_PRL_FL401.RemoveBarristerFL401Applicant)
 				.exec(XuiHelper.Logout)
-		}
+		}*/
 
   /*===============================================================================================
   * XUI Legal Rep Bails Scenario
