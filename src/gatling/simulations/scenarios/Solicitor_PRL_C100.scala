@@ -321,7 +321,7 @@ object Solicitor_PRL_C100 {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/prl/c100/PRLPermissionRequired.json"))
-        //.check(substring("orderInPlacePermissionRequired")))
+        .check(substring("orderInPlacePermissionRequired"))
       )
       .exec(Common.userDetails)
     }
@@ -357,7 +357,7 @@ object Solicitor_PRL_C100 {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/prl/c100/PRLCheckYourAnswersTypeOfApplication.json"))
-        //.check(substring("applicationPermissionRequired"))
+        .check(substring("applicationPermissionRequired"))
         .check(jsonPath("$.state").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
       .exec(http("XUI_PRL_C100_170_010_ViewCase")
