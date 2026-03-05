@@ -1,14 +1,7 @@
 {
   "data": {
     "applicationPermissionRequired": "yes",
-    "applicationPermissionRequiredReason": "Random Text",
-    "orderInPlacePermissionRequired": "Yes",
-    "orderDetailsForPermissions": "1111111111111111",
-    "uploadOrderDocForPermission": {
-      "document_url": "#{DocumentURL_permission}",
-      "document_binary_url": "#{DocumentURL_permission}/binary",
-      "document_filename": "7PageDoc.pdf"
-    }
+    "applicationPermissionRequiredReason": "Random Text"
   },
   "event": {
     "id": "selectApplicationType",
@@ -20,22 +13,16 @@
       "childArrangementsOrder"
     ],
     "typeOfChildArrangementsOrder": "spendTimeWithOrder",
-    "natureOfOrder": "test",
+    "natureOfOrder": "Random Text",
     "consentOrder": "Yes",
     "draftConsentOrderFile": {
       "document_url": "#{DocumentURL}",
       "document_binary_url": "#{DocumentURL}/binary",
-      "document_filename": "3MB.pdf"
+      "document_filename": "3MB.pdf",
+      "document_hash": "#{documentHash}"
     },
     "applicationPermissionRequired": "yes",
-    "applicationPermissionRequiredReason": "Random Text",
-    "orderInPlacePermissionRequired": "Yes",
-    "orderDetailsForPermissions": "1111111111111111",
-    "uploadOrderDocForPermission": {
-      "document_url": "#{DocumentURL_permission}",
-      "document_binary_url": "#{DocumentURL_permission}/binary",
-      "document_filename": "7PageDoc.pdf"
-    }
+    "applicationPermissionRequiredReason": "Random Text"
   },
   "event_token": "#{event_token}",
   "ignore_warning": false,
