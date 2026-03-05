@@ -1,0 +1,32 @@
+{
+  "data": {
+    "ordersApplyingFor": [
+      "childArrangementsOrder"
+    ],
+    "typeOfChildArrangementsOrder": "spendTimeWithOrder",
+    "natureOfOrder": "Random Text",
+    "consentOrder": "Yes",
+    "draftConsentOrderFile": {
+      "document_url": "#{DocumentURL}",
+      "document_binary_url": "#{DocumentURL}/binary",
+      "document_filename": "3MB.pdf"
+    },
+    "applicationPermissionRequired": "yes",
+    "applicationPermissionRequiredReason": "Random Text",
+    "orderInPlacePermissionRequired": "Yes",
+    "orderDetailsForPermissions": "1111111111111111",
+    "uploadOrderDocForPermission": {
+      "document_url": "#{DocumentURL_permission}",
+      "document_binary_url": "#{DocumentURL_permission}/binary",
+      "document_filename": "Doc1.docx"
+    },
+    "applicationDetails": "Random Brief Details"
+  },
+  "event": {
+    "id": "selectApplicationType",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false
+}

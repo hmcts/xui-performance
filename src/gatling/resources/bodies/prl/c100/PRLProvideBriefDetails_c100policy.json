@@ -1,0 +1,36 @@
+{
+  "data": {
+    "applicationDetails": "Random Brief Details"
+  },
+  "event": {
+    "id": "selectApplicationType",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "ordersApplyingFor": [
+      "childArrangementsOrder"
+    ],
+    "typeOfChildArrangementsOrder": "spendTimeWithOrder",
+    "natureOfOrder": "test",
+    "consentOrder": "Yes",
+    "draftConsentOrderFile": {
+      "document_url": "#{DocumentURL}",
+      "document_binary_url": "#{DocumentURL}/binary",
+      "document_filename": "3MB.pdf"
+    },
+    "applicationPermissionRequired": "yes",
+    "applicationPermissionRequiredReason": "test",
+    "orderInPlacePermissionRequired": "Yes",
+    "orderDetailsForPermissions": "1111111111111111",
+    "uploadOrderDocForPermission": {
+      "document_url": "#{DocumentURL_permission}",
+      "document_binary_url": "#{DocumentURL_permission}/binary",
+      "document_filename": "7PageDoc.pdf"
+    },
+    "applicationDetails": "Random Brief Details"
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
+}
