@@ -12,22 +12,16 @@
       "childArrangementsOrder"
     ],
     "typeOfChildArrangementsOrder": "spendTimeWithOrder",
-    "natureOfOrder": "test",
+    "natureOfOrder": "Random Text",
     "consentOrder": "Yes",
     "draftConsentOrderFile": {
       "document_url": "#{DocumentURL}",
       "document_binary_url": "#{DocumentURL}/binary",
-      "document_filename": "3MB.pdf"
+      "document_filename": "3MB.pdf",
+      "document_hash": "#{documentHash}"
     },
     "applicationPermissionRequired": "yes",
-    "applicationPermissionRequiredReason": "test",
-    "orderInPlacePermissionRequired": "Yes",
-    "orderDetailsForPermissions": "1111111111111111",
-    "uploadOrderDocForPermission": {
-      "document_url": "#{DocumentURL_permission}",
-      "document_binary_url": "#{DocumentURL_permission}/binary",
-      "document_filename": "7PageDoc.pdf"
-    },
+    "applicationPermissionRequiredReason": "Random Text",
     "applicationDetails": "Random Brief Details"
   },
   "event_token": "#{event_token}",
