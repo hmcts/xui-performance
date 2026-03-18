@@ -1774,4 +1774,195 @@ object Solicitor_PRL_C100 {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+val PathfinderCase =
+
+  group("XUI_PRL_C100progress_000_000_PathfinderEvent") {
+    exec(http("XUI_PRL_C100progress_000_005_PathfinderEvent")
+      .get("/workallocation/case/tasks/#{caseId}/event/pathfinderDecision/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
+      .headers(Headers.commonHeader)
+      .header("Accept", "application/json, text/plain, */*")
+      .check(substring("task_required_for_event"))
+      .check(status.is(200)))
+
+    exec(http("XUI_PRL_C100progress_000_010_PathfinderEvent_EventTrigger")
+      .get("/data/internal/cases/#{caseId}/event-triggers/pathfinderDecision?ignore-warning=false")
+      .headers(Headers.commonHeader)
+      .header("Accept", "application/json, text/plain, */*")
+      .check(jsonPath("$.event_token").saveAs("event_token"))
+      .check(jsonPath("$.case_fields[0].value[0].id").saveAs("id_value"))
+      .check(substring("Is this a Pathfinder case"))
+      .check(status.is(200)))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    .group("XUI_PRL_C100progress_000_000_PathfinderEvent_Validate") {
+      exec(http("XUI_PRL_C100progress_000_000_PathfinderEvent_Validate")
+        .post("/data/case-types/PRLAPPS/validate?pageId=pathfinderDecision1")
+        .headers(Headers.commonHeader)
+        .header("Content-Type", "application/json; charset=utf-8")
+        .header("Accept", "application/json, text/plain, */*")
+        .body(ElFileBody("bodies/prl/c100/PathfinderValidate.json"))
+        .check(substring("isPathfinderCase"))
+        .check(status.is(200)))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    .group("XUI_PRL_C100progress_000_000_PathfinderEvent_Event") {
+      exec(http("XUI_PRL_C100progress_000_000_PathfinderEvent_Event")
+        .post("/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("Content-Type", "application/json; charset=utf-8")
+        .header("Accept", "application/json, text/plain, */*")
+        .body(ElFileBody("bodies/prl/c100/PathfinderEvent.json"))
+        .check(substring("seekHelpDetails"))
+        .check(status.is(201)))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+  val AddLocalAuthority =
+
+    group("XUI_PRL_C100progress_000_000_AddLocalAuthority") {
+      exec(http("XUI_PRL_C100progress_000_005_AddLocalAuthority")
+        .get("/workallocation/case/tasks/#{caseId}/event/adminAddLocalAuthority/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("task_required_for_event"))
+        .check(status.is(200)))
+
+      exec(http("XUI_PRL_C100progress_000_010_AddLocalAuthority_EventTrigger")
+        .get("/data/internal/cases/#{caseId}/event-triggers/adminAddLocalAuthority?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.case_fields[0].value[0].id").saveAs("id_value"))
+        .check(substring("adminAddLocalAuthority"))
+        .check(status.is(200)))
+    }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_C100progress_000_000_AddLocalAuthority_Validate") {
+        exec(http("XUI_PRL_C100progress_000_000_AddLocalAuthority_Validate")
+          .post("/data/case-types/PRLAPPS/validate?pageId=adminAddLocalAuthority1")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/AddLocalAuthorityValidate.json"))
+          .check(substring("localAuthoritySolicitorOrganisationPolicy"))
+          .check(status.is(200)))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_C100progress_000_000_AddLocalAuthority_Event") {
+        exec(http("XUI_PRL_C100progress_000_000_AddLocalAuthority_Event")
+          .post("/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/AddLocalAuthorityEvent.json"))
+          .check(substring("seekHelpDetails"))
+          .check(status.is(201)))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+  val RemoveLocalAuthority = {
+
+    group("XUI_PRL_C100progress_000_000_RemoveLocalAuthority") {
+      exec(http("XUI_PRL_C100progress_000_005_RemoveLocalAuthority")
+        .get("/workallocation/case/tasks/#{caseId}/event/adminRemoveLocalAuthority/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("task_required_for_event"))
+        .check(status.is(200)))
+
+      exec(http("XUI_PRL_C100progress_000_010_RemoveLocalAuthority_EventTrigger")
+        .get("/data/internal/cases/#{caseId}/event-triggers/adminRemoveLocalAuthority?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.case_fields[0].value[0].id").saveAs("id_value"))
+        .check(substring("adminRemoveLocalAuthority"))
+        .check(status.is(200)))
+    }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_C100progress_000_000_RemoveLocalAuthority_Validate") {
+        exec(http("XUI_PRL_C100progress_000_000_RemoveLocalAuthority_Validate")
+          .post("/data/case-types/PRLAPPS/validate?pageId=adminRemoveLocalAuthority1")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/RemoveLocalAuthorityValidate.json"))
+          .check(substring("localAuthoritySolicitorOrganisationPolicy"))
+          .check(status.is(200)))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_C100progress_000_000_RemoveLocalAuthority_Event") {
+        exec(http("XUI_PRL_C100progress_000_000_RemoveLocalAuthority_Event")
+          .post("/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/RemoveLocalAuthorityEvent.json"))
+          .check(substring("responseToAllegationsOfHarmDocument"))
+          .check(status.is(201)))
+      }
+  }
+      .pause(MinThinkTime, MaxThinkTime)
+
+  val OrgHomepage =
+
+      group("PRL_CitizenC100_010_PRLHome") {
+          exec(http("PRL_CitizenC100_010_005_PRLHome")
+            .get("https://manage-org.perftest.platform.hmcts.net/")
+            .headers(Headers.navigationHeader)
+            .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
+            .check(substring("Sign in or create an account")))
+
+          exec(http("PRL_CitizenC100_010_005_PRLHome")
+            .get("https://manage-org.perftest.platform.hmcts.net/auth/login")
+            .headers(Headers.navigationHeader)
+            .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
+            .check(substring("Sign in or create an account")))
+
+          exec(http("PRL_CitizenC100_010_005_PRLHome")
+            .get("https://idam-web-public.perftest.platform.hmcts.net/login?response_type=code&redirect_uri=https%3A%2F%2Fmanage-org.perftest.platform.hmcts.net%2Foauth2%2Fcallback&scope=profile%20openid%20roles%20manage-user%20create-user%20manage-roles&state=C8Bw2hEFXfmhwPWi1P-ifVVohjV-kD3qqypuczeM81w&client_id=xuimowebapp")
+            .headers(Headers.navigationHeader)
+            .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
+            .check(substring("Sign in or create an account")))
+      }
+
+
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*===============================================================================================
+    * Login
+    ===============================================================================================*/
+
+    .group("PRL_CitizenC100_020_Login") {
+      exec(http("PRL_CitizenC100_020_005_Login")
+        .post("https://idam-web-public.perftest.platform.hmcts.net/login?response_type=code&redirect_uri=https%3A%2F%2Fmanage-org.perftest.platform.hmcts.net%2Foauth2%2Fcallback&scope=profile%20openid%20roles%20manage-user%20create-user%20manage-roles&state=C8Bw2hEFXfmhwPWi1P-ifVVohjV-kD3qqypuczeM81w&client_id=xuimowebapp")
+        .headers(Headers.commonHeader)
+        .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
+        .header("content-type", "application/x-www-form-urlencoded")
+        .formParam("username", "#{user}")
+        .formParam("password", "#{password}")
+        .formParam("selfRegistrationEnabled", "false")
+        .formParam("mojLoginEnabled", "true")
+        .formParam("_csrf", "#{csrf}")
+        .check(substring("Child arrangements and family injunction cases")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+
 }

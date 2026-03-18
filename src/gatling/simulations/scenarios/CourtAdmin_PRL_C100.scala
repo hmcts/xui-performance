@@ -13,22 +13,22 @@ import java.io.{BufferedWriter, FileWriter}
 ================================================================================================================*/
 
 object CourtAdmin_PRL_C100 {
-  
+
   val BaseURL = Environment.baseURL
 
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
 
-    exec(_.setAll(
-      "PRLRandomString" -> (Common.randomString(7)),
-      "PRLRandomPhone" -> (Common.randomNumber(8)),
-      "PRLAppDobDay" -> Common.getDay(),
-      "PRLAppDobMonth" -> Common.getMonth(),
-      "JudgeFirstName" -> (Common.randomString(4) + "judgefirst"),
-      "JudgeLastName" -> (Common.randomString(4) + "judgeLast"),
-      "todayDate" -> Common.getDate(),
-      "LegalAdviserName" -> (Common.randomString(4) + " " + Common.randomString(4) + "legAdv")))
-  
+  exec(_.setAll(
+    "PRLRandomString" -> (Common.randomString(7)),
+    "PRLRandomPhone" -> (Common.randomNumber(8)),
+    "PRLAppDobDay" -> Common.getDay(),
+    "PRLAppDobMonth" -> Common.getMonth(),
+    "JudgeFirstName" -> (Common.randomString(4) + "judgefirst"),
+    "JudgeLastName" -> (Common.randomString(4) + "judgeLast"),
+    "todayDate" -> Common.getDate(),
+    "LegalAdviserName" -> (Common.randomString(4) + " " + Common.randomString(4) + "legAdv")))
+
   val CourtAdminCheckApplication =
 
     exec(http("XUI_PRL_C100Progress_030_SearchCase")
@@ -38,45 +38,26 @@ object CourtAdmin_PRL_C100 {
       .check(jsonPath("$.tabs[0].fields[0].value").saveAs("caseName"))
       .check(jsonPath("$.case_id").is("#{caseId}")))
 
-    .exec(Common.waJurisdictions)
-    .exec(Common.activity)
-    .exec(Common.userDetails)
-    .exec(Common.caseActivityGet)
-    .exec(Common.isAuthenticated)
+      .exec(Common.waJurisdictions)
+      .exec(Common.activity)
+      .exec(Common.userDetails)
+      .exec(Common.caseActivityGet)
+      .exec(Common.isAuthenticated)
 
-    .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-   /*=====================================================================================
+      /*=====================================================================================
    * Select task tab 
    ======================================================================================*/
 
-    .exec(http("XUI_PRL_C100Progress_040_SelectCase")
-      .get(BaseURL + "/cases/case-details/#{caseId}/task")
-      .headers(Headers.commonHeader)
-      .check(substring("HMCTS Manage cases")))
+      .exec(http("XUI_PRL_C100Progress_040_SelectCase")
+        .get(BaseURL + "/cases/case-details/#{caseId}/task")
+        .headers(Headers.commonHeader)
+        .check(substring("HMCTS Manage cases")))
 
-    .exec(http("XUI_PRL_C100Progress_050_SelectCaseTask")
-      .get(BaseURL + "/workallocation/case/task/#{caseId}")
-      .headers(Headers.commonHeader)
-      .header("Accept", "application/json, text/plain, */*")
-      .header("x-xsrf-token", "#{XSRFToken}")
-      .check(jsonPath("$[0].id").optional.saveAs("taskId"))
-      .check(jsonPath("$[0].type").optional.saveAs("taskType")))
-
-    //Save taskType from response
-    .exec(session => {
-      // Initialise task type in session if it's not already present, ensure the variable exists before entering Loop
-      session("taskType").asOption[String] match {
-        case Some(taskType) => session
-        case None => session.set("taskType", "")
-      }
-    })
-
-    // Loop until the task type matches "checkApplicationC100" *For Cases which selected HWF different steps are required here
-    .asLongAs(session => session("taskType").as[String] != "checkApplicationC100") {
-      exec(http("XUI_PRL_C100Progress_055_SelectCaseTaskRepeat")
+      .exec(http("XUI_PRL_C100Progress_050_SelectCaseTask")
         .get(BaseURL + "/workallocation/case/task/#{caseId}")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*")
@@ -84,223 +65,243 @@ object CourtAdmin_PRL_C100 {
         .check(jsonPath("$[0].id").optional.saveAs("taskId"))
         .check(jsonPath("$[0].type").optional.saveAs("taskType")))
 
-      .pause(5, 10) // Wait between retries
+      //Save taskType from response
+      .exec(session => {
+        // Initialise task type in session if it's not already present, ensure the variable exists before entering Loop
+        session("taskType").asOption[String] match {
+          case Some(taskType) => session
+          case None => session.set("taskType", "")
+        }
+      })
 
-    //   // Log task Type
-    //   .exec (session => {
-    //     println(s"Current Task Type: ${session("taskType").as[String]}")
-    //     session
-    // })
-  }
+      // Loop until the task type matches "checkApplicationC100" *For Cases which selected HWF different steps are required here
+      .asLongAs(session => session("taskType").as[String] != "checkApplicationC100") {
+        exec(http("XUI_PRL_C100Progress_055_SelectCaseTaskRepeat")
+          .get(BaseURL + "/workallocation/case/task/#{caseId}")
+          .headers(Headers.commonHeader)
+          .header("Accept", "application/json, text/plain, */*")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .check(jsonPath("$[0].id").optional.saveAs("taskId"))
+          .check(jsonPath("$[0].type").optional.saveAs("taskType")))
 
-  /*=====================================================================================
+          .pause(5, 10) // Wait between retries
+
+        //   // Log task Type
+        //   .exec (session => {
+        //     println(s"Current Task Type: ${session("taskType").as[String]}")
+        //     session
+        // })
+      }
+
+      /*=====================================================================================
   * Claim the task
   ======================================================================================*/
 
-  .exec(http("XUI_PRL_C100Progress_060_ClaimTask")
-      .post(BaseURL + "/workallocation/task/#{taskId}/claim")
-      .headers(Headers.commonHeader)
-      .header("Accept", "application/json, text/plain, */*")
-      .header("x-xsrf-token", "#{XSRFToken}")
-      .body(StringBody("""{}"""))
-      .check(status.in(200, 204)))
+      .exec(http("XUI_PRL_C100Progress_060_ClaimTask")
+        .post(BaseURL + "/workallocation/task/#{taskId}/claim")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(StringBody("""{}"""))
+        .check(status.in(200, 204)))
 
-  .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-  /*=====================================================================================
+      /*=====================================================================================
   * Select Issue and send to local Court
   ======================================================================================*/
 
-    .exec(http("XUI_PRL_C100Progress_070_IssueAndSendToLocalCourt")
-      .get(BaseURL + "/workallocation/case/tasks/#{caseId}/event/issueAndSendToLocalCourtCallback/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
-      .headers(Headers.navigationHeader)
-      .header("accept", "application/json")
-      .check(jsonPath("$.task_required_for_event").is("false")))
+      .exec(http("XUI_PRL_C100Progress_070_IssueAndSendToLocalCourt")
+        .get(BaseURL + "/workallocation/case/tasks/#{caseId}/event/issueAndSendToLocalCourtCallback/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
+        .headers(Headers.navigationHeader)
+        .header("accept", "application/json")
+        .check(jsonPath("$.task_required_for_event").is("false")))
 
-    .exec(Common.activity)
-    .exec(Common.profile)
+      .exec(Common.activity)
+      .exec(Common.profile)
 
-    .exec(http("XUI_PRL_C100Progress_080_IssueAndSendToLocalCourtEventTrigger")  //*** SAVE THE Courtlist response here for use in later post requests **
-      .get(BaseURL + "/data/internal/cases/#{caseId}/event-triggers/issueAndSendToLocalCourtCallback?ignore-warning=false")
-      .headers(Headers.commonHeader)
-      .header("Accept", "application/json, text/plain, */*")
-      .check(jsonPath("$.event_token").saveAs("event_token"))
-      .check(jsonPath("$.id").is("issueAndSendToLocalCourtCallback"))
-      .check(status.in(200, 403)))
+      .exec(http("XUI_PRL_C100Progress_080_IssueAndSendToLocalCourtEventTrigger") //*** SAVE THE Courtlist response here for use in later post requests **
+        .get(BaseURL + "/data/internal/cases/#{caseId}/event-triggers/issueAndSendToLocalCourtCallback?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("issueAndSendToLocalCourtCallback"))
+        .check(status.in(200, 403)))
 
-    .exec(http("XUI_PRL_C100Progress_090_IssueAndSendToLocalCourtEvent")
-      .get(BaseURL + "/workallocation/case/tasks/#{caseId}/event/issueAndSendToLocalCourtCallback/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
-      .headers(Headers.navigationHeader)
-      .header("accept", "application/json"))
+      .exec(http("XUI_PRL_C100Progress_090_IssueAndSendToLocalCourtEvent")
+        .get(BaseURL + "/workallocation/case/tasks/#{caseId}/event/issueAndSendToLocalCourtCallback/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
+        .headers(Headers.navigationHeader)
+        .header("accept", "application/json"))
       //.check(substring("PRIVATELAW")))
-    
-    // .exec(Common.caseActivityPost)
-    .exec(Common.userDetails)
-    //.exec(Common.caseActivityOnlyGet)
 
-    .pause(MinThinkTime, MaxThinkTime)
+      // .exec(Common.caseActivityPost)
+      .exec(Common.userDetails)
+      //.exec(Common.caseActivityOnlyGet)
 
-  /*=====================================================================================
+      .pause(MinThinkTime, MaxThinkTime)
+
+      /*=====================================================================================
    * Select Court from dropdown and submit
    ======================================================================================*/
 
-    .exec(http("XUI_PRL_C100Progress_100_SelectCourt")
-      .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=issueAndSendToLocalCourtCallback1")
-      .headers(Headers.commonHeader)
-      .header("Accept", "application/json, text/plain, */*")
-      .header("x-xsrf-token", "#{XSRFToken}")
-      .body(ElFileBody("bodies/prl/c100/PRLLocalCourt.json"))
-      .check(jsonPath("$.data.courtList.value.code").is("234946:")))  //Value does not change for now. 
+      .exec(http("XUI_PRL_C100Progress_100_SelectCourt")
+        .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=issueAndSendToLocalCourtCallback1")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/prl/c100/PRLLocalCourt.json"))
+        .check(jsonPath("$.data.courtList.value.code").is("234946:")))
+      //Value does not change for now.
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-    .exec(Common.activity)
-    .exec(Common.userDetails)
-    .exec(Common.activity)
+      .exec(Common.activity)
+      .exec(Common.userDetails)
+      .exec(Common.activity)
 
-    .exec(http("XUI_PRL_C100Progress_110_SubmitToLocalCourtEvent")
-      .post(BaseURL + "/data/cases/#{caseId}/events")
-      .headers(Headers.commonHeader)
-      .header("Accept", "application/json, text/plain, */*")
-      .header("x-xsrf-token", "#{XSRFToken}")
-      .body(ElFileBody("bodies/prl/c100/PRLLocalCourtSubmit.json"))
-      .check(jsonPath("$.data.courtList.value.code").is("234946:")))  //Value does not change for now. 
+      .exec(http("XUI_PRL_C100Progress_110_SubmitToLocalCourtEvent")
+        .post(BaseURL + "/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/prl/c100/PRLLocalCourtSubmit.json"))
+        .check(jsonPath("$.data.courtList.value.code").is("234946:"))) //Value does not change for now.
 
-    .exec(http("XUI_PRL_C100Progress_120_SubmitToLocalCourtCompleteTask")
-      .post(BaseURL + "/workallocation/task/#{taskId}/complete")
-      .headers(Headers.navigationHeader)
-      .header("Content-Type", "application/json")
-      .header("x-xsrf-token", "#{XSRFToken}")
-      .header("accept", "application/json") //No check available for this request
-      .body(StringBody("""{"actionByEvent":true,"eventName":"Issue and send to local court"}""")))
+      .exec(http("XUI_PRL_C100Progress_120_SubmitToLocalCourtCompleteTask")
+        .post(BaseURL + "/workallocation/task/#{taskId}/complete")
+        .headers(Headers.navigationHeader)
+        .header("Content-Type", "application/json")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/json") //No check available for this request
+        .body(StringBody("""{"actionByEvent":true,"eventName":"Issue and send to local court"}""")))
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-  val CourtAdminSendToGateKeeper = 
+  val CourtAdminSendToGateKeeper =
 
     exec(http("XUI_PRL_C100Progress_130_SelectCase")
       .get(BaseURL + "/cases/case-details/#{caseId}/task")
       .headers(Headers.commonHeader)
       .check(substring("HMCTS Manage cases")))
 
-    //.exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
-    .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
+      //.exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
 
-    .exec(Common.activity)
-    .exec(Common.configUI)
-    .exec(Common.configJson)
-    .exec(Common.userDetails)
+      .exec(Common.activity)
+      .exec(Common.configUI)
+      .exec(Common.configJson)
+      .exec(Common.userDetails)
 
-    .exec(http("XUI_PRL_C100Progress_140_SelectCaseTask")
-      .get(BaseURL + "/workallocation/case/task/#{caseId}")
-      .headers(Headers.commonHeader)
-      .header("Accept", "application/json, text/plain, */*")
-      .header("x-xsrf-token", "#{XSRFToken}")
-      .check(jsonPath("$[0].id").optional.saveAs("taskId"))
-      .check(jsonPath("$[0].type").optional.saveAs("taskType"))
+      .exec(http("XUI_PRL_C100Progress_140_SelectCaseTask")
+        .get(BaseURL + "/workallocation/case/task/#{caseId}")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .check(jsonPath("$[0].id").optional.saveAs("taskId"))
+        .check(jsonPath("$[0].type").optional.saveAs("taskType"))
       )
 
-    // Log task Type
+      // Log task Type
       // .exec (session => {
       //   println(s"Current respTaskType: ${session("respTaskType").as[String]}")
       //   println(s"Current respTaskId: ${session("respTaskId").as[String]}")
       //   session
       // })
 
-    //Save taskType from response
-    .exec(session => {
-      // Initialise task type in session if it's not already present, ensure the variable exists before entering Loop
-      session("taskType").asOption[String] match {
-        case Some(taskType) => session
-        case None => session.set("taskType", "")
+      //Save taskType from response
+      .exec(session => {
+        // Initialise task type in session if it's not already present, ensure the variable exists before entering Loop
+        session("taskType").asOption[String] match {
+          case Some(taskType) => session
+          case None => session.set("taskType", "")
+        }
+      })
+
+      // Loop until the task type matches "sendToGateKeeperC100"
+      .asLongAs(session => session("taskType").as[String] != "sendToGateKeeperC100") {
+        exec(http("XUI_PRL_C100Progress_150_SelectCaseTaskRepeat")
+          .get(BaseURL + "/workallocation/case/task/#{caseId}")
+          .headers(Headers.commonHeader)
+          .header("Accept", "application/json, text/plain, */*")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .check(jsonPath("$[0].id").optional.saveAs("taskId"))
+          .check(jsonPath("$[0].type").optional.saveAs("taskType")))
+
+          .pause(5, 10) // Wait between retries
+
+        //   // Log task Type
+        //   .exec (session => {
+        //     println(s"Current respTaskType: ${session("respTaskType").as[String]}")
+        //     println(s"Current respTaskId: ${session("respTaskId").as[String]}")
+        //     session
+        // })
       }
-    })
 
-    // Loop until the task type matches "sendToGateKeeperC100"
-    .asLongAs(session => session("taskType").as[String] != "sendToGateKeeperC100") {
-      exec(http("XUI_PRL_C100Progress_150_SelectCaseTaskRepeat")
-        .get(BaseURL + "/workallocation/case/task/#{caseId}")
-        .headers(Headers.commonHeader)
-        .header("Accept", "application/json, text/plain, */*")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .check(jsonPath("$[0].id").optional.saveAs("taskId"))
-        .check(jsonPath("$[0].type").optional.saveAs("taskType")))
+      .pause(MinThinkTime, MaxThinkTime)
 
-      .pause(5, 10) // Wait between retries
-
-    //   // Log task Type
-    //   .exec (session => {
-    //     println(s"Current respTaskType: ${session("respTaskType").as[String]}")
-    //     println(s"Current respTaskId: ${session("respTaskId").as[String]}")
-    //     session
-    // })
-  }
-
-  .pause(MinThinkTime, MaxThinkTime)
-
-  /*======================================================================================
+      /*======================================================================================
   * Click on 'Send to Gate Keeper'
   ======================================================================================*/
 
-    .exec(http("XUI_PRL_C100Progress_160_SendToGateKeeper")
-      .get(BaseURL + "/data/internal/cases/#{caseId}/event-triggers/sendToGateKeeper?ignore-warning=false")
-      .headers(Headers.navigationHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-      .check(jsonPath("$.event_token").saveAs("event_token"))
-      .check(jsonPath("$.id").is("sendToGateKeeper")))
+      .exec(http("XUI_PRL_C100Progress_160_SendToGateKeeper")
+        .get(BaseURL + "/data/internal/cases/#{caseId}/event-triggers/sendToGateKeeper?ignore-warning=false")
+        .headers(Headers.navigationHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("sendToGateKeeper")))
 
       .exec(Common.userDetails)
 
       .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
       //.exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-  /*======================================================================================
+      /*======================================================================================
   * Add Gate Keeper
   ======================================================================================*/
 
-    .exec(http("XUI_PRL_C100Progress_170_AddGateKeeper")
-      .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=sendToGateKeeper1")
-      .headers(Headers.commonHeader)
-      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-      .header("x-xsrf-token", "#{XSRFToken}")
-      .body(ElFileBody("bodies/prl/c100/PRLAddGateKeeper.json"))
-      .check(substring("isJudgeOrLegalAdviserGatekeeping")))
+      .exec(http("XUI_PRL_C100Progress_170_AddGateKeeper")
+        .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=sendToGateKeeper1")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/prl/c100/PRLAddGateKeeper.json"))
+        .check(substring("isJudgeOrLegalAdviserGatekeeping")))
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-  /*======================================================================================
+      /*======================================================================================
   * Send to Gate Keeper Submit
   ======================================================================================*/
 
-    .group("XUI_PRL_C100Progress_180_GateKeeperSubmit") {
-      exec(http("XUI_PRL_C100Progress_180_005_GateKeeperSubmit")
-        .post(BaseURL + "/data/cases/#{caseId}/events")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100/PRLAddGateKeeperSubmit.json"))
-        .check(substring("gatekeepingDetails")))
+      .group("XUI_PRL_C100Progress_180_GateKeeperSubmit") {
+        exec(http("XUI_PRL_C100Progress_180_005_GateKeeperSubmit")
+          .post(BaseURL + "/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(ElFileBody("bodies/prl/c100/PRLAddGateKeeperSubmit.json"))
+          .check(substring("gatekeepingDetails")))
 
-      .exec(http("XUI_PRL_C100Progress_180_010_GateKeeperSubmitCompleteTask")
-        .post(BaseURL + "/workallocation/task/#{taskId}/complete")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody("""{"actionByEvent":true,"eventName":"Send to Gatekeeper"}""")))
+          .exec(http("XUI_PRL_C100Progress_180_010_GateKeeperSubmitCompleteTask")
+            .post(BaseURL + "/workallocation/task/#{taskId}/complete")
+            .headers(Headers.commonHeader)
+            .header("accept", "application/json")
+            .header("x-xsrf-token", "#{XSRFToken}")
+            .body(StringBody("""{"actionByEvent":true,"eventName":"Send to Gatekeeper"}""")))
 
-      .exec(http("XUI_PRL_C100Progress_180_015_SelectCase")
-        .get(BaseURL + "/data/internal/cases/#{caseId}")
-        .headers(Headers.commonHeader)
-        .check(jsonPath("$.case_type.name").is("C100 & FL401 Applications")))
-    } 
+          .exec(http("XUI_PRL_C100Progress_180_015_SelectCase")
+            .get(BaseURL + "/data/internal/cases/#{caseId}")
+            .headers(Headers.commonHeader)
+            .check(jsonPath("$.case_type.name").is("C100 & FL401 Applications")))
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-  val CourtAdminManageOrders = 
+  val CourtAdminManageOrders =
 
-  exec(_.setAll(
+    exec(_.setAll(
       "PRLRandomString" -> (Common.randomString(7)),
       //"PRLRandomPhone" -> (Common.randomNumber(8)),
       //"PRLAppDobDay" -> Common.getDay(),
@@ -313,190 +314,190 @@ object CourtAdmin_PRL_C100 {
       "OrderDateDay" -> Common.getCurrentDay(),
       "LegalAdviserName" -> (Common.randomString(4) + " " + Common.randomString(4) + "legAdv"))) //*/
 
-    /*======================================================================================
+      /*======================================================================================
     * Click on 'Manage Orders'
     ======================================================================================*/
 
-    .group("XUI_PRL_C100Progress_190_ManageOrders") {
-      exec(http("XUI_PRL_C100Progress_190_005_ManageOrders")
-        .get(BaseURL + "/data/internal/cases/#{caseId}/event-triggers/manageOrders?ignore-warning=false")
-        .headers(Headers.navigationHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-        .check(jsonPath("$.event_token").saveAs("event_token"))
-        .check(jsonPath("$.id").is("manageOrders")))
+      .group("XUI_PRL_C100Progress_190_ManageOrders") {
+        exec(http("XUI_PRL_C100Progress_190_005_ManageOrders")
+          .get(BaseURL + "/data/internal/cases/#{caseId}/event-triggers/manageOrders?ignore-warning=false")
+          .headers(Headers.navigationHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+          .check(jsonPath("$.event_token").saveAs("event_token"))
+          .check(jsonPath("$.id").is("manageOrders")))
 
-        .exec(Common.userDetails)
-        .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
+          .exec(Common.userDetails)
+          .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
         //.exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
-    }
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-    /*======================================================================================
+      /*======================================================================================
     * Create an Order
     ======================================================================================*/
 
-    .group("XUI_PRL_C100Progress_200_CreateOrder") {
-      exec(http("XUI_PRL_C100Progress_200_005_CreateOrder")
-        .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders1")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100/PRLCreateOrder.json"))
-        .check(substring("isSdoSelected")))
-    }
+      .group("XUI_PRL_C100Progress_200_CreateOrder") {
+        exec(http("XUI_PRL_C100Progress_200_005_CreateOrder")
+          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders1")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(ElFileBody("bodies/prl/c100/PRLCreateOrder.json"))
+          .check(substring("isSdoSelected")))
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-    /*======================================================================================
+      /*======================================================================================
     * Select Order - Special guardianship order (C43A)
     ======================================================================================*/
 
-    .group("XUI_PRL_C100Progress_210_SelectOrder") {
-      exec(http("XUI_PRL_C100Progress_210_005_SelectOrder")
-        .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders2")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100/PRLSelectOrder.json"))
-        .check(substring("otherPartyInTheCaseRevised")))
-    }
+      .group("XUI_PRL_C100Progress_210_SelectOrder") {
+        exec(http("XUI_PRL_C100Progress_210_005_SelectOrder")
+          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders2")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(ElFileBody("bodies/prl/c100/PRLSelectOrder.json"))
+          .check(substring("otherPartyInTheCaseRevised")))
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-    /*======================================================================================
+      /*======================================================================================
     * Order Details
     ======================================================================================*/
 
-    .group("XUI_PRL_C100Progress_220_OrderDetails") {
-      exec(http("XUI_PRL_C100Progress_220_005_OrderDetails")
-        .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders5")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100/PRLOrderDetails.json"))
-        .check(jsonPath("$.data.appointedGuardianName[0].id").saveAs("guardianId"))
-        .check(substring("isEngDocGen")))
-    }
+      .group("XUI_PRL_C100Progress_220_OrderDetails") {
+        exec(http("XUI_PRL_C100Progress_220_005_OrderDetails")
+          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders5")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(ElFileBody("bodies/prl/c100/PRLOrderDetails.json"))
+          .check(jsonPath("$.data.appointedGuardianName[0].id").saveAs("guardianId"))
+          .check(substring("isEngDocGen")))
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-    /*======================================================================================
+      /*======================================================================================
     * Guardian Name
     ======================================================================================*/
 
-    .group("XUI_PRL_C100Progress_230_GuardianName") {
-      exec(http("XUI_PRL_C100Progress_230_005_GuardianName")
-        .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders11")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100/PRLGuardianName.json"))
-        .check(jsonPath("$.data.previewOrderDoc.document_url").saveAs("document_url"))
-        .check(jsonPath("$.data.previewOrderDoc.document_hash").saveAs("document_hash"))
-        .check(jsonPath("$.data.previewOrderDoc.document_hash").saveAs("document_filename"))
-        .check(substring("previewOrderDoc")))
-    }
+      .group("XUI_PRL_C100Progress_230_GuardianName") {
+        exec(http("XUI_PRL_C100Progress_230_005_GuardianName")
+          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders11")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(ElFileBody("bodies/prl/c100/PRLGuardianName.json"))
+          .check(jsonPath("$.data.previewOrderDoc.document_url").saveAs("document_url"))
+          .check(jsonPath("$.data.previewOrderDoc.document_hash").saveAs("document_hash"))
+          .check(jsonPath("$.data.previewOrderDoc.document_hash").saveAs("document_filename"))
+          .check(substring("previewOrderDoc")))
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-    /*======================================================================================
+      /*======================================================================================
     * Check Your Order
     ======================================================================================*/
 
-    .group("XUI_PRL_C100Progress_240_CheckYourOrder") {
-      exec(http("XUI_PRL_C100Progress_240_005_CheckYourOrder")
-        .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders20")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        //.header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100/PRLCheckOrder.json"))
-        .check(substring("previewOrderDoc")))
-    }
+      .group("XUI_PRL_C100Progress_240_CheckYourOrder") {
+        exec(http("XUI_PRL_C100Progress_240_005_CheckYourOrder")
+          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders20")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+          //.header("x-xsrf-token", "#{XSRFToken}")
+          .body(ElFileBody("bodies/prl/c100/PRLCheckOrder.json"))
+          .check(substring("previewOrderDoc")))
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-    /*======================================================================================
+      /*======================================================================================
     * Order Recipients
     ======================================================================================*/
 
-    .group("XUI_PRL_C100Progress_250_OrderRecipients") {
-      exec(http("XUI_PRL_C100Progress_250_005_OrderRecipients")
-        .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders24")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100/PRLOrderRecipients.json"))
-        .check(substring("amendOrderSelectCheckOptions")))
-    }
+      .group("XUI_PRL_C100Progress_250_OrderRecipients") {
+        exec(http("XUI_PRL_C100Progress_250_005_OrderRecipients")
+          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders24")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(ElFileBody("bodies/prl/c100/PRLOrderRecipients.json"))
+          .check(substring("amendOrderSelectCheckOptions")))
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-    /*======================================================================================
+      /*======================================================================================
     * Order Serve
     ======================================================================================*/
 
-    .group("XUI_PRL_C100Progress_260_OrderServe") {
-      exec(http("XUI_PRL_C100Progress_260_005_OrderServe")
-        .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders26")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100/PRLOrderServe.json"))
-        .check(jsonPath("$.data.serveOrderDynamicList.value[0].code").saveAs("orderCode"))
-        .check(jsonPath("$.data.serveOrderDynamicList.value[0].label").saveAs("orderLabel"))
-        .check(substring("orderRecipients")))
-    }
+      .group("XUI_PRL_C100Progress_260_OrderServe") {
+        exec(http("XUI_PRL_C100Progress_260_005_OrderServe")
+          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders26")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(ElFileBody("bodies/prl/c100/PRLOrderServe.json"))
+          .check(jsonPath("$.data.serveOrderDynamicList.value[0].code").saveAs("orderCode"))
+          .check(jsonPath("$.data.serveOrderDynamicList.value[0].label").saveAs("orderLabel"))
+          .check(substring("orderRecipients")))
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-    /*======================================================================================
+      /*======================================================================================
     * Order To Serve List
     ======================================================================================*/
 
-    .group("XUI_PRL_C100Progress_270_OrderServe") {
-      exec(http("XUI_PRL_C100Progress_270_005_OrderToServeList")
-        .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders27")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100/PRLOrderToServeList.json"))
-        .check(substring("otherPartyInTheCaseRevised")))
-    }
+      .group("XUI_PRL_C100Progress_270_OrderServe") {
+        exec(http("XUI_PRL_C100Progress_270_005_OrderToServeList")
+          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders27")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(ElFileBody("bodies/prl/c100/PRLOrderToServeList.json"))
+          .check(substring("otherPartyInTheCaseRevised")))
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-    /*======================================================================================
+      /*======================================================================================
     * Serve to Respondent Options
     ======================================================================================*/
 
-    .group("XUI_PRL_C100Progress_280_ServeToRespondentOptions") {
-      exec(http("XUI_PRL_C100Progress_280_005_ServeToRespondentOptions")
-        .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders28")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100/PRLOrderToServeRespondentOptions.json"))
-        .check(substring("otherPartyInTheCaseRevised")))
-    }
+      .group("XUI_PRL_C100Progress_280_ServeToRespondentOptions") {
+        exec(http("XUI_PRL_C100Progress_280_005_ServeToRespondentOptions")
+          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders28")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(ElFileBody("bodies/prl/c100/PRLOrderToServeRespondentOptions.json"))
+          .check(substring("otherPartyInTheCaseRevised")))
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-    /*======================================================================================
+      /*======================================================================================
     * Order Submit
     ======================================================================================*/
 
-    .group("XUI_PRL_C100Progress_290_OrderSubmit") {
-      exec(http("XUI_PRL_C100Progress_290_005_OrderSubmit")
-        .post(BaseURL + "/data/cases/#{caseId}/events")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100/PRLOrderSubmit.json"))
-        .check(substring("JUDICIAL_REVIEW")))
-    }
+      .group("XUI_PRL_C100Progress_290_OrderSubmit") {
+        exec(http("XUI_PRL_C100Progress_290_005_OrderSubmit")
+          .post(BaseURL + "/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(ElFileBody("bodies/prl/c100/PRLOrderSubmit.json"))
+          .check(substring("JUDICIAL_REVIEW")))
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
   val CourtAdminServiceApplication =
 
@@ -510,143 +511,143 @@ object CourtAdmin_PRL_C100 {
         .headers(Headers.navigationHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
-        .check(jsonPath("$.case_fields[7].value.list_items[0].code")saveAs("serviceOfApplicationScreenCode"))
-        .check(jsonPath("$.case_fields[7].value.list_items[0].label")saveAs("serviceOfApplicationScreenLabel"))
-        .check(jsonPath("$.case_fields[30].value.list_items[0].code")saveAs("serviceOfApplicationApplicantCode"))
-        .check(jsonPath("$.case_fields[30].value.list_items[0].label")saveAs("serviceOfApplicationApplicantName"))
-        .check(jsonPath("$.case_fields[30].value.list_items[1].code")saveAs("serviceOfApplicationRespondentCode"))
-        .check(jsonPath("$.case_fields[30].value.list_items[1].label")saveAs("serviceOfApplicationRespondentName"))
+        .check(jsonPath("$.case_fields[7].value.list_items[0].code") saveAs ("serviceOfApplicationScreenCode"))
+        .check(jsonPath("$.case_fields[7].value.list_items[0].label") saveAs ("serviceOfApplicationScreenLabel"))
+        .check(jsonPath("$.case_fields[31].value.list_items[0].code") saveAs ("serviceOfApplicationApplicantCode"))
+        .check(jsonPath("$.case_fields[31].value.list_items[0].label") saveAs ("serviceOfApplicationApplicantName"))
+        .check(jsonPath("$.case_fields[31].value.list_items[1].code") saveAs ("serviceOfApplicationRespondentCode"))
+        .check(jsonPath("$.case_fields[31].value.list_items[1].label") saveAs ("serviceOfApplicationRespondentName"))
         .check(jsonPath("$.id").is("serviceOfApplication")))
 
-      .exec(http("XUI_Common_000_UserDetails")
-        .get("/api/user/details?refreshRoleAssignments=undefined")
-        .headers(Headers.commonHeader)
-        .header("Cache-Control", "no-cache") 
-        .header("Pragma", "no-cache")
-        .header("accept", "application/json, text/plain, */*")
-        .check(jsonPath("$.roleAssignmentInfo[0].primaryLocation")saveAs("locationId"))
-        .check(status.in(200)))
+        .exec(http("XUI_Common_000_UserDetails")
+          .get("/api/user/details?refreshRoleAssignments=undefined")
+          .headers(Headers.commonHeader)
+          .header("Cache-Control", "no-cache")
+          .header("Pragma", "no-cache")
+          .header("accept", "application/json, text/plain, */*")
+          .check(jsonPath("$.roleAssignmentInfo[0].primaryLocation") saveAs ("locationId"))
+          .check(status.in(200)))
 
         .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
     }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-    /*======================================================================================
+      /*======================================================================================
     * PD36Q letter Upload
     ======================================================================================*/
 
-    .group("XUI_PRL_C100Progress_310_PD36QUpload") {
-      exec(http("XUI_PRL_C100Progress_310_005_PD36QUpload")
-        .post(BaseURL + "/documentsv2")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json, text/plain, */*")
-        .header("content-type", "multipart/form-data")
-      .header("x-xsrf-token", "#{XSRFToken}")
-      .bodyPart(RawFileBodyPart("files", "120KB.pdf")
-        .fileName("120KB.pdf")
-        .transferEncoding("binary"))
-      .asMultipartForm
-      .formParam("classification", "PUBLIC")
-      .formParam("caseTypeId", "PRLAPPS")
-      .formParam("jurisdictionId", "PRIVATELAW")
-      .check(substring("originalDocumentName"))
-      .check(jsonPath("$.documents[0].hashToken").saveAs("documentHashPD36Q"))
-      .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURLPD36Q")))
-     }
+      .group("XUI_PRL_C100Progress_310_PD36QUpload") {
+        exec(http("XUI_PRL_C100Progress_310_005_PD36QUpload")
+          .post(BaseURL + "/documentsv2")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/json, text/plain, */*")
+          .header("content-type", "multipart/form-data")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .bodyPart(RawFileBodyPart("files", "120KB.pdf")
+            .fileName("120KB.pdf")
+            .transferEncoding("binary"))
+          .asMultipartForm
+          .formParam("classification", "PUBLIC")
+          .formParam("caseTypeId", "PRLAPPS")
+          .formParam("jurisdictionId", "PRIVATELAW")
+          .check(substring("originalDocumentName"))
+          .check(jsonPath("$.documents[0].hashToken").saveAs("documentHashPD36Q"))
+          .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURLPD36Q")))
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-  .exec(session => {
-  for (_ <- 1 to 10) { // Adjust the loop count as needed
-    Thread.sleep(500)  // 500ms delay per iteration
-    println("Debug: Delaying the script...")
-  }
-  session
-  })
+      .exec(session => {
+        for (_ <- 1 to 10) { // Adjust the loop count as needed
+          Thread.sleep(500) // 500ms delay per iteration
+          println("Debug: Delaying the script...")
+        }
+        session
+      })
 
-    
 
-  /*======================================================================================
+
+      /*======================================================================================
   * Special arrangements letter  Upload
   ======================================================================================*/
 
-    .group("XUI_PRL_C100Progress_320_SpecialArrangementsUpload") {
-      exec(http("XUI_PRL_C100Progress_320_SpecialArrangementsUpload")
-        .post(BaseURL + "/documentsv2")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json, text/plain, */*")
-        .header("content-type", "multipart/form-data")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .bodyPart(RawFileBodyPart("files", "120KB.pdf")
-          .fileName("120KB.pdf")
-          .transferEncoding("binary"))
-        .asMultipartForm
-        .formParam("classification", "PUBLIC")
-        .formParam("caseTypeId", "PRLAPPS")
-        .formParam("jurisdictionId", "PRIVATELAW")
-        .check(substring("originalDocumentName"))
-        .check(jsonPath("$.documents[0].hashToken").saveAs("documentHashSpecial"))
-        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURLSpecial")))
-    }
+      .group("XUI_PRL_C100Progress_320_SpecialArrangementsUpload") {
+        exec(http("XUI_PRL_C100Progress_320_SpecialArrangementsUpload")
+          .post(BaseURL + "/documentsv2")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/json, text/plain, */*")
+          .header("content-type", "multipart/form-data")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .bodyPart(RawFileBodyPart("files", "120KB.pdf")
+            .fileName("120KB.pdf")
+            .transferEncoding("binary"))
+          .asMultipartForm
+          .formParam("classification", "PUBLIC")
+          .formParam("caseTypeId", "PRLAPPS")
+          .formParam("jurisdictionId", "PRIVATELAW")
+          .check(substring("originalDocumentName"))
+          .check(jsonPath("$.documents[0].hashToken").saveAs("documentHashSpecial"))
+          .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURLSpecial")))
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-  /*======================================================================================
+      /*======================================================================================
   * Service of Application document uploads
   ======================================================================================*/
 
-    .group("XUI_PRL_C100Progress_330_DocumentUpload") {
-      exec(http("XUI_PRL_C100Progress_330_005_DocumentUpload")
-        .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=serviceOfApplication2")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100/PRLSoADocuments.json"))
-        .check(substring("additionalDocuments")))
-    }
+      .group("XUI_PRL_C100Progress_330_DocumentUpload") {
+        exec(http("XUI_PRL_C100Progress_330_005_DocumentUpload")
+          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=serviceOfApplication2")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(ElFileBody("bodies/prl/c100/PRLSoADocuments.json"))
+          .check(substring("additionalDocuments")))
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-  /*======================================================================================
+      /*======================================================================================
   * Service of Application Confirm recipients
   ======================================================================================*/
 
-    .group("XUI_PRL_C100Progress_340_ServiceRecipients") {
-      exec(http("XUI_PRL_C100Progress_340_005_ServiceRecipients")
-        .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=serviceOfApplication4")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100/PRLSoARecipients.json"))
-        .check(substring("otherPartyInTheCaseRevised")))
-    }
+      .group("XUI_PRL_C100Progress_340_ServiceRecipients") {
+        exec(http("XUI_PRL_C100Progress_340_005_ServiceRecipients")
+          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=serviceOfApplication4")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(ElFileBody("bodies/prl/c100/PRLSoARecipients.json"))
+          .check(substring("otherPartyInTheCaseRevised")))
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-  /*======================================================================================
+      /*======================================================================================
   * Service of Application Submit
   ======================================================================================*/
 
-    .group("XUI_PRL_C100Progress_350_ServiceSubmit") {
-      exec(http("XUI_PRL_C100Progress_350_005_ServiceSubmit")
-        .post(BaseURL + "/data/cases/#{caseId}/events")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/prl/c100/PRLSoASubmit.json"))
-        .check(jsonPath("$.data.caseInvites[0].value.accessCode").saveAs("prlAccessCodeApplicant"))
-        .check(jsonPath("$.data.caseInvites[1].value.accessCode").saveAs("prlAccessCodeRespondent"))
-        .check(jsonPath("$.data.respondentTable[0].id").saveAs("respondentPartyId"))
-        .check(jsonPath("$.data.respondents[0].value.solicitorPartyId").saveAs("respondentSolicitorPartyId"))
-        .check(jsonPath("$.data.applicantTable[0].id").saveAs("applicantPartyId"))
-        .check(jsonPath("$.data.applicants[0].value.solicitorPartyId").saveAs("applicantSolicitorPartyId"))
-        .check(jsonPath("$.data.applicants[0].value.solicitorOrgUuid").saveAs("solicitorOrgId")))
-    }
+      .group("XUI_PRL_C100Progress_350_ServiceSubmit") {
+        exec(http("XUI_PRL_C100Progress_350_005_ServiceSubmit")
+          .post(BaseURL + "/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(ElFileBody("bodies/prl/c100/PRLSoASubmit.json"))
+          .check(jsonPath("$.data.caseInvites[0].value.accessCode").saveAs("prlAccessCodeApplicant"))
+          .check(jsonPath("$.data.caseInvites[1].value.accessCode").saveAs("prlAccessCodeRespondent"))
+          .check(jsonPath("$.data.respondentTable[0].id").saveAs("respondentPartyId"))
+          .check(jsonPath("$.data.respondents[0].value.solicitorPartyId").saveAs("respondentSolicitorPartyId"))
+          .check(jsonPath("$.data.applicantTable[0].id").saveAs("applicantPartyId"))
+          .check(jsonPath("$.data.applicants[0].value.solicitorPartyId").saveAs("applicantSolicitorPartyId"))
+          .check(jsonPath("$.data.applicants[0].value.solicitorOrgUuid").saveAs("solicitorOrgId")))
+      }
 
-val CourtAdminListHearing =
+  val CourtAdminListHearing =
 
-/*======================================================================================
+    /*======================================================================================
 * Click the Hearing Tab
 ======================================================================================*/
 
@@ -657,52 +658,52 @@ val CourtAdminListHearing =
         .header("Accept", "application/json, text/plain, */*")
         .check(status.is(200)))
 
-      .exec(http("XUI_PRL_C100Progress_370_010_GetHearingsJurisdiction")
-        .post("/api/hearings/loadServiceHearingValues?jurisdictionId=PRIVATELAW")
-        .headers(Headers.commonHeader)
-        .header("Content-Type", "application/json; charset=utf-8")
-        .header("Accept", "application/json, text/plain, */*")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody("""{"caseReference":"#{caseId}"}"""))
-        .check(substring("hearing-facilities")))
+        .exec(http("XUI_PRL_C100Progress_370_010_GetHearingsJurisdiction")
+          .post("/api/hearings/loadServiceHearingValues?jurisdictionId=PRIVATELAW")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(StringBody("""{"caseReference":"#{caseId}"}"""))
+          .check(substring("hearing-facilities")))
 
-      .exec(http("XUI_PRL_C100Progress_370_015_GetHearingTypes")
-        .get("/api/prd/lov/getLovRefData?categoryId=HearingType&serviceId=ABA5&isChildRequired=N")
-        .headers(Headers.commonHeader)
-        .header("Accept", "application/json, text/plain, */*")
-        .check(substring("HearingType")))
+        .exec(http("XUI_PRL_C100Progress_370_015_GetHearingTypes")
+          .get("/api/prd/lov/getLovRefData?categoryId=HearingType&serviceId=ABA5&isChildRequired=N")
+          .headers(Headers.commonHeader)
+          .header("Accept", "application/json, text/plain, */*")
+          .check(substring("HearingType")))
 
       //.exec(Common.caseActivityPost)
     }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-/*======================================================================================
+      /*======================================================================================
 * Select Request a Hearing
 =======================================================================================*/
 
-    .group("XUI_PRL_C100Progress_380_RequestHearing") {
+      .group("XUI_PRL_C100Progress_380_RequestHearing") {
 
-      //exec(Common.caseActivityPost)
-      exec(Common.isAuthenticated)
+        //exec(Common.caseActivityPost)
+        exec(Common.isAuthenticated)
 
-      .exec(http("XUI_PRL_C100Progress_380_005_GetCaseFlag")
-        .get("/api/prd/caseFlag/getCaseFlagRefData?serviceId=ABA5")
-        .headers(Headers.commonHeader)
-        .header("Accept", "application/json, text/plain, */*")
-        .check(status.in(200, 304)))
+          .exec(http("XUI_PRL_C100Progress_380_005_GetCaseFlag")
+            .get("/api/prd/caseFlag/getCaseFlagRefData?serviceId=ABA5")
+            .headers(Headers.commonHeader)
+            .header("Accept", "application/json, text/plain, */*")
+            .check(status.in(200, 304)))
 
-      .exec(http("XUI_PRL_C100Progress_380_010_LocationById")
-        .get("/api/prd/location/getLocationById?epimms_id=#{locationId}&serviceCode=null") 
-        .headers(Headers.commonHeader)
-        .header("Accept", "application/json, text/plain, */*")
-        .check(status.in(200, 304)))
-  
-    }
+          .exec(http("XUI_PRL_C100Progress_380_010_LocationById")
+            .get("/api/prd/location/getLocationById?epimms_id=#{locationId}&serviceCode=null")
+            .headers(Headers.commonHeader)
+            .header("Accept", "application/json, text/plain, */*")
+            .check(status.in(200, 304)))
 
-    .pause(MinThinkTime, MaxThinkTime)
+      }
 
-/*======================================================================================
+      .pause(MinThinkTime, MaxThinkTime)
+
+      /*======================================================================================
 * Navigate through hearing screens and submit hearing request
 =======================================================================================*/
 
@@ -724,7 +725,7 @@ val CourtAdminListHearing =
       .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI_PRL_C100Progress_410_LocationByIdServiceCode")
-        .get("/api/prd/location/getLocationById?epimms_id=#{locationId}&serviceCode=ABA5") 
+        .get("/api/prd/location/getLocationById?epimms_id=#{locationId}&serviceCode=ABA5")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*")
         .check(status.in(200, 304)))
@@ -745,55 +746,55 @@ val CourtAdminListHearing =
         .header("Accept", "application/json, text/plain, */*")
         .check(substring("HearingPriority")))
 
-    .group("XUI_PRL_C100Progress_440_ListHearing") {
-       exec(http("XUI_PRL_C100Progress_440_005_LoadServiceLinkedCases")
-        .post("/api/hearings/loadServiceLinkedCases?jurisdictionId=PRIVATELAW")
-        .headers(Headers.commonHeader)
-        .header("Content-Type", "application/json; charset=utf-8")
-        .header("Accept", "application/json, text/plain, */*")
-        .body(StringBody("""{"caseReference":"#{caseId}","hearingId": ""}"""))
-        .check(status.is(200)))
+      .group("XUI_PRL_C100Progress_440_ListHearing") {
+        exec(http("XUI_PRL_C100Progress_440_005_LoadServiceLinkedCases")
+          .post("/api/hearings/loadServiceLinkedCases?jurisdictionId=PRIVATELAW")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(StringBody("""{"caseReference":"#{caseId}","hearingId": ""}"""))
+          .check(status.is(200)))
 
-       .exec(http("XUI_PRL_C100Progress_440_010_CaseLinkingReasonCode")
-        .get("/api/prd/lov/getLovRefData?categoryId=HearingPriority&serviceId=ABA5&isChildRequired=N")
-        .headers(Headers.commonHeader)
-        .header("Accept", "application/json, text/plain, */*")
-        .check(substring("HearingPriority")))
-     }
-
-      .pause(MinThinkTime, MaxThinkTime)
-
-    .group("XUI_PRL_C100Progress_450_ListHearing") {
-      exec(http("XUI_PRL_C100Progress_390_005_GetCaseFlag")
-        .get("/api/prd/caseFlag/getCaseFlagRefData?serviceId=ABA5")
-        .headers(Headers.commonHeader)
-        .header("Accept", "application/json, text/plain, */*")
-        .check(status.in(200, 304)))
-
-
-      .exec(http("XUI_PRL_C100Progress_450_010_GetHearingChannel")
-        .get("/api/prd/lov/getLovRefData?categoryId=HearingChannel&serviceId=ABA5&isChildRequired=N")
-        .headers(Headers.commonHeader)
-        .header("Accept", "application/json, text/plain, */*")
-        .check(substring("HearingChannel")))
-
-      .exec(http("XUI_PRL_C100Progress_450_015_GetHearingSubChannel")
-        .get("/api/prd/lov/getLovRefData?categoryId=HearingSubChannel&serviceId=ABA5&isChildRequired=N")
-        .headers(Headers.commonHeader)
-        .header("Accept", "application/json, text/plain, */*")
-        .check(substring("HearingSubChannel")))
-
-      .exec(http("XUI_PRL_C100Progress_450_020_LocationByIdServiceCode")
-        .get("/api/prd/location/getLocationById?epimms_id=#{locationId}&serviceCode=ABA5") 
-        .headers(Headers.commonHeader)
-        .header("Accept", "application/json, text/plain, */*")
-        .check(status.in(200, 304)))
-
-    }
+          .exec(http("XUI_PRL_C100Progress_440_010_CaseLinkingReasonCode")
+            .get("/api/prd/lov/getLovRefData?categoryId=HearingPriority&serviceId=ABA5&isChildRequired=N")
+            .headers(Headers.commonHeader)
+            .header("Accept", "application/json, text/plain, */*")
+            .check(substring("HearingPriority")))
+      }
 
       .pause(MinThinkTime, MaxThinkTime)
 
-/*======================================================================================
+      .group("XUI_PRL_C100Progress_450_ListHearing") {
+        exec(http("XUI_PRL_C100Progress_390_005_GetCaseFlag")
+          .get("/api/prd/caseFlag/getCaseFlagRefData?serviceId=ABA5")
+          .headers(Headers.commonHeader)
+          .header("Accept", "application/json, text/plain, */*")
+          .check(status.in(200, 304)))
+
+
+          .exec(http("XUI_PRL_C100Progress_450_010_GetHearingChannel")
+            .get("/api/prd/lov/getLovRefData?categoryId=HearingChannel&serviceId=ABA5&isChildRequired=N")
+            .headers(Headers.commonHeader)
+            .header("Accept", "application/json, text/plain, */*")
+            .check(substring("HearingChannel")))
+
+          .exec(http("XUI_PRL_C100Progress_450_015_GetHearingSubChannel")
+            .get("/api/prd/lov/getLovRefData?categoryId=HearingSubChannel&serviceId=ABA5&isChildRequired=N")
+            .headers(Headers.commonHeader)
+            .header("Accept", "application/json, text/plain, */*")
+            .check(substring("HearingSubChannel")))
+
+          .exec(http("XUI_PRL_C100Progress_450_020_LocationByIdServiceCode")
+            .get("/api/prd/location/getLocationById?epimms_id=#{locationId}&serviceCode=ABA5")
+            .headers(Headers.commonHeader)
+            .header("Accept", "application/json, text/plain, */*")
+            .check(status.in(200, 304)))
+
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      /*======================================================================================
 * Submit hearing request
 =======================================================================================*/
 
@@ -807,12 +808,12 @@ val CourtAdminListHearing =
         .check(jsonPath("$.hearingRequestID").saveAs("hearingRequestId"))
         .check(status.is(201)))
 
-  //.exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
-  //.exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
+      //.exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).saveAs("XSRFToken")))
+      //.exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-val CourtAdminHearingsTab = 
+  val CourtAdminHearingsTab =
 
     /*======================================================================================
     * Click on the Hearings tab to view any Hearings
@@ -824,53 +825,52 @@ val CourtAdminHearingsTab =
         .headers(Headers.commonHeader)
         .check(status.is(200)))
 
-      .exec(Common.configUI)
-      .exec(Common.userDetails)
-      .exec(Common.isAuthenticated)
+        .exec(Common.configUI)
+        .exec(Common.userDetails)
+        .exec(Common.isAuthenticated)
 
-      .exec(http("XUI_PRL_C100Progress_470_010_HearingsTabGetCaseData")
-        .get("/data/internal/cases/#{caseId}")
-        .headers(Headers.commonHeader)
-        .header("Accept", "application/json, text/plain, */*")
-        .check(status.is(200)))
+        .exec(http("XUI_PRL_C100Progress_470_010_HearingsTabGetCaseData")
+          .get("/data/internal/cases/#{caseId}")
+          .headers(Headers.commonHeader)
+          .header("Accept", "application/json, text/plain, */*")
+          .check(status.is(200)))
 
-      .exec(Common.monitoringTools)
-      .exec(Common.manageLabellingRoleAssignment)
-      .exec(Common.waJurisdictions)
+        .exec(Common.monitoringTools)
+        .exec(Common.manageLabellingRoleAssignment)
+        .exec(Common.waJurisdictions)
 
-      .exec(http("XUI_PRL_C100Progress_470_015_HearingsTabCaseWorkerJurisdictions")
-        .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
-        .headers(Headers.commonHeader)
-        .header("Accept", "application/json, text/plain, */*")
-        .check(status.is(200)))
+        .exec(http("XUI_PRL_C100Progress_470_015_HearingsTabCaseWorkerJurisdictions")
+          .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
+          .headers(Headers.commonHeader)
+          .header("Accept", "application/json, text/plain, */*")
+          .check(status.is(200)))
 
-      .exec(Common.activity)
+        .exec(Common.activity)
 
-      .exec(http("XUI_PRL_C100Progress_470_020_HearingsTabGetHearings")
-        .get("/api/hearings/getHearings?caseId=#{caseId}")
-        .headers(Headers.commonHeader)
-        .header("Accept", "application/json, text/plain, */*")
-        .check(substring("LISTED"))
-        .check(status.is(200)))
+        .exec(http("XUI_PRL_C100Progress_470_020_HearingsTabGetHearings")
+          .get("/api/hearings/getHearings?caseId=#{caseId}")
+          .headers(Headers.commonHeader)
+          .header("Accept", "application/json, text/plain, */*")
+          .check(substring("LISTED"))
+          .check(status.is(200)))
 
-      .exec(http("XUI_PRL_C100Progress_470_025_HearingsTabLoadHearingValues")
-        .post("/api/hearings/loadServiceHearingValues?jurisdictionId=PRIVATELAW")
-        .headers(Headers.commonHeader)
-        .header("Content-Type", "application/json; charset=utf-8")
-        .header("Accept", "application/json, text/plain, */*")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody("""{"caseReference":"#{caseId}"}"""))
-        .check(substring("hearing-facilities")))
+        .exec(http("XUI_PRL_C100Progress_470_025_HearingsTabLoadHearingValues")
+          .post("/api/hearings/loadServiceHearingValues?jurisdictionId=PRIVATELAW")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(StringBody("""{"caseReference":"#{caseId}"}"""))
+          .check(substring("hearing-facilities")))
 
-      .exec(http("XUI_PRL_C100Progress_470_030_GetHearingTypes")
-        .get("/api/prd/lov/getLovRefData?categoryId=HearingType&serviceId=ABA5&isChildRequired=N")
-        .headers(Headers.commonHeader)
-        .header("Accept", "application/json, text/plain, */*")
-        .check(substring("HearingType")))
+        .exec(http("XUI_PRL_C100Progress_470_030_GetHearingTypes")
+          .get("/api/prd/lov/getLovRefData?categoryId=HearingType&serviceId=ABA5&isChildRequired=N")
+          .headers(Headers.commonHeader)
+          .header("Accept", "application/json, text/plain, */*")
+          .check(substring("HearingType")))
 
       //.exec(Common.caseActivityPost)
     }
-
 
 
   val AddBarristerC100Applicant =
@@ -888,10 +888,10 @@ val CourtAdminHearingsTab =
         .check(status.is(200)))
     }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-    .group("XUI_PRL_C100progress_100_020_ApplicantAddBarristerTask_EventTrigger") {
-      exec(http("XUI_PRL_C100progress_100_020_ApplicantAddBarristerTask_EventTrigger")
+      .group("XUI_PRL_C100progress_100_020_ApplicantAddBarristerTask_EventTrigger") {
+        exec(http("XUI_PRL_C100progress_100_020_ApplicantAddBarristerTask_EventTrigger")
           .get("/data/internal/cases/#{caseId}/event-triggers/adminAddBarrister?ignore-warning=false")
           .headers(Headers.commonHeader)
           .header("Accept", "application/json, text/plain, */*")
@@ -908,18 +908,18 @@ val CourtAdminHearingsTab =
 
       .pause(MinThinkTime, MaxThinkTime)
 
-        /*======================================================================================
+      /*======================================================================================
     * Submit Barrister Details
     ======================================================================================*/
       .group("XUI_PRL_C100progress_100_040_ApplicantBarristerDetailsSubmit") {
         exec(http("XUI_PRL_C100progress_100_040_ApplicantBarristerDetailsSubmit")
-            .post("/data/case-types/PRLAPPS/validate?pageId=adminAddBarrister1")
-            .headers(Headers.commonHeader)
-            .header("Content-Type", "application/json; charset=utf-8")
-            .header("Accept", "application/json, text/plain, */*")
-            .body(ElFileBody("bodies/prl/c100/PRLAddBarrister.json"))
-            .check(substring("perf_barrister"))
-            .check(status.is(200)))
+          .post("/data/case-types/PRLAPPS/validate?pageId=adminAddBarrister1")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/PRLAddBarrister.json"))
+          .check(substring("perf_barrister"))
+          .check(status.is(200)))
       }
 
       .pause(MinThinkTime, MaxThinkTime)
@@ -954,10 +954,10 @@ val CourtAdminHearingsTab =
         .check(status.is(200)))
     }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-    .group("XUI_PRL_C100progress_100_020_RespondentAddBarristerTask_EventTrigger") {
-      exec(http("XUI_PRL_C100progress_100_020_RespondentAddBarristerTask_EventTrigger")
+      .group("XUI_PRL_C100progress_100_020_RespondentAddBarristerTask_EventTrigger") {
+        exec(http("XUI_PRL_C100progress_100_020_RespondentAddBarristerTask_EventTrigger")
           .get("/data/internal/cases/#{caseId}/event-triggers/adminAddBarrister?ignore-warning=false")
           .headers(Headers.commonHeader)
           .header("Accept", "application/json, text/plain, */*")
@@ -968,15 +968,15 @@ val CourtAdminHearingsTab =
           .check(jsonPath("$.case_fields[0].value.partyList.list_items[1].label").saveAs("appLabel2"))
           .check(substring("Organisation Search"))
           .check(status.is(200)))
-    }
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-        /*======================================================================================
+      /*======================================================================================
         * Submit Barrister Details
         ======================================================================================*/
-    .group("XUI_PRL_C100progress_100_040_RespondentBarristerDetailsSubmit") {
-      exec(http("XUI_PRL_C100progress_100_040_RespondentBarristerDetailsSubmit")
+      .group("XUI_PRL_C100progress_100_040_RespondentBarristerDetailsSubmit") {
+        exec(http("XUI_PRL_C100progress_100_040_RespondentBarristerDetailsSubmit")
           .post("/data/case-types/PRLAPPS/validate?pageId=adminAddBarrister1")
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
@@ -984,22 +984,22 @@ val CourtAdminHearingsTab =
           .body(ElFileBody("bodies/prl/c100/PRLAddBarristerRespondent.json"))
           .check(substring("perf_barrister"))
           .check(status.is(200)))
-    }
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-    .group("XUI_PRL_C100progress_100_050_RespondentBarristerEvent") {
-      exec(http("XUI_PRL_C100progress_100_050_RespondentBarristerEvent")
-        .post("/data/cases/#{caseId}/events")
-        .headers(Headers.commonHeader)
-        .header("Content-Type", "application/json; charset=utf-8")
-        .header("Accept", "application/json, text/plain, */*")
-        .body(ElFileBody("bodies/prl/c100/PRLAddBarristerEventRespondent.json"))
-        .check(substring("perf_barrister"))
-        .check(status.is(201)))
-    }
+      .group("XUI_PRL_C100progress_100_050_RespondentBarristerEvent") {
+        exec(http("XUI_PRL_C100progress_100_050_RespondentBarristerEvent")
+          .post("/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/PRLAddBarristerEventRespondent.json"))
+          .check(substring("perf_barrister"))
+          .check(status.is(201)))
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
   val RemoveBarristerC100Applicant =
 
@@ -1021,13 +1021,13 @@ val CourtAdminHearingsTab =
         .check(status.is(200)))
     }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-          /*======================================================================================
+      /*======================================================================================
     * Submit Barrister Remove Details
     ======================================================================================*/
-    .group("XUI_PRL_C100progress_300_040_ApplicantRemoveBarristerDetailsSubmit") {
-      exec(http("XUI_PRL_C100progress_300_040_ApplicantRemoveBarristerDetailsSubmit")
+      .group("XUI_PRL_C100progress_300_040_ApplicantRemoveBarristerDetailsSubmit") {
+        exec(http("XUI_PRL_C100progress_300_040_ApplicantRemoveBarristerDetailsSubmit")
           .post("/data/case-types/PRLAPPS/validate?pageId=adminRemoveBarrister1")
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
@@ -1035,22 +1035,22 @@ val CourtAdminHearingsTab =
           .body(ElFileBody("bodies/prl/c100/PRLRemoveBarrister.json"))
           .check(substring("OrganisationName"))
           .check(status.is(200)))
-          }
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-    .group("XUI_PRL_C100progress_300_050_ApplicantRemoveBarristerEvent") {
-      exec(http("XUI_PRL_C100progress_300_050_ApplicantRemoveBarristerEvent")
-      .post("/data/cases/#{caseId}/events")
-      .headers(Headers.commonHeader)
-      .header("Content-Type", "application/json; charset=utf-8")
-      .header("Accept", "application/json, text/plain, */*")
-      .body(ElFileBody("bodies/prl/c100/PRLRemoveBarristerEvent.json"))
-      .check(substring("perf_barrister"))
-      .check(status.is(201)))
-    }
+      .group("XUI_PRL_C100progress_300_050_ApplicantRemoveBarristerEvent") {
+        exec(http("XUI_PRL_C100progress_300_050_ApplicantRemoveBarristerEvent")
+          .post("/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/PRLRemoveBarristerEvent.json"))
+          .check(substring("perf_barrister"))
+          .check(status.is(201)))
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
   val RemoveBarristerC100Defendent =
 
@@ -1070,13 +1070,13 @@ val CourtAdminHearingsTab =
         .check(status.is(200)))
     }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-          /*======================================================================================
+      /*======================================================================================
         * Submit Barrister Remove Details
         ======================================================================================*/
-    .group("XUI_PRL_C100progress_400_040_DefendentRemoveBarristerDetailsSubmit") {
-      exec(http("XUI_PRL_C100progress_400_040_DefendentRemoveBarristerDetailsSubmit")
+      .group("XUI_PRL_C100progress_400_040_DefendentRemoveBarristerDetailsSubmit") {
+        exec(http("XUI_PRL_C100progress_400_040_DefendentRemoveBarristerDetailsSubmit")
           .post("/data/case-types/PRLAPPS/validate?pageId=adminRemoveBarrister1")
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
@@ -1084,22 +1084,22 @@ val CourtAdminHearingsTab =
           .body(ElFileBody("bodies/prl/c100/PRLRemoveBarristerDefendent.json"))
           .check(substring("OrganisationName"))
           .check(status.is(200)))
-    }
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-    .group("XUI_PRL_C100progress_400_050_DefendentRemoveBarristerEvent") {
+      .group("XUI_PRL_C100progress_400_050_DefendentRemoveBarristerEvent") {
         exec(http("XUI_PRL_C100progress_400_050_DefendentRemoveBarristerEvent")
-        .post("/data/cases/#{caseId}/events")
-        .headers(Headers.commonHeader)
-        .header("Content-Type", "application/json; charset=utf-8")
-        .header("Accept", "application/json, text/plain, */*")
-        .body(ElFileBody("bodies/prl/c100/PRLRemoveBarristerEventDefendent.json"))
-        .check(substring("If children live with another party"))
-        .check(status.is(201)))
-    }
+          .post("/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/PRLRemoveBarristerEventDefendent.json"))
+          .check(substring("If children live with another party"))
+          .check(status.is(201)))
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
   val ServiceOfApplicationC100 =
 
@@ -1116,10 +1116,10 @@ val CourtAdminHearingsTab =
         .check(status.is(200)))
     }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-    .group("XUI_PRL_C100progress_400_020_ServiceOfApplicationTask_EventTrigger") {
-      exec(http("XUI_PRL_C100progress_400_020_ServiceOfApplicationTask_EventTrigger")
+      .group("XUI_PRL_C100progress_400_020_ServiceOfApplicationTask_EventTrigger") {
+        exec(http("XUI_PRL_C100progress_400_020_ServiceOfApplicationTask_EventTrigger")
           .get("/data/internal/cases/#{caseId}/event-triggers/serviceOfApplication?ignore-warning=false")
           .headers(Headers.commonHeader)
           .header("Accept", "application/json, text/plain, */*")
@@ -1138,15 +1138,15 @@ val CourtAdminHearingsTab =
           .check(jsonPath("$.case_fields[31].value.list_items[1].label").saveAs("otherPartiesAppLabel2"))
           .check(substring("Event to serve the parties"))
           .check(status.is(200)))
-    }
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-        /*======================================================================================
+      /*======================================================================================
         * Document Upload - pd36qLetter
         ======================================================================================*/
-    .group("XUI_PRL_C100progress_200_030_ServiceOfApplicationTask_pd36qLetterUpload") {
-      exec(http("XUI_PRL_C100progress_200_030_ServiceOfApplicationTask_pd36qLetterUpload")
+      .group("XUI_PRL_C100progress_200_030_ServiceOfApplicationTask_pd36qLetterUpload") {
+        exec(http("XUI_PRL_C100progress_200_030_ServiceOfApplicationTask_pd36qLetterUpload")
           .post("/documents")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
@@ -1162,15 +1162,15 @@ val CourtAdminHearingsTab =
           .check(jsonPath("$._embedded.documents[0]._links.binary.href").saveAs("pd36qLetter_document_binary_url"))
           .check(substring("originalDocumentName"))
           .check(status.is(200)))
-    }
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-        /*======================================================================================
+      /*======================================================================================
         * Document Upload - specialArrangementsLetter
         ======================================================================================*/
-    .group("XUI_PRL_C100progress_200_030_ServiceOfApplicationTask_specialArrangementsLetterUpload") {
-      exec(http("XUI_PRL_C100progress_200_030_ServiceOfApplicationTask_specialArrangementsLetterUpload")
+      .group("XUI_PRL_C100progress_200_030_ServiceOfApplicationTask_specialArrangementsLetterUpload") {
+        exec(http("XUI_PRL_C100progress_200_030_ServiceOfApplicationTask_specialArrangementsLetterUpload")
           .post("/documents")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
@@ -1186,15 +1186,15 @@ val CourtAdminHearingsTab =
           .check(jsonPath("$._embedded.documents[0]._links.binary.href").saveAs("specialArrangementsLetter_document_binary_url"))
           .check(substring("originalDocumentName"))
           .check(status.is(200)))
-    }
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-        /*======================================================================================
+      /*======================================================================================
         * Select the Draft Order
         ======================================================================================*/
-    .group("XUI_PRL_C100progress_400_040_ServiceOfApplicationDetails") {
-      exec(http("XUI_PRL_C100progress_400_040_ServiceOfApplicationDetails")
+      .group("XUI_PRL_C100progress_400_040_ServiceOfApplicationDetails") {
+        exec(http("XUI_PRL_C100progress_400_040_ServiceOfApplicationDetails")
           .post("/data/case-types/PRLAPPS/validate?pageId=serviceOfApplication2")
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
@@ -1202,15 +1202,15 @@ val CourtAdminHearingsTab =
           .body(ElFileBody("bodies/prl/c100/PRLServiceOfApplicationDetails.json"))
           .check(substring("serviceOfApplicationHeader"))
           .check(status.is(200)))
-    }
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-        /*======================================================================================
+      /*======================================================================================
         * Enter final decision details
         ======================================================================================*/
-    .group("XUI_PRL_C100progress_400_040_ServiceOfApplicationDetailsSubmit") {
-      exec(http("XUI_PRL_C100progress_400_040_ServiceOfApplicationDetailsSubmit")
+      .group("XUI_PRL_C100progress_400_040_ServiceOfApplicationDetailsSubmit") {
+        exec(http("XUI_PRL_C100progress_400_040_ServiceOfApplicationDetailsSubmit")
           .post("/data/case-types/PRLAPPS/validate?pageId=serviceOfApplication4")
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
@@ -1218,25 +1218,25 @@ val CourtAdminHearingsTab =
           .body(ElFileBody("bodies/prl/c100/PRLServiceOfApplicationDetailsSubmit.json"))
           .check(substring("FPRL Child Arrangements"))
           .check(status.is(200)))
-    }
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-        /*======================================================================================
+      /*======================================================================================
         * ServiceOfApplication Event
         ======================================================================================*/
-    .group("XUI_PRL_C100progress_400_050_ServiceOfApplicationEvent") {
-      exec(http("XUI_PRL_C100progress_400_050_ServiceOfApplicationEvent")
-        .post("/data/cases/#{caseId}/events")
-        .headers(Headers.commonHeader)
-        .header("Content-Type", "application/json; charset=utf-8")
-        .header("Accept", "application/json, text/plain, */*")
-        .body(ElFileBody("bodies/prl/c100/PRLServiceOfApplicationEvent.json"))
-        .check(substring("I understand that proceedings for contempt of court"))
-        .check(status.is(201)))
-    }
+      .group("XUI_PRL_C100progress_400_050_ServiceOfApplicationEvent") {
+        exec(http("XUI_PRL_C100progress_400_050_ServiceOfApplicationEvent")
+          .post("/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/PRLServiceOfApplicationEvent.json"))
+          .check(substring("I understand that proceedings for contempt of court"))
+          .check(status.is(201)))
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
   val FinalDecisionC100 =
 
@@ -1253,10 +1253,10 @@ val CourtAdminHearingsTab =
         .check(status.is(200)))
     }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-    .group("XUI_PRL_C100progress_500_020_FinalOrderTask_EventTrigger") {
-      exec(http("XUI_PRL_C100progress_500_020_FinalOrderTask_EventTrigger")
+      .group("XUI_PRL_C100progress_500_020_FinalOrderTask_EventTrigger") {
+        exec(http("XUI_PRL_C100progress_500_020_FinalOrderTask_EventTrigger")
           .get("/data/internal/cases/#{caseId}/event-triggers/recordFinalDecision?ignore-warning=false")
           .headers(Headers.commonHeader)
           .header("Accept", "application/json, text/plain, */*")
@@ -1270,15 +1270,15 @@ val CourtAdminHearingsTab =
             .saveAs("lastName1"))
           .check(substring("finalOutcomeForChildren"))
           .check(status.is(200)))
-    }
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-        /*======================================================================================
+      /*======================================================================================
         * Select final order
         ======================================================================================*/
-    .group("XUI_PRL_C100progress_500_040_FinalOrderDetails") {
-      exec(http("XUI_PRL_C100progress_500_040_FinalOrderDetails")
+      .group("XUI_PRL_C100progress_500_040_FinalOrderDetails") {
+        exec(http("XUI_PRL_C100progress_500_040_FinalOrderDetails")
           .post("/data/case-types/PRLAPPS/validate?pageId=recordFinalDecision1")
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
@@ -1286,15 +1286,15 @@ val CourtAdminHearingsTab =
           .body(ElFileBody("bodies/prl/c100/PRLFinalOrder.json"))
           .check(substring("solicitorRepresented"))
           .check(status.is(200)))
-    }
+      }
 
-    .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
-        /*======================================================================================
+      /*======================================================================================
         * Enter final order details
         ======================================================================================*/
-    .group("XUI_PRL_C100progress_500_040_FinalOrderDetailsSubmit") {
-      exec(http("XUI_PRL_C100progress_500_040_FinalOrderDetailsSubmit")
+      .group("XUI_PRL_C100progress_500_040_FinalOrderDetailsSubmit") {
+        exec(http("XUI_PRL_C100progress_500_040_FinalOrderDetailsSubmit")
           .post("/data/case-types/PRLAPPS/validate?pageId=recordFinalDecision2")
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
@@ -1302,29 +1302,340 @@ val CourtAdminHearingsTab =
           .body(ElFileBody("bodies/prl/c100/PRLFinalOrderDetails.json"))
           .check(substring("solicitorRepresented"))
           .check(status.is(200)))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      /*======================================================================================
+        * Final order Event
+        ======================================================================================*/
+      .group("XUI_PRL_C100progress_500_050_FinalOrderEvent") {
+        exec(http("XUI_PRL_C100progress_500_050_FinalOrderEvent")
+          .post("/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/PRLFinalOrderEvent.json"))
+          .check(substring("ALL_FINAL_ORDERS_ISSUED"))
+          .check(status.is(201)))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+  val PathfinderCase =
+
+    group("XUI_PRL_LA_010_PathfinderEvent") {
+      exec(http("XUI_PRL_LA_010_005_PathfinderEvent")
+        .get("/workallocation/case/tasks/#{caseId}/event/pathfinderDecision/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("task_required_for_event"))
+        .check(status.is(200)))
+
+      exec(http("XUI_PRL_LA_010_010_PathfinderEvent_EventTrigger")
+        .get("/data/internal/cases/#{caseId}/event-triggers/pathfinderDecision?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        //.check(jsonPath("$.case_fields[0].value[0].id").saveAs("id_value"))
+        .check(substring("Is this a Pathfinder case"))
+        .check(status.is(200)))
+    }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_LA_020_PathfinderEvent_Validate") {
+        exec(http("XUI_PRL_LA_020_005_PathfinderEvent_Validate")
+          .post("/data/case-types/PRLAPPS/validate?pageId=pathfinderDecision1")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/PathfinderValidate.json"))
+          .check(substring("isPathfinderCase"))
+          .check(status.is(200)))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_LA_030_PathfinderEvent_Event") {
+        exec(http("XUI_PRL_LA_030_005_PathfinderEvent_Event")
+          .post("/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/PathfinderEvent.json"))
+          .check(substring("seekHelpDetails"))
+          .check(status.is(201)))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+  val AddLocalAuthority =
+
+    group("XUI_PRL_LA_040_AddLocalAuthority") {
+      exec(http("XUI_PRL_LA_040_005_AddLocalAuthority")
+        .get("/workallocation/case/tasks/#{caseId}/event/adminAddLocalAuthority/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("task_required_for_event"))
+        .check(status.is(200)))
+
+      exec(http("XUI_PRL_LA_040_010_AddLocalAuthority_EventTrigger")
+        .get("/data/internal/cases/#{caseId}/event-triggers/adminAddLocalAuthority?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        //.check(jsonPath("$.case_fields[0].value[0].id").saveAs("id_value"))
+        .check(substring("adminAddLocalAuthority"))
+        .check(status.is(200)))
+    }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_LA_050_AddLocalAuthority_Validate") {
+        exec(http("XUI_PRL_LA_050_005_AddLocalAuthority_Validate")
+          .post("/data/case-types/PRLAPPS/validate?pageId=adminAddLocalAuthority1")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/AddLocalAuthorityValidate.json"))
+          .check(substring("localAuthoritySolicitorOrganisationPolicy"))
+          .check(status.is(200)))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_LA_060_AddLocalAuthority_Event") {
+        exec(http("XUI_PRL_LA_060_005_AddLocalAuthority_Event")
+          .post("/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/AddLocalAuthorityEvent.json"))
+          .check(substring("seekHelpDetails"))
+          .check(status.is(201)))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+  val RemoveLocalAuthority =
+
+    group("XUI_PRL_LA_150_RemoveLocalAuthority") {
+      exec(http("XUI_PRL_LA_150_005_RemoveLocalAuthority")
+        .get("/workallocation/case/tasks/#{caseId}/event/adminRemoveLocalAuthority/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("task_required_for_event"))
+        .check(status.is(200)))
+
+      .exec(http("XUI_PRL_LA_150_010_RemoveLocalAuthority_EventTrigger")
+        .get("/data/internal/cases/#{caseId}/event-triggers/adminRemoveLocalAuthority?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.case_fields[0].value[0].id").saveAs("id_value"))
+        .check(substring("adminRemoveLocalAuthority"))
+        .check(status.is(200)))
+    }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_LA_160_RemoveLocalAuthority_Validate") {
+        exec(http("XUI_PRL_LA_160_005_RemoveLocalAuthority_Validate")
+          .post("/data/case-types/PRLAPPS/validate?pageId=adminRemoveLocalAuthority1")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/RemoveLocalAuthorityValidate.json"))
+          .check(substring("localAuthoritySolicitorOrganisationPolicy"))
+          .check(status.is(200)))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_LA_170_010_RemoveLocalAuthority_Event") {
+        exec(http("XUI_PRL_LA_000_000_RemoveLocalAuthority_Event")
+          .post("/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/RemoveLocalAuthorityEvent.json"))
+          .check(substring("responseToAllegationsOfHarmDocument"))
+          .check(status.is(201)))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+  val LAOpenCase =
+
+    group("XUI_PRL_LA_070_OpenCase") {
+      exec(http("XUI_PRL_LA_070_005_OpenCase")
+        .get("/data/internal/cases/#{caseId}")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("task_required_for_event"))
+        .check(status.is(200)))
+
+      exec(http("XUI_PRL_LA_070_010_OpenCase")
+        .post("/api/role-access/roles/manageLabellingRoleAssignment/#{caseId}")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .body(ElFileBody("bodies/prl/c100/LAOpenCase.json"))
+        .check(substring("adminRemoveLocalAuthority"))
+        .check(status.is(200)))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
 
-        /*======================================================================================
-        * Final order Event
-        ======================================================================================*/
-    .group("XUI_PRL_C100progress_500_050_FinalOrderEvent") {
-      exec(http("XUI_PRL_C100progress_500_050_FinalOrderEvent")
+  val ManageDocsUpload =
+
+    group("XUI_PRL_LA_090_ManageDocs_Task") {
+      exec(http("XUI_PRL_LA_000_005_ManageDocsTask")
+        .get("/workallocation/case/tasks/#{caseId}/event/manageDocumentsNew/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("task_required_for_event"))
+        .check(status.is(200)))
+
+      exec(http("XUI_PRL_LA_090_010_ManageDocs_EventTrigger")
+        .get("/data/internal/cases/#{caseId}/event-triggers/manageDocumentsNew?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        //.check(jsonPath("$.case_fields[0].value[0].id").saveAs("id"))
+        .check(jsonPath("$.case_fields[0].value[0].id").saveAs("id"))
+        .check(substring("manageDocumentsNew"))
+        .check(status.is(200)))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    .group("XUI_PRL_LA_100_ManageDocs_Upload") {
+      exec(http("XUI_PRL_LA_100_005_ManageDocs_Upload")
+        .post("/documents")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json, text/plain, */*")
+        .header("content-type", "multipart/form-data")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .bodyPart(RawFileBodyPart("files", "3MB.pdf.pdf")
+          .fileName("3MB.pdf")
+          .transferEncoding("binary"))
+        .asMultipartForm
+        .formParam("classification", "PUBLIC")
+        .formParam("caseTypeId", "PRLAPPS")
+        .formParam("jurisdictionId", "PRIVATELAW")
+        .check(substring("originalDocumentName4545"))
+        .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash_cir"))
+        .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL_cir")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    .group("XUI_PRL_LA_110_ManageDocs_Validate") {
+      exec(http("XUI_PRL_LA_110_005_ManageDocs_Validate")
+        .post("/data/case-types/PRLAPPS/validate?pageId=adminRemoveLocalAuthority1")
+        .headers(Headers.commonHeader)
+        .header("Content-Type", "application/json; charset=utf-8")
+        .header("Accept", "application/json, text/plain, */*")
+        .body(ElFileBody("bodies/prl/c100/managedocs_validate.json"))
+        .check(substring("localAuthoritySolicitorOrganisationPolicy"))
+        .check(status.is(200)))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    .group("XUI_PRL_LA_120_RemoveLocalAuthority_Event") {
+      exec(http("XUI_PRL_LA_120_005_RemoveLocalAuthority_Event")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("Content-Type", "application/json; charset=utf-8")
         .header("Accept", "application/json, text/plain, */*")
-        .body(ElFileBody("bodies/prl/c100/PRLFinalOrderEvent.json"))
-        .check(substring("ALL_FINAL_ORDERS_ISSUED"))
+        .body(ElFileBody("bodies/prl/c100/managedocs_validate.json"))
+        .check(substring("responseToAllegationsOfHarmDocument"))
         .check(status.is(201)))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
 
+  val caseFileView =
+
+    group("XUI_PRL_LA_130_CFV_ClickTab") {
+      exec(http("XUI_PRL_LA_130_005_CFV_ClickTab")
+        .get("/categoriesAndDocuments/#{caseId}")
+        .headers(Headers.commonHeader)
+        .header("Content-Type", "application/json; charset=utf-8")
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("localAuthoritySolicitorOrganisationPolicy"))
+        .check(status.is(200)))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    .group("XUI_PRL_LA_140_CFV_ClickDocument") {
+      exec(http("XUI_PRL_LA_140_005_CFV_Filter")
+        .get("/em-anno/annotation-sets/filter?documentId=391d5b5c-c3f4-4500-b4b4-50fbde9ef070")
+        .headers(Headers.commonHeader)
+        .header("Content-Type", "application/json; charset=utf-8")
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("localAuthoritySolicitorOrganisationPolicy"))
+        .check(status.is(200)))
+
+        .exec(http("XUI_PRL_LA_140_010_CFV_markup")
+          .get("/api/markups/391d5b5c-c3f4-4500-b4b4-50fbde9ef070")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .check(substring("localAuthoritySolicitorOrganisationPolicy"))
+          .check(status.is(200)))
+
+        .exec(http("XUI_PRL_LA_140_015_CFV_bookmark")
+          .get("/em-anno/391d5b5c-c3f4-4500-b4b4-50fbde9ef070/bookmarks")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .check(substring("localAuthoritySolicitorOrganisationPolicy"))
+          .check(status.is(200)))
+
+      .exec(http("XUI_PRL_LA_140_020_CFV")
+        .get("/documents/391d5b5c-c3f4-4500-b4b4-50fbde9ef070/binary")
+        .headers(Headers.commonHeader)
+        .header("Content-Type", "application/json; charset=utf-8")
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("localAuthoritySolicitorOrganisationPolicy"))
+        .check(status.is(200)))
+
+      .exec(http("XUI_PRL_LA_140_025_CFV")
+        .get("/em-anno/metadata/391d5b5c-c3f4-4500-b4b4-50fbde9ef070")
+        .headers(Headers.commonHeader)
+        .header("Content-Type", "application/json; charset=utf-8")
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("localAuthoritySolicitorOrganisationPolicy"))
+        .check(status.is(200)))
+    }
+
+  val clickParties =
+
+    group("XUI_PRL_LA_080_Parties") {
+      exec(http("XUI_PRL_LA_080_005_Parties")
+        .get("/api/caseshare/orgs")
+        .headers(Headers.commonHeader)
+        .header("Content-Type", "application/json; charset=utf-8")
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("organisationIdentifier"))
+        .check(status.is(200)))
+    }
+
+  val writeToFile =
+    exec { session =>
+      val fw = new BufferedWriter(new FileWriter("LAData.csv", true))
+      try {
+        fw.write(session("orgID").as[String] + "," + session("LAUser").as[String] + "," + session("LAPassword").as[String] + "," + session("LAFirm").as[String] + "," + session("LAFirstName").as[String] + "," + session("LALastName").as[String] + "," + session("LARole").as[String] + "," + session("caseId").as[String] + "\r\n")
+      } finally fw.close()
+      session
+    }
+
 }
-
-
 /*
 //Write applicant access code to file
     .exec { session =>
