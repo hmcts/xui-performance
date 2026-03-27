@@ -195,7 +195,7 @@ object CourtAdmin_PRL_FL401 {
   * Open Case
   ======================================================================================*/
 
-  .exec(http("XUI_PRL_FL401Progress_130_SelectCase")
+  /*.exec(http("XUI_PRL_FL401Progress_130_SelectCase")
     .get(BaseURL + "/data/internal/cases/#{caseId}")
     .headers(Headers.commonHeader)
     .check(jsonPath("$.tabs[6].fields[0].value.firstName").saveAs("ApplicantFirstName"))
@@ -204,7 +204,7 @@ object CourtAdmin_PRL_FL401 {
     .check(jsonPath("$.tabs[6].fields[1].value.lastName").saveAs("RespondentLastName"))
     .check(jsonPath("$.case_id").is("#{caseId}")))
 
-  .pause(MinThinkTime, MaxThinkTime)
+  .pause(MinThinkTime, MaxThinkTime)*/
 
   /*======================================================================================
   * Click on 'Manage Orders'
