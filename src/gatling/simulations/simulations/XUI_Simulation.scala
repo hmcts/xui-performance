@@ -179,7 +179,7 @@ class XUI_Simulation extends Simulation {
   /*===============================================================================================
 * XUI Add LA to C100 Scenario
 ===============================================================================================*/
-  val PRLC100AddLAScenario = scenario("***** Private Law Solicitor C100 Create Case *****")
+  /*val PRLC100AddLAScenario = scenario("***** Private Law Solicitor C100 Create Case *****")
     .exitBlockOnFail {
       feed(UserFeederLA)
       .feed(UserFeederPRLCourtAdmin)
@@ -192,12 +192,12 @@ class XUI_Simulation extends Simulation {
         .exec(CourtAdmin_PRL_C100.AddLocalAuthority)
         .exec(CourtAdmin_PRL_C100.writeToFile)
         .exec(XuiHelper.Logout)
-    }
+    }*/
 
   /*===============================================================================================
 * XUI Add LA to C100 Scenario
 ===============================================================================================*/
-  val PRLC100LAScenario = scenario("***** Private Law Solicitor C100 Create Case *****")
+  /*val PRLC100LAScenario = scenario("***** Private Law Solicitor C100 Create Case *****")
     .exitBlockOnFail {
       feed(UserFeederLA)
         .feed(UserFeederPRLCourtAdmin)
@@ -219,7 +219,7 @@ class XUI_Simulation extends Simulation {
         .exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
         .exec(CourtAdmin_PRL_C100.RemoveLocalAuthority)
         .exec(XuiHelper.Logout)
-    }
+    }*/
 
   /*===============================================================================================
 * XUI Solicitor Private Law Scenario - FL401
