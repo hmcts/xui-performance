@@ -32,9 +32,9 @@ class XUI_Simulation extends Simulation {
 	val UserFeederFPL = csv("UserDataFPL.csv").circular
 	val CaseworkerUserFeeder = csv("UserDataCaseworkers.csv").circular
 	val UserFeederCTSC = csv("UserDataCTSC.csv").circular
-  val UserFeederLA = csv("UserDataPRLLocalAuthorityList.csv").circular
-  val AddLAList = csv("AddLAList.csv").circular
-  val LAList = csv("LAList.csv").circular
+  //val UserFeederLA = csv("UserDataPRLLocalAuthorityList.csv").circular
+  //val AddLAList = csv("AddLAList.csv").circular
+  //val LAList = csv("LAList.csv").circular
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
