@@ -32,6 +32,9 @@ class XUI_Simulation extends Simulation {
 	val UserFeederFPL = csv("UserDataFPL.csv").circular
 	val CaseworkerUserFeeder = csv("UserDataCaseworkers.csv").circular
 	val UserFeederCTSC = csv("UserDataCTSC.csv").circular
+  val UserFeederLA = csv("UserDataPRLLocalAuthorityList.csv").circular
+  val AddLAList = csv("AddLAList.csv").circular
+  val LAList = csv("LAList.csv").circular
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
@@ -162,8 +165,60 @@ class XUI_Simulation extends Simulation {
         .exec(CourtAdmin_PRL_C100.CourtAdminSendToGateKeeper)
         .exec(CourtAdmin_PRL_C100.CourtAdminManageOrders)
         .exec(CourtAdmin_PRL_C100.CourtAdminServiceApplication)
-        .exec(CourtAdmin_PRL_C100.CourtAdminListHearing)
-        .exec(CourtAdmin_PRL_C100.CourtAdminHearingsTab)
+        //.exec(CourtAdmin_PRL_C100.CourtAdminListHearing)
+        //.exec(CourtAdmin_PRL_C100.CourtAdminHearingsTab)
+        .exec(XuiHelper.Logout)
+        /*.feed(UserFeederPRLCourtAdmin)
+        .exec(XuiHelper.Homepage)
+        .exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
+        .exec(CourtAdmin_PRL_C100.PathfinderCase)
+        .exec(CourtAdmin_PRL_C100.AddLocalAuthority)
+        .exec(XuiHelper.Logout)*/
+    }
+
+  /*===============================================================================================
+* XUI Add LA to C100 Scenario
+===============================================================================================*/
+  val PRLC100AddLAScenario = scenario("***** Private Law Solicitor C100 Create Case *****")
+    .exitBlockOnFail {
+      feed(UserFeederLA)
+      .feed(UserFeederPRLCourtAdmin)
+      .feed(AddLAList)
+        .exec(_.set("env", s"${env}")
+          .set("caseType", "PRLAPPS"))
+        .exec(XuiHelper.Homepage)
+        .exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
+        .exec(CourtAdmin_PRL_C100.PathfinderCase)
+        .exec(CourtAdmin_PRL_C100.AddLocalAuthority)
+        .exec(CourtAdmin_PRL_C100.writeToFile)
+        .exec(XuiHelper.Logout)
+    }
+
+  /*===============================================================================================
+* XUI Add LA to C100 Scenario
+===============================================================================================*/
+  val PRLC100LAScenario = scenario("***** Private Law Solicitor C100 Create Case *****")
+    .exitBlockOnFail {
+      feed(UserFeederLA)
+        .feed(UserFeederPRLCourtAdmin)
+        .feed(LAList)
+        .exec(_.set("env", s"${env}")
+          .set("caseType", "PRLAPPS"))
+        //.exec(XuiHelper.Homepage)
+        //.exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
+        //.exec(CourtAdmin_PRL_C100.PathfinderCase)
+        //.exec(XuiHelper.Logout)
+        .exec(XuiHelper.Homepage)
+        .exec(XuiHelper.Login("#{LAUser}", "#{LAPassword}"))
+        .exec(CourtAdmin_PRL_C100.LAOpenCase)
+        .exec(CourtAdmin_PRL_C100.clickParties)
+        .exec(CourtAdmin_PRL_C100.ManageDocsUpload)
+        .exec(CourtAdmin_PRL_C100.caseFileView)
+        .exec(XuiHelper.Logout)
+        .exec(XuiHelper.Homepage)
+        .exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
+        .exec(CourtAdmin_PRL_C100.RemoveLocalAuthority)
+        .exec(XuiHelper.Logout)
     }
 
   /*===============================================================================================
@@ -199,8 +254,8 @@ class XUI_Simulation extends Simulation {
         .exec(CourtAdmin_PRL_FL401.CourtAdminSendToGateKeeper)
         .exec(CourtAdmin_PRL_FL401.CourtAdminManageOrders)
         .exec(CourtAdmin_PRL_FL401.CourtAdminServiceApplication)
-        .exec(CourtAdmin_PRL_FL401.CourtAdminListHearing)
-        .exec(CourtAdmin_PRL_FL401.CourtAdminHearingsTab)
+        //.exec(CourtAdmin_PRL_FL401.CourtAdminListHearing)
+        //.exec(CourtAdmin_PRL_FL401.CourtAdminHearingsTab)
         .exec(XuiHelper.Logout)
 
     }
@@ -679,6 +734,9 @@ class XUI_Simulation extends Simulation {
   }
 
   setUp(
+    //PRLC100SolicitorScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption),
+    //PRLFL401SolicitorScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption)
+    //PRLC100LAScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption)
     PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
     PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
     /*PRLC100BarristerScenario.inject(simulationProfile(testType, prlC100BarristerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),

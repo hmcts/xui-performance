@@ -515,8 +515,8 @@ object CourtAdmin_PRL_C100 {
         .check(jsonPath("$.case_fields[7].value.list_items[0].label") saveAs ("serviceOfApplicationScreenLabel"))
         .check(jsonPath("$.case_fields[31].value.list_items[0].code") saveAs ("serviceOfApplicationApplicantCode"))
         .check(jsonPath("$.case_fields[31].value.list_items[0].label") saveAs ("serviceOfApplicationApplicantName"))
-        .check(jsonPath("$.case_fields[31].value.list_items[1].code") saveAs ("serviceOfApplicationRespondentCode"))
-        .check(jsonPath("$.case_fields[31].value.list_items[1].label") saveAs ("serviceOfApplicationRespondentName"))
+        .check(jsonPath("$.case_fields[31].value.list_items[2].code") saveAs ("serviceOfApplicationRespondentCode"))
+        .check(jsonPath("$.case_fields[31].value.list_items[2].label") saveAs ("serviceOfApplicationRespondentName"))
         .check(jsonPath("$.id").is("serviceOfApplication")))
 
         .exec(http("XUI_Common_000_UserDetails")
