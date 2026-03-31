@@ -1,0 +1,32 @@
+{
+  "data": {
+    "localAuthoritySolicitorOrganisationPolicy": {
+      "PrepopulateToUsersOrganisation": null,
+      "LastNoCRequestedBy": null,
+      "PreviousOrganisations": [],
+      "Organisation": {
+        "OrganisationID": "#{orgID}",
+        "OrganisationName": "#{LAFirm}"
+      }
+    }
+  },
+  "event": {
+    "id": "adminAddLocalAuthority",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "localAuthoritySolicitorOrganisationPolicy": {
+      "PrepopulateToUsersOrganisation": null,
+      "LastNoCRequestedBy": null,
+      "PreviousOrganisations": [],
+      "Organisation": {
+        "OrganisationID": "#{orgID}",
+        "OrganisationName": "#{LAFirm}"
+      }
+    }
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
+}

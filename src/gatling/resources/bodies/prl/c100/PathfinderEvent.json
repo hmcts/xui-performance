@@ -1,0 +1,12 @@
+{
+  "data": {
+    "isPathfinderCase": "Yes"
+  },
+  "event": {
+    "id": "pathfinderDecision",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false
+}

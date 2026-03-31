@@ -1,0 +1,84 @@
+{
+  "data": {
+    "manageDocuments": [
+      {
+        "value": {
+          "documentParty": "LOCAL_AUTHORITY",
+          "documentCategories": {
+            "value": {
+              "code": "childImpactReport1La",
+              "label": "Child Impact Report 1"
+            },
+            "list_items": [
+              {
+                "code": "childImpactReport1La",
+                "label": "Child Impact Report 1"
+              },
+              {
+                "code": "childImpactReport2La",
+                "label": "Child Impact Report 2"
+              },
+              {
+                "code": "sec37Report",
+                "label": "Section 37 (S37) report"
+              },
+              {
+                "code": "section7ReportLa",
+                "label": "Section 7 report"
+              },
+              {
+                "code": "section7AddendumReportLa",
+                "label": "Section 7 addendum report"
+              },
+              {
+                "code": "localAuthorityInvolvementLa",
+                "label": "Local Authority involvement letter"
+              },
+              {
+                "code": "section47La",
+                "label": "Section 47 enquiry"
+              },
+              {
+                "code": "cirExtensionRequestLa",
+                "label": "CIR extension request"
+              },
+              {
+                "code": "cirTransferRequestLa",
+                "label": "CIR transfer request"
+              },
+              {
+                "code": "localAuthorityOtherDoc",
+                "label": "Other"
+              }
+            ]
+          },
+          "isConfidential": "No",
+          "isRestricted": "No",
+          "restrictedDetails": null,
+          "documentDetails": null,
+          "documentRelatedToCaseCheckbox": [
+            "RELATED_TO_CASE"
+          ],
+          "document": {
+            "document_url": "#{DocumentURL_cir}",
+            "document_binary_url": "#{DocumentURL_cir}/binary",
+            "document_filename": "7PageDoc.pdf"
+          },
+          "documentRestrictCheckbox": []
+        },
+        "id": "#{id}"
+      }
+    ],
+    "caseTypeOfApplication": "C100",
+    "manageDocumentsRestrictedFlag": null,
+    "manageDocumentsTriggeredBy": null,
+    "isC8DocumentPresent": "Yes"
+  },
+  "event": {
+    "id": "manageDocumentsNew",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false
+}
