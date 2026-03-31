@@ -32,9 +32,10 @@ class XUI_Simulation extends Simulation {
 	val UserFeederFPL = csv("UserDataFPL.csv").circular
 	val CaseworkerUserFeeder = csv("UserDataCaseworkers.csv").circular
 	val UserFeederCTSC = csv("UserDataCTSC.csv").circular
-  //val UserFeederLA = csv("UserDataPRLLocalAuthorityList.csv").circular
-  //val AddLAList = csv("AddLAList.csv").circular
-  //val LAList = csv("LAList.csv").circular
+  val UserFeederLA = csv("UserDataPRLLocalAuthorityList.csv").circular
+  val AddLAList = csv("AddLAList.csv").circular
+  val LAList = csv("LAList.csv").circular
+  val LAData = csv("LAData.csv").circular
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
@@ -76,6 +77,7 @@ class XUI_Simulation extends Simulation {
 	val caseworkerTargetPerHour: Double = 1000
 	val prlC100BarristerTargetPerHour: Double = 17
 	val prlFL401BarristerTargetPerHour: Double = 11
+  val prlC100LATargetPerHour: Double = 15
 
 	val rampUpDurationMins = 5
 	val rampDownDurationMins = 5
@@ -179,7 +181,7 @@ class XUI_Simulation extends Simulation {
   /*===============================================================================================
 * XUI Add LA to C100 Scenario
 ===============================================================================================*/
-  /*val PRLC100AddLAScenario = scenario("***** Private Law Solicitor C100 Create Case *****")
+  val PRLC100AddLAScenario = scenario("***** Private Law Solicitor C100 Create Case *****")
     .exitBlockOnFail {
       feed(UserFeederLA)
       .feed(UserFeederPRLCourtAdmin)
@@ -192,22 +194,17 @@ class XUI_Simulation extends Simulation {
         .exec(CourtAdmin_PRL_C100.AddLocalAuthority)
         .exec(CourtAdmin_PRL_C100.writeToFile)
         .exec(XuiHelper.Logout)
-    }*/
+    }
 
   /*===============================================================================================
 * XUI Add LA to C100 Scenario
 ===============================================================================================*/
-  /*val PRLC100LAScenario = scenario("***** Private Law Solicitor C100 Create Case *****")
+  val PRLC100LAScenario = scenario("***** Private Law Solicitor C100 Create Case *****")
     .exitBlockOnFail {
-      feed(UserFeederLA)
+        feed(LAData)
         .feed(UserFeederPRLCourtAdmin)
-        .feed(LAList)
         .exec(_.set("env", s"${env}")
           .set("caseType", "PRLAPPS"))
-        //.exec(XuiHelper.Homepage)
-        //.exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
-        //.exec(CourtAdmin_PRL_C100.PathfinderCase)
-        //.exec(XuiHelper.Logout)
         .exec(XuiHelper.Homepage)
         .exec(XuiHelper.Login("#{LAUser}", "#{LAPassword}"))
         .exec(CourtAdmin_PRL_C100.LAOpenCase)
@@ -219,7 +216,7 @@ class XUI_Simulation extends Simulation {
         .exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
         .exec(CourtAdmin_PRL_C100.RemoveLocalAuthority)
         .exec(XuiHelper.Logout)
-    }*/
+    }
 
   /*===============================================================================================
 * XUI Solicitor Private Law Scenario - FL401
@@ -734,11 +731,13 @@ class XUI_Simulation extends Simulation {
   }
 
   setUp(
-    //PRLC100SolicitorScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption),
+    PRLC100AddLAScenario.inject(simulationProfile(testType, 100, 100)).pauses(pauseOption),
     //PRLFL401SolicitorScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption)
     //PRLC100LAScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption)
-    PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-    PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+    //PRLC100AddLAScenario.inject(simulationProfile(testType, prlC100LATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+    //PRLC100LAScenario.inject(simulationProfile(testType, prlC100LATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+    //PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+    //PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
     /*PRLC100BarristerScenario.inject(simulationProfile(testType, prlC100BarristerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
     PRLFL401BarristerScenario.inject(simulationProfile(testType, prlFL401BarristerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
     BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),

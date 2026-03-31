@@ -1,0 +1,22 @@
+{
+  "data": {
+    "localAuthoritySolicitorOrganisationPolicy": {
+      "Organisation": {
+        "OrganisationID": "#{orgID}",
+        "OrganisationName": "#{LAFirm}"
+      },
+      "OrgPolicyCaseAssignedRole": "[#{LARole}]",
+      "OrgPolicyReference": null,
+      "PrepopulateToUsersOrganisation": null,
+      "LastNoCRequestedBy": null,
+      "PreviousOrganisations": []
+    }
+  },
+  "event": {
+    "id": "adminRemoveLocalAuthority",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false
+}

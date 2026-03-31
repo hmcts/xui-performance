@@ -1380,7 +1380,7 @@ object CourtAdmin_PRL_C100 {
         .check(substring("task_required_for_event"))
         .check(status.is(200)))
 
-      exec(http("XUI_PRL_LA_040_010_AddLocalAuthority_EventTrigger")
+      .exec(http("XUI_PRL_LA_040_010_AddLocalAuthority_EventTrigger")
         .get("/data/internal/cases/#{caseId}/event-triggers/adminAddLocalAuthority?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*")
@@ -1388,7 +1388,7 @@ object CourtAdmin_PRL_C100 {
         //.check(jsonPath("$.case_fields[0].value[0].id").saveAs("id_value"))
         .check(substring("adminAddLocalAuthority"))
         .check(status.is(200)))
-    }
+      }
 
       .pause(MinThinkTime, MaxThinkTime)
 
@@ -1433,7 +1433,6 @@ object CourtAdmin_PRL_C100 {
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*")
         .check(jsonPath("$.event_token").saveAs("event_token"))
-        .check(jsonPath("$.case_fields[0].value[0].id").saveAs("id_value"))
         .check(substring("adminRemoveLocalAuthority"))
         .check(status.is(200)))
     }
@@ -1473,17 +1472,23 @@ object CourtAdmin_PRL_C100 {
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*")
-        .check(substring("task_required_for_event"))
+        .check(substring("Application for a court order"))
         .check(status.is(200)))
 
-      exec(http("XUI_PRL_LA_070_010_OpenCase")
+      .exec(http("XUI_PRL_LA_070_010_OpenCase")
         .post("/api/role-access/roles/manageLabellingRoleAssignment/#{caseId}")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*")
-        .check(jsonPath("$.event_token").saveAs("event_token"))
         .body(ElFileBody("bodies/prl/c100/LAOpenCase.json"))
-        .check(substring("adminRemoveLocalAuthority"))
-        .check(status.is(200)))
+        .check(status.is(204)))
+
+        .exec(http("XUI_PRL_LA_070_015_Jurisdictions")
+          .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
+          .headers(Headers.commonHeader)
+          .header("Accept", "application/json, text/plain, */*")
+          .check(status.is(200)))
+
+
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1498,7 +1503,7 @@ object CourtAdmin_PRL_C100 {
         .check(substring("task_required_for_event"))
         .check(status.is(200)))
 
-      exec(http("XUI_PRL_LA_090_010_ManageDocs_EventTrigger")
+      .exec(http("XUI_PRL_LA_090_010_ManageDocs_EventTrigger")
         .get("/data/internal/cases/#{caseId}/event-triggers/manageDocumentsNew?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*")
@@ -1518,15 +1523,15 @@ object CourtAdmin_PRL_C100 {
         .header("accept", "application/json, text/plain, */*")
         .header("content-type", "multipart/form-data")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .bodyPart(RawFileBodyPart("files", "3MB.pdf.pdf")
+        .bodyPart(RawFileBodyPart("files", "3MB.pdf")
           .fileName("3MB.pdf")
           .transferEncoding("binary"))
         .asMultipartForm
         .formParam("classification", "PUBLIC")
         .formParam("caseTypeId", "PRLAPPS")
         .formParam("jurisdictionId", "PRIVATELAW")
-        .check(substring("originalDocumentName4545"))
-        .check(jsonPath("$.documents[0].hashToken").saveAs("documentHash_cir"))
+        .check(substring("originalDocumentName"))
+        .check(jsonPath("$._embedded.documents[0]._links.binary.href").saveAs("documentBinary_cir"))
         .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL_cir")))
     }
 
@@ -1539,14 +1544,14 @@ object CourtAdmin_PRL_C100 {
         .header("Content-Type", "application/json; charset=utf-8")
         .header("Accept", "application/json, text/plain, */*")
         .body(ElFileBody("bodies/prl/c100/managedocs_validate.json"))
-        .check(substring("localAuthoritySolicitorOrganisationPolicy"))
+        .check(substring("LOCAL_AUTHORITY"))
         .check(status.is(200)))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
 
-    .group("XUI_PRL_LA_120_RemoveLocalAuthority_Event") {
-      exec(http("XUI_PRL_LA_120_005_RemoveLocalAuthority_Event")
+    .group("XUI_PRL_LA_120_ManageDocs_Event") {
+      exec(http("XUI_PRL_LA_120_005_ManageDocs_Event")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("Content-Type", "application/json; charset=utf-8")
@@ -1566,53 +1571,66 @@ object CourtAdmin_PRL_C100 {
         .headers(Headers.commonHeader)
         .header("Content-Type", "application/json; charset=utf-8")
         .header("Accept", "application/json, text/plain, */*")
-        .check(substring("localAuthoritySolicitorOrganisationPolicy"))
+        .check(substring("approvedOrders"))
+        .check(status.is(200)))
+
+      .exec(http("XUI_PRL_LA_130_010_CFV_ClickTab2")
+        .get("/categoriesAndDocuments/#{caseId}")
+        .headers(Headers.commonHeader)
+        .header("Content-Type", "application/json; charset=utf-8")
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("approvedOrders"))
         .check(status.is(200)))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
 
+    .exec { session =>
+      val full = session("DocumentURL_cir").as[String]
+      val trimmed = full.takeRight(36)
+      session.set("binary_value", trimmed)
+    }
+
     .group("XUI_PRL_LA_140_CFV_ClickDocument") {
       exec(http("XUI_PRL_LA_140_005_CFV_Filter")
-        .get("/em-anno/annotation-sets/filter?documentId=391d5b5c-c3f4-4500-b4b4-50fbde9ef070")
+        .get("/em-anno/annotation-sets/filter?documentId=#{binary_value}")
         .headers(Headers.commonHeader)
         .header("Content-Type", "application/json; charset=utf-8")
         .header("Accept", "application/json, text/plain, */*")
-        .check(substring("localAuthoritySolicitorOrganisationPolicy"))
-        .check(status.is(200)))
+        .check(status.is(204)))
 
         .exec(http("XUI_PRL_LA_140_010_CFV_markup")
-          .get("/api/markups/391d5b5c-c3f4-4500-b4b4-50fbde9ef070")
+          .get("/api/markups/#{binary_value}")
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .check(substring("localAuthoritySolicitorOrganisationPolicy"))
-          .check(status.is(200)))
+          //.check(substring("localAuthoritySolicitorOrganisationPolicy"))
+          .check(status.is(204)))
 
         .exec(http("XUI_PRL_LA_140_015_CFV_bookmark")
-          .get("/em-anno/391d5b5c-c3f4-4500-b4b4-50fbde9ef070/bookmarks")
+          .get("/em-anno/#{binary_value}/bookmarks")
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
-          .check(substring("localAuthoritySolicitorOrganisationPolicy"))
-          .check(status.is(200)))
+          //.check(substring("localAuthoritySolicitorOrganisationPolicy"))
+          .check(status.is(204)))
 
-      .exec(http("XUI_PRL_LA_140_020_CFV")
-        .get("/documents/391d5b5c-c3f4-4500-b4b4-50fbde9ef070/binary")
+      .exec(http("XUI_PRL_LA_140_020_CFV_binary")
+        .get("/documents/#{binary_value}/binary")
         .headers(Headers.commonHeader)
         .header("Content-Type", "application/json; charset=utf-8")
         .header("Accept", "application/json, text/plain, */*")
-        .check(substring("localAuthoritySolicitorOrganisationPolicy"))
         .check(status.is(200)))
 
-      .exec(http("XUI_PRL_LA_140_025_CFV")
-        .get("/em-anno/metadata/391d5b5c-c3f4-4500-b4b4-50fbde9ef070")
+      .exec(http("XUI_PRL_LA_140_025_CFV2_meta")
+        .get("/em-anno/metadata/#{binary_value}")
         .headers(Headers.commonHeader)
         .header("Content-Type", "application/json; charset=utf-8")
         .header("Accept", "application/json, text/plain, */*")
-        .check(substring("localAuthoritySolicitorOrganisationPolicy"))
-        .check(status.is(200)))
+        .check(status.is(204)))
     }
+      .pause(MinThinkTime, MaxThinkTime)
+
 
   val clickParties =
 
@@ -1630,7 +1648,7 @@ object CourtAdmin_PRL_C100 {
     exec { session =>
       val fw = new BufferedWriter(new FileWriter("LAData.csv", true))
       try {
-        fw.write(session("orgID").as[String] + "," + session("LAUser").as[String] + "," + session("LAPassword").as[String] + "," + session("LAFirm").as[String] + "," + session("LAFirstName").as[String] + "," + session("LALastName").as[String] + "," + session("LARole").as[String] + "," + session("caseId").as[String] + "\r\n")
+        fw.write(session("orgID").as[String] + "," + session("LAUser").as[String] + "," + session("LAPassword").as[String] + "," + session("LAFirm").as[String] + "," + session("LAFirstName").as[String] + "," + session("LALastName").as[String] + "," + session("LARole").as[String] + "," + session("caseId").as[String] + "," + session("adminUser").as[String] + "," + session("adminPassword").as[String] + "\r\n")
       } finally fw.close()
       session
     }

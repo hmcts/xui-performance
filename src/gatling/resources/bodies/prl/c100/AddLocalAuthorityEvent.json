@@ -1,0 +1,22 @@
+{
+  "data": {
+    "localAuthoritySolicitorOrganisationPolicy": {
+      "OrgPolicyCaseAssignedRole": "[#{LARole}]",
+      "OrgPolicyReference": null,
+      "PrepopulateToUsersOrganisation": null,
+      "LastNoCRequestedBy": null,
+      "PreviousOrganisations": [],
+      "Organisation": {
+        "OrganisationID": "#{orgID}",
+        "OrganisationName": "#{LAFirm}"
+      }
+    }
+  },
+  "event": {
+    "id": "adminAddLocalAuthority",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false
+}
