@@ -730,7 +730,7 @@ class XUI_Simulation extends Simulation {
   }
 
   setUp(
-    //PRLC100AddLAScenario.inject(simulationProfile(testType, 100, 100)).pauses(pauseOption),
+    //PRLC100AddLAScenario.inject(simulationProfile(testType, 200, 200)).pauses(pauseOption),
     //PRLFL401SolicitorScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption)
     //PRLC100LAScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption)
     PRLC100AddLAScenario.inject(simulationProfile(testType, prlC100LATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
