@@ -77,7 +77,7 @@ class XUI_Simulation extends Simulation {
 	val caseworkerTargetPerHour: Double = 1000
 	val prlC100BarristerTargetPerHour: Double = 17
 	val prlFL401BarristerTargetPerHour: Double = 11
-  val prlC100LATargetPerHour: Double = 15
+  val prlC100LATargetPerHour: Double = 26
 
 	val rampUpDurationMins = 5
 	val rampDownDurationMins = 5
@@ -731,13 +731,13 @@ class XUI_Simulation extends Simulation {
   }
 
   setUp(
-    PRLC100AddLAScenario.inject(simulationProfile(testType, 100, 100)).pauses(pauseOption),
+    //PRLC100AddLAScenario.inject(simulationProfile(testType, 100, 100)).pauses(pauseOption),
     //PRLFL401SolicitorScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption)
     //PRLC100LAScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption)
-    //PRLC100AddLAScenario.inject(simulationProfile(testType, prlC100LATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-    //PRLC100LAScenario.inject(simulationProfile(testType, prlC100LATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-    //PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-    //PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+    PRLC100AddLAScenario.inject(simulationProfile(testType, prlC100LATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+    PRLC100LAScenario.inject(simulationProfile(testType, prlC100LATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+    PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+    PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
     /*PRLC100BarristerScenario.inject(simulationProfile(testType, prlC100BarristerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
     PRLFL401BarristerScenario.inject(simulationProfile(testType, prlFL401BarristerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
     BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
