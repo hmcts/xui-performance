@@ -180,7 +180,7 @@ class XUI_Simulation extends Simulation {
   /*===============================================================================================
 * XUI Add LA to C100 Scenario
 ===============================================================================================*/
-  val PRLC100AddLAScenario = scenario("***** Private Law Solicitor C100 Create Case *****")
+  val PRLC100AddLAScenario = scenario("***** Private Law Add LA*******")
     .exitBlockOnFail {
       feed(UserFeederLA)
       .feed(UserFeederPRLCourtAdmin)
@@ -198,7 +198,7 @@ class XUI_Simulation extends Simulation {
   /*===============================================================================================
 * XUI Add LA to C100 Scenario
 ===============================================================================================*/
-  val PRLC100LAScenario = scenario("***** Private Law Solicitor C100 Create Case *****")
+  val PRLC100LAScenario = scenario("***** Private Law LA Tasks *****")
     .exitBlockOnFail {
         feed(LAData)
         .feed(UserFeederPRLCourtAdmin)
