@@ -35,6 +35,7 @@ class XUI_Simulation extends Simulation {
   val UserFeederLA = csv("UserDataPRLLocalAuthorityList.csv").circular
   val AddLAList = csv("AddLAList.csv").circular
   val LAData = csv("LAData.csv").circular
+  val CWData = csv("CWData.csv").circular
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
@@ -158,17 +159,17 @@ class XUI_Simulation extends Simulation {
         .exec(Solicitor_PRL_C100.ViewPdfApplication)
         .exec(Solicitor_PRL_C100.SubmitAndPay)
         .exec(XuiHelper.Logout)
-        .feed(UserFeederPRLCourtAdmin)
-        .exec(XuiHelper.Homepage)
-        .exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
+        //.feed(UserFeederPRLCourtAdmin)
+        //.exec(XuiHelper.Homepage)
+        //.exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
         //Case worker progress case
-        .exec(CourtAdmin_PRL_C100.CourtAdminCheckApplication)
-        .exec(CourtAdmin_PRL_C100.CourtAdminSendToGateKeeper)
-        .exec(CourtAdmin_PRL_C100.CourtAdminManageOrders)
-        .exec(CourtAdmin_PRL_C100.CourtAdminServiceApplication)
+        //.exec(CourtAdmin_PRL_C100.CourtAdminCheckApplication)
+        //.exec(CourtAdmin_PRL_C100.CourtAdminSendToGateKeeper)
+        //.exec(CourtAdmin_PRL_C100.CourtAdminManageOrders)
+        //.exec(CourtAdmin_PRL_C100.CourtAdminServiceApplication)
         //.exec(CourtAdmin_PRL_C100.CourtAdminListHearing)
         //.exec(CourtAdmin_PRL_C100.CourtAdminHearingsTab)
-        .exec(XuiHelper.Logout)
+        //.exec(XuiHelper.Logout)
         /*.feed(UserFeederPRLCourtAdmin)
         .exec(XuiHelper.Homepage)
         .exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
@@ -218,6 +219,24 @@ class XUI_Simulation extends Simulation {
     }
 
   /*===============================================================================================
+* XUI Add LA to C100 Scenario
+===============================================================================================*/
+  val PRLC100CaseWorkerScenario = scenario("***** Private Law Case Worker Tasks *****")
+    .exitBlockOnFail {
+        feed(UserFeederPRLCourtAdmin)
+      .feed(CWData)
+        .exec(_.set("env", s"${env}")
+          .set("caseType", "PRLAPPS"))
+        .exec(XuiHelper.Homepage)
+          .exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
+        //.exec(CourtAdmin_PRL_C100.CWOpenCase)
+        .exec(CourtAdmin_PRL_C100.CWclickParties)
+        .exec(CourtAdmin_PRL_C100.CWManageDocsUpload)
+        .exec(CourtAdmin_PRL_C100.CWcaseFileView)
+        .exec(XuiHelper.Logout)
+    }
+
+  /*===============================================================================================
 * XUI Solicitor Private Law Scenario - FL401
  ===============================================================================================*/
   val PRLFL401SolicitorScenario = scenario("***** Private Law Solicitor FL401 Create Case *****")
@@ -242,17 +261,17 @@ class XUI_Simulation extends Simulation {
         .exec(Solicitor_PRL_FL401.ViewPDF)
         .exec(Solicitor_PRL_FL401.StatementOfTruth)
         .exec(XuiHelper.Logout)
-        .feed(UserFeederPRLCourtAdmin)
-        .exec(XuiHelper.Homepage)
-        .exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
+        //.feed(UserFeederPRLCourtAdmin)
+        //.exec(XuiHelper.Homepage)
+        //.exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
         //Case worker progress case
-        .exec(CourtAdmin_PRL_FL401.CourtAdminCheckApplication)
-        .exec(CourtAdmin_PRL_FL401.CourtAdminSendToGateKeeper)
-        .exec(CourtAdmin_PRL_FL401.CourtAdminManageOrders)
-        .exec(CourtAdmin_PRL_FL401.CourtAdminServiceApplication)
+        //.exec(CourtAdmin_PRL_FL401.CourtAdminCheckApplication)
+        //.exec(CourtAdmin_PRL_FL401.CourtAdminSendToGateKeeper)
+        //.exec(CourtAdmin_PRL_FL401.CourtAdminManageOrders)
+        //.exec(CourtAdmin_PRL_FL401.CourtAdminServiceApplication)
         //.exec(CourtAdmin_PRL_FL401.CourtAdminListHearing)
         //.exec(CourtAdmin_PRL_FL401.CourtAdminHearingsTab)
-        .exec(XuiHelper.Logout)
+        //.exec(XuiHelper.Logout)
 
     }
 
@@ -731,10 +750,11 @@ class XUI_Simulation extends Simulation {
 
   setUp(
     //PRLC100AddLAScenario.inject(simulationProfile(testType, 200, 200)).pauses(pauseOption),
-    //PRLFL401SolicitorScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption)
+    //PRLC100SolicitorScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption)
     //PRLC100LAScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption)
-    PRLC100AddLAScenario.inject(simulationProfile(testType, prlC100LATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-    PRLC100LAScenario.inject(simulationProfile(testType, prlC100LATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+    PRLC100CaseWorkerScenario.inject(simulationProfile(testType, prlC100LATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+    //PRLC100AddLAScenario.inject(simulationProfile(testType, prlC100LATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+    //PRLC100LAScenario.inject(simulationProfile(testType, prlC100LATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
     PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
     PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
     /*PRLC100BarristerScenario.inject(simulationProfile(testType, prlC100BarristerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),

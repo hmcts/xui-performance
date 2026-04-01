@@ -1644,6 +1644,198 @@ object CourtAdmin_PRL_C100 {
         .check(status.is(200)))
     }
 
+  group("XUI_PRL_LA_080_Parties2") {
+    exec(http("XUI_PRL_LA_080_005_Parties2")
+      .get("/api/caseshare/orgs")
+      .headers(Headers.commonHeader)
+      .header("Content-Type", "application/json; charset=utf-8")
+      .header("Accept", "application/json, text/plain, */*")
+      .check(substring("organisationIdentifier"))
+      .check(status.is(200)))
+  }
+
+  val CWOpenCase =
+
+    group("XUI_PRL_CW_070_OpenCase") {
+      exec(http("XUI_PRL_CW_070_005_OpenCase")
+        .get("/data/internal/cases/#{caseId}")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("Application for a court order"))
+        .check(status.is(200)))
+
+        .exec(http("XUI_PRL_CW_070_010_OpenCase")
+          .post("/api/role-access/roles/manageLabellingRoleAssignment/#{caseId}")
+          .headers(Headers.commonHeader)
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/LAOpenCase.json"))
+          .check(status.is(204)))
+
+        .exec(http("XUI_PRL_CW_070_015_Jurisdictions")
+          .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
+          .headers(Headers.commonHeader)
+          .header("Accept", "application/json, text/plain, */*")
+          .check(status.is(200)))
+
+
+    }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+  val CWManageDocsUpload =
+
+    group("XUI_PRL_CW_090_ManageDocs_Task") {
+      exec(http("XUI_PRL_CW_000_005_ManageDocsTask")
+        .get("/workallocation/case/tasks/#{caseId}/event/manageDocumentsNew/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("task_required_for_event"))
+        .check(status.is(200)))
+
+        .exec(http("XUI_PRL_CW_090_010_ManageDocs_EventTrigger")
+          .get("/data/internal/cases/#{caseId}/event-triggers/manageDocumentsNew?ignore-warning=false")
+          .headers(Headers.commonHeader)
+          .header("Accept", "application/json, text/plain, */*")
+          .check(jsonPath("$.event_token").saveAs("event_token"))
+          //.check(jsonPath("$.case_fields[0].value[0].id").saveAs("id"))
+          .check(jsonPath("$.case_fields[0].value[0].id").saveAs("id"))
+          .check(substring("manageDocumentsNew"))
+          .check(status.is(200)))
+    }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_CW_100_ManageDocs_Upload") {
+        exec(http("XUI_PRL_CW_100_005_ManageDocs_Upload")
+          .post("/documents")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/json, text/plain, */*")
+          .header("content-type", "multipart/form-data")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .bodyPart(RawFileBodyPart("files", "3MB.pdf")
+            .fileName("3MB.pdf")
+            .transferEncoding("binary"))
+          .asMultipartForm
+          .formParam("classification", "PUBLIC")
+          .formParam("caseTypeId", "PRLAPPS")
+          .formParam("jurisdictionId", "PRIVATELAW")
+          .check(substring("originalDocumentName"))
+          .check(jsonPath("$._embedded.documents[0]._links.binary.href").saveAs("documentBinary_cir"))
+          .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL_cir")))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_CW_110_ManageDocs_Validate") {
+        exec(http("XUI_PRL_CW_110_005_ManageDocs_Validate")
+          .post("/data/case-types/PRLAPPS/validate?pageId=adminRemoveLocalAuthority1")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/managedocs_validate_cw.json"))
+          .check(substring("COURT"))
+          .check(status.is(200)))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_CW_120_ManageDocs_Event") {
+        exec(http("XUI_PRL_CW_120_005_ManageDocs_Event")
+          .post("/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/managedocs_event_cw.json"))
+          .check(substring("OrgPolicyReference"))
+          .check(status.is(201)))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+  val CWcaseFileView =
+
+    group("XUI_PRL_CW_130_CFV_ClickTab") {
+      exec(http("XUI_PRL_CW_130_005_CFV_ClickTab")
+        .get("/categoriesAndDocuments/#{caseId}")
+        .headers(Headers.commonHeader)
+        .header("Content-Type", "application/json; charset=utf-8")
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("approvedOrders"))
+        .check(status.is(200)))
+
+        .exec(http("XUI_PRL_CW_130_010_CFV_ClickTab2")
+          .get("/categoriesAndDocuments/#{caseId}")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .check(substring("approvedOrders"))
+          .check(status.is(200)))
+    }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .exec { session =>
+        val full = session("DocumentURL_cir").as[String]
+        val trimmed = full.takeRight(36)
+        session.set("binary_value", trimmed)
+      }
+
+      .group("XUI_PRL_CW_140_CFV_ClickDocument") {
+        exec(http("XUI_PRL_CW_140_005_CFV_Filter")
+          .get("/em-anno/annotation-sets/filter?documentId=#{binary_value}")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .check(status.is(204)))
+
+          .exec(http("XUI_PRL_CW_140_010_CFV_markup")
+            .get("/api/markups/#{binary_value}")
+            .headers(Headers.commonHeader)
+            .header("Content-Type", "application/json; charset=utf-8")
+            .header("Accept", "application/json, text/plain, */*")
+            //.check(substring("localAuthoritySolicitorOrganisationPolicy"))
+            .check(status.is(204)))
+
+          .exec(http("XUI_PRL_CW_140_015_CFV_bookmark")
+            .get("/em-anno/#{binary_value}/bookmarks")
+            .headers(Headers.commonHeader)
+            .header("Content-Type", "application/json; charset=utf-8")
+            .header("Accept", "application/json, text/plain, */*")
+            //.check(substring("localAuthoritySolicitorOrganisationPolicy"))
+            .check(status.is(204)))
+
+          .exec(http("XUI_PRL_CW_140_020_CFV_binary")
+            .get("/documents/#{binary_value}/binary")
+            .headers(Headers.commonHeader)
+            .header("Content-Type", "application/json; charset=utf-8")
+            .header("Accept", "application/json, text/plain, */*")
+            .check(status.is(200)))
+
+          .exec(http("XUI_PRL_CW_140_025_CFV2_meta")
+            .get("/em-anno/metadata/#{binary_value}")
+            .headers(Headers.commonHeader)
+            .header("Content-Type", "application/json; charset=utf-8")
+            .header("Accept", "application/json, text/plain, */*")
+            .check(status.is(204)))
+      }
+      .pause(MinThinkTime, MaxThinkTime)
+
+
+  val CWclickParties =
+
+    group("XUI_PRL_CW_080_Parties") {
+      exec(http("XUI_PRL_CW_080_005_Parties")
+        .get("/api/caseshare/orgs")
+        .headers(Headers.commonHeader)
+        .header("Content-Type", "application/json; charset=utf-8")
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("organisationIdentifier"))
+        .check(status.is(200)))
+    }
+
+
+
+
   val writeToFile =
     exec { session =>
       val fw = new BufferedWriter(new FileWriter("LAData.csv", true))
