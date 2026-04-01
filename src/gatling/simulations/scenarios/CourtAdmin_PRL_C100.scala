@@ -1644,16 +1644,6 @@ object CourtAdmin_PRL_C100 {
         .check(status.is(200)))
     }
 
-  group("XUI_PRL_LA_080_Parties2") {
-    exec(http("XUI_PRL_LA_080_005_Parties2")
-      .get("/api/caseshare/orgs")
-      .headers(Headers.commonHeader)
-      .header("Content-Type", "application/json; charset=utf-8")
-      .header("Accept", "application/json, text/plain, */*")
-      .check(substring("organisationIdentifier"))
-      .check(status.is(200)))
-  }
-
   val CWOpenCase =
 
     group("XUI_PRL_CW_070_OpenCase") {
@@ -1833,8 +1823,17 @@ object CourtAdmin_PRL_C100 {
         .check(status.is(200)))
     }
 
+  val CWclickParties2 =
 
-
+  group("XUI_PRL_CW_080_Parties2") {
+    exec(http("XUI_PRL_CW_080_005_Parties2")
+      .get("/api/caseshare/orgs")
+      .headers(Headers.commonHeader)
+      .header("Content-Type", "application/json; charset=utf-8")
+      .header("Accept", "application/json, text/plain, */*")
+      .check(substring("organisationIdentifier"))
+      .check(status.is(200)))
+  }
 
   val writeToFile =
     exec { session =>
