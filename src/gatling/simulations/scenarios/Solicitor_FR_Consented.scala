@@ -70,14 +70,10 @@ object Solicitor_FR_Consented  {
         .check(jsonPath("$.data.solicitorAddress.County").saveAs("firmCounty"))
         .check(jsonPath("$.data.solicitorAddress.PostCode").saveAs("firmPostcode")))
 
-      //select applicant and respondent solicitor orgs now, as this call will be retrieved from cache in future
-      //requests, where checks aren't performed by Gatling https://gatling.io/docs/gatling/reference/current/http/protocol/#caching
       .exec(http("XUI_FR_Consented_050_010_GetOrgs")
         .get("/api/caseshare/orgs")
         .headers(Headers.commonHeader)
-        .header("accept", "application/json, text/plain, */*")
-        .check(regex(""""name":"(.+?)","organisationIdentifier":"([0-9A-Z]+?)"""").ofType[(String, String)].findRandom.saveAs("applicantOrgs"))
-        .check(regex(""""name":"(.+?)","organisationIdentifier":"([0-9A-Z]+?)"""").ofType[(String, String)].findRandom.saveAs("respondentOrgs")))
+        .header("accept", "application/json, text/plain, */*"))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
