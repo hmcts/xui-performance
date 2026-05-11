@@ -60,7 +60,7 @@ object Solicitor_FR_Consented  {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/fr/FRContinueToApplication.json"))
+        .body(ElFileBody("bodies/fr/consented/FRContinueToApplication.json"))
         .check(jsonPath("$.data.solicitorFirm").saveAs("firmName"))
         .check(jsonPath("$.data.solicitorReference").saveAs("firmRef"))
         .check(jsonPath("$.data.solicitorAddress.AddressLine1").saveAs("firmAddress1"))
@@ -68,7 +68,9 @@ object Solicitor_FR_Consented  {
         .check(jsonPath("$.data.solicitorAddress.AddressLine3").saveAs("firmAddress3"))
         .check(jsonPath("$.data.solicitorAddress.PostTown").saveAs("firmPostTown"))
         .check(jsonPath("$.data.solicitorAddress.County").saveAs("firmCounty"))
-        .check(jsonPath("$.data.solicitorAddress.PostCode").saveAs("firmPostcode")))
+        .check(jsonPath("$.data.solicitorAddress.PostCode").saveAs("firmPostcode"))
+        .check(jsonPath("$.data.solicitorReference").is("#{orgref(0)}"))
+        .check(jsonPath("$.data.solicitorFirm").is("#{orgname(0)}")))
 
       .exec(http("XUI_FR_Consented_050_010_GetOrgs")
         .get("/api/caseshare/orgs")
@@ -88,7 +90,7 @@ object Solicitor_FR_Consented  {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/fr/FRAddSolicitorDetails.json"))
+        .body(ElFileBody("bodies/fr/consented/FRAddSolicitorDetails.json"))
         .check(substring("solicitorAgreeToReceiveEmails")))
     }
 
@@ -104,7 +106,7 @@ object Solicitor_FR_Consented  {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/fr/FRAddDivorceCaseDetails.json"))
+        .body(ElFileBody("bodies/fr/consented/FRAddDivorceCaseDetails.json"))
         .check(jsonPath("$.data.divorceStageReached").is("Petition Issued")))
     }
 
@@ -120,7 +122,7 @@ object Solicitor_FR_Consented  {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/fr/FRAddApplicantDetails.json"))
+        .body(ElFileBody("bodies/fr/consented/FRAddApplicantDetails.json"))
         .check(jsonPath("$.data.applicantFMName").is("ApplicantPerf")))
 
       .exec(http("XUI_FR_Consented_080_010_GetOrgs")
@@ -149,7 +151,7 @@ object Solicitor_FR_Consented  {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/fr/FRAddRespondentDetails.json"))
+        .body(ElFileBody("bodies/fr/consented/FRAddRespondentDetails.json"))
         .check(jsonPath("$.data.appRespondentRep").is("Yes")))
     }
 
@@ -165,7 +167,7 @@ object Solicitor_FR_Consented  {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/fr/AddNatureOfApplication.json"))
+        .body(ElFileBody("bodies/fr/consented/AddNatureOfApplication.json"))
         .check(jsonPath("$.data.natureOfApplication2[0]").is("Lump Sum Order")))
     }
 
@@ -206,7 +208,7 @@ object Solicitor_FR_Consented  {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/fr/FRSubmitConsentOrderDocument.json")))
+        .body(ElFileBody("bodies/fr/consented/FRSubmitConsentOrderDocument.json")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -246,7 +248,7 @@ object Solicitor_FR_Consented  {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/fr/FRSubmitD81Document.json")))
+        .body(ElFileBody("bodies/fr/consented/FRSubmitD81Document.json")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -261,7 +263,7 @@ object Solicitor_FR_Consented  {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/fr/FROtherDocuments.json"))
+        .body(ElFileBody("bodies/fr/consented/FROtherDocuments.json"))
         .check(substring("ApplicantOrganisationPolicy")))
     }
 
@@ -277,7 +279,7 @@ object Solicitor_FR_Consented  {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/fr/FRContinueToCheckYourAnswers.json"))
+        .body(ElFileBody("bodies/fr/consented/FRContinueToCheckYourAnswers.json"))
         .check(substring(""""data":{}""")))
 
       .exec(http("XUI_FR_Consented_160_010_GetOrgs")
@@ -298,7 +300,7 @@ object Solicitor_FR_Consented  {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-case.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/fr/FRSubmitApplication.json"))
+        .body(ElFileBody("bodies/fr/consented/FRSubmitApplication.json"))
         .check(jsonPath("$.state").is("caseAdded"))
         .check(jsonPath("$.id").saveAs("caseId")))
 
