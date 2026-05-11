@@ -1,19 +1,20 @@
 {
   "data": {
     "respondentRepresented": "Yes",
-    "rSolicitorName": "#{respondentOrgs(1)}",
-    "rSolicitorReference": "#{respondentOrgs(0)}",
-    "rSolicitorFirm": "#{respondentOrgs(1)}",
-    "rSolicitorPhone": "88888888",
-    "rSolicitorEmail": "#{respondentOrgs(1)}@test.com",
+    "rSolicitorName": "Respondent Solicitor",
+    "rSolicitorReference": null,
+    "rSolicitorFirm": "#{orgname(1)}",
+    "rSolicitorPhone": "07000000001",
+    "rSolicitorEmail": "#{user(1)}",
     "rSolicitorDXnumber": null,
     "RespondentOrganisationPolicy": {
-      "OrgPolicyReference": null,
+      "newCase": null,
+      "OrgPolicyReference": "Ref123",
       "PrepopulateToUsersOrganisation": null,
       "LastNoCRequestedBy": null,
       "Organisation": {
-        "OrganisationID": "#{respondentOrgs(1)}",
-        "OrganisationName": "#{respondentOrgs(0)}"
+        "OrganisationID": "#{orgref(1)}",
+        "OrganisationName": "#{orgname(1)}"
       },
       "PreviousOrganisations": []
     },
@@ -37,12 +38,13 @@
     "applicantRepresented": "Yes",
     "applicantSolicitorName": "#{firmName}",
     "ApplicantOrganisationPolicy": {
-      "OrgPolicyReference": null,
+      "newCase": null,
+      "OrgPolicyReference": "Ref123",
       "PrepopulateToUsersOrganisation": null,
       "LastNoCRequestedBy": null,
       "Organisation": {
-        "OrganisationID": "#{applicantOrgs(1)}",
-        "OrganisationName": "#{applicantOrgs(0)}"
+        "OrganisationID": "#{orgref(0)}",
+        "OrganisationName": "#{orgname(0)}"
       },
       "PreviousOrganisations": []
     },
@@ -58,7 +60,7 @@
       "Country": "UK"
     },
     "applicantSolicitorPhone": "07777777777",
-    "applicantSolicitorEmail": "#{firmName}@test.com",
+    "applicantSolicitorEmail": "#{user(0)}",
     "applicantSolicitorDXnumber": null,
     "applicantSolicitorConsentForEmails": "No",
     "typeOfApplication": "In connection to matrimonial and civil partnership proceedings",
@@ -75,8 +77,8 @@
       "document_filename": "#{PetitionDocumentFileName}",
       "document_hash": "#{PetitionDocumentHashToken}"
     },
-    "applicantFMName": "Applicant perf",
-    "applicantLName": "applicant ln",
+    "applicantFMName": "ApplicantPerf",
+    "applicantLName": "ApplicantTest",
     "applicantResideOutsideUK": "No",
     "applicantPhone": null,
     "applicantEmail": null,
@@ -94,19 +96,20 @@
       "PostCode": "#{applicantPostcode}",
       "Country": "United Kingdom"
     },
-    "rSolicitorName": "#{respondentOrgs(0)}",
-    "rSolicitorReference": "#{respondentOrgs(1)}",
-    "rSolicitorFirm": "#{respondentOrgs(1)}",
-    "rSolicitorPhone": "88888888",
-    "rSolicitorEmail": "#{respondentOrgs(1)}@test.com",
+    "rSolicitorName": "Respondent Solicitor",
+    "rSolicitorReference": null,
+    "rSolicitorFirm": "#{orgname(1)}",
+    "rSolicitorPhone": "07000000001",
+    "rSolicitorEmail": "#{user(1)}",
     "rSolicitorDXnumber": null,
     "RespondentOrganisationPolicy": {
-      "OrgPolicyReference": null,
+      "newCase": null,
+      "OrgPolicyReference": "Ref123",
       "PrepopulateToUsersOrganisation": null,
       "LastNoCRequestedBy": null,
       "Organisation": {
-        "OrganisationID": "#{respondentOrgs(1)}",
-        "OrganisationName": "#{respondentOrgs(0)}"
+        "OrganisationID": "#{orgref(1)}",
+        "OrganisationName": "#{orgname(1)}"
       },
       "PreviousOrganisations": []
     },

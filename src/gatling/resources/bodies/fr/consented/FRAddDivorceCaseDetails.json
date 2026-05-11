@@ -13,14 +13,18 @@
     "isAdmin": "No",
     "solicitorName": "#{firmName}",
     "ApplicantOrganisationPolicy": {
-      "OrgPolicyReference": null,
+      "LastNoCRequestedBy": null,
+      "newCase": null,
+      "OrgPolicyReference": "Ref123",
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
-        "OrganisationID": "#{applicantOrgs(1)}",
-        "OrganisationName": "#{applicantOrgs(0)}"
+        "OrganisationID": "#{orgref(0)}",
+        "OrganisationName": "#{orgname(0)}"
       },
       "PreviousOrganisations": []
     },
+    "applicantRepresented": "Yes",
+    "civilPartnership": "No",
     "solicitorFirm": "#{firmName}",
     "solicitorReference": "#{firmRef}",
     "solicitorAddress": {
@@ -33,7 +37,7 @@
       "Country": "UK"
     },
     "solicitorPhone": "07000000000",
-    "solicitorEmail": "#{firmName}@test.com",
+    "solicitorEmail": "#{user(0)}",
     "solicitorDXnumber": null,
     "solicitorAgreeToReceiveEmails": "No",
     "divorceCaseNumber": "EZ12D91234",
