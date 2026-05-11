@@ -1,11 +1,6 @@
 {
   "data": {
-    "consentOrder": {
-      "document_url": "#{ConsentOrderDocumentURL}",
-      "document_binary_url": "#{ConsentOrderDocumentURL}/binary",
-      "document_filename": "3MB.pdf",
-      "document_hash": "#{ConsentOrderDocumentHash}"
-    }
+    "otherCollection": []
   },
   "event": {
     "id": "FR_solicitorCreate",
@@ -16,27 +11,30 @@
     "isAdmin": "No",
     "solicitorName": "#{firmName}",
     "ApplicantOrganisationPolicy": {
-      "OrgPolicyReference": null,
+      "LastNoCRequestedBy": null,
+      "newCase": null,
+      "OrgPolicyReference": "Ref123",
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
-        "OrganisationID": "#{applicantOrgs(1)}",
-        "OrganisationName": "#{applicantOrgs(0)}"
+        "OrganisationID": "#{orgref(0)}",
+        "OrganisationName": "#{orgname(0)}"
       },
       "PreviousOrganisations": []
     },
+    "applicantRepresented": "Yes",
     "solicitorFirm": "#{firmName}",
     "solicitorReference": "#{firmRef}",
     "solicitorAddress": {
       "AddressLine1": "#{addressLines(0)}",
       "AddressLine2": "#{addressLines(1)}",
-      "AddressLine3": "",
+      "AddressLine3": null,
       "PostTown": "#{addressLines(2)}",
-      "County": "",
+      "County": null,
       "PostCode": "#{addressLines(3)}",
       "Country": "UK"
     },
     "solicitorPhone": "07000000000",
-    "solicitorEmail": "#{firmName}@test.com",
+    "solicitorEmail": "#{user(0)}",
     "solicitorDXnumber": null,
     "solicitorAgreeToReceiveEmails": "No",
     "divorceCaseNumber": "EZ12D91234",
@@ -50,29 +48,31 @@
     "appRespondentFMName": "RespondentPerf",
     "appRespondentLName": "RespondentTest",
     "appRespondentRep": "Yes",
-    "rSolicitorName": "#{respondentOrgs(0)}",
+    "rSolicitorName": "Respondent Solicitor",
     "RespondentOrganisationPolicy": {
-      "OrgPolicyReference": null,
+      "LastNoCRequestedBy": null,
+      "newCase": null,
+      "OrgPolicyReference": "Ref123",
       "PrepopulateToUsersOrganisation": null,
       "Organisation": {
-        "OrganisationID": "#{respondentOrgs(1)}",
-        "OrganisationName": "#{respondentOrgs(0)}"
+        "OrganisationID": "#{orgref(1)}",
+        "OrganisationName": "#{orgname(1)}"
       },
       "PreviousOrganisations": []
     },
-    "rSolicitorFirm": "#{respondentOrgs(0)}",
+    "rSolicitorFirm": "#{orgname(1)}",
     "rSolicitorReference": null,
     "rSolicitorAddress": {
       "AddressLine1": "#{addressLines(0)}",
       "AddressLine2": "#{addressLines(1)}",
-      "AddressLine3": "",
+      "AddressLine3": null,
       "PostTown": "#{addressLines(2)}",
-      "County": "",
+      "County": null,
       "PostCode": "#{addressLines(3)}",
       "Country": "United Kingdom"
     },
     "rSolicitorPhone": "07000000009",
-    "rSolicitorEmail": "#{firmName}Resp@test.com",
+    "rSolicitorEmail": "#{user(1)}",
     "rSolicitorDXnumber": null,
     "natureOfApplication2": [
       "Lump Sum Order"
@@ -82,7 +82,15 @@
       "document_binary_url": "#{ConsentOrderDocumentURL}/binary",
       "document_filename": "3MB.pdf",
       "document_hash": "#{ConsentOrderDocumentHash}"
-    }
+    },
+    "d81Question": "Yes",
+    "d81Joint": {
+      "document_url": "#{D81DocumentURL}",
+      "document_binary_url": "#{D81DocumentURL}/binary",
+      "document_filename": "3MB.pdf",
+      "document_hash": "#{D81DocumentHash}"
+    },
+    "otherCollection": []
   },
   "event_token": "#{event_token}",
   "ignore_warning": false

@@ -398,11 +398,11 @@ class XUI_Simulation extends Simulation {
 	 ===============================================================================================*/
 	val FinancialRemedySolicitorConsentedScenario = scenario("***** FR Create Consented Case *****")
 		.exitBlockOnFail {
-			feed(UserFeederFR)
+			feed(UserFeederFR, 2)
 				.exec(_.set("env", s"${env}")
 							.set("caseType", "FinancialRemedyMVP2"))
 				.exec(XuiHelper.Homepage)
-				.exec(XuiHelper.Login("#{user}", "#{password}"))
+				.exec(XuiHelper.Login("#{user(0)}", "#{password(0)}"))
 				.repeat(2) {
 					exec(Solicitor_FR_Consented.CreateFRCase)
 				}
@@ -414,11 +414,11 @@ class XUI_Simulation extends Simulation {
 	 ===============================================================================================*/
 	val FinancialRemedySolicitorContestedScenario = scenario("***** FR Create Contested Case *****")
 		.exitBlockOnFail {
-			feed(UserFeederFR)
+			feed(UserFeederFR, 2)
 				.exec(_.set("env", s"${env}")
 					.set("caseType", "FinancialRemedyContested"))
 				.exec(XuiHelper.Homepage)
-				.exec(XuiHelper.Login("#{user}", "#{password}"))
+				.exec(XuiHelper.Login("#{user(0)}", "#{password(0)}"))
 				.repeat(1) {
 					exec(Solicitor_FR_Contested.CreateFRCase)
 				}

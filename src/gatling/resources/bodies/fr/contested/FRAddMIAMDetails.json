@@ -16,17 +16,17 @@
     "description": ""
   },
   "event_data": {
-    "applicantAttendedMIAM": "Yes",
     "isAdmin": "No",
     "applicantRepresented": "Yes",
     "applicantSolicitorName": "#{firmName}",
     "ApplicantOrganisationPolicy": {
-      "OrgPolicyReference": null,
+      "newCase": null,
+      "OrgPolicyReference": "Ref123",
       "PrepopulateToUsersOrganisation": null,
       "LastNoCRequestedBy": null,
       "Organisation": {
-        "OrganisationID": "#{applicantOrgs(1)}",
-        "OrganisationName": "#{applicantOrgs(0)}"
+        "OrganisationID": "#{orgref(0)}",
+        "OrganisationName": "#{orgname(0)}"
       },
       "PreviousOrganisations": []
     },
@@ -42,9 +42,9 @@
       "Country": "UK"
     },
     "applicantSolicitorPhone": "07777777777",
-    "applicantSolicitorEmail": "#{firmName}@test.com",
+    "applicantSolicitorEmail": "#{user(0)}",
     "applicantSolicitorDXnumber": null,
-    "applicantSolicitorConsentForEmails": "Yes",
+    "applicantSolicitorConsentForEmails": "No",
     "typeOfApplication": "In connection to matrimonial and civil partnership proceedings",
     "divorceCaseNumber": "EZ12D91234",
     "civilPartnership": "No",
@@ -59,9 +59,16 @@
       "document_filename": "#{PetitionDocumentFileName}",
       "document_hash": "#{PetitionDocumentHashToken}"
     },
-    "applicantFMName": "Applicant perf",
-    "applicantLName": "applicant ln",
+    "applicantFMName": "ApplicantPerf",
+    "applicantLName": "ApplicantTest",
     "applicantResideOutsideUK": "No",
+    "applicantPhone": null,
+    "applicantEmail": null,
+    "applicantAddressConfidential": "Yes",
+    "applicantInRefugeQuestion": "No",
+    "respondentFMName": "RespondentPerf",
+    "respondentLName": "RespondentTest",
+    "respondentRepresented": "Yes",
     "applicantAddress": {
       "AddressLine1": "#{applicantAddress1}",
       "AddressLine2": "#{applicantAddress2}",
@@ -71,26 +78,23 @@
       "PostCode": "#{applicantPostcode}",
       "Country": "United Kingdom"
     },
-    "applicantPhone": null,
-    "applicantEmail": null,
-    "applicantAddressConfidential": "Yes",
-    "applicantInRefugeQuestion": "No",
-    "respondentFMName": "RespondentPerf",
-    "respondentLName": "RespondentTest",
-    "respondentRepresented": "Yes",
+    "rSolicitorName": "Respondent Solicitor",
+    "rSolicitorReference": null,
+    "rSolicitorFirm": "#{orgname(1)}",
+    "rSolicitorPhone": "07000000001",
+    "rSolicitorEmail": "#{user(1)}",
+    "rSolicitorDXnumber": null,
     "RespondentOrganisationPolicy": {
-      "OrgPolicyReference": null,
+      "newCase": null,
+      "OrgPolicyReference": "Ref123",
       "PrepopulateToUsersOrganisation": null,
       "LastNoCRequestedBy": null,
       "Organisation": {
-        "OrganisationID": "#{respondentOrgs(1)}",
-        "OrganisationName": "#{respondentOrgs(0)}"
+        "OrganisationID": "#{orgref(1)}",
+        "OrganisationName": "#{orgname(1)}"
       },
       "PreviousOrganisations": []
     },
-    "rSolicitorName": "#{respondentOrgs(0)}",
-    "rSolicitorReference": "#{respondentOrgs(1)}",
-    "rSolicitorFirm": "#{respondentOrgs(1)}",
     "rSolicitorAddress": {
       "AddressLine1": "#{addressLines(0)}",
       "AddressLine2": "#{addressLines(1)}",
@@ -100,13 +104,10 @@
       "PostCode": "#{addressLines(3)}",
       "Country": "United Kingdom"
     },
-    "rSolicitorPhone": "07788888888",
-    "rSolicitorEmail": "#{respondentOrgs(1)}@test.com",
-    "rSolicitorDXnumber": null,
     "natureOfApplicationChecklist": [
-      "Maintenance Pending Suit",
       "Lump Sum Order",
       "propertyAdjustmentOrder",
+      "Maintenance Pending Suit",
       "A settlement or a transfer of property",
       "periodicalPaymentOrder",
       "Pension Sharing Order",
@@ -124,7 +125,7 @@
           "propertAddress": "prop2",
           "nameForProperty": "Applicant prop2"
         },
-        "id": "#{propertyId}"
+        "id": null
       }
     ],
     "paymentForChildrenDecision": "Yes",
@@ -148,8 +149,8 @@
       "potentialAllegationChecklist_5",
       "potentialAllegationChecklist_6",
       "potentialAllegationChecklist_7",
-      "potentialAllegationChecklist_9",
       "potentialAllegationChecklist_8",
+      "potentialAllegationChecklist_9",
       "potentialAllegationChecklist_10",
       "potentialAllegationChecklist_11",
       "potentialAllegationChecklist_12",
@@ -168,6 +169,7 @@
     "isApplicantsHomeCourt": "Yes",
     "reasonForLocalCourt": "just some random reason",
     "reasonForFRCLocation": "FRC close location",
+    "applicantAttendedMIAM": "Yes",
     "mediatorRegistrationNumber": "MIAMREGNNUM",
     "familyMediatorServiceName": "Gandalf",
     "soleTraderName": "Wizard divorce service",
