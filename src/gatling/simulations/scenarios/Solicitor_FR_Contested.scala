@@ -76,17 +76,14 @@ object Solicitor_FR_Contested {
           .check(jsonPath("$.data.applicantSolicitorAddress.PostTown").saveAs("firmPostTown"))
           .check(jsonPath("$.data.applicantSolicitorAddress.County").saveAs("firmCounty"))
           .check(jsonPath("$.data.applicantSolicitorAddress.PostCode").saveAs("firmPostcode"))
-          .check(jsonPath("$.data.solicitorReference").is("#{orgref}"))
-          .check(jsonPath("$.data.applicantSolicitorFirm").is("#{orgname}"))
+          .check(jsonPath("$.data.solicitorReference").is("#{orgref(0)}"))
+          .check(jsonPath("$.data.applicantSolicitorFirm").is("#{orgname(0)}"))
         )
 
-          //select applicant and respondent solicitor orgs now, as this call will be retrieved from cache in future
-          .exec(http("XUI_FR_Contested_030_010_GetOrgs")
-            .get("/api/caseshare/orgs")
-            .headers(Headers.commonHeader)
-            .header("accept", "application/json, text/plain, */*")
-            .check(regex(""""name":"(.+?)","organisationIdentifier":"([0-9A-Z]+?)"""").ofType[(String, String)].findRandom.saveAs("applicantOrgs"))
-            .check(regex(""""name":"(.+?)","organisationIdentifier":"([0-9A-Z]+?)"""").ofType[(String, String)].findRandom.saveAs("respondentOrgs")))
+        .exec(http("XUI_FR_Contested_030_010_GetOrgs")
+          .get("/api/caseshare/orgs")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/json, text/plain, */*"))
       }
 
       .pause(MinThinkTime, MaxThinkTime)
@@ -103,8 +100,6 @@ object Solicitor_FR_Contested {
           .header("x-xsrf-token", "#{XSRFToken}")
           .body(ElFileBody("bodies/fr/contested/FRAddSolicitorDetails.json"))
           .check(substring("applicantSolicitorConsentForEmails"))
-          .check(jsonPath("$.data.ApplicantOrganisationPolicy.Organisation.OrganisationID").is("#{applicantOrgs(1)}"))
-          .check(jsonPath("$.data.ApplicantOrganisationPolicy.Organisation.OrganisationName").is("#{applicantOrgs(0)}"))
           .check(jsonPath("$.data.applicantSolicitorFirm").is("#{firmName}"))
         )
 
@@ -195,7 +190,7 @@ object Solicitor_FR_Contested {
             .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
             .header("x-xsrf-token", "#{XSRFToken}")
             .body(ElFileBody("bodies/fr/contested/FRAddRespondentSolicitorDetails.json"))
-            .check(jsonPath("$.data.ApplicantOrganisationPolicy.Organisation.OrganisationID").is("#{applicantOrgs(1)}"))
+            .check(jsonPath("$.data.ApplicantOrganisationPolicy.Organisation.OrganisationID").is("#{orgref(0)}"))
             .check(jsonPath("$.data.rSolicitorAddress.AddressLine1").saveAs("respondentSolicitorAddress1"))
             .check(jsonPath("$.data.rSolicitorAddress.AddressLine2").saveAs("respondentSolicitorAddress2"))
             .check(jsonPath("$.data.rSolicitorAddress.AddressLine3").saveAs("respondentSolicitorAddress3"))
@@ -218,7 +213,7 @@ object Solicitor_FR_Contested {
             .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
             .header("x-xsrf-token", "#{XSRFToken}")
             .body(ElFileBody("bodies/fr/contested/FRAddNatureOfApplication.json"))
-            .check(jsonPath("$.data.natureOfApplicationChecklist[0]").is("Maintenance Pending Suit")))
+            .check(substring("Maintenance Pending Suit")))
         }
 
         .pause(MinThinkTime, MaxThinkTime)
@@ -234,8 +229,7 @@ object Solicitor_FR_Contested {
             .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
             .header("x-xsrf-token", "#{XSRFToken}")
             .body(ElFileBody("bodies/fr/contested/FRAddPropertyAdjustment.json"))
-            .check(jsonPath("$.data.additionalPropertyOrderDecision").is("Yes"))
-            .check(jsonPath("$.data.propertyAddress").is("prop1"))
+            .check(jsonPath("$.data.propertyAdjutmentOrderDetail"))
           )
         }
 

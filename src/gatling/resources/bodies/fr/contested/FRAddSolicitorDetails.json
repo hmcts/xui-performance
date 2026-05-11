@@ -2,12 +2,13 @@
   "data": {
     "applicantSolicitorName": "#{firmName}",
     "ApplicantOrganisationPolicy": {
-      "OrgPolicyReference": null,
+      "newCase": null,
+      "OrgPolicyReference": "Ref123",
       "PrepopulateToUsersOrganisation": null,
       "LastNoCRequestedBy": null,
       "Organisation": {
-        "OrganisationID": "#{applicantOrgs(1)}",
-        "OrganisationName": "#{applicantOrgs(0)}"
+        "OrganisationID": "#{orgref(0)}",
+        "OrganisationName": "#{orgname(0)}"
       },
       "PreviousOrganisations": []
     },
@@ -23,7 +24,7 @@
       "Country": "UK"
     },
     "applicantSolicitorPhone": "07777777777",
-    "applicantSolicitorEmail": "#{firmName}@test.com",
+    "applicantSolicitorEmail": "#{user(0)}",
     "applicantSolicitorDXnumber": null,
     "applicantSolicitorConsentForEmails": "No",
     "typeOfApplication": "In connection to matrimonial and civil partnership proceedings"
@@ -38,12 +39,13 @@
     "applicantRepresented": "Yes",
     "applicantSolicitorName": "#{firmName}",
     "ApplicantOrganisationPolicy": {
-      "OrgPolicyReference": null,
+      "newCase": null,
+      "OrgPolicyReference": "Ref123",
       "PrepopulateToUsersOrganisation": null,
       "LastNoCRequestedBy": null,
       "Organisation": {
-        "OrganisationID": "#{applicantOrgs(1)}",
-        "OrganisationName": "#{applicantOrgs(0)}"
+        "OrganisationID": "#{orgref(0)}",
+        "OrganisationName": "#{orgname(0)}"
       },
       "PreviousOrganisations": []
     },
@@ -59,7 +61,7 @@
       "Country": "UK"
     },
     "applicantSolicitorPhone": "07777777777",
-    "applicantSolicitorEmail": "#{firmName}@test.com",
+    "applicantSolicitorEmail": "#{user(0)}",
     "applicantSolicitorDXnumber": null,
     "applicantSolicitorConsentForEmails": "No",
     "typeOfApplication": "In connection to matrimonial and civil partnership proceedings"
