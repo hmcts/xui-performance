@@ -1,0 +1,158 @@
+{
+  "data": {
+    "manageDocuments": [
+      {
+        "value": {
+          "documentParty": "LOCAL_AUTHORITY",
+          "documentCategories": {
+            "value": {
+              "code": "cirTransferRequestLa",
+              "label": "CIR transfer request"
+            },
+            "list_items": [
+              {
+                "code": "childImpactReport1La",
+                "label": "Child Impact Report 1"
+              },
+              {
+                "code": "childImpactReport2La",
+                "label": "Child Impact Report 2"
+              },
+              {
+                "code": "sec37Report",
+                "label": "Local Authority Section 37 report"
+              },
+              {
+                "code": "section7ReportLa",
+                "label": "Section 7 report"
+              },
+              {
+                "code": "section7AddendumReportLa",
+                "label": "Section 7 addendum report"
+              },
+              {
+                "code": "localAuthorityInvolvementLa",
+                "label": "Local Authority involvement letter"
+              },
+              {
+                "code": "section47La",
+                "label": "Section 47 enquiry"
+              },
+              {
+                "code": "cirExtensionRequestLa",
+                "label": "CIR extension request"
+              },
+              {
+                "code": "cirTransferRequestLa",
+                "label": "CIR transfer request"
+              },
+              {
+                "code": "localAuthorityOtherDoc",
+                "label": "Local Authority other documents"
+              }
+            ]
+          },
+          "isConfidential": "No",
+          "isRestricted": "No",
+          "documentRelatedToCaseCheckbox": [
+            "RELATED_TO_CASE"
+          ],
+          "document": {
+            "document_url": "#{DocumentURL_transfer_cir}",
+            "document_binary_url": "#{DocumentURL_transfer_cir}/binary",
+            "document_filename": "7PageDoc.pdf"
+          },
+          "documentRestrictCheckbox": []
+        },
+        "id": "#{id}"
+      }
+    ],
+    "manageDocUploadedCategory": [],
+    "caseTypeOfApplication": "C100",
+    "manageDocumentsTriggeredBy": null,
+    "isC8DocumentPresent": "Yes",
+    "manageDocumentsRestrictedFlag": null
+  },
+  "event": {
+    "id": "manageDocumentsNew",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "manageDocuments": [
+      {
+        "value": {
+          "documentParty": "LOCAL_AUTHORITY",
+          "documentCategories": {
+            "value": {
+              "code": "cirTransferRequestLa",
+              "label": "CIR transfer request"
+            },
+            "list_items": [
+              {
+                "code": "childImpactReport1La",
+                "label": "Child Impact Report 1"
+              },
+              {
+                "code": "childImpactReport2La",
+                "label": "Child Impact Report 2"
+              },
+              {
+                "code": "sec37Report",
+                "label": "Local Authority Section 37 report"
+              },
+              {
+                "code": "section7ReportLa",
+                "label": "Section 7 report"
+              },
+              {
+                "code": "section7AddendumReportLa",
+                "label": "Section 7 addendum report"
+              },
+              {
+                "code": "localAuthorityInvolvementLa",
+                "label": "Local Authority involvement letter"
+              },
+              {
+                "code": "section47La",
+                "label": "Section 47 enquiry"
+              },
+              {
+                "code": "cirExtensionRequestLa",
+                "label": "CIR extension request"
+              },
+              {
+                "code": "cirTransferRequestLa",
+                "label": "CIR transfer request"
+              },
+              {
+                "code": "localAuthorityOtherDoc",
+                "label": "Local Authority other documents"
+              }
+            ]
+          },
+          "isConfidential": "No",
+          "isRestricted": "No",
+          "documentRelatedToCaseCheckbox": [
+            "RELATED_TO_CASE"
+          ],
+          "document": {
+            "document_url": "#{DocumentURL_transfer_cir}",
+            "document_binary_url": "#{DocumentURL_transfer_cir}/binary",
+            "document_filename": "7PageDoc.pdf"
+          },
+          "documentRestrictCheckbox": []
+        },
+        "id": "#{id}"
+      }
+    ],
+    "manageDocUploadedCategory": [],
+    "caseTypeOfApplication": "C100",
+    "manageDocumentsTriggeredBy": null,
+    "isC8DocumentPresent": "Yes",
+    "manageDocumentsRestrictedFlag": null
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
+}

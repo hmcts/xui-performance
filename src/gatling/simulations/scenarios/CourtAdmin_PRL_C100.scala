@@ -1420,15 +1420,15 @@ object CourtAdmin_PRL_C100 {
 
   val RemoveLocalAuthority =
 
-    group("XUI_PRL_LA_150_RemoveLocalAuthority") {
-      exec(http("XUI_PRL_LA_150_005_RemoveLocalAuthority")
+    group("XUI_PRL_LA_000_RemoveLocalAuthority") {
+      exec(http("XUI_PRL_LA_000_005_RemoveLocalAuthority")
         .get("/workallocation/case/tasks/#{caseId}/event/adminRemoveLocalAuthority/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*")
         .check(substring("task_required_for_event"))
         .check(status.is(200)))
 
-      .exec(http("XUI_PRL_LA_150_010_RemoveLocalAuthority_EventTrigger")
+      .exec(http("XUI_PRL_LA_000_010_RemoveLocalAuthority_EventTrigger")
         .get("/data/internal/cases/#{caseId}/event-triggers/adminRemoveLocalAuthority?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*")
@@ -1439,8 +1439,8 @@ object CourtAdmin_PRL_C100 {
 
       .pause(MinThinkTime, MaxThinkTime)
 
-      .group("XUI_PRL_LA_160_RemoveLocalAuthority_Validate") {
-        exec(http("XUI_PRL_LA_160_005_RemoveLocalAuthority_Validate")
+      .group("XUI_PRL_LA_000_RemoveLocalAuthority_Validate") {
+        exec(http("XUI_PRL_LA_000_005_RemoveLocalAuthority_Validate")
           .post("/data/case-types/PRLAPPS/validate?pageId=adminRemoveLocalAuthority1")
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
@@ -1452,7 +1452,7 @@ object CourtAdmin_PRL_C100 {
 
       .pause(MinThinkTime, MaxThinkTime)
 
-      .group("XUI_PRL_LA_170_010_RemoveLocalAuthority_Event") {
+      .group("XUI_PRL_LA_000_010_RemoveLocalAuthority_Event") {
         exec(http("XUI_PRL_LA_000_000_RemoveLocalAuthority_Event")
           .post("/data/cases/#{caseId}/events")
           .headers(Headers.commonHeader)
@@ -1467,28 +1467,26 @@ object CourtAdmin_PRL_C100 {
 
   val LAOpenCase =
 
-    group("XUI_PRL_LA_070_OpenCase") {
-      exec(http("XUI_PRL_LA_070_005_OpenCase")
+    group("XUI_PRL_LA_000_OpenCase") {
+      exec(http("XUI_PRL_LA_000_005_OpenCase")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*")
         .check(substring("Application for a court order"))
         .check(status.is(200)))
 
-      .exec(http("XUI_PRL_LA_070_010_OpenCase")
+      .exec(http("XUI_PRL_LA_000_010_OpenCase")
         .post("/api/role-access/roles/manageLabellingRoleAssignment/#{caseId}")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*")
         .body(ElFileBody("bodies/prl/c100/LAOpenCase.json"))
         .check(status.is(204)))
 
-        .exec(http("XUI_PRL_LA_070_015_Jurisdictions")
+        .exec(http("XUI_PRL_LA_000_015_Jurisdictions")
           .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
           .headers(Headers.commonHeader)
           .header("Accept", "application/json, text/plain, */*")
           .check(status.is(200)))
-
-
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1563,6 +1561,279 @@ object CourtAdmin_PRL_C100 {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+
+  val ManageDocsExtensionUpload =
+
+    group("XUI_PRL_LA_Extension_150_ManageDocs_Task") {
+      exec(http("XUI_PRL_LA_Extension_150_005_ManageDocs_Task")
+        .get("/workallocation/case/tasks/#{caseId}/event/manageDocumentsNew/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("task_required_for_event"))
+        .check(status.is(200)))
+
+        .exec(http("XUI_PRL_LA_Extension_150_010_ManageDocs_Task")
+          .get("/data/internal/cases/#{caseId}/event-triggers/manageDocumentsNew?ignore-warning=false")
+          .headers(Headers.commonHeader)
+          .header("Accept", "application/json, text/plain, */*")
+          .check(jsonPath("$.event_token").saveAs("event_token"))
+          //.check(jsonPath("$.case_fields[0].value[0].id").saveAs("id"))
+          .check(jsonPath("$.case_fields[0].value[0].id").saveAs("id"))
+          .check(substring("manageDocumentsNew"))
+          .check(status.is(200)))
+    }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_LA_Extension_160_ManageDocs_Task") {
+        exec(http("XUI_PRL_LA_Extension_160_005_ManageDocs_Task")
+          .post("/documents")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/json, text/plain, */*")
+          .header("content-type", "multipart/form-data")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .bodyPart(RawFileBodyPart("files", "3MB.pdf")
+            .fileName("3MB.pdf")
+            .transferEncoding("binary"))
+          .asMultipartForm
+          .formParam("classification", "PUBLIC")
+          .formParam("caseTypeId", "PRLAPPS")
+          .formParam("jurisdictionId", "PRIVATELAW")
+          .check(substring("originalDocumentName"))
+          .check(jsonPath("$._embedded.documents[0]._links.binary.href").saveAs("documentBinary_extension_cir"))
+          .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL_extension_cir")))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_LA_Extension_170_ManageDocs_Validate") {
+        exec(http("XUI_PRL_LA_Extension_170_005_ManageDocs_Validate")
+          .post("/data/case-types/PRLAPPS/validate?pageId=manageDocumentsNew1")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/managedocs_extension_validate.json"))
+          .check(substring("LOCAL_AUTHORITY"))
+          .check(status.is(200)))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_LA_Extension_180_ManageDocs_Event") {
+        exec(http("XUI_PRL_LA_Extension_180_005_ManageDocs_Event")
+          .post("/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/managedocs_extension_event.json"))
+          .check(substring("responseToAllegationsOfHarmDocument"))
+          .check(status.is(201)))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+  val ViewTasksExtension =
+
+    exec(session => {
+      session("taskType").asOption[String] match {
+        case Some(taskType) => session
+        case None => session.set("taskType", "")
+      }
+    })
+
+      // Loop until the task type matches "checkApplicationC100" *For Cases which selected HWF different steps are required here
+      .asLongAs(session => session("taskType").as[String] != "cirExtensionRequestReviewDocumentsC100") {
+        exec(http("XUI_PRL_LA_Extension_200_WaitForTask")
+          .get(BaseURL + "/workallocation/case/task/#{caseId}")
+          .headers(Headers.commonHeader)
+          .header("Accept", "application/json, text/plain, */*")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .check(jsonPath("$[-1].id").optional.saveAs("taskId"))
+          .check(jsonPath("$[-1].type").optional.saveAs("taskType")))
+
+          .pause(10) // Wait between retries
+      }
+
+    .group("XUI_PRL_LA_Extension_210_ViewTasks") {
+      exec(http("XUI_PRL_LA_Extension_210_005_ViewTasks")
+        .post("/workallocation/case/task/#{caseId}")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("unassigned"))
+        .check(jsonPath("$[-1].id").saveAs("taskID"))
+        .check(status.is(200)))
+    }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+  val AssignExtensionTask =
+
+    group("XUI_PRL_LA_Extension_210_AssignTask") {
+      exec(http("XUI_PRL_LA_Extension_210_005_AssignTask")
+        .post("/workallocation/task/#{taskID}/claim")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .body(ElFileBody("bodies/prl/c100/workallocation_claim_extension.json"))
+        //.check(substring("task_required_for_event"))
+        .check(status.is(204)))
+
+        .exec(http("XUI_PRL_LA_Extension_210_010_AssignTask")
+          .post("/workallocation/case/task/#{caseId}")
+          .headers(Headers.commonHeader)
+          .header("Accept", "application/json, text/plain, */*")
+          //.check(jsonPath("$.event_token").saveAs("event_token"))
+          //.check(jsonPath("$.case_fields[0].value[0].id").saveAs("id"))
+          //.check(jsonPath("$.case_fields[0].value[0].id").saveAs("id"))
+          .body(ElFileBody("bodies/prl/c100/workallocation_task.json"))
+          .check(substring("Private Law"))
+          .check(status.is(200)))
+    }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+
+  val ExtensionTask =
+
+    group("XUI_PRL_LA_Extension_220_ReviewDocsExtension_Task") {
+      exec(http("XUI_PRL_LA_Extension_220_005_ReviewDocs_Task")
+        .get("/workallocation/case/tasks/#{caseId}/event/reviewDocuments/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("task_required_for_event"))
+        .check(status.is(200)))
+
+        .exec(http("XUI_PRL_LA_Extension_220_010_ReviewDocsExtension_EventTrigger")
+          .get("/data/internal/cases/#{caseId}/event-triggers/reviewDocuments?ignore-warning=false")
+          .headers(Headers.commonHeader)
+          .header("Accept", "application/json, text/plain, */*")
+          .check(jsonPath("$.event_token").saveAs("event_token"))
+          .check(jsonPath("$.case_fields[2].value.list_items[0].code").saveAs("extension_code"))
+          .check(jsonPath("$.case_fields[2].value.list_items[0].label").saveAs("extension_label"))
+          //.check(jsonPath("$.case_fields[0].value[0].id").saveAs("id"))
+          .check(substring("Review documents"))
+          .check(status.is(200)))
+    }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_LA_Extension_230_ReviewDocsExtension_Validate") {
+        exec(http("XUI_PRL_LA_Extension_230_005_ReviewDocsExtension_Validate")
+          .post("/data/case-types/PRLAPPS/validate?pageId=reviewDocuments1")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/reviewdocs_reviewdocuments1_extension_validate.json"))
+          .check(jsonPath("$.data.localAuthorityQuarantineDocsList[0].value.localAuthorityQuarantineDocument.document_filename").saveAs("extension_filename"))
+          .check(jsonPath("$.data.docToBeReviewed").saveAs("docToBeReviewed"))
+          .check(jsonPath("$.data.docLabel").saveAs("docLabel"))
+          .check(substring("otherPartyInTheCaseRevised"))
+          .check(status.is(200)))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_LA_Extension_240_ReviewDocsExtension_Validate") {
+        exec(http("XUI_PRL_LA_Extension_240_005_ReviewDocsExtension_Validate")
+          .post("/data/case-types/PRLAPPS/validate?pageId=reviewDocuments2")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/reviewdocs_reviewdocuments2_extension_validate.json"))
+          .check(substring("docToBeReviewed"))
+          .check(status.is(200)))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_LA_Extension_250_ReviewDocsExtension_Event") {
+        exec(http("XUI_PRL_LA_Extension_250_005_ReviewDocsExtension_Event")
+          .post("/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/reviewdocs_reviewdocuments2_extension_event.json"))
+          .check(substring("responseToAllegationsOfHarmDocument"))
+          .check(status.is(201)))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+
+  val ManageDocsTransferUpload =
+
+    group("XUI_PRL_LA_Transfer_150_ManageDocs_Task") {
+      exec(http("XUI_PRL_LA_Transfer_150_005_ManageDocsTask")
+        .get("/workallocation/case/tasks/#{caseId}/event/manageDocumentsNew/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("task_required_for_event"))
+        .check(status.is(200)))
+
+        .exec(http("XUI_PRL_LA_Transfer_150_010_ManageDocs_EventTrigger")
+          .get("/data/internal/cases/#{caseId}/event-triggers/manageDocumentsNew?ignore-warning=false")
+          .headers(Headers.commonHeader)
+          .header("Accept", "application/json, text/plain, */*")
+          .check(jsonPath("$.event_token").saveAs("event_token"))
+          //.check(jsonPath("$.case_fields[0].value[0].id").saveAs("id"))
+          .check(jsonPath("$.case_fields[0].value[0].id").saveAs("id"))
+          .check(substring("manageDocumentsNew"))
+          .check(status.is(200)))
+    }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_LA_Transfer_160_ManageDocs_Upload") {
+        exec(http("XUI_PRL_LA_Transfer_160_005_ManageDocs_Upload")
+          .post("/documents")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/json, text/plain, */*")
+          .header("content-type", "multipart/form-data")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .bodyPart(RawFileBodyPart("files", "3MB.pdf")
+            .fileName("3MB.pdf")
+            .transferEncoding("binary"))
+          .asMultipartForm
+          .formParam("classification", "PUBLIC")
+          .formParam("caseTypeId", "PRLAPPS")
+          .formParam("jurisdictionId", "PRIVATELAW")
+          .check(substring("originalDocumentName"))
+          .check(jsonPath("$._embedded.documents[0]._links.binary.href").saveAs("documentBinary_transfer_cir"))
+          .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL_transfer_cir")))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_LA_Transfer_170_ManageDocs_Validate") {
+        exec(http("XUI_PRL_LA_Transfer_170_005_ManageDocs_Validate")
+          .post("/data/case-types/PRLAPPS/validate?pageId=manageDocumentsNew1")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/managedocs_transfer_validate.json"))
+          .check(substring("LOCAL_AUTHORITY"))
+          .check(status.is(200)))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_LA_Transfer_180_ManageDocs_Event") {
+        exec(http("XUI_PRL_LA_Transfer_180_005_ManageDocs_Event")
+          .post("/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/managedocs_transfer_event.json"))
+          .check(substring("responseToAllegationsOfHarmDocument"))
+          .check(status.is(201)))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+
+
+
+
+
   val caseFileView =
 
     group("XUI_PRL_LA_130_CFV_ClickTab") {
@@ -1631,6 +1902,142 @@ object CourtAdmin_PRL_C100 {
     }
       .pause(MinThinkTime, MaxThinkTime)
 
+  val caseFileView_extension =
+
+    group("XUI_PRL_LA_Extension_190_CFV_ClickTab") {
+      exec(http("XUI_PRL_LA_Extension_190_005_CFV_ClickTab")
+        .get("/categoriesAndDocuments/#{caseId}")
+        .headers(Headers.commonHeader)
+        .header("Content-Type", "application/json; charset=utf-8")
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("approvedOrders"))
+        .check(status.is(200)))
+
+        .exec(http("XUI_PRL_LA_Extension_190_010_CFV_ClickTab2")
+          .get("/categoriesAndDocuments/#{caseId}")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .check(substring("approvedOrders"))
+          .check(status.is(200)))
+    }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .exec { session =>
+        val full = session("DocumentURL_extension_cir").as[String]
+        val trimmed = full.takeRight(36)
+        session.set("binary_value", trimmed)
+      }
+
+      .group("XUI_PRL_LA_Extension_200_CFV_ClickDocument") {
+        exec(http("XUI_PRL_LA_Extension_200_005_CFV_Filter")
+          .get("/em-anno/annotation-sets/filter?documentId=#{binary_value}")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .check(status.is(204)))
+
+          .exec(http("XUI_PRL_LA_Extension_200_010_CFV_markup")
+            .get("/api/markups/#{binary_value}")
+            .headers(Headers.commonHeader)
+            .header("Content-Type", "application/json; charset=utf-8")
+            .header("Accept", "application/json, text/plain, */*")
+            //.check(substring("localAuthoritySolicitorOrganisationPolicy"))
+            .check(status.is(204)))
+
+          .exec(http("XUI_PRL_LA_Extension_200_015_CFV_bookmark")
+            .get("/em-anno/#{binary_value}/bookmarks")
+            .headers(Headers.commonHeader)
+            .header("Content-Type", "application/json; charset=utf-8")
+            .header("Accept", "application/json, text/plain, */*")
+            //.check(substring("localAuthoritySolicitorOrganisationPolicy"))
+            .check(status.is(204)))
+
+          .exec(http("XUI_PRL_LA_Extension_200_020_CFV_binary")
+            .get("/documents/#{binary_value}/binary")
+            .headers(Headers.commonHeader)
+            .header("Content-Type", "application/json; charset=utf-8")
+            .header("Accept", "application/json, text/plain, */*")
+            .check(status.is(200)))
+
+          .exec(http("XUI_PRL_LA_Extension_200_025_CFV2_meta")
+            .get("/em-anno/metadata/#{binary_value}")
+            .headers(Headers.commonHeader)
+            .header("Content-Type", "application/json; charset=utf-8")
+            .header("Accept", "application/json, text/plain, */*")
+            .check(status.is(204)))
+      }
+      .pause(MinThinkTime, MaxThinkTime)
+
+  val caseFileView_transfer =
+
+    group("XUI_PRL_LA_Transfer_190_CFV_ClickTab") {
+      exec(http("XUI_PRL_LA_Transfer_190_005_CFV_ClickTab")
+        .get("/categoriesAndDocuments/#{caseId}")
+        .headers(Headers.commonHeader)
+        .header("Content-Type", "application/json; charset=utf-8")
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("approvedOrders"))
+        .check(status.is(200)))
+
+        .exec(http("XUI_PRL_LA_Transfer_190_010_CFV_ClickTab2")
+          .get("/categoriesAndDocuments/#{caseId}")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .check(substring("approvedOrders"))
+          .check(status.is(200)))
+    }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .exec { session =>
+        val full = session("DocumentURL_transfer_cir").as[String]
+        val trimmed = full.takeRight(36)
+        session.set("binary_value", trimmed)
+      }
+
+      .group("XUI_PRL_LA_Transfer_200_CFV_ClickDocument") {
+        exec(http("XUI_PRL_LA_200_005_CFV_Filter")
+          .get("/em-anno/annotation-sets/filter?documentId=#{binary_value}")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .check(status.is(204)))
+
+          .exec(http("XUI_PRL_LA_Transfer_200_010_CFV_markup")
+            .get("/api/markups/#{binary_value}")
+            .headers(Headers.commonHeader)
+            .header("Content-Type", "application/json; charset=utf-8")
+            .header("Accept", "application/json, text/plain, */*")
+            //.check(substring("localAuthoritySolicitorOrganisationPolicy"))
+            .check(status.is(204)))
+
+          .exec(http("XUI_PRL_LA_Transfer_200_015_CFV_bookmark")
+            .get("/em-anno/#{binary_value}/bookmarks")
+            .headers(Headers.commonHeader)
+            .header("Content-Type", "application/json; charset=utf-8")
+            .header("Accept", "application/json, text/plain, */*")
+            //.check(substring("localAuthoritySolicitorOrganisationPolicy"))
+            .check(status.is(204)))
+
+          .exec(http("XUI_PRL_LA_Transfer_200_020_CFV_binary")
+            .get("/documents/#{binary_value}/binary")
+            .headers(Headers.commonHeader)
+            .header("Content-Type", "application/json; charset=utf-8")
+            .header("Accept", "application/json, text/plain, */*")
+            .check(status.is(200)))
+
+          .exec(http("XUI_PRL_LA_Transfer_200_025_CFV2_meta")
+            .get("/em-anno/metadata/#{binary_value}")
+            .headers(Headers.commonHeader)
+            .header("Content-Type", "application/json; charset=utf-8")
+            .header("Accept", "application/json, text/plain, */*")
+            .check(status.is(204)))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
 
   val clickParties =
 
@@ -1834,6 +2241,133 @@ object CourtAdmin_PRL_C100 {
       .check(substring("organisationIdentifier"))
       .check(status.is(200)))
   }
+
+
+  val ViewTasksTransfer =
+
+    exec(session => {
+        session("taskType").asOption[String] match {
+          case Some(taskType) => session
+          case None => session.set("taskType", "")
+        }
+      })
+
+    // Loop until the task type matches "checkApplicationC100" *For Cases which selected HWF different steps are required here
+    .asLongAs(session => session("taskType").as[String] != "cirTransferRequestReviewDocumentsC100") {
+      exec(http("XUI_PRL_LA_Transfer_200_WaitForTask")
+        .get(BaseURL + "/workallocation/case/task/#{caseId}")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .check(jsonPath("$[0].id").optional.saveAs("taskId"))
+        .check(jsonPath("$[-1].type").optional.saveAs("taskType")))
+
+        .pause(10) // Wait between retries
+    }
+
+    .group("XUI_PRL_LA_Transfer_210_ViewTasks") {
+      exec(http("XUI_PRL_LA_Transfer_210_005_ViewTasks")
+        .post("/workallocation/case/task/#{caseId}")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("unassigned"))
+        .check(jsonPath("$[-1].id").saveAs("taskID"))
+        .check(status.is(200)))
+    }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+  val AssignTransferTask =
+
+    group("XUI_PRL_LA_Transfer_210_AssignTask") {
+      exec(http("XUI_PRL_LA_Transfer_210_005_AssignTask")
+        .post("/workallocation/task/#{taskID}/claim")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .body(ElFileBody("bodies/prl/c100/workallocation_claim_transfer.json"))
+        //.check(substring("task_required_for_event"))
+        .check(status.is(204)))
+
+        .exec(http("XUI_PRL_LA_Transfer_210_010_AssignTask")
+          .post("/workallocation/case/task/#{caseId}")
+          .headers(Headers.commonHeader)
+          .header("Accept", "application/json, text/plain, */*")
+          //.check(jsonPath("$.event_token").saveAs("event_token"))
+          //.check(jsonPath("$.case_fields[0].value[0].id").saveAs("id"))
+          //.check(jsonPath("$.case_fields[0].value[0].id").saveAs("id"))
+          .body(ElFileBody("bodies/prl/c100/workallocation_task.json"))
+          .check(substring("Private Law"))
+          .check(status.is(200)))
+    }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+
+  val TransferTask =
+
+    group("XUI_PRL_LA_Transfer_220_ReviewDocsTransfer_Task") {
+      exec(http("XUI_PRL_LA_Transfer_220_005_ReviewDocs_Task")
+        .get("/workallocation/case/tasks/#{caseId}/event/reviewDocuments/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
+        .headers(Headers.commonHeader)
+        .header("Accept", "application/json, text/plain, */*")
+        .check(substring("task_required_for_event"))
+        .check(status.is(200)))
+
+        .exec(http("XUI_PRL_LA_Transfer_220_010_ReviewDocsTransfer_EventTrigger")
+          .get("/data/internal/cases/#{caseId}/event-triggers/reviewDocuments?ignore-warning=false")
+          .headers(Headers.commonHeader)
+          .header("Accept", "application/json, text/plain, */*")
+          .check(jsonPath("$.event_token").saveAs("event_token"))
+          .check(jsonPath("$.case_fields[2].value.list_items[0].code").saveAs("transfer_code"))
+          .check(jsonPath("$.case_fields[2].value.list_items[0].label").saveAs("transfer_label"))
+          //.check(jsonPath("$.case_fields[0].value[0].id").saveAs("id"))
+          .check(substring("Review documents"))
+          .check(status.is(200)))
+    }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_LA_Transfer_230_ReviewDocsTransfer_Validate") {
+        exec(http("XUI_PRL_LA_Transfer_230_005_ReviewDocsTransfer_Validate")
+          .post("/data/case-types/PRLAPPS/validate?pageId=reviewDocuments1")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/reviewdocs_reviewdocuments1_transfer_validate.json"))
+          .check(jsonPath("$.data.localAuthorityQuarantineDocsList[0].value.localAuthorityQuarantineDocument.document_filename").saveAs("transfer_filename"))
+          .check(jsonPath("$.data.docToBeReviewed").saveAs("docToBeReviewed"))
+          .check(jsonPath("$.data.docLabel").saveAs("docLabel"))
+          .check(substring("otherPartyInTheCaseRevised"))
+          .check(status.is(200)))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_LA_Transfer_240_ReviewDocsTransfer_Validate") {
+        exec(http("XUI_PRL_LA_Transfer_240_005_ReviewDocsTransfer_Validate")
+          .post("/data/case-types/PRLAPPS/validate?pageId=reviewDocuments2")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/reviewdocs_reviewdocuments2_transfer_validate.json"))
+          .check(substring("docToBeReviewed"))
+          .check(status.is(200)))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_LA_Transfer_250_ReviewDocsTransfer_Event") {
+        exec(http("XUI_PRL_LA_Transfer_250_005_ReviewDocsTransfer_Event")
+          .post("/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/reviewdocs_reviewdocuments2_transfer_event.json"))
+          .check(substring("responseToAllegationsOfHarmDocument"))
+          .check(status.is(201)))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
 
   val writeToFile =
     exec { session =>

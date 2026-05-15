@@ -1,0 +1,33 @@
+{
+  "data": {
+    "reviewDocsDynamicList": {
+      "value": {
+        "code": "#{transfer_code}",
+        "label": "#{transfer_label}"
+      },
+      "list_items": [
+        {
+          "code": "#{transfer_code}",
+          "label": "#{transfer_label}"
+        }
+      ]
+    },
+    "tempQuarantineDocumentList": [],
+    "docToBeReviewed": "#{docToBeReviewed}",
+    "docLabel": "#{docLabel}",
+    "reviewDoc": {
+      "document_url": "#{DocumentURL_transfer_cir}",
+      "document_binary_url": "#{DocumentURL_transfer_cir}/binary",
+      "document_filename": "7PageDoc.pdf",
+      "upload_timestamp": "2026-05-14T11:00:51.095881453"
+    },
+    "reviewDecisionYesOrNo": "no"
+  },
+  "event": {
+    "id": "reviewDocuments",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false
+}
