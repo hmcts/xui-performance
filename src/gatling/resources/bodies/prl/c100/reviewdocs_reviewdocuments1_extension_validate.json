@@ -1,0 +1,40 @@
+{
+  "data": {
+    "reviewDocsDynamicList": {
+      "value": {
+        "code": "#{extension_code}",
+        "label": "#{extension_label}"
+      },
+      "list_items": [
+        {
+          "code": "#{extension_code}",
+          "label": "#{extension_label}"
+        }
+      ]
+    },
+    "tempQuarantineDocumentList": []
+  },
+  "event": {
+    "id": "reviewDocuments",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "reviewDocsDynamicList": {
+      "value": {
+        "code": "#{extension_code}",
+        "label": "#{extension_label}"
+      },
+      "list_items": [
+        {
+          "code": "#{extension_code}",
+          "label": "#{extension_label}"
+        }
+      ]
+    },
+    "tempQuarantineDocumentList": []
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
+}

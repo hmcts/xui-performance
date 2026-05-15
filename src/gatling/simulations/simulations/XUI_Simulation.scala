@@ -40,6 +40,9 @@ class XUI_Simulation extends Simulation {
   val LAData = csv("LAData.csv").circular
   val CWData = csv("CWData.csv").circular
   val UserFeederPRL = csv("UserDataPRL.csv").circular
+  val LADataExtension = csv("LADataExtension.csv").circular
+  val LADataTransfer = csv("LADataTransfer.csv").circular
+  val orderData = csv("OrderData.csv").circular
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
@@ -81,7 +84,10 @@ class XUI_Simulation extends Simulation {
 	val caseworkerTargetPerHour: Double = 1000
 	val prlC100BarristerTargetPerHour: Double = 17
 	val prlFL401BarristerTargetPerHour: Double = 11
-  val prlC100LATargetPerHour: Double = 26
+  val prlC100LATargetPerHour: Double = 16
+  val prlC100LATransferTargetPerHour: Double = 5
+  val prlC100LAExtensionTargetPerHour: Double = 5
+  val prlC100LAOrdersTargetPerHour: Double = 16
 
 	val rampUpDurationMins = 5
 	val rampDownDurationMins = 5
@@ -102,7 +108,8 @@ class XUI_Simulation extends Simulation {
 
 	val httpProtocol = http
 		.baseUrl(Environment.baseURL.replace("#{env}", s"${env}"))
-		.inferHtmlResources()
+		//.inferHtmlResources()
+    .inferHtmlResources(AllowList(), DenyList()) //*** ONLY TO BE USED FOR DATA PREP ****
 		.silentResources
 		.header("experimental", "true") //used to send through client id, s2s and bearer tokens. Might be temporary
 
@@ -174,12 +181,6 @@ class XUI_Simulation extends Simulation {
         .exec(CourtAdmin_PRL_C100.CourtAdminListHearing)
         .exec(CourtAdmin_PRL_C100.CourtAdminHearingsTab)
         .exec(XuiHelper.Logout)
-        /*.feed(UserFeederPRLCourtAdmin)
-        .exec(XuiHelper.Homepage)
-        .exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
-        .exec(CourtAdmin_PRL_C100.PathfinderCase)
-        .exec(CourtAdmin_PRL_C100.AddLocalAuthority)
-        .exec(XuiHelper.Logout)*/
     }
 
   /*===============================================================================================
@@ -219,6 +220,74 @@ class XUI_Simulation extends Simulation {
         .exec(XuiHelper.Homepage)
         .exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
         .exec(CourtAdmin_PRL_C100.RemoveLocalAuthority)
+        .exec(XuiHelper.Logout)
+    }
+
+  /*===============================================================================================
+* XUI Add LA to C100 Scenario
+===============================================================================================*/
+  val PRLC100LAExtensionScenario = scenario("***** Private Law LA Tasks *****")
+    .exitBlockOnFail {
+      feed(LADataExtension)
+        .feed(UserFeederPRLCourtAdmin)
+        .exec(_.set("env", s"${env}")
+          .set("caseType", "PRLAPPS"))
+        .exec(XuiHelper.Homepage)
+        .exec(XuiHelper.Login("#{LAUser}", "#{LAPassword}"))
+        .exec(CourtAdmin_PRL_C100.LAOpenCase)
+        .exec(CourtAdmin_PRL_C100.clickParties)
+        .exec(CourtAdmin_PRL_C100.ManageDocsExtensionUpload)
+        .exec(CourtAdmin_PRL_C100.caseFileView_extension)
+        .exec(XuiHelper.Logout)
+        .exec(XuiHelper.Homepage)
+        .exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
+        .exec(CourtAdmin_PRL_C100.LAOpenCase)
+        .exec(CourtAdmin_PRL_C100.ViewTasksExtension)
+        .exec(CourtAdmin_PRL_C100.AssignExtensionTask)
+        .exec(CourtAdmin_PRL_C100.ExtensionTask)
+        .exec(CourtAdmin_PRL_C100.RemoveLocalAuthority)
+        .exec(XuiHelper.Logout)
+    }
+
+
+  /*===============================================================================================
+* XUI Add LA to C100 Scenario
+===============================================================================================*/
+  val PRLC100LATransferScenario = scenario("***** Private Law LA Tasks *****")
+    .exitBlockOnFail {
+      feed(LADataTransfer)
+        .feed(UserFeederPRLCourtAdmin)
+        .exec(_.set("env", s"${env}")
+          .set("caseType", "PRLAPPS"))
+        .exec(XuiHelper.Homepage)
+        .exec(XuiHelper.Login("#{LAUser}", "#{LAPassword}"))
+        .exec(CourtAdmin_PRL_C100.LAOpenCase)
+        .exec(CourtAdmin_PRL_C100.clickParties)
+        .exec(CourtAdmin_PRL_C100.ManageDocsTransferUpload)
+        .exec(CourtAdmin_PRL_C100.caseFileView_transfer)
+        .exec(XuiHelper.Logout)
+        .exec(XuiHelper.Homepage)
+        .exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
+        .exec(CourtAdmin_PRL_C100.LAOpenCase)
+        .exec(CourtAdmin_PRL_C100.ViewTasksTransfer)
+        .exec(CourtAdmin_PRL_C100.AssignTransferTask)
+        .exec(CourtAdmin_PRL_C100.TransferTask)
+        .exec(CourtAdmin_PRL_C100.RemoveLocalAuthority)
+        .exec(XuiHelper.Logout)
+    }
+
+  /*===============================================================================================
+* XUI Add LA to C100 Scenario
+===============================================================================================*/
+  val PRLC100LAOrderScenario = scenario("***** Private Law LA Tasks *****")
+    .exitBlockOnFail {
+      feed(orderData)
+        .feed(UserFeederPRLCourtAdmin)
+        .exec(_.set("env", s"${env}")
+          .set("caseType", "PRLAPPS"))
+        .exec(XuiHelper.Homepage)
+        .exec(XuiHelper.Login("#{userCourtAdmin}", "#{passwordCourtAdmin}"))
+        .exec(CourtAdmin_PRL_Order_C100.CreateDraftOrder)
         .exec(XuiHelper.Logout)
     }
 
@@ -276,6 +345,8 @@ class XUI_Simulation extends Simulation {
         .exec(CourtAdmin_PRL_FL401.CourtAdminServiceApplication)
         .exec(CourtAdmin_PRL_FL401.CourtAdminListHearing)
         .exec(CourtAdmin_PRL_FL401.CourtAdminHearingsTab)
+
+        .exec(CourtAdmin_PRL_FL401.WriteAccessCodesToFile)
         .exec(XuiHelper.Logout)
 
     }
@@ -754,19 +825,27 @@ class XUI_Simulation extends Simulation {
   }
 
   setUp(
-    //PRLC100AddLAScenario.inject(simulationProfile(testType, 100, 100)).pauses(pauseOption),
+    //PRLC100LAOrderScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption),
+    //PRLC100AddLAScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption),
     //PRLC100LAScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption),
+    //PRLC100LAExtensionScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption),
+    //PRLC100LATransferScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption),
     //PRLC100SolicitorScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption),
     //PRLFL401SolicitorScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption),
     //PRLC100AddLAScenario.inject(simulationProfile(testType, 100, 100)).pauses(pauseOption),
     ///PRLC100SolicitorScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption)
     //PRLC100LAScenario.inject(simulationProfile(testType, 1, 1)).pauses(pauseOption)
-    //PRLC100CaseWorkerScenario.inject(simulationProfile(testType, prlC100LATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-    //PRLC100CaseWorkerScenario.inject(simulationProfile(testType, prlC100LATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-    //PRLC100AddLAScenario.inject(simulationProfile(testType, prlC100LATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      //PRLC100LAScenario.inject(simulationProfile(testType, prlC100LATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-  PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-  PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+
+    PRLC100CaseWorkerScenario.inject(simulationProfile(testType, prlC100LATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+    PRLC100CaseWorkerScenario.inject(simulationProfile(testType, prlC100LATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+    PRLC100AddLAScenario.inject(simulationProfile(testType, prlC100LATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+    PRLC100LAScenario.inject(simulationProfile(testType, prlC100LATargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+    PRLC100LAExtensionScenario.inject(simulationProfile(testType, prlC100LAExtensionTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+    PRLC100LATransferScenario.inject(simulationProfile(testType, prlC100LATransferTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+    PRLC100LAOrderScenario.inject(simulationProfile(testType, prlC100LAOrdersTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+
+  //PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+  //PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
     /*PRLC100BarristerScenario.inject(simulationProfile(testType, prlC100BarristerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
     PRLFL401BarristerScenario.inject(simulationProfile(testType, prlFL401BarristerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
     BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),

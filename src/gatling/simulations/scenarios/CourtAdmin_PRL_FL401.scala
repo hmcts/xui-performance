@@ -958,23 +958,25 @@ val CourtAdminHearingsTab =
 
     .pause(MinThinkTime, MaxThinkTime)
 
-}
 
+
+val WriteAccessCodesToFile =
 //Write applicant access code to file
-    // .exec { session =>
-    //   val fw = new BufferedWriter(new FileWriter("FL401caseNumberAndCodeApplicant.csv", true))
-    //   try {
-    //     fw.write(session("caseId").as[String] + "," + session("prlAccessCodeApplicant").as[String] + "\r\n")
-    //   } finally fw.close()
-    //   session
-    // }
-    // //Write respondent access code to file
-    // .exec { session =>
-    //   val fw = new BufferedWriter(new FileWriter("FL401caseNumberAndCodeRespondent.csv", true))
-    //   try {
-    //     fw.write(session("caseId").as[String] + "," + session("prlAccessCodeRespondent").as[String] + "\r\n")
-    //   } finally fw.close()
-    //   session
-    // }
+     exec { session =>
+       val fw = new BufferedWriter(new FileWriter("FL401caseNumberAndCodeApplicant.csv", true))
+       try {
+         fw.write(session("caseId").as[String] + "," + session("prlAccessCodeApplicant").as[String] + "\r\n")
+       } finally fw.close()
+       session
+     }
+     //Write respondent access code to file
+     .exec { session =>
+       val fw = new BufferedWriter(new FileWriter("FL401caseNumberAndCodeRespondent.csv", true))
+       try {
+         fw.write(session("caseId").as[String] + "," + session("prlAccessCodeRespondent").as[String] + "\r\n")
+       } finally fw.close()
+       session
+     }
+}
 
 // -- ADD HEARINGS NAVIGATION AND ADD HEARING 

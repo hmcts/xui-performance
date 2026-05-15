@@ -1,0 +1,50 @@
+{
+  "data": {
+    "daOrderForCaCase": "No",
+    "typeOfC21Order": "",
+    "isTheOrderByConsent": "No",
+    "wasTheOrderApprovedAtHearing": "No",
+    "judgeOrMagistrateTitle": "herHonourJudge",
+    "judgeOrMagistratesLastName": "test",
+    "justiceLegalAdviserFullName": "test",
+    "dateOrderMade": "2026-05-15",
+    "isTheOrderAboutAllChildren": "Yes",
+    "recitalsOrPreamble": "test",
+    "orderDirections": "test"
+  },
+  "event": {
+    "id": "manageOrders",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "manageOrderHeader1": null,
+    "manageOrdersOptions": "createAnOrder",
+    "isSdoSelected": "No",
+    "sdoPreamblesTempList": null,
+    "sdoCafcassOrCymruTempList": null,
+    "sdoLocalAuthorityTempList": null,
+    "sdoCourtTempList": null,
+    "sdoDocumentationAndEvidenceTempList": null,
+    "sdoOtherTempList": null,
+    "listElementsSetToDefaultValue": null,
+    "sdoHearingsAndNextStepsTempList": null,
+    "isInvokedFromTask": "No",
+    "createSelectOrderOptions": "childArrangementsSpecificProhibitedOrder",
+    "selectedOrder": "<span class='heading-h3'>Child arrangements, specific issue or prohibited steps order (C43)\n\n</span>",
+    "daOrderForCaCase": "No",
+    "typeOfC21Order": "",
+    "isTheOrderByConsent": "No",
+    "wasTheOrderApprovedAtHearing": "No",
+    "judgeOrMagistrateTitle": "herHonourJudge",
+    "judgeOrMagistratesLastName": "test",
+    "justiceLegalAdviserFullName": "test",
+    "dateOrderMade": "2026-05-15",
+    "isTheOrderAboutAllChildren": "Yes",
+    "recitalsOrPreamble": "test",
+    "orderDirections": "test"
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
+}
