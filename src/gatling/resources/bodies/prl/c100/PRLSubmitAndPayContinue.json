@@ -1,6 +1,6 @@
 {
   "data": {
-    "paymentServiceRequestReferenceNumber": null
+    "helpWithFees": "No"
   },
   "event": {
     "id": "submitAndPay",
@@ -15,6 +15,7 @@
     },
     "applicantSolicitorEmailAddress": "#{user}",
     "caseworkerEmailAddress": "prl_caseworker_solicitor@mailinator.com",
+    "courtName": "No Court Fetched",
     "solicitorName": "#{C100SolicitorName}",
     "payAgreeStatement": [
       "agree"
@@ -27,7 +28,7 @@
       "document_filename": "#{DocumentFileName}",
       "document_hash": "#{DocumentHash}"
     },
-    "paymentServiceRequestReferenceNumber": null
+    "helpWithFees": "No"
   },
   "event_token": "#{event_token}",
   "ignore_warning": false,
