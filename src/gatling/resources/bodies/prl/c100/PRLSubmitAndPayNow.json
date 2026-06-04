@@ -7,24 +7,20 @@
     },
     "applicantSolicitorEmailAddress": "#{user}",
     "caseworkerEmailAddress": "C100applications@justice.gov.uk",
-    "courtName": "Medway County Court and Family Court",
+    "courtName": "No Court Fetched",
     "solicitorName": "#{C100SolicitorName}",
     "payAgreeStatement": [
       "agree"
     ],
     "feeAmount": "£232.00",
-    "isEngDocGen": null,
-    "submitAndPayDownloadApplicationWelshLink": null,
     "submitAndPayDownloadApplicationLink": {
       "document_url": "#{DocumentUrl}",
       "document_binary_url": "#{DocumentUrl}/binary",
       "document_filename": "#{DocumentFileName}",
-      "document_hash": "#{DocumentHash}",
-      "category_id": null,
-      "document_creation_date": null
+      "document_hash": "#{DocumentHash}"
     },
-    "isWelshDocGen": null,
-    "paymentServiceRequestReferenceNumber": null
+    "submitAndPayDownloadApplicationWelshLink": null,
+    "helpWithFees": "No"
   },
   "event": {
     "id": "submitAndPay",

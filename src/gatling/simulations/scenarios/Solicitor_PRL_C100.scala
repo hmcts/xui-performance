@@ -1000,7 +1000,7 @@ object Solicitor_PRL_C100 {
       exec(Common.caseShareOrgs)
 
       .exec(http("XUI_PRL_C100_440_005_AllegationsOfHarmOther")
-        .post("/data/case-types/PRLAPPS/validate?pageId=allegationsOfHarm4")
+        .post("/data/case-types/PRLAPPS/validate?pageId=allegationsOfHarm5")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -1668,7 +1668,7 @@ object Solicitor_PRL_C100 {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
         .body(ElFileBody("bodies/prl/c100/PRLSubmitAndPayContinue.json"))
-        .check(substring("paymentServiceRequestReferenceNumber")))
+        .check(substring("submitAndPay3")))
 
       .exec(Common.userDetails)
     }
