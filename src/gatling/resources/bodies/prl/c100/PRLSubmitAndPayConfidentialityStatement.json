@@ -7,7 +7,7 @@
     },
     "applicantSolicitorEmailAddress": "#{user}",
     "caseworkerEmailAddress": "prl_caseworker_solicitor@mailinator.com",
-    "courtName": "#{courtName}"
+    "courtName": "No Court Fetched"
   },
   "event": {
     "id": "submitAndPay",
@@ -22,7 +22,7 @@
     },
     "applicantSolicitorEmailAddress": "#{user}",
     "caseworkerEmailAddress": "prl_caseworker_solicitor@mailinator.com",
-    "courtName": "#{courtName}"
+    "courtName": "No Court Fetched"
   },
   "event_token": "#{event_token}",
   "ignore_warning": false,
