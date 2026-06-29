@@ -12,3 +12,4 @@ bin/*
 .settings/*
 .vscode
 .java-version
+.metals
