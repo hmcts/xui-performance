@@ -117,3 +117,10 @@ tasks.register('generateStats', JavaExec) {
 tasks.named('gatlingRun') {
     finalizedBy tasks.named('generateStats')
 }
+
+// Disable Gatling Enterprise packaging task for local Gatling execution
+tasks.configureEach {
+    if (name == "gatlingEnterprisePackage") {
+        enabled = false
+    }
+}
