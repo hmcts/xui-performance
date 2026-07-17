@@ -59,7 +59,7 @@ tasks.register("runSimulation", JavaExec) {
 
     // Add simulation class and results directory
     args += [
-            "-s", "simulations.XUI_Simulation", // <---- SPECIFY YOUR SIMULATION HERE
+            "-s", "simulations.CCNotes_Simulation", // <---- SPECIFY YOUR SIMULATION HERE
             "-rf", layout.buildDirectory.get().asFile.toString() + "/reports/gatling"
     ]
 
