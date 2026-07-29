@@ -11,3 +11,10 @@ java {
 performance {
     simulationClass = 'simulations.XUI_Simulation'
 }
+
+// Disable Gatling Enterprise packaging task for local Gatling execution
+tasks.configureEach {
+    if (name == "gatlingEnterprisePackage") {
+        enabled = false
+    }
+}
