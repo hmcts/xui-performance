@@ -12,3 +12,10 @@ bin/*
 .settings/*
 .vscode
 .java-version
+.cursor/
+.bloop/
+.metals/
+tools/
+converted-backup/
+__pycache__/
+*.pyc

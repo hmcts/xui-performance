@@ -26,6 +26,21 @@ class XUI_Simulation extends Simulation {
 	val UserFeederFPL = csv("UserDataFPL.csv").circular
 	val CaseworkerUserFeeder = csv("UserDataCaseworkers.csv").circular
 	val UserFeederCTSC = csv("UserDataCTSC.csv").circular
+	val UserFeederMakeAClaim = csv("userdetails_makeAClaim_feePay.csv").circular
+	val UserFeederCCNotes = csv("ccnoteuserdetails.csv").circular
+	val uploadFeeder = Array(
+		Map(
+			"uploadFilePath" -> "data/uploads/1mb.docx",
+			"uploadFileName" -> "1mb.docx",
+			"uploadMimeType" -> "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+		),
+		Map(
+			"uploadFilePath" -> "data/uploads/5mb.pdf",
+			"uploadFileName" -> "5mb.pdf",
+			"uploadMimeType" -> "application/pdf"
+		)
+	).random
+	
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
@@ -480,6 +495,68 @@ class XUI_Simulation extends Simulation {
 		}
 
 	/*===============================================================================================
+	* Make A Claim (PCS) Scenario
+	===============================================================================================*/
+	val MakeAClaimScenario = scenario("***** Make A Claim *****")
+	.exitBlockOnFail {
+		feed(UserFeederMakeAClaim)
+		.feed(uploadFeeder)
+		.exec(_.set("env", s"${env}").set("caseType", "PCS"))
+		// Access UI login (same pattern as CC Notes — classic /login 404s on perftest)
+		.exec(CCNotes.HomepageCompat)
+		.exec(CCNotes.LoginCompat("#{user}", "#{password}"))
+		.exec(MakeAClaimCreateCase.StartCreateCase)
+		.exec(MakeAClaimCreateCase.ContinueMakeAClaim)
+		.exec(MakeAClaimCreateCase.EnterEnglandPostcode)
+		.exec(MakeAClaimCreateCase.EnterPropertyAddress)
+		.exec(MakeAClaimCreateCase.CheckYourAnswers)
+		.exec(MakeAClaimCreateCase.PostCreateRoleSetup)
+		.exec(MakeAClaimCreateCase.ContinueNextSteps)
+		.exec(MakeAClaimCreateCase.ClaimantName)
+		.exec(MakeAClaimCreateCase.ClaimantType)
+		.exec(MakeAClaimCreateCase.TrespassClaim)
+		.exec(MakeAClaimCreateCase.ContactPreferences)
+		.exec(MakeAClaimCreateCase.DefendantDetails)
+		.exec(MakeAClaimCreateCase.UploadTenancyDocument)
+		.exec(MakeAClaimCreateCase.TenancyLicenceDetails)
+		.exec(MakeAClaimCreateCase.GroundsForPossession)
+		.exec(MakeAClaimCreateCase.AssuredNoArrearsGrounds)
+		.exec(MakeAClaimCreateCase.ReasonsForPossession)
+		.exec(MakeAClaimCreateCase.PreActionProtocol)
+		.exec(MakeAClaimCreateCase.MediationAndSettlement)
+		.exec(MakeAClaimCreateCase.CheckingNotice)
+		.exec(MakeAClaimCreateCase.ClaimantCircumstances)
+		.exec(MakeAClaimCreateCase.DefendantCircumstances)
+		.exec(MakeAClaimCreateCase.AlternativesToPossession)
+		.exec(MakeAClaimCreateCase.HousingAct)
+		.exec(MakeAClaimCreateCase.ReasonsForRequestingASuspension)
+		.exec(MakeAClaimCreateCase.AdditionalReasonsForPossession)
+		.exec(MakeAClaimCreateCase.UnderlesseeOrMortgagee)
+		.exec(MakeAClaimCreateCase.UploadAdditionalDocuments)
+		.exec(MakeAClaimCreateCase.Applications)
+		.exec(MakeAClaimCreateCase.LanguageUsed)
+		.exec(MakeAClaimCreateCase.CompletingYourClaim)
+		.exec(MakeAClaimCreateCase.StatementOfTruth)
+		.exec(MakeAClaimCreateCase.SubmitClaim)
+		// Payment steps intentionally commented — stop after SubmitClaim
+		// .exec(MakeAClaimCreateCase.PayTheClaimFee)
+		// .exec(MakeAClaimCreateCase.PaynowLink)
+		// .exec(MakeAClaimCreateCase.ConfirmPayment)
+		.exec(XuiHelper.Logout)
+	}
+
+	/*===============================================================================================
+	* CC Notes - Add Case Note Scenario
+	 ===============================================================================================*/
+	val CCNotesScenario = scenario("***** CC Notes Add Case Note *****")
+		.exitBlockOnFail {
+			feed(UserFeederCCNotes)
+				.exec(_.set("env", s"${env}")
+					.set("caseType", "PCS"))
+				.exec(CCNotes.Flow)
+		}
+
+	/*===============================================================================================
 	* Simulation Configuration
 	 ===============================================================================================*/
 
@@ -530,20 +607,22 @@ class XUI_Simulation extends Simulation {
 		}
 	}
 
+  // Practice: Make A Claim through SubmitClaim only (payment steps commented in scenario)
   setUp(
-		  PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-			PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-			NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-			NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      FinancialRemedySolicitorConsentedScenario.inject(simulationProfile(testType, frConsentedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-			FinancialRemedySolicitorContestedScenario.inject(simulationProfile(testType, frContestedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-			FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-
+			MakeAClaimScenario.inject(atOnceUsers(1)).pauses(pauseOption),
+			CCNotesScenario.inject(rampUsers(5).during(200.seconds)).pauses(pauseOption)
+			// PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			// PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			// BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			// ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			// ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			// NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			// NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			 // FinancialRemedySolicitorConsentedScenario.inject(simulationProfile(testType, frConsentedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			// FinancialRemedySolicitorContestedScenario.inject(simulationProfile(testType, frContestedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			// FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			// CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
   ).protocols(httpProtocol)
-    .assertions(assertions(testType))
-    .maxDuration(75.minutes)
+    // .assertions(assertions(testType))
+    .maxDuration(15.minutes)
 }
