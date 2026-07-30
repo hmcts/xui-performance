@@ -1,3 +1,7 @@
+pluginManagement {
+    includeBuild('common/common-performance/build-logic')
+}
+
 rootProject.name = 'xui-performance'
 
 include ':common-performance'
