@@ -120,6 +120,11 @@ val CheckYourAnswers =
       }"""))
       .check(status.is(201))
       .check(jsonPath("$.id").saveAs("caseId")))
+
+      .exec { session =>
+      println("CREATED caseId=" + session("caseId").as[String])
+      session
+    }
   }
   val PostCreateRoleSetup =
   group("MakeAClaim_07_PostCreateRoleSetup") {
@@ -2441,7 +2446,7 @@ val ReasonsForRequestingASuspension =
       }"""))
       .check(status.is(201)))
   }
-  // --- Payment steps below are kept but not run (commented out of MakeAClaimScenario after SubmitClaim) ---
+  // --- Payment steps (you will fix PayTheClaimFee extraction yourself) ---
 val PayTheClaimFee =
   group("MakeAClaim_35_PayTheClaimFee") {
     tryMax(15) {
@@ -2451,10 +2456,16 @@ val PayTheClaimFee =
           .header("Accept", "application/json, text/plain, */*")
           .check(status.is(200))
           .check(bodyString.saveAs("paymentGroupsBody"))
-          .check(substring("service_request")))
+        .check(
+          bodyString.transform { body =>
+            val pattern = """"service_request_reference"\s*:\s*"([^"]+)"""".r
+            pattern.findFirstMatchIn(body).map(_.group(1)).getOrElse("")
+          }.not("").saveAs("serviceRequestId")
+        ))
         .exec { session =>
           println("caseId=" + session("caseId").as[String])
-          println("PAYMENTGROUPS BODY: " + session("paymentGroupsBody").as[String])
+          println("PAYMENTGROUPS BODY: " + session("paymentGroupsBody").asOption[String].getOrElse("<empty>"))
+          println("serviceRequestId=" + session("serviceRequestId").asOption[String].getOrElse("<missing>"))
           session
         }
     }

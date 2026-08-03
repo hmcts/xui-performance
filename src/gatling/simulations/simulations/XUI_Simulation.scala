@@ -503,8 +503,8 @@ class XUI_Simulation extends Simulation {
 		.feed(uploadFeeder)
 		.exec(_.set("env", s"${env}").set("caseType", "PCS"))
 		// Access UI login (same pattern as CC Notes — classic /login 404s on perftest)
-		.exec(CCNotes.HomepageCompat)
-		.exec(CCNotes.LoginCompat("#{user}", "#{password}"))
+		.exec(XuiHelper.Homepage)
+		.exec(XuiHelper.Login("#{user}", "#{password}"))
 		.exec(MakeAClaimCreateCase.StartCreateCase)
 		.exec(MakeAClaimCreateCase.ContinueMakeAClaim)
 		.exec(MakeAClaimCreateCase.EnterEnglandPostcode)
@@ -538,10 +538,9 @@ class XUI_Simulation extends Simulation {
 		.exec(MakeAClaimCreateCase.CompletingYourClaim)
 		.exec(MakeAClaimCreateCase.StatementOfTruth)
 		.exec(MakeAClaimCreateCase.SubmitClaim)
-		// Payment steps intentionally commented — stop after SubmitClaim
-		// .exec(MakeAClaimCreateCase.PayTheClaimFee)
-		// .exec(MakeAClaimCreateCase.PaynowLink)
-		// .exec(MakeAClaimCreateCase.ConfirmPayment)
+		.exec(MakeAClaimCreateCase.PayTheClaimFee)
+		.exec(MakeAClaimCreateCase.PaynowLink)
+		.exec(MakeAClaimCreateCase.ConfirmPayment)
 		.exec(XuiHelper.Logout)
 	}
 
@@ -555,7 +554,19 @@ class XUI_Simulation extends Simulation {
 					.set("caseType", "PCS"))
 				.exec(CCNotes.Flow)
 		}
+	/*===============================================================================================
+	* CC Case LinkScenario
+	===============================================================================================*/
+	val CCCaseLinkScenario = scenario("***** CC Case Link *****")
+	.exitBlockOnFail {
+		feed(UserFeederMakeAClaim)
+		.feed(uploadFeeder)
+		.exec(_.set("env", s"${env}").set("caseType", "PCS"))
+		// Access UI login (same pattern as CC Notes — classic /login 404s on perftest)
+		.exec(XuiHelper.Homepage)
+		.exec(XuiHelper.Login("#{user}", "#{password}"))
 
+	}
 	/*===============================================================================================
 	* Simulation Configuration
 	 ===============================================================================================*/
@@ -609,8 +620,8 @@ class XUI_Simulation extends Simulation {
 
   // Practice: Make A Claim through SubmitClaim only (payment steps commented in scenario)
   setUp(
-			MakeAClaimScenario.inject(atOnceUsers(1)).pauses(pauseOption),
-			CCNotesScenario.inject(rampUsers(5).during(200.seconds)).pauses(pauseOption)
+			//MakeAClaimScenario.inject(atOnceUsers(1)).pauses(pauseOption),
+			//CNotesScenario.inject(rampUsers(5).during(200.seconds)).pauses(pauseOption)
 			// PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			// PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			// BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
@@ -622,6 +633,8 @@ class XUI_Simulation extends Simulation {
 			// FinancialRemedySolicitorContestedScenario.inject(simulationProfile(testType, frContestedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			// FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 			// CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+			//SMOKE
+			  CCNotesScenario.inject(atOnceUsers(1)).pauses(pauseOption)
   ).protocols(httpProtocol)
     // .assertions(assertions(testType))
     .maxDuration(15.minutes)
