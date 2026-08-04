@@ -160,14 +160,14 @@ object Solicitor_PRL_C100 {
 
     //https://manage-case.perftest.platform.hmcts.net/data/internal/cases/1785422065824463/event-triggers/selectApplicationType?ignore-warning=false
 
-    group("XUI_PRL_C100_100_CreateTypeOfApplicationEvent") {
-      exec(http("XUI_PRL_C100_100_005_CreateTypeOfApplicationWACheckTask")
+    group("XUI_PRL_C100_070_CreateTypeOfApplicationEvent") {
+      exec(http("XUI_PRL_C100_070_005_CreateTypeOfApplicationWACheckTask")
         .get("/workallocation/case/tasks/#{caseId}/event/selectApplicationType/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
         .headers(Headers.navigationHeader)
         .header("accept", "application/json")
         .check(substring("task_required_for_event")))
 
-      exec(http("XUI_PRL_C100_100_010_CreateTypeOfApplicationEvent")
+      exec(http("XUI_PRL_C100_070_010_CreateTypeOfApplicationEvent")
         .get("/data/internal/cases/#{caseId}/event-triggers/selectApplicationType?ignore-warning=false")
         .headers(Headers.navigationHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -183,7 +183,7 @@ object Solicitor_PRL_C100 {
     * Type of Application Profile
     ======================================================================================*/
 
-    .group("XUI_PRL_C100_110_TypeOfApplicationProfile") {
+    .group("XUI_PRL_C100_080_TypeOfApplicationProfile") {
       exec(Common.profile)
     }
 
@@ -193,8 +193,8 @@ object Solicitor_PRL_C100 {
     * What order(s) are you applying for? - Child Arrangements, Spend Time with Order
     ======================================================================================*/
 
-    .group("XUI_PRL_C100_120_SelectOrders") {
-      exec(http("XUI_PRL_C100_120_005_SelectOrders")
+    .group("XUI_PRL_C100_090_SelectOrders") {
+      exec(http("XUI_PRL_C100_090_005_SelectOrders")
         .post("/data/case-types/PRLAPPS/validate?pageId=selectApplicationType1")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -211,8 +211,8 @@ object Solicitor_PRL_C100 {
     * Draft Consent Order Upload
     ======================================================================================*/
 
-    .group("XUI_PRL_C100_130_ConsentOrderUpload") {
-      exec(http("XUI_PRL_C100_130_005_ConsentOrderUpload")
+    .group("XUI_PRL_C100_100_ConsentOrderUpload") {
+      exec(http("XUI_PRL_C100_100_005_ConsentOrderUpload")
         .post("/documents")
         .headers(Headers.commonHeader)
         .header("accept", "application/json, text/plain, */*")
@@ -235,8 +235,8 @@ object Solicitor_PRL_C100 {
     * Do you have a draft consent order? - Yes
     ======================================================================================*/
 
-    .group("XUI_PRL_C100_140_ConsentOrder") {
-      exec(http("XUI_PRL_C100_140_005_ConsentOrder")
+    .group("XUI_PRL_C100_110_ConsentOrder") {
+      exec(http("XUI_PRL_C100_110_005_ConsentOrder")
         .post("/data/case-types/PRLAPPS/validate?pageId=selectApplicationType2")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -249,8 +249,8 @@ object Solicitor_PRL_C100 {
 
     .pause(MinThinkTime, MaxThinkTime)
 
-    .group("XUI_PRL_C100_145_PermissionUpload") {
-        exec(http("XUI_PRL_C100_145_005_PermissionUpload")
+    .group("XUI_PRL_C100_120_PermissionUpload") {
+        exec(http("XUI_PRL_C100_120_005_PermissionUpload")
           .post("/documents")
           .headers(Headers.commonHeader)
           .header("accept", "application/json, text/plain, */*")
@@ -273,8 +273,8 @@ object Solicitor_PRL_C100 {
     * Have you applied to the court for permission to make this application? - Yes
     ======================================================================================*/
 
-    .group("XUI_PRL_C100_150_PermissionForApplication") {
-      exec(http("XUI_PRL_C100_150_005_PermissionForApplication")
+    .group("XUI_PRL_C100_130_PermissionForApplication") {
+      exec(http("XUI_PRL_C100_130_005_PermissionForApplication")
         .post("/data/case-types/PRLAPPS/validate?pageId=selectApplicationType3")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -291,8 +291,8 @@ object Solicitor_PRL_C100 {
     * Provide Brief Details of Application
     ======================================================================================*/
 
-    .group("XUI_PRL_C100_160_ProvideBriefDetails") {
-      exec(http("XUI_PRL_C100_160_005_ProvideBriefDetails")
+    .group("XUI_PRL_C100_140_ProvideBriefDetails") {
+      exec(http("XUI_PRL_C100_140_005_ProvideBriefDetails")
         .post("/data/case-types/PRLAPPS/validate?pageId=selectApplicationType4")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -309,8 +309,8 @@ object Solicitor_PRL_C100 {
     * Check Your Answers
     ======================================================================================*/
 
-    .group("XUI_PRL_C100_170_CheckYourAnswers") {
-      exec(http("XUI_PRL_C100_170_005_CheckYourAnswers")
+    .group("XUI_PRL_C100_150_CheckYourAnswers") {
+      exec(http("XUI_PRL_C100_150_005_CheckYourAnswers")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -319,7 +319,7 @@ object Solicitor_PRL_C100 {
         .check(substring("applicationPermissionRequired"))
         .check(jsonPath("$.state").is("AWAITING_SUBMISSION_TO_HMCTS")))
 
-      .exec(http("XUI_PRL_C100_170_010_ViewCase")
+      .exec(http("XUI_PRL_C100_150_010_ViewCase")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -387,7 +387,7 @@ object Solicitor_PRL_C100 {
     ======================================================================================*/
 
     .group("XUI_PRL_C100_210_HearingUrgencyCheckYourAnswers") {
-      exec(http("XUI_PRL_C100_320_005_HearingUrgencyCheckYourAnswers")
+      exec(http("XUI_PRL_C100_210_005_HearingUrgencyCheckYourAnswers")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -716,8 +716,8 @@ object Solicitor_PRL_C100 {
     * MIAM Policy Submit
     ======================================================================================*/
 
-    .group("XUI_PRL_C100_380_MIAMSubmitEvent") {
-      exec(http("XUI_PRL_C100_380_005_MIAMSubmitEvent")
+    .group("XUI_PRL_C100_370_MIAMSubmitEvent") {
+      exec(http("XUI_PRL_C100_370_005_MIAMSubmitEvent")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
@@ -725,7 +725,7 @@ object Solicitor_PRL_C100 {
         .body(ElFileBody("bodies/prl/c100/PRLMIAMDetailsSubmit.json"))
         .check(jsonPath("$.callback_response_status_code").is("200")))
 
-      .exec(http("XUI_PRL_C100_380_010_MIAMViewCase")
+      .exec(http("XUI_PRL_C100_370_010_MIAMViewCase")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
@@ -1123,14 +1123,14 @@ object Solicitor_PRL_C100 {
 
   val ChildrenAndOtherPeople = 
 
-    group("XUI_PRL_580_ChildrenAndOtherPeople") {
+    group("XUI_PRL_C100_580_ChildrenAndOtherPeople") {
       exec(http("XUI_PRL_C100_580_005_ChildrenAndOtherPeopleWACheckTask")
         .get("/workallocation/case/tasks/#{caseId}/event/childrenAndOtherPeople/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
         .headers(Headers.navigationHeader)
         .header("accept", "application/json")
         .check(substring("task_required_for_event")))
 
-      .exec(http("XUI_PRL_580_010_ChildrenAndOtherPeople")
+      .exec(http("XUI_PRL_C100_580_010_ChildrenAndOtherPeople")
         .get("/data/internal/cases/#{caseId}/event-triggers/childrenAndOtherPeople?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -1148,8 +1148,8 @@ object Solicitor_PRL_C100 {
         
     .pause(MinThinkTime, MaxThinkTime)
 
-    .group("XUI_PRL_590_ChildrenAndOtherPeopleValidate") {
-      exec(http("XUI_PRL_590_005_ChildrenAndOtherPeopleValidate")
+    .group("XUI_PRL_C100_590_ChildrenAndOtherPeopleValidate") {
+      exec(http("XUI_PRL_C100_590_005_ChildrenAndOtherPeopleValidate")
         .post("/data/case-types/PRLAPPS/validate?pageId=childrenAndOtherPeople1")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
@@ -1160,8 +1160,8 @@ object Solicitor_PRL_C100 {
       
     .pause(MinThinkTime, MaxThinkTime)
 
-    .group("XUI_PRL_600_ChildrenAndOtherPeopleSubmit") {
-      exec(http("XUI_PRL_600_005_ChildrenAndOtherPeopleSubmit")
+    .group("XUI_PRL_C100_600_ChildrenAndOtherPeopleSubmit") {
+      exec(http("XUI_PRL_C100_600_005_ChildrenAndOtherPeopleSubmit")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -1169,7 +1169,7 @@ object Solicitor_PRL_C100 {
         .body(ElFileBody("bodies/prl/c100/PRLChildrenAndOtherPeopleSubmit.json"))
         .check(substring("AWAITING_SUBMISSION_TO_HMCTS")))
 
-      .exec(http("XUI_PRL_600_010_ChildrenAndOtherPeopleSubmit")
+      .exec(http("XUI_PRL_C100_600_010_ChildrenAndOtherPeopleSubmit")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
@@ -1446,14 +1446,14 @@ object Solicitor_PRL_C100 {
     * Click on the Hearings tab to view any Hearings
     ======================================================================================*/
 
-    group("XUI_PRL_C100_710_HearingsTab") {
-      exec(http("XUI_PRL_C100_710_GetHearings")
+    group("XUI_PRL_C100_730_HearingsTab") {
+      exec(http("XUI_PRL_C100_730_005_GetHearings")
         .get("/api/hearings/getHearings?caseId=#{caseId}")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*")
         .check(status.in(200, 403)))
 
-      .exec(http("XUI_PRL_C100_710_GetHearingsJurisdiction")
+      .exec(http("XUI_PRL_C100_730_010_GetHearingsJurisdiction")
         .post("/api/hearings/loadServiceHearingValues?jurisdictionId=PRIVATELAW")
         .headers(Headers.commonHeader)
         .header("Content-Type", "application/json; charset=utf-8")
@@ -1462,12 +1462,12 @@ object Solicitor_PRL_C100 {
         .body(StringBody("""{"caseReference":"#{caseId}"}"""))
         .check(substring("hearing-facilities")))
 
-      .exec(http("XUI_PRL_C100_710_GetRoleAssignments")
+      .exec(http("XUI_PRL_C100_730_015_GetRoleAssignments")
         .get("/api/user/details?refreshRoleAssignments=undefined")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*"))
 
-      .exec(http("XUI_PRL_C100_710_GetHearingTypes")
+      .exec(http("XUI_PRL_C100_730_020_GetHearingTypes")
         .get("/api/prd/lov/getLovRefData?categoryId=HearingType&serviceId=ABA5&isChildRequired=N")
         .headers(Headers.commonHeader)
         .header("Accept", "application/json, text/plain, */*")
