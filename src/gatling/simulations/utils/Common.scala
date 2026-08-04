@@ -64,6 +64,7 @@ object Common {
   }
   //Saves partyId
   def savePartyId: CheckBuilder[JsonPathCheckType, JsonNode] = jsonPath("$.case_fields[*].value[*].value.party.partyId").saveAs("partyId")
+  def savePartyIds: CheckBuilder[JsonPathCheckType, JsonNode] = jsonPath("$.case_fields[?(@.id=='respondents')].value[*].value.partyId").findAll.saveAs("partyIds")
 
   //Saves user ID
   def saveId: CheckBuilder[JsonPathCheckType, JsonNode] = jsonPath("$.case_fields[*].value[0].id").saveAs("id")

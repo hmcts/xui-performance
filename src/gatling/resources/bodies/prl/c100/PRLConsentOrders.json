@@ -4,8 +4,7 @@
     "draftConsentOrderFile": {
       "document_url": "#{DocumentURL}",
       "document_binary_url": "#{DocumentURL}/binary",
-      "document_filename": "3MB.pdf",
-      "document_hash": "#{documentHash}"
+      "document_filename": "3MB.pdf"
     }
   },
   "event": {
@@ -23,8 +22,7 @@
     "draftConsentOrderFile": {
       "document_url": "#{DocumentURL}",
       "document_binary_url": "#{DocumentURL}/binary",
-      "document_filename": "3MB.pdf",
-      "document_hash": "#{documentHash}"
+      "document_filename": "3MB.pdf"
     }
   },
   "event_token": "#{event_token}",
