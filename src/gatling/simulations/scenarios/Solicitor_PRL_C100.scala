@@ -158,8 +158,6 @@ object Solicitor_PRL_C100 {
     * Click on 'Type of Application' link
     ======================================================================================*/
 
-    //https://manage-case.perftest.platform.hmcts.net/data/internal/cases/1785422065824463/event-triggers/selectApplicationType?ignore-warning=false
-
     group("XUI_PRL_C100_070_CreateTypeOfApplicationEvent") {
       exec(http("XUI_PRL_C100_070_005_CreateTypeOfApplicationWACheckTask")
         .get("/workallocation/case/tasks/#{caseId}/event/selectApplicationType/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
