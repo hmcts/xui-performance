@@ -1392,6 +1392,54 @@ object Solicitor_PRL_C100 {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+    val DummyPaymentConfirmation = 
+
+      /*======================================================================================
+    * Click on 'Dummy Payment Confirmation' Next Step Dropdown
+    ======================================================================================*/
+
+    group("XUI_PRL_C100_710_DummyPaymentConfirmation") {
+      exec(http("XUI_PRL_C100_710_005_DummyPaymentConfirmation")
+        .get("/workallocation/case/tasks/#{caseId}/event/testingSupportPaymentSuccessCallback/caseType/PRLAPPS/jurisdiction/PRIVATELAW")
+        .headers(Headers.navigationHeader)
+        .header("accept", "application/json")
+        .check(substring("task_required_for_event")))
+
+      .exec(http("XUI_PRL_C100_710_010_DummyPaymentConfirmation")
+        .get("/data/internal/cases/#{caseId}/event-triggers/testingSupportPaymentSuccessCallback?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.id").is("testingSupportPaymentSuccessCallback")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    * Select make the payment
+    ======================================================================================*/
+
+    .group("XUI_PRL_C100_720_005_DummyPaymentConfirmationEvent") {
+      exec(http("XUI_PRL_C100_720_005_DummyPaymentConfirmationEvent")
+        .post("/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/prl/c100/PRLSubmitDummyPayment.json"))
+        .check(jsonPath("$.state").is("SUBMITTED_NOT_PAID")))
+
+      .exec(http("XUI_PRL_C100_720_010_DummyPaymentConfirmationViewCase")
+        .get("/data/internal/cases/#{caseId}")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .check(substring("Submitted")))
+
+      .exec(Common.userDetails)
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
     val HearingsTab = 
 
     /*======================================================================================
