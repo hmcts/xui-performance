@@ -107,7 +107,7 @@ class XUI_Simulation extends Simulation {
 			.exec(Solicitor_PRL_C100.TypeOfApplication)
 			.exec(Solicitor_PRL_C100.HearingUrgency)
 			.exec(Solicitor_PRL_C100.ApplicantDetails)
-			.exec(Solicitor_PRL_C100.RespondentDetails) // Temp order swap due to bug
+			.exec(Solicitor_PRL_C100.RespondentDetails)
 			.exec(Solicitor_PRL_C100.ChildDetails)
 			.exec(Solicitor_PRL_C100.AllegationsOfHarm)
 			.exec(Solicitor_PRL_C100.OtherChildrenNotInCase)
@@ -117,12 +117,11 @@ class XUI_Simulation extends Simulation {
 			.exec(Solicitor_PRL_C100.ChildrenAndOtherPeople)
 			.exec(Solicitor_PRL_C100.MIAM)
 			.exec(Solicitor_PRL_C100.ViewPdfApplication)
-			//.exec(Solicitor_PRL_C100.ApplicantDetails)
 			.exec(Solicitor_PRL_C100.SubmitAndPay)
 //			.exec(Solicitor_PRL_C100.HearingsTab)
 			.exec(XuiHelper.Logout)
 			.exec { session =>
-				println(s"[FAILED] CaseId: ${session("caseId").as[String]}")			
+				println(s"[PASSED] CaseId: ${session("caseId").as[String]}")			
 				session
 				}
 		}
