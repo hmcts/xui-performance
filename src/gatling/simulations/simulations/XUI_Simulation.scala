@@ -118,6 +118,7 @@ class XUI_Simulation extends Simulation {
 			.exec(Solicitor_PRL_C100.MIAM)
 			.exec(Solicitor_PRL_C100.ViewPdfApplication)
 			.exec(Solicitor_PRL_C100.SubmitAndPay)
+			.exec(Solicitor_PRL_C100.DummyPaymentConfirmation)
 //			.exec(Solicitor_PRL_C100.HearingsTab)
 			.exec(XuiHelper.Logout)
 			.exec { session =>
