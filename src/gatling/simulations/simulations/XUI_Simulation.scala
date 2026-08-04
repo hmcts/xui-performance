@@ -78,7 +78,7 @@ class XUI_Simulation extends Simulation {
 	val pauseOption: PauseType = debugMode match {
 		case "off" if testType == "perftest" => constantPauses
 		case "off" if testType == "pipeline" => customPauses(pipelinePausesMillis)
-		case _ => constantPauses//disabledPauses
+		case _ => disabledPauses
 	}
 
 	val httpProtocol = http
@@ -121,17 +121,7 @@ class XUI_Simulation extends Simulation {
 			.exec(Solicitor_PRL_C100.DummyPaymentConfirmation)
 //			.exec(Solicitor_PRL_C100.HearingsTab)
 			.exec(XuiHelper.Logout)
-			.exec { session =>
-				println(s"[PASSED] CaseId: ${session("caseId").as[String]}")			
-				session
-				}
 		}
-		.exec { session =>
-  			if (session.isFailed) {
-    		println(s"[FAILED] CaseId: ${session("caseId").as[String]}")
-  			}
-  			session
-			}
 
 	/*===============================================================================================
 	* XUI Solicitor Private Law FL401 Scenario
