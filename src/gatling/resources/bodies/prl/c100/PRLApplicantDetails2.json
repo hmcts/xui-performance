@@ -651,7 +651,7 @@
             "OrganisationName": null
         }
       },
-      "id": "0b22acf2-7e0e-4c15-a889-e5adfa13e00b"
+      "id": "#{applicantId}"
       },
       {
         "value": {
@@ -677,7 +677,7 @@
           "isDateOfBirthUnknown": null,
           "isAddressUnknown": null,
           "landline": null,
-	  "isPartyIdentityConfidential": null,
+	        "isPartyIdentityConfidential": null,
           "relationshipToChildren": null,
           "isDateOfBirthKnown": null,
           "isCurrentAddressKnown": null,
@@ -1964,7 +1964,7 @@
             "OrganisationName": null
           }
         },
-        "id": "0b22acf2-7e0e-4c15-a889-e5adfa13e00b"
+        "id": "#{applicantId}"
       },
       {
         "value": {
@@ -1990,7 +1990,7 @@
           "isDateOfBirthUnknown": null,
           "isAddressUnknown": null,
           "landline": null,
-	"isPartyIdentityConfidential": null,
+	        "isPartyIdentityConfidential": null,
           "relationshipToChildren": null,
           "isDateOfBirthKnown": null,
           "isCurrentAddressKnown": null,
