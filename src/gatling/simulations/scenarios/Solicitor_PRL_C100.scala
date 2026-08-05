@@ -423,8 +423,8 @@ object Solicitor_PRL_C100 {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
-        .check(jsonPath("$.data.applicants[0].id").optional.saveAs("applicantId1"))
-        .check(jsonPath("$.data.applicants[1].id").optional.saveAs("applicantId2"))
+        .check(jsonPath("$.case_fields[?(@.id=='applicants')].value[0].id").saveAs("applicantId"))
+        .check(jsonPath("$.case_fields[?(@.id=='applicants')].value[1].id").optional.saveAs("applicantIdTwo"))     
         .check(jsonPath("$.id").is("applicantsDetails")))
     }
     .pause(MinThinkTime, MaxThinkTime)
