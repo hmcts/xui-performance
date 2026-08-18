@@ -21,7 +21,6 @@ object Common {
   val patternMonth = DateTimeFormatter.ofPattern("MM")
   val patternYear = DateTimeFormatter.ofPattern("yyyy")
   val patternReference = DateTimeFormatter.ofPattern("d MMM yyyy")
-  val yearMonthDay = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
   def randomString(length: Int) = {
     rnd.alphanumeric.filter(_.isLetter).take(length).mkString
@@ -38,27 +37,7 @@ object Common {
   def getMonth(): String = {
     (1 + rnd.nextInt(12)).toString.format(patternMonth).reverse.padTo(2, '0').reverse //pads single-digit dates with a leading zero
   }
-  
-  //CurrentDate
-  def getDate(): String = {
-    now.format(yearMonthDay)
-  }
-  //CurrentYear
-  def getCurrentYear(): String = {
-    now.format(patternYear)
-  }
-  //CurrentMonth
-  def getCurrentMonth(): String = {
-    now.format(patternMonth)
-  }
-  //CurrentDay
-  def getCurrentDay(): String = {
-    now.format(patternDay)
-  }
-  // //Date +2 Months
-  def getFutureDate(): String = {
-    now.plusMonths(2).format(yearMonthDay)
-  }
+
   //Date of Marriage >= 30 years
   def getMarriageYear(): String = {
     now.minusYears(30 + rnd.nextInt(30)).format(patternYear)
@@ -85,6 +64,7 @@ object Common {
   }
   //Saves partyId
   def savePartyId: CheckBuilder[JsonPathCheckType, JsonNode] = jsonPath("$.case_fields[*].value[*].value.party.partyId").saveAs("partyId")
+  def savePartyIds: CheckBuilder[JsonPathCheckType, JsonNode] = jsonPath("$.case_fields[?(@.id=='respondents')].value[*].value.partyId").findAll.saveAs("partyIds")
 
   //Saves user ID
   def saveId: CheckBuilder[JsonPathCheckType, JsonNode] = jsonPath("$.case_fields[*].value[0].id").saveAs("id")
@@ -112,44 +92,46 @@ object Common {
       .header("accept", "application/json, text/plain, */*")
       .check(substring("""{"healthState":true}""")))
 
-  val activity = exec {session => session}
-    //exec(http("XUI_Common_000_ActivityOptions")
-    //  .options("/activity/cases/#{caseId}/activity")
-    //  .headers(Headers.commonHeader)
-    //  .header("accept", "application/json, text/plain, */*")
-    //  .header("sec-fetch-site", "same-site")
-    //  .check(status.in(200, 304, 403)))
+  val activity =
+    exec(http("XUI_Common_000_ActivityOptions")
+      .options("/activity/cases/#{caseId}/activity")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .header("sec-fetch-site", "same-site")
+      .check(status.in(200, 304, 403)))
 
-  val caseActivityGet = exec {session => session}
-    //exec(http("XUI_Common_000_ActivityOptions")
-    //  .options("/activity/cases/#{caseId}/activity")
-    //  .headers(Headers.commonHeader)
-    //  .header("accept", "application/json, text/plain, */*")
-    //  .header("sec-fetch-site", "same-site")
-    //  .check(status.in(200, 304, 403)))
+  val caseActivityGet =
+    exec(http("XUI_Common_000_ActivityOptions")
+      .options(Environment.ccdGatewayURL + "/activity/cases/#{caseId}/activity")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .header("sec-fetch-site", "same-site")
+      .check(status.in(200, 304, 403)))
 
-    //.exec(http("XUI_Common_000_ActivityGet")
-    //  .get("/activity/cases/#{caseId}/activity")
-    //  .headers(Headers.commonHeader)
-    //  .header("accept", "application/json, text/plain, */*")
-    //  .header("sec-fetch-site", "same-site")
-    //  .check(status.in(200, 304, 403)))
+    .exec(http("XUI_Common_000_ActivityGet")
+      .get(Environment.ccdGatewayURL + "/activity/cases/#{caseId}/activity")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .header("sec-fetch-site", "same-site")
+      .header("Authorization", "Bearer #{authToken}")
+      .check(status.in(200, 304, 403)))
 
-  val caseActivityPost = exec {session => session}
-    //exec(http("XUI_Common_000_ActivityOptions")
-    //  .options("/activity/cases/#{caseId}/activity")
-    //  .headers(Headers.commonHeader)
-    //  .header("accept", "application/json, text/plain, */*")
-    //  .header("sec-fetch-site", "same-site")
-    //  .check(status.in(200, 304, 403)))
+  val caseActivityPost =
+    exec(http("XUI_Common_000_ActivityOptions")
+      .options(Environment.ccdGatewayURL + "/activity/cases/#{caseId}/activity")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .header("sec-fetch-site", "same-site")
+      .check(status.in(200, 201, 304, 403)))
 
-    //.exec(http("XUI_Common_000_ActivityPost")
-    //  .post("/activity/cases/#{caseId}/activity")
-    //  .headers(Headers.commonHeader)
-    //  .header("accept", "application/json, text/plain, */*")
-    //  .header("sec-fetch-site", "same-site")
-    //  .body(StringBody("{\n  \"activity\": \"view\"\n}"))
-    //  .check(status.in(200, 201, 304, 403)))
+    .exec(http("XUI_Common_000_ActivityPost")
+      .post(Environment.ccdGatewayURL + "/activity/cases/#{caseId}/activity")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json, text/plain, */*")
+      .header("sec-fetch-site", "same-site")
+      .header("Authorization", "Bearer #{authToken}")
+      .body(StringBody("""{"activity": "view"}"""))
+      .check(status.in(200, 201, 304, 403)))
 
   val configurationui =
     exec(http("XUI_Common_000_ConfigurationUI")

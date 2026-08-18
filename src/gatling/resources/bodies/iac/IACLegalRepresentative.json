@@ -1,83 +1,88 @@
 {
-  "data": {
-     "legalRepCompany": "#{orgname}",
-     "legalRepName": "John",
-     "legalRepReferenceNumber": "123",
-     "isFeePaymentEnabled": null,
-     "isRemissionsEnabled": null
-  },
-  "event": {
-     "id": "startAppeal",
-     "summary": "",
-     "description": ""
-  },
-  "event_data": {
-     "isOutOfCountryEnabled": "Yes",
-     "checklist": {
-        "checklist2": [
-           "isNotDetained"
-        ],
-        "checklist7": [
-           "isNotEUDecision"
-        ]
-     },
-     "appellantInUk": "Yes",
-     "homeOfficeReferenceNumber": "123456789",
-     "homeOfficeDecisionDate": "#{currentDate}",
-     "uploadTheNoticeOfDecisionDocs": [
-        {
-           "value": {
-              "description": "test doc 1",
-              "document": {
-                 "document_url": "#{DocumentURL1}",
-                 "document_binary_url": "#{DocumentURL1}/binary",
-                 "document_filename": "3MB.pdf",
-                 "document_hash": "#{DocumentHash}"
-              }
-           },
-           "id": null
-        }
-     ],
-     "appellantTitle": "Mr",
-     "appellantGivenNames": "#{firstName}",
-     "appellantFamilyName": "#{lastName}",
-     "appellantDateOfBirth": "#{dobYear}-#{dobMonth}-#{dobDay}",
-     "appellantStateless": "hasNationality",
-     "appellantNationalities": [
-        {
-           "value": {
-              "code": "AF"
-           },
-           "id": null
-        }
-     ],
-     "appellantHasFixedAddress": "Yes",
-     "appellantAddress": {
-        "AddressLine1": "#{addressLines(0)}",
-        "AddressLine2": "#{addressLines(1)}",
-        "AddressLine3": "",
-        "PostTown": "#{addressLines(2)}",
-        "County": "",
-        "PostCode": "#{addressLines(3)}",
-        "Country": "United Kingdom"
-     },
-     "contactPreference": "wantsEmail",
-     "email": "iacperftest@test.com",
-     "appealType": "refusalOfHumanRights",
-     "appealGroundsDecisionHumanRightsRefusal": {
-        "values": [
-           "humanRightsRefusal"
-        ]
-     },
-     "deportationOrderOptions": "No",
-     "hasNewMatters": "No",
-     "hasOtherAppeals": "No",
-     "legalRepCompany": "test co",
-     "legalRepName": "John",
-     "legalRepReferenceNumber": "123",
-     "isFeePaymentEnabled": null,
-     "isRemissionsEnabled": null
-  },
+   "data": {
+      "legalRepCompany": "#{orgname}",
+      "legalRepName": "John",
+      "legalRepFamilyName": "Smith",
+      "legalRepMobilePhoneNumber": "07000111222",
+      "legalRepReferenceNumber": "123",
+      "isFeePaymentEnabled": "Yes",
+      "isRemissionsEnabled": "Yes"
+   },
+   "event": {
+      "id": "startAppeal",
+      "summary": "",
+      "description": ""
+   },
+   "event_data": {
+      "isCaseUsingLocationRefData": null,
+      "searchParties": [],
+      "checklist": {
+         "checklist2": [
+            "isNotDetained"
+         ]
+      },
+      "isOutOfCountryEnabled": "Yes",
+      "appellantInUk": "Yes",
+      "homeOfficeReferenceNumber": "123456789",
+      "appellantTitle": "Mr",
+      "appellantGivenNames": "#{firstName}",
+      "appellantFamilyName": "#{lastName}",
+      "appellantDateOfBirth": "#{dobYear}-#{dobMonth}-#{dobDay}",
+      "appellantStateless": "hasNationality",
+      "appellantNationalities": [
+         {
+            "value": {
+               "code": "AF"
+            },
+            "id": "#{nationalityId}"
+         }
+      ],
+      "appellantHasFixedAddress": "Yes",
+      "appellantAddress": {
+         "AddressLine1": "#{addressLines(0)}",
+         "AddressLine2": "#{addressLines(1)}",
+         "AddressLine3": "",
+         "PostTown": "#{addressLines(2)}",
+         "County": "",
+         "PostCode": "#{addressLines(3)}",
+         "Country": "United Kingdom"
+      },
+      "contactPreference": "wantsEmail",
+      "email": "iacperftest@test.com",
+      "appealType": "refusalOfHumanRights",
+      "appealGroundsDecisionHumanRightsRefusal": {
+         "values": [
+            "humanRightsRefusal"
+         ]
+      },
+      "homeOfficeDecisionDate": "#{currentDate}",
+      "uploadTheNoticeOfDecisionDocs": [
+         {
+            "value": {
+               "description": "perf test",
+               "document": {
+               "document_url": "#{DocumentURL1}",
+               "document_binary_url": "#{DocumentURL1}/binary",
+               "document_filename": "3MB.pdf",
+               "document_hash": "#{DocumentHash}"
+               }
+            },
+            "id": null
+         }
+      ],
+      "hasSponsor": "No",
+      "deportationOrderOptions": "No",
+      "hasNewMatters": "No",
+      "hasOtherAppeals": "No",
+      "hearingTypeResult": "No",
+      "legalRepCompany": "#{orgname}",
+      "legalRepName": "John",
+      "legalRepFamilyName": "Smith",
+      "legalRepMobilePhoneNumber": "07000111222",
+      "legalRepReferenceNumber": "123",
+      "isFeePaymentEnabled": "Yes",
+      "isRemissionsEnabled": "Yes"
+   },
   "event_token": "#{event_token}",
   "ignore_warning": false
 }

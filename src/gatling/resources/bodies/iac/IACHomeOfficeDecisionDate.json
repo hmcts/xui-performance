@@ -1,0 +1,56 @@
+{
+  "data": {
+    "homeOfficeDecisionDate": "#{currentDate}"
+  },
+  "event": {
+    "id": "startAppeal",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "searchParties": [],
+    "isCaseUsingLocationRefData": null,
+    "checklist": {
+      "checklist2": [
+        "isNotDetained"
+      ]
+    },
+    "isOutOfCountryEnabled": "Yes",
+    "appellantInUk": "Yes",
+    "homeOfficeReferenceNumber": "123456789",
+    "appellantTitle": "Mr",
+    "appellantGivenNames": "#{firstName}",
+    "appellantFamilyName": "#{lastName}",
+    "appellantDateOfBirth": "#{dobYear}-#{dobMonth}-#{dobDay}",
+    "appellantStateless": "hasNationality",
+    "appellantNationalities": [
+      {
+        "value": {
+          "code": "AF"
+        },
+        "id": "#{nationalityId}"
+      }
+    ],
+    "appellantHasFixedAddress": "Yes",
+    "appellantAddress": {
+      "AddressLine1": "#{addressLines(0)}",
+      "AddressLine2": "#{addressLines(1)}",
+      "AddressLine3": "",
+      "PostTown": "#{addressLines(2)}",
+      "County": "",
+      "PostCode": "#{addressLines(3)}",
+      "Country": "United Kingdom"
+    },
+    "contactPreference": "wantsEmail",
+    "email": "iacperftest@test.com",
+    "appealType": "refusalOfHumanRights",
+    "appealGroundsDecisionHumanRightsRefusal": {
+      "values": [
+        "humanRightsRefusal"
+      ]
+    },
+    "homeOfficeDecisionDate": "#{currentDate}"
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false
+}

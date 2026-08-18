@@ -9,15 +9,12 @@
     "applicationType": "jointApplication",
     "divorceOrDissolution": "divorce",
     "solUrgentCase": "No",
-    "solUrgentCaseSupportingInformation": null,
     "applicant1FinancialOrder": "No",
-    "serviceMethod": null,
     "solStatementOfReconciliationCertify": "Yes",
     "solStatementOfReconciliationDiscussed": "Yes",
     "applicant1PrayerDissolveDivorce": [
       "dissolveDivorce"
     ],
-    "applicant1PrayerEndCivilPartnership": [],
     "applicant1PrayerFinancialOrdersThemselves": [
       "financialOrdersThemselves"
     ],
