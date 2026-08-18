@@ -1,6 +1,7 @@
 {
   "data": {
     "solPaymentHowToPay": "feePayByAccount",
+    "applicationFeeServiceRequestReference": null,
     "applicationFeeOrderSummary": {
       "PaymentReference": null,
       "PaymentTotal": "#{paymentTotal}",
@@ -50,6 +51,7 @@
     "statementOfReconciliationComments": null,
     "solApplicationFeeInPounds": "#{feeInPounds}",
     "solPaymentHowToPay": "feePayByAccount",
+    "applicationFeeServiceRequestReference": null,
     "applicationFeeOrderSummary": {
       "PaymentReference": null,
       "PaymentTotal": "#{paymentTotal}",

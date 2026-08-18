@@ -44,6 +44,8 @@ object Solicitor_Probate {
       .exec(Common.userDetails)
     }
 
+    .exec(getCookieValue(CookieKey("__auth__").saveAs("authToken")))
+
     .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
@@ -79,7 +81,7 @@ object Solicitor_Probate {
         .check(substring("""{"data":{}""")))
 
       .exec(http("XUI_Probate_060_010_CreateApplicationDraft")
-        .post("/data/internal/case-types/GrantOfRepresentation/drafts/")
+        .post("/data/internal/case-types/GrantOfRepresentation/drafts")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-draft-create.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -535,9 +537,10 @@ object Solicitor_Probate {
       //see xui-webapp cookie capture in the Homepage scenario for details of why this is being used.
       //after a period of time during a performance test, the cookie would change and subsequent calls would fail
       //with a 401 unauthorized, so this code is forcing the original cookie back in to the Gatling session
-      .exec(addCookie(Cookie("xui-webapp", "#{xuiWebAppCookie}")
-        .withMaxAge(28800)
-        .withSecure(true)))
+      //UPDATE MAY 2026: This is no longer required, so could probably be removed in the future
+      //.exec(addCookie(Cookie("xui-webapp", "#{xuiWebAppCookie}")
+      //  .withMaxAge(28800)
+      //  .withSecure(true)))
 
       .exec(Common.activity)
 

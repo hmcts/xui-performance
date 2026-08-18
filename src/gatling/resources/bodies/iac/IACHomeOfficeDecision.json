@@ -1,26 +1,23 @@
 {
   "data": {
-     "homeOfficeReferenceNumber": "123456789",
-     "homeOfficeDecisionDate": "#{currentDate}"
+    "homeOfficeReferenceNumber": "123456789"
   },
   "event": {
-     "id": "startAppeal",
-     "summary": "",
-     "description": ""
+    "id": "startAppeal",
+    "summary": "",
+    "description": ""
   },
   "event_data": {
-     "isOutOfCountryEnabled": "Yes",
-     "checklist": {
-        "checklist2": [
-           "isNotDetained"
-        ],
-        "checklist7": [
-           "isNotEUDecision"
-        ]
-     },
-     "appellantInUk": "Yes",
-     "homeOfficeReferenceNumber": "123456789",
-     "homeOfficeDecisionDate": "#{currentDate}"
+    "searchParties": [],
+    "isCaseUsingLocationRefData": null,
+    "checklist": {
+      "checklist2": [
+        "isNotDetained"
+      ]
+    },
+    "isOutOfCountryEnabled": "Yes",
+    "appellantInUk": "Yes",
+    "homeOfficeReferenceNumber": "123456789"
   },
   "event_token": "#{event_token}",
   "ignore_warning": false
