@@ -186,18 +186,15 @@ object CourtAdmin_PRL_Order_C100 {
     }
   })
 
-    // Loop until the task type matches "checkApplicationC100" *For Cases which selected HWF different steps are required here
-    .asLongAs(session => session("taskType").as[String] != "requestCirUpdate") {
-      exec(http("XUI_PRL_LA_CreateOrder_100_WaitForEvent")
-        .get(BaseURL + "/workallocation/case/task/#{caseId}")
-        .headers(Headers.commonHeader)
-        .header("Accept", "application/json, text/plain, */*")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .check(jsonPath("$[0].id").optional.saveAs("taskId"))
-        .check(jsonPath("$[-1].type").optional.saveAs("taskType")))
+    .exec(http("XUI_PRL_LA_CreateOrder_100_WaitForEvent")
+      .get(BaseURL + "/workallocation/case/task/#{caseId}")
+      .headers(Headers.commonHeader)
+      .header("Accept", "application/json, text/plain, */*")
+      .header("x-xsrf-token", "#{XSRFToken}")
+      .check(jsonPath("$[0].id").optional.saveAs("taskId"))
+      .check(jsonPath("$[-1].type").optional.saveAs("taskType")))
 
-        .pause(10) // Wait between retries
-    }
+      .pause(10) // Wait between retries
 
   val writeToFile =
     exec { session =>
