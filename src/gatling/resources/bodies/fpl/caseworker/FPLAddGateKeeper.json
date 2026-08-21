@@ -1,0 +1,30 @@
+{
+  "data": {
+    "gatekeeperEmails": [
+      {
+        "value": {
+          "email": "judge-wales@ejudiciary.net"
+        },
+        "id": null
+      }
+    ]
+  },
+  "event": {
+    "id": "sendToGatekeeper",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "gatekeeperEmails": [
+      {
+        "value": {
+          "email": "judge-wales@ejudiciary.net"
+        },
+        "id": null
+      }
+    ]
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
+}

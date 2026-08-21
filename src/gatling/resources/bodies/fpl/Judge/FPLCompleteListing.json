@@ -1,0 +1,64 @@
+{
+  "data": {
+    "gatekeepingOrderListOrSendToAdmin": "YES",
+    "gatekeepingOrderSealDecision": {
+      "draftDocument": {
+        "document_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/320f92eb-b182-4d35-a1fc-e022673d4d8a",
+        "document_filename": "1MB-c.pdf",
+        "document_binary_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/320f92eb-b182-4d35-a1fc-e022673d4d8a/binary"
+      },
+      "dateOfIssue": "2026-08-21"
+    }
+  },
+  "event": {
+    "id": "addGatekeepingOrder",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "urgentDirectionsRouter": null,
+    "allocationProposal": {
+      "proposal": null,
+      "proposalV2": "Circuit judge",
+      "proposalReason": "Reason text"
+    },
+    "allocationDecision": {
+      "judgeLevelRadio": "Yes",
+      "allocationProposalPresent": "Yes",
+      "proposal": null
+    },
+    "gatekeepingOrderRouter": "UPLOAD",
+    "preparedSDO": {
+      "document_url": "#{DocumentURL}",
+      "document_binary_url": "#{DocumentURL}/binary",
+      "document_filename": "3MB.pdf",
+      "document_hash": "#{DocumentHash}"
+    },
+    "gatekeepingOrderListOrSendToAdmin": "YES",
+    "gatekeepingOrderSealDecision": {
+      "draftDocument": {
+        "document_url": "#{DocumentURL}",
+        "document_binary_url": "#{DocumentURL}/binary",
+        "document_filename": "3MB.pdf"
+      },
+      "dateOfIssue": "2026-08-21"
+    },
+    "gatekeepingOrderIssuingJudge": {
+      "allocatedJudgeLabel": null,
+      "useAllocatedJudge": null,
+      "judgeTitle": "HER_HONOUR_JUDGE",
+      "judgeLastName": "briggs",
+      "judgeEmailAddress": "judge-wales@ejudiciary.net",
+      "legalAdvisorName": null,
+      "judgeType": null,
+      "judgeEnterManually": null,
+      "judgeJudicialUser": {
+        "idamId": null,
+        "personalCode": null
+      }
+    }
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
+}
