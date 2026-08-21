@@ -1,0 +1,60 @@
+{
+  "data": {
+    "gatekeepingOrderIssuingJudge": {
+      "allocatedJudgeLabel": null,
+      "useAllocatedJudge": null,
+      "judgeTitle": "HER_HONOUR_JUDGE",
+      "judgeLastName": "briggs",
+      "judgeEmailAddress": "judge-wales@ejudiciary.net",
+      "legalAdvisorName": null,
+      "judgeType": null,
+      "judgeEnterManually": null,
+      "judgeJudicialUser": {
+        "idamId": null,
+        "personalCode": null
+      }
+    }
+  },
+  "event": {
+    "id": "addGatekeepingOrder",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "urgentDirectionsRouter": null,
+    "allocationProposal": {
+      "proposal": null,
+      "proposalV2": "Circuit judge",
+      "proposalReason": "Reason text"
+    },
+    "allocationDecision": {
+      "judgeLevelRadio": "Yes",
+      "allocationProposalPresent": "Yes",
+      "proposal": null
+    },
+    "gatekeepingOrderRouter": "UPLOAD",
+    "preparedSDO": {
+      "document_url": "#{DocumentURL}",
+      "document_binary_url": "#{DocumentURL}/binary",
+      "document_filename": "3MB.pdf",
+      "document_hash": "#{DocumentHash}"
+    },
+    "gatekeepingOrderIssuingJudge": {
+      "allocatedJudgeLabel": null,
+      "useAllocatedJudge": null,
+      "judgeTitle": "HER_HONOUR_JUDGE",
+      "judgeLastName": "briggs",
+      "judgeEmailAddress": "judge-wales@ejudiciary.net",
+      "legalAdvisorName": null,
+      "judgeType": null,
+      "judgeEnterManually": null,
+      "judgeJudicialUser": {
+        "idamId": null,
+        "personalCode": null
+      }
+    }
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
+}
