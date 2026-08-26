@@ -1,42 +1,11 @@
 {
   "data": {
-    "urgentDirectionsRouter": null,
-    "allocationProposal": {
-      "proposal": null,
-      "proposalV2": "Circuit judge",
-      "proposalReason": "Reason text"
-    },
-    "allocationDecision": {
-      "judgeLevelRadio": "Yes",
-      "proposalV2": null,
-      "proposalReason": null,
-      "allocationProposalPresent": "Yes",
-      "proposal": null
-    },
-    "gatekeepingOrderRouter": "UPLOAD",
-    "preparedSDO": {
-      "document_url": "#{DocumentURL}",
-      "document_binary_url": "#{DocumentURL}/binary",
-      "document_filename": "3MB.pdf",
-      "document_hash": "#{DocumentHash}"
-    },
-    "gatekeepingOrderListOrSendToAdmin": "YES",
-    "gatekeepingOrderSealDecision": {
-      "draftDocument": {
-        "document_url": "#{DocumentURL}",
-        "document_binary_url": "#{DocumentURL}/binary",
-        "document_filename": "3MB.pdf"
-      },
-      "dateOfIssue": "2026-08-21"
-    },
     "gatekeepingOrderIssuingJudge": {
       "allocatedJudgeLabel": null,
       "useAllocatedJudge": null,
       "judgeTitle": "HER_HONOUR_JUDGE",
-      "otherTitle": null,
-      "judgeLastName": "briggs",
-      "judgeFullName": null,
-      "judgeEmailAddress": "judge-wales@ejudiciary.net",
+      "judgeLastName": "#{lastName}",
+      "judgeEmailAddress": "#{usernamejudge}",
       "legalAdvisorName": null,
       "judgeType": null,
       "judgeEnterManually": null,
@@ -51,6 +20,41 @@
     "summary": "",
     "description": ""
   },
+  "event_data": {
+    "urgentDirectionsRouter": null,
+    "allocationProposal": {
+      "proposal": null,
+      "proposalV2": "Circuit judge",
+      "proposalReason": "Reason text"
+    },
+    "allocationDecision": {
+      "judgeLevelRadio": "Yes",
+      "allocationProposalPresent": "Yes",
+      "proposal": null
+    },
+    "gatekeepingOrderRouter": "UPLOAD",
+    "preparedSDO": {
+      "document_url": "#{DocumentURL}",
+      "document_binary_url": "#{DocumentURL}/binary",
+      "document_filename": "3MB.pdf",
+      "document_hash": "#{DocumentHash}"
+    },
+    "gatekeepingOrderIssuingJudge": {
+      "allocatedJudgeLabel": null,
+      "useAllocatedJudge": null,
+      "judgeTitle": "HER_HONOUR_JUDGE",
+      "judgeLastName": "#{lastName}",
+      "judgeEmailAddress": "#{usernamejudge}",
+      "legalAdvisorName": null,
+      "judgeType": null,
+      "judgeEnterManually": null,
+      "judgeJudicialUser": {
+        "idamId": null,
+        "personalCode": null
+      }
+    }
+  },
   "event_token": "#{event_token}",
-  "ignore_warning": false
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
 }
