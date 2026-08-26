@@ -1,0 +1,50 @@
+{
+  "data": {
+    "judgeType": "SALARIED_JUDGE",
+    "urgentDirectionsRouter": null,
+    "gatekeepingOrderRouter": "UPLOAD",
+    "judicialUser": {
+      "idamId": "b682db84-01e6-4d04-8f40-6b37226d1924",
+      "personalCode": "4924168"
+    },
+    "manualJudgeAllocationWarning": null,
+    "allocatedJudge": null,
+    "court": {
+      "code": "344",
+      "name": "FPLA Court",
+      "email": "FamilyPublicLaw+court@gmail.com",
+      "region": null,
+      "epimmsId": null,
+      "regionId": null,
+      "dateTransferred": null
+    }
+  },
+  "event": {
+    "id": "listGatekeepingHearing",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "judgeType": "SALARIED_JUDGE",
+    "urgentDirectionsRouter": null,
+    "gatekeepingOrderRouter": "UPLOAD",
+    "judicialUser": {
+      "idamId": "b682db84-01e6-4d04-8f40-6b37226d1924",
+      "personalCode": "4924168"
+    },
+    "manualJudgeAllocationWarning": null,
+    "allocatedJudge": null,
+    "court": {
+      "code": "344",
+      "name": "FPLA Court",
+      "email": "FamilyPublicLaw+court@gmail.com",
+      "region": null,
+      "epimmsId": null,
+      "regionId": null,
+      "dateTransferred": null
+    }
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
+}

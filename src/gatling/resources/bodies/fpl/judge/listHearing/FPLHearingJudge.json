@@ -1,0 +1,75 @@
+{
+  "data": {
+    "allocatedJudgeLabel": "Case assigned to: Ms Young",
+    "useAllocatedJudge": "Yes",
+    "manualJudgeAllocationWarningHearingJudge": null,
+    "legalAdvisorName": null,
+    "judgeAndLegalAdvisor": {
+      "allocatedJudgeLabel": "Case assigned to: Ms Young"
+    }
+  },
+  "event": {
+    "id": "listGatekeepingHearing",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "judgeType": "SALARIED_JUDGE",
+    "urgentDirectionsRouter": null,
+    "gatekeepingOrderRouter": "UPLOAD",
+    "manualJudgeAllocationWarning": null,
+    "allocatedJudge": {
+      "judgeType": "SALARIED_JUDGE",
+      "judgeTitle": "OTHER",
+      "otherTitle": "Ms",
+      "judgeLastName": "Young",
+      "judgeFullName": "Ms Nicole Young",
+      "judgeEmailAddress": "DJ.Nicole.Young@ejudiciary.net",
+      "judgeJudicialUser": {
+        "idamId": "b682db84-01e6-4d04-8f40-6b37226d1924",
+        "personalCode": null
+      }
+    },
+    "court": {
+      "code": "344",
+      "name": "FPLA Court",
+      "email": "FamilyPublicLaw+court@gmail.com",
+      "region": null,
+      "epimmsId": null,
+      "regionId": null,
+      "dateTransferred": null
+    },
+    "firstHearingFlag": "Yes",
+    "sendNoticeOfHearing": "Yes",
+    "hasPreviousHearingVenue": "No",
+    "hearingType": "CASE_MANAGEMENT",
+    "hearingVenue": "75",
+    "hearingAttendanceDetails": null,
+    "hearingStartDate": "2026-10-21T13:00:00.000",
+    "hearingDuration": "HOURS_MINS",
+    "hearingHours": "1",
+    "hearingMinutes": "0",
+    "showConfirmPastHearingDatesPage": "No",
+    "startDateFlag": null,
+    "endDateFlag": null,
+    "preHearingAttendanceDetails": "1 hour before the hearing",
+    "hearingEndDate": "2026-10-21T14:00:00",
+    "allocatedJudgeLabel": "Case assigned to: Ms Young",
+    "useAllocatedJudge": "Yes",
+    "manualJudgeAllocationWarningHearingJudge": null,
+    "legalAdvisorName": null,
+    "judgeAndLegalAdvisor": {
+      "allocatedJudgeLabel": "Case assigned to: Ms Young"
+    },
+    "judicialUser": {
+      "idamId": "b682db84-01e6-4d04-8f40-6b37226d1924",
+      "personalCode": "4924168"
+    },
+    "hearingAttendance": [
+      "IN_PERSON"
+    ]
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
+}

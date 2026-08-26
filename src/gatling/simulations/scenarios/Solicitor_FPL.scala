@@ -2,7 +2,9 @@ package scenarios
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import utils.{Environment, Common, Headers}
+import utilities.DateUtils
+import utils.{Common, Environment, Headers}
+
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -19,7 +21,7 @@ object Solicitor_FPL {
   val now = LocalDateTime.now()
   val patternTimeNow = DateTimeFormatter.ofPattern("HH:mm:ss.S")
 
-  val CreateFPLCase =
+  val CreateFPLCase = //capital start with???
 
     //set session variables
     exec(_.setAll("caseName" -> ("Perf" + Common.randomString(5) + " vs Perf" + Common.randomString(5)),
@@ -35,7 +37,16 @@ object Solicitor_FPL {
       "respondentFirstName" -> ("Resp" + Common.randomString(5)),
       "respondentLastName" -> ("Test" + Common.randomString(5)),
       "dobYearResp" -> Common.getDobYear(),
+      "lastName" -> ("Test" + Common.randomString(5)), //maybe make same as earlier last name variable
+      //use patterndate. to turn random future date into an hour format. then end court time will be that plusHour a random hour
+
+//      "courtLengthHours" -> Common.randomNumber(4),
+//      "courtLengthMins" -> Common.randomNumber(59),
+//      "randomStartHour" -> scala.util.Random.between(9, 16),
+//      "randomStartMin" -> scala.util.Random.between(0, 60),
+//      "futureCourtDate" -> DateUtils.getDateFutureRandom("0,5,0,12,0,28"),
       "currentDate" -> now.format(patternDate)))
+
 
       /*======================================================================================
     Click On Create Case for FPL
@@ -43,7 +54,7 @@ object Solicitor_FPL {
 
       .group("XUI_FPL_040_CreateCase") {
 
-        exec(http("XUI_FPL_040_CreateCase")
+        exec(http("XUI_FPL_040_CreateCase") //need 005?
           .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
           .headers(Headers.commonHeader)
           .header("accept", "application/json")
@@ -61,7 +72,6 @@ object Solicitor_FPL {
     ======================================================================================*/
 
       .group("XUI_FPL_050_005_StartCreateCase") {
-
         exec(http("XUI_FPL_050_005_StartCreateCase")
           .get("/data/internal/case-types/CARE_SUPERVISION_EPO/event-triggers/openCase?ignore-warning=false")
           .headers(Headers.commonHeader)
@@ -948,7 +958,6 @@ object Solicitor_FPL {
           .check(jsonPath("$.event_token").saveAs("event_token")))
       }
 
-
       .pause(MinThinkTime, MaxThinkTime)
 
       .group("XUI_FPL_360_RaiseNewQuery") {
@@ -1020,6 +1029,7 @@ object Solicitor_FPL {
     /*======================================================================================
     View the case
     ======================================================================================*/
+
     group("XUI_FPL_410_ViewCase") {
       exec(http("XUI_FPL_410_005_ViewCase")
         .get("/data/internal/cases/#{caseId}")
@@ -1032,6 +1042,7 @@ object Solicitor_FPL {
 
 
   val fplAddCaseNumber =
+
     /*======================================================================================
     Click add case number
     ======================================================================================*/
@@ -1074,11 +1085,12 @@ object Solicitor_FPL {
 
     .pause(MinThinkTime, MaxThinkTime)
 
-  val fplAddGateKeeper =
+  val fplAddGatekeeper =
 
     /*======================================================================================
     Click send to gatekeeper
     ======================================================================================*/
+
     group("XUI_FPL_450_SendToGatekeeper") {
       exec(http("XUI_FPL_450_005_SendToGatekeeper")
         .get("/data/internal/cases/#{caseId}/event-triggers/sendToGatekeeper?ignore-warning=false")
@@ -1095,13 +1107,13 @@ object Solicitor_FPL {
     Add a Gate Keeper
     ======================================================================================*/
 
-    .group("XUI_FPL_460_ValidateGateKeeper") {
-      exec(http("XUI_FPL_460_005_ValidateGateKeeper")
+    .group("XUI_FPL_460_ValidateGatekeeper") {
+      exec(http("XUI_FPL_460_005_ValidateGatekeeper")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=sendToGatekeeper1")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/fpl/caseworker/FPLAddGateKeeper.json"))
+        .body(ElFileBody("bodies/fpl/caseworker/FPLAddGatekeeper.json"))
         .check(substring("gatekeeper"))
         .check(jsonPath("$.data.gatekeeperEmails[0].id").saveAs("gatekeeperId")))
     }
@@ -1112,13 +1124,13 @@ object Solicitor_FPL {
     Send to Gate Keeper
     ======================================================================================*/
 
-    .group("XUI_FPL_470_SubmitGateKeeper") {
-      exec(http("XUI_FPL_470_005_SubmitGateKeeper")
+    .group("XUI_FPL_470_SubmitGatekeeper") {
+      exec(http("XUI_FPL_470_005_SubmitGatekeeper")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/fpl/caseworker/FPLSendGateKeeper.json"))
+        .body(ElFileBody("bodies/fpl/caseworker/FPLSendGatekeeper.json"))
         .check(substring("gatekeeperEmails")))
 
 }
@@ -1132,7 +1144,7 @@ object Solicitor_FPL {
     ======================================================================================*/
 
     group("XUI_FPL_480_OpenJudicialGatekeeping") {
-      exec(http("XUI_FPL_480_005_OpenJudicalGatekeeping")
+      exec(http("XUI_FPL_480_005_OpenJudicialGatekeeping")
         .get("/data/internal/cases/#{caseId}/event-triggers/addGatekeepingOrder?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
@@ -1153,8 +1165,9 @@ object Solicitor_FPL {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/fpl/Judge/FPLJudgeLevel.json")))
-        //.check(substring("gatekeeper"))
+        .body(ElFileBody("bodies/fpl/judge/judicialGatekeeping/FPLJudgeLevel.json"))
+        .check(status.is(200))
+        .check(substring("judgeLevelRadio")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1169,15 +1182,17 @@ object Solicitor_FPL {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/fpl/Judge/FPLOrderType.json")))
-        //.check(substring("gatekeeper"))
+        .body(ElFileBody("bodies/fpl/judge/judicialGatekeeping/FPLOrderType.json"))
+        .check(status.is(200))
+        .check(substring("gatekeepingOrderRouter")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
 
-      /*======================================================================================
-      Upload Order Document
-      ======================================================================================*/
+    /*======================================================================================
+    Upload Order Document
+    ======================================================================================*/
+
     .group("XUI_FPL_510_UploadPreparedOrder") {
       exec(http("XUI_FPL_510_005_UploadPreparedOrder")
         .post("/documentsv2")
@@ -1192,7 +1207,6 @@ object Solicitor_FPL {
         .formParam("classification", "PUBLIC")
         .formParam("caseTypeId", "CARE_SUPERVISION_EPO")
         .formParam("jurisdictionId", "PUBLICLAW")
-        //.check(substring("originalDocumentName"))
         .check(jsonPath("$.documents[0].hashToken").saveAs("DocumentHash"))
         .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL")))
     }
@@ -1202,14 +1216,15 @@ object Solicitor_FPL {
     /*======================================================================================
     Submit Order Document
     ======================================================================================*/
+
     .group("XUI_FPL_520_SubmitPreparedOrder") {
       exec(http("XUI_FPL_520_005_SubmitPreparedOrder")
-        .post("data/case-types/CARE_SUPERVISION_EPO/validate?pageId=addGatekeepingOrderorderUpload")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=addGatekeepingOrderorderUpload")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/fpl/Judge/FPLOrderUpload.json")))
-       // .check(substring("uploadTheNoticeOfDecisionDocs")))
+        .body(ElFileBody("bodies/fpl/judge/judicialGatekeeping/FPLOrderUpload.json"))
+        .check(substring("gatekeepingOrderSealDecision")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1217,14 +1232,15 @@ object Solicitor_FPL {
     /*======================================================================================
     Confirm Issuing Judge
     ======================================================================================*/
+
     .group("XUI_FPL_530_IssuingJudge") {
       exec(http("XUI_FPL_530_005_IssuingJudge")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=addGatekeepingOrderIssuingJudge")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/fpl/Judge/FPLIssuingJudge.json")))
-      //.check(substring("gatekeeper"))
+        .body(ElFileBody("bodies/fpl/judge/judicialGatekeeping/FPLIssuingJudge.json"))
+        .check(substring("gatekeepingOrderIssuingJudge")))
     }
 
     .pause(MinThinkTime, MaxThinkTime)
@@ -1241,8 +1257,8 @@ object Solicitor_FPL {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/fpl/Judge/FPLCompleteListing.json")))
-      //.check(substring("gatekeeper"))
+        .body(ElFileBody("bodies/fpl/judge/judicialGatekeeping/FPLCompleteListing.json"))
+        .check(substring("gatekeepingOrderListOrSendToAdmin")))
     }
 
     /*======================================================================================
@@ -1257,9 +1273,92 @@ object Solicitor_FPL {
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(ElFileBody("bodies/fpl/Judge/FPLSubmitOrder.json")))
-      //.check(substring("gatekeeper"))
+        .body(ElFileBody("bodies/fpl/judge/judicialGatekeeping/FPLSubmitOrder.json"))
+        .check(jsonPath("$.state").is("GATEKEEPING_LISTING")))
     }
 
+  val fplListHearing =
+
+    /*======================================================================================
+    Click List Hearing
+    ======================================================================================*/
+
+    group("XUI_FPL_560_ListHearing") {
+      exec(http("XUI_FPL_560_005_ListHearing")
+        .get("/data/internal/cases/#{caseId}/event-triggers/listGatekeepingHearing?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(substring("List Gatekeeping Hearing")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Select Allocated Judge
+    ======================================================================================*/
+
+    .group("XUI_FPL_570_AllocatedJudge") {
+      exec(http("XUI_FPL_570_005_AllocatedJudge")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=listGatekeepingHearingListGatekeepingHearingAllocatedJudge")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/fpl/judge/listHearing/FPLAllocatedJudge.json"))
+        .check(substring("allocatedJudgeLabel")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Enter Hearing Details
+    ======================================================================================*/
+
+    .group("XUI_FPL_580_HearingDetails") {
+      exec(http("XUI_FPL_580_005_HearingDetails")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=listGatekeepingHearingListGatekeepingHearingEnterHearingDetails")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/fpl/judge/listHearing/FPLHearingDetails.json"))
+        .check(substring("hearingStartDate")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Confirm Hearing Judge
+    ======================================================================================*/
+
+    .group("XUI_FPL_590_HearingJudge") {
+      exec(http("XUI_FPL_590_005_HearingJudge")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=listGatekeepingHearingListGatekeepingHearingJudgeInformatio")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/fpl/judge/listHearing/FPLHearingJudge.json"))
+        .check(jsonPath("$.data.useAllocatedJudge").is("Yes")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Submit Hearing
+    ======================================================================================*/
+
+    .group("XUI_FPL_600_SubmitHearing") {
+      exec(http("XUI_FPL_600_005_SubmitHearing")
+        .post("/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/fpl/judge/listHearing/FPLSubmitHearing.json"))
+        .check(jsonPath("$.state").is("PREPARE_FOR_HEARING")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
 
 }
+
+
