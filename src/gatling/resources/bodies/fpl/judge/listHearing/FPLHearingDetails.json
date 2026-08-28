@@ -9,7 +9,7 @@
       "IN_PERSON"
     ],
     "hearingAttendanceDetails": null,
-    "hearingStartDate": "2026-10-21T13:00:00.000",
+    "hearingStartDate": "#{futureCourtDate}T13:00:00.000",
     "hearingDuration": "HOURS_MINS",
     "hearingHours": "1",
     "hearingMinutes": "0",
@@ -63,7 +63,7 @@
       "IN_PERSON"
     ],
     "hearingAttendanceDetails": null,
-    "hearingStartDate": "2026-10-21T13:00:00.000",
+    "hearingStartDate": "#{futureCourtDate}T13:00:00.000",
     "hearingDuration": "HOURS_MINS",
     "hearingHours": "1",
     "hearingMinutes": "0",

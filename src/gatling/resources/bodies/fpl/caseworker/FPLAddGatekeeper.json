@@ -3,7 +3,7 @@
     "gatekeeperEmails": [
       {
         "value": {
-          "email": "judge-wales@ejudiciary.net"
+          "email": "#{user-judge}"
         },
         "id": null
       }
@@ -18,7 +18,7 @@
     "gatekeeperEmails": [
       {
         "value": {
-          "email": "judge-wales@ejudiciary.net"
+          "email": "#{user-judge}"
         },
         "id": null
       }

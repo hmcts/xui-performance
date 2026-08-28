@@ -434,6 +434,8 @@ class XUI_Simulation extends Simulation {
 	val FamilyPublicLawSolicitorScenario = scenario("***** FPL Create Case *****")
 		.exitBlockOnFail {
 			feed(UserFeederFPL)
+				.feed(CWFeederFPL)
+				.feed(JudgeFeederFPL)
 				.exec(_.set("env", s"${env}")
 							.set("caseType", "CARE_SUPERVISION_EPO"))
 				.exec(XuiHelper.Homepage)
@@ -448,30 +450,34 @@ class XUI_Simulation extends Simulation {
 				.exec(Solicitor_FPL.fplAllocationProposal)
 				.exec(Solicitor_FPL.fplSubmitApplication)
 				.exec(Solicitor_FPL.fplReturnToCase)
-        //.exec(Solicitor_FPL.QueryManagement) //Temporarily removing QM until FPL is onboarded in XUI master
-        .exec(XuiHelper.Logout)
-				.feed(CWFeederFPL)
+				//.exec(Solicitor_FPL.QueryManagement) //Temporarily removing QM until FPL is onboarded in XUI master
+				.exec(XuiHelper.Logout)
 				.exec(XuiHelper.Homepage)
-				.exec(XuiHelper.Login("#{username}", "#{password1}"))
+				.exec(XuiHelper.Login("#{user-cw}", "#{password-cw}"))
 				.exec(Solicitor_FPL.fplViewCase)
 				.exec(Solicitor_FPL.fplAddCaseNumber)
 				.exec(Solicitor_FPL.fplViewCase)
 				.exec(Solicitor_FPL.fplAddGatekeeper)
 				.exec(XuiHelper.Logout)
-				.feed(JudgeFeederFPL)
 				.exec(XuiHelper.Homepage)
-				.exec(XuiHelper.Login("#{usernamejudge}", "#{passwordjudge}"))
+				.exec(XuiHelper.Login("#{user-judge}", "#{password-judge}"))
 				.exec(Solicitor_FPL.fplViewCase)
 				.exec(Solicitor_FPL.fplJudicialGatekeeping)
 				.exec(Solicitor_FPL.fplViewCase)
 				.exec(Solicitor_FPL.fplListHearing)
 
-        //.feed(UserFeederCTSC)
-        //.exec(Homepage.XUIHomePage)
-				//.exec(Login.XUILogin)
-        //.exec(Solicitor_FPL.RespondToQueryManagement)
-				//.exec(XuiHelper.Logout)
+			//.feed(UserFeederCTSC)
+			//.exec(Homepage.XUIHomePage)
+			//.exec(Login.XUILogin)
+			//.exec(Solicitor_FPL.RespondToQueryManagement)
+			//.exec(XuiHelper.Logout)
 		}
+		.exec {
+			session =>
+				println(session)
+			session
+		}
+
 
 	/*===============================================================================================
 	* XUI Caseworker - Search & View Case Scenario
