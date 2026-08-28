@@ -36,7 +36,7 @@
       "otherTitle": null,
       "judgeLastName": "#{lastName}",
       "judgeFullName": null,
-      "judgeEmailAddress": "#{usernamejudge}",
+      "judgeEmailAddress": "#{user-judge}",
       "legalAdvisorName": null,
       "judgeType": null,
       "judgeEnterManually": null,

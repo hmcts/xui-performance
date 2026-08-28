@@ -48,7 +48,7 @@
       "useAllocatedJudge": null,
       "judgeTitle": "HER_HONOUR_JUDGE",
       "judgeLastName": "#{lastName}",
-      "judgeEmailAddress": "#{usernamejudge}",
+      "judgeEmailAddress": "#{user-judge}",
       "legalAdvisorName": null,
       "judgeType": null,
       "judgeEnterManually": null,
