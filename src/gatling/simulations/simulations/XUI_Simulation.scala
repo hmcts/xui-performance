@@ -465,6 +465,18 @@ class XUI_Simulation extends Simulation {
 				.exec(Solicitor_FPL.fplJudicialGatekeeping)
 				.exec(Solicitor_FPL.fplViewCase)
 				.exec(Solicitor_FPL.fplListHearing)
+				.exec(XuiHelper.Logout)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user}", "#{password}"))
+				.exec(Solicitor_FPL.fplViewCase)
+				.exec(Solicitor_FPL.fplAdditionalApplications)
+				.exec(XuiHelper.Logout)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user-judge}", "#{password-judge}"))
+				.exec(Solicitor_FPL.fplViewCase)
+				.exec(Solicitor_FPL.fplReviewApplication)
+				.exec(XuiHelper.Logout)
+
 
 			//.feed(UserFeederCTSC)
 			//.exec(Homepage.XUIHomePage)

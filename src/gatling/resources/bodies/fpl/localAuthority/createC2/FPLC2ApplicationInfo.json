@@ -1,0 +1,198 @@
+{
+  "data": {
+    "temporaryC2Document": {
+      "applicationPermissionType": "ALREADY_GRANTED",
+      "applicationRelatesToAllChildren": "Yes",
+      "childSelectorForApplication": {
+        "value": [],
+        "list_items": [
+          {
+            "code": "867e140c-d5a8-4999-82de-e5a52c00ffd1",
+            "label": "Childvaqsx TestvITms (Child 1)"
+          }
+        ]
+      },
+      "applicationSummary": "This application is about x y z.",
+      "hasSafeguardingRisk": "No",
+      "isHearingAdjournmentRequired": "No",
+      "canBeConsideredAtNextHearing": "Yes",
+      "applicantName": null,
+      "type": null,
+      "routeType": null,
+      "uploadedDateTime": null,
+      "author": null,
+      "othersNotified": null,
+      "description": null,
+      "nameOfRepresentative": null,
+      "usePbaPayment": null,
+      "pbaNumber": null,
+      "clientCode": null,
+      "fileReference": null,
+      "parentalResponsibilityType": null,
+      "childrenOnApplication": null,
+      "urgencyTimeFrameType": null,
+      "id": null,
+      "confidentialApplication": null,
+      "draftOrdersBundle": [
+        {
+          "value": {
+            "title": "C2 Draft Order Document",
+            "dateTimeUploaded": null,
+            "uploaderType": null,
+            "document": {
+              "document_url": "#{DraftOrderDocumentURL}",
+              "document_binary_url": "#{DraftOrderDocumentURL}/binary",
+              "document_filename": "3MB.pdf",
+              "document_hash": "#{DraftOrderDocumentHash}"
+            },
+            "documentAcknowledge": [
+              "ACK_RELATED_TO_CASE"
+            ],
+            "uploaderCaseRoles": []
+          },
+          "id": null
+        }
+      ],
+      "supplementsBundle": [],
+      "supportingEvidenceBundle": [],
+      "draftOrderUrgency": {
+        "urgency": []
+      },
+      "c2AdditionalOrdersRequested": [],
+      "others": [],
+      "respondents": [],
+      "supportingEvidenceLA": [],
+      "supportingEvidenceNC": []
+    },
+    "hasConfidentialParty": "NO",
+    "skipPaymentPage": null,
+    "statementOfTruth": [
+      "YES"
+    ]
+  },
+  "event": {
+    "id": "uploadAdditionalApplications",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "caseName": "{#caseName}",
+    "additionalApplicationType": [
+      "C2_ORDER"
+    ],
+    "c2ApplicationRoute": "APPLY_ONLINE",
+    "c2Type": "WITHOUT_NOTICE",
+    "c2EvidenceConsentDocument": {
+      "document_url": "#{EvidenceDocumentURL}",
+      "document_binary_url": "#{EvidenceDocumentURL}/binary",
+      "document_filename": "3MB.pdf",
+      "document_hash": "#{EvidenceDocumentHash}"
+    },
+    "isC2Confidential": "No",
+    "applicantsList": {
+      "value": {
+        "code": "applicant",
+        "label": "FPLA team, Applicant"
+      },
+      "list_items": [
+        {
+          "code": "applicant",
+          "label": "FPLA team, Applicant"
+        },
+        {
+          "code": "c05f2da2-37be-4eb4-a4bc-00a5070ac153",
+          "label": "RespDEfSz TestmGxim, Respondent 1"
+        },
+        {
+          "code": "867e140c-d5a8-4999-82de-e5a52c00ffd1",
+          "label": "Childvaqsx TestvITms, Child 1"
+        },
+        {
+          "code": "SOMEONE_ELSE",
+          "label": "Someone else"
+        }
+      ]
+    },
+    "court": {
+      "code": "344",
+      "name": "FPLA Court",
+      "email": "FamilyPublicLaw+court@gmail.com",
+      "region": null,
+      "epimmsId": null,
+      "regionId": null,
+      "dateTransferred": null
+    },
+    "temporaryC2Document": {
+      "applicationPermissionType": "ALREADY_GRANTED",
+      "applicationRelatesToAllChildren": "Yes",
+      "childSelectorForApplication": {
+        "value": [],
+        "list_items": [
+          {
+            "code": "867e140c-d5a8-4999-82de-e5a52c00ffd1",
+            "label": "Childvaqsx TestvITms (Child 1)"
+          }
+        ]
+      },
+      "applicationSummary": "This application is about x y z.",
+      "hasSafeguardingRisk": "No",
+      "isHearingAdjournmentRequired": "No",
+      "canBeConsideredAtNextHearing": "Yes",
+      "applicantName": null,
+      "type": null,
+      "routeType": null,
+      "uploadedDateTime": null,
+      "author": null,
+      "othersNotified": null,
+      "description": null,
+      "nameOfRepresentative": null,
+      "usePbaPayment": null,
+      "pbaNumber": null,
+      "clientCode": null,
+      "fileReference": null,
+      "parentalResponsibilityType": null,
+      "childrenOnApplication": null,
+      "urgencyTimeFrameType": null,
+      "id": null,
+      "confidentialApplication": null,
+      "draftOrdersBundle": [
+        {
+          "value": {
+            "title": "C2 Draft Order Document",
+            "dateTimeUploaded": null,
+            "uploaderType": null,
+            "document": {
+              "document_url": "#{DraftOrderDocumentURL}",
+              "document_binary_url": "#{DraftOrderDocumentURL}/binary",
+              "document_filename": "3MB.pdf",
+              "document_hash": "#{DraftOrderDocumentHash}"
+            },
+            "documentAcknowledge": [
+              "ACK_RELATED_TO_CASE"
+            ],
+            "uploaderCaseRoles": []
+          },
+          "id": null
+        }
+      ],
+      "supplementsBundle": [],
+      "supportingEvidenceBundle": [],
+      "draftOrderUrgency": {
+        "urgency": []
+      },
+      "c2AdditionalOrdersRequested": [],
+      "others": [],
+      "respondents": [],
+      "supportingEvidenceLA": [],
+      "supportingEvidenceNC": []
+    },
+    "hasConfidentialParty": "NO",
+    "skipPaymentPage": null,
+    "statementOfTruth": [
+      "YES"
+    ]
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
+}

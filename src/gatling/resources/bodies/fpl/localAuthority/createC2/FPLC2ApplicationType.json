@@ -1,0 +1,106 @@
+{
+  "data": {
+    "caseName": "{#caseName}",
+    "additionalApplicationType": [
+      "C2_ORDER"
+    ],
+    "c2ApplicationRoute": "APPLY_ONLINE",
+    "c2Type": "WITHOUT_NOTICE",
+    "c2EvidenceConsentDocument": {
+      "document_url": "#{EvidenceDocumentURL}",
+      "document_binary_url": "#{EvidenceDocumentURL}/binary",
+      "document_filename": "3MB.pdf",
+      "document_hash": "#{EvidenceDocumentHash}"
+    },
+    "isC2Confidential": "No",
+    "applicantsList": {
+      "value": {
+        "code": "applicant",
+        "label": "FPLA team, Applicant"
+      },
+      "list_items": [
+        {
+          "code": "applicant",
+          "label": "FPLA team, Applicant"
+        },
+        {
+          "code": "79b0e137-f1f3-4585-9f81-8933827dc43b",
+          "label": "RespsgTgt TestRaSIY, Respondent 1"
+        },
+        {
+          "code": "053887a4-ee38-4688-8c25-380e9b8286c6",
+          "label": "ChildDWFbb TestUIkjc, Child 1"
+        },
+        {
+          "code": "SOMEONE_ELSE",
+          "label": "Someone else"
+        }
+      ]
+    },
+    "court": {
+      "code": "344",
+      "name": "FPLA Court",
+      "email": "FamilyPublicLaw+court@gmail.com",
+      "region": null,
+      "epimmsId": null,
+      "regionId": null,
+      "dateTransferred": null
+    }
+  },
+  "event": {
+    "id": "uploadAdditionalApplications",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "caseName": "{#caseName}",
+    "additionalApplicationType": [
+      "C2_ORDER"
+    ],
+    "c2ApplicationRoute": "APPLY_ONLINE",
+    "c2Type": "WITHOUT_NOTICE",
+    "c2EvidenceConsentDocument": {
+      "document_url": "#{EvidenceDocumentURL}",
+      "document_binary_url": "#{EvidenceDocumentURL}/binary",
+      "document_filename": "3MB.pdf",
+      "document_hash": "#{EvidenceDocumentHash}"
+    },
+    "isC2Confidential": "No",
+    "applicantsList": {
+      "value": {
+        "code": "applicant",
+        "label": "FPLA team, Applicant"
+      },
+      "list_items": [
+        {
+          "code": "applicant",
+          "label": "FPLA team, Applicant"
+        },
+        {
+          "code": "79b0e137-f1f3-4585-9f81-8933827dc43b",
+          "label": "RespsgTgt TestRaSIY, Respondent 1"
+        },
+        {
+          "code": "053887a4-ee38-4688-8c25-380e9b8286c6",
+          "label": "ChildDWFbb TestUIkjc, Child 1"
+        },
+        {
+          "code": "SOMEONE_ELSE",
+          "label": "Someone else"
+        }
+      ]
+    },
+    "court": {
+      "code": "344",
+      "name": "FPLA Court",
+      "email": "FamilyPublicLaw+court@gmail.com",
+      "region": null,
+      "epimmsId": null,
+      "regionId": null,
+      "dateTransferred": null
+    }
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
+}

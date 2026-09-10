@@ -1,0 +1,152 @@
+{
+  "data": {
+    "caseName": "{#caseName}",
+    "additionalApplicationType": [
+      "C2_ORDER"
+    ],
+    "c2ApplicationRoute": "APPLY_ONLINE",
+    "c2Type": "WITHOUT_NOTICE",
+    "c2EvidenceConsentDocument": {
+      "document_url": "#{EvidenceDocumentURL}",
+      "document_binary_url": "#{EvidenceDocumentURL}/binary",
+      "document_filename": "3MB.pdf",
+      "document_hash": "#{EvidenceDocumentHash}"
+    },
+    "isC2Confidential": "No",
+    "applicantsList": {
+      "value": {
+        "code": "applicant",
+        "label": "FPLA team, Applicant"
+      },
+      "list_items": [
+        {
+          "code": "applicant",
+          "label": "FPLA team, Applicant"
+        },
+        {
+          "code": "e8f10a22-c38b-4ab3-88c9-288753d3bd01",
+          "label": "RespKvbrH TestmItzd, Respondent 1"
+        },
+        {
+          "code": "f2c2aca5-7b5f-499c-aa0e-14eba8cfd3fe",
+          "label": "ChildbRaea TestzGaRE, Child 1"
+        },
+        {
+          "code": "SOMEONE_ELSE",
+          "label": "Someone else"
+        }
+      ]
+    },
+    "court": {
+      "code": "344",
+      "name": "FPLA Court",
+      "email": "FamilyPublicLaw+court@gmail.com",
+      "region": null,
+      "epimmsId": null,
+      "regionId": null,
+      "dateTransferred": null
+    },
+    "temporaryC2Document": {
+      "applicationPermissionType": "ALREADY_GRANTED",
+      "applicationRelatesToAllChildren": "YES",
+      "childSelectorForApplication": {
+        "value": [],
+        "list_items": [
+          {
+            "code": "f2c2aca5-7b5f-499c-aa0e-14eba8cfd3fe",
+            "label": "ChildbRaea TestzGaRE (Child 1)"
+          }
+        ]
+      },
+      "applicationSummary": "This application is about x y z.",
+      "hasSafeguardingRisk": "No",
+      "safeguardingRiskDetails": null,
+      "isHearingAdjournmentRequired": "No",
+      "hearingList": null,
+      "requestedHearingToAdjourn": null,
+      "canBeConsideredAtNextHearing": "Yes",
+      "applicantName": null,
+      "type": "WITHOUT_NOTICE",
+      "routeType": null,
+      "uploadedDateTime": null,
+      "author": null,
+      "othersNotified": null,
+      "description": null,
+      "nameOfRepresentative": null,
+      "usePbaPayment": null,
+      "pbaNumber": null,
+      "clientCode": null,
+      "fileReference": null,
+      "parentalResponsibilityType": null,
+      "childrenOnApplication": null,
+      "urgencyTimeFrameType": null,
+      "id": null,
+      "confidentialApplication": null,
+      "documentAcknowledge": [],
+      "hasConfidentialAddress": [],
+      "draftOrdersBundle": [
+        {
+          "value": {
+            "title": "C2 Draft Order Document",
+            "dateTimeUploaded": null,
+            "uploaderType": null,
+            "document": {
+              "document_url": "#{DraftOrderDocumentURL}",
+              "document_binary_url": "#{DraftOrderDocumentURL}/binary",
+              "document_filename": "3MB.pdf",
+              "document_hash": "#{DraftOrderDocumentHash}"
+            },
+            "documentAcknowledge": [
+              "ACK_RELATED_TO_CASE"
+            ],
+            "uploaderCaseRoles": []
+          },
+          "id": "0381fc16-4be8-41fa-8076-dd9bad919599"
+        }
+      ],
+      "supplementsBundle": [],
+      "supportingEvidenceBundle": [],
+      "draftOrderUrgency": {
+        "urgency": []
+      },
+      "c2AdditionalOrdersRequested": [],
+      "others": [],
+      "respondents": [],
+      "supportingEvidenceLA": [],
+      "supportingEvidenceNC": []
+    },
+    "hasConfidentialParty": "NO",
+    "skipPaymentPage": "No",
+    "statementOfTruth": [
+      "YES"
+    ],
+    "isCTSCUser": "No",
+    "displayAmountToPay": "Yes",
+    "amountToPay": "6200",
+    "latestRoleSent": null,
+    "temporaryPbaPayment": {
+      "pbaNumber": null,
+      "pbaNumberDynamicList": {
+        "value": {
+          "code": "PBA0080000",
+          "label": "PBA0080000"
+        },
+        "list_items": [
+          {
+            "code": "PBA0080000",
+            "label": "PBA0080000"
+          }
+        ]
+      },
+      "clientCode": null,
+      "fileReference": "Ref123"
+    }
+  },
+  "event": {
+    "id": "uploadAdditionalApplications",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false
+}
