@@ -1035,7 +1035,8 @@ object Solicitor_FPL {
     .pause(MinThinkTime, MaxThinkTime)
 
 
-  val fplAddCaseNumber =
+  val fplAddCaseNumber = {
+    //make sure substring checks and json checks are unique enough -  like how did for first judge flow.
 
     /*======================================================================================
     Click add case number
@@ -1077,6 +1078,7 @@ object Solicitor_FPL {
     }
 
     .pause(MinThinkTime, MaxThinkTime)
+  }
 
   val fplAddGatekeeper =
 
@@ -1349,6 +1351,247 @@ object Solicitor_FPL {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+
+  val fplAdditionalApplications =
+
+
+    /*======================================================================================
+    Select Upload Additional Applications
+    ======================================================================================*/
+
+
+    group("XUI_FPL_600_AdditionalApplications") {
+      exec(http("XUI_FPL_600_005_AdditionalApplications")
+        .get("/data/internal/cases/#{caseId}/event-triggers/uploadAdditionalApplications?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(substring("What application are you making?")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+
+    /*======================================================================================
+    Upload Consent Document
+    ======================================================================================*/
+
+    .group("XUI_FPL_610_UploadConsentEvidence") {
+      exec(http("XUI_FPL_610_005_UploadConsentEvidence")
+        .post("/documentsv2")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json, text/plain, */*")
+        .header("content-type", "multipart/form-data")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .bodyPart(RawFileBodyPart("files", "3MB.pdf")
+          .fileName("3MB.pdf")
+          .transferEncoding("binary"))
+        .asMultipartForm
+        .formParam("classification", "PUBLIC")
+        .formParam("caseTypeId", "CARE_SUPERVISION_EPO")
+        .formParam("jurisdictionId", "PUBLICLAW")
+        .check(jsonPath("$.documents[0].hashToken").saveAs("EvidenceDocumentHash"))
+        .check(jsonPath("$.documents[0]._links.self.href").saveAs("EvidenceDocumentURL")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Select Application Type
+    ======================================================================================*/
+
+    .group("XUI_FPL_620_ApplicationType") {
+      exec(http("XUI_FPL_620_005_ApplicationType")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=uploadAdditionalApplications1")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/fpl/localAuthority/createC2/FPLC2ApplicationType.json"))
+        .check(substring("c2EvidenceConsentDocument")))
+    }
+
+    .pause(10, constantPauses)
+
+    /*======================================================================================
+    Upload Draft Order Document
+    ======================================================================================*/
+
+    .group("XUI_FPL_630_UploadDraftOrder") {
+      exec(http("XUI_FPL_630_005_UploadDraftOrder")
+        .post("/documentsv2")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json, text/plain, */*")
+        .header("content-type", "multipart/form-data")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .bodyPart(RawFileBodyPart("files", "3MB.pdf")
+          .fileName("3MB.pdf")
+          .transferEncoding("binary"))
+        .asMultipartForm
+        .formParam("classification", "PUBLIC")
+        .formParam("caseTypeId", "CARE_SUPERVISION_EPO")
+        .formParam("jurisdictionId", "PUBLICLAW")
+        .check(jsonPath("$.documents[0].hashToken").saveAs("DraftOrderDocumentHash"))
+        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DraftOrderDocumentURL")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Enter Application Information
+    ======================================================================================*/
+
+    .group("XUI_FPL_640_ApplicationInfo") {
+      exec(http("XUI_FPL_640_005_ApplicationInfo")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=uploadAdditionalApplications2")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/fpl/localAuthority/createC2/FPLC2ApplicationInfo.json"))
+        .check(substring("C2 Draft Order Document")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Enter Payment Information
+    ======================================================================================*/
+
+    .group("XUI_FPL_650_ApplicationPayment") {
+      exec(http("XUI_FPL_650_005_ApplicationPayment")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=uploadAdditionalApplications5")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/fpl/localAuthority/createC2/FPLC2ApplicationPayment.json"))
+        .check(substring("fileReference")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Submit Application
+    ======================================================================================*/
+
+    .group("XUI_FPL_660_SubmitApplication") {
+      exec(http("XUI_FPL_660_005_SubmitApplication")
+        .post("/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/fpl/localAuthority/createC2/FPLC2ApplicationSubmit.json"))
+        .check(jsonPath("$.data.additionalApplicationsBundle[0].value.c2DocumentBundle.document.document_url").saveAs("C2ApplicationDocumentURL"))
+//        .check(jsonPath("$.data.additionalApplicationsBundle[0].value.c2DocumentBundle.document.upload_timestamp").saveAs("C2ApplicationDocumentTimestamp"))
+//        .check(jsonPath("$.data.additionalApplicationsBundle[0].value.c2DocumentBundle.draftOrdersBundle[0].value.document.upload_timestamp").saveAs("DraftOrderDocumentTimestamp"))
+//        .check(jsonPath("$.data.additionalApplicationsBundle[0].value.c2DocumentBundle.supportingEvidenceBundle[0].value.document.upload_timestamp").saveAs("EvidenceDocumentTimestamp"))
+          .check(jsonPath("$.data.additionalApplicationsBundle[0].value.c2DocumentBundle.draftOrdersBundle[0].id").saveAs("DraftOrderBundleID"))
+        .check(jsonPath("$.data.additionalApplicationsBundle[0].value.c2DocumentBundle.supportingEvidenceBundle[0].id").saveAs("EvidenceConsentBundleID"))
+
+
+        .check(jsonPath("$.state").is("PREPARE_FOR_HEARING")))
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+  val fplReviewApplication =
+
+    /*======================================================================================
+    Select Review Additional Applications
+    ======================================================================================*/
+
+    group("XUI_FPL_670_ReviewApplication") {
+      exec(http("XUI_FPL_670_005_ReviewApplication")
+        .get("/data/internal/cases/#{caseId}/event-triggers/reviewAdditionalApplication?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(substring("Review additional application")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Set an upload time
+    ======================================================================================*/
+
+    .exec { session =>
+      val now = LocalDateTime.now()
+      val patternTodayTime = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS")
+      val uploadTimestamp = now.format(patternTodayTime)
+      val patternWrittenDate = DateTimeFormatter.ofPattern("d MMMM yyyy, h:mma")
+      val uploadedDateTime = now.format(patternWrittenDate)
+
+      session
+        .set("upload_timestamp", uploadTimestamp)
+        .set("uploadedDateTime", uploadedDateTime)
+    }
+
+    /*======================================================================================
+    Confirm and Continue Review
+    ======================================================================================*/
+
+    .group("XUI_FPL_680_ConfirmReview") {
+      exec(http("XUI_FPL_680_005_ConfirmReview")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=reviewAdditionalApplication2")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/fpl/judge/reviewApplication/FPLConfirmReview.json"))
+        .check(substring("c2AdditionalApplicationToBeReview")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Approve Application
+    ======================================================================================*/
+
+    .group("XUI_FPL_690_ApproveApplication") {
+      exec(http("XUI_FPL_690_005_ApproveApplication")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=reviewAdditionalApplication3")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/fpl/judge/reviewApplication/FPLApproveApplication.json"))
+        .check(jsonPath("$.data.previewApprovedOrder1.document_url").saveAs("PreviewApprovedOrderURL"))
+        .check(substring("reviewOrderUrgency")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+
+    /*======================================================================================
+    Continue Application Review
+    ======================================================================================*/
+
+    .group("XUI_FPL_700_ContinueReview") {
+      exec(http("XUI_FPL_700_005_ContinueReview")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=reviewAdditionalApplication4")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/fpl/judge/reviewApplication/FPLContinueReview.json"))
+        .check(substring("previewApprovedOrder1")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Submit Review
+    ======================================================================================*/
+
+    .group("XUI_FPL_710_SubmitReview") {
+      exec(http("XUI_FPL_710_005_SubmitReview")
+        .post("/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/fpl/judge/reviewApplication/FPLSubmitReview.json"))
+        .check(jsonPath("$.data.additionalApplicationsBundle[0].value.applicationReviewed").is("YES")))
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
 }
+
 
 
