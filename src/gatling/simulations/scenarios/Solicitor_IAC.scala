@@ -2,9 +2,11 @@ package scenarios
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import java.text.SimpleDateFormat
-import java.util.Date
-import utils.{Common, Environment, Headers}
+import utilities._
+import utils._
+
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 object Solicitor_IAC {
 
@@ -13,9 +15,12 @@ object Solicitor_IAC {
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
 
-  val sdfDate = new SimpleDateFormat("yyyy-MM-dd")
-  val now = new Date()
-  val timeStamp = sdfDate.format(now)
+//  val sdfDate = new SimpleDateFormat("yyyy-MM-dd")
+//  val patternDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+//  val patternYear = DateTimeFormatter.ofPattern("yyyy")
+  val now = LocalDateTime.now()
+  val patternTimeNow = DateTimeFormatter.ofPattern("HH:mm:ss.SSS")
+//  val timeStamp = sdfDate.format(now)
 
   /*======================================================================================
   * IAC Case Creation
@@ -24,12 +29,12 @@ object Solicitor_IAC {
   val CreateIACCase =
 
     //set session variables
-    exec(_.setAll( "firstName" -> ("Perf" + Common.randomString(5)),
-                    "lastName" -> ("Test" + Common.randomString(5)),
-                    "dobDay" -> Common.getDay(),
-                    "dobMonth" -> Common.getMonth(),
-                    "dobYear" -> Common.getDobYear(),
-                    "currentDate" -> timeStamp))
+    exec(_.setAll("firstName" -> ("Perf" + StringUtils.randomString(5)),
+                  "lastName" -> ("Test" + StringUtils.randomString(5)),
+                  "dobDay" -> DateUtils.getRandomDayOfMonth(),
+                  "dobMonth" -> DateUtils.getRandomMonthOfYear(),
+                  "dobYear" -> DateUtils.getDatePastRandom("yyyy", minYears = 25, maxYears = 70),
+                  "currentDate" -> DateUtils.getDateNow("yyyy-MM-dd")))
 
   /*======================================================================================
   *Business process : Following business process is for IAC Case Creation
@@ -52,7 +57,7 @@ object Solicitor_IAC {
   *Business process : Following business process is for IAC Case Creation
   *Below group contains all the requests when starting create case
   ======================================================================================*/
-      
+
     .group("XUI_IAC_050_StartCreateCase1") {
       exec(http("XUI_IAC_050_005_StartCreateCase1")
         .get("/data/internal/case-types/Asylum/event-triggers/startAppeal?ignore-warning=false")
@@ -511,7 +516,7 @@ object Solicitor_IAC {
         .check(jsonPath("$..firstName").find(0).saveAs("firstName"))
         .check(jsonPath("$..lastName").find(0).saveAs("lastName"))
         .check(jsonPath("$..idamId").find(0).saveAs("idamId")))
-    
+
       .exec(http("XUI_IAC_290_010_ShareACaseUsers")
         .get("/api/caseshare/users")
         .headers(Headers.commonHeader)
@@ -534,4 +539,310 @@ object Solicitor_IAC {
 
     .pause(MinThinkTime , MaxThinkTime )
 
+  val QueryManagement =
+
+    group("XUI_IAC_310_RaiseNewQuery") {
+      exec(http("XUI_IAC_310_005_RaiseNewQuery")
+        .get("/query-management/query/#{caseId}")
+        .headers(Headers.commonHeader)
+        .check(substring("HMCTS Manage cases"))) // No page specific text is returned
+
+        .exec(Common.isAuthenticated)
+
+        .exec(http("XUI_IAC_310_005_ViewCase")
+          .get("/data/internal/cases/#{caseId}")
+          .headers(Headers.commonHeader)
+          .check(substring("case_id")))
+    }
+
+      .exec(getCookieValue(CookieKey("__userid__").withDomain(BaseURL.replace("https://", "")).saveAs("idamId")))
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
+
+      .pause(MinThinkTime , MaxThinkTime )
+
+      .group("XUI_IAC_320_ConfirmQueryDetails") {
+        exec(http("XUI_IAC_320_005_ConfirmQueryDetails")
+          .get("/data/internal/cases/#{caseId}/event-triggers/queryManagementRaiseQuery?ignore-warning=false")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+          .check(jsonPath("$.event_token").saveAs("event_token")))
+      }
+
+      .pause(MinThinkTime , MaxThinkTime )
+
+      .group("XUI_IAC_330_RaiseNewQuery") {
+        exec(http("XUI_IAC_330_005_RaiseNewQuery")
+          .get("/query-management/query/#{caseId}raiseAQuery")
+          .headers(Headers.commonHeader)
+          .check(substring("HMCTS Manage cases")))
+      }
+
+      .pause(MinThinkTime , MaxThinkTime )
+
+      .exec(_.setAll("currentTime" -> now.format(patternTimeNow),
+                     "currentDate" -> DateUtils.getDateNow("yyyy-MM-dd")))
+
+      .group("XUI_IAC_340_SubmitNewQuery") {
+        exec(http("XUI_IAC_340_005_SubmitNewQuery")
+          .post("/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(ElFileBody("bodies/iac/IACRaiseNewQuery.json")))
+      }
+
+      .pause(MinThinkTime , MaxThinkTime )
+
+  val RespondToQueryManagement =
+
+    group("XUI_IAC_350_ViewCase") {
+      exec(http("XUI_IAC_350_005_ViewCase")
+        .get("/data/internal/cases/#{caseId}")
+        .headers(Headers.commonHeader)
+        .check(substring("case_id")))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    .exec(_.set("taskName", "respondToQuery"))
+    .exec(session => session.set("counter", 0))
+
+    .doWhile(session => !session.contains("taskId") && session("counter").as[Int] < 20, "counter") {
+
+      pause(60)
+
+      .group("XUI_IAC_360_SelectCaseTask") {
+        exec(http("XUI_IAC_360__SelectCaseTask_#{counter}")
+          .post("/workallocation/case/task/#{caseId}")
+          .headers(Headers.commonHeader)
+          .header("Accept", "application/json, text/plain, */*")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(StringBody("""{"refined":true}"""))
+          .check(jsonPath("$[?(@.type=='#{taskName}')].id").optional.saveAs("taskId"))
+          .check(jsonPath("$[?(@.type=='#{taskName}')].type").optional.saveAs("taskType")))
+      }
+    }
+
+    .doIf(session => !session.contains("taskId")) {
+      exec { session =>
+        println("Could not retrieve task after 20 attempts, exiting user...")
+        println(s"Iteration ${session("counter").as[Int]}, caseId: ${session("caseId").as[String]}, taskId present: ${session.contains("taskId")}")
+        session.markAsFailed
+      }
+        .exitHereIfFailed
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    .group("XUI_IAC_370_AssignTaskToMe") {
+      exec(http("XUI_IAC_370_AssignTaskToMe_Claim")
+        .post("/workallocation/task/#{taskId}/claim")
+        .headers(Headers.commonHeader)
+        .header("content-type", "application/json")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(StringBody("""{}""")))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    .exec(_.setAll("currentTime" -> now.format(patternTimeNow),
+      "currentDate" -> DateUtils.getDateNow("yyyy-MM-dd")))
+
+    .group("XUI_IAC_380_ViewQuery") {
+      exec(Common.isAuthenticated)
+
+      .exec(http("XUI_IAC_380_005_ViewQuery")
+        .get("/data/internal/cases/#{caseId}/event-triggers/queryManagementRespondQuery?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmLegalRepresentativeQueries')].value.caseMessages[0].id").saveAs("raiseQueryParentId"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmLegalRepresentativeQueries')].value.caseMessages[0].value.id").saveAs("raiseQueryId"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmLegalRepresentativeQueries')].value.caseMessages[0].value.createdBy").saveAs("queryCreatedBy"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmLegalRepresentativeQueries')].value.caseMessages[0].value.createdOn").saveAs("queryCreatedOn")))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    .exec(_.setAll("currentTime" -> now.format(patternTimeNow)))
+    .exec(getCookieValue(CookieKey("__userid__").withDomain(BaseURL.replace("https://", "")).saveAs("idamId")))
+
+    .group("XUI_IAC_390_SubmitQueryResponse") {
+      exec(http("XUI_IAC_390_005_SubmitQueryResponse")
+        .post("/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACRespondToQuery.json")))
+
+      .exec(http("XUI_IAC_390_005_CompleteTask")
+        .post("/workallocation/task/#{taskId}/complete")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(StringBody("""{"actionByEvent":true,"eventName":"Respond Query"}""")))
+    }
+
+    //Removing this session variable because a new one needs to be captured for a future response
+    .exec(_.remove("taskId"))
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+  val FollowUpQuestionQueryManagement =
+
+    group("XUI_IAC_400_ViewCase") {
+      exec(http("XUI_IAC_400_005_ViewCase")
+        .get("/data/internal/cases/#{caseId}")
+        .headers(Headers.commonHeader)
+        .check(substring("case_id")))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    .group("XUI_IAC_410_AskFollowUpQuery") {
+      exec(http("XUI_IAC_410_005_AskFollowUpQuery")
+        .get("/data/internal/cases/#{caseId}/event-triggers/queryManagementRaiseQuery?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.case_fields[?(@.id=='qmLegalRepresentativeQueries')].value.caseMessages[0].value.id").saveAs("raiseQueryParentId"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmLegalRepresentativeQueries')].value.caseMessages[0].value.createdBy").saveAs("raiseQueryCreatedBy"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmLegalRepresentativeQueries')].value.caseMessages[0].value.createdOn").saveAs("raiseQueryCreatedOn"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmLegalRepresentativeQueries')].value.caseMessages[0].id").saveAs("raiseQueryId"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmLegalRepresentativeQueries')].value.caseMessages[1].id").saveAs("raiseQueryParentId2"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmLegalRepresentativeQueries')].value.caseMessages[1].value.id").saveAs("raiseQueryId2"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmLegalRepresentativeQueries')].value.caseMessages[1].value.createdBy").saveAs("queryCreatedBy2"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmLegalRepresentativeQueries')].value.caseMessages[1].value.createdOn").saveAs("queryCreatedOn2"))
+        .check(jsonPath("$.event_token").saveAs("event_token")))
+
+      .exec(Common.waJurisdictions)
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    .exec(_.setAll("currentTime" -> now.format(patternTimeNow),
+                   "currentDate" -> DateUtils.getDateNow("yyyy-MM-dd")))
+
+    .group("XUI_IAC_420_ValidateFollowUpDetails") {
+      exec(http("XUI_IAC_420_005_ValidateFollowUpDetails")
+        .post("/data/case-types/Asylum/validate?pageId=queryManagementRaiseQuery")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACFollowUpQuery.json"))
+        .check(substring("Followup")))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    .group("XUI_IAC_430_SubmitFollowUpQuery") {
+      exec(http("XUI_IAC_430_005_SubmitFollowUpQuery")
+        .post("/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/iac/IACFollowUpQuery.json")))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+  val RespondToFollowUpQueryManagement =
+
+    group("XUI_IAC_440_ViewCase") {
+      exec(http("XUI_IAC_440_005_ViewCase")
+        .get("/data/internal/cases/#{caseId}")
+        .headers(Headers.commonHeader)
+        .check(substring("case_id")))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    .exec(_.set("taskName", "respondToQuery"))
+    .exec(session => session.set("counter", 0))
+
+    .doWhile(session => !session.contains("taskId") && session("counter").as[Int] < 20, "counter") {
+
+      pause(60)
+
+      .group("XUI_IAC_450_SelectCaseTask") {
+        exec(http("XUI_IAC_450__SelectCaseTask_#{counter}")
+          .post("/workallocation/case/task/#{caseId}")
+          .headers(Headers.commonHeader)
+          .header("Accept", "application/json, text/plain, */*")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(StringBody("""{"refined":true}"""))
+          .check(jsonPath("$[?(@.type=='#{taskName}')].id").optional.saveAs("taskId"))
+          .check(jsonPath("$[?(@.type=='#{taskName}')].type").optional.saveAs("taskType")))
+      }
+    }
+
+    .doIf(session => !session.contains("taskId")) {
+      exec { session =>
+        println("Could not retrieve task after 20 attempts, exiting user...")
+        println(s"Iteration ${session("counter").as[Int]}, caseId: ${session("caseId").as[String]}, taskId present: ${session.contains("taskId")}")
+        session.markAsFailed
+      }
+        .exitHereIfFailed
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    .group("XUI_IAC_460_AssignTaskToMe") {
+      exec(http("XUI_IAC_460_AssignTaskToMe_Claim")
+        .post("/workallocation/task/#{taskId}/claim")
+        .headers(Headers.commonHeader)
+        .header("content-type", "application/json")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(StringBody("""{}""")))
+    }
+
+    .pause(MinThinkTime , MaxThinkTime )
+
+    .exec(_.setAll("currentTime" -> now.format(patternTimeNow),
+      "currentDate" -> DateUtils.getDateNow("yyyy-MM-dd")))
+
+    .group("XUI_IAC_470_ViewQuery") {
+      exec(Common.isAuthenticated)
+
+      .exec(http("XUI_IAC_470_005_ViewQuery")
+        .get("/data/internal/cases/#{caseId}/event-triggers/queryManagementRespondQuery?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmLegalRepresentativeQueries')].value.caseMessages[0].value.id").saveAs("raiseQueryId"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmLegalRepresentativeQueries')].value.caseMessages[0].value.createdBy").saveAs("raiseQueryCreatedBy"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmLegalRepresentativeQueries')].value.caseMessages[0].value.createdOn").saveAs("raiseQueryCreatedOn"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmLegalRepresentativeQueries')].value.caseMessages[0].id").saveAs("raiseQueryParentId"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmLegalRepresentativeQueries')].value.caseMessages[1].value.id").saveAs("raiseQueryId1"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmLegalRepresentativeQueries')].value.caseMessages[1].value.createdBy").saveAs("raiseQueryCreatedBy1"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmLegalRepresentativeQueries')].value.caseMessages[1].id").saveAs("raiseQueryParentId1"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmLegalRepresentativeQueries')].value.caseMessages[2].value.id").saveAs("raiseQueryId2"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmLegalRepresentativeQueries')].value.caseMessages[2].value.createdOn").saveAs("raiseQueryCreatedOn2"))
+        .check(jsonPath("$.case_fields[?(@.id=='qmLegalRepresentativeQueries')].value.caseMessages[2].id").saveAs("raiseQueryParentId2"))
+        .check(jsonPath("$.event_token").saveAs("event_token")))
+      }
+
+      .pause(MinThinkTime , MaxThinkTime )
+
+      .exec(_.setAll("currentTime" -> now.format(patternTimeNow),
+                     "currentDate" -> DateUtils.getDateNow("yyyy-MM-dd")))
+
+      .group("XUI_IAC_480_SubmitQueryResponse") {
+        exec(http("XUI_IAC_480_005_SubmitQueryResponse")
+          .post("/data/cases/#{caseId}/events")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(ElFileBody("bodies/iac/IACRespondToFollowUpQuery.json")))
+
+        .exec(http("XUI_IAC_480_005_CompleteTask")
+          .post("/workallocation/task/#{taskId}/complete")
+          .headers(Headers.commonHeader)
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(StringBody("""{"actionByEvent":true,"eventName":"Respond Query"}""")))
+      }
+
+      .pause(MinThinkTime , MaxThinkTime )
 }

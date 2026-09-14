@@ -208,16 +208,40 @@ class XUI_Simulation extends Simulation {
 	 ===============================================================================================*/
 	val ImmigrationAndAsylumSolicitorScenario = scenario("***** IAC Create Case *****")
 		.exitBlockOnFail {
-			feed(UserFeederIAC)
-				.exec(_.set("env", s"${env}")
-							.set("caseType", "Asylum"))
-				.exec(XuiHelper.Homepage)
-				.exec(XuiHelper.Login("#{user}", "#{password}"))
-				.repeat(2) {
-					exec(Solicitor_IAC.CreateIACCase)
-					// .exec(Solicitor_IAC.shareacase) //Temp removed as the way to share a case is now done through the case list
-				}
-				.exec(XuiHelper.Logout)
+
+			exec(_.set("env", s"${env}")
+			.set("caseType", "Asylum"))
+
+			.feed(UserFeederIAC)
+			.exec(session => session
+				.set("solicitorEmail", session("user").as[String])
+				.set("solicitorPassword", session("password").as[String]))
+
+			.exec(XuiHelper.Homepage)
+			.exec(XuiHelper.Login("#{solicitorEmail}", "#{solicitorPassword}"))
+			.exec(Solicitor_IAC.CreateIACCase)
+			.exec(Solicitor_IAC.QueryManagement)
+			.exec(XuiHelper.Logout)
+
+			.feed(UserFeederCTSC)
+			.exec(session => session
+				.set("cwEmail", session("user").as[String])
+				.set("cwPassword", session("password").as[String]))
+
+			.exec(XuiHelper.Homepage)
+			.exec(XuiHelper.Login("#{cwEmail}", "#{cwPassword}"))
+			.exec(Solicitor_IAC.RespondToQueryManagement)
+			.exec(XuiHelper.Logout)
+
+			.exec(XuiHelper.Homepage)
+			.exec(XuiHelper.Login("#{solicitorEmail}", "#{solicitorPassword}"))
+			.exec(Solicitor_IAC.FollowUpQuestionQueryManagement)
+			.exec(XuiHelper.Logout)
+
+			.exec(XuiHelper.Homepage)
+			.exec(XuiHelper.Login("#{cwEmail}", "#{cwPassword}"))
+			.exec(Solicitor_IAC.RespondToFollowUpQueryManagement)
+			.exec(XuiHelper.Logout)
 		}
 
 	/*===============================================================================================
@@ -534,15 +558,15 @@ class XUI_Simulation extends Simulation {
   setUp(
 		PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      	BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      	ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      	ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      	FinancialRemedySolicitorConsentedScenario.inject(simulationProfile(testType, frConsentedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		FinancialRemedySolicitorConsentedScenario.inject(simulationProfile(testType, frConsentedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		FinancialRemedySolicitorContestedScenario.inject(simulationProfile(testType, frContestedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-      CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 
   ).protocols(httpProtocol)
     .assertions(assertions(testType))

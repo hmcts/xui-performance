@@ -1,0 +1,63 @@
+{
+  "data": {
+    "qmLegalRepresentativeQueries": {
+      "partyName": "",
+      "roleOnCase": "",
+      "caseMessages": [
+        {
+          "value": {
+            "id": "#{raiseQueryParentId}",
+            "subject": "Perf test query subject",
+            "name": "sdsdsdsd hjhjhjhj",
+            "body": "Some perf test query details go here for query management perf testing",
+            "attachments": [],
+            "isHearingRelated": "No",
+            "createdBy": "#{raiseQueryCreatedBy}",
+            "createdOn": "#{raiseQueryCreatedOn}",
+            "messageType": "Followup"
+          },
+          "id": "#{raiseQueryId}"
+        },
+        {
+          "value": {
+            "id": "#{raiseQueryId2}",
+            "subject": "Perf test query subject",
+            "name": "PerfIa Caseofficer",
+            "body": "Here is my response to your query",
+            "attachments": [],
+            "isHearingRelated": "No",
+            "createdOn": "#{queryCreatedOn2}",
+            "createdBy": "#{queryCreatedBy2}",
+            "parentId": "#{raiseQueryParentId}",
+            "messageType": "Respond",
+            "isClosed": "No"
+          },
+          "id": "#{raiseQueryParentId2}"
+        },
+        {
+          "id": null,
+          "value": {
+            "id": "#{randomUuid()}",
+            "subject": "Perf test query subject",
+            "name": "sdsdsdsd hjhjhjhj",
+            "body": "Asking a follow up question",
+            "attachments": [],
+            "isHearingRelated": "No",
+            "createdOn": "#{currentDate}T#{currentTime}Z",
+            "createdBy": "#{idamId}",
+            "parentId": "#{raiseQueryParentId}",
+            "isClosed": "No",
+            "messageType": "Followup"
+          }
+        }
+      ]
+    }
+  },
+  "event": {
+    "id": "queryManagementRaiseQuery",
+    "summary": "",
+    "description": "Raise Query"
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false
+}
