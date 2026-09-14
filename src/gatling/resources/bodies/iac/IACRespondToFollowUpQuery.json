@@ -1,0 +1,79 @@
+{
+  "data": {
+    "qmLegalRepresentativeQueries": {
+      "partyName": "",
+      "roleOnCase": "",
+      "caseMessages": [
+        {
+          "value": {
+            "id": "#{raiseQueryId}",
+            "body": "Some perf test query details go here for query management perf testing",
+            "name": "sdsdsdsd hjhjhjhj",
+            "subject": "Perf test query subject",
+            "createdBy": "#{raiseQueryCreatedBy}",
+            "createdOn": "#{raiseQueryCreatedOn}",
+            "attachments": [],
+            "messageType": "Followup",
+            "isHearingRelated": "No"
+          },
+          "id": "#{raiseQueryParentId}"
+        },
+        {
+          "value": {
+            "id": "#{raiseQueryId1}",
+            "body": "Here is my response to your query",
+            "name": "PerfIa Caseofficer",
+            "subject": "Perf test query subject",
+            "isClosed": "No",
+            "parentId": "#{raiseQueryId}",
+            "createdBy": "#{raiseQueryCreatedBy1}",
+            "createdOn": "#{raiseQueryCreatedOn}",
+            "attachments": [],
+            "messageType": "Respond",
+            "isHearingRelated": "No"
+          },
+          "id": "#{raiseQueryParentId1}"
+        },
+        {
+          "value": {
+            "id": "#{raiseQueryId2}",
+            "body": "Asking a follow up question",
+            "name": "sdsdsdsd hjhjhjhj",
+            "subject": "Perf test query subject",
+            "isClosed": "No",
+            "parentId": "#{raiseQueryId}",
+            "createdBy": "#{raiseQueryCreatedBy}",
+            "createdOn": "#{raiseQueryCreatedOn2}",
+            "attachments": [],
+            "messageType": "Followup",
+            "isHearingRelated": "No"
+          },
+          "id": "#{raiseQueryParentId2}"
+        },
+        {
+          "id": null,
+          "value": {
+            "id": "#{randomUuid()}",
+            "subject": "Perf test query subject",
+            "name": "PerfIa Caseofficer",
+            "body": "Adding a response and closing the query",
+            "attachments": [],
+            "isHearingRelated": "No",
+            "createdOn": "#{currentDate}T#{currentTime}Z",
+            "createdBy": "#{raiseQueryCreatedBy1}",
+            "parentId": "#{raiseQueryId}",
+            "isClosed": "Yes",
+            "messageType": "Respond"
+          }
+        }
+      ]
+    }
+  },
+  "event": {
+    "id": "queryManagementRespondQuery",
+    "summary": "",
+    "description": "Respond Query"
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false
+}
