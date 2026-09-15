@@ -26,6 +26,7 @@ class XUI_Simulation extends Simulation {
 	val UserFeederFPL = csv("UserDataFPL.csv").circular
 	val CaseworkerUserFeeder = csv("UserDataCaseworkers.csv").circular
 	val UserFeederCTSC = csv("UserDataCTSC.csv").circular
+	val UserFeederCivil = csv("UserDataCivil.csv").circular
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
@@ -62,6 +63,7 @@ class XUI_Simulation extends Simulation {
 	val fplTargetPerHour: Double = 30
 	val frConsentedTargetPerHour: Double = 50
 	val frContestedTargetPerHour: Double = 50
+	val civilTargetPerHour: Double = 450
 	val caseworkerTargetPerHour: Double = 1000
 
 	val rampUpDurationMins = 5
@@ -479,6 +481,45 @@ class XUI_Simulation extends Simulation {
 				//.exec(XuiHelper.Logout)
 		}
 
+	val CivilSolicitorScenario = scenario("***** Civil Create Case *****")
+		.exitBlockOnFail{
+			feed(UserFeederCivil)
+			.exec(_.set("env", s"${env}")
+			.set("caseType", "CIVIL"))
+			.exec(XuiHelper.Homepage)
+			.exec(XuiHelper.Login("#{user}", "#{password}"))
+			.exec(Solicitor_Civil.CreateCivilCase)
+			.pause(60)
+			.exec(Solicitor_Civil.s2s("civil_service"))
+			.exec(Solicitor_Civil.s2s("xui_webapp"))
+			.exec(Solicitor_Civil.AddPayment)
+			.pause(60)
+			.exec(Solicitor_Civil.QueryManagement)
+			.exec(XuiHelper.Logout)
+
+			.feed(UserFeederCTSC)
+			.exec(XuiHelper.Homepage)
+			.exec(XuiHelper.Login("#{user}", "#{password}"))
+			.exec(Solicitor_Civil.RespondToQueryManagement)
+			.exec(XuiHelper.Logout)
+
+			.feed(UserFeederCivil)
+			.exec(XuiHelper.Homepage)
+			.exec(XuiHelper.Login("#{user}", "#{password}"))
+			.exec(Solicitor_Civil.RespondToCTSCResponse)
+			.exec(XuiHelper.Logout)
+
+			.exec(flushHttpCache)
+			.exec(flushCookieJar)
+			.pause(120)
+			.feed(UserFeederCTSC)
+			.exec(XuiHelper.Homepage)
+			.exec(XuiHelper.Login("#{user}", "#{password}"))
+			.exec(Solicitor_Civil.CTSCResponseToSecondQuery)
+			.exec(XuiHelper.Logout)
+		}
+
+
 	/*===============================================================================================
 	* XUI Caseworker - Search & View Case Scenario
 	 ===============================================================================================*/
@@ -556,17 +597,18 @@ class XUI_Simulation extends Simulation {
 	}
 
   setUp(
-		PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		FinancialRemedySolicitorConsentedScenario.inject(simulationProfile(testType, frConsentedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		FinancialRemedySolicitorContestedScenario.inject(simulationProfile(testType, frContestedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//		PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//		PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//		BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//		ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//		ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//		NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//		NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//		FinancialRemedySolicitorConsentedScenario.inject(simulationProfile(testType, frConsentedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//		FinancialRemedySolicitorContestedScenario.inject(simulationProfile(testType, frContestedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//		FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+//		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		CivilSolicitorScenario.inject(simulationProfile(testType, civilTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
