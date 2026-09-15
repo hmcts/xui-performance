@@ -540,7 +540,7 @@ object Solicitor_Civil {
 		======================================================================================*/
 
 		.group("XUI_Civil_340_ConfirmQueryDetails") {
-			exec(http("XUI_Civil_340_005_ConfirmQueryDetails")
+			exec(http("XUI_Civil_340_005_ConfirmQueryDetailsEventTrigger")
 				.get("/data/internal/cases/#{caseId}/event-triggers/queryManagementRaiseQuery?ignore-warning=false")
 				.headers(Headers.commonHeader)
 				.header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -644,7 +644,7 @@ object Solicitor_Civil {
 		.exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
 
 		.group("XUI_Civil_400_RespondToQuery") {
-			exec(http("XUI_Civil_400_005_RespondToQuery")
+			exec(http("XUI_Civil_400_005_RespondToQueryEventTrigger")
 				.get("/data/internal/cases/#{caseId}/event-triggers/queryManagementRespondQuery?ignore-warning=false")
 				.headers(Headers.commonHeader)
 				.header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -715,7 +715,7 @@ object Solicitor_Civil {
 		.group("XUI_Civil_430_RespondToQuery") {
 			exec(Common.isAuthenticated)
 
-			.exec(http("XUI_Civil_430_005_RespondToQuery")
+			.exec(http("XUI_Civil_430_005_RespondToQueryEventTrigger")
 				.get("/data/internal/cases/#{caseId}/event-triggers/queryManagementRaiseQuery?ignore-warning=false")
 				.headers(Headers.commonHeader)
 				.header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
@@ -844,7 +844,7 @@ object Solicitor_Civil {
 				.headers(Headers.commonHeader)
 				.check(substring("case_id")))
 
-			.exec(http("XUI_Civil_490_010_RespondToQuery")
+			.exec(http("XUI_Civil_490_010_RespondToQueryEventTrigger")
 				.get("/data/internal/cases/#{caseId}/event-triggers/queryManagementRespondQuery?ignore-warning=false")
 				.headers(Headers.commonHeader)
 				.header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
