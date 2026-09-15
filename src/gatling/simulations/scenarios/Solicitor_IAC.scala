@@ -547,12 +547,12 @@ object Solicitor_IAC {
         .headers(Headers.commonHeader)
         .check(substring("HMCTS Manage cases"))) // No page specific text is returned
 
-        .exec(Common.isAuthenticated)
+      .exec(Common.isAuthenticated)
 
-        .exec(http("XUI_IAC_310_005_ViewCase")
-          .get("/data/internal/cases/#{caseId}")
-          .headers(Headers.commonHeader)
-          .check(substring("case_id")))
+      .exec(http("XUI_IAC_310_005_ViewCase")
+        .get("/data/internal/cases/#{caseId}")
+        .headers(Headers.commonHeader)
+        .check(substring("case_id")))
     }
 
       .exec(getCookieValue(CookieKey("__userid__").withDomain(BaseURL.replace("https://", "")).saveAs("idamId")))
@@ -612,7 +612,7 @@ object Solicitor_IAC {
       pause(60)
 
       .group("XUI_IAC_360_SelectCaseTask") {
-        exec(http("XUI_IAC_360__SelectCaseTask_#{counter}")
+        exec(http("XUI_IAC_360_SelectCaseTask_#{counter}")
           .post("/workallocation/case/task/#{caseId}")
           .headers(Headers.commonHeader)
           .header("Accept", "application/json, text/plain, */*")
@@ -767,7 +767,7 @@ object Solicitor_IAC {
       pause(60)
 
       .group("XUI_IAC_450_SelectCaseTask") {
-        exec(http("XUI_IAC_450__SelectCaseTask_#{counter}")
+        exec(http("XUI_IAC_450_SelectCaseTask_#{counter}")
           .post("/workallocation/case/task/#{caseId}")
           .headers(Headers.commonHeader)
           .header("Accept", "application/json, text/plain, */*")
