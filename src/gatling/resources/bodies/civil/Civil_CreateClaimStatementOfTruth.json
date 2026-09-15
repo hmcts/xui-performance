@@ -1,0 +1,157 @@
+{
+  "data": {
+    "uiStatementOfTruth": {
+      "name": "Perf Test",
+      "role": "Solicitor"
+    }
+  },
+  "event": {
+    "id": "CREATE_CLAIM_SPEC",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "solicitorReferences": {
+      "applicantSolicitor1Reference": "claimant-perf123",
+      "respondentSolicitor1Reference": "defendant-perf123"
+    },
+    "applicant1": {
+      "type": "COMPANY",
+      "companyName": "Claimant",
+      "partyEmail": null,
+      "partyPhone": null,
+      "partyName": "Claimant",
+      "partyTypeDisplayValue": "Company",
+      "partyID": null,
+      "primaryAddress": {
+        "AddressLine1": "#{addressLines(0)}",
+        "AddressLine2": "#{addressLines(1)}",
+        "AddressLine3": "",
+        "PostTown": "#{addressLines(2)}",
+        "County": "",
+        "Country": "United Kingdom",
+        "PostCode": "#{addressLines(3)}"
+      },
+      "unavailableDates": [],
+      "flags": {
+        "roleOnCase": null,
+        "partyName": null,
+        "groupId": null,
+        "visibility": null,
+        "details": []
+      }
+    },
+    "addApplicant2": "No",
+    "applicantSolicitor1CheckEmail": {
+      "email": "#{user}",
+      "correct": "No"
+    },
+    "applicantSolicitor1UserDetails": {
+      "email": "civilmoneyclaimsdemo@gmail.com",
+      "id": null
+    },
+    "applicant1OrganisationPolicy": {
+      "OrgPolicyReference": "SolRef123",
+      "PrepopulateToUsersOrganisation": null,
+      "Organisation": {
+        "OrganisationID": "#{orgId}",
+        "OrganisationName": "#{orgName}"
+      },
+      "PreviousOrganisations": []
+    },
+    "specApplicantCorrespondenceAddressRequired": "No",
+    "respondent1": {
+      "type": "COMPANY",
+      "companyName": "Defendant",
+      "partyEmail": null,
+      "partyPhone": null,
+      "individualDateOfBirth": null,
+      "soleTraderDateOfBirth": null,
+      "partyName": "Defendant",
+      "partyTypeDisplayValue": "Company",
+      "partyID": null,
+      "primaryAddress": {
+        "AddressLine1": "#{addressLines(0)}",
+        "AddressLine2": "#{addressLines(1)}",
+        "AddressLine3": "",
+        "PostTown": "#{addressLines(2)}",
+        "County": "",
+        "Country": "United Kingdom",
+        "PostCode": "#{addressLines(3)}"
+      },
+      "unavailableDates": [],
+      "flags": {
+        "roleOnCase": null,
+        "partyName": null,
+        "groupId": null,
+        "visibility": null,
+        "details": []
+      }
+    },
+    "specRespondent1Represented": "Yes",
+    "respondent1OrgRegistered": "Yes",
+    "respondent1OrganisationPolicy": {
+      "OrgPolicyReference": "DefSol123",
+      "Organisation": {
+        "OrganisationID": "#{orgId}",
+        "OrganisationName": "#{orgName}"
+      },
+      "PreviousOrganisations": []
+    },
+    "respondentSolicitor1EmailAddress": "civilmoneyclaimsdemo@gmail.com",
+    "specRespondentCorrespondenceAddressRequired": "No",
+    "addRespondent2": "No",
+    "isFlightDelayClaim": "No",
+    "detailsOfClaim": "Civil XUI performance test details",
+    "specClaimTimelineList": "MANUAL",
+    "timelineOfEvents": [
+      {
+        "value": {
+          "timelineDate": "2025-01-20",
+          "timelineDescription": "Performance test event 1 goes here"
+        },
+        "id": "91700f71-3dcb-42be-8ec8-f5ecbc9391fa"
+      }
+    ],
+    "speclistYourEvidenceList": [
+      {
+        "value": {
+          "evidenceType": "EXPERT_WITNESS",
+          "expertWitnessEvidence": "This witness was an expert who saw it all happen"
+        },
+        "id": "f0af6e89-420c-41ee-9e61-ca68c68a51fb"
+      }
+    ],
+    "claimAmountBreakup": [
+      {
+        "value": {
+          "claimReason": "performance test claim",
+          "claimAmount": "900000"
+        },
+        "id": "bf2f32c8-8dbb-45d1-b24a-04a6505b5c5e"
+      }
+    ],
+    "claimAmountBreakupSummaryObject": "| Description | Amount | \n |---|---| \n | performance test claim | £ 9000.00 |\n | **Total** | £ 9000.00 |",
+    "CaseAccessCategory": null,
+    "totalClaimAmount": "9000",
+    "totalInterest": "0",
+    "claimInterest": "No",
+    "calculatedInterest": "| Description | Amount | \n |---|---| \n | Claim amount | £ 9000 | \n | Interest amount | £ 0 | \n | Total amount | £ 9000 |",
+    "claimFee": {
+      "calculatedAmountInPence": "45500",
+      "code": "FEE0208",
+      "version": "4"
+    },
+    "caseNameHmctsInternal": null,
+    "featureToggleWA": null,
+    "fixedCosts": {
+      "claimFixedCosts": "No"
+    },
+    "uiStatementOfTruth": {
+      "name": "Perf Test",
+      "role": "Solicitor"
+    }
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false
+}

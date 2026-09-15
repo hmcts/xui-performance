@@ -1,0 +1,44 @@
+{
+  "data": {
+    "queries": {
+      "partyName": "All queries",
+      "caseMessages": [
+        {
+          "value": {
+            "id": "#{raiseQueryId1}",
+            "body": "Here are some details about the perf test query",
+            "name": "Case sol2",
+            "subject": "Perf test query",
+            "createdBy": "#{queryCreatedBy}",
+            "createdOn": "#{queryCreatedOn}",
+            "isHearingRelated": "No"
+          },
+        "id": "#{raiseQueryParentId1}"
+        },
+        {
+          "id": null,
+          "value": {
+            "id": "#{randomUuid()}",
+            "subject": "Perf test query subject",
+            "name": "cuiuser r2",
+            "body": "Here is my response to your query",
+            "attachments": [],
+            "isHearingRelated": "No",
+            "createdOn": "#{currentDate(yyyy-MM-dd)}T#{currentDate(HH:mm:ss.S)}Z",
+            "createdBy": "#{idamId}",
+            "parentId": "#{raiseQueryId1}",
+            "isClosed": "No",
+            "messageType": "Respond"
+          }
+        }
+      ]
+    }
+  },
+  "event": {
+    "id": "queryManagementRespondQuery",
+    "summary": "",
+    "description": "Respond to a query"
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false
+}

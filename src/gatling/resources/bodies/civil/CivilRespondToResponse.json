@@ -1,0 +1,56 @@
+{
+  "data": {
+    "queries": {
+      "partyName": "All queries",
+      "caseMessages": [
+        {
+          "id": "#{raiseQueryParentId1}",
+          "value": {
+            "id": "#{raiseQueryId1}",
+            "body": "Here are some details about the perf test query",
+            "name": "Case sol2",
+            "subject": "Perf test query",
+            "createdBy": "#{queryCreatedBy}",
+            "createdOn": "#{queryCreatedOn}",
+            "isHearingRelated": "No"
+          }
+        },
+        {
+          "id": "#{raiseQueryParentId2}",
+          "value": {
+            "id": ",#{raiseQueryId2}",
+            "body": "some response details",
+            "name": "cuiuser r2",
+            "subject": "Test",
+            "parentId": "#{raiseQueryId1}",
+            "createdBy": "#{queryCreatedBy2}”",
+            "createdOn": "#{queryCreatedOn2}",
+            "isHearingRelated": "No"
+          }
+        },
+        {
+          "id": null,
+          "value": {
+            "id": "#{randomUuid()}",
+            "subject": "Test",
+            "name": "Case sol2",
+            "body": "here is my second follow up question",
+            "attachments": [],
+            "isHearingRelated": "No",
+            "createdOn": "#{currentDate(yyyy-MM-dd)}T#{currentDate(HH:mm:ss.S)}Z",
+            "createdBy": "#{idamId}",
+            "parentId": "#{raiseQueryId1}",
+            "isClosed": "Yes"
+          }
+        }
+      ]
+    }
+  },
+  "event": {
+    "id": "queryManagementRaiseQuery",
+    "summary": "",
+    "description": "Raise a new query"
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false
+}
