@@ -58,7 +58,7 @@ class XUI_Simulation extends Simulation {
 	val prlFL401TargetPerHour: Double = 34
 	val bailsTargetPerHour: Double = 10
 	val probateTargetPerHour: Double = 250
-	val iacTargetPerHour: Double = 20
+	val iacTargetPerHour: Double = 152
 	val nfdSoleTargetPerHour: Double = 120
 	val nfdJointTargetPerHour: Double = 120
 	val fplTargetPerHour: Double = 30
@@ -81,7 +81,7 @@ class XUI_Simulation extends Simulation {
 	val pauseOption: PauseType = debugMode match {
 		case "off" if testType == "perftest" => constantPauses
 		case "off" if testType == "pipeline" => customPauses(pipelinePausesMillis)
-		case _ => disabledPauses
+		case _ => constantPauses //disabledPauses
 	}
 
 	val httpProtocol = http
