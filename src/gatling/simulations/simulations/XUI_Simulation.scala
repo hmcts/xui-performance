@@ -523,8 +523,7 @@ class XUI_Simulation extends Simulation {
 						details("XUI_Bails_770_Upload_Signed_Notice_Submit").successfulRequests.percent.gte(80),
 						details("XUI_Probate_330_ViewCase").successfulRequests.percent.gte(80),
 						details("XUI_IAC_300_AppealDeclarationSubmitted").successfulRequests.percent.gte(80),
-						details("XUI_000_CCDEvent-system-progress-case-awaiting-final-order").successfulRequests.percent.gte(80), //NFD Sole
-						details("XUI_000_CCDEvent-system-progress-held-case").successfulRequests.percent.gte(80), //NFD Joint
+						details("CCD_SubmitEvent_caseworker-grant-final-order").successfulRequests.percent.gte(80), //NFD
 						details("XUI_FR_Consented_170_SubmitApplication").successfulRequests.percent.gte(80),
             details("XUI_FR_Contested_200_ReviewAndSubmitApplication").successfulRequests.percent.gte(80),
 						details("XUI_FPL_330_ReturnToCase").successfulRequests.percent.gte(80),
