@@ -15,25 +15,25 @@
     "isC2Confidential": "No",
     "applicantsList": {
       "value": {
-        "code": "applicant",
-        "label": "FPLA team, Applicant"
+          "code": "#{PersonOptionOneCode}",
+          "label": "#{PersonOptionOneLabel}"
       },
       "list_items": [
         {
-          "code": "applicant",
-          "label": "FPLA team, Applicant"
+          "code": "#{PersonOptionOneCode}",
+          "label": "#{PersonOptionOneLabel}"
         },
         {
-          "code": "e8f10a22-c38b-4ab3-88c9-288753d3bd01",
-          "label": "RespKvbrH TestmItzd, Respondent 1"
+          "code": "#{PersonOptionTwoCode}",
+          "label": "#{PersonOptionTwoLabel}"
         },
         {
-          "code": "f2c2aca5-7b5f-499c-aa0e-14eba8cfd3fe",
-          "label": "ChildbRaea TestzGaRE, Child 1"
+          "code": "#{PersonOptionThreeCode}",
+          "label": "#{PersonOptionThreeLabel}"
         },
         {
-          "code": "SOMEONE_ELSE",
-          "label": "Someone else"
+          "code": "#{PersonOptionFourCode}",
+          "label": "#{PersonOptionFourLabel}"
         }
       ]
     },
@@ -53,8 +53,8 @@
         "value": [],
         "list_items": [
           {
-            "code": "f2c2aca5-7b5f-499c-aa0e-14eba8cfd3fe",
-            "label": "ChildbRaea TestzGaRE (Child 1)"
+              "code": "#{PersonOptionThreeCode}",
+              "label": "#{PersonOptionThreeLabel}"
           }
         ]
       },
@@ -101,7 +101,7 @@
             ],
             "uploaderCaseRoles": []
           },
-          "id": "0381fc16-4be8-41fa-8076-dd9bad919599"
+          "id": "#{DraftOrderBundleID}"
         }
       ],
       "supplementsBundle": [],
@@ -122,7 +122,7 @@
     ],
     "isCTSCUser": "No",
     "displayAmountToPay": "Yes",
-    "amountToPay": "6200",
+    "amountToPay": "#{PaymentAmount}",
     "latestRoleSent": null,
     "temporaryPbaPayment": {
       "pbaNumber": null,

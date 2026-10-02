@@ -1351,14 +1351,11 @@ object Solicitor_FPL {
 
     .pause(MinThinkTime, MaxThinkTime)
 
-
   val fplAdditionalApplications =
-
 
     /*======================================================================================
     Select Upload Additional Applications
     ======================================================================================*/
-
 
     group("XUI_FPL_600_AdditionalApplications") {
       exec(http("XUI_FPL_600_005_AdditionalApplications")
@@ -1367,6 +1364,14 @@ object Solicitor_FPL {
         .header("x-xsrf-token", "#{XSRFToken}")
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.case_fields[?(@.id == 'applicantsList')].value.list_items[0].code").saveAs("PersonOptionOneCode"))
+        .check(jsonPath("$.case_fields[?(@.id == 'applicantsList')].value.list_items[0].label").saveAs("PersonOptionOneLabel"))
+        .check(jsonPath("$.case_fields[?(@.id == 'applicantsList')].value.list_items[1].code").saveAs("PersonOptionTwoCode"))
+        .check(jsonPath("$.case_fields[?(@.id == 'applicantsList')].value.list_items[1].label").saveAs("PersonOptionTwoLabel"))
+        .check(jsonPath("$.case_fields[?(@.id == 'applicantsList')].value.list_items[2].code").saveAs("PersonOptionThreeCode"))
+        .check(jsonPath("$.case_fields[?(@.id == 'applicantsList')].value.list_items[2].label").saveAs("PersonOptionThreeLabel"))
+        .check(jsonPath("$.case_fields[?(@.id == 'applicantsList')].value.list_items[3].code").saveAs("PersonOptionFourCode"))
+        .check(jsonPath("$.case_fields[?(@.id == 'applicantsList')].value.list_items[3].label").saveAs("PersonOptionFourLabel"))
         .check(substring("What application are you making?")))
     }
 
@@ -1448,6 +1453,8 @@ object Solicitor_FPL {
         .header("x-xsrf-token", "#{XSRFToken}")
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
         .body(ElFileBody("bodies/fpl/localAuthority/createC2/FPLC2ApplicationInfo.json"))
+        .check(jsonPath("$.data.temporaryC2Document.draftOrdersBundle[0].id").saveAs("DraftOrderBundleID"))
+        .check(jsonPath("$.data.amountToPay").saveAs("PaymentAmount"))
         .check(substring("C2 Draft Order Document")))
     }
 
@@ -1481,13 +1488,7 @@ object Solicitor_FPL {
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
         .body(ElFileBody("bodies/fpl/localAuthority/createC2/FPLC2ApplicationSubmit.json"))
         .check(jsonPath("$.data.additionalApplicationsBundle[0].value.c2DocumentBundle.document.document_url").saveAs("C2ApplicationDocumentURL"))
-//        .check(jsonPath("$.data.additionalApplicationsBundle[0].value.c2DocumentBundle.document.upload_timestamp").saveAs("C2ApplicationDocumentTimestamp"))
-//        .check(jsonPath("$.data.additionalApplicationsBundle[0].value.c2DocumentBundle.draftOrdersBundle[0].value.document.upload_timestamp").saveAs("DraftOrderDocumentTimestamp"))
-//        .check(jsonPath("$.data.additionalApplicationsBundle[0].value.c2DocumentBundle.supportingEvidenceBundle[0].value.document.upload_timestamp").saveAs("EvidenceDocumentTimestamp"))
-          .check(jsonPath("$.data.additionalApplicationsBundle[0].value.c2DocumentBundle.draftOrdersBundle[0].id").saveAs("DraftOrderBundleID"))
         .check(jsonPath("$.data.additionalApplicationsBundle[0].value.c2DocumentBundle.supportingEvidenceBundle[0].id").saveAs("EvidenceConsentBundleID"))
-
-
         .check(jsonPath("$.state").is("PREPARE_FOR_HEARING")))
     }
     .pause(MinThinkTime, MaxThinkTime)
@@ -1515,11 +1516,8 @@ object Solicitor_FPL {
     ======================================================================================*/
 
     .exec { session =>
-      val now = LocalDateTime.now()
-      val patternTodayTime = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS")
-      val uploadTimestamp = now.format(patternTodayTime)
-      val patternWrittenDate = DateTimeFormatter.ofPattern("d MMMM yyyy, h:mma")
-      val uploadedDateTime = now.format(patternWrittenDate)
+      val uploadTimestamp = DateUtils.getDateNow("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS")
+      val uploadedDateTime = DateUtils.getDateNow("d MMMM yyyy, h:mma")
 
       session
         .set("upload_timestamp", uploadTimestamp)
@@ -1592,6 +1590,3 @@ object Solicitor_FPL {
     .pause(MinThinkTime, MaxThinkTime)
 
 }
-
-
-

@@ -15,25 +15,25 @@
     "isC2Confidential": "No",
     "applicantsList": {
       "value": {
-        "code": "applicant",
-        "label": "FPLA team, Applicant"
+        "code": "#{PersonOptionOneCode}",
+        "label": "#{PersonOptionOneLabel}"
       },
       "list_items": [
         {
-          "code": "applicant",
-          "label": "FPLA team, Applicant"
+          "code": "#{PersonOptionOneCode}",
+          "label": "#{PersonOptionOneLabel}"
         },
         {
-          "code": "79b0e137-f1f3-4585-9f81-8933827dc43b",
-          "label": "RespsgTgt TestRaSIY, Respondent 1"
+          "code": "#{PersonOptionTwoCode}",
+          "label": "#{PersonOptionTwoLabel}"
         },
         {
-          "code": "053887a4-ee38-4688-8c25-380e9b8286c6",
-          "label": "ChildDWFbb TestUIkjc, Child 1"
+          "code": "#{PersonOptionThreeCode}",
+          "label": "#{PersonOptionThreeLabel}"
         },
         {
-          "code": "SOMEONE_ELSE",
-          "label": "Someone else"
+          "code": "#{PersonOptionFourCode}",
+          "label": "#{PersonOptionFourLabel}"
         }
       ]
     },
@@ -68,25 +68,25 @@
     "isC2Confidential": "No",
     "applicantsList": {
       "value": {
-        "code": "applicant",
-        "label": "FPLA team, Applicant"
+        "code": "#{PersonOptionOneCode}",
+        "label": "#{PersonOptionOneLabel}"
       },
       "list_items": [
         {
-          "code": "applicant",
-          "label": "FPLA team, Applicant"
+          "code": "#{PersonOptionOneCode}",
+          "label": "#{PersonOptionOneLabel}"
         },
         {
-          "code": "79b0e137-f1f3-4585-9f81-8933827dc43b",
-          "label": "RespsgTgt TestRaSIY, Respondent 1"
+          "code": "#{PersonOptionTwoCode}",
+          "label": "#{PersonOptionTwoLabel}"
         },
         {
-          "code": "053887a4-ee38-4688-8c25-380e9b8286c6",
-          "label": "ChildDWFbb TestUIkjc, Child 1"
+          "code": "#{PersonOptionThreeCode}",
+          "label": "#{PersonOptionThreeLabel}"
         },
         {
-          "code": "SOMEONE_ELSE",
-          "label": "Someone else"
+          "code": "#{PersonOptionFourCode}",
+          "label": "#{PersonOptionFourLabel}"
         }
       ]
     },

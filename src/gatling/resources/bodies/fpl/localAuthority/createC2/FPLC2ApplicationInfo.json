@@ -7,8 +7,8 @@
         "value": [],
         "list_items": [
           {
-            "code": "867e140c-d5a8-4999-82de-e5a52c00ffd1",
-            "label": "Childvaqsx TestvITms (Child 1)"
+            "code": "#{PersonOptionThreeCode}",
+            "label": "#{PersonOptionThreeLabel}"
           }
         ]
       },
@@ -96,20 +96,20 @@
       },
       "list_items": [
         {
-          "code": "applicant",
-          "label": "FPLA team, Applicant"
+          "code": "#{PersonOptionOneCode}",
+          "label": "#{PersonOptionOneLabel}"
         },
         {
-          "code": "c05f2da2-37be-4eb4-a4bc-00a5070ac153",
-          "label": "RespDEfSz TestmGxim, Respondent 1"
+          "code": "#{PersonOptionTwoCode}",
+          "label": "#{PersonOptionTwoLabel}"
         },
         {
-          "code": "867e140c-d5a8-4999-82de-e5a52c00ffd1",
-          "label": "Childvaqsx TestvITms, Child 1"
+          "code": "#{PersonOptionThreeCode}",
+          "label": "#{PersonOptionThreeLabel}"
         },
         {
-          "code": "SOMEONE_ELSE",
-          "label": "Someone else"
+          "code": "#{PersonOptionFourCode}",
+          "label": "#{PersonOptionFourLabel}"
         }
       ]
     },
@@ -129,8 +129,8 @@
         "value": [],
         "list_items": [
           {
-            "code": "867e140c-d5a8-4999-82de-e5a52c00ffd1",
-            "label": "Childvaqsx TestvITms (Child 1)"
+            "code": "#{PersonOptionThreeCode}",
+            "label": "#{PersonOptionThreeLabel}"
           }
         ]
       },
