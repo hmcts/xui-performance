@@ -29,6 +29,7 @@ class XUI_Simulation extends Simulation {
 	val UserFeederFPL = csv("UserDataFPL.csv").circular
 	val CaseworkerUserFeeder = csv("UserDataCaseworkers.csv").circular
 	val UserFeederCTSC = csv("UserDataCTSC.csv").circular
+	val UserFeederCCNotes = csv("UserDataCCNotes.csv").circular
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
@@ -66,6 +67,7 @@ class XUI_Simulation extends Simulation {
 	val frConsentedTargetPerHour: Double = 50
 	val frContestedTargetPerHour: Double = 50
 	val caseworkerTargetPerHour: Double = 1000
+	val ccNotesTargetPerHour: Double = 50
 
 	val rampUpDurationMins = 5
 	val rampDownDurationMins = 5
@@ -488,6 +490,26 @@ class XUI_Simulation extends Simulation {
 		}
 
 	/*===============================================================================================
+	* XUI Common Component Notes (CC Notes) - PCS Add Case Note Scenario
+	 ===============================================================================================*/
+	val CCNotesScenario = scenario("***** CC Notes Add Case Note *****")
+		.exitBlockOnFail {
+			feed(UserFeederCCNotes)
+				.exec(_.set("env", s"${env}")
+							.set("caseType", "PCS"))
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user}", "#{password}"))
+				.exec(CC_Notes.SearchCase)
+				.exec(CC_Notes.OpenCase)
+				.exec(CC_Notes.GetProfile)
+				.exec(CC_Notes.StartAddCaseNote)
+				.exec(CC_Notes.ValidateAddCaseNote)
+				.exec(CC_Notes.SubmitAddCaseNote)
+				.exec(CC_Notes.VerifyCaseNote)
+				.exec(XuiHelper.Logout)
+		}
+
+	/*===============================================================================================
 	* Simulation Configuration
 	 ===============================================================================================*/
 
@@ -527,7 +549,8 @@ class XUI_Simulation extends Simulation {
 						details("XUI_FR_Consented_170_SubmitApplication").successfulRequests.percent.gte(80),
             details("XUI_FR_Contested_200_ReviewAndSubmitApplication").successfulRequests.percent.gte(80),
 						details("XUI_FPL_330_ReturnToCase").successfulRequests.percent.gte(80),
-						details("XUI_Caseworker_100_CaseList").successfulRequests.percent.gte(80))
+						details("XUI_Caseworker_100_CaseList").successfulRequests.percent.gte(80),
+						details("XUI_CCNotes_080_SubmitAddCaseNote").successfulRequests.percent.gte(80))
 				}
 				else {
 					Seq(global.successfulRequests.percent.is(100))
@@ -548,7 +571,8 @@ class XUI_Simulation extends Simulation {
 		FinancialRemedySolicitorConsentedScenario.inject(simulationProfile(testType, frConsentedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		FinancialRemedySolicitorContestedScenario.inject(simulationProfile(testType, frContestedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		CCNotesScenario.inject(simulationProfile(testType, ccNotesTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
     .maxDuration(75.minutes)
