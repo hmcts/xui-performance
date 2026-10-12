@@ -588,7 +588,7 @@ object Caseworker_ManageHearing {
 			}
       val ClickView =
            group("XUI_PCS_Caseworker_AmendHearing_16_SelectMangeHearing") {
-				exec(http("XUI_PCS_Caseworker_CancelHearing_16_SelectMangeHearing")
+				exec(http("XUI_PCS_Caseworker_AmendHearing_16_SelectMangeHearing")
 					.get("/workallocation/case/tasks/#{caseId}/event/manageHearing/caseType/PCS/jurisdiction/PCS")
 					.header("Accept", "application/json")
 				)
