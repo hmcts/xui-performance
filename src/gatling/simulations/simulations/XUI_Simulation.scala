@@ -501,9 +501,7 @@ class XUI_Simulation extends Simulation {
 				.exec(XuiHelper.Login("#{user}", "#{password}"))
 				.exec(Caseworker_PCS_AddCaseNotes.SearchCase)
 				.exec(Caseworker_PCS_AddCaseNotes.OpenCase)
-				.exec(Caseworker_PCS_AddCaseNotes.StartAddCaseNote)
-				.exec(Caseworker_PCS_AddCaseNotes.ValidateAddCaseNote)
-				.exec(Caseworker_PCS_AddCaseNotes.SubmitAddCaseNote)
+				.exec(Caseworker_PCS_AddCaseNotes.AddCaseNote)
 				.exec(Caseworker_PCS_AddCaseNotes.VerifyCaseNote)
 				.exec(XuiHelper.Logout)
 		}
@@ -549,7 +547,7 @@ class XUI_Simulation extends Simulation {
             details("XUI_FR_Contested_200_ReviewAndSubmitApplication").successfulRequests.percent.gte(80),
 						details("XUI_FPL_330_ReturnToCase").successfulRequests.percent.gte(80),
 						details("XUI_Caseworker_100_CaseList").successfulRequests.percent.gte(80),
-						details("Caseworker_PCS_AddCaseNotes_080_SubmitAddCaseNote").successfulRequests.percent.gte(80))
+						details("Caseworker_PCS_AddCaseNotes_070_SubmitAddCaseNote").successfulRequests.percent.gte(80))
 				}
 				else {
 					Seq(global.successfulRequests.percent.is(100))
@@ -560,17 +558,17 @@ class XUI_Simulation extends Simulation {
 	}
 
   setUp(
-		//PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//FinancialRemedySolicitorConsentedScenario.inject(simulationProfile(testType, frConsentedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//FinancialRemedySolicitorContestedScenario.inject(simulationProfile(testType, frContestedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		FinancialRemedySolicitorConsentedScenario.inject(simulationProfile(testType, frConsentedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		FinancialRemedySolicitorContestedScenario.inject(simulationProfile(testType, frContestedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		CaseworkerPCSAddCaseNotesScenario.inject(simulationProfile(testType, caseworkerPCSAddCaseNotesTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
