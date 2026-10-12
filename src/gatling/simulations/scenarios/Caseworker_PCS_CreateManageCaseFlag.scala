@@ -23,6 +23,15 @@ import scala.jdk.CollectionConverters._
 *   InactiveCaseFlag      — amendFlags inactive (start → build → submit → verify)
 *
 * HARs: createmanagecaseflag.har / inactive case flag.har / Full till inactive case flag.har
+*
+* JSON body pattern (aligned with CC Notes / PCS ElFileBody + #{EL}):
+*   - Static bodies: ElFileBody under bodies/pcs/caseflag/
+*   - SearchCases.json: temporarily {} (size removed for sanity). Case filter is query
+*     case_reference. Restore {"size":25} if search fails without page size.
+*   - createFlags / amendFlags submits: Jackson merges eventTriggerJson (parties,
+*     allDefendants, existing caseFlags) and mutates flagIdToAmend, then
+*     StringBody("#{…EventBody}") — same EL style as CC Notes templates.
+*   - experimental Accept is set on httpProtocol (not duplicated per-request).
 ======================================================================================*/
 
 object Caseworker_PCS_CreateManageCaseFlag {
@@ -82,6 +91,72 @@ object Caseworker_PCS_CreateManageCaseFlag {
     caseFlagsPayload
   }
 
+  /** CCD POST /events envelope: data + event id/token + ignore_warning. */
+  private def ccdEventJson(eventId: String, data: ObjectNode, eventToken: String): String = {
+    val event = mapper.createObjectNode()
+    event.put("id", eventId)
+    event.put("summary", "")
+    event.put("description", "")
+
+    val payload = mapper.createObjectNode()
+    payload.set("data", data)
+    payload.set("event", event)
+    payload.put("event_token", eventToken)
+    payload.put("ignore_warning", false)
+
+    mapper.writeValueAsString(payload)
+  }
+
+  /**
+   * Shared amendFlags body for Manage (comment + dateTimeModified) and Inactive
+   * (same fields + status Inactive). Marks the session failed if flagIdToAmend is missing.
+   */
+  private def buildAmendFlagsSessionBody(
+    session: Session,
+    comment: String,
+    setStatusInactive: Boolean,
+    sessionBodyKey: String
+  ): Session = {
+    val trigger = mapper.readTree(session("eventTriggerJson").as[String])
+    val eventToken = session("event_token").as[String]
+    val flagIdToAmend = session("flagIdToAmend").as[String]
+
+    val caseFlagsPayload = caseFlagsFromTrigger(trigger)
+    val existingDetails: ArrayNode =
+      if (caseFlagsPayload.path("details").isArray) caseFlagsPayload.path("details").deepCopy().asInstanceOf[ArrayNode]
+      else mapper.createArrayNode()
+
+    val now = ccdDateTimeFormatter.format(Instant.now())
+    var updated = false
+
+    existingDetails.asScala.foreach { d =>
+      if (!updated && d.path("id").asText("") == flagIdToAmend) {
+        val valueNode = d.path("value")
+        if (valueNode.isObject) {
+          val value = valueNode.asInstanceOf[ObjectNode]
+          value.put("flagComment", comment)
+          value.put("flagUpdateComment", comment)
+          if (setStatusInactive) value.put("status", "Inactive")
+          value.put("dateTimeModified", now)
+          updated = true
+        }
+      }
+    }
+
+    if (!updated) {
+      session.markAsFailed
+    } else {
+      caseFlagsPayload.set("details", existingDetails)
+
+      val data = mapper.createObjectNode()
+      data.set("caseFlags", caseFlagsPayload)
+      data.set("parties", partiesFromTrigger(trigger))
+      data.set("allDefendants", allDefendantsFromTrigger(trigger))
+
+      session.set(sessionBodyKey, ccdEventJson("amendFlags", data, eventToken))
+    }
+  }
+
   private def refreshXsrf =
     exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
 
@@ -91,13 +166,13 @@ object Caseworker_PCS_CreateManageCaseFlag {
 
   val SearchCase =
 
-    group("Caseworker_PCS_CreateCaseFlag_030_SearchCase") {
-      exec(http("Caseworker_PCS_CreateCaseFlag_030_005_SearchCase")
+    group("Caseworker_PCS_CreateCaseFlag_01_SearchCase") {
+      exec(http("Caseworker_PCS_CreateCaseFlag_01_005_SearchCase")
         .post("/data/internal/searchCases?ctid=#{caseType}&use_case=SEARCH&view=SEARCH&page=1&case_reference=#{caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
         .formParam("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody("""{"size":25}"""))
+        .body(ElFileBody("bodies/pcs/caseflag/SearchCases.json"))
         .check(status.is(200))
         .check(substring("\"results\""))
         .check(jsonPath("$.results[*].case_id").find.is("#{caseId}")))
@@ -111,13 +186,12 @@ object Caseworker_PCS_CreateManageCaseFlag {
 
   val OpenCase =
 
-    group("Caseworker_PCS_CreateCaseFlag_040_OpenCase") {
-      exec(http("Caseworker_PCS_CreateCaseFlag_040_005_OpenCase")
+    group("Caseworker_PCS_CreateCaseFlag_02_OpenCase") {
+      exec(http("Caseworker_PCS_CreateCaseFlag_02_005_OpenCase")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .header("experimental", "true")
         .check(status.is(200))
         .check(jsonPath("$.case_id").is("#{caseId}")))
 
@@ -132,37 +206,36 @@ object Caseworker_PCS_CreateManageCaseFlag {
 
   val CreateCaseFlag =
 
-    group("Caseworker_PCS_CreateCaseFlag_060_StartCreateFlags") {
+    group("Caseworker_PCS_CreateCaseFlag_03_StartCreateFlags") {
       exec(Common.profile)
 
-      .exec(http("Caseworker_PCS_CreateCaseFlag_060_005_CreateFlagsWACheckTask")
+      .exec(http("Caseworker_PCS_CreateCaseFlag_03_005_CreateFlagsWACheckTask")
         .get("/workallocation/case/tasks/#{caseId}/event/createFlags/caseType/#{caseType}/jurisdiction/#{caseType}")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
         .check(status.is(200))
         .check(substring("task_required_for_event")))
 
-      .exec(http("Caseworker_PCS_CreateCaseFlag_060_010_StartCreateFlags")
+      .exec(http("Caseworker_PCS_CreateCaseFlag_03_010_StartCreateFlags")
         .get("/data/internal/cases/#{caseId}/event-triggers/createFlags?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-        .header("experimental", "true")
         .check(status.is(200))
         .check(substring("Create case flags"))
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(bodyString.saveAs("eventTriggerJson")))
     }
 
+    // XSRF refresh outside Start group (CCNotes review convention)
     .exec(refreshXsrf)
 
     .pause(MinThinkTime, MaxThinkTime)
 
-    .group("Caseworker_PCS_CreateCaseFlag_070_GetFlagRefData") {
-      exec(http("Caseworker_PCS_CreateCaseFlag_070_005_GetFlagRefData")
+    .group("Caseworker_PCS_CreateCaseFlag_04_GetFlagRefData") {
+      exec(http("Caseworker_PCS_CreateCaseFlag_04_005_GetFlagRefData")
         .get("/refdata/commondata/caseflags/service-id=AAA3?flag-type=CASE&welsh-required=Y&available-external-flag=N")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
-        .header("experimental", "true")
         .check(status.is(200))
         .check(substring("CF0002")))
     }
@@ -223,32 +296,20 @@ object Caseworker_PCS_CreateManageCaseFlag {
       data.set("parties", partiesFromTrigger(trigger))
       data.set("allDefendants", allDefendantsFromTrigger(trigger))
 
-      val event = mapper.createObjectNode()
-      event.put("id", "createFlags")
-      event.put("summary", "")
-      event.put("description", "")
-
-      val payload = mapper.createObjectNode()
-      payload.set("data", data)
-      payload.set("event", event)
-      payload.put("event_token", eventToken)
-      payload.put("ignore_warning", false)
-
       session
         .set("existingFlagIds", existingFlagIds)
-        .set("createFlagsEventBody", mapper.writeValueAsString(payload))
+        .set("createFlagsEventBody", ccdEventJson("createFlags", data, eventToken))
     }
 
     .exec(refreshXsrf)
 
-    .group("Caseworker_PCS_CreateCaseFlag_080_SubmitCreateFlags") {
-      exec(http("Caseworker_PCS_CreateCaseFlag_080_005_SubmitCreateFlags")
+    .group("Caseworker_PCS_CreateCaseFlag_05_SubmitCreateFlags") {
+      exec(http("Caseworker_PCS_CreateCaseFlag_05_005_SubmitCreateFlags")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-        .header("experimental", "true")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody(session => session("createFlagsEventBody").as[String]))
+        .body(StringBody("#{createFlagsEventBody}"))
         .check(status.is(201))
         .check(substring("CF0002"))
         .check(substring("#{flagComment}"))
@@ -276,13 +337,12 @@ object Caseworker_PCS_CreateManageCaseFlag {
 
     .pause(MinThinkTime, MaxThinkTime)
 
-    .group("Caseworker_PCS_CreateCaseFlag_090_VerifyFlag") {
-      exec(http("Caseworker_PCS_CreateCaseFlag_090_005_VerifyFlag")
+    .group("Caseworker_PCS_CreateCaseFlag_06_VerifyFlag") {
+      exec(http("Caseworker_PCS_CreateCaseFlag_06_005_VerifyFlag")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .header("experimental", "true")
         .check(status.is(200))
         .check(substring("CF0002"))
         .check(substring("#{flagComment}")))
@@ -290,19 +350,18 @@ object Caseworker_PCS_CreateManageCaseFlag {
 
     .pause(MinThinkTime, MaxThinkTime)
 
-    .group("Caseworker_PCS_CreateCaseFlag_100_ViewCaseFlags") {
-      exec(http("Caseworker_PCS_CreateCaseFlag_100_005_ViewCaseFlags")
+    .group("Caseworker_PCS_CreateCaseFlag_07_ViewCaseFlags") {
+      exec(http("Caseworker_PCS_CreateCaseFlag_07_005_ViewCaseFlags")
         .get("/cases/case-details/#{caseType}/#{caseType}/#{caseId}")
         .headers(Headers.navigationHeader)
         .check(status.is(200))
         .check(substring("exui-root")))
 
-      .exec(http("Caseworker_PCS_CreateCaseFlag_100_010_LoadCaseFlagsData")
+      .exec(http("Caseworker_PCS_CreateCaseFlag_07_010_LoadCaseFlagsData")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .header("experimental", "true")
         .check(status.is(200))
         .check(substring("Complex Case")))
 
@@ -318,21 +377,20 @@ object Caseworker_PCS_CreateManageCaseFlag {
 
   val ManageCaseFlag =
 
-    group("Caseworker_PCS_CreateCaseFlag_110_StartAmendFlags") {
+    group("Caseworker_PCS_CreateCaseFlag_08_StartAmendFlags") {
       exec(Common.profile)
 
-      .exec(http("Caseworker_PCS_CreateCaseFlag_110_005_AmendFlagsWACheckTask")
+      .exec(http("Caseworker_PCS_CreateCaseFlag_08_005_AmendFlagsWACheckTask")
         .get("/workallocation/case/tasks/#{caseId}/event/amendFlags/caseType/#{caseType}/jurisdiction/#{caseType}")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
         .check(status.is(200))
         .check(substring("task_required_for_event")))
 
-      .exec(http("Caseworker_PCS_CreateCaseFlag_110_010_StartAmendFlags")
+      .exec(http("Caseworker_PCS_CreateCaseFlag_08_010_StartAmendFlags")
         .get("/data/internal/cases/#{caseId}/event-triggers/amendFlags?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-        .header("experimental", "true")
         .check(status.is(200))
         .check(substring("Manage case flags"))
         .check(jsonPath("$.event_token").saveAs("event_token"))
@@ -346,67 +404,23 @@ object Caseworker_PCS_CreateManageCaseFlag {
     .exec(_.set("flagUpdateComment", "Update flag"))
 
     .exec { session =>
-      val trigger = mapper.readTree(session("eventTriggerJson").as[String])
-      val eventToken = session("event_token").as[String]
-      val updateComment = session("flagUpdateComment").as[String]
-      val flagIdToAmend = session("flagIdToAmend").as[String]
-
-      val caseFlagsPayload = caseFlagsFromTrigger(trigger)
-      val existingDetails: ArrayNode =
-        if (caseFlagsPayload.path("details").isArray) caseFlagsPayload.path("details").deepCopy().asInstanceOf[ArrayNode]
-        else mapper.createArrayNode()
-
-      val now = ccdDateTimeFormatter.format(Instant.now())
-      var updated = false
-
-      existingDetails.asScala.foreach { d =>
-        if (!updated && d.path("id").asText("") == flagIdToAmend) {
-          val valueNode = d.path("value")
-          if (valueNode.isObject) {
-            val value = valueNode.asInstanceOf[ObjectNode]
-            value.put("flagComment", updateComment)
-            value.put("flagUpdateComment", updateComment)
-            value.put("dateTimeModified", now)
-            updated = true
-          }
-        }
-      }
-
-      if (!updated) {
-        session.markAsFailed
-      } else {
-        caseFlagsPayload.set("details", existingDetails)
-
-        val data = mapper.createObjectNode()
-        data.set("caseFlags", caseFlagsPayload)
-        data.set("parties", partiesFromTrigger(trigger))
-        data.set("allDefendants", allDefendantsFromTrigger(trigger))
-
-        val event = mapper.createObjectNode()
-        event.put("id", "amendFlags")
-        event.put("summary", "")
-        event.put("description", "")
-
-        val payload = mapper.createObjectNode()
-        payload.set("data", data)
-        payload.set("event", event)
-        payload.put("event_token", eventToken)
-        payload.put("ignore_warning", false)
-
-        session.set("amendFlagsEventBody", mapper.writeValueAsString(payload))
-      }
+      buildAmendFlagsSessionBody(
+        session,
+        session("flagUpdateComment").as[String],
+        setStatusInactive = false,
+        "amendFlagsEventBody"
+      )
     }
 
     .exec(refreshXsrf)
 
-    .group("Caseworker_PCS_CreateCaseFlag_120_SubmitAmendFlags") {
-      exec(http("Caseworker_PCS_CreateCaseFlag_120_005_SubmitAmendFlags")
+    .group("Caseworker_PCS_CreateCaseFlag_09_SubmitAmendFlags") {
+      exec(http("Caseworker_PCS_CreateCaseFlag_09_005_SubmitAmendFlags")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-        .header("experimental", "true")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody(session => session("amendFlagsEventBody").as[String]))
+        .body(StringBody("#{amendFlagsEventBody}"))
         .check(status.is(201))
         .check(substring("Update flag"))
         .check(substring("#{flagIdToAmend}")))
@@ -414,13 +428,12 @@ object Caseworker_PCS_CreateManageCaseFlag {
 
     .pause(MinThinkTime, MaxThinkTime)
 
-    .group("Caseworker_PCS_CreateCaseFlag_130_VerifyAmendFlags") {
-      exec(http("Caseworker_PCS_CreateCaseFlag_130_005_VerifyAmendFlags")
+    .group("Caseworker_PCS_CreateCaseFlag_10_VerifyAmendFlags") {
+      exec(http("Caseworker_PCS_CreateCaseFlag_10_005_VerifyAmendFlags")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .header("experimental", "true")
         .check(status.is(200))
         .check(substring("Update flag"))
         .check(substring("#{flagIdToAmend}")))
@@ -437,21 +450,20 @@ object Caseworker_PCS_CreateManageCaseFlag {
 
   val InactiveCaseFlag =
 
-    group("Caseworker_PCS_CreateCaseFlag_140_StartInactiveFlags") {
+    group("Caseworker_PCS_CreateCaseFlag_11_StartInactiveFlags") {
       exec(Common.profile)
 
-      .exec(http("Caseworker_PCS_CreateCaseFlag_140_005_InactiveFlagsWACheckTask")
+      .exec(http("Caseworker_PCS_CreateCaseFlag_11_005_InactiveFlagsWACheckTask")
         .get("/workallocation/case/tasks/#{caseId}/event/amendFlags/caseType/#{caseType}/jurisdiction/#{caseType}?xuiPhase=inactive")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
         .check(status.is(200))
         .check(substring("task_required_for_event")))
 
-      .exec(http("Caseworker_PCS_CreateCaseFlag_140_010_StartInactiveFlags")
+      .exec(http("Caseworker_PCS_CreateCaseFlag_11_010_StartInactiveFlags")
         .get("/data/internal/cases/#{caseId}/event-triggers/amendFlags?ignore-warning=false&xuiPhase=inactive")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-        .header("experimental", "true")
         .check(status.is(200))
         .check(substring("Manage case flags"))
         .check(jsonPath("$.event_token").saveAs("event_token"))
@@ -465,68 +477,23 @@ object Caseworker_PCS_CreateManageCaseFlag {
     .exec(_.set("flagInactiveComment", "Inactivated"))
 
     .exec { session =>
-      val trigger = mapper.readTree(session("eventTriggerJson").as[String])
-      val eventToken = session("event_token").as[String]
-      val inactiveComment = session("flagInactiveComment").as[String]
-      val flagIdToAmend = session("flagIdToAmend").as[String]
-
-      val caseFlagsPayload = caseFlagsFromTrigger(trigger)
-      val existingDetails: ArrayNode =
-        if (caseFlagsPayload.path("details").isArray) caseFlagsPayload.path("details").deepCopy().asInstanceOf[ArrayNode]
-        else mapper.createArrayNode()
-
-      val now = ccdDateTimeFormatter.format(Instant.now())
-      var updated = false
-
-      existingDetails.asScala.foreach { d =>
-        if (!updated && d.path("id").asText("") == flagIdToAmend) {
-          val valueNode = d.path("value")
-          if (valueNode.isObject) {
-            val value = valueNode.asInstanceOf[ObjectNode]
-            value.put("flagComment", inactiveComment)
-            value.put("flagUpdateComment", inactiveComment)
-            value.put("status", "Inactive")
-            value.put("dateTimeModified", now)
-            updated = true
-          }
-        }
-      }
-
-      if (!updated) {
-        session.markAsFailed
-      } else {
-        caseFlagsPayload.set("details", existingDetails)
-
-        val data = mapper.createObjectNode()
-        data.set("caseFlags", caseFlagsPayload)
-        data.set("parties", partiesFromTrigger(trigger))
-        data.set("allDefendants", allDefendantsFromTrigger(trigger))
-
-        val event = mapper.createObjectNode()
-        event.put("id", "amendFlags")
-        event.put("summary", "")
-        event.put("description", "")
-
-        val payload = mapper.createObjectNode()
-        payload.set("data", data)
-        payload.set("event", event)
-        payload.put("event_token", eventToken)
-        payload.put("ignore_warning", false)
-
-        session.set("inactiveFlagsEventBody", mapper.writeValueAsString(payload))
-      }
+      buildAmendFlagsSessionBody(
+        session,
+        session("flagInactiveComment").as[String],
+        setStatusInactive = true,
+        "inactiveFlagsEventBody"
+      )
     }
 
     .exec(refreshXsrf)
 
-    .group("Caseworker_PCS_CreateCaseFlag_150_SubmitInactiveFlags") {
-      exec(http("Caseworker_PCS_CreateCaseFlag_150_005_SubmitInactiveFlags")
+    .group("Caseworker_PCS_CreateCaseFlag_12_SubmitInactiveFlags") {
+      exec(http("Caseworker_PCS_CreateCaseFlag_12_005_SubmitInactiveFlags")
         .post("/data/cases/#{caseId}/events")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
-        .header("experimental", "true")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .body(StringBody(session => session("inactiveFlagsEventBody").as[String]))
+        .body(StringBody("#{inactiveFlagsEventBody}"))
         .check(status.is(201))
         .check(substring("Inactive"))
         .check(substring("Inactivated"))
@@ -535,13 +502,12 @@ object Caseworker_PCS_CreateManageCaseFlag {
 
     .pause(MinThinkTime, MaxThinkTime)
 
-    .group("Caseworker_PCS_CreateCaseFlag_160_VerifyInactiveFlags") {
-      exec(http("Caseworker_PCS_CreateCaseFlag_160_005_VerifyInactiveFlags")
+    .group("Caseworker_PCS_CreateCaseFlag_13_VerifyInactiveFlags") {
+      exec(http("Caseworker_PCS_CreateCaseFlag_13_005_VerifyInactiveFlags")
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
         .header("x-xsrf-token", "#{XSRFToken}")
-        .header("experimental", "true")
         .check(status.is(200))
         .check(substring("Inactive"))
         .check(substring("Inactivated"))
