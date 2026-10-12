@@ -14,6 +14,9 @@ object Caseworker_ManageHearing {
   val MaxThinkTime = Environment.maxThinkTime
   val UserFeederHearing = csv("UserDataCaseworkerPCS_ManageHearing.csv").circular
  
+ /*====================================================================================
+  *Search PCS cases (SEARCH view) by Case ID
+  *=====================================================================================*/
 
   val OpenCaseIssued =
         group("XUI_PCS_Caseworker_AddHearing_03_OpenCaseIssuedRecord") {
@@ -105,6 +108,10 @@ object Caseworker_ManageHearing {
 
 				.pause(MinThinkTime, MaxThinkTime)
     }
+
+  /*====================================================================================
+  *SELECT MANAGE HEARING DROP DOWN FROM NEXT STEP DROP DOWN
+  *=====================================================================================*/
     val AddHearing =
         group("XUI_PCS_Caseworker_AddHearing_04_SelectManageHearingDropDown") {
 				exec(http("XUI_PCS_Caseworker_AddHearing_04_SelectManageHearingDropDown")
@@ -159,6 +166,10 @@ object Caseworker_ManageHearing {
 
 				.pause(MinThinkTime, MaxThinkTime)
             }
+ 
+ /*====================================================================================
+  *ADD HEARING REQUIRED DETAILS
+  *=====================================================================================*/
 
     val AddHearingDetails =
         group("XUI_PCS_Caseworker_AddHearing_05_AddDetails") {
@@ -225,6 +236,10 @@ object Caseworker_ManageHearing {
 		 		)
 				.pause(MinThinkTime, MaxThinkTime)
 			}
+
+ /*====================================================================================
+  * CLOSE CASE AND RETURN TO CASE DETAILS
+  *=====================================================================================*/
      val CloseCase =
         group("XUI_PCS_Caseworker_AddHearing_07_ClickClose&Return") {
 				exec(http("XUI_PCS_Caseworker_AddHearing_07_ClickClose&Return")
@@ -283,6 +298,9 @@ object Caseworker_ManageHearing {
 				)
 				.pause(MinThinkTime, MaxThinkTime)
 			}
+ /*====================================================================================
+  * GO TO HISTORY TAB
+  *=====================================================================================*/
     val HistoryView =
         group("XUI_PCS_Caseworker_AddHearing_08_clickhistoryTab") {
 				exec(http("XUI_PCS_Caseworker_AddHearing_08_clickhistoryTab")
@@ -306,6 +324,10 @@ object Caseworker_ManageHearing {
 				)
 				.pause(MinThinkTime, MaxThinkTime)
 			} 
+
+ /*====================================================================================
+  * SEARCH CASE ID FROM FEEDER FILE
+  *=====================================================================================*/
 
     val SearchCaseId =
        group("XUI_PCS_Caseworker_AmendHearing_09_SearchRecord") {
@@ -358,6 +380,10 @@ object Caseworker_ManageHearing {
 				)
 				.pause(MinThinkTime, MaxThinkTime)
 			}
+
+ /*====================================================================================
+  * OPEN AND VIEW CASE 
+  *=====================================================================================*/
     val ViewCaseId =
        group("XUI_PCS_Caseworker_AmendHearing_10_clcikview") {
 				exec(http("XUI_PCS_Caseworker_AmendHearing_10_clcikview")
@@ -439,6 +465,10 @@ object Caseworker_ManageHearing {
 				)
 				.pause(MinThinkTime, MaxThinkTime)
 			}
+
+ /*====================================================================================
+  * SEARCH CASE ID FROM FEEDER FILE
+  *=====================================================================================*/
     val ManagehearingTab =
        group("XUI_PCS_Caseworker_AmendHearing_11_ManagehearingTab") {
 				exec(http("XUI_PCS_Caseworker_AmendHearing_11_ManagehearingTab")
@@ -480,6 +510,10 @@ object Caseworker_ManageHearing {
 				.pause(MinThinkTime, MaxThinkTime)
 			}   
 
+ /*====================================================================================
+  * CHOOSE EDIT HEARING OPTION
+  *=====================================================================================*/
+
       val EditHearing =
           group("XUI_PCS_Caseworker_AmendHearing_12_ChooseEditHearing") {
 				exec(http("XUI_PCS_Caseworker_AmendHearing_12_ChooseEditHearing")
@@ -498,6 +532,10 @@ object Caseworker_ManageHearing {
 				)
 				.pause(MinThinkTime, MaxThinkTime)
           }
+
+ /*====================================================================================
+  * CHOOSE CONTINUE TAB AND UPDATE EXISTING DETAILS 
+  *=====================================================================================*/
          .group("XUI_PCS_Caseworker_AmendHearing_13_EditHearingContinue") {
 				exec(http("XUI_PCS_Caseworker_AmendHearing_13_EditHearingContinue")
 					.get("/auth/keepalive")
@@ -528,6 +566,10 @@ object Caseworker_ManageHearing {
                 )
 				.pause(MinThinkTime, MaxThinkTime)
 			}
+
+ /*====================================================================================
+  * SUBMIT EDITED DETAILS
+  *=====================================================================================*/
 		    .group("XUI_PCS_Caseworker_AmendHearing_14_Submit") {
 				exec(http("XUI_PCS_Caseworker_AmendHearing_14_Submit")
 					.get("/auth/keepalive")
@@ -584,8 +626,12 @@ object Caseworker_ManageHearing {
 					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
                     .check(substring("PCS"))
 				)
-				.pause(MinThinkTime, MaxThinkTime)
+				.pause(MinThinkTime, MaxThinkTime)a
 			}
+
+ /*====================================================================================
+  * CHOOSE HISTORY VIEW
+  *=====================================================================================*/
       val ClickView =
            group("XUI_PCS_Caseworker_AmendHearing_16_SelectMangeHearing") {
 				exec(http("XUI_PCS_Caseworker_AmendHearing_16_SelectMangeHearing")
@@ -596,7 +642,7 @@ object Caseworker_ManageHearing {
 					.get("/data/internal/cases/#{caseId}/event-triggers/manageHearing")
 					.header("experimental", "true")
 					.header("Client-Context", "eyJjbGllbnRfY29udGV4dCI6eyJ1c2VyX2xhbmd1YWdlIjp7Imxhbmd1YWdlIjoiZW4ifX19")
-					.header("Accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+					.header("Accept", "application/vnd.uk.gov.hmcts.ccd-data-st ore-api.ui-start-event-trigger.v2+json;charset=UTF-8")
 					.queryParam("ignore-warning", "false")
 					.check(regex("event_token\":\"(.*?)\",\"wizard_pages").saveAs("event_token2"))
                     .check(jsonPath("$.case_fields[?(@.id == 'hearing_CancellationReason')].display_context").is("MANDATORY"))
