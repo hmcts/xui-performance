@@ -12,13 +12,11 @@ object Caseworker_ManageHearing {
 
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
-  val caseIdFeeder = csv("UserDataHearing.csv").circular
-  val TypeHearingFeeder = csv("TypeOfHearing.csv").random
-  val WordingFeeder = csv("WordingOfHearing.csv").random
+  val UserFeederHearing = csv("UserDataCaseworkerPCS_ManageHearing.csv").circular
+ 
 
-  val OpenCaseIssed =
+  val OpenCaseIssued =
         group("XUI_PCS_Caseworker_AddHearing_03_OpenCaseIssuedRecord") {
-            feed(caseIdFeeder)
 				exec(http("XUI_PCS_Caseworker_AddHearing_03_OpenCaseIssuedRecord")
 					.get("/auth/keepalive")
 					.headers(Headers.commonHeader)
@@ -164,8 +162,6 @@ object Caseworker_ManageHearing {
 
     val AddHearingDetails =
         group("XUI_PCS_Caseworker_AddHearing_05_AddDetails") {
-            feed(TypeHearingFeeder)
-            feed(WordingFeeder)
 				exec(http("XUI_PCS_Caseworker_AddHearing_05_AddDetails")
 					.post("/data/case-types/PCS/validate?pageId=manageHearinghearingDetails")
 					.headers(Headers.commonHeader)
@@ -267,17 +263,6 @@ object Caseworker_ManageHearing {
 					.get("/api/wa-supported-jurisdiction/get")
 					.headers(Headers.commonHeader)
         			.header("accept", "application/json")
-					.header("x-dtreferer", BaseURL + "/cases/case-details/PCS/PCS/#{caseId}/trigger/manageHearing/confirm")
-					.header("Priority", "u=0")
-					.header("Accept", "application/json, text/plain, */*")
-					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
-                    .check(substring("PCS"))
-				)
-				.exec(http("/api/wa-supported-jurisdiction/get")
-					.get("/api/wa-supported-jurisdiction/get")
-					.headers(Headers.commonHeader)
-        			.header("accept", "application/json")
 					.header("x-dtreferer", BaseURL + "/cases/case-details/PCS/PCS/#{caseId}")
 					.header("Accept", "application/json, text/plain, */*")
 					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
@@ -353,6 +338,7 @@ object Caseworker_ManageHearing {
 					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 					.queryParam("access", "read")
                     .check(jsonPath("$[0].caseTypes[0].name").is("Possession"))
+                    .check(substring("Civil Possession"))
 				)
                 .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRF-TOKEN8")))
 
@@ -372,7 +358,7 @@ object Caseworker_ManageHearing {
 				)
 				.pause(MinThinkTime, MaxThinkTime)
 			}
-    val VeiwCaseId =
+    val ViewCaseId =
        group("XUI_PCS_Caseworker_AmendHearing_10_clcikview") {
 				exec(http("XUI_PCS_Caseworker_AmendHearing_10_clcikview")
 					.get("/auth/isAuthenticated")
@@ -390,6 +376,7 @@ object Caseworker_ManageHearing {
 					.header("Accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
 					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
+                    .check(substring("Possession"))
 				)
 				.exec(http("/api/wa-supported-jurisdiction/get")
 					.get("/api/wa-supported-jurisdiction/get")
@@ -438,6 +425,7 @@ object Caseworker_ManageHearing {
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
 					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 					.body(StringBody("{\"refined\":true}"))
+					.check(status.in(200))
 				)
 				.exec(http("/aggregated/caseworkers/:uid/jurisdictions")
 					.get("/aggregated/caseworkers/:uid/jurisdictions")
@@ -451,7 +439,7 @@ object Caseworker_ManageHearing {
 				)
 				.pause(MinThinkTime, MaxThinkTime)
 			}
-    val MangehearingTab =
+    val ManagehearingTab =
        group("XUI_PCS_Caseworker_AmendHearing_11_ManagehearingTab") {
 				exec(http("XUI_PCS_Caseworker_AmendHearing_11_ManagehearingTab")
 					.get("/workallocation/case/tasks/#{caseId}/event/manageHearing/caseType/PCS/jurisdiction/PCS")
@@ -484,6 +472,7 @@ object Caseworker_ManageHearing {
 					.check(regex("event_token\":\"(.*?)\",\"wizard_pages").saveAs("event_token1"))
 					.check(regex("hearing_HearingSummaryMarkdown\",\"label\":\"\",\"hidden\":null,\"value\":\"(.*?)&nbsp;").saveAs("HearingSummaryMarkdown"))
                     .check(regex(""""id"\s*:\s*"hearing_HearingId"[\s\S]*?"value"\s*:\s*(\d+)""").saveAs("hearingId"))
+                    .check(status.in(200))
 				)
 
                 .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRF-TOKEN11")))
@@ -505,7 +494,6 @@ object Caseworker_ManageHearing {
 					.formParam("X-XSRF-TOKEN", "${XSRF-TOKEN11}")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
 					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
-					//.body(StringBody("{\"data\":{\"showManageHearingPage\":\"YES\",\"manageHearingOption\":\"EDIT\",\"selectedHearingId\":null,\"mhDraftPartyList\":null,\"hearing_HearingId\":\"932"\",\"hearing_HearingSummaryMarkdown\":\"#{HearingSummaryMarkdown}&nbsp;</p>\",\"mhDraft_HearingId\":null,\"mhDraft_HearingSummaryMarkdown\":null,\"mhDraft_Type\":null,\"mhDraft_OtherHearingType\":null,\"mhDraft_NoticeWording\":null,\"mhDraft_Date\":null,\"mhDraft_DurationDays\":null,\"mhDraft_DurationHours\":null,\"mhDraft_DurationMinutes\":null,\"mhDraft_Notes\":null,\"mhDraft_IssueNotice\":null,\"mhDraft_IsWithoutNotice\":null,\"mhDraft_AdditionalInformation\":null,\"mhDraft_CancellationReason\":null},\"event\":{\"id\":\"manageHearing\",\"summary\":\"\",\"description\":\"\"},\"event_data\":{\"showManageHearingPage\":\"YES\",\"manageHearingOption\":\"EDIT\",\"selectedHearingId\":null,\"mhDraftPartyList\":null,\"hearing_HearingId\":\932\",\"hearing_HearingSummaryMarkdown\":\"#{HearingSummaryMarkdown}&nbsp;</p>\",\"mhDraft_HearingId\":null,\"mhDraft_HearingSummaryMarkdown\":null,\"mhDraft_Type\":null,\"mhDraft_OtherHearingType\":null,\"mhDraft_NoticeWording\":null,\"mhDraft_Date\":null,\"mhDraft_DurationDays\":null,\"mhDraft_DurationHours\":null,\"mhDraft_DurationMinutes\":null,\"mhDraft_Notes\":null,\"mhDraft_IssueNotice\":null,\"mhDraft_IsWithoutNotice\":null,\"mhDraft_AdditionalInformation\":null,\"mhDraft_CancellationReason\":null},\"event_token\":\"#{event_token1}\",\"ignore_warning\":false,\"case_reference\":\"#{caseId}\"}"))
                     .body(StringBody("""{"data":{"showManageHearingPage":"YES","manageHearingOption":"EDIT","selectedHearingId":null,"mhDraftPartyList":null,"hearing_HearingId":"932","hearing_HearingSummaryMarkdown":"#{HearingSummaryMarkdown}&nbsp;</p>","mhDraft_HearingId":null,"mhDraft_HearingSummaryMarkdown":null,"mhDraft_Type":null,"mhDraft_OtherHearingType":null,"mhDraft_NoticeWording":null,"mhDraft_Date":null,"mhDraft_DurationDays":null,"mhDraft_DurationHours":null,"mhDraft_DurationMinutes":null,"mhDraft_Notes":null,"mhDraft_IssueNotice":null,"mhDraft_IsWithoutNotice":null,"mhDraft_AdditionalInformation":null,"mhDraft_CancellationReason":null},"event":{"id":"manageHearing","summary":"","description":""},"event_data":{"showManageHearingPage":"YES","manageHearingOption":"EDIT","selectedHearingId":null,"mhDraftPartyList":null,"hearing_HearingId":"932","hearing_HearingSummaryMarkdown":"#{HearingSummaryMarkdown}&nbsp;</p>","mhDraft_HearingId":null,"mhDraft_HearingSummaryMarkdown":null,"mhDraft_Type":null,"mhDraft_OtherHearingType":null,"mhDraft_NoticeWording":null,"mhDraft_Date":null,"mhDraft_DurationDays":null,"mhDraft_DurationHours":null,"mhDraft_DurationMinutes":null,"mhDraft_Notes":null,"mhDraft_IssueNotice":null,"mhDraft_IsWithoutNotice":null,"mhDraft_AdditionalInformation":null,"mhDraft_CancellationReason":null},"event_token":"#{event_token1}","ignore_warning":false,"case_reference":"#{caseId}"}"""))
 				)
 				.pause(MinThinkTime, MaxThinkTime)
@@ -536,6 +524,7 @@ object Caseworker_ManageHearing {
 					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 					//.body(StringBody("{\"data\":{\"hearingLocation\":\"#{hearingLocation}\",\"hearing_Type\":\"#{TypeofHearing}\",\"hearing_NoticeWording\":\"#{WordingOfHearing}\",\"hearing_Date\":\"2028-02-03T00:00:00.000\",\"hearing_DurationDays\":\"1\",\"hearing_DurationHours\":\"1\",\"hearing_DurationMinutes\":\"10\",\"hearing_Notes\":\"hearing testing for further discussion on claim issues\",\"hearing_IssueNotice\":\"NO\",\"hearing_AdditionalInformation\":\"Testing\"},\"event\":{\"id\":\"manageHearing\",\"summary\":\"\",\"description\":\"\"},\"event_data\":{\"showManageHearingPage\":\"YES\",\"manageHearingOption\":\"EDIT\",\"selectedHearingId\":\932\",\"mhDraftPartyList\":null,\"  \":\932\",\"hearing_HearingSummaryMarkdown\":\"#{HearingSummaryMarkdown}&nbsp;</p>\",\"mhDraft_HearingId\":null,\"mhDraft_HearingSummaryMarkdown\":null,\"mhDraft_Type\":null,\"mhDraft_OtherHearingType\":null,\"mhDraft_NoticeWording\":null,\"mhDraft_Date\":null,\"mhDraft_DurationDays\":null,\"mhDraft_DurationHours\":null,\"mhDraft_DurationMinutes\":null,\"mhDraft_Notes\":null,\"mhDraft_IssueNotice\":null,\"mhDraft_IsWithoutNotice\":null,\"mhDraft_AdditionalInformation\":null,\"mhDraft_CancellationReason\":null,\"hearingLocation\":\"#{hearingLocation}\",\"hearing_Type\":\"#{TypeofHearing}\",\"hearing_NoticeWording\":\"#{WordingOfHearing}\",\"hearing_Date\":\"2028-02-03T00:00:00.000\",\"hearing_DurationDays\":\"1\",\"hearing_DurationHours\":\"1\",\"hearing_DurationMinutes\":\"10\",\"hearing_Notes\":\"hearing testing for further discussion on claim issues\",\"hearing_IssueNotice\":\"NO\",\"hearing_AdditionalInformation\":\"Testing\"},\"event_token\":\"#{event_token1}\",\"ignore_warning\":false,\"case_reference\":\"#{caseId}\"}"))
 				    .body(StringBody("""{"data":{"hearingLocation":"#{hearingLocation}","hearing_Type":"#{TypeofHearing}","hearing_NoticeWording":"#{WordingOfHearing}","hearing_Date":"2028-02-03T00:00:00.000","hearing_DurationDays":"1","hearing_DurationHours":"1","hearing_DurationMinutes":"10","hearing_Notes":"hearing testing for further discussion on claim issues","hearing_IssueNotice":"NO","hearing_AdditionalInformation":"Testing"},"event":{"id":"manageHearing","summary":"","description":""},"event_data":{"showManageHearingPage":"YES","manageHearingOption":"EDIT","selectedHearingId":null,"mhDraftPartyList":null,"hearing_HearingId":"932","hearing_HearingSummaryMarkdown":"#{HearingSummaryMarkdown}&nbsp;</p>","mhDraft_HearingId":null,"mhDraft_HearingSummaryMarkdown":null,"mhDraft_Type":null,"mhDraft_NoticeWording":null,"mhDraft_Date":null,"mhDraft_DurationDays":null,"mhDraft_DurationHours":null,"mhDraft_DurationMinutes":null,"mhDraft_Notes":null,"mhDraft_IssueNotice":null,"mhDraft_IsWithoutNotice":null,"mhDraft_AdditionalInformation":null,"mhDraft_CancellationReason":null,"hearingLocation":"#{hearingLocation}","hearing_Type":"#{TypeofHearing}","hearing_NoticeWording":"#{WordingOfHearing}","hearing_Date":"2028-02-03T00:00:00.000","hearing_DurationDays":"1","hearing_DurationHours":"1","hearing_DurationMinutes":"10","hearing_Notes":"hearing testing for further discussion on claim issues","hearing_IssueNotice":"NO","hearing_AdditionalInformation":"Testing"},"event_token":"#{event_token1}","ignore_warning":false,"case_reference":"#{caseId}"}"""))
+                    .check(jsonPath("$.data.hearing_Type").is("#{TypeofHearing}"))
                 )
 				.pause(MinThinkTime, MaxThinkTime)
 			}
@@ -566,6 +555,7 @@ object Caseworker_ManageHearing {
 					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 					.header("Sec-Fetch-Dest", "empty")
 					.body(StringBody("{\"data\":{\"showManageHearingPage\":\"YES\",\"manageHearingOption\":\"EDIT\",\"selectedHearingId\":\"#{hearingId}\",\"mhDraftPartyList\":null,\"hearing_HearingId\":\"#{hearingId}\",\"hearing_HearingSummaryMarkdown\":\"#{HearingSummaryMarkdown}&nbsp;</p>\",\"mhDraft_HearingId\":\"932\",\"mhDraft_HearingSummaryMarkdown\":\"#{HearingSummaryMarkdown}&nbsp;</p>\",\"mhDraft_Type\":\"#{TypeofHearing}\",\"mhDraft_OtherHearingType\":null,\"mhDraft_NoticeWording\":\"#{WordingOfHearing}\",\"mhDraft_Date\":\"2028-02-03T00:00:00\",\"mhDraft_DurationDays\":\"1\",\"mhDraft_DurationHours\":\"1\",\"mhDraft_DurationMinutes\":\"10\",\"mhDraft_Notes\":\"hearing testing for further discussion on claim issues\",\"mhDraft_IssueNotice\":\"NO\",\"mhDraft_IsWithoutNotice\":null,\"mhDraft_AdditionalInformation\":\"Testing\",\"mhDraft_CancellationReason\":null,\"hearingLocation\":\"#{hearingLocation}\",\"hearing_Type\":\"#{TypeofHearing}\",\"hearing_NoticeWording\":\"#{WordingOfHearing}\",\"hearing_Date\":\"2028-02-03T00:00:00\",\"hearing_DurationDays\":\"1\",\"hearing_DurationHours\":\"1\",\"hearing_DurationMinutes\":\"10\",\"hearing_Notes\":\"hearing testing for further discussion on claim issues\",\"hearing_IssueNotice\":\"NO\",\"hearing_AdditionalInformation\":\"Testing\"},\"event\":{\"id\":\"manageHearing\",\"summary\":\"\",\"description\":\"\"},\"event_token\":\"#{event_token1}\",\"ignore_warning\":false}"))
+                    .check(jsonPath("$.callback_response_status").is("CALLBACK_COMPLETED"))
                 )
 				.exec(http("/data/internal/cases/#{caseId}")
 					.get("/data/internal/cases/#{caseId}")
@@ -575,6 +565,7 @@ object Caseworker_ManageHearing {
 					.header("Accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
 					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
+                    .check(substring("Possession"))
 				)
 				.pause(MinThinkTime, MaxThinkTime)
 
@@ -582,17 +573,9 @@ object Caseworker_ManageHearing {
                .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRF-TOKEN14")))
 			}
 
-      val HistroryView =
+      val HistoryView2 =
           group("XUI_PCS_Caseworker_AmendHearing_15_ClickHistoryTab") {
 				exec(http("XUI_PCS_Caseworker_AmendHearing_15_ClickHistoryTab")
-					.get("/auth/keepalive")
-					.headers(Headers.commonHeader)
-        			.header("accept", "application/json")
-					.header("Accept", "application/json, text/plain, */*")
-					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
-				)
-				.exec(http("/api/wa-supported-jurisdiction/get")
 					.get("/api/wa-supported-jurisdiction/get")
 					.headers(Headers.commonHeader)
         			.header("accept", "application/json")
@@ -604,12 +587,8 @@ object Caseworker_ManageHearing {
 				.pause(MinThinkTime, MaxThinkTime)
 			}
       val ClickView =
-           group("XUI_PCS_Caseworker_CancelHearing_16_SelectMangeHearing") {
-			    exec(http("XUI_PCS_Caseworker_CancelHearing_16_SelectMangeHearing")
-					.get("/auth/keepalive")
-					.header("Accept", "application/json, text/plain, */*")
-				)
-				.exec(http("/workallocation/case/tasks/#{caseId}/event/manageHearing/caseType/PCS/jurisdiction/PCS")
+           group("XUI_PCS_Caseworker_AmendHearing_16_SelectMangeHearing") {
+				exec(http("XUI_PCS_Caseworker_CancelHearing_16_SelectMangeHearing")
 					.get("/workallocation/case/tasks/#{caseId}/event/manageHearing/caseType/PCS/jurisdiction/PCS")
 					.header("Accept", "application/json")
 				)

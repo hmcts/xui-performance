@@ -29,10 +29,7 @@ class XUI_Simulation extends Simulation {
 	val UserFeederFPL = csv("UserDataFPL.csv").circular
 	val CaseworkerUserFeeder = csv("UserDataCaseworkers.csv").circular
 	val UserFeederCTSC = csv("UserDataCTSC.csv").circular
-	val UserFeederHearing = csv("UserDataHearing.csv").circular
-	val caseIdFeeder = csv("UserDataHearing.csv").circular
-	val TypeHearingFeeder = csv("TypeOfHearing.csv").random
-    val WordingFeeder = csv("WordingOfHearing.csv").random
+	val UserFeederHearing = csv("UserDataCaseworkerPCS_ManageHearing.csv").circular
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
@@ -70,7 +67,7 @@ class XUI_Simulation extends Simulation {
 	val frConsentedTargetPerHour: Double = 50
 	val frContestedTargetPerHour: Double = 50
 	val caseworkerTargetPerHour: Double = 1000
-	val caseworkerHearingTargetPerHour: Double = 500
+	val caseworkerHearingTargetPerHour: Double = 10
 
 	val rampUpDurationMins = 5
 	val rampDownDurationMins = 5
@@ -493,29 +490,27 @@ class XUI_Simulation extends Simulation {
 		}
 
 	/*===============================================================================================
-	* XUI Caseworker - Manage Hearing
+	* XUI PCS Caseworker - Manage Hearing
 	 ===============================================================================================*/
 	val HearingScenario = scenario("***** Caseworker Hearing Journey ******")
 		.exitBlockOnFail {
 			feed(UserFeederHearing)
-			.feed(caseIdFeeder)
-			.feed(TypeHearingFeeder)
-            .feed(WordingFeeder)
+			//.feed(caseIdFeeder)
 				//TODO: UPDATE caseType with something more dynamic
 				.exec(_.set("env", s"${env}")
 							.set("caseType", "PCS"))
 				.exec(XuiHelper.Homepage)
 				.exec(XuiHelper.Login("#{Username}", "#{Password}"))
-				.exec(Caseworker_ManageHearing.OpenCaseIssed)
+				.exec(Caseworker_ManageHearing.OpenCaseIssued)
 				.exec(Caseworker_ManageHearing.AddHearing)
 				.exec(Caseworker_ManageHearing.AddHearingDetails)
 				.exec(Caseworker_ManageHearing.CloseCase)
 				.exec(Caseworker_ManageHearing.HistoryView)
 				.exec(Caseworker_ManageHearing.SearchCaseId)
-				.exec(Caseworker_ManageHearing.VeiwCaseId)
-				.exec(Caseworker_ManageHearing.MangehearingTab)
+				.exec(Caseworker_ManageHearing.ViewCaseId)
+				.exec(Caseworker_ManageHearing.ManagehearingTab)
 				.exec(Caseworker_ManageHearing.EditHearing)
-				.exec(Caseworker_ManageHearing.HistroryView)
+				.exec(Caseworker_ManageHearing.HistoryView2)
 				.exec(Caseworker_ManageHearing.ClickView)
 				.exec(XuiHelper.Logout)
 		}
