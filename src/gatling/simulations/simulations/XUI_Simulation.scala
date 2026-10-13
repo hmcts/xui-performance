@@ -492,26 +492,24 @@ class XUI_Simulation extends Simulation {
 	/*===============================================================================================
 	* XUI PCS Caseworker - Manage Hearing
 	 ===============================================================================================*/
-	val HearingScenario = scenario("***** Caseworker Hearing Journey ******")
+	val XUIPCSHearingScenario = scenario("***** PCS Caseworker Hearing Journey ******")
 		.exitBlockOnFail {
 			feed(UserFeederHearing)
-			//.feed(caseIdFeeder)
-				//TODO: UPDATE caseType with something more dynamic
 				.exec(_.set("env", s"${env}")
 							.set("caseType", "PCS"))
 				.exec(XuiHelper.Homepage)
 				.exec(XuiHelper.Login("#{Username}", "#{Password}"))
-				.exec(Caseworker_ManageHearing.OpenCaseIssued)
-				.exec(Caseworker_ManageHearing.AddHearing)
-				.exec(Caseworker_ManageHearing.AddHearingDetails)
-				.exec(Caseworker_ManageHearing.CloseCase)
-				.exec(Caseworker_ManageHearing.HistoryView)
-				.exec(Caseworker_ManageHearing.SearchCaseId)
-				.exec(Caseworker_ManageHearing.ViewCaseId)
-				.exec(Caseworker_ManageHearing.ManagehearingTab)
-				.exec(Caseworker_ManageHearing.EditHearing)
-				.exec(Caseworker_ManageHearing.HistoryView2)
-				.exec(Caseworker_ManageHearing.ClickView)
+				.exec(PCS_Caseworker_ManageHearing.OpenCaseIssued)
+				.exec(PCS_Caseworker_ManageHearing.AddHearing)
+				.exec(PCS_Caseworker_ManageHearing.AddHearingDetails)
+				.exec(PCS_Caseworker_ManageHearing.CloseCase)
+				.exec(PCS_Caseworker_ManageHearing.HistoryView)
+				.exec(PCS_Caseworker_ManageHearing.SearchCaseId)
+				.exec(PCS_Caseworker_ManageHearing.ViewCaseId)
+				.exec(PCS_Caseworker_ManageHearing.ManagehearingTab)
+				.exec(PCS_Caseworker_ManageHearing.EditHearing)
+				.exec(PCS_Caseworker_ManageHearing.HistoryView2)
+				.exec(PCS_Caseworker_ManageHearing.ClickView)
 				.exec(XuiHelper.Logout)
 		}
 
@@ -566,18 +564,18 @@ class XUI_Simulation extends Simulation {
 	}
 
   setUp(
-		//PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//FinancialRemedySolicitorConsentedScenario.inject(simulationProfile(testType, frConsentedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//FinancialRemedySolicitorContestedScenario.inject(simulationProfile(testType, frContestedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		//CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
-		  HearingScenario.inject(simulationProfile(testType, caseworkerHearingTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+		PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		FinancialRemedySolicitorConsentedScenario.inject(simulationProfile(testType, frConsentedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		FinancialRemedySolicitorContestedScenario.inject(simulationProfile(testType, frContestedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+	    XUIPCSHearingScenario.inject(simulationProfile(testType, caseworkerHearingTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
     .maxDuration(75.minutes)
