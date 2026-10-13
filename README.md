@@ -9,6 +9,7 @@ This script runs a suite of services against XUI in a cohabitation scenario:
 - Private Law C100 solicitor journey
 - Private Law FL401 solicitor journey
 - Probate solicitor journey
+- PCS journey
 
 To run locally:
 - Performance test against the perftest environment: `./gradlew gatlingRun`
