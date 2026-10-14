@@ -24,8 +24,8 @@ class XUI_Simulation extends Simulation {
 	val UserFeederNFD = csv("UserDataNFD.csv").circular
 	val UserFeederFR = csv("UserDataFR.csv").circular
 	val UserFeederFPL = csv("UserDataFPL.csv").circular
-	val CWFeederFPL = csv("C2CaseWorker.csv").circular
-	val JudgeFeederFPL = csv("C2Judge.csv").circular
+	val CWFeederFPL = csv("UserDataFPLCaseworker.csv").circular
+	val JudgeFeederFPL = csv("UserDataFPLJudge.csv").circular
 	val CaseworkerUserFeeder = csv("UserDataCaseworkers.csv").circular
 	val UserFeederCTSC = csv("UserDataCTSC.csv").circular
 
@@ -433,70 +433,78 @@ class XUI_Simulation extends Simulation {
 	 ===============================================================================================*/
 	val FamilyPublicLawSolicitorScenario = scenario("***** FPL Create Case *****")
 		.exitBlockOnFail {
+			//exec(session => session.set("repeatCount", 1))
+			if (debugMode == "off") {
+				randomSwitch(
+					//Numbers reference: https://hmcts.atlassian.net/browse/DFPL-3086
+					28.47 -> exec(session => session.set("repeatCount", 0)),
+					19.65 -> exec(session => session.set("repeatCount", 1)),
+					15.24 -> exec(session => session.set("repeatCount", 2)),
+					11.10 -> exec(session => session.set("repeatCount", 3)),
+					8.19 -> exec(session => session.set("repeatCount", 4)),
+					5.71 -> exec(session => session.set("repeatCount", 5)),
+					4.12 -> exec(session => session.set("repeatCount", 6)),
+					2.89 -> exec(session => session.set("repeatCount", 7)),
+					2.15 -> exec(session => session.set("repeatCount", 8)),
+					1.48 -> exec(session => session.set("repeatCount", 9)),
+					1.00 -> exec(session => session.set("repeatCount", 10))
+				)
+			}
+
+			else {
+				exec(session => session.set("repeatCount", 1))
+			}
+
 			feed(UserFeederFPL)
-				.feed(CWFeederFPL)
-				.feed(JudgeFeederFPL)
-				.exec(_.set("env", s"${env}")
-							.set("caseType", "CARE_SUPERVISION_EPO"))
-				.exec(XuiHelper.Homepage)
+			.feed(CWFeederFPL)
+			.feed(JudgeFeederFPL)
+			.exec(_.set("env", s"${env}")
+						.set("caseType", "CARE_SUPERVISION_EPO"))
+			.exec(XuiHelper.Homepage)
+			.exec(XuiHelper.Login("#{user}", "#{password}"))
+			.exec(Solicitor_FPL.CreateFPLCase)
+			.exec(Solicitor_FPL.fplOrdersAndDirections)
+			.exec(Solicitor_FPL.fplHearingUrgency)
+			.exec(Solicitor_FPL.fplGrounds)
+			.exec(Solicitor_FPL.fplLocalAuthority)
+			.exec(Solicitor_FPL.fplChildDetails)
+			.exec(Solicitor_FPL.fplRespondentDetails)
+			.exec(Solicitor_FPL.fplAllocationProposal)
+			.exec(Solicitor_FPL.fplSubmitApplication)
+			.exec(Solicitor_FPL.fplReturnToCase)
+			//.exec(Solicitor_FPL.QueryManagement) //Temporarily removing QM until FPL is onboarded in XUI master
+			.exec(XuiHelper.Logout)
+			.exec(XuiHelper.Homepage)
+			.exec(XuiHelper.Login("#{user-cw}", "#{password-cw}"))
+			.exec(Solicitor_FPL.fplViewCase)
+			.exec(Solicitor_FPL.fplAddCaseNumber)
+			.exec(Solicitor_FPL.fplViewCase)
+			.exec(Solicitor_FPL.fplAddGatekeeper)
+			.exec(XuiHelper.Logout)
+			.exec(XuiHelper.Homepage)
+			.exec(XuiHelper.Login("#{user-judge}", "#{password-judge}"))
+			.exec(Solicitor_FPL.fplViewCase)
+			.exec(Solicitor_FPL.fplJudicialGatekeeping)
+			.exec(Solicitor_FPL.fplViewCase)
+			.exec(Solicitor_FPL.fplListHearing)
+			.exec(XuiHelper.Logout)
+			.repeat("#{repeatCount}") {
+				 exec(XuiHelper.Homepage)
 				.exec(XuiHelper.Login("#{user}", "#{password}"))
-				.exec(Solicitor_FPL.CreateFPLCase)
-				.exec(Solicitor_FPL.fplOrdersAndDirections)
-				.exec(Solicitor_FPL.fplHearingUrgency)
-				.exec(Solicitor_FPL.fplGrounds)
-				.exec(Solicitor_FPL.fplLocalAuthority)
-				.exec(Solicitor_FPL.fplChildDetails)
-				.exec(Solicitor_FPL.fplRespondentDetails)
-				.exec(Solicitor_FPL.fplAllocationProposal)
-				.exec(Solicitor_FPL.fplSubmitApplication)
-				.exec(Solicitor_FPL.fplReturnToCase)
-				//.exec(Solicitor_FPL.QueryManagement) //Temporarily removing QM until FPL is onboarded in XUI master
+				.exec(Solicitor_FPL.fplViewCase)
+				.exec(Solicitor_FPL.fplAdditionalApplications)
 				.exec(XuiHelper.Logout)
-//				.randomSwitch(
-//					50.0 -> exec(session => session.set("repeatCount", 0)),
-//					30.0 -> exec(session => session.set("repeatCount", 1)),
-//					15.0 -> exec(session => session.set("repeatCount", 2)),
-//					5.0 -> exec(session => session.set("repeatCount", 3))
-//				)
-//				.repeat("#{repeatCount}") {
-					 .exec(XuiHelper.Homepage)
-					.exec(XuiHelper.Login("#{user-cw}", "#{password-cw}"))
-					.exec(Solicitor_FPL.fplViewCase)
-					.exec(Solicitor_FPL.fplAddCaseNumber)
-					.exec(Solicitor_FPL.fplViewCase)
-					.exec(Solicitor_FPL.fplAddGatekeeper)
-					.exec(XuiHelper.Logout)
-					.exec(XuiHelper.Homepage)
-					.exec(XuiHelper.Login("#{user-judge}", "#{password-judge}"))
-					.exec(Solicitor_FPL.fplViewCase)
-					.exec(Solicitor_FPL.fplJudicialGatekeeping)
-					.exec(Solicitor_FPL.fplViewCase)
-					.exec(Solicitor_FPL.fplListHearing)
-					.exec(XuiHelper.Logout)
-					.exec(XuiHelper.Homepage)
-					.exec(XuiHelper.Login("#{user}", "#{password}"))
-					.exec(Solicitor_FPL.fplViewCase)
-					.exec(Solicitor_FPL.fplAdditionalApplications)
-					.exec(XuiHelper.Logout)
-					.exec(XuiHelper.Homepage)
-					.exec(XuiHelper.Login("#{user-judge}", "#{password-judge}"))
-					.exec(Solicitor_FPL.fplViewCase)
-					.exec(Solicitor_FPL.fplReviewApplication)
-					.exec(XuiHelper.Logout)
-				//}
-
-
-
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user-judge}", "#{password-judge}"))
+				.exec(Solicitor_FPL.fplViewCase)
+				.exec(Solicitor_FPL.fplReviewApplication)
+				.exec(XuiHelper.Logout)
+			}
 			//.feed(UserFeederCTSC)
 			//.exec(Homepage.XUIHomePage)
 			//.exec(Login.XUILogin)
 			//.exec(Solicitor_FPL.RespondToQueryManagement)
 			//.exec(XuiHelper.Logout)
-		}
-		.exec {
-			session =>
-				println(session)
-			session
 		}
 
 
