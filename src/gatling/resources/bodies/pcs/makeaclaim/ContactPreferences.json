@@ -1,0 +1,72 @@
+{
+  "data": {
+    "claimantContactEmail": "#{user}",
+    "isCorrectClaimantContactEmail": "YES",
+    "orgAddressFound": "Yes",
+    "organisationAddress": {
+      "AddressLine1": "#{orgAddressLine1}",
+      "AddressLine2": "#{orgAddressLine2}",
+      "PostTown": "#{orgPostTown}",
+      "PostCode": "#{orgPostCode}",
+      "Country": "United Kingdom"
+    },
+    "formattedClaimantContactAddress": "#{orgAddressLine1}<br>#{orgAddressLine2}<br>#{orgPostTown}<br>#{orgPostCode}",
+    "isCorrectClaimantContactAddress": "YES",
+    "claimantProvidePhoneNumber": "NO"
+  },
+  "event": {
+    "id": "resumePossessionClaim",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "regionId": "1",
+    "caseManagementLocationNumber": "20262",
+    "orgNameFound": "Yes",
+    "claimantName": "#{orgName}",
+    "isClaimantNameCorrect": "YES",
+    "legislativeCountry": "England",
+    "claimantType": {
+      "value": {
+        "code": "PROVIDER_OF_SOCIAL_HOUSING",
+        "label": "Registered provider of social housing or local authority"
+      },
+      "list_items": [
+        {
+          "code": "PRIVATE_LANDLORD",
+          "label": "Private landlord"
+        },
+        {
+          "code": "PROVIDER_OF_SOCIAL_HOUSING",
+          "label": "Registered provider of social housing or local authority"
+        },
+        {
+          "code": "MORTGAGE_LENDER",
+          "label": "Mortgage lender"
+        },
+        {
+          "code": "OTHER",
+          "label": "Other"
+        }
+      ],
+      "valueCode": "PROVIDER_OF_SOCIAL_HOUSING"
+    },
+    "claimAgainstTrespassers": "NO",
+    "claimantContactEmail": "#{user}",
+    "isCorrectClaimantContactEmail": "YES",
+    "orgAddressFound": "Yes",
+    "organisationAddress": {
+      "AddressLine1": "#{orgAddressLine1}",
+      "AddressLine2": "#{orgAddressLine2}",
+      "PostTown": "#{orgPostTown}",
+      "PostCode": "#{orgPostCode}",
+      "Country": "United Kingdom"
+    },
+    "formattedClaimantContactAddress": "#{orgAddressLine1}<br>#{orgAddressLine2}<br>#{orgPostTown}<br>#{orgPostCode}",
+    "isCorrectClaimantContactAddress": "YES",
+    "claimantProvidePhoneNumber": "NO"
+  },
+  "event_token": "#{eventToken}",
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
+}

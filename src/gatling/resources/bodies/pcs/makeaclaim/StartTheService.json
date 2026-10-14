@@ -1,0 +1,15 @@
+{
+  "data": {
+    "feeAmount": "#{feeAmount}"
+  },
+  "event": {
+    "id": "createPossessionClaim",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "feeAmount": "#{feeAmount}"
+  },
+  "event_token": "#{createClaimEventToken}",
+  "ignore_warning": false
+}
