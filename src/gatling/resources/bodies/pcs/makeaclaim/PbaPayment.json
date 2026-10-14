@@ -1,0 +1,8 @@
+{
+  "account_number": "#{accounts}",
+  "amount": "#{feeAmount1}",
+  "currency": "GBP",
+  "customer_reference": "Test",
+  "organisation_name": "#{orgName}",
+  "idempotency_key": "#{idempotencyKey}"
+}

@@ -1,0 +1,24 @@
+{
+  "data": {
+    "regionId": "1",
+    "caseManagementLocationNumber": "20262",
+    "orgNameFound": "Yes",
+    "claimantName": "#{orgName}",
+    "isClaimantNameCorrect": "YES"
+  },
+  "event": {
+    "id": "resumePossessionClaim",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "regionId": "1",
+    "caseManagementLocationNumber": "20262",
+    "orgNameFound": "Yes",
+    "claimantName": "#{orgName}",
+    "isClaimantNameCorrect": "YES"
+  },
+  "event_token": "#{eventToken}",
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
+}

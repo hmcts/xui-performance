@@ -1,0 +1,23 @@
+{
+  "data": {
+    "feeAmount": "#{feeAmount}",
+    "propertyAddress": {
+      "AddressLine1": "#{buildingNumber} #{buildingName}",
+      "AddressLine2": "#{AddressLine2}",
+      "AddressLine3": "",
+      "PostTown": "#{postTown}",
+      "County": "",
+      "Country": "United Kingdom",
+      "PostCode": "#{postCode}"
+    },
+    "legislativeCountry": "England"
+  },
+  "event": {
+    "id": "createPossessionClaim",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "#{createClaimEventToken}",
+  "ignore_warning": false,
+  "draft_id": null
+}

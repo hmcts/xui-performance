@@ -29,6 +29,7 @@ class XUI_Simulation extends Simulation {
 	val UserFeederFPL = csv("UserDataFPL.csv").circular
 	val CaseworkerUserFeeder = csv("UserDataCaseworkers.csv").circular
 	val UserFeederCTSC = csv("UserDataCTSC.csv").circular
+	val UserFeederXUISolicitorPCSMakeaClaim = csv("UserDataSolicitor_PCS_MakeaClaimXUI.csv").circular
 
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
@@ -66,6 +67,7 @@ class XUI_Simulation extends Simulation {
 	val frConsentedTargetPerHour: Double = 50
 	val frContestedTargetPerHour: Double = 50
 	val caseworkerTargetPerHour: Double = 1000
+	val SolicitorPCSMakeaClaimXUITargetPerHour: Double = 20
 
 	val rampUpDurationMins = 5
 	val rampDownDurationMins = 5
@@ -94,6 +96,10 @@ class XUI_Simulation extends Simulation {
 		println(s"Test Type: ${testType}")
 		println(s"Test Environment: ${env}")
 		println(s"Debug Mode: ${debugMode}")
+	}
+
+	after {
+		MakeAClaimCaseRecorder.writeConsolidatedCsv()
 	}
 
 	/*===============================================================================================
@@ -487,6 +493,24 @@ class XUI_Simulation extends Simulation {
 				.exec(XuiHelper.Logout)
 		}
 
+
+		/*===============================================================================================
+	* XUI Solicitor PCS Make a Claim + Pay Now Scenario
+	 ===============================================================================================*/
+	val XUISolicitorPCSMakeaClaimScenario = scenario("***** XUI Solicitor PCS Make a Claim *****")
+		.exitBlockOnFail {
+			feed(UserFeederXUISolicitorPCSMakeaClaim)
+				.exec(_.set("env", s"${env}")
+							.set("caseType", "PCS"))
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user}", "#{password}"))
+				.exec(XUI_SolicitorPCSMakeaClaim.ExtractOrganisation)
+				.exec(XUI_SolicitorPCSMakeaClaim.CreatePossessionClaim)
+				.exec(XUI_SolicitorPCSMakeaClaim.ResumePossessionClaim)
+				.exec(XUI_SolicitorPCSMakeaClaim.PayNow)
+				.exec(XuiHelper.Logout)
+		}
+
 	/*===============================================================================================
 	* Simulation Configuration
 	 ===============================================================================================*/
@@ -525,9 +549,10 @@ class XUI_Simulation extends Simulation {
 						details("XUI_IAC_300_AppealDeclarationSubmitted").successfulRequests.percent.gte(80),
 						details("CCD_SubmitEvent_caseworker-grant-final-order").successfulRequests.percent.gte(80), //NFD
 						details("XUI_FR_Consented_170_SubmitApplication").successfulRequests.percent.gte(80),
-            details("XUI_FR_Contested_200_ReviewAndSubmitApplication").successfulRequests.percent.gte(80),
+						details("XUI_FR_Contested_200_ReviewAndSubmitApplication").successfulRequests.percent.gte(80),
 						details("XUI_FPL_330_ReturnToCase").successfulRequests.percent.gte(80),
-						details("XUI_Caseworker_100_CaseList").successfulRequests.percent.gte(80))
+						details("XUI_Caseworker_100_CaseList").successfulRequests.percent.gte(80),
+						details("XUI_PCS_39_SubmitClaim").successfulRequests.percent.gte(80))
 				}
 				else {
 					Seq(global.successfulRequests.percent.is(100))
@@ -548,7 +573,8 @@ class XUI_Simulation extends Simulation {
 		FinancialRemedySolicitorConsentedScenario.inject(simulationProfile(testType, frConsentedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		FinancialRemedySolicitorContestedScenario.inject(simulationProfile(testType, frContestedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
+		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		XUISolicitorPCSMakeaClaimScenario.inject(simulationProfile(testType, SolicitorPCSMakeaClaimXUITargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
     .maxDuration(75.minutes)

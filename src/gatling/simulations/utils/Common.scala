@@ -7,6 +7,7 @@ import io.gatling.core.check.jsonpath.JsonPathCheckType
 import com.fasterxml.jackson.databind.JsonNode
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import scala.concurrent.duration._
 import scala.util.Random
 
 object Common {
@@ -75,15 +76,22 @@ object Common {
 
   val postcodeFeeder = csv("postcodes.csv").random
 
+  private def postcodeLookupRequest =
+    http("XUI_Common_000_PostcodeLookup")
+      .get("/api/addresses?postcode=#{postcode}")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/json")
+      .check(jsonPath("$.header.totalresults").ofType[Int].gt(0))
+      .check(regex(""""(?:BUILDING|ORGANISATION)_.+" : "(.+?)",(?s).*?"(?:DEPENDENT_LOCALITY|THOROUGHFARE_NAME)" : "(.+?)",.*?"POST_TOWN" : "(.+?)",.*?"POSTCODE" : "(.+?)"""")
+        .ofType[(String, String, String, String)].findRandom.saveAs("addressLines"))
+
   val postcodeLookup =
     feed(postcodeFeeder)
-      .exec(http("XUI_Common_000_PostcodeLookup")
-        .get("/api/addresses?postcode=#{postcode}")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/json")
-        .check(jsonPath("$.header.totalresults").ofType[Int].gt(0))
-        .check(regex(""""(?:BUILDING|ORGANISATION)_.+" : "(.+?)",(?s).*?"(?:DEPENDENT_LOCALITY|THOROUGHFARE_NAME)" : "(.+?)",.*?"POST_TOWN" : "(.+?)",.*?"POSTCODE" : "(.+?)"""")
-          .ofType[(String, String, String, String)].findRandom.saveAs("addressLines")))
+      .exec(postcodeLookupRequest)
+
+  // Uses session #{postcode} already supplied by a journey feeder (does not feed postcodes.csv).
+  val postcodeLookupFromSession =
+    exec(postcodeLookupRequest)
 
   def healthcheck(path: String) =
     exec(http("XUI_Common_000_Healthcheck")
@@ -217,6 +225,11 @@ object Common {
       .check(status.is(204))) 
       //No response body is returned, therefore no substring check is possible
 
+  // Large DM Store uploads on perftest commonly take 40–60s under concurrency. The default
+  // Gatling requestTimeout (60s) cuts off transfers that would otherwise succeed (report
+  // evidence: OK max ~59.4s; KOs are exclusively "Request timeout ... after 60000 ms").
+  // Apply a longer timeout to uploads only; do not retry — a timed-out upload may already
+  // have been accepted server-side, so retrying risks duplicate documents.
   def uploadFile(fileName: String, classification: String, caseTypeId: String, jurisdictionId: String, saveAsKey: String) =
     exec(http("XUI_Common_000_UploadFile_" + fileName)
       .post("/documentsv2")
@@ -231,6 +244,7 @@ object Common {
       .formParam("classification", classification)
       .formParam("caseTypeId", caseTypeId)
       .formParam("jurisdictionId", jurisdictionId)
+      .requestTimeout(180.seconds)
       .check(substring("originalDocumentName"))
       .check(jsonPath("$.documents[0]._links.self.href").saveAs(saveAsKey + "DocumentURL"))
       .check(jsonPath("$.documents[0].hashToken").saveAs(saveAsKey + "DocumentHashToken"))
