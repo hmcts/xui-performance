@@ -45,8 +45,6 @@ object Caseworker_PCS_AddCaseNotes {
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .header("experimental", "true")
         .check(status.is(200))
         .check(jsonPath("$.case_id").is("#{caseId}")))
     }
@@ -66,7 +64,6 @@ object Caseworker_PCS_AddCaseNotes {
         .get("/data/internal/cases/#{caseId}/event-triggers/addCaseNote?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-        .header("experimental", "true")
         .check(status.is(200))
         .check(substring("Add a case note"))
         .check(jsonPath("$.event_token").saveAs("event_token")))
@@ -123,8 +120,6 @@ object Caseworker_PCS_AddCaseNotes {
         .get("/data/internal/cases/#{caseId}")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .header("experimental", "true")
         .check(status.is(200))
         .check(substring("#{noteText}")))
     }
