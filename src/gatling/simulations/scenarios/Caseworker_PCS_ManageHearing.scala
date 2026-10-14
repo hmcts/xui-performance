@@ -6,14 +6,12 @@ import io.gatling.http.response.Response
 
 import utils.{Common, Environment, Headers}
 
-object PCS_Caseworker_ManageHearing {
+object Caseworker_PCS_ManageHearing {
 
   val BaseURL = Environment.baseURL
 
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
-  val UserFeederHearing = csv("UserDataCaseworkerPCS_ManageHearing.csv").circular
- 
  /*====================================================================================
   *Search PCS cases (SEARCH view) by Case ID
   *=====================================================================================*/
@@ -34,7 +32,6 @@ object PCS_Caseworker_ManageHearing {
 					.header("Origin", BaseURL)
 					.header("Priority", "u=0")
                     .formParam("X-XSRF-TOKEN", "${XSRF-TOKEN1}")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 					.body(StringBody("{\"size\":25}"))
                     .check(substring("columns"))
 				)
@@ -45,7 +42,6 @@ object PCS_Caseworker_ManageHearing {
 					.header("experimental", "true")
 					.header("Priority", "u=0")
 					.header("Accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 				)
 				.exec(http("/api/wa-supported-jurisdiction/get")
 					.get("/api/wa-supported-jurisdiction/get")
@@ -53,7 +49,6 @@ object PCS_Caseworker_ManageHearing {
         			.header("accept", "application/json")
 					.header("x-dtreferer", BaseURL)
 					.header("Accept", "application/json, text/plain, */*")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
                     .check(substring("PCS"))
 				)
                 .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRF-TOKEN2")))
@@ -66,7 +61,6 @@ object PCS_Caseworker_ManageHearing {
 					.header("Origin", BaseURL)
 					.header("Accept", "application/json, text/plain, */*")
 					.formParam("X-XSRF-TOKEN", "${XSRF-TOKEN2}")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 					.body(StringBody("{}"))
                     .check(status.in(204))
 				)
@@ -76,7 +70,6 @@ object PCS_Caseworker_ManageHearing {
         			.header("accept", "application/json")
 					.header("x-dtreferer", s"$BaseURL/cases")
 					.header("Accept", "application/json, text/plain, */*")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
                     .check(substring("PCS"))
 				)
 				.exec(http("/aggregated/caseworkers/:uid/jurisdictions")
@@ -84,7 +77,6 @@ object PCS_Caseworker_ManageHearing {
 					.headers(Headers.commonHeader)
         			.header("accept", "application/json")
 					.header("x-dtreferer", s"$BaseURL/cases")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 					.queryParam("access", "read")
                     .check(substring("Civil Possession"))
 				)
@@ -99,13 +91,11 @@ object PCS_Caseworker_ManageHearing {
 					.header("Origin", BaseURL)
 					.header("Accept", "application/json, text/plain, */*")
 					.formParam("X-XSRF-TOKEN", "${XSRF-TOKEN3}")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 					.body(StringBody("{\"refined\":true}"))
                     .check(status.in(200))
 				)
-
-				.pause(MinThinkTime, MaxThinkTime)
     }
+	.pause(MinThinkTime, MaxThinkTime)
 
   /*====================================================================================
   *SELECT MANAGE HEARING DROP DOWN FROM NEXT STEP DROP DOWN
@@ -117,14 +107,12 @@ object PCS_Caseworker_ManageHearing {
 					.headers(Headers.commonHeader)
         			.header("accept", "application/json")
 					.header("Accept", "application/json, text/plain, */*")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 				)
 				.exec(http("/workallocation/case/tasks/#{caseId}/event/manageHearing/caseType/PCS/jurisdiction/PCS")
 					.get("/workallocation/case/tasks/#{caseId}/event/manageHearing/caseType/PCS/jurisdiction/PCS")
 					.headers(Headers.commonHeader)
         			.header("accept", "application/json")
 					.header("Priority", "u=0")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
                     .check(jsonPath("$.task_required_for_event").ofType[Boolean].is(false))
 				)
 				.exec(http("/data/internal/profile")
@@ -133,7 +121,6 @@ object PCS_Caseworker_ManageHearing {
         			.header("accept", "application/json")
 					.header("experimental", "true")
 					.header("Accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
                     .check(jsonPath("$.jurisdictions[0].name").is("Civil Possession"))
 				)
 				.exec(http("/data/internal/cases/#{caseId}/event-triggers/manageHearing")
@@ -142,7 +129,6 @@ object PCS_Caseworker_ManageHearing {
         			.header("accept", "application/json")
 					.header("experimental", "true")
 					.header("Accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 					.queryParam("ignore-warning", "false")
 					.check(regex("event_token\":\"(.*?)\",\"wizard_pages").saveAs("event_token"))
                     .check(jsonPath("$.case_fields[?(@.id == 'hearingLocation')].value").saveAs("hearingLocation"))
@@ -153,14 +139,12 @@ object PCS_Caseworker_ManageHearing {
         			.header("accept", "application/json")
 					.header("x-dtreferer", BaseURL + "/cases/case-details/PCS/PCS/#{caseId}")
 					.header("Accept", "application/json, text/plain, */*")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
                     .check(substring("PCS"))
 				)
 
                 .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRF-TOKEN4")))
-
-				.pause(MinThinkTime, MaxThinkTime)
             }
+				.pause(MinThinkTime, MaxThinkTime)
  
  /*====================================================================================
   *ADD HEARING REQUIRED DETAILS
@@ -178,12 +162,11 @@ object PCS_Caseworker_ManageHearing {
 					.header("Client-Context", "eyJjbGllbnRfY29udGV4dCI6eyJ1c2VyX2xhbmd1YWdlIjp7Imxhbmd1YWdlIjoiZW4ifX19")
 					.header("Accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
 					.formParam("X-XSRF-TOKEN", "${XSRF-TOKEN4}")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 					.body(StringBody("{\"data\":{\"hearingLocation\":\"#{hearingLocation}\",\"hearing_Type\":\"#{TypeofHearing}\",\"hearing_NoticeWording\":\"#{WordingOfHearing}\",\"hearing_Date\":\"2028-02-01T00:00:00.000\",\"hearing_DurationDays\":\"1\",\"hearing_DurationHours\":\"1\",\"hearing_DurationMinutes\":\"10\",\"hearing_Notes\":\"hearing testing for further discussion on claim issues\",\"hearing_IssueNotice\":\"NO\",\"hearing_AdditionalInformation\":\"Testing\"},\"event\":{\"id\":\"manageHearing\",\"summary\":\"\",\"description\":\"\"},\"event_data\":{\"hearingLocation\":\"#{hearingLocation}\",\"hearing_Type\":\"#{TypeofHearing}\",\"hearing_NoticeWording\":\"#{WordingOfHearing}\",\"hearing_Date\":\"2028-02-01T00:00:00.000\",\"hearing_DurationDays\":\"1\",\"hearing_DurationHours\":\"1\",\"hearing_DurationMinutes\":\"10\",\"hearing_Notes\":\"hearing testing for further discussion on claim issues\",\"hearing_IssueNotice\":\"NO\",\"hearing_AdditionalInformation\":\"Testing\"},\"event_token\":\"#{event_token}\",\"ignore_warning\":false,\"case_reference\":\"#{caseId}\"}"))
                     .check(jsonPath("$.data.hearing_Type").is("#{TypeofHearing}"))
 				)
-				.pause(MinThinkTime, MaxThinkTime)
 			}
+			.pause(MinThinkTime, MaxThinkTime)
 
         .group("XUI_PCS_Caseworker_AddHearing_06_ManageHearing") {
 				exec(http("XUI_PCS_Caseworker_AddHearing_06_ManageHearing")
@@ -192,7 +175,6 @@ object PCS_Caseworker_ManageHearing {
         			.header("accept", "application/json")
 					.header("Accept", "application/json, text/plain, */*")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 				)
                 .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRF-TOKEN5")))
 
@@ -206,7 +188,6 @@ object PCS_Caseworker_ManageHearing {
 					.header("Accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
 					.formParam("X-XSRF-TOKEN", "${XSRF-TOKEN5}")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 					.body(StringBody("{\"data\":{\"hearingLocation\":\"#{hearingLocation}\",\"hearing_Type\":\"#{TypeofHearing}\",\"hearing_NoticeWording\":\"#{WordingOfHearing}\",\"hearing_Date\":\"2028-02-01T00:00:00\",\"hearing_DurationDays\":\"1\",\"hearing_DurationHours\":\"1\",\"hearing_DurationMinutes\":\"10\",\"hearing_Notes\":\"hearing testing for further discussion on claim issues\",\"hearing_IssueNotice\":\"NO\",\"hearing_AdditionalInformation\":\"Testing\"},\"event\":{\"id\":\"manageHearing\",\"summary\":\"\",\"description\":\"\"},\"event_token\":\"#{event_token}\",\"ignore_warning\":false}"))
                     .check(jsonPath("$.state").is("CASE_ISSUED"))
 				)
@@ -216,7 +197,6 @@ object PCS_Caseworker_ManageHearing {
         			.header("accept", "application/json")
 					.header("experimental", "true")
 					.header("Accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
                     .check(jsonPath("$.case_type.name").is("Possession"))
 				)
 				.exec(http("/api/wa-supported-jurisdiction/get")
@@ -225,12 +205,11 @@ object PCS_Caseworker_ManageHearing {
         			.header("accept", "application/json")
 					.header("x-dtreferer", BaseURL + "/cases/case-details/PCS/PCS/#{caseId}/trigger/manageHearing/submit")
 					.header("Accept", "application/json, text/plain, */*")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
                     .check(substring("PCS"))
 		 		)
-				.pause(MinThinkTime, MaxThinkTime)
 			}
 
+		.pause(MinThinkTime, MaxThinkTime)
  /*====================================================================================
   * CLOSE CASE AND RETURN TO CASE DETAILS
   *=====================================================================================*/
@@ -241,7 +220,6 @@ object PCS_Caseworker_ManageHearing {
 					.headers(Headers.commonHeader)
         			.header("accept", "application/json")
 					.header("Accept", "application/json, text/plain, */*")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 				)
                 .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRF-TOKEN6")))
 
@@ -254,7 +232,6 @@ object PCS_Caseworker_ManageHearing {
 					.header("Priority", "u=0")
 					.header("Accept", "application/json, text/plain, */*")
 					.formParam("X-XSRF-TOKEN", "${XSRF-TOKEN6}")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 					.body(StringBody("{}"))
                     .check(status.in(204))
 				)
@@ -265,7 +242,6 @@ object PCS_Caseworker_ManageHearing {
 					.header("x-dtreferer", BaseURL + "/cases/case-details/PCS/PCS/#{caseId}/trigger/manageHearing/confirm")
 					.header("Priority", "u=0")
 					.header("Accept", "application/json, text/plain, */*")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
                     .check(substring("PCS"))
 				)
 				.exec(http("/api/wa-supported-jurisdiction/get")
@@ -274,7 +250,6 @@ object PCS_Caseworker_ManageHearing {
         			.header("accept", "application/json")
 					.header("x-dtreferer", BaseURL + "/cases/case-details/PCS/PCS/#{caseId}")
 					.header("Accept", "application/json, text/plain, */*")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
                     .check(substring("PCS"))
 				)
                 .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRF-TOKEN7")))
@@ -286,12 +261,11 @@ object PCS_Caseworker_ManageHearing {
 					.header("Origin", BaseURL)
 					.header("Accept", "application/json, text/plain, */*")
 					.formParam("X-XSRF-TOKEN", "${XSRF-TOKEN7}")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 					.body(StringBody("{\"refined\":true}"))
                     .check(status.in(200))
 				)
-				.pause(MinThinkTime, MaxThinkTime)
 			}
+		.pause(MinThinkTime, MaxThinkTime)
  /*====================================================================================
   * GO TO HISTORY TAB
   *=====================================================================================*/
@@ -303,7 +277,6 @@ object PCS_Caseworker_ManageHearing {
         			.header("accept", "application/json")
 					.header("Accept", "application/json, text/plain, */*")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 				)
 				.exec(http("/api/wa-supported-jurisdiction/get")
 					.get("/api/wa-supported-jurisdiction/get")
@@ -313,11 +286,10 @@ object PCS_Caseworker_ManageHearing {
 					.header("Priority", "u=0")
 					.header("Accept", "application/json, text/plain, */*")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
                     .check(substring("PCS"))
 				)
-				.pause(MinThinkTime, MaxThinkTime)
 			} 
+		.pause(MinThinkTime, MaxThinkTime)
 
  /*====================================================================================
   * SEARCH CASE ID FROM FEEDER FILE
@@ -331,7 +303,6 @@ object PCS_Caseworker_ManageHearing {
         			.header("accept", "application/json")
 					.header("Accept", "application/json, text/plain, */*")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 				)
 				.exec(http("/api/wa-supported-jurisdiction/get")
 					.get("/api/wa-supported-jurisdiction/get")
@@ -340,7 +311,6 @@ object PCS_Caseworker_ManageHearing {
 					.header("Priority", "u=0")
 					.header("Accept", "application/json, text/plain, */*")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
                     .check(substring("PCS"))
 				)
 				
@@ -351,7 +321,6 @@ object PCS_Caseworker_ManageHearing {
 					.header("x-dtreferer", BaseURL + "/search")
 					.header("Accept", "application/json, text/plain, */*")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 					.queryParam("access", "read")
                     .check(jsonPath("$[0].caseTypes[0].name").is("Possession"))
                     .check(substring("Civil Possession"))
@@ -367,12 +336,11 @@ object PCS_Caseworker_ManageHearing {
 					.header("Accept", "application/json, text/plain, */*")
 					.formParam("X-XSRF-TOKEN", "${XSRF-TOKEN8}")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 					.body(StringBody("{\"searchCriteria\":{\"CCDCaseTypeIds\":null,\"CCDJurisdictionIds\":[\"IA\",\"Civil\",\"PRIVATELAW\",\"PUBLICLAW\",\"SSCS\",\"ST_CIC\",\"EMPLOYMENT\",\"PCS\",\"PROBATE\"],\"caseManagementBaseLocationIds\":null,\"caseManagementRegionIds\":null,\"caseReferences\":[\"#{caseId}\"],\"otherReferences\":null,\"parties\":[],\"stateIds\":null},\"sortCriteria\":null,\"maxReturnRecordCount\":25,\"startRecordNumber\":1}"))
                     .check(jsonPath("$.results[0].CCDJurisdictionId").is("PCS"))
 				)
-				.pause(MinThinkTime, MaxThinkTime)
 			}
+		.pause(MinThinkTime, MaxThinkTime)
 
  /*====================================================================================
   * OPEN AND VIEW CASE 
@@ -385,7 +353,6 @@ object PCS_Caseworker_ManageHearing {
         			.header("accept", "application/json")
 					.header("Accept", "application/json, text/plain, */*")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 				)
 				.exec(http("/data/internal/cases/#{caseId}")
 					.get("/data/internal/cases/#{caseId}")
@@ -394,7 +361,6 @@ object PCS_Caseworker_ManageHearing {
 					.header("experimental", "true")
 					.header("Accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
                     .check(substring("Possession"))
 				)
 				.exec(http("/api/wa-supported-jurisdiction/get")
@@ -403,7 +369,6 @@ object PCS_Caseworker_ManageHearing {
         			.header("accept", "application/json")
 					.header("Accept", "application/json, text/plain, */*")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
                     .check(substring("PCS"))
 				)
 
@@ -417,7 +382,6 @@ object PCS_Caseworker_ManageHearing {
 					.header("Origin", BaseURL)
 					.formParam("X-XSRF-TOKEN", "${XSRF-TOKEN9}")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 					.body(StringBody("{}"))
                     .check(status.in(204))
 				)
@@ -427,7 +391,6 @@ object PCS_Caseworker_ManageHearing {
         			.header("accept", "application/json")
 					.header("Accept", "application/json, text/plain, */*")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
                     .check(substring("PCS"))
 				)
 
@@ -441,7 +404,6 @@ object PCS_Caseworker_ManageHearing {
 					.header("Accept", "application/json, text/plain, */*")
 					.formParam("X-XSRF-TOKEN", "${XSRF-TOKEN10}")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 					.body(StringBody("{\"refined\":true}"))
 					.check(status.in(200))
 				)
@@ -450,25 +412,23 @@ object PCS_Caseworker_ManageHearing {
 					.headers(Headers.commonHeader)
         			.header("accept", "application/json")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 					.queryParam("access", "read")
                     .check(substring("PCS"))
 				)
-				.pause(MinThinkTime, MaxThinkTime)
 			}
+		.pause(MinThinkTime, MaxThinkTime)
 
  /*====================================================================================
   * SEARCH CASE ID FROM FEEDER FILE
   *=====================================================================================*/
-    val ManagehearingTab =
-       group("XUI_PCS_Caseworker_AmendHearing_11_ManagehearingTab") {
-				exec(http("XUI_PCS_Caseworker_AmendHearing_11_ManagehearingTab")
+    val ManageHearingTab =
+       group("XUI_PCS_Caseworker_AmendHearing_11_ManageHearingTab") {
+				exec(http("XUI_PCS_Caseworker_AmendHearing_11_ManageHearingTab")
 					.get("/workallocation/case/tasks/#{caseId}/event/manageHearing/caseType/PCS/jurisdiction/PCS")
 					.headers(Headers.commonHeader)
 					.header("Priority", "u=0")
 					.header("Accept", "application/json")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
                     .check(jsonPath("$.task_required_for_event").ofType[Boolean].is(false))
 				)
 				.exec(http("/data/internal/profile")
@@ -478,7 +438,6 @@ object PCS_Caseworker_ManageHearing {
 					.header("experimental", "true")
 					.header("Accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 				)
 				.exec(http("/data/internal/cases/#{caseId}/event-triggers/manageHearing")
 					.get("/data/internal/cases/#{caseId}/event-triggers/manageHearing")
@@ -488,7 +447,6 @@ object PCS_Caseworker_ManageHearing {
 					.header("Client-Context", "eyJjbGllbnRfY29udGV4dCI6eyJ1c2VyX2xhbmd1YWdlIjp7Imxhbmd1YWdlIjoiZW4ifX19")
 					.header("Accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 					.queryParam("ignore-warning", "false")
 					.check(regex("event_token\":\"(.*?)\",\"wizard_pages").saveAs("event_token1"))
 					.check(regex("hearing_HearingSummaryMarkdown\",\"label\":\"\",\"hidden\":null,\"value\":\"(.*?)&nbsp;").saveAs("HearingSummaryMarkdown"))
@@ -497,10 +455,8 @@ object PCS_Caseworker_ManageHearing {
 				)
 
                 .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRF-TOKEN11")))
-
-				.pause(MinThinkTime, MaxThinkTime)
 			}   
-
+		.pause(MinThinkTime, MaxThinkTime)
  /*====================================================================================
   * CHOOSE EDIT HEARING OPTION
   *=====================================================================================*/
@@ -518,11 +474,11 @@ object PCS_Caseworker_ManageHearing {
 					.header("Accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
 					.formParam("X-XSRF-TOKEN", "${XSRF-TOKEN11}")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
                     .body(StringBody("""{"data":{"showManageHearingPage":"YES","manageHearingOption":"EDIT","selectedHearingId":null,"mhDraftPartyList":null,"hearing_HearingId":"#{hearingId}","hearing_HearingSummaryMarkdown":"#{HearingSummaryMarkdown}&nbsp;</p>","mhDraft_HearingId":null,"mhDraft_HearingSummaryMarkdown":null,"mhDraft_Type":null,"mhDraft_OtherHearingType":null,"mhDraft_NoticeWording":null,"mhDraft_Date":null,"mhDraft_DurationDays":null,"mhDraft_DurationHours":null,"mhDraft_DurationMinutes":null,"mhDraft_Notes":null,"mhDraft_IssueNotice":null,"mhDraft_IsWithoutNotice":null,"mhDraft_AdditionalInformation":null,"mhDraft_CancellationReason":null},"event":{"id":"manageHearing","summary":"","description":""},"event_data":{"showManageHearingPage":"YES","manageHearingOption":"EDIT","selectedHearingId":null,"mhDraftPartyList":null,"hearing_HearingId":"#{hearingId}","hearing_HearingSummaryMarkdown":"#{HearingSummaryMarkdown}&nbsp;</p>","mhDraft_HearingId":null,"mhDraft_HearingSummaryMarkdown":null,"mhDraft_Type":null,"mhDraft_OtherHearingType":null,"mhDraft_NoticeWording":null,"mhDraft_Date":null,"mhDraft_DurationDays":null,"mhDraft_DurationHours":null,"mhDraft_DurationMinutes":null,"mhDraft_Notes":null,"mhDraft_IssueNotice":null,"mhDraft_IsWithoutNotice":null,"mhDraft_AdditionalInformation":null,"mhDraft_CancellationReason":null},"event_token":"#{event_token1}","ignore_warning":false,"case_reference":"#{caseId}"}"""))
 				)
-				.pause(MinThinkTime, MaxThinkTime)
           }
+
+		.pause(MinThinkTime, MaxThinkTime)
 
  /*====================================================================================
   * CHOOSE CONTINUE TAB AND UPDATE EXISTING DETAILS 
@@ -535,7 +491,6 @@ object PCS_Caseworker_ManageHearing {
 					.header("Accept", "application/json, text/plain, */*")
 					.header("traceparent", "00-f55c5667db1540c0a4848a18d07ecdac-47e6d9e6927741d2-01")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 				)
                  .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRF-TOKEN12")))
                  
@@ -550,12 +505,12 @@ object PCS_Caseworker_ManageHearing {
 					.header("Accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
 					.formParam("X-XSRF-TOKEN", "${XSRF-TOKEN12}")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 				    .body(StringBody("""{"data":{"hearingLocation":"#{hearingLocation}","hearing_Type":"#{TypeofHearing}","hearing_NoticeWording":"#{WordingOfHearing}","hearing_Date":"2028-02-03T00:00:00.000","hearing_DurationDays":"1","hearing_DurationHours":"1","hearing_DurationMinutes":"10","hearing_Notes":"hearing testing for further discussion on claim issues","hearing_IssueNotice":"NO","hearing_AdditionalInformation":"Testing"},"event":{"id":"manageHearing","summary":"","description":""},"event_data":{"showManageHearingPage":"YES","manageHearingOption":"EDIT","selectedHearingId":null,"mhDraftPartyList":null,"hearing_HearingId":"#{hearingId}","hearing_HearingSummaryMarkdown":"#{HearingSummaryMarkdown}&nbsp;</p>","mhDraft_HearingId":null,"mhDraft_HearingSummaryMarkdown":null,"mhDraft_Type":null,"mhDraft_NoticeWording":null,"mhDraft_Date":null,"mhDraft_DurationDays":null,"mhDraft_DurationHours":null,"mhDraft_DurationMinutes":null,"mhDraft_Notes":null,"mhDraft_IssueNotice":null,"mhDraft_IsWithoutNotice":null,"mhDraft_AdditionalInformation":null,"mhDraft_CancellationReason":null,"hearingLocation":"#{hearingLocation}","hearing_Type":"#{TypeofHearing}","hearing_NoticeWording":"#{WordingOfHearing}","hearing_Date":"2028-02-03T00:00:00.000","hearing_DurationDays":"1","hearing_DurationHours":"1","hearing_DurationMinutes":"10","hearing_Notes":"hearing testing for further discussion on claim issues","hearing_IssueNotice":"NO","hearing_AdditionalInformation":"Testing"},"event_token":"#{event_token1}","ignore_warning":false,"case_reference":"#{caseId}"}"""))
                     .check(jsonPath("$.data.hearing_Type").is("#{TypeofHearing}"))
                 )
-				.pause(MinThinkTime, MaxThinkTime)
 			}
+
+		.pause(MinThinkTime, MaxThinkTime)
 
  /*====================================================================================
   * SUBMIT EDITED DETAILS
@@ -568,7 +523,6 @@ object PCS_Caseworker_ManageHearing {
 					.header("Accept", "application/json, text/plain, */*")
 					.header("traceparent", "00-f55c5667db1540c0a4848a18d07ecdac-75df14fb470f4d22-01")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 				)
 
                 .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRF-TOKEN13")))
@@ -584,7 +538,6 @@ object PCS_Caseworker_ManageHearing {
 					.header("Accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
 					.formParam("X-XSRF-TOKEN", "${XSRF-TOKEN13}")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 					.body(StringBody("{\"data\":{\"showManageHearingPage\":\"YES\",\"manageHearingOption\":\"EDIT\",\"selectedHearingId\":\"#{hearingId}\",\"mhDraftPartyList\":null,\"hearing_HearingId\":\"#{hearingId}\",\"hearing_HearingSummaryMarkdown\":\"#{HearingSummaryMarkdown}&nbsp;</p>\",\"mhDraft_HearingId\":\"#{hearingId}\",\"mhDraft_HearingSummaryMarkdown\":\"#{HearingSummaryMarkdown}&nbsp;</p>\",\"mhDraft_Type\":\"#{TypeofHearing}\",\"mhDraft_OtherHearingType\":null,\"mhDraft_NoticeWording\":\"#{WordingOfHearing}\",\"mhDraft_Date\":\"2028-02-03T00:00:00\",\"mhDraft_DurationDays\":\"1\",\"mhDraft_DurationHours\":\"1\",\"mhDraft_DurationMinutes\":\"10\",\"mhDraft_Notes\":\"hearing testing for further discussion on claim issues\",\"mhDraft_IssueNotice\":\"NO\",\"mhDraft_IsWithoutNotice\":null,\"mhDraft_AdditionalInformation\":\"Testing\",\"mhDraft_CancellationReason\":null,\"hearingLocation\":\"#{hearingLocation}\",\"hearing_Type\":\"#{TypeofHearing}\",\"hearing_NoticeWording\":\"#{WordingOfHearing}\",\"hearing_Date\":\"2028-02-03T00:00:00\",\"hearing_DurationDays\":\"1\",\"hearing_DurationHours\":\"1\",\"hearing_DurationMinutes\":\"10\",\"hearing_Notes\":\"hearing testing for further discussion on claim issues\",\"hearing_IssueNotice\":\"NO\",\"hearing_AdditionalInformation\":\"Testing\"},\"event\":{\"id\":\"manageHearing\",\"summary\":\"\",\"description\":\"\"},\"event_token\":\"#{event_token1}\",\"ignore_warning\":false}"))
                     .check(jsonPath("$.callback_response_status").is("CALLBACK_COMPLETED"))
                 )
@@ -595,14 +548,12 @@ object PCS_Caseworker_ManageHearing {
 					.header("experimental", "true")
 					.header("Accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
                     .check(substring("Possession"))
 				)
-				.pause(MinThinkTime, MaxThinkTime)
-
-                
                .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRF-TOKEN14")))
 			}
+
+			.pause(MinThinkTime, MaxThinkTime)
 
       val HistoryView2 =
           group("XUI_PCS_Caseworker_AmendHearing_15_ClickHistoryTab") {
@@ -612,11 +563,10 @@ object PCS_Caseworker_ManageHearing {
         			.header("accept", "application/json")
 					.header("Accept", "application/json, text/plain, */*")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
-                    .check(substring("PCS"))
+                    .check(substring("CIVIL"))
 				)
-				.pause(MinThinkTime, MaxThinkTime)
 			}
+			.pause(MinThinkTime, MaxThinkTime)
 
  /*====================================================================================
   * CHOOSE HISTORY VIEW
@@ -633,14 +583,12 @@ object PCS_Caseworker_ManageHearing {
         			.header("accept", "application/json")
 					.header("experimental", "true")
 					.header("Accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-					.header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:153.0) Gecko/20100101 Firefox/153.0")
 					.queryParam("ignore-warning", "false")
-					.check(regex("event_token\":\"(.*?)\",\"wizard_pages").saveAs("event_token2"))
                     .check(jsonPath("$.case_fields[?(@.id == 'hearingLocation')].value").saveAs("hearingLocation"))
+					.check(status.in(200))
 				)
-				.pause(MinThinkTime, MaxThinkTime)
 			}
-        
+       .pause(MinThinkTime, MaxThinkTime) 
 } 
 
 
