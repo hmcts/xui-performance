@@ -21,17 +21,7 @@ import scala.jdk.CollectionConverters._
 *   CreateCaseFlag        — createFlags (start → ref data → build → submit → verify → view)
 *   ManageCaseFlag        — amendFlags update (start → build → submit → verify)
 *   InactiveCaseFlag      — amendFlags inactive (start → build → submit → verify)
-*
-* HARs: createmanagecaseflag.har / inactive case flag.har / Full till inactive case flag.har
-*
-* JSON body pattern (aligned with CC Notes / PCS ElFileBody + #{EL}):
-*   - Static bodies: ElFileBody under bodies/pcs/caseflag/
-*   - SearchCases.json: temporarily {} (size removed for sanity). Case filter is query
-*     case_reference. Restore {"size":25} if search fails without page size.
-*   - createFlags / amendFlags submits: Jackson merges eventTriggerJson (parties,
-*     allDefendants, existing caseFlags) and mutates flagIdToAmend, then
-*     StringBody("#{…EventBody}") — same EL style as CC Notes templates.
-*   - experimental Accept is set on httpProtocol (not duplicated per-request).
+
 ======================================================================================*/
 
 object Caseworker_PCS_CreateManageCaseFlag {
@@ -41,12 +31,19 @@ object Caseworker_PCS_CreateManageCaseFlag {
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
 
+  // Creates a Jackson ObjectMapper to read, create, and convert JSON data.
   private val mapper = new ObjectMapper()
 
-  // HAR / CCD DateTime fields use millisecond precision (e.g. 2026-10-12T09:35:33.550Z)
+  // Defines a date-time formatter that produces timestamps in UTC
+  // using the format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'.(This block defines how dates must be formatted before being sent in the JSON request.)
   private val ccdDateTimeFormatter =
     DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(ZoneOffset.UTC)
 
+  // Retrieves the value of a field from the "case_fields" array
+  // by matching its "id" with the supplied id.
+  //
+  // If "case_fields" is not an array, or the field is not found,
+  // returns a Jackson NullNode instead of throwing an error.
   private def fieldValue(root: JsonNode, id: String): JsonNode = {
     val fields = root.path("case_fields")
     if (!fields.isArray) mapper.nullNode()
@@ -226,7 +223,6 @@ object Caseworker_PCS_CreateManageCaseFlag {
         .check(bodyString.saveAs("eventTriggerJson")))
     }
 
-    // XSRF refresh outside Start group (CCNotes review convention)
     .exec(refreshXsrf)
 
     .pause(MinThinkTime, MaxThinkTime)
