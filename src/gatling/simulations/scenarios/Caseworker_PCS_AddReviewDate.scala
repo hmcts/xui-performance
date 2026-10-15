@@ -2,7 +2,6 @@ package scenarios
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import io.gatling.http.response.Response
 
 import utils.{Common, Environment, Headers}
 
@@ -18,7 +17,7 @@ object Caseworker_PCS_AddReviewDate {
   *=====================================================================================*/
 
   val OpenCaseIssued =
-        group("XUI_Caseworker_ReviewDate_030_ApplyFilter") {
+        group("XUI_PCS_Caseworker_ReviewDate_030_ApplyFilter") {
 			    exec(http("XUI_PCS_Caseworke_ReviewDate_030_ApplyFilter")
 					.get("/auth/keepalive")
 					.headers(Headers.commonHeader)
@@ -39,11 +38,9 @@ object Caseworker_PCS_AddReviewDate {
                 .exec(http("/data/internal/cases/#{caseId}")
 					.get("/data/internal/cases/#{caseId}")
 					.headers(Headers.commonHeader)
-        			.header("accept", "application/json")
 					.header("experimental", "true")
 					.header("Priority", "u=0")
 					.header("Accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-					.header("Accept-Encoding", "gzip, deflate, br, zstd")
 					.check(jsonPath("$.case_type.name").is("Possession"))
 				)
 				.exec(http("/api/wa-supported-jurisdiction/get")
@@ -123,7 +120,6 @@ object Caseworker_PCS_AddReviewDate {
 				.exec(http("/data/internal/profile")
 					.get("/data/internal/profile")
 					.headers(Headers.commonHeader)
-        			.header("accept", "application/json")
 					.header("experimental", "true")
 					.header("Accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-user-profile.v2+json;charset=UTF-8")
                     .check(jsonPath("$.jurisdictions[0].name").is("Civil Possession"))
@@ -143,7 +139,6 @@ object Caseworker_PCS_AddReviewDate {
 					.get("/api/wa-supported-jurisdiction/get")
 					.headers(Headers.commonHeader)
         			.header("accept", "application/json")
-					//.header("x-dtreferer", BaseURL + "/cases/case-details/PCS/PCS/#{caseId}")
 					.header("Accept", "application/json, text/plain, */*")
                     .check(substring("PCS"))
 				)
@@ -163,14 +158,12 @@ object Caseworker_PCS_AddReviewDate {
                exec(http("XUI_PCS_Caseworker_AddReviewDate_050_001_EnterDetails")
 					.post("/data/case-types/PCS/validate?pageId=addCaseReviewDateaddCaseReviewDate")
 					.headers(Headers.commonHeader)
-        			.header("accept", "application/json")
 					.header("Origin", BaseURL)
 					.header("experimental", "true")
 					.header("Priority", "u=0")
 					.header("Client-Context", "eyJjbGllbnRfY29udGV4dCI6eyJ1c2VyX2xhbmd1YWdlIjp7Imxhbmd1YWdlIjoiZW4ifX19")
 					.header("Accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
 					.header("X-XSRF-TOKEN", "#{XSRF-TOKEN4}")
-					.header("Accept-Encoding", "gzip, deflate, br, zstd")
 					.body(StringBody("{\"data\":{\"reviewDates\":[{\"value\":{\"date\":\"#{ReviewDate}\",\"reason\":\"#{Reason}\",\"description\":\"test\"},\"id\":null}]},\"event\":{\"id\":\"addCaseReviewDate\",\"summary\":\"\",\"description\":\"\"},\"event_data\":{\"reviewDates\":[{\"value\":{\"date\":\"#{ReviewDate}\",\"reason\":\"#{Reason}\",\"description\":\"test\"},\"id\":null}]},\"event_token\":\"#{event_token}\",\"ignore_warning\":false,\"case_reference\":\"#{caseId}\"}"))
 					.check(status.in(200))
 					.check(jsonPath("$.data.reviewDates[0].value.description").is("test"))
@@ -181,7 +174,6 @@ object Caseworker_PCS_AddReviewDate {
 					.headers(Headers.commonHeader)
         			.header("accept", "application/json")
 					.header("Accept", "application/json, text/plain, */*")
-					.header("Accept-Encoding", "gzip, deflate, br, zstd")
 					.check(substring("CIVIL"))
 				)
 
@@ -190,18 +182,16 @@ object Caseworker_PCS_AddReviewDate {
 
 			.pause(MinThinkTime, MaxThinkTime)
 
-        .group("XUI_PCS_Caseworker_AddReviewDate_050_EnterDetailsContinue") {
-				exec(http("XUI_PCS_Caseworker_AddReviewDate_050_002_ClickSubmit")
+        .group("XUI_PCS_Caseworker_AddReviewDate_050_ContinueClickSubmit") {
+				exec(http("XUI_PCS_Caseworker_AddReviewDate_050_ContinueClickSubmit")
 					.post("/data/cases/#{caseId}/events")
 					.headers(Headers.commonHeader)
-        			.header("accept", "application/json")
 					.header("Origin", BaseURL)
 					.header("experimental", "true")
 					.header("Priority", "u=0")
 					.header("Client-Context", "eyJjbGllbnRfY29udGV4dCI6eyJ1c2VyX2xhbmd1YWdlIjp7Imxhbmd1YWdlIjoiZW4ifX19")
 					.header("Accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
 					.header("X-XSRF-TOKEN", "#{XSRF-TOKEN5}")
-					.header("Accept-Encoding", "gzip, deflate, br, zstd")
 					.body(StringBody("{\"data\":{\"reviewDates\":[{\"value\":{\"date\":\"#{ReviewDate}\",\"reason\":\"#{Reason}\",\"description\":\"test\"},\"id\":\"#{reviewDatesId}\"}]},\"event\":{\"id\":\"addCaseReviewDate\",\"summary\":\"\",\"description\":\"\"},\"event_token\":\"#{event_token}\",\"ignore_warning\":false}"))
 					.check(substring("Work allocation tasks will be created for court staff"))
 				)
@@ -210,11 +200,8 @@ object Caseworker_PCS_AddReviewDate {
 				.exec(http("/data/internal/cases/#{caseId}")
 					.get("/data/internal/cases/#{caseId}")
 					.headers(Headers.commonHeader)
-        			.header("accept", "application/json")
 					.header("experimental", "true")
 					.header("Accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-					.header("Content-Type", "application/json")
-					.header("Accept-Encoding", "gzip, deflate, br, zstd")
 					.check(substring("Possession"))
                     .check(jsonPath("$.case_type.name").is("Possession"))
 				)
@@ -280,13 +267,12 @@ object Caseworker_PCS_AddReviewDate {
   * GO TO HISTORY TAB TO VIEW RECORDS 
   *=====================================================================================*/
     val HistoryView =
-        group("XUI_PCS_Caseworker_AddReviewDate_060_clickhistoryTab") {
-				exec(http("XUI_PCS_Caseworker_AddReviewDate_060_clickhistoryTab")
+        group("XUI_PCS_Caseworker_AddReviewDate_060_ClickHistoryTab") {
+				exec(http("XUI_PCS_Caseworker_AddReviewDate_060_ClickHistoryTab")
 					.get("/auth/keepalive")
 					.headers(Headers.commonHeader)
         			.header("accept", "application/json")
 					.header("Accept", "application/json, text/plain, */*")
-					.header("Accept-Encoding", "gzip, deflate, br, zstd")
 				)
 				.exec(http("/api/wa-supported-jurisdiction/get")
 					.get("/api/wa-supported-jurisdiction/get")
@@ -294,7 +280,6 @@ object Caseworker_PCS_AddReviewDate {
         			.header("accept", "application/json")
 					.header("Priority", "u=0")
 					.header("Accept", "application/json, text/plain, */*")
-					.header("Accept-Encoding", "gzip, deflate, br, zstd")
                     .check(substring("PCS"))
 				)
 
@@ -302,8 +287,6 @@ object Caseworker_PCS_AddReviewDate {
 					.get("/aggregated/caseworkers/:uid/jurisdictions")
 					.headers(Headers.commonHeader)
 					.header("Accept", "application/json")
-					.header("Content-Type", "application/json")
-					.header("Accept-Encoding", "gzip, deflate, br, zstd")
 					.queryParam("access", "read")
 					.check(substring("Civil Possession"))
 				)
