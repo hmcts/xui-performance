@@ -188,7 +188,7 @@ object Caseworker_PCS_ManageHearing {
 					.formParam("X-XSRF-TOKEN", "${XSRF-TOKEN5}")
 					.header("Accept-Encoding", "gzip, deflate, br, zstd")
 					.body(StringBody("{\"data\":{\"hearingLocation\":\"#{hearingLocation}\",\"hearing_Type\":\"#{TypeofHearing}\",\"hearing_NoticeWording\":\"#{WordingOfHearing}\",\"hearing_Date\":\"2028-02-01T00:00:00\",\"hearing_DurationDays\":\"1\",\"hearing_DurationHours\":\"1\",\"hearing_DurationMinutes\":\"10\",\"hearing_Notes\":\"hearing testing for further discussion on claim issues\",\"hearing_IssueNotice\":\"NO\",\"hearing_AdditionalInformation\":\"Testing\"},\"event\":{\"id\":\"manageHearing\",\"summary\":\"\",\"description\":\"\"},\"event_token\":\"#{event_token}\",\"ignore_warning\":false}"))
-                    .check(jsonPath("$.state").saveAs("caseState"))
+                    .check(jsonPath("$.callback_response_status").is("CALLBACK_COMPLETED"))
 				)
 				.exec(http("/data/internal/cases/#{caseId}")
 					.get("/data/internal/cases/#{caseId}")
@@ -440,7 +440,6 @@ object Caseworker_PCS_ManageHearing {
 					.check(regex("event_token\":\"(.*?)\",\"wizard_pages").saveAs("event_token1"))
 					.check(regex("hearing_HearingSummaryMarkdown\",\"label\":\"\",\"hidden\":null,\"value\":\"(.*?)&nbsp;").saveAs("HearingSummaryMarkdown"))
                     .check(regex(""""id"\s*:\s*"hearing_HearingId"[\s\S]*?"value"\s*:\s*(\d+)""").saveAs("hearingId"))
-					.check(jsonPath("$.case_fields[?(@.id == 'hearing_HearingSummaryMarkdown')].value").saveAs("hearingSummary"))
                     .check(status.in(200))
 				)
 
@@ -555,8 +554,8 @@ object Caseworker_PCS_ManageHearing {
   * CHOOSE HISTORY VIEW
   *=====================================================================================*/
       val ClickView =
-           group("XUI_PCS_Caseworker_AmendHearing_16_SelectMangeHearing") {
-				exec(http("XUI_PCS_Caseworker_AmendHearing_16_SelectMangeHearing")
+           group("XUI_PCS_Caseworker_AmendHearing_16_SelectManageHearing") {
+				exec(http("XUI_PCS_Caseworker_AmendHearing_16_SelectManageHearing")
 					.get("/workallocation/case/tasks/#{caseId}/event/manageHearing/caseType/PCS/jurisdiction/PCS")
 					.header("Accept", "application/json")
 				)
