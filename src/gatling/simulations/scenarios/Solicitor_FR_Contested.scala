@@ -112,7 +112,8 @@ object Solicitor_FR_Contested {
       ======================================================================================*/
       .exec(Common.uploadFile("3MB.pdf", "PUBLIC", "#{caseType}", "DIVORCE", "Petition"))
 
-      .pause(MinThinkTime, MaxThinkTime)
+      //force 20 second pause (even in debug mode) to ensure subsequent document uploads don't occur too quickly and throw a HTTP 429
+      .pause(20, constantPauses)
 
       .group("XUI_FR_Contested_050_AddDivorceCaseDetails") {
         exec(
@@ -338,7 +339,8 @@ object Solicitor_FR_Contested {
 
       .exec(Common.uploadFile("3MB.pdf", "PUBLIC", "FinancialRemedyContested", "DIVORCE", "Miam"))
 
-        .pause(MinThinkTime, MaxThinkTime)
+      //force 20 second pause (even in debug mode) to ensure subsequent document uploads don't occur too quickly and throw a HTTP 429
+      .pause(20, constantPauses)
 
       .group("XUI_FR_Contested_170_AddMIAMCertificationDetails") {
         exec(http("XUI_FR_Contested_170_005_AddMIAMCertificationDetails")
@@ -351,8 +353,7 @@ object Solicitor_FR_Contested {
         )
       }
 
-      //force 10 second pause (even in debug mode) to ensure subsequent document uploads don't occur too quickly and throw a HTTP 429
-      .pause(10, constantPauses)
+      .pause(MinThinkTime, MaxThinkTime)
 
       /*======================================================================================
        * Add Variation order details and click Continue
@@ -360,8 +361,8 @@ object Solicitor_FR_Contested {
 
       .exec(Common.uploadFile("3MB.pdf", "PUBLIC", "FinancialRemedyContested", "DIVORCE", "Variation"))
 
-      //force 10 second pause (even in debug mode) to ensure subsequent document uploads don't occur too quickly and throw a HTTP 429
-      .pause(10, constantPauses)
+      //force 20 second pause (even in debug mode) to ensure subsequent document uploads don't occur too quickly and throw a HTTP 429
+      .pause(20, constantPauses)
 
       .exec(Common.uploadFile("3MB.pdf", "PUBLIC", "FinancialRemedyContested", "DIVORCE", "OtherDocument"))
 

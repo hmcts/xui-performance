@@ -227,8 +227,8 @@ object Solicitor_PRL_C100 {
         .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("DocumentURL")))
     }
 
-    //force 10 second pause (even in debug mode) to ensure subsequent document uploads don't occur too quickly and throw a HTTP 429
-    .pause(10, constantPauses)
+    //force 20 second pause (even in debug mode) to ensure subsequent document uploads don't occur too quickly and throw a HTTP 429
+    .pause(20, constantPauses)
 
     /*======================================================================================
     * Do you have a draft consent order? - Yes
