@@ -433,29 +433,27 @@ class XUI_Simulation extends Simulation {
 	 ===============================================================================================*/
 	val FamilyPublicLawSolicitorScenario = scenario("***** FPL Create Case *****")
 		.exitBlockOnFail {
-			//exec(session => session.set("repeatCount", 1))
-			if (debugMode == "off") {
+			//Numbers of C2 applications created for the case based on production figures: https://hmcts.atlassian.net/browse/DFPL-3086
+			doIfOrElse (debugMode == "off") {
 				randomSwitch(
-					//Numbers reference: https://hmcts.atlassian.net/browse/DFPL-3086
-					28.47 -> exec(session => session.set("repeatCount", 0)),
-					19.65 -> exec(session => session.set("repeatCount", 1)),
-					15.24 -> exec(session => session.set("repeatCount", 2)),
-					11.10 -> exec(session => session.set("repeatCount", 3)),
-					8.19 -> exec(session => session.set("repeatCount", 4)),
-					5.71 -> exec(session => session.set("repeatCount", 5)),
-					4.12 -> exec(session => session.set("repeatCount", 6)),
-					2.89 -> exec(session => session.set("repeatCount", 7)),
-					2.15 -> exec(session => session.set("repeatCount", 8)),
-					1.48 -> exec(session => session.set("repeatCount", 9)),
-					1.00 -> exec(session => session.set("repeatCount", 10))
+					28.47 -> exec(session => session.set("numberOfFPLC2Applications", 0)),
+					19.65 -> exec(session => session.set("numberOfFPLC2Applications", 1)),
+					15.24 -> exec(session => session.set("numberOfFPLC2Applications", 2)),
+					11.10 -> exec(session => session.set("numberOfFPLC2Applications", 3)),
+					8.19 -> exec(session => session.set("numberOfFPLC2Applications", 4)),
+					5.71 -> exec(session => session.set("numberOfFPLC2Applications", 5)),
+					4.12 -> exec(session => session.set("numberOfFPLC2Applications", 6)),
+					2.89 -> exec(session => session.set("numberOfFPLC2Applications", 7)),
+					2.15 -> exec(session => session.set("numberOfFPLC2Applications", 8)),
+					1.48 -> exec(session => session.set("numberOfFPLC2Applications", 9)),
+					1.00 -> exec(session => session.set("numberOfFPLC2Applications", 10))
 				)
 			}
-
-			else {
-				exec(session => session.set("repeatCount", 1))
+			{
+				exec(session => session.set("numberOfFPLC2Applications", 1))
 			}
 
-			feed(UserFeederFPL)
+			.feed(UserFeederFPL)
 			.feed(CWFeederFPL)
 			.feed(JudgeFeederFPL)
 			.exec(_.set("env", s"${env}")
@@ -488,7 +486,7 @@ class XUI_Simulation extends Simulation {
 			.exec(Solicitor_FPL.fplViewCase)
 			.exec(Solicitor_FPL.fplListHearing)
 			.exec(XuiHelper.Logout)
-			.repeat("#{repeatCount}") {
+			.repeat("#{numberOfFPLC2Applications}") {
 				 exec(XuiHelper.Homepage)
 				.exec(XuiHelper.Login("#{user}", "#{password}"))
 				.exec(Solicitor_FPL.fplViewCase)
@@ -585,17 +583,17 @@ class XUI_Simulation extends Simulation {
 	}
 
   setUp(
-//		PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-//		PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-//      	BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-//      	ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-//      	ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-//		NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-//		NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-//      	FinancialRemedySolicitorConsentedScenario.inject(simulationProfile(testType, frConsentedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-//		FinancialRemedySolicitorContestedScenario.inject(simulationProfile(testType, frContestedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		PRLC100SolicitorScenario.inject(simulationProfile(testType, prlC100TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		FinancialRemedySolicitorConsentedScenario.inject(simulationProfile(testType, frConsentedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		FinancialRemedySolicitorContestedScenario.inject(simulationProfile(testType, frContestedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-    //  CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 
   ).protocols(httpProtocol)
     .assertions(assertions(testType))

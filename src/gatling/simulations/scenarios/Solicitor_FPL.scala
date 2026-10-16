@@ -1515,14 +1515,8 @@ object Solicitor_FPL {
     Set an upload time
     ======================================================================================*/
 
-    .exec { session =>
-      val uploadTimestamp = DateUtils.getDateNow("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS")
-      val uploadedDateTime = DateUtils.getDateNow("d MMMM yyyy, h:mma")
-
-      session
-        .set("upload_timestamp", uploadTimestamp)
-        .set("uploadedDateTime", uploadedDateTime)
-    }
+    .exec(_.set("upload_timestamp", DateUtils.getDateNow("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS"))
+      .set("uploadedDateTime", DateUtils.getDateNow("d MMMM yyyy, h:mma")))
 
     /*======================================================================================
     Confirm and Continue Review
