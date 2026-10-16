@@ -27,68 +27,46 @@ import scala.jdk.CollectionConverters._
 object Caseworker_PCS_CreateManageCaseFlag {
 
   val BaseURL = Environment.baseURL
-
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
 
-  // Creates a Jackson ObjectMapper to read, create, and convert JSON data.
   private val mapper = new ObjectMapper()
-
-  // Defines a date-time formatter that produces timestamps in UTC
-  // using the format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'.(This block defines how dates must be formatted before being sent in the JSON request.)
   private val ccdDateTimeFormatter =
     DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(ZoneOffset.UTC)
 
-  // Retrieves the value of a field from the "case_fields" array
-  // by matching its "id" with the supplied id.
-  //
-  // If "case_fields" is not an array, or the field is not found,
-  // returns a Jackson NullNode instead of throwing an error.
   private def fieldValue(root: JsonNode, id: String): JsonNode = {
     val fields = root.path("case_fields")
     if (!fields.isArray) mapper.nullNode()
+    else fields.asScala.find(_.path("id").asText("") == id).map(_.path("value")).getOrElse(mapper.nullNode())
+  }
+
+  private def partiesFromTrigger(trigger: JsonNode): ArrayNode = {
+    val raw = fieldValue(trigger, "parties")
+    if (!raw.isArray) mapper.createArrayNode()
     else {
-      fields.asScala
-        .find(_.path("id").asText("") == id)
-        .map(_.path("value"))
-        .getOrElse(mapper.nullNode())
+      val parties = raw.deepCopy().asInstanceOf[ArrayNode]
+      val ordered = mapper.createArrayNode()
+      parties.asScala.filter(_.path("value").has("defendantFlags")).foreach(ordered.add)
+      parties.asScala.filterNot(_.path("value").has("defendantFlags")).foreach(ordered.add)
+      ordered
     }
   }
 
-  private def cloneNode(node: JsonNode): JsonNode =
-    if (node == null || node.isNull || node.isMissingNode) mapper.nullNode()
-    else mapper.readTree(mapper.writeValueAsString(node))
-
-  private def partiesFromTrigger(trigger: JsonNode): ArrayNode = {
-    val partiesNode = cloneNode(fieldValue(trigger, "parties"))
-    val parties: ArrayNode =
-      if (partiesNode != null && partiesNode.isArray) partiesNode.deepCopy().asInstanceOf[ArrayNode]
-      else mapper.createArrayNode()
-    val sortedParties = mapper.createArrayNode()
-    val withDefendantFlags = parties.asScala.filter(_.path("value").has("defendantFlags"))
-    val withoutDefendantFlags = parties.asScala.filterNot(_.path("value").has("defendantFlags"))
-    withDefendantFlags.foreach(sortedParties.add)
-    withoutDefendantFlags.foreach(sortedParties.add)
-    sortedParties
-  }
-
   private def allDefendantsFromTrigger(trigger: JsonNode): JsonNode = {
-    val allDefendantsNode = cloneNode(fieldValue(trigger, "allDefendants"))
-    if (allDefendantsNode != null && !allDefendantsNode.isNull && !allDefendantsNode.isMissingNode) allDefendantsNode
-    else mapper.createArrayNode()
+    val raw = fieldValue(trigger, "allDefendants")
+    if (raw.isArray) raw.deepCopy() else mapper.createArrayNode()
   }
 
+  /** Deep-copy caseFlags. groupId/visibility defaults match successful Case Flag HAR payloads. */
   private def caseFlagsFromTrigger(trigger: JsonNode): ObjectNode = {
-    val existingCaseFlags = cloneNode(fieldValue(trigger, "caseFlags"))
-    val caseFlagsPayload: ObjectNode =
-      if (existingCaseFlags != null && existingCaseFlags.isObject) existingCaseFlags.deepCopy().asInstanceOf[ObjectNode]
-      else mapper.createObjectNode()
-    if (!caseFlagsPayload.has("groupId")) caseFlagsPayload.putNull("groupId")
-    if (!caseFlagsPayload.hasNonNull("visibility")) caseFlagsPayload.put("visibility", "Internal")
-    caseFlagsPayload
+    val raw = fieldValue(trigger, "caseFlags")
+    val caseFlags =
+      if (raw.isObject) raw.deepCopy().asInstanceOf[ObjectNode] else mapper.createObjectNode()
+    if (!caseFlags.has("groupId")) caseFlags.putNull("groupId")
+    if (!caseFlags.hasNonNull("visibility")) caseFlags.put("visibility", "Internal")
+    caseFlags
   }
 
-  /** CCD POST /events envelope: data + event id/token + ignore_warning. */
   private def ccdEventJson(eventId: String, data: ObjectNode, eventToken: String): String = {
     val event = mapper.createObjectNode()
     event.put("id", eventId)
@@ -100,14 +78,9 @@ object Caseworker_PCS_CreateManageCaseFlag {
     payload.set("event", event)
     payload.put("event_token", eventToken)
     payload.put("ignore_warning", false)
-
     mapper.writeValueAsString(payload)
   }
 
-  /**
-   * Shared amendFlags body for Manage (comment + dateTimeModified) and Inactive
-   * (same fields + status Inactive). Marks the session failed if flagIdToAmend is missing.
-   */
   private def buildAmendFlagsSessionBody(
     session: Session,
     comment: String,
@@ -119,38 +92,32 @@ object Caseworker_PCS_CreateManageCaseFlag {
     val flagIdToAmend = session("flagIdToAmend").as[String]
 
     val caseFlagsPayload = caseFlagsFromTrigger(trigger)
-    val existingDetails: ArrayNode =
+    val details: ArrayNode =
       if (caseFlagsPayload.path("details").isArray) caseFlagsPayload.path("details").deepCopy().asInstanceOf[ArrayNode]
       else mapper.createArrayNode()
 
-    val now = ccdDateTimeFormatter.format(Instant.now())
-    var updated = false
+    val flagValue = details.asScala
+      .find(_.path("id").asText("") == flagIdToAmend)
+      .map(_.path("value"))
+      .filter(_.isObject)
+      .map(_.asInstanceOf[ObjectNode])
 
-    existingDetails.asScala.foreach { d =>
-      if (!updated && d.path("id").asText("") == flagIdToAmend) {
-        val valueNode = d.path("value")
-        if (valueNode.isObject) {
-          val value = valueNode.asInstanceOf[ObjectNode]
-          value.put("flagComment", comment)
-          value.put("flagUpdateComment", comment)
-          if (setStatusInactive) value.put("status", "Inactive")
-          value.put("dateTimeModified", now)
-          updated = true
-        }
-      }
-    }
+    flagValue match {
+      case None =>
+        session.markAsFailed
+      case Some(value) =>
+        val now = ccdDateTimeFormatter.format(Instant.now())
+        value.put("flagComment", comment)
+        value.put("flagUpdateComment", comment)
+        if (setStatusInactive) value.put("status", "Inactive")
+        value.put("dateTimeModified", now)
 
-    if (!updated) {
-      session.markAsFailed
-    } else {
-      caseFlagsPayload.set("details", existingDetails)
-
-      val data = mapper.createObjectNode()
-      data.set("caseFlags", caseFlagsPayload)
-      data.set("parties", partiesFromTrigger(trigger))
-      data.set("allDefendants", allDefendantsFromTrigger(trigger))
-
-      session.set(sessionBodyKey, ccdEventJson("amendFlags", data, eventToken))
+        caseFlagsPayload.set("details", details)
+        val data = mapper.createObjectNode()
+        data.set("caseFlags", caseFlagsPayload)
+        data.set("parties", partiesFromTrigger(trigger))
+        data.set("allDefendants", allDefendantsFromTrigger(trigger))
+        session.set(sessionBodyKey, ccdEventJson("amendFlags", data, eventToken))
     }
   }
 
@@ -368,8 +335,7 @@ object Caseworker_PCS_CreateManageCaseFlag {
 
   /*====================================================================================
   * Manage Case Flag — amendFlags update (start → build → submit → verify)
-  * HAR event name: "Manage case flags" | backend event id: amendFlags
-  *=====================================================================================*/
+    *=====================================================================================*/
 
   val ManageCaseFlag =
 
