@@ -196,7 +196,8 @@ object Solicitor_FR_Consented  {
         .check(jsonPath("$.documents[0]._links.self.href").saveAs("ConsentOrderDocumentURL")))
     }
 
-    .pause(MinThinkTime, MaxThinkTime)
+    //force 10 second pause (even in debug mode) to ensure the second document upload doesn't occur too quickly and throw a HTTP 429
+    .pause(10, constantPauses)
 
     /*======================================================================================
     * Click Continue to submit Consent Order document
