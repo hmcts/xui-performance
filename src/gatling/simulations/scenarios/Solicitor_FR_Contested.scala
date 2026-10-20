@@ -112,7 +112,8 @@ object Solicitor_FR_Contested {
       ======================================================================================*/
       .exec(Common.uploadFile("3MB.pdf", "PUBLIC", "#{caseType}", "DIVORCE", "Petition"))
 
-      .pause(MinThinkTime, MaxThinkTime)
+      //force 20 second pause (even in debug mode) to ensure subsequent document uploads don't occur too quickly and throw a HTTP 429
+      .pause(20, constantPauses)
 
       .group("XUI_FR_Contested_050_AddDivorceCaseDetails") {
         exec(
@@ -338,7 +339,8 @@ object Solicitor_FR_Contested {
 
       .exec(Common.uploadFile("3MB.pdf", "PUBLIC", "FinancialRemedyContested", "DIVORCE", "Miam"))
 
-        .pause(MinThinkTime, MaxThinkTime)
+      //force 20 second pause (even in debug mode) to ensure subsequent document uploads don't occur too quickly and throw a HTTP 429
+      .pause(20, constantPauses)
 
       .group("XUI_FR_Contested_170_AddMIAMCertificationDetails") {
         exec(http("XUI_FR_Contested_170_005_AddMIAMCertificationDetails")
@@ -350,10 +352,8 @@ object Solicitor_FR_Contested {
           .check(jsonPath("$.data.soleTraderName").is("Wizard divorce service"))
         )
       }
-        // Adding additional pauses to avoid http 429 too many requests error from document management service
-        .pause(MinThinkTime, MaxThinkTime)
-        .pause(MinThinkTime, MaxThinkTime)
-        .pause(MinThinkTime, MaxThinkTime)
+
+      .pause(MinThinkTime, MaxThinkTime)
 
       /*======================================================================================
        * Add Variation order details and click Continue
@@ -361,17 +361,12 @@ object Solicitor_FR_Contested {
 
       .exec(Common.uploadFile("3MB.pdf", "PUBLIC", "FinancialRemedyContested", "DIVORCE", "Variation"))
 
-        // Adding additional pauses to avoid http 429 too many requests error from document management service
-        // (manually setting a higher pause time is overriden by the simulation configuration when running in a pipeline)
-        .pause(MinThinkTime, MaxThinkTime)
-        .pause(MinThinkTime, MaxThinkTime)
-        .pause(MinThinkTime, MaxThinkTime)
-        .pause(MinThinkTime, MaxThinkTime)
-        .pause(MinThinkTime, MaxThinkTime)
+      //force 20 second pause (even in debug mode) to ensure subsequent document uploads don't occur too quickly and throw a HTTP 429
+      .pause(20, constantPauses)
 
       .exec(Common.uploadFile("3MB.pdf", "PUBLIC", "FinancialRemedyContested", "DIVORCE", "OtherDocument"))
 
-        .pause(MinThinkTime, MaxThinkTime)
+      .pause(MinThinkTime, MaxThinkTime)
 
       .group("XUI_FR_Contested_180_AddVariationOrderDetails") {
 
