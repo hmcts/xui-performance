@@ -434,7 +434,8 @@ class XUI_Simulation extends Simulation {
 	val FamilyPublicLawSolicitorScenario = scenario("***** FPL Create Case *****")
 		.exitBlockOnFail {
 			//Numbers of C2 applications created for the case based on production figures: https://hmcts.atlassian.net/browse/DFPL-3086
-			doIfOrElse (debugMode == "off") {
+			//In debug mode, only runs a single C2 application.
+			doIfOrElse (debugMode == "off") { // || testType != "pipeline"
 				randomSwitch(
 					28.47 -> exec(session => session.set("numberOfFPLC2Applications", 0)),
 					19.65 -> exec(session => session.set("numberOfFPLC2Applications", 1)),
@@ -451,6 +452,12 @@ class XUI_Simulation extends Simulation {
 			}
 			{
 				exec(session => session.set("numberOfFPLC2Applications", 1))
+			}
+
+			.exec{
+				session =>
+					println("Number of FPL C2 applications: " + session("numberOfFPLC2Applications").as[String])
+				session
 			}
 
 			.feed(UserFeederFPL)
@@ -593,7 +600,7 @@ class XUI_Simulation extends Simulation {
 		FinancialRemedySolicitorConsentedScenario.inject(simulationProfile(testType, frConsentedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		FinancialRemedySolicitorContestedScenario.inject(simulationProfile(testType, frContestedTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		FamilyPublicLawSolicitorScenario.inject(simulationProfile(testType, fplTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
-		CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+	  CaseworkerScenario.inject(simulationProfile(testType, caseworkerTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption)
 
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
