@@ -1,0 +1,154 @@
+{
+  "data": {
+    "hasOtherToBeReview": "NO",
+    "reviewAdditionalAppDraftOrderId": "#{DraftOrderBundleID}",
+    "judgeNameAndTitle": "Ms Young",
+    "hasC2ToBeReview": "YES",
+    "reviewAdditionalAppIsConfidential": "NO",
+    "c2AdditionalApplicationToBeReview": {
+      "type": "WITHOUT_NOTICE",
+      "routeType": "APPLY_ONLINE",
+      "document": {
+        "document_url": "#{C2ApplicationDocumentURL}",
+        "document_filename": "C2_application.pdf",
+        "document_binary_url": "#{C2ApplicationDocumentURL}/binary",
+        "upload_timestamp": "#{upload_timestamp}"
+      },
+      "uploadedDateTime": "#{uploadedDateTime}",
+      "supportingEvidenceBundle": [
+        {
+          "value": {
+            "name": "Evidence of consent",
+            "dateTimeUploaded": "#{upload_timestamp}",
+            "document": {
+              "document_url": "#{EvidenceDocumentURL}",
+              "document_binary_url": "#{EvidenceDocumentURL}/binary",
+              "document_filename": "3MB.pdf",
+              "upload_timestamp": "#{upload_timestamp}"
+            },
+            "uploaderType": "DESIGNATED_LOCAL_AUTHORITY",
+            "uploaderCaseRoles": [
+              "LASOLICITOR"
+            ],
+            "uploadedBy": "#{user}",
+            "hasConfidentialAddress": "No",
+            "documentAcknowledge": [
+              "ACK_RELATED_TO_CASE"
+            ],
+            "needTranslation": "NO"
+          },
+          "id": "#{EvidenceConsentBundleID}"
+        }
+      ],
+      "draftOrdersBundle": [
+        {
+          "value": {
+            "title": "C2 Draft Order Document",
+            "document": {
+              "document_url": "#{DraftOrderDocumentURL}",
+              "document_binary_url": "#{DraftOrderDocumentURL}/binary",
+              "document_filename": "3MB.pdf",
+              "upload_timestamp": "#{upload_timestamp}"
+            },
+            "uploaderType": "DESIGNATED_LOCAL_AUTHORITY",
+            "uploaderCaseRoles": [
+              "LASOLICITOR"
+            ]
+          },
+          "id": "#{DraftOrderBundleID}"
+        }
+      ],
+      "supplementsBundle": [],
+      "applicantName": "FPLA team, Applicant",
+      "applicationPermissionType": "ALREADY_GRANTED",
+      "applicationRelatesToAllChildren": "YES",
+      "childrenOnApplication": "",
+      "applicationSummary": "This application is about x y z.",
+      "hasSafeguardingRisk": "No",
+      "canBeConsideredAtNextHearing": "Yes",
+      "isHearingAdjournmentRequired": "No",
+      "confidentialApplication": "No"
+    },
+    "otherAdditionalApplicationToBeReview": null
+  },
+  "event": {
+    "id": "reviewAdditionalApplication",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "hasOtherToBeReview": "NO",
+    "reviewAdditionalAppDraftOrderId": "#{DraftOrderBundleID}",
+    "judgeNameAndTitle": "Ms Young",
+    "hasC2ToBeReview": "YES",
+    "reviewAdditionalAppIsConfidential": "NO",
+    "c2AdditionalApplicationToBeReview": {
+      "type": "WITHOUT_NOTICE",
+      "routeType": "APPLY_ONLINE",
+      "document": {
+        "document_url": "#{C2ApplicationDocumentURL}",
+        "document_filename": "C2_application.pdf",
+        "document_binary_url": "#{C2ApplicationDocumentURL}/binary",
+        "upload_timestamp": "#{upload_timestamp}"
+      },
+      "uploadedDateTime": "#{uploadedDateTime}",
+      "supportingEvidenceBundle": [
+        {
+          "value": {
+            "name": "Evidence of consent",
+            "dateTimeUploaded": "#{upload_timestamp}",
+            "document": {
+              "document_url": "#{EvidenceDocumentURL}",
+              "document_binary_url": "#{EvidenceDocumentURL}/binary",
+              "document_filename": "3MB.pdf",
+              "upload_timestamp": "#{upload_timestamp}"
+            },
+            "uploaderType": "DESIGNATED_LOCAL_AUTHORITY",
+            "uploaderCaseRoles": [
+              "LASOLICITOR"
+            ],
+            "uploadedBy": "#{user}",
+            "hasConfidentialAddress": "No",
+            "documentAcknowledge": [
+              "ACK_RELATED_TO_CASE"
+            ],
+            "needTranslation": "NO"
+          },
+          "id": "#{EvidenceConsentBundleID}"
+        }
+      ],
+      "draftOrdersBundle": [
+        {
+          "value": {
+            "title": "C2 Draft Order Document",
+            "document": {
+              "document_url": "#{DraftOrderDocumentURL}",
+              "document_binary_url": "#{DraftOrderDocumentURL}/binary",
+              "document_filename": "3MB.pdf",
+              "upload_timestamp": "#{upload_timestamp}"
+            },
+            "uploaderType": "DESIGNATED_LOCAL_AUTHORITY",
+            "uploaderCaseRoles": [
+              "LASOLICITOR"
+            ]
+          },
+          "id": "#{DraftOrderBundleID}"
+        }
+      ],
+      "supplementsBundle": [],
+      "applicantName": "FPLA team, Applicant",
+      "applicationPermissionType": "ALREADY_GRANTED",
+      "applicationRelatesToAllChildren": "YES",
+      "childrenOnApplication": "",
+      "applicationSummary": "This application is about x y z.",
+      "hasSafeguardingRisk": "No",
+      "canBeConsideredAtNextHearing": "Yes",
+      "isHearingAdjournmentRequired": "No",
+      "confidentialApplication": "No"
+    },
+    "otherAdditionalApplicationToBeReview": null
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
+}

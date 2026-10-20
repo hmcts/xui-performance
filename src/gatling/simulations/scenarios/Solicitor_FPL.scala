@@ -2,82 +2,72 @@ package scenarios
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import utils.{Environment, Common, Headers}
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import utilities.DateUtils
+import utils.{Common, Environment, Headers}
 
 object Solicitor_FPL {
 
-  val IdamUrl = Environment.idamURL
   val BaseURL = Environment.baseURL
 
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
 
-  val patternDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-  val patternYear = DateTimeFormatter.ofPattern("yyyy")
-  val now = LocalDateTime.now()
-  val patternTimeNow = DateTimeFormatter.ofPattern("HH:mm:ss.S")
-
   val CreateFPLCase =
 
-    //set session variables
-    exec(_.setAll(  "caseName"  -> ("Perf" + Common.randomString(5) + " vs Perf" + Common.randomString(5)),
-                    "firstName"  -> ("Perf" + Common.randomString(5)),
-                    "childFirstName" -> ("Child" + Common.randomString(5)),
-                    "childLastName" -> ("Test" + Common.randomString(5)),
-                    "dobDay" -> Common.getDay(),
-                    "dobMonth" -> Common.getMonth(),
-                    "dobYearChild" -> Common.getDobYearChild(),
-                    "livingWithSinceDay" -> Common.getDay(),
-                    "livingWithSinceMonth" -> Common.getMonth(),
-                    "livingWithSinceYear" -> now.minusYears(1).format(patternYear),
-                    "respondentFirstName" -> ("Resp" + Common.randomString(5)),
-                    "respondentLastName" -> ("Test" + Common.randomString(5)),
-                    "dobYearResp" -> Common.getDobYear(),
-                    "currentDate" -> now.format(patternDate)))
- 
+    exec(_.setAll("caseName" -> ("Perf" + Common.randomString(5) + " vs Perf" + Common.randomString(5)),
+      "firstName" -> ("Perf" + Common.randomString(5)),
+      "childFirstName" -> ("Child" + Common.randomString(5)),
+      "childLastName" -> ("Test" + Common.randomString(5)),
+      "dobDay" -> Common.getDay(),
+      "dobMonth" -> Common.getMonth(),
+      "dobYearChild" -> Common.getDobYearChild(),
+      "livingWithSinceDay" -> Common.getDay(),
+      "livingWithSinceMonth" -> Common.getMonth(),
+      "livingWithSinceYear" -> DateUtils.getDatePast("yyyy", years = 1),
+      "currentDate" -> DateUtils.getDateNow("yyyy-MM-dd"),
+      "respondentFirstName" -> ("Resp" + Common.randomString(5)),
+      "respondentLastName" -> ("Test" + Common.randomString(5)),
+      "dobYearResp" -> Common.getDobYear(),
+      "lastName" -> ("Test" + Common.randomString(5)),
+      "futureCourtDate" -> DateUtils.getDateFutureRandom("yyyy-MM-dd", minDays = 10, maxDays = 100))
+    )
+
     /*======================================================================================
     Click On Create Case for FPL
     ======================================================================================*/
-  
-    .group("XUI_FPL_040_CreateCase") {
 
+    .group("XUI_FPL_040_CreateCase") {
       exec(http("XUI_FPL_040_CreateCase")
         .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
         .check(substring("PUBLICLAW")))
-
-      .exec(Common.userDetails)
+        .exec(Common.userDetails)
     }
 
     .exec(getCookieValue(CookieKey("__auth__").saveAs("authToken")))
+    .pause(MinThinkTime, MaxThinkTime)
 
-    .pause(MinThinkTime , MaxThinkTime)
-    
     /*======================================================================================
     Select Jurisdiction as Family Law and Casetype as CARE_SUPERVISION_EPO
     ======================================================================================*/
 
     .group("XUI_FPL_050_005_StartCreateCase") {
-
       exec(http("XUI_FPL_050_005_StartCreateCase")
         .get("/data/internal/case-types/CARE_SUPERVISION_EPO/event-triggers/openCase?ignore-warning=false")
         .headers(Headers.commonHeader)
         .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-case-trigger.v2+json;charset=UTF-8")
         .check(jsonPath("$.event_token").saveAs("event_token"))
         .check(substring("Start application")))
-
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
+        .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
     }
 
-    .pause(MinThinkTime , MaxThinkTime)
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     Enter case name and click Continue
     ======================================================================================*/
-    
+
     .group("XUI_FPL_060_CaseNameContinue") {
       exec(http("XUI_FPL_060_005_CaseNameContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=openCaseprovideCaseName")
@@ -87,13 +77,13 @@ object Solicitor_FPL {
         .body(ElFileBody("bodies/fpl/FPLOpenCase.json"))
         .check(substring("caseName")))
     }
-    
-    .pause(MinThinkTime , MaxThinkTime )
+
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     Click Save and Continue to create the case
     ======================================================================================*/
-    
+
     .group("XUI_FPL_070_CaseNameSaveContinue") {
       exec(http("XUI_FPL_070_005_CaseNameSaveContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/cases?ignore-warning=false")
@@ -110,15 +100,15 @@ object Solicitor_FPL {
         .header("x-xsrf-token", "#{XSRFToken}")
         .check(substring("CCD ID")))
     }
-      
-    .pause(MinThinkTime , MaxThinkTime )
+
+    .pause(MinThinkTime, MaxThinkTime)
 
   val fplOrdersAndDirections =
 
     /*======================================================================================
     Click on the 'Orders and directions sought' link
     ======================================================================================*/
-      
+
     group("XUI_FPL_080_OrdersAndDirections") {
       exec(http("XUI_FPL_080_005_OrdersAndDirectionsTrigger")
         .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/#{caseId}/trigger/ordersNeeded")
@@ -157,18 +147,19 @@ object Solicitor_FPL {
         .check(jsonPath("$.id").is("ordersNeeded")))
 
       .exec(Common.isAuthenticated)
+
     }
-    
+
     .exec(Common.caseActivityGet)
 
-    .pause(MinThinkTime , MaxThinkTime )
-  
+    .pause(MinThinkTime, MaxThinkTime)
+
     /*======================================================================================
     Select options and click Continue:
     Orders = Care order
     Directions = No
     ======================================================================================*/
-    
+
     .group("XUI_FPL_090_AddOrdersAndDirections") {
       exec(http("XUI_FPL_090_005_AddOrdersAndDirections")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=ordersNeeded1")
@@ -178,13 +169,13 @@ object Solicitor_FPL {
         .body(ElFileBody("bodies/fpl/FPLOrdersAndDirectionsAdd.json"))
         .check(substring("emergencyProtectionOrderDetails")))
     }
-    
-    .pause(MinThinkTime , MaxThinkTime )
+
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     Review details and click Save and Continue
     ======================================================================================*/
-    
+
     .group("XUI_FPL_100_SubmitOrdersAndDirections") {
       exec(http("XUI_FPL_100_005_SubmitOrdersAndDirections")
         .post("/data/cases/#{caseId}/events")
@@ -200,8 +191,8 @@ object Solicitor_FPL {
         .header("x-xsrf-token", "#{XSRFToken}")
         .check(substring("""event_id":"ordersNeeded""")))
     }
-      
-    .pause(MinThinkTime , MaxThinkTime )
+
+    .pause(MinThinkTime, MaxThinkTime)
 
   val fplHearingUrgency =
 
@@ -251,7 +242,7 @@ object Solicitor_FPL {
 
     .exec(Common.caseActivityGet)
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     Select options and click Continue:
@@ -272,7 +263,7 @@ object Solicitor_FPL {
         .check(substring("STANDARD")))
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     Review details and click Save and Continue
@@ -293,9 +284,9 @@ object Solicitor_FPL {
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
         .check(substring("""event_id":"hearingNeeded""")))
-    }
+      }
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
   val fplGrounds =
 
@@ -341,11 +332,12 @@ object Solicitor_FPL {
         .check(jsonPath("$.id").is("enterGrounds")))
 
       .exec(Common.isAuthenticated)
+
     }
 
     .exec(Common.caseActivityGet)
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     Select options and click Continue:
@@ -362,11 +354,11 @@ object Solicitor_FPL {
         .check(substring("beyondControl")))
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
-     Review details and click Save and Continue
-     ======================================================================================*/
+    Review details and click Save and Continue
+    ======================================================================================*/
 
     .group("XUI_FPL_160_SubmitGrounds") {
       exec(http("XUI_FPL_160_005_SubmitGrounds")
@@ -383,9 +375,9 @@ object Solicitor_FPL {
         .headers(Headers.commonHeader)
         .header("x-xsrf-token", "#{XSRFToken}")
         .check(substring("""event_id":"enterGrounds""")))
-    }
+      }
 
-    .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
   val fplLocalAuthority =
 
@@ -441,7 +433,7 @@ object Solicitor_FPL {
 
     .exec(Common.caseActivityGet)
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     Select options and click Continue:
@@ -462,7 +454,7 @@ object Solicitor_FPL {
         .check(substring("#{laName}")))
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     Select Add New colleague, select the options and click Continue:
@@ -484,11 +476,11 @@ object Solicitor_FPL {
         .check(jsonPath("$.data.applicantContactOthers[0].id").saveAs("applicantContactOthersId")))
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
-     Review details and click Save and Continue
-     ======================================================================================*/
+    Review details and click Save and Continue
+    ======================================================================================*/
 
     .group("XUI_FPL_200_SubmitLocalAuthority") {
       exec(http("XUI_FPL_200_005_SubmitLocalAuthority")
@@ -507,7 +499,7 @@ object Solicitor_FPL {
         .check(substring("""event_id":"enterApplicantDetailsLA""")))
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
   val fplChildDetails =
 
@@ -559,7 +551,7 @@ object Solicitor_FPL {
 
     .exec(Common.caseActivityGet)
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     Select options and click Continue:
@@ -592,11 +584,11 @@ object Solicitor_FPL {
         .check(substring("finalDecisionDate")))
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
-     Review details and click Save and Continue
-     ======================================================================================*/
+    Review details and click Save and Continue
+    ======================================================================================*/
 
     .group("XUI_FPL_230_SubmitChildDetails") {
       exec(http("XUI_FPL_230_005_SubmitChildDetails")
@@ -615,7 +607,7 @@ object Solicitor_FPL {
         .check(substring("""event_id":"enterChildren""")))
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
   val fplRespondentDetails =
 
@@ -673,7 +665,7 @@ object Solicitor_FPL {
 
     .exec(Common.caseActivityGet)
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     Select options and click Continue:
@@ -700,11 +692,11 @@ object Solicitor_FPL {
         .check(substring("respondents1")))
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
-     Review details and click Save and Continue
-     ======================================================================================*/
+    Review details and click Save and Continue
+    ======================================================================================*/
 
     .group("XUI_FPL_260_SubmitRespondentDetails") {
       exec(http("XUI_FPL_260_005_SubmitRespondentDetails")
@@ -716,14 +708,14 @@ object Solicitor_FPL {
         .check(jsonPath("$.data.respondents1[0].id").is("#{id}"))
         .check(jsonPath("$.state").is("Open")))
 
-      .exec(http("XUI_FPL_260_010_ViewCase")
-        .get("/data/internal/cases/#{caseId}")
-        .headers(Headers.commonHeader)
-        .header("x-xsrf-token", "#{XSRFToken}")
-        .check(substring("""event_id":"enterRespondents""")))
+        .exec(http("XUI_FPL_260_010_ViewCase")
+          .get("/data/internal/cases/#{caseId}")
+          .headers(Headers.commonHeader)
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .check(substring("""event_id":"enterRespondents""")))
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
   val fplAllocationProposal =
 
@@ -773,7 +765,7 @@ object Solicitor_FPL {
 
     .exec(Common.caseActivityGet)
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     Select options and click Continue:
@@ -791,11 +783,11 @@ object Solicitor_FPL {
         .check(substring("allocationProposal")))
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
-     Review details and click Save and Continue
-     ======================================================================================*/
+    Review details and click Save and Continue
+    ======================================================================================*/
 
     .group("XUI_FPL_290_SubmitAllocationProposalDetails") {
       exec(http("XUI_FPL_290_005_SubmitAllocationProposalDetails")
@@ -814,7 +806,7 @@ object Solicitor_FPL {
         .check(substring("""event_id":"otherProposal""")))
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
   val fplSubmitApplication =
 
@@ -864,11 +856,12 @@ object Solicitor_FPL {
         .check(jsonPath("$.id").is("submitApplication")))
 
       .exec(Common.isAuthenticated)
+
     }
 
     .exec(Common.caseActivityGet)
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
     Select options and click Continue:
@@ -885,11 +878,11 @@ object Solicitor_FPL {
         .check(substring("submissionConsent")))
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
     /*======================================================================================
-     Click Submit
-     ======================================================================================*/
+    Click Submit
+    ======================================================================================*/
 
     .group("XUI_FPL_320_SubmitApplication") {
       exec(http("XUI_FPL_320_005_SubmitApplication")
@@ -902,7 +895,7 @@ object Solicitor_FPL {
         .check(jsonPath("$.state").is("Submitted")))
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
   val fplReturnToCase =
 
@@ -918,15 +911,15 @@ object Solicitor_FPL {
         .check(substring("CCD ID")))
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
-  val QueryManagement = 
+  val QueryManagement =
 
     group("XUI_FPL_340_RaiseNewQuery") {
       exec(http("XUI_FPL_340_005_RaiseNewQuery")
-      .get("/query-management/query/#{caseId}")
-      .headers(Headers.commonHeader)
-      .check(substring("HMCTS Manage cases"))) // No page specific text is returned
+        .get("/query-management/query/#{caseId}")
+        .headers(Headers.commonHeader)
+        .check(substring("HMCTS Manage cases"))) // No page specific text is returned
 
       .exec(Common.isAuthenticated)
 
@@ -938,7 +931,7 @@ object Solicitor_FPL {
 
     .exec(getCookieValue(CookieKey("__userid__").withDomain(BaseURL.replace("https://", "")).saveAs("idamId")))
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
     .group("XUI_FPL_350_ConfirmQueryDetails") {
       exec(http("XUI_FPL_350_005_ConfirmQueryDetails")
@@ -948,7 +941,7 @@ object Solicitor_FPL {
         .check(jsonPath("$.event_token").saveAs("event_token")))
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
     .group("XUI_FPL_360_RaiseNewQuery") {
       exec(http("XUI_FPL_360_005_RaiseNewQuery")
@@ -957,9 +950,9 @@ object Solicitor_FPL {
         .check(substring("HMCTS Manage cases")))
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
-    .exec(_.setAll("currentTime" -> now.format(patternTimeNow)))
+    .exec(_.setAll("currentTime" -> DateUtils.getDateNow("HH:mm:ss.S")))
 
     .group("XUI_FPL_370_SubmitNewQuery") {
       exec(http("XUI_FPL_370_005_SubmitNewQuery")
@@ -970,9 +963,9 @@ object Solicitor_FPL {
         .body(ElFileBody("bodies/fpl/FPLRaiseNewQuery.json")))
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
-  val RespondToQueryManagement = 
+  val RespondToQueryManagement =
 
     group("XUI_FPL_380_ViewCase") {
       exec(http("XUI_FPL_380_005_ViewCase")
@@ -981,25 +974,24 @@ object Solicitor_FPL {
         .check(substring("CCD ID")))
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
     .group("XUI_FPL_390_ViewQuery") {
       exec(Common.isAuthenticated)
-
-      .exec(http("XUI_FPL_390_005_ViewQuery")
-        .get("/data/internal/cases/#{caseId}/event-triggers/queryManagementRespondQuery?ignore-warning=false")
-        .headers(Headers.commonHeader)
-        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
-        .check(jsonPath("$.event_token").saveAs("event_token"))
-        .check(jsonPath("$.case_fields[?(@.id=='qmCaseQueriesCollectionLASol')].value.caseMessages[0].id").saveAs("raiseQueryParentId"))
-        .check(jsonPath("$.case_fields[?(@.id=='qmCaseQueriesCollectionLASol')].value.caseMessages[0].value.id").saveAs("raiseQueryId"))
-        .check(jsonPath("$.case_fields[?(@.id=='qmCaseQueriesCollectionLASol')].value.caseMessages[0].value.createdBy").saveAs("queryCreatedBy"))
-        .check(jsonPath("$.case_fields[?(@.id=='qmCaseQueriesCollectionLASol')].value.caseMessages[0].value.createdOn").saveAs("queryCreatedOn")))
+        .exec(http("XUI_FPL_390_005_ViewQuery")
+          .get("/data/internal/cases/#{caseId}/event-triggers/queryManagementRespondQuery?ignore-warning=false")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+          .check(jsonPath("$.event_token").saveAs("event_token"))
+          .check(jsonPath("$.case_fields[?(@.id=='qmCaseQueriesCollectionLASol')].value.caseMessages[0].id").saveAs("raiseQueryParentId"))
+          .check(jsonPath("$.case_fields[?(@.id=='qmCaseQueriesCollectionLASol')].value.caseMessages[0].value.id").saveAs("raiseQueryId"))
+          .check(jsonPath("$.case_fields[?(@.id=='qmCaseQueriesCollectionLASol')].value.caseMessages[0].value.createdBy").saveAs("queryCreatedBy"))
+          .check(jsonPath("$.case_fields[?(@.id=='qmCaseQueriesCollectionLASol')].value.caseMessages[0].value.createdOn").saveAs("queryCreatedOn")))
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
 
-    .exec(_.setAll("currentTime" -> now.format(patternTimeNow)))
+    .exec(_.setAll("currentTime" -> DateUtils.getDateNow("HH:mm:ss.S")))
     .exec(getCookieValue(CookieKey("__userid__").withDomain(BaseURL.replace("https://", "")).saveAs("idamId")))
 
     .group("XUI_FPL_400_SubmitQueryResponse") {
@@ -1011,6 +1003,572 @@ object Solicitor_FPL {
         .body(ElFileBody("bodies/fpl/FPLRespondToQuery.json")))
     }
 
-    .pause(MinThinkTime , MaxThinkTime )
+    .pause(MinThinkTime, MaxThinkTime)
+
+
+  val fplViewCase =
+
+    /*======================================================================================
+    View the case
+    ======================================================================================*/
+
+    group("XUI_FPL_000_ViewCase") {
+      exec(http("XUI_FPL_000_005_ViewCase")
+        .get("/data/internal/cases/#{caseId}")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .check(substring("CCD ID")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+
+  val fplAddCaseNumber = {
+
+    /*======================================================================================
+    Click add case number
+    ======================================================================================*/
+
+    group("XUI_FPL_420_005_AddCaseNumber") {
+      exec(http("XUI_FPL_420_005_AddCaseNumber")
+        .get("/data/internal/cases/#{caseId}/event-triggers/addFamilyManCaseNumber?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(substring("Add case number")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Submit a case number
+    ======================================================================================*/
+
+    .group("XUI_FPL_430_SubmitCaseNumber") {
+      exec(http("XUI_FPL_430_005_ValidateCaseNumber")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=addFamilyManCaseNumber1")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/fpl/caseworker/FPLAddCaseNumber.json"))
+        .check(substring("familyManCaseNumber")))
+
+      .exec(http("XUI_FPL_430_010_SubmitCaseNumber")
+        .post("/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/fpl/caseworker/FPLSendCaseNumber.json"))
+        .check(substring("familyManCaseNumber")))
+
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+  }
+
+  val fplAddGatekeeper =
+
+    /*======================================================================================
+    Click send to gatekeeper
+    ======================================================================================*/
+
+    group("XUI_FPL_440_SendToGatekeeper") {
+      exec(http("XUI_FPL_440_005_SendToGatekeeper")
+        .get("/data/internal/cases/#{caseId}/event-triggers/sendToGatekeeper?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(substring("Send to gatekeeper")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Add a Gate Keeper
+    ======================================================================================*/
+
+    .group("XUI_FPL_450_AddGatekeeper") {
+      exec(http("XUI_FPL_450_005_AddGatekeeper")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=sendToGatekeeper1")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/fpl/caseworker/FPLAddGatekeeper.json"))
+        .check(substring("gatekeeper"))
+        .check(jsonPath("$.data.gatekeeperEmails[0].id").saveAs("gatekeeperId")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Send to Gate Keeper
+    ======================================================================================*/
+
+    .group("XUI_FPL_460_SubmitGatekeeper") {
+      exec(http("XUI_FPL_460_005_SubmitGatekeeper")
+        .post("/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/fpl/caseworker/FPLSendGatekeeper.json"))
+        .check(substring("gatekeeperEmails")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+  val fplJudicialGatekeeping =
+
+    /*======================================================================================
+    Click Judicial Gatekeeping
+    ======================================================================================*/
+
+    group("XUI_FPL_470_JudicialGatekeeping") {
+      exec(http("XUI_FPL_470_005_JudicialGatekeeping")
+        .get("/data/internal/cases/#{caseId}/event-triggers/addGatekeepingOrder?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(substring("Judicial Gatekeeping")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Select Judge Level
+    ======================================================================================*/
+
+    .group("XUI_FPL_480_JudgeLevel") {
+      exec(http("XUI_FPL_480_005_JudgeLevel")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=addGatekeepingOrderallocationDecision")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/fpl/judge/judicialGatekeeping/FPLJudgeLevel.json"))
+        .check(substring("judgeLevelRadio")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Select Order Type
+    ======================================================================================*/
+
+    .group("XUI_FPL_490_OrderType") {
+      exec(http("XUI_FPL_490_005_OrderType")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=addGatekeepingOrderRouter")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/fpl/judge/judicialGatekeeping/FPLOrderType.json"))
+        .check(substring("gatekeepingOrderRouter")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Upload Order Document
+    ======================================================================================*/
+
+    .group("XUI_FPL_500_UploadPreparedOrder") {
+      exec(http("XUI_FPL_500_005_UploadPreparedOrder")
+        .post("/documentsv2")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json, text/plain, */*")
+        .header("content-type", "multipart/form-data")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .bodyPart(RawFileBodyPart("files", "3MB.pdf")
+          .fileName("3MB.pdf")
+          .transferEncoding("binary"))
+        .asMultipartForm
+        .formParam("classification", "PUBLIC")
+        .formParam("caseTypeId", "CARE_SUPERVISION_EPO")
+        .formParam("jurisdictionId", "PUBLICLAW")
+        .check(jsonPath("$.documents[0].hashToken").saveAs("DocumentHash"))
+        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DocumentURL")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Submit Order Document
+    ======================================================================================*/
+
+    .group("XUI_FPL_510_SubmitPreparedOrder") {
+      exec(http("XUI_FPL_510_005_SubmitPreparedOrder")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=addGatekeepingOrderorderUpload")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/fpl/judge/judicialGatekeeping/FPLOrderUpload.json"))
+        .check(substring("gatekeepingOrderSealDecision")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Confirm Issuing Judge
+    ======================================================================================*/
+
+    .group("XUI_FPL_520_IssuingJudge") {
+      exec(http("XUI_FPL_520_005_IssuingJudge")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=addGatekeepingOrderIssuingJudge")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/fpl/judge/judicialGatekeeping/FPLIssuingJudge.json"))
+        .check(substring("gatekeepingOrderIssuingJudge")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Select Complete Listing
+    ======================================================================================*/
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    .group("XUI_FPL_530_CompleteListing") {
+      exec(http("XUI_FPL_530_005_CompleteListing")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=addGatekeepingOrderListHearingOrSendToAdmin")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/fpl/judge/judicialGatekeeping/FPLCompleteListing.json"))
+        .check(substring("gatekeepingOrderListOrSendToAdmin")))
+    }
+
+    /*======================================================================================
+    Submit Order
+    ======================================================================================*/
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    .group("XUI_FPL_540_SubmitOrder") {
+      exec(http("XUI_FPL_540_005_SubmitOrder")
+        .post("/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .body(ElFileBody("bodies/fpl/judge/judicialGatekeeping/FPLSubmitOrder.json"))
+        .check(jsonPath("$.state").is("GATEKEEPING_LISTING")))
+    }
+
+  val fplListHearing =
+
+    /*======================================================================================
+    Click List Hearing
+    ======================================================================================*/
+
+    group("XUI_FPL_550_ListHearing") {
+      exec(http("XUI_FPL_550_005_ListHearing")
+        .get("/data/internal/cases/#{caseId}/event-triggers/listGatekeepingHearing?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(substring("List Gatekeeping Hearing")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Select Allocated Judge
+    ======================================================================================*/
+
+    .group("XUI_FPL_560_AllocatedJudge") {
+      exec(http("XUI_FPL_560_005_AllocatedJudge")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=listGatekeepingHearingListGatekeepingHearingAllocatedJudge")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/fpl/judge/listHearing/FPLAllocatedJudge.json"))
+        .check(substring("allocatedJudgeLabel")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Enter Hearing Details
+    ======================================================================================*/
+
+    .group("XUI_FPL_570_HearingDetails") {
+      exec(http("XUI_FPL_570_005_HearingDetails")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=listGatekeepingHearingListGatekeepingHearingEnterHearingDetails")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/fpl/judge/listHearing/FPLHearingDetails.json"))
+        .check(substring("hearingStartDate")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Confirm Hearing Judge
+    ======================================================================================*/
+
+    .group("XUI_FPL_580_HearingJudge") {
+      exec(http("XUI_FPL_580_005_HearingJudge")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=listGatekeepingHearingListGatekeepingHearingJudgeInformatio")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/fpl/judge/listHearing/FPLHearingJudge.json"))
+        .check(jsonPath("$.data.useAllocatedJudge").is("Yes")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Submit Hearing
+    ======================================================================================*/
+
+    .group("XUI_FPL_590_SubmitHearing") {
+      exec(http("XUI_FPL_590_005_SubmitHearing")
+        .post("/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/fpl/judge/listHearing/FPLSubmitHearing.json"))
+        .check(jsonPath("$.state").is("PREPARE_FOR_HEARING")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+  val fplAdditionalApplications =
+
+    /*======================================================================================
+    Select Upload Additional Applications
+    ======================================================================================*/
+
+    group("XUI_FPL_600_AdditionalApplications") {
+      exec(http("XUI_FPL_600_005_AdditionalApplications")
+        .get("/data/internal/cases/#{caseId}/event-triggers/uploadAdditionalApplications?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(jsonPath("$.case_fields[?(@.id == 'applicantsList')].value.list_items[0].code").saveAs("PersonOptionOneCode"))
+        .check(jsonPath("$.case_fields[?(@.id == 'applicantsList')].value.list_items[0].label").saveAs("PersonOptionOneLabel"))
+        .check(jsonPath("$.case_fields[?(@.id == 'applicantsList')].value.list_items[1].code").saveAs("PersonOptionTwoCode"))
+        .check(jsonPath("$.case_fields[?(@.id == 'applicantsList')].value.list_items[1].label").saveAs("PersonOptionTwoLabel"))
+        .check(jsonPath("$.case_fields[?(@.id == 'applicantsList')].value.list_items[2].code").saveAs("PersonOptionThreeCode"))
+        .check(jsonPath("$.case_fields[?(@.id == 'applicantsList')].value.list_items[2].label").saveAs("PersonOptionThreeLabel"))
+        .check(jsonPath("$.case_fields[?(@.id == 'applicantsList')].value.list_items[3].code").saveAs("PersonOptionFourCode"))
+        .check(jsonPath("$.case_fields[?(@.id == 'applicantsList')].value.list_items[3].label").saveAs("PersonOptionFourLabel"))
+        .check(substring("What application are you making?")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Upload Consent Document
+    ======================================================================================*/
+
+    .group("XUI_FPL_610_UploadConsentEvidence") {
+      exec(http("XUI_FPL_610_005_UploadConsentEvidence")
+        .post("/documentsv2")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json, text/plain, */*")
+        .header("content-type", "multipart/form-data")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .bodyPart(RawFileBodyPart("files", "3MB.pdf")
+          .fileName("3MB.pdf")
+          .transferEncoding("binary"))
+        .asMultipartForm
+        .formParam("classification", "PUBLIC")
+        .formParam("caseTypeId", "CARE_SUPERVISION_EPO")
+        .formParam("jurisdictionId", "PUBLICLAW")
+        .check(jsonPath("$.documents[0].hashToken").saveAs("EvidenceDocumentHash"))
+        .check(jsonPath("$.documents[0]._links.self.href").saveAs("EvidenceDocumentURL")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Select Application Type
+    ======================================================================================*/
+
+    .group("XUI_FPL_620_ApplicationType") {
+      exec(http("XUI_FPL_620_005_ApplicationType")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=uploadAdditionalApplications1")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/fpl/localAuthority/createC2/FPLC2ApplicationType.json"))
+        .check(substring("c2EvidenceConsentDocument")))
+    }
+
+    //forced pause between doc uploads to ensure it doesn't get an HTTP 429 response for multiple uploads in quick succession
+    .pause(20, constantPauses)
+
+    /*======================================================================================
+    Upload Draft Order Document
+    ======================================================================================*/
+
+    .group("XUI_FPL_630_UploadDraftOrder") {
+      exec(http("XUI_FPL_630_005_UploadDraftOrder")
+        .post("/documentsv2")
+        .headers(Headers.commonHeader)
+        .header("accept", "application/json, text/plain, */*")
+        .header("content-type", "multipart/form-data")
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .bodyPart(RawFileBodyPart("files", "3MB.pdf")
+          .fileName("3MB.pdf")
+          .transferEncoding("binary"))
+        .asMultipartForm
+        .formParam("classification", "PUBLIC")
+        .formParam("caseTypeId", "CARE_SUPERVISION_EPO")
+        .formParam("jurisdictionId", "PUBLICLAW")
+        .check(jsonPath("$.documents[0].hashToken").saveAs("DraftOrderDocumentHash"))
+        .check(jsonPath("$.documents[0]._links.self.href").saveAs("DraftOrderDocumentURL")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Enter Application Information
+    ======================================================================================*/
+
+    .group("XUI_FPL_640_ApplicationInfo") {
+      exec(http("XUI_FPL_640_005_ApplicationInfo")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=uploadAdditionalApplications2")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/fpl/localAuthority/createC2/FPLC2ApplicationInfo.json"))
+        .check(jsonPath("$.data.temporaryC2Document.draftOrdersBundle[0].id").saveAs("DraftOrderBundleID"))
+        .check(jsonPath("$.data.amountToPay").saveAs("PaymentAmount"))
+        .check(substring("C2 Draft Order Document")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Enter Payment Information
+    ======================================================================================*/
+
+    .group("XUI_FPL_650_ApplicationPayment") {
+      exec(http("XUI_FPL_650_005_ApplicationPayment")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=uploadAdditionalApplications5")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/fpl/localAuthority/createC2/FPLC2ApplicationPayment.json"))
+        .check(substring("fileReference")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Submit Application
+    ======================================================================================*/
+
+    .group("XUI_FPL_660_SubmitApplication") {
+      exec(http("XUI_FPL_660_005_SubmitApplication")
+        .post("/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/fpl/localAuthority/createC2/FPLC2ApplicationSubmit.json"))
+        .check(jsonPath("$.data.additionalApplicationsBundle[0].value.c2DocumentBundle.document.document_url").saveAs("C2ApplicationDocumentURL"))
+        .check(jsonPath("$.data.additionalApplicationsBundle[0].value.c2DocumentBundle.supportingEvidenceBundle[0].id").saveAs("EvidenceConsentBundleID"))
+        .check(jsonPath("$.state").is("PREPARE_FOR_HEARING")))
+    }
+    .pause(MinThinkTime, MaxThinkTime)
+
+  val fplReviewApplication =
+
+    /*======================================================================================
+    Select Review Additional Applications
+    ======================================================================================*/
+
+    group("XUI_FPL_670_ReviewApplication") {
+      exec(http("XUI_FPL_670_005_ReviewApplication")
+        .get("/data/internal/cases/#{caseId}/event-triggers/reviewAdditionalApplication?ignore-warning=false")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
+        .check(jsonPath("$.event_token").saveAs("event_token"))
+        .check(substring("Review additional application")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Set an upload time
+    ======================================================================================*/
+
+    .exec(_.set("upload_timestamp", DateUtils.getDateNow("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS"))
+      .set("uploadedDateTime", DateUtils.getDateNow("d MMMM yyyy, h:mma")))
+
+    /*======================================================================================
+    Confirm and Continue Review
+    ======================================================================================*/
+
+    .group("XUI_FPL_680_ConfirmReview") {
+      exec(http("XUI_FPL_680_005_ConfirmReview")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=reviewAdditionalApplication2")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/fpl/judge/reviewApplication/FPLConfirmReview.json"))
+        .check(substring("c2AdditionalApplicationToBeReview")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Approve Application
+    ======================================================================================*/
+
+    .group("XUI_FPL_690_ApproveApplication") {
+      exec(http("XUI_FPL_690_005_ApproveApplication")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=reviewAdditionalApplication3")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/fpl/judge/reviewApplication/FPLApproveApplication.json"))
+        .check(jsonPath("$.data.previewApprovedOrder1.document_url").saveAs("PreviewApprovedOrderURL"))
+        .check(substring("reviewOrderUrgency")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+
+    /*======================================================================================
+    Continue Application Review
+    ======================================================================================*/
+
+    .group("XUI_FPL_700_ContinueReview") {
+      exec(http("XUI_FPL_700_005_ContinueReview")
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=reviewAdditionalApplication4")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/fpl/judge/reviewApplication/FPLContinueReview.json"))
+        .check(substring("previewApprovedOrder1")))
+    }
+
+    .pause(MinThinkTime, MaxThinkTime)
+
+    /*======================================================================================
+    Submit Review
+    ======================================================================================*/
+
+    .group("XUI_FPL_710_SubmitReview") {
+      exec(http("XUI_FPL_710_005_SubmitReview")
+        .post("/data/cases/#{caseId}/events")
+        .headers(Headers.commonHeader)
+        .header("x-xsrf-token", "#{XSRFToken}")
+        .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8")
+        .body(ElFileBody("bodies/fpl/judge/reviewApplication/FPLSubmitReview.json"))
+        .check(jsonPath("$.data.additionalApplicationsBundle[0].value.applicationReviewed").is("YES")))
+    }
+    .pause(MinThinkTime, MaxThinkTime)
 
 }

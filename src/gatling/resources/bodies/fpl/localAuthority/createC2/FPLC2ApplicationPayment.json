@@ -1,0 +1,167 @@
+{
+  "data": {
+    "isCTSCUser": "No",
+    "displayAmountToPay": "Yes",
+    "amountToPay": "#{PaymentAmount}",
+    "temporaryPbaPayment": {
+      "pbaNumberDynamicList": {
+        "value": {
+          "code": "PBA0080000",
+          "label": "PBA0080000"
+        },
+        "list_items": [
+          {
+            "code": "PBA0080000",
+            "label": "PBA0080000"
+          }
+        ]
+      },
+      "clientCode": null,
+      "fileReference": "Ref123"
+    }
+  },
+  "event": {
+    "id": "uploadAdditionalApplications",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "caseName": "{#caseName}",
+    "additionalApplicationType": [
+      "C2_ORDER"
+    ],
+    "c2ApplicationRoute": "APPLY_ONLINE",
+    "c2Type": "WITHOUT_NOTICE",
+    "c2EvidenceConsentDocument": {
+      "document_url": "#{EvidenceDocumentURL}",
+      "document_binary_url": "#{EvidenceDocumentURL}/binary",
+      "document_filename": "3MB.pdf",
+      "document_hash": "#{EvidenceDocumentHash}"
+    },
+    "isC2Confidential": "No",
+    "applicantsList": {
+      "value": {
+        "code": "applicant",
+        "label": "FPLA team, Applicant"
+      },
+      "list_items": [
+        {
+          "code": "#{PersonOptionOneCode}",
+          "label": "#{PersonOptionOneLabel}"
+        },
+        {
+          "code": "#{PersonOptionTwoCode}",
+          "label": "#{PersonOptionTwoLabel}"
+        },
+        {
+          "code": "#{PersonOptionThreeCode}",
+          "label": "#{PersonOptionThreeLabel}"
+        },
+        {
+          "code": "#{PersonOptionFourCode}",
+          "label": "#{PersonOptionFourLabel}"
+        }
+      ]
+    },
+    "court": {
+      "code": "344",
+      "name": "FPLA Court",
+      "email": "FamilyPublicLaw+court@gmail.com",
+      "region": null,
+      "epimmsId": null,
+      "regionId": null,
+      "dateTransferred": null
+    },
+    "temporaryC2Document": {
+      "applicationPermissionType": "ALREADY_GRANTED",
+      "applicationRelatesToAllChildren": "YES",
+      "childSelectorForApplication": {
+        "value": [],
+        "list_items": [
+          {
+              "code": "#{PersonOptionThreeCode}",
+              "label": "#{PersonOptionThreeLabel}"
+          }
+        ]
+      },
+      "applicationSummary": "This application is about x y z.",
+      "hasSafeguardingRisk": "No",
+      "isHearingAdjournmentRequired": "No",
+      "canBeConsideredAtNextHearing": "Yes",
+      "applicantName": null,
+      "type": "WITHOUT_NOTICE",
+      "routeType": null,
+      "uploadedDateTime": null,
+      "author": null,
+      "othersNotified": null,
+      "description": null,
+      "nameOfRepresentative": null,
+      "usePbaPayment": null,
+      "pbaNumber": null,
+      "clientCode": null,
+      "fileReference": null,
+      "parentalResponsibilityType": null,
+      "childrenOnApplication": null,
+      "urgencyTimeFrameType": null,
+      "id": null,
+      "confidentialApplication": null,
+      "draftOrdersBundle": [
+        {
+          "value": {
+            "title": "C2 Draft Order Document",
+            "dateTimeUploaded": null,
+            "uploaderType": null,
+            "document": {
+              "document_url": "#{DraftOrderDocumentURL}",
+              "document_binary_url": "#{DraftOrderDocumentURL}/binary",
+              "document_filename": "3MB.pdf",
+              "document_hash": "#{DraftOrderDocumentHash}"
+            },
+            "documentAcknowledge": [
+              "ACK_RELATED_TO_CASE"
+            ],
+            "uploaderCaseRoles": []
+          },
+          "id": "#{DraftOrderBundleID}"
+        }
+      ],
+      "supplementsBundle": [],
+      "supportingEvidenceBundle": [],
+      "draftOrderUrgency": {
+        "urgency": []
+      },
+      "c2AdditionalOrdersRequested": [],
+      "others": [],
+      "respondents": [],
+      "supportingEvidenceLA": [],
+      "supportingEvidenceNC": []
+    },
+    "hasConfidentialParty": "NO",
+    "skipPaymentPage": "No",
+    "statementOfTruth": [
+      "YES"
+    ],
+    "isCTSCUser": "No",
+    "displayAmountToPay": "Yes",
+    "amountToPay": "#{PaymentAmount}",
+    "temporaryPbaPayment": {
+      "pbaNumberDynamicList": {
+        "value": {
+          "code": "PBA0080000",
+          "label": "PBA0080000"
+        },
+        "list_items": [
+          {
+            "code": "PBA0080000",
+            "label": "PBA0080000"
+          }
+        ]
+      },
+      "clientCode": null,
+      "fileReference": "Ref123"
+    }
+  },
+  "event_token": "#{event_token}",
+  "ignore_warning": false,
+  "case_reference": "#{caseId}"
+}

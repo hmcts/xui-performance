@@ -27,6 +27,8 @@ class XUI_Simulation extends Simulation {
 	val UserFeederNFDLegal = csv("UserDataNFDLegal.csv").circular
 	val UserFeederFR = csv("UserDataFR.csv").circular
 	val UserFeederFPL = csv("UserDataFPL.csv").circular
+	val UserFeederFPLCaseWorker = csv("UserDataFPLCaseworker.csv").circular
+	val UserFeederFPLJudge = csv("UserDataFPLJudge.csv").circular
 	val CaseworkerUserFeeder = csv("UserDataCaseworkers.csv").circular
 	val UserFeederCTSC = csv("UserDataCTSC.csv").circular
 
@@ -438,29 +440,85 @@ class XUI_Simulation extends Simulation {
 	 ===============================================================================================*/
 	val FamilyPublicLawSolicitorScenario = scenario("***** FPL Create Case *****")
 		.exitBlockOnFail {
-			feed(UserFeederFPL)
-				.exec(_.set("env", s"${env}")
-							.set("caseType", "CARE_SUPERVISION_EPO"))
-				.exec(XuiHelper.Homepage)
+			//Numbers of C2 applications created for the case based on production figures: https://hmcts.atlassian.net/browse/DFPL-3086
+			//In debug mode, only runs a single C2 application.
+			doIfOrElse (debugMode == "off") { // || testType != "pipeline"
+				randomSwitch(
+					28.47 -> exec(session => session.set("numberOfFPLC2Applications", 0)),
+					19.65 -> exec(session => session.set("numberOfFPLC2Applications", 1)),
+					15.24 -> exec(session => session.set("numberOfFPLC2Applications", 2)),
+					11.10 -> exec(session => session.set("numberOfFPLC2Applications", 3)),
+					8.19 -> exec(session => session.set("numberOfFPLC2Applications", 4)),
+					5.71 -> exec(session => session.set("numberOfFPLC2Applications", 5)),
+					4.12 -> exec(session => session.set("numberOfFPLC2Applications", 6)),
+					2.89 -> exec(session => session.set("numberOfFPLC2Applications", 7)),
+					2.15 -> exec(session => session.set("numberOfFPLC2Applications", 8)),
+					1.48 -> exec(session => session.set("numberOfFPLC2Applications", 9)),
+					1.00 -> exec(session => session.set("numberOfFPLC2Applications", 10))
+				)
+			}
+			{
+				exec(session => session.set("numberOfFPLC2Applications", 1))
+			}
+
+			.exec{
+				session =>
+					println("Number of FPL C2 applications: " + session("numberOfFPLC2Applications").as[String])
+				session
+			}
+
+			.feed(UserFeederFPL)
+			.feed(UserFeederFPLCaseWorker)
+			.feed(UserFeederFPLJudge)
+			.exec(_.set("env", s"${env}")
+						.set("caseType", "CARE_SUPERVISION_EPO"))
+			.exec(XuiHelper.Homepage)
+			.exec(XuiHelper.Login("#{user}", "#{password}"))
+			.exec(Solicitor_FPL.CreateFPLCase)
+			.exec(Solicitor_FPL.fplOrdersAndDirections)
+			.exec(Solicitor_FPL.fplHearingUrgency)
+			.exec(Solicitor_FPL.fplGrounds)
+			.exec(Solicitor_FPL.fplLocalAuthority)
+			.exec(Solicitor_FPL.fplChildDetails)
+			.exec(Solicitor_FPL.fplRespondentDetails)
+			.exec(Solicitor_FPL.fplAllocationProposal)
+			.exec(Solicitor_FPL.fplSubmitApplication)
+			.exec(Solicitor_FPL.fplReturnToCase)
+			//.exec(Solicitor_FPL.QueryManagement) //Temporarily removing QM until FPL is onboarded in XUI master
+			.exec(XuiHelper.Logout)
+			.exec(XuiHelper.Homepage)
+			.exec(XuiHelper.Login("#{user-cw}", "#{password-cw}"))
+			.exec(Solicitor_FPL.fplViewCase)
+			.exec(Solicitor_FPL.fplAddCaseNumber)
+			.exec(Solicitor_FPL.fplViewCase)
+			.exec(Solicitor_FPL.fplAddGatekeeper)
+			.exec(XuiHelper.Logout)
+			.exec(XuiHelper.Homepage)
+			.exec(XuiHelper.Login("#{user-judge}", "#{password-judge}"))
+			.exec(Solicitor_FPL.fplViewCase)
+			.exec(Solicitor_FPL.fplJudicialGatekeeping)
+			.exec(Solicitor_FPL.fplViewCase)
+			.exec(Solicitor_FPL.fplListHearing)
+			.exec(XuiHelper.Logout)
+			.repeat("#{numberOfFPLC2Applications}") {
+				 exec(XuiHelper.Homepage)
 				.exec(XuiHelper.Login("#{user}", "#{password}"))
-				.exec(Solicitor_FPL.CreateFPLCase)
-				.exec(Solicitor_FPL.fplOrdersAndDirections)
-				.exec(Solicitor_FPL.fplHearingUrgency)
-				.exec(Solicitor_FPL.fplGrounds)
-				.exec(Solicitor_FPL.fplLocalAuthority)
-				.exec(Solicitor_FPL.fplChildDetails)
-				.exec(Solicitor_FPL.fplRespondentDetails)
-				.exec(Solicitor_FPL.fplAllocationProposal)
-				.exec(Solicitor_FPL.fplSubmitApplication)
-				.exec(Solicitor_FPL.fplReturnToCase)
-        //.exec(Solicitor_FPL.QueryManagement) //Temporarily removing QM until FPL is onboarded in XUI master
-        .exec(XuiHelper.Logout)
-        //.feed(UserFeederCTSC)
-        //.exec(Homepage.XUIHomePage)
-				//.exec(Login.XUILogin)
-        //.exec(Solicitor_FPL.RespondToQueryManagement)
-				//.exec(XuiHelper.Logout)
+				.exec(Solicitor_FPL.fplViewCase)
+				.exec(Solicitor_FPL.fplAdditionalApplications)
+				.exec(XuiHelper.Logout)
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user-judge}", "#{password-judge}"))
+				.exec(Solicitor_FPL.fplViewCase)
+				.exec(Solicitor_FPL.fplReviewApplication)
+				.exec(XuiHelper.Logout)
+			}
+			//.feed(UserFeederCTSC)
+			//.exec(Homepage.XUIHomePage)
+			//.exec(Login.XUILogin)
+			//.exec(Solicitor_FPL.RespondToQueryManagement)
+			//.exec(XuiHelper.Logout)
 		}
+
 
 	/*===============================================================================================
 	* XUI Caseworker - Search & View Case Scenario
