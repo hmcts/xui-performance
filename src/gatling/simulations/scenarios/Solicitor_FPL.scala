@@ -5,12 +5,8 @@ import io.gatling.http.Predef._
 import utilities.DateUtils
 import utils.{Common, Environment, Headers}
 
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-
 object Solicitor_FPL {
 
-  val IdamUrl = Environment.idamURL
   val BaseURL = Environment.baseURL
 
   val MinThinkTime = Environment.minThinkTime
@@ -1407,7 +1403,8 @@ object Solicitor_FPL {
         .check(substring("c2EvidenceConsentDocument")))
     }
 
-    .pause(10, constantPauses)
+    //forced pause between doc uploads to ensure it doesn't get an HTTP 429 response for multiple uploads in quick succession
+    .pause(20, constantPauses)
 
     /*======================================================================================
     Upload Draft Order Document
