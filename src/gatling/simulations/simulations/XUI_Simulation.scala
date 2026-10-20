@@ -27,8 +27,8 @@ class XUI_Simulation extends Simulation {
 	val UserFeederNFDLegal = csv("UserDataNFDLegal.csv").circular
 	val UserFeederFR = csv("UserDataFR.csv").circular
 	val UserFeederFPL = csv("UserDataFPL.csv").circular
-	val CWFeederFPL = csv("UserDataFPLCaseworker.csv").circular
-	val JudgeFeederFPL = csv("UserDataFPLJudge.csv").circular
+	val UserFeederFPLCaseWorker = csv("UserDataFPLCaseworker.csv").circular
+	val UserFeederFPLJudge = csv("UserDataFPLJudge.csv").circular
 	val CaseworkerUserFeeder = csv("UserDataCaseworkers.csv").circular
 	val UserFeederCTSC = csv("UserDataCTSC.csv").circular
 
@@ -468,8 +468,8 @@ class XUI_Simulation extends Simulation {
 			}
 
 			.feed(UserFeederFPL)
-			.feed(CWFeederFPL)
-			.feed(JudgeFeederFPL)
+			.feed(UserFeederFPLCaseWorker)
+			.feed(UserFeederFPLJudge)
 			.exec(_.set("env", s"${env}")
 						.set("caseType", "CARE_SUPERVISION_EPO"))
 			.exec(XuiHelper.Homepage)
