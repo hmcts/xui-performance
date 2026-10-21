@@ -15,7 +15,6 @@ object Caseworker_PCS_AddReviewDate {
  /*====================================================================================
   *Search PCS cases (SEARCH view) by Case ID
   *=====================================================================================*/
-
   val OpenCaseIssued =
         group("XUI_PCS_Caseworker_ReviewDate_030_ApplyFilter") {
 			    exec(http("XUI_PCS_Caseworke_ReviewDate_030_ApplyFilter")

@@ -548,6 +548,7 @@ class XUI_Simulation extends Simulation {
 						details("XUI_FR_Consented_170_SubmitApplication").successfulRequests.percent.gte(80),
             details("XUI_FR_Contested_200_ReviewAndSubmitApplication").successfulRequests.percent.gte(80),
 						details("XUI_FPL_330_ReturnToCase").successfulRequests.percent.gte(80),
+						details("XUI_PCS_Caseworker_AddReviewDate_050_ContinueClickSubmit").successfulRequests.percent.gte(80),
 						details("XUI_PCS_Caseworker_AddReviewDate_060_CloseToReturnCaseDetails").successfulRequests.percent.gte(80),
 						details("XUI_Caseworker_100_CaseList").successfulRequests.percent.gte(80))
 				}
