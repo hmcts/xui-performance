@@ -7,25 +7,6 @@
       "isFL401RespondentPresent": "Yes",
       "isFL401RespondentSolicitorPresent": "No",
       "isApplicant1Present": "No",
-      "isApplicant2Present": "No",
-      "isApplicant3Present": "No",
-      "isApplicant4Present": "No",
-      "isApplicant5Present": "No",
-      "isApplicant1SolicitorPresent": "No",
-      "isApplicant2SolicitorPresent": "No",
-      "isApplicant3SolicitorPresent": "No",
-      "isApplicant4SolicitorPresent": "No",
-      "isApplicant5SolicitorPresent": "No",
-      "isRespondent1Present": "No",
-      "isRespondent2Present": "No",
-      "isRespondent3Present": "No",
-      "isRespondent4Present": "No",
-      "isRespondent5Present": "No",
-      "isRespondent1SolicitorPresent": "No",
-      "isRespondent2SolicitorPresent": "No",
-      "isRespondent3SolicitorPresent": "No",
-      "isRespondent4SolicitorPresent": "No",
-      "isRespondent5SolicitorPresent": "No",
       "ordersHearingDetails": [
          {
             "value": {
@@ -71,7 +52,7 @@
                      },
                      {
                         "code": "101959:",
-                        "label": "Carmarthen County Court and Tribunal Hearing Centre - Hill House, Picton Terrace, Carmarthen - SA31 3BT"
+                        "label": "Carmarthen County Court and Family Court - The Hearing Centre, Hill House, Picton Terrace, Carmarthen - SA31 3BT"
                      },
                      {
                         "code": "816875:family.chelmsford.countycourt@justice.gov.uk",
@@ -141,6 +122,8 @@
                },
                "hearingAuthority": null,
                "hearingListedLinkedCases": null,
+               "transientConfirmedHearingDetail": null,
+               "displayConfirmedHearing": "No",
                "hearingVideoChannels": null,
                "hearingTelephoneChannels": null,
                "hearingChannels": null,
@@ -174,7 +157,26 @@
             },
             "id": "#{hearingDetailsID}"
          }
-      ]
+      ],
+      "isApplicant2Present": "No",
+      "isApplicant3Present": "No",
+      "isApplicant4Present": "No",
+      "isApplicant5Present": "No",
+      "isApplicant1SolicitorPresent": "No",
+      "isApplicant2SolicitorPresent": "No",
+      "isApplicant3SolicitorPresent": "No",
+      "isApplicant4SolicitorPresent": "No",
+      "isApplicant5SolicitorPresent": "No",
+      "isRespondent1Present": "No",
+      "isRespondent2Present": "No",
+      "isRespondent3Present": "No",
+      "isRespondent4Present": "No",
+      "isRespondent5Present": "No",
+      "isRespondent1SolicitorPresent": "No",
+      "isRespondent2SolicitorPresent": "No",
+      "isRespondent3SolicitorPresent": "No",
+      "isRespondent4SolicitorPresent": "No",
+      "isRespondent5SolicitorPresent": "No"
    },
    "event": {
       "id": "manageOrders",
@@ -193,6 +195,7 @@
       "sdoOtherTempList": null,
       "listElementsSetToDefaultValue": null,
       "sdoHearingsAndNextStepsTempList": null,
+      "isInvokedFromTask": "No",
       "createSelectOrderOptions": "blank",
       "selectedOrder": "<span class='heading-h3'>Blank order (FL404B)\n\n<\/span>",
       "daOrderForCaCase": "No",
@@ -200,14 +203,14 @@
       "isTheOrderByConsent": "Yes",
       "wasTheOrderApprovedAtHearing": "No",
       "judgeOrMagistrateTitle": "districtJudge",
-      "judgeOrMagistratesLastName": "firstJudge",
-      "justiceLegalAdviserFullName": null,
+      "judgeOrMagistratesLastName": "#{JudgeLastName}",
+      "justiceLegalAdviserFullName": "#{LegalAdviserName}",
       "dateOrderMade": "#{todayDate}",
       "isTheOrderAboutChildren": "No",
-      "recitalsOrPreamble": "dkdskfkjfsdzffsdsdfds",
-      "orderDirections": "fdsfsdsakdsjksdjskjsfsf",
+      "recitalsOrPreamble": null,
+      "orderDirections": null,
       "fl404CustomFields": {
-         "fl404bHearingOutcome": "some info",
+         "fl404bHearingOutcome": "The hearing was perf tested",
          "fl404bCourtName1": null,
          "fl404bTimeEstimate": null,
          "fl404bDateOfNextHearing": null,
@@ -260,25 +263,6 @@
       "isFL401RespondentPresent": "Yes",
       "isFL401RespondentSolicitorPresent": "No",
       "isApplicant1Present": "No",
-      "isApplicant2Present": "No",
-      "isApplicant3Present": "No",
-      "isApplicant4Present": "No",
-      "isApplicant5Present": "No",
-      "isApplicant1SolicitorPresent": "No",
-      "isApplicant2SolicitorPresent": "No",
-      "isApplicant3SolicitorPresent": "No",
-      "isApplicant4SolicitorPresent": "No",
-      "isApplicant5SolicitorPresent": "No",
-      "isRespondent1Present": "No",
-      "isRespondent2Present": "No",
-      "isRespondent3Present": "No",
-      "isRespondent4Present": "No",
-      "isRespondent5Present": "No",
-      "isRespondent1SolicitorPresent": "No",
-      "isRespondent2SolicitorPresent": "No",
-      "isRespondent3SolicitorPresent": "No",
-      "isRespondent4SolicitorPresent": "No",
-      "isRespondent5SolicitorPresent": "No",
       "ordersHearingDetails": [
          {
             "value": {
@@ -324,7 +308,7 @@
                      },
                      {
                         "code": "101959:",
-                        "label": "Carmarthen County Court and Tribunal Hearing Centre - Hill House, Picton Terrace, Carmarthen - SA31 3BT"
+                        "label": "Carmarthen County Court and Family Court - The Hearing Centre, Hill House, Picton Terrace, Carmarthen - SA31 3BT"
                      },
                      {
                         "code": "816875:family.chelmsford.countycourt@justice.gov.uk",
@@ -394,6 +378,8 @@
                },
                "hearingAuthority": null,
                "hearingListedLinkedCases": null,
+               "transientConfirmedHearingDetail": null,
+               "displayConfirmedHearing": "No",
                "hearingVideoChannels": null,
                "hearingTelephoneChannels": null,
                "hearingChannels": null,
@@ -427,7 +413,26 @@
             },
             "id": "#{hearingDetailsID}"
          }
-      ]
+      ],
+      "isApplicant2Present": "No",
+      "isApplicant3Present": "No",
+      "isApplicant4Present": "No",
+      "isApplicant5Present": "No",
+      "isApplicant1SolicitorPresent": "No",
+      "isApplicant2SolicitorPresent": "No",
+      "isApplicant3SolicitorPresent": "No",
+      "isApplicant4SolicitorPresent": "No",
+      "isApplicant5SolicitorPresent": "No",
+      "isRespondent1Present": "No",
+      "isRespondent2Present": "No",
+      "isRespondent3Present": "No",
+      "isRespondent4Present": "No",
+      "isRespondent5Present": "No",
+      "isRespondent1SolicitorPresent": "No",
+      "isRespondent2SolicitorPresent": "No",
+      "isRespondent3SolicitorPresent": "No",
+      "isRespondent4SolicitorPresent": "No",
+      "isRespondent5SolicitorPresent": "No"
    },
    "event_token": "#{event_token}",
    "ignore_warning": false,

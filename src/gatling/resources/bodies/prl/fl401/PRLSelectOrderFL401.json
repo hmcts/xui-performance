@@ -1,7 +1,6 @@
 {
   "data": {
-     "createSelectOrderOptions": "blank",
-     "selectedOrder": null
+    "createSelectOrderOptions": "blank"
   },
   "event": {
      "id": "manageOrders",
@@ -11,6 +10,7 @@
   "event_data": {
      "manageOrderHeader1": null,
      "manageOrdersOptions": "createAnOrder",
+     "selectedOrder": null,
      "isSdoSelected": "No",
      "sdoPreamblesTempList": null,
      "sdoCafcassOrCymruTempList": null,
@@ -20,8 +20,8 @@
      "sdoOtherTempList": null,
      "sdoHearingsAndNextStepsTempList": null,
      "listElementsSetToDefaultValue": null,
-     "createSelectOrderOptions": "blank",
-     "selectedOrder": null
+     "isInvokedFromTask": "No",
+     "createSelectOrderOptions": "blank"
   },
   "event_token": "#{event_token}",
   "ignore_warning": false,

@@ -250,7 +250,7 @@ object CourtAdmin_PRL_FL401 {
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("x-xsrf-token", "#{XSRFToken}")
-      .body(ElFileBody("bodies/prl/fl401//PRLSelectOrderFL401.json"))
+      .body(ElFileBody("bodies/prl/fl401/PRLSelectOrderFL401.json"))
       .check(jsonPath("$.data.ordersHearingDetails[0].id").saveAs("hearingDetailsID"))
       .check(substring("caApplicant3InternalFlags")))
   }
@@ -274,18 +274,34 @@ object CourtAdmin_PRL_FL401 {
   .pause(MinThinkTime, MaxThinkTime)
 
   /*======================================================================================
+  * Add recitals, preamble or directions
+  ======================================================================================*/
+
+  .group("XUI_PRL_FL401Progress_175_AddRecitals") {
+    exec(http("XUI_PRL_FL401Progress_175_005_AddRecitals")
+      .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders6")
+      .headers(Headers.commonHeader)
+      .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+      .header("x-xsrf-token", "#{XSRFToken}")
+      .body(ElFileBody("bodies/prl/fl401/PRLAddRecitalsFL401.json"))
+      .check(jsonPath("$.data.previewOrderDoc.document_url").saveAs("document_url"))
+      .check(jsonPath("$.data.previewOrderDoc.document_hash").saveAs("document_hash"))
+      .check(substring("recitalsOrPreamble")))
+  }
+
+  .pause(MinThinkTime, MaxThinkTime)
+
+  /*======================================================================================
   * Hearing Outcome
   ======================================================================================*/
 
   .group("XUI_PRL_FL401Progress_180_HearingOutcome") {
     exec(http("XUI_PRL_FL401Progress_180_005_HearingOutcome")
-      .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders12")
+      .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders13")
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("x-xsrf-token", "#{XSRFToken}")
       .body(ElFileBody("bodies/prl/fl401/PRLHearingOutcome.json"))
-      .check(jsonPath("$.data.previewOrderDoc.document_url").saveAs("document_url"))
-      .check(jsonPath("$.data.previewOrderDoc.document_hash").saveAs("document_hash"))
       .check(substring("OrgPolicyCaseAssignedRole")))
   }
 
@@ -297,7 +313,7 @@ object CourtAdmin_PRL_FL401 {
 
   .group("XUI_PRL_FL401Progress_190_HearingType") {
     exec(http("XUI_PRL_FL401Progress_190_HearingType")
-      .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders19")
+      .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders20")
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("x-xsrf-token", "#{XSRFToken}")
@@ -317,7 +333,7 @@ object CourtAdmin_PRL_FL401 {
 
   .group("XUI_PRL_FL401Progress_200_CheckYourOrder") {
     exec(http("XUI_PRL_FL401Progress_200_005_CheckYourOrder")
-      .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders20")
+      .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders21")
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("x-xsrf-token", "#{XSRFToken}")
@@ -333,7 +349,7 @@ object CourtAdmin_PRL_FL401 {
 
   .group("XUI_PRL_FL401Progress_210_OrderRecipients") {
     exec(http("XUI_PRL_FL401Progress_210_005_OrderRecipients")
-      .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders24")
+      .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders25")
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("x-xsrf-token", "#{XSRFToken}")
@@ -349,7 +365,7 @@ object CourtAdmin_PRL_FL401 {
 
   .group("XUI_PRL_FL401Progress_220_OrderServe") {
     exec(http("XUI_PRL_FL401Progress_220_005_OrderServe")
-      .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders26")
+      .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders27")
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("x-xsrf-token", "#{XSRFToken}")
@@ -367,7 +383,7 @@ object CourtAdmin_PRL_FL401 {
 
   .group("XUI_PRL_FL401Progress_230_OrderServe") {
     exec(http("XUI_PRL_FL401Progress_230_005_OrderToServeList")
-      .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders27")
+      .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders28")
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("x-xsrf-token", "#{XSRFToken}")
@@ -383,7 +399,7 @@ object CourtAdmin_PRL_FL401 {
 
   .group("XUI_PRL_FL401Progress_240_ServeToRespondentOptions") {
     exec(http("XUI_PRL_FL401Progress_240_005_ServeToRespondentOptions")
-      .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders28")
+      .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders29")
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("x-xsrf-token", "#{XSRFToken}")
