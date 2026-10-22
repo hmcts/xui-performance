@@ -31,7 +31,6 @@ class XUI_Simulation extends Simulation {
 	val UserFeederCTSC = csv("UserDataCTSC.csv").circular
 	val UserFeederReviewDate = csv("UserDataXUIPCS_Reviewdate.csv").circular
 
-
 	//Read in text labels required for each NFD case type - sole and joint case labels are different, so are fed directly into the JSON payload bodies
 	val nfdSoleLabelsInitialised = Source.fromResource("bodies/nfd/labels/soleLabelsInitialised.txt").mkString
 	val nfdSoleLabelsPopulated = Source.fromResource("bodies/nfd/labels/soleLabelsPopulated.txt").mkString

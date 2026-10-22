@@ -133,7 +133,9 @@ object Caseworker_PCS_AddReviewDate {
 					.check(regex("event_token\":\"(.*?)\",\"wizard_pages").saveAs("event_token"))
 					.check(regex("""id":"reviewDates-(.*?)","type":""").saveAs("reviewDatesId"))
 					.check(jsonPath("$.name").is("Add review date"))
-				)
+					.check(jsonPath("$.event_token").saveAs("event_token"))
+				)	
+
 				.exec(http("/api/wa-supported-jurisdiction/get")
 					.get("/api/wa-supported-jurisdiction/get")
 					.headers(Headers.commonHeader)
@@ -193,6 +195,7 @@ object Caseworker_PCS_AddReviewDate {
 					.header("X-XSRF-TOKEN", "#{XSRF-TOKEN5}")
 					.body(StringBody("{\"data\":{\"reviewDates\":[{\"value\":{\"date\":\"#{ReviewDate}\",\"reason\":\"#{Reason}\",\"description\":\"test\"},\"id\":\"#{reviewDatesId}\"}]},\"event\":{\"id\":\"addCaseReviewDate\",\"summary\":\"\",\"description\":\"\"},\"event_token\":\"#{event_token}\",\"ignore_warning\":false}"))
 					.check(substring("Work allocation tasks will be created for court staff"))
+					.check(status.in(201))
 				)
                 .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRF-TOKEN6")))
 
@@ -203,6 +206,7 @@ object Caseworker_PCS_AddReviewDate {
 					.header("Accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
 					.check(substring("Possession"))
                     .check(jsonPath("$.case_type.name").is("Possession"))
+					.check(substring("#{Reason_Response}"))
 				)
 
 				.exec(http("/api/wa-supported-jurisdiction/get")
@@ -245,7 +249,7 @@ object Caseworker_PCS_AddReviewDate {
         			.header("accept", "application/json")
 					.header("x-dtreferer", BaseURL + "/cases/case-details/PCS/PCS/#{caseId}")
 					.header("Accept", "application/json, text/plain, */*")
-                    .check(substring("PUBLICLAW"))
+                    .check(substring("PCS"))
 				)
                 .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("XSRF-TOKEN7")))
 
