@@ -9,8 +9,7 @@
     "justiceLegalAdviserFullName": "test",
     "dateOrderMade": "2026-05-15",
     "isTheOrderAboutAllChildren": "Yes",
-    "recitalsOrPreamble": "test",
-    "orderDirections": "test"
+    "partiesAndRepresentation": "Parties and representation"
   },
   "event": {
     "id": "manageOrders",
@@ -41,8 +40,7 @@
     "justiceLegalAdviserFullName": "test",
     "dateOrderMade": "2026-05-15",
     "isTheOrderAboutAllChildren": "Yes",
-    "recitalsOrPreamble": "test",
-    "orderDirections": "test"
+    "partiesAndRepresentation": "Parties and representation"
   },
   "event_token": "#{event_token}",
   "ignore_warning": false,

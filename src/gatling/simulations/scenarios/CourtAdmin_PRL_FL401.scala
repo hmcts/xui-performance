@@ -35,7 +35,7 @@ object CourtAdmin_PRL_FL401 {
       .get(BaseURL + "/data/internal/cases/#{caseId}")
       .headers(Headers.commonHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
-      .check(jsonPath("$.tabs[0].fields[0].value").saveAs("caseName"))
+      .check(jsonPath("$.tabs[?(@.id=='caseLinksTab')].fields[?(@.id=='caseNameHmctsInternal')].value")saveAs("caseName"))
       .check(jsonPath("$.case_id").is("#{caseId}")))
 
     .exec(Common.waJurisdictions)

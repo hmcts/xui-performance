@@ -2,6 +2,7 @@
   "data": {
     "manageOrderHeader1": null,
     "manageOrdersOptions": "createAnOrder",
+    "selectedOrder": null,
     "isSdoSelected": null,
     "sdoPreamblesTempList": null,
     "sdoCafcassOrCymruTempList": null,
@@ -21,6 +22,7 @@
   "event_data": {
     "manageOrderHeader1": null,
     "manageOrdersOptions": "createAnOrder",
+    "selectedOrder": null,
     "isSdoSelected": null,
     "sdoPreamblesTempList": null,
     "sdoCafcassOrCymruTempList": null,

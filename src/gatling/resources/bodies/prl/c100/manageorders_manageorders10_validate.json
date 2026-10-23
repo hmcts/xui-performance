@@ -33,9 +33,12 @@
     "judgeOrMagistratesLastName": "test",
     "justiceLegalAdviserFullName": "test",
     "dateOrderMade": "2026-05-15",
+    "partiesAndRepresentation": "Parties and representation",
     "isTheOrderAboutAllChildren": "Yes",
-    "recitalsOrPreamble": "test",
-    "orderDirections": "test",
+    "penalNoticeNeeded": [],
+    "recitalsOrPreambleRtf": "",
+    "orderDirectionsRtf": "",
+    "scheduleToOrderRtf": "",
     "childArrangementsOrdersToIssue": [
       "childArrangementsOrder"
     ],

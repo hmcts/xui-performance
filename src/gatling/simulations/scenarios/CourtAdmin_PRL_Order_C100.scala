@@ -100,28 +100,42 @@ object CourtAdmin_PRL_Order_C100 {
 
       .pause(MinThinkTime, MaxThinkTime)
 
-      .group("XUI_PRL_LA_CreateOrder_050_ManageOrder_Validate4") {
-        exec(http("XUI_PRL_LA_CreateOrder_050_005_ManageOrder_Validate4")
-          .post("/data/case-types/PRLAPPS/validate?pageId=manageOrders10")
+      .group("XUI_PRL_LA_CreateOrder_045_ManageOrder_Validate4") {
+        exec(http("XUI_PRL_LA_CreateOrder_045_005_ManageOrder_Validate4")
+          .post("/data/case-types/PRLAPPS/validate?pageId=manageOrders6")
+          .headers(Headers.commonHeader)
+          .header("Content-Type", "application/json; charset=utf-8")
+          .header("Accept", "application/json, text/plain, */*")
+          .body(ElFileBody("bodies/prl/c100/manageorders_manageorders6_validate.json"))
+          .check(jsonPath("$.data.previewOrderDoc.document_hash").saveAs("document_hash_order"))
+          .check(jsonPath("$.data.previewOrderDoc.document_url").saveAs("document_url_orderdoc"))
+          .check(substring("recitalsOrPreambleRtf"))
+          .check(status.is(200)))
+      }
+      //CHECK DOC CHECKS ABOVE!!!
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .group("XUI_PRL_LA_CreateOrder_050_ManageOrder_Validate5") {
+        exec(http("XUI_PRL_LA_CreateOrder_050_005_ManageOrder_Validate5")
+          .post("/data/case-types/PRLAPPS/validate?pageId=manageOrders11")
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
           .body(ElFileBody("bodies/prl/c100/manageorders_manageorders10_validate.json"))
-          .check(substring("otherPartyInTheCaseRevised"))
+          .check(substring("scheduleToOrderRtf"))
           .check(status.is(200)))
       }
 
       .pause(MinThinkTime, MaxThinkTime)
 
-      .group("XUI_PRL_LA_CreateOrder_060_ManageOrder_Validate5") {
-        exec(http("XUI_PRL_LA_CreateOrder_060_005_ManageOrder_Validate5")
-          .post("/data/case-types/PRLAPPS/validate?pageId=manageOrders19")
+      .group("XUI_PRL_LA_CreateOrder_060_ManageOrder_Validate6") {
+        exec(http("XUI_PRL_LA_CreateOrder_060_005_ManageOrder_Validate6")
+          .post("/data/case-types/PRLAPPS/validate?pageId=manageOrders20")
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
           .body(ElFileBody("bodies/prl/c100/manageorders_manageorders19_validate.json"))
-          .check(jsonPath("$.data.previewOrderDoc.document_hash").saveAs("document_hash_order"))
-          .check(jsonPath("$.data.previewOrderDoc.document_url").saveAs("document_url_orderdoc"))
           .check(jsonPath("$.data.ordersHearingDetails[0].id").saveAs("id_orderdoc"))
           .check(substring("isAtAddressLessThan5Years"))
           .check(status.is(200)))
@@ -129,9 +143,9 @@ object CourtAdmin_PRL_Order_C100 {
 
       .pause(MinThinkTime, MaxThinkTime)
 
-      .group("XUI_PRL_LA_CreateOrder_070_ManageOrder_Validate6") {
-        exec(http("XUI_PRL_LA_CreateOrder_070_005_ManageOrder_Validate6")
-          .post("/data/case-types/PRLAPPS/validate?pageId=manageOrders20")
+      .group("XUI_PRL_LA_CreateOrder_070_ManageOrder_Validate7") {
+        exec(http("XUI_PRL_LA_CreateOrder_070_005_ManageOrder_Validate7")
+          .post("/data/case-types/PRLAPPS/validate?pageId=manageOrders21")
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
@@ -142,9 +156,9 @@ object CourtAdmin_PRL_Order_C100 {
 
       .pause(MinThinkTime, MaxThinkTime)
 
-      .group("XUI_PRL_LA_CreateOrder_080_ManageOrder_Validate7") {
-        exec(http("XUI_PRL_LA_CreateOrder_080_005_ManageOrder_Validate7")
-          .post("/data/case-types/PRLAPPS/validate?pageId=manageOrders24")
+      .group("XUI_PRL_LA_CreateOrder_080_ManageOrder_Validate8") {
+        exec(http("XUI_PRL_LA_CreateOrder_080_005_ManageOrder_Validate8")
+          .post("/data/case-types/PRLAPPS/validate?pageId=manageOrders25")
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")
@@ -155,9 +169,9 @@ object CourtAdmin_PRL_Order_C100 {
 
       .pause(MinThinkTime, MaxThinkTime)
 
-      .group("XUI_PRL_LA_CreateOrder_090_ManageOrder_Validate8") {
-        exec(http("XUI_PRL_LA_CreateOrder_090_005_ManageOrder_Validate8")
-          .post("/data/case-types/PRLAPPS/validate?pageId=manageOrders26")
+      .group("XUI_PRL_LA_CreateOrder_090_ManageOrder_Validate9") {
+        exec(http("XUI_PRL_LA_CreateOrder_090_005_ManageOrder_Validate9")
+          .post("/data/case-types/PRLAPPS/validate?pageId=manageOrders27")
           .headers(Headers.commonHeader)
           .header("Content-Type", "application/json; charset=utf-8")
           .header("Accept", "application/json, text/plain, */*")

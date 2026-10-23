@@ -43,9 +43,12 @@
     "judgeOrMagistratesLastName": "test",
     "justiceLegalAdviserFullName": "test",
     "dateOrderMade": "2026-05-15",
+    "partiesAndRepresentation": "Parties and representation",
     "isTheOrderAboutAllChildren": "Yes",
-    "recitalsOrPreamble": "test",
-    "orderDirections": "test",
+    "penalNoticeNeeded": [],
+    "recitalsOrPreambleRtf": "",
+    "orderDirectionsRtf": "",
+    "scheduleToOrderRtf": "",
     "childArrangementsOrdersToIssue": [
       "childArrangementsOrder"
     ],
@@ -56,6 +59,7 @@
     "isFL401ApplicantSolicitorPresent": "No",
     "isFL401RespondentPresent": "No",
     "isFL401RespondentSolicitorPresent": "No",
+    "isApplicant1Present": "Yes",
     "ordersHearingDetails": [
       {
         "value": {
@@ -562,7 +566,6 @@
         "id": "#{id_orderdoc}"
       }
     ],
-    "isApplicant1Present": "Yes",
     "isApplicant2Present": "Yes",
     "isApplicant3Present": "No",
     "isApplicant4Present": "No",
