@@ -1,7 +1,6 @@
 {
    "data": {
-      "createSelectOrderOptions": "specialGuardianShip",
-      "selectedOrder": null
+      "createSelectOrderOptions": "specialGuardianShip"
    },
    "event": {
       "id": "manageOrders",
@@ -20,6 +19,7 @@
       "sdoOtherTempList": null,
       "sdoHearingsAndNextStepsTempList": null,
       "listElementsSetToDefaultValue": null,
+      "isInvokedFromTask": "No",
       "createSelectOrderOptions": "specialGuardianShip",
       "selectedOrder": null
    },

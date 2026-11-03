@@ -1,7 +1,18 @@
 {
   "data": {
     "manageOrderHeader1": null,
-    "manageOrdersOptions": "createAnOrder"
+    "manageOrdersOptions": "createAnOrder",
+    "selectedOrder": null,
+    "isSdoSelected": null,
+    "sdoPreamblesTempList": null,
+    "sdoCafcassOrCymruTempList": null,
+    "sdoLocalAuthorityTempList": null,
+    "sdoCourtTempList": null,
+    "sdoDocumentationAndEvidenceTempList": null,
+    "sdoOtherTempList": null,
+    "sdoHearingsAndNextStepsTempList": null,
+    "listElementsSetToDefaultValue": null,
+    "isInvokedFromTask": "No"
   },
   "event": {
     "id": "manageOrders",
@@ -10,7 +21,18 @@
   },
   "event_data": {
     "manageOrderHeader1": null,
-    "manageOrdersOptions": "createAnOrder"
+    "manageOrdersOptions": "createAnOrder",
+    "selectedOrder": null,
+    "isSdoSelected": null,
+    "sdoPreamblesTempList": null,
+    "sdoCafcassOrCymruTempList": null,
+    "sdoLocalAuthorityTempList": null,
+    "sdoCourtTempList": null,
+    "sdoDocumentationAndEvidenceTempList": null,
+    "sdoOtherTempList": null,
+    "sdoHearingsAndNextStepsTempList": null,
+    "listElementsSetToDefaultValue": null,
+    "isInvokedFromTask": "No"
   },
   "event_token": "#{event_token}",
   "ignore_warning": false,

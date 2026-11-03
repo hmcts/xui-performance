@@ -34,12 +34,12 @@
     "isTheOrderByConsent": "Yes",
     "wasTheOrderApprovedAtHearing": "No",
     "judgeOrMagistrateTitle": "districtJudge",
-    "judgeOrMagistratesLastName": "Judge Last",
-    "justiceLegalAdviserFullName": null,
+    "judgeOrMagistratesLastName": "#{JudgeLastName}",
+    "justiceLegalAdviserFullName": "#{LegalAdviserName}",
     "dateOrderMade": "#{todayDate}",
     "isTheOrderAboutAllChildren": "Yes",
-    "recitalsOrPreamble": "test",
-    "orderDirections": "test",
+    "recitalsOrPreamble": null,
+    "orderDirections": null,
     "appointedGuardianName": [
       {
         "value": {

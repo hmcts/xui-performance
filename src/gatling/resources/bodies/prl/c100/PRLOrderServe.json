@@ -3,6 +3,7 @@
     "selectTypeOfOrder": "interim",
     "cafcassOrCymruNeedToProvideReport": "No",
     "orderEndsInvolvementOfCafcassOrCymru": "No",
+    "localAuthorityNeedToProvideReport": "No",
     "doYouWantToServeOrder": "Yes"
   },
   "event": {
@@ -34,8 +35,8 @@
     "justiceLegalAdviserFullName": "#{LegalAdviserName}",
     "dateOrderMade": "#{todayDate}",
     "isTheOrderAboutAllChildren": "Yes",
-    "recitalsOrPreamble": "test",
-    "orderDirections": "test",
+    "recitalsOrPreamble": null,
+    "orderDirections": null,
     "appointedGuardianName": [
       {
         "value": {
@@ -55,6 +56,7 @@
     "selectTypeOfOrder": "interim",
     "cafcassOrCymruNeedToProvideReport": "No",
     "orderEndsInvolvementOfCafcassOrCymru": "No",
+    "localAuthorityNeedToProvideReport": "No",
     "doYouWantToServeOrder": "Yes"
   },
   "event_token": "#{event_token}",

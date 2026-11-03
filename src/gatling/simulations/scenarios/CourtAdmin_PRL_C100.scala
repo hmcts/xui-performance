@@ -383,20 +383,36 @@ object CourtAdmin_PRL_C100 {
       .pause(MinThinkTime, MaxThinkTime)
 
       /*======================================================================================
+    * Add recitals, preamble or directions
+    ======================================================================================*/
+
+      .group("XUI_PRL_C100Progress_225_AddRecitals") {
+        exec(http("XUI_PRL_C100Progress_225_005_AddRecitals")
+          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders6")
+          .headers(Headers.commonHeader)
+          .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
+          .header("x-xsrf-token", "#{XSRFToken}")
+          .body(ElFileBody("bodies/prl/c100/PRLAddRecitals.json"))
+          .check(jsonPath("$.data.previewOrderDoc.document_url").saveAs("document_url"))
+          .check(jsonPath("$.data.previewOrderDoc.document_hash").saveAs("document_hash"))
+          .check(jsonPath("$.data.previewOrderDoc.document_filename").saveAs("document_filename"))
+          .check(substring("sdoPreamblesTempList")))
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      /*======================================================================================
     * Guardian Name
     ======================================================================================*/
 
       .group("XUI_PRL_C100Progress_230_GuardianName") {
         exec(http("XUI_PRL_C100Progress_230_005_GuardianName")
-          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders11")
+          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders12")
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
           .header("x-xsrf-token", "#{XSRFToken}")
           .body(ElFileBody("bodies/prl/c100/PRLGuardianName.json"))
-          .check(jsonPath("$.data.previewOrderDoc.document_url").saveAs("document_url"))
-          .check(jsonPath("$.data.previewOrderDoc.document_hash").saveAs("document_hash"))
-          .check(jsonPath("$.data.previewOrderDoc.document_hash").saveAs("document_filename"))
-          .check(substring("previewOrderDoc")))
+          .check(substring("appointedGuardianName")))
       }
 
       .pause(MinThinkTime, MaxThinkTime)
@@ -407,10 +423,10 @@ object CourtAdmin_PRL_C100 {
 
       .group("XUI_PRL_C100Progress_240_CheckYourOrder") {
         exec(http("XUI_PRL_C100Progress_240_005_CheckYourOrder")
-          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders20")
+          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders21")
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-          //.header("x-xsrf-token", "#{XSRFToken}")
+          .header("x-xsrf-token", "#{XSRFToken}")
           .body(ElFileBody("bodies/prl/c100/PRLCheckOrder.json"))
           .check(substring("previewOrderDoc")))
       }
@@ -423,7 +439,7 @@ object CourtAdmin_PRL_C100 {
 
       .group("XUI_PRL_C100Progress_250_OrderRecipients") {
         exec(http("XUI_PRL_C100Progress_250_005_OrderRecipients")
-          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders24")
+          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders25")
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
           .header("x-xsrf-token", "#{XSRFToken}")
@@ -439,7 +455,7 @@ object CourtAdmin_PRL_C100 {
 
       .group("XUI_PRL_C100Progress_260_OrderServe") {
         exec(http("XUI_PRL_C100Progress_260_005_OrderServe")
-          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders26")
+          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders27")
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
           .header("x-xsrf-token", "#{XSRFToken}")
@@ -457,7 +473,7 @@ object CourtAdmin_PRL_C100 {
 
       .group("XUI_PRL_C100Progress_270_OrderServe") {
         exec(http("XUI_PRL_C100Progress_270_005_OrderToServeList")
-          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders27")
+          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders28")
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
           .header("x-xsrf-token", "#{XSRFToken}")
@@ -473,7 +489,7 @@ object CourtAdmin_PRL_C100 {
 
       .group("XUI_PRL_C100Progress_280_ServeToRespondentOptions") {
         exec(http("XUI_PRL_C100Progress_280_005_ServeToRespondentOptions")
-          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders28")
+          .post(BaseURL + "/data/case-types/PRLAPPS/validate?pageId=manageOrders29")
           .headers(Headers.commonHeader)
           .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
           .header("x-xsrf-token", "#{XSRFToken}")
