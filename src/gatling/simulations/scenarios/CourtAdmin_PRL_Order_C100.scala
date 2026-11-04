@@ -112,7 +112,6 @@ object CourtAdmin_PRL_Order_C100 {
           .check(substring("recitalsOrPreambleRtf"))
           .check(status.is(200)))
       }
-      //CHECK DOC CHECKS ABOVE!!!
 
       .pause(MinThinkTime, MaxThinkTime)
 
