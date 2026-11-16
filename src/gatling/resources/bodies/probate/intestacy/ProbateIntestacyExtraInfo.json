@@ -1,0 +1,75 @@
+{
+  "data": {
+    "furtherEvidenceForApplication": null,
+    "solsAdditionalInfo": null
+  },
+  "event": {
+    "id": "solicitorUpdateIntestacy",
+    "summary": "",
+    "description": ""
+  },
+  "event_data": {
+    "primaryApplicantForenames": "AppForename",
+    "primaryApplicantSurname": "AppSurname",
+    "primaryApplicantPhoneNumber": null,
+    "primaryApplicantAddress": {
+      "AddressLine1":"#{addressLines(0)}",
+      "AddressLine2":"#{addressLines(1)}",
+      "AddressLine3":"",
+      "PostTown":"#{addressLines(2)}",
+      "County":"",
+      "PostCode":"#{addressLines(3)}",
+      "Country": "United Kingdom"
+    },
+    "languagePreferenceWelsh": "No",
+    "solsApplicantRelationshipToDeceased": "Child",
+    "primaryApplicantAdoptedIn": "No",
+    "primaryApplicantAdoptedOut": "No",
+    "deceasedMaritalStatus": "widowed",
+    "solsMinorityInterest": "No",
+    "otherExecutorExists": "Yes",
+    "solsIntestacyExecutorList": [
+      {
+        "value": {
+          "additionalExecForenames": "CoAppForename",
+          "additionalExecLastname": "CoAppSurname",
+          "additionalExecAddress": {
+            "AddressLine1":"#{addressLines(0)}",
+            "AddressLine2":"#{addressLines(1)}",
+            "AddressLine3":"",
+            "PostTown":"#{addressLines(2)}",
+            "County":"",
+            "PostCode":"#{addressLines(3)}",
+            "Country": "United Kingdom"
+          },
+          "solsApplicantFamilyDetails": {
+            "relationship": {
+              "value": {
+                "code": "child",
+                "label": "They are the deceased’s child"
+              },
+              "list_items": [
+                {
+                  "code": "child",
+                  "label": "They are the deceased’s child"
+                },
+                {
+                  "code": "grandchild",
+                  "label": "They are the deceased’s grandchild"
+                }
+              ]
+            },
+            "coApplicantAdoptedIn": "No",
+            "coApplicantAdoptedOut": "No"
+          }
+        },
+        "id": "#{newExecId}"
+      }
+    ],
+    "furtherEvidenceForApplication": null,
+    "solsAdditionalInfo": null
+  },
+  "event_token": "#{event_token_probate}",
+  "ignore_warning": false,
+  "case_reference":"#{caseId}"
+}

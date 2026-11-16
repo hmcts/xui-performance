@@ -235,22 +235,6 @@ object Solicitor_Probate {
 
     .pause(MinThinkTime, MaxThinkTime)
 
-    // /*======================================================================================
-    // * Submit Type of Application
-    // ======================================================================================*/
-
-    //   .group("XUI_Probate_120_SubmitTypeOfApplication") {
-    //     exec(http("XUI_Probate_120_005_SubmitTypeOfApplication")
-    //       .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorUpdateApplicationsolicitorUpdateApplicationPage3")
-    //       .headers(Headers.commonHeader)
-    //       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
-    //       .header("x-xsrf-token", "#{XSRFToken}")
-    //       .body(ElFileBody("bodies/probate/ProbateTypeOfApplication.json"))
-    //       .check(substring("solsWillType")))
-    //   }
-
-    //   .pause(MinThinkTime, MaxThinkTime)
-
     /*======================================================================================
     * HMRC Letter ID
     ======================================================================================*/
@@ -287,11 +271,14 @@ object Solicitor_Probate {
 
     .pause(MinThinkTime, MaxThinkTime)
 
+  //Splitting journey here so intestacy can reuse the above code and continue with a variation from this point
+  val WillLeft =
+
     /*======================================================================================
     * Has a will been left?
     ======================================================================================*/
 
-    .group("XUI_Probate_150_SubmitWillLeft") {
+    group("XUI_Probate_150_SubmitWillLeft") {
       exec(http("XUI_Probate_150_005_SubmitWillLeft")
         .post("/data/case-types/GrantOfRepresentation/validate?pageId=solicitorUpdateApplicationsolicitorUpdateApplicationPage7")
         .headers(Headers.commonHeader)

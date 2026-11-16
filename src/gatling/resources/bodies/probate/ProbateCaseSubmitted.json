@@ -3,8 +3,8 @@
     "solsSolicitorWillSignSOT":"Yes",
     "solsSOTForenames":"SolPerf",
     "solsSOTSurname":"SolTest",
-    "solsSolicitorIsExec":"Yes",
-    "solsSolicitorIsApplying":"Yes",
+    "solsSolicitorIsExec":"#{solIsExecAndApplying}",
+    "solsSolicitorIsApplying":"#{solIsExecAndApplying}",
     "solsSolicitorNotApplyingReason": null,
     "solsSolicitorFirmName":"solfirmperftest",
     "applicantOrganisationPolicy": {
