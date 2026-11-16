@@ -61,6 +61,7 @@ class XUI_Simulation extends Simulation {
 	val prlFL401TargetPerHour: Double = 34
 	val bailsTargetPerHour: Double = 10
 	val probateTargetPerHour: Double = 250
+	val probateIntestacyTargetPerHour: Double = 80
 	val iacTargetPerHour: Double = 20
 	val nfdSoleTargetPerHour: Double = 120
 	val nfdJointTargetPerHour: Double = 120
@@ -196,15 +197,36 @@ class XUI_Simulation extends Simulation {
 		.exitBlockOnFail {
 			feed(UserFeederProbate)
 				.exec(_.set("env", s"${env}")
-							.set("caseType", "GrantOfRepresentation"))
+							.set("caseType", "GrantOfRepresentation")
+							.set("solIsExecAndApplying", "Yes")) //Solicitor is executor for Probate flow
 				.exec(XuiHelper.Homepage)
 				.exec(XuiHelper.Login("#{user}", "#{password}"))
 				.repeat(2) {
 					exec(Solicitor_Probate.CreateProbateCase)
 					.exec(Solicitor_Probate.AddDeceasedDetails)
+					.exec(Solicitor_Probate.WillLeft)
 					.exec(Solicitor_Probate.AddApplicationDetails)
 					.exec(Solicitor_Probate.ReviewAndSubmitApplication) 
 				}
+				.exec(XuiHelper.Logout)
+		}
+
+	/*===============================================================================================
+	* XUI Solicitor Probate Intestacy Scenario
+	 ===============================================================================================*/
+	val ProbateIntestacySolicitorScenario = scenario("***** Probate Intestacy Create Case *****")
+		.exitBlockOnFail {
+			feed(UserFeederProbate)
+				.exec(_.set("env", s"${env}")
+					.set("caseType", "GrantOfRepresentation")
+					.set("solIsExecAndApplying", "No")) //Solicitor can't be executor for Intestacy flow
+				.exec(XuiHelper.Homepage)
+				.exec(XuiHelper.Login("#{user}", "#{password}"))
+				.exec(Solicitor_Probate.CreateProbateCase)
+				.exec(Solicitor_Probate.AddDeceasedDetails)
+				.exec(Solicitor_Probate_Intestacy.BranchToIntestacyJourney)
+				.exec(Solicitor_Probate_Intestacy.AddApplicationDetails)
+				.exec(Solicitor_Probate.ReviewAndSubmitApplication)
 				.exec(XuiHelper.Logout)
 		}
 
@@ -600,6 +622,7 @@ class XUI_Simulation extends Simulation {
 		PRLFL401SolicitorScenario.inject(simulationProfile(testType, prlFL401TargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		BailsScenario.inject(simulationProfile(testType, bailsTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		ProbateSolicitorScenario.inject(simulationProfile(testType, probateTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
+		ProbateIntestacySolicitorScenario.inject(simulationProfile(testType, probateIntestacyTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		ImmigrationAndAsylumSolicitorScenario.inject(simulationProfile(testType, iacTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		NoFaultDivorceSolicitorSoleScenario.inject(simulationProfile(testType, nfdSoleTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),
 		NoFaultDivorceSolicitorJointScenario.inject(simulationProfile(testType, nfdJointTargetPerHour, numberOfPipelineUsers)).pauses(pauseOption),

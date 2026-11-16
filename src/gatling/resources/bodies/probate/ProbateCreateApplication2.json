@@ -3,8 +3,8 @@
     "solsSolicitorWillSignSOT":"Yes",
     "solsSOTForenames":"SolPerf",
     "solsSOTSurname":"SolTest",
-    "solsSolicitorIsExec":"Yes",
-    "solsSolicitorIsApplying":"Yes",
+    "solsSolicitorIsExec":"#{solIsExecAndApplying}",
+    "solsSolicitorIsApplying":"#{solIsExecAndApplying}",
     "solsSolicitorFirmName":"solfirmperftest",
     "solsSolicitorAddress":{
       "AddressLine1":"#{addressLines(0)}",
@@ -28,8 +28,8 @@
     "solsSolicitorWillSignSOT":"Yes",
     "solsSOTForenames":"SolPerf",
     "solsSOTSurname":"SolTest",
-    "solsSolicitorIsExec":"Yes",
-    "solsSolicitorIsApplying":"Yes",
+    "solsSolicitorIsExec":"#{solIsExecAndApplying}",
+    "solsSolicitorIsApplying":"#{solIsExecAndApplying}",
     "solsSolicitorFirmName":"solfirmperftest",
     "solsSolicitorAddress":{
       "AddressLine1":"#{addressLines(0)}",
