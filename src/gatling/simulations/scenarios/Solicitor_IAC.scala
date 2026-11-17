@@ -23,12 +23,13 @@ object Solicitor_IAC {
 
   val CreateIACCase =
 
-    //set session variables
-    exec(_.setAll( "firstName" -> ("Perf" + Common.randomString(5)),
-                    "lastName" -> ("Test" + Common.randomString(5)),
-                    "dobDay" -> Common.getDay(),
-                    "dobMonth" -> Common.getMonth(),
-                    "dobYear" -> Common.getDobYear(),
+    //set session variables - matches valid data configured in the Home Office mock
+    exec(_.setAll(  "uan" -> "1342-5786-9120-3564",
+                    "firstName" -> "Abhishek Amitabh",
+                    "lastName" -> "Bachchan",
+                    "dobDay" -> "05",
+                    "dobMonth" -> "02",
+                    "dobYear" -> "1976",
                     "currentDate" -> timeStamp))
 
   /*======================================================================================

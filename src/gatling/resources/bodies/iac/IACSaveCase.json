@@ -15,7 +15,7 @@
       },
       "isOutOfCountryEnabled": "Yes",
       "appellantInUk": "Yes",
-      "homeOfficeReferenceNumber": "123456789",
+      "homeOfficeReferenceNumber": "#{uan}",
       "appellantTitle": "Mr",
       "appellantGivenNames": "#{firstName}",
       "appellantFamilyName": "#{lastName}",

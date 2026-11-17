@@ -2,7 +2,7 @@
    "data": {
       "appellantTitle": "Mr",
       "appellantGivenNames": "#{firstName}",
-      "appellantFamilyName": "Test",
+      "appellantFamilyName": "#{lastName}",
       "appellantDateOfBirth": "#{dobYear}-#{dobMonth}-#{dobDay}"
    },
    "event": {
@@ -20,7 +20,7 @@
       },
       "isOutOfCountryEnabled": "Yes",
       "appellantInUk": "Yes",
-      "homeOfficeReferenceNumber": "123456789",
+      "homeOfficeReferenceNumber": "#{uan}",
       "appellantTitle": "Mr",
       "appellantGivenNames": "#{firstName}",
       "appellantFamilyName": "#{lastName}",
