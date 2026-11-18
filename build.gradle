@@ -11,3 +11,14 @@ java {
 performance {
     simulationClass = 'simulations.XUI_Simulation'
 }
+
+gatling {
+    jvmArgs = [
+            '-server', '-Xms512M', '-Xmx2048M',
+            '-XX:+HeapDumpOnOutOfMemoryError',
+            '-XX:MaxInlineLevel=20',
+            '-XX:MaxTrivialSize=12',
+            '--add-opens=java.base/java.lang=ALL-UNNAMED',
+            '--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED'
+    ]
+}
